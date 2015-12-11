@@ -16,7 +16,6 @@ x64
 gmon.out
 *.stackdump
 *.user
-*.filters
 Thumbs.db
 x64
 
