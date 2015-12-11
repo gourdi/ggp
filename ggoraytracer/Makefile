@@ -7,14 +7,14 @@ CFLAGS+=-Isrc \
         -Isrc/fog \
         -Isrc/backgrounds \
         -Isrc/cameras \
-        -Isrc/lights \
+        -Isrc/shaders \
         -I../ggononreg/include \
         -I../ggokernel/include \
         -I../ggo2d/include
 LIBS=../ggononreg/$(LIBDIR)/libggononreg.a ../ggokernel/$(LIBDIR)/libggokernel.a ../ggo2d/$(LIBDIR)/libggo2d.a
 
 HEADERS=src/ggo_object3d.h \
-        src/ggo_solid_object3d.h \
+        src/ggo_scene.h \
         src/ggo_raytracer_global.h \
         src/raycasters/ggo_raycaster_abc.h \
         src/raycasters/ggo_brute_force_raycaster.h \
@@ -30,20 +30,19 @@ HEADERS=src/ggo_object3d.h \
         src/materials/ggo_material_abc.h \
         src/materials/ggo_solid_color_material.h \
         src/materials/ggo_checker_material.h \
-        src/lights/ggo_light_abc.h \
-        src/lights/ggo_point_light.h \
-        src/lights/ggo_disc_light.h \
-        src/lights/ggo_sphere_light.h \
         src/backgrounds/ggo_background3d_abc.h \
         src/backgrounds/ggo_background3d_color.h \
         src/fog/ggo_fog_abc.h \
         src/fog/ggo_linear_fog.h \
-        src/fog/ggo_z_fog.h
+        src/fog/ggo_z_fog.h \
+        src/shaders/ggo_shader_abc.h \
+        src/shaders/ggo_phong_shader.h
 LIB=$(LIBDIR)/libggoraytracer.a
 OBJ=src/ggo_object3d.o \
-    src/ggo_solid_object3d.o \
     src/ggo_raytracer.o \
+    src/ggo_scene.o \
     src/raycasters/ggo_raycaster_abc.o \
+    src/raycasters/ggo_brute_force_raycaster.o \
     src/renderers/ggo_renderer_abc.o \
     src/renderers/ggo_mono_sampling_renderer.o \
     src/renderers/ggo_antialiasing_renderer.o \
@@ -51,15 +50,12 @@ OBJ=src/ggo_object3d.o \
     src/renderers/ggo_bidirectional_path_tracing_renderer.o \
     src/materials/ggo_solid_color_material.o \
     src/materials/ggo_checker_material.o \
-    src/lights/ggo_light_abc.o \
-    src/lights/ggo_point_light.o \
-    src/lights/ggo_disc_light.o \
-    src/lights/ggo_sphere_light.o \
     src/cameras/ggo_camera_abc.o \
     src/cameras/ggo_point_camera.o \
     src/cameras/ggo_isometric_camera.o \
     src/fog/ggo_linear_fog.o \
-    src/fog/ggo_z_fog.o
+    src/fog/ggo_z_fog.o \
+    src/shaders/ggo_phong_shader.o
 
 NONREG_OBJ=test/ggo_raytracer_nonreg.o \
            test/ggo_scene1.o \

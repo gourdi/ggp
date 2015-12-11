@@ -20,7 +20,7 @@ namespace ggo
     void				          set_normalized_dir(const ggo::set3<T> & dir) { _dir = dir; GGO_ASSERT(_dir.is_normalized(T(0.001))); }
     void				          set_normalized_dir(T x, T y, T z) { _dir = ggo::set3<T>(x, y, z); GGO_ASSERT(_dir.is_normalized(T(0.001))); }
 
-    bool                  is_normalized(T espilon = 0.0001) const { return _dir.is_normalized(epsilon); }
+    bool                  is_normalized(T epsilon = 0.0001) const { return _dir.is_normalized(epsilon); }
     
     void                  flip();
     
