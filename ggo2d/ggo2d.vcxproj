@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\blender\ggo_blender_abc.h" />
+    <ClInclude Include="src\brush\ggo_brush_abc.h" />
+    <ClInclude Include="src\brush\ggo_gradient_brush.h" />
+    <ClInclude Include="src\brush\ggo_triangle_interpolation_brush.h" />
+    <ClInclude Include="src\color\ggo_color.h" />
+    <ClInclude Include="src\color\ggo_color_conv.h" />
+    <ClInclude Include="src\ggo_2d.h" />
+    <ClInclude Include="src\ggo_fill.h" />
+    <ClInclude Include="src\ggo_layer.h" />
+    <ClInclude Include="src\ggo_pixel_rect.h" />
+    <ClInclude Include="src\image_data\ggo_gray_image_data.h" />
+    <ClInclude Include="src\image_data\ggo_image_data_abc.h" />
+    <ClInclude Include="src\image_data\ggo_rgb_image_data.h" />
+    <ClInclude Include="src\io\ggo_bmp.h" />
+    <ClInclude Include="src\paint\ggo_hard_paint.h" />
+    <ClInclude Include="src\paint\ggo_paint.h" />
+    <ClInclude Include="src\paint\ggo_paint_helpers.h" />
+    <ClInclude Include="src\paint\ggo_paint_params.h" />
+    <ClInclude Include="src\paint\ggo_seed_paint.h" />
+    <ClInclude Include="src\paint\ggo_shapes_collection.h" />
+    <ClInclude Include="src\paint\ggo_shapes_collection.imp.h" />
+    <ClInclude Include="src\paint\ggo_soft_paint.h" />
+    <ClInclude Include="src\processing\ggo_morphology.h" />
+    <ClInclude Include="src\space_partitionning\ggo_basic_space_partitionning_2d.h" />
+    <ClInclude Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.h" />
+    <ClInclude Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.h" />
+    <ClInclude Include="src\space_partitionning\ggo_space_partitionning_2d_abc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\color\ggo_color.cpp" />
+    <ClCompile Include="src\color\ggo_color_conv.cpp" />
+    <ClCompile Include="src\ggo_fill.cpp" />
+    <ClCompile Include="src\ggo_layer.cpp" />
+    <ClCompile Include="src\ggo_pixel_rect.cpp" />
+    <ClCompile Include="src\image_data\ggo_gray_image_data.cpp" />
+    <ClCompile Include="src\image_data\ggo_rgb_image_data.cpp" />
+    <ClCompile Include="src\io\ggo_bmp.cpp" />
+    <ClCompile Include="src\paint\ggo_hard_paint.cpp" />
+    <ClCompile Include="src\paint\ggo_paint_helpers.cpp" />
+    <ClCompile Include="src\paint\ggo_seed_paint.cpp" />
+    <ClCompile Include="src\paint\ggo_soft_paint.cpp" />
+    <ClCompile Include="src\processing\ggo_morphology.cpp" />
+    <ClCompile Include="src\space_partitionning\ggo_basic_space_partitionning_2d.cpp" />
+    <ClCompile Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.cpp" />
+    <ClCompile Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.cpp" />
+    <ClCompile Include="src\space_partitionning\ggo_space_partitionning_2d_abc.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{28E4FCBA-8918-406F-A8CC-ADE4FD341F4F}</ProjectGuid>
+    <RootNamespace>ggokernel</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_data;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\Debug</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_data;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;ggokernel.lib;ggononreg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>None</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

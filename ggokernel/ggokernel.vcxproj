@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{85BCCE2E-EA7F-4510-AD17-C6B904A76F99}</ProjectGuid>
+    <RootNamespace>ggokernel</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
+    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ggo_array.h" />
+    <ClInclude Include="src\ggo_array2d.h" />
+    <ClInclude Include="src\ggo_best_match.h" />
+    <ClInclude Include="src\ggo_data_fetcher.h" />
+    <ClInclude Include="src\ggo_ease.h" />
+    <ClInclude Include="src\ggo_helpers.h" />
+    <ClInclude Include="src\ggo_io.h" />
+    <ClInclude Include="src\ggo_kernel.h" />
+    <ClInclude Include="src\ggo_link.h" />
+    <ClInclude Include="src\ggo_memory.h" />
+    <ClInclude Include="src\ggo_stdint.h" />
+    <ClInclude Include="src\ggo_tree.h" />
+    <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />
+    <ClInclude Include="src\math\ggo_distance2d.h" />
+    <ClInclude Include="src\math\ggo_distance3d.h" />
+    <ClInclude Include="src\math\ggo_harmonic_curve.h" />
+    <ClInclude Include="src\math\ggo_harmonic_surface.h" />
+    <ClInclude Include="src\math\ggo_quadratic.h" />
+    <ClInclude Include="src\math\ggo_set2.h" />
+    <ClInclude Include="src\math\ggo_set3.h" />
+    <ClInclude Include="src\math\interpolation\ggo_curve.h" />
+    <ClInclude Include="src\math\interpolation\ggo_interpolation1d.h" />
+    <ClInclude Include="src\math\interpolation\ggo_interpolation2d.h" />
+    <ClInclude Include="src\math\interpolation\ggo_interpolation3d.h" />
+    <ClInclude Include="src\math\interpolation\ggo_triangle_interpolation.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra2d.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra3d.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_matrix.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_matrix.imp.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_sparse_matrix.h" />
+    <ClInclude Include="src\math\marching_cubes\ggo_marching_cubes.h" />
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.h" />
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.h" />
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_poisson_sampling.h" />
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.h" />
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.h" />
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.h" />
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_shape_sampling.h" />
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_gaussian_field_2d.h" />
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_multi_scalar_field_2d.h" />
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_perlin_noise_field_2d.h" />
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_scalar_field_2d_abc.h" />
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_shape_field_2d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_circle.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_circle.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_disc.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_disc.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_polygon.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_polygon.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_rect.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_rect.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_segment.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_segment.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_shapes2d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_spline.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_spline.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_basis3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_basis3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_disc3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_disc3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_face3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_face3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_parallelogram3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_parallelogram3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_plane3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_plane3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_ray3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_segment3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_shapes3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_box_filter.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_dct.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_laplacian.h" />
+    <ClInclude Include="src\time\ggo_chronometer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ggo_kernel.cpp" />
+    <ClCompile Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.cpp" />
+    <ClCompile Include="src\math\marching_cubes\ggo_marching_cubes.cpp" />
+    <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp" />
+    <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp" />
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp" />
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.cpp" />
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_box_filter.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_dct.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_gaussian_blur.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_laplacian.cpp" />
+    <ClCompile Include="src\time\ggo_chronometer.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
