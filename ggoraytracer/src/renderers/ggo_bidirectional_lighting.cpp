@@ -1,4 +1,4 @@
-#include "ggo_bidirectional_path_tracing_renderer.h"
+#include "ggo_bidirectional_lighting.h"
 #include <ggo_camera_abc.h>
 #include <ggo_raycaster_abc.h>
 #include <ggo_raytracer.h>
@@ -6,9 +6,9 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bidirectional_path_tracing_renderer::bidirectional_path_tracing_renderer(const multi_sampling_camera_abc & camera,
-                                                                           const ggo::raycaster_abc & raycaster,
-                                                                           int samples_count)
+  bidirectional_lighting::bidirectional_lighting(const multi_sampling_camera_abc & camera,
+                                                 const ggo::raycaster_abc & raycaster,
+                                                 int samples_count)
   :
   _camera(camera),
   _raycaster(raycaster),
@@ -17,7 +17,7 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  ggo::color bidirectional_path_tracing_renderer::render(int x, int y, const ggo::scene & scene) const
+  ggo::color bidirectional_lighting::render(int x, int y, const ggo::scene & scene) const
   {
     ggo::color result(ggo::color::BLACK);
     

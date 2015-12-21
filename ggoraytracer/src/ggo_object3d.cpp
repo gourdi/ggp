@@ -179,6 +179,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  ggo::ray3d_float object3d::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const
+  {
+    return ggo::ray3d_float(world_normal.pos(), ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::ray3d_float object3d::sample_reflection_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float random_variable1, float random_variable2) const
   {
     ggo::vector3d_float reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());

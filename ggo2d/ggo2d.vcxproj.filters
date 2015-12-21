@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="blender">
+      <UniqueIdentifier>{f777da7e-5375-4753-af45-fdceb438e7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="brush">
+      <UniqueIdentifier>{94b4b6b6-99fe-4dd5-989a-b0d522aa5205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="color">
+      <UniqueIdentifier>{4a3ae842-ca2b-422b-b612-2495cdf0255b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image_data">
+      <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{e9775c00-0c97-45e7-9916-9f6dc1b82635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="paint">
+      <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="space_partitionning">
+      <UniqueIdentifier>{86339f62-8e0b-438a-9506-69f9d0d75e7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="processing">
+      <UniqueIdentifier>{5dd0f5bf-d68a-4499-ab2d-ee308ec9f440}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\blender\ggo_blender_abc.h">
+      <Filter>blender</Filter>
+    </ClInclude>
+    <ClInclude Include="src\brush\ggo_gradient_brush.h">
+      <Filter>brush</Filter>
+    </ClInclude>
+    <ClInclude Include="src\brush\ggo_triangle_interpolation_brush.h">
+      <Filter>brush</Filter>
+    </ClInclude>
+    <ClInclude Include="src\brush\ggo_brush_abc.h">
+      <Filter>brush</Filter>
+    </ClInclude>
+    <ClInclude Include="src\color\ggo_color.h">
+      <Filter>color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\color\ggo_color_conv.h">
+      <Filter>color</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_data\ggo_image_data_abc.h">
+      <Filter>image_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_data\ggo_rgb_image_data.h">
+      <Filter>image_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_data\ggo_gray_image_data.h">
+      <Filter>image_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\ggo_bmp.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_paint.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_paint_helpers.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_paint_params.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_seed_paint.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_shapes_collection.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_shapes_collection.imp.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_soft_paint.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_hard_paint.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.h">
+      <Filter>space_partitionning</Filter>
+    </ClInclude>
+    <ClInclude Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.h">
+      <Filter>space_partitionning</Filter>
+    </ClInclude>
+    <ClInclude Include="src\space_partitionning\ggo_space_partitionning_2d_abc.h">
+      <Filter>space_partitionning</Filter>
+    </ClInclude>
+    <ClInclude Include="src\space_partitionning\ggo_basic_space_partitionning_2d.h">
+      <Filter>space_partitionning</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ggo_2d.h" />
+    <ClInclude Include="src\ggo_fill.h" />
+    <ClInclude Include="src\ggo_layer.h" />
+    <ClInclude Include="src\ggo_pixel_rect.h" />
+    <ClInclude Include="src\processing\ggo_morphology.h">
+      <Filter>processing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\color\ggo_color.cpp">
+      <Filter>color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\color\ggo_color_conv.cpp">
+      <Filter>color</Filter>
+    </ClCompile>
+    <ClCompile Include="src\image_data\ggo_rgb_image_data.cpp">
+      <Filter>image_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\image_data\ggo_gray_image_data.cpp">
+      <Filter>image_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\ggo_bmp.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\paint\ggo_paint_helpers.cpp">
+      <Filter>paint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\paint\ggo_seed_paint.cpp">
+      <Filter>paint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\paint\ggo_soft_paint.cpp">
+      <Filter>paint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\paint\ggo_hard_paint.cpp">
+      <Filter>paint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.cpp">
+      <Filter>space_partitionning</Filter>
+    </ClCompile>
+    <ClCompile Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.cpp">
+      <Filter>space_partitionning</Filter>
+    </ClCompile>
+    <ClCompile Include="src\space_partitionning\ggo_space_partitionning_2d_abc.cpp">
+      <Filter>space_partitionning</Filter>
+    </ClCompile>
+    <ClCompile Include="src\space_partitionning\ggo_basic_space_partitionning_2d.cpp">
+      <Filter>space_partitionning</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ggo_fill.cpp" />
+    <ClCompile Include="src\ggo_layer.cpp" />
+    <ClCompile Include="src\ggo_pixel_rect.cpp" />
+    <ClCompile Include="src\processing\ggo_morphology.cpp">
+      <Filter>processing</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

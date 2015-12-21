@@ -68,7 +68,8 @@ NONREG_OBJ=test/ggo_raytracer_nonreg.o \
            test/ggo_marching_cubes_nonreg.o \
            test/ggo_polygon3d_nonreg.o \
            test/ggo_bidirectional_lighting.o \
-           test/ggo_parallelogram3d_nonreg.o
+           test/ggo_parallelogram3d_nonreg.o \
+           test/ggo_transmission_nonreg.o
 NONREG_EXE=./test/raytracer_nonreg  
     
 all: $(LIB) $(NONREG_EXE)

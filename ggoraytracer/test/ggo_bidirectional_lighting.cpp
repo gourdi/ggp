@@ -7,7 +7,7 @@
 #include <ggo_global_sampling_renderer.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_background3d_color.h>
-#include <ggo_bidirectional_path_tracing_renderer.h>
+#include <ggo_bidirectional_lighting.h>
 
 GGO_TEST(bidirectional_lighting, test)
 {
@@ -48,9 +48,9 @@ GGO_TEST(bidirectional_lighting, test)
   // With indirect lighting.
   ggo::scene scene = scene_builder.build_scene();
   ggo::brute_force_raycaster raycaster(scene.objects());
-  ggo::bidirectional_path_tracing_renderer indirect_lighting_renderer(camera, raycaster, GGO_INDIRECT_LIGHTING_SAMPLES_COUNT);
+  ggo::bidirectional_lighting indirect_lighting(camera, raycaster, GGO_INDIRECT_LIGHTING_SAMPLES_COUNT);
   ggo::raytrace_params raytrace_params;
-  raytrace_params._indirect_lighting_renderer = &indirect_lighting_renderer;
+  raytrace_params._indirect_lighting = &indirect_lighting;
   
   renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene, raytrace_params);
   ggo::save_bmp("bidirectional_lighting_on.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);

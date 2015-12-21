@@ -31,6 +31,7 @@
     <ClCompile Include="test\ggo_scene5.cpp" />
     <ClCompile Include="test\ggo_scene6.cpp" />
     <ClCompile Include="test\ggo_scene7.cpp" />
+    <ClCompile Include="test\ggo_transmission_nonreg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F78D77E4-B028-41AD-A808-C2E0E062A68D}</ProjectGuid>
