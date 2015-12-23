@@ -22,6 +22,7 @@ namespace ggo
     ggo::point3d_float                sample_point(const ggo::point3d_float & target_pos, float random_variable1, float random_variable2) const;
     std::vector<ggo::ray3d_float>     sample_rays(int samples_count) const;
 
+    ggo::ray3d_float                  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const;
     ggo::ray3d_float                  sample_reflection_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float random_variable1, float random_variable2) const;
 
     void                              set_roughness(float roughness) { _roughness = ggo::clamp<float>(roughness, 0, 1); }
@@ -30,8 +31,10 @@ namespace ggo
     float						                  get_reflection_factor() const { return _reflection_factor; }
     void						                  set_reflection_factor(float v) { _reflection_factor = ggo::clamp<float>(v, 0, 1); }
 
+    void                              set_transparent(bool transparent) { _transparent = transparent; }
     bool						                  is_transparent() const { return _transparent; }
 
+    void                              set_density(float density) { _density = density; }
     float                             get_density() const { return _density; }
 
     void                              set_discard_basis(bool discard) { _discard_basis = discard; }

@@ -2,7 +2,7 @@
 #include "ggo_raytracer.h"
 #include "ggo_camera_abc.h"
 #include "ggo_object3d.h"
-#include "ggo_indirect_lighting_renderer_abc.h"
+#include "ggo_indirect_lighting_abc.h"
 #include <ggo_helpers.h>
 #include <ggo_array.h>
 #include <thread>
@@ -64,9 +64,9 @@ namespace ggo
       
       ggo::color color = render_task->render_pixel(x, y, *scene, *raytrace_params);
       
-      if (raytrace_params->_indirect_lighting_renderer != nullptr)
+      if (raytrace_params->_indirect_lighting != nullptr)
       {
-        color += raytrace_params->_indirect_lighting_renderer->render(x, y, *scene);
+        color += raytrace_params->_indirect_lighting->render(x, y, *scene);
       }
 
       uint8_t * ptr = buffer + 3 * ((height - y - 1) * width + x);
@@ -130,9 +130,9 @@ namespace ggo
         {
           ggo::color color = render_task->render_pixel(x, y, scene, raytrace_params);
           
-          if (raytrace_params._indirect_lighting_renderer != nullptr)
+          if (raytrace_params._indirect_lighting != nullptr)
           {
-            color += raytrace_params._indirect_lighting_renderer->render(x, y, scene);
+            color += raytrace_params._indirect_lighting->render(x, y, scene);
           }
           
           *line++ = color.r8();

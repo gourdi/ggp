@@ -71,7 +71,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLACK));
 
   // The fog.
-  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color(0.5), 25));
+  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color(0.5f), 25.f));
 
 	// Setup the camera.
 	ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
