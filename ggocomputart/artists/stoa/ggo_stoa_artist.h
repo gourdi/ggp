@@ -70,7 +70,7 @@ private:
     std::map<std::string, ggo_raycaster_cells_aggregate> _aggregates;
   };
 
-  std::auto_ptr<ggo_stoa_raycaster>           _raycaster;
+  std::unique_ptr<ggo_stoa_raycaster>         _raycaster;
   std::vector<std::shared_ptr<ggo::object3d>> _objects;
 };
 
