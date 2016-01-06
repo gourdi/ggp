@@ -251,7 +251,7 @@ private:
 
   std::vector<std::shared_ptr<const ggo::object3d>> _objects;
   ggo::axis_aligned_box3d<float>                    _bounding_box;
-  std::auto_ptr<ggo::brute_force_raycaster>         _brute_force_raycaster;
+  std::unique_ptr<ggo::brute_force_raycaster>       _brute_force_raycaster;
 };
 
 //////////////////////////////////////////////////////////////

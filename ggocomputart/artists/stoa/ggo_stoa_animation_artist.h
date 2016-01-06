@@ -18,12 +18,12 @@ private:
 
 private:
 
-  std::auto_ptr<ggo_stoa_artist>  _artist;
-  float                           _hue;
-  float                           _light1_angle_start;
-  float                           _light1_angle_end;
-  float                           _light2_angle_start;
-  float                           _light2_angle_end;
+  std::unique_ptr<ggo_stoa_artist>  _artist;
+  float                             _hue;
+  float                             _light1_angle_start;
+  float                             _light1_angle_end;
+  float                             _light2_angle_start;
+  float                             _light2_angle_end;
 };
 
 #endif
