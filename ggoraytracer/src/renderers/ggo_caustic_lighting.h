@@ -10,6 +10,10 @@ namespace ggo
   public:
 
     ggo::color  render(int x, int y, const ggo::scene & scene) const override;
+
+  private:
+
+    std::vector<ggo::point3d_float> _shape_samples;
   };
 }
 
