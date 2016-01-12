@@ -38,6 +38,7 @@
     <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
+    <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{45BCDA0B-27ED-4D46-848C-A03C9B839E78}</ProjectGuid>

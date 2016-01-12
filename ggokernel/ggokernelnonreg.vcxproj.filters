@@ -16,6 +16,9 @@
     <Filter Include="signal_proc">
       <UniqueIdentifier>{434b1d57-32fa-4cd1-b00a-e3c5aace5795}</UniqueIdentifier>
     </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{3e96d46e-e6c4-4da1-ba4e-ac66dd4cd53c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
@@ -63,5 +66,8 @@
     <ClCompile Include="test\ggo_kernel_nonreg.cpp" />
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
     <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
+    <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp">
+      <Filter>trees</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -256,6 +256,7 @@
     <ClInclude Include="src\math\shapes_3d\ggo_face3d.imp.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_tree3d.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
