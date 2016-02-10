@@ -4,15 +4,15 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(trees, tree3d)
 {
-  std::vector<ggo::point3d_float> points{
-    {  2.f, -1.f, 0.f },
-    {  1.f,  1.f, 0.f },
-    { -1.f,  3.f, 0.f },
-    {  4.f,  4.f, 0.f },
-    {  3.f,  5.f, 0.f },
-    {  0.f,  4.f, 0.f } };
+  std::vector<std::pair<ggo::point3d_float, void*>> points{
+    { {  2.f, -1.f, 0.f }, nullptr },
+    { {  1.f,  1.f, 0.f }, nullptr },
+    { { -1.f,  3.f, 0.f }, nullptr },
+    { {  4.f,  4.f, 0.f }, nullptr },
+    { {  3.f,  5.f, 0.f }, nullptr },
+    { {  0.f,  4.f, 0.f }, nullptr }, };
 
-  ggo::tree3d tree(points);
+  ggo::tree3d<void*> tree(points);
 
   tree.dump(std::cout);
 

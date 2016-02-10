@@ -60,10 +60,10 @@ private:
                                    const ggo::object3d * exclude_object1 = nullptr,
                                    const ggo::object3d * exclude_object2 = nullptr) const override;
 
-    bool hit_test(const ggo::ray3d_float & ray,
-                  float dist_max,
-                  const ggo::object3d * exclude_object1 = nullptr,
-                  const ggo::object3d * exclude_object2 = nullptr) const override;
+    bool check_visibility(const ggo::ray3d_float & ray,
+                          float dist_max,
+                          const ggo::object3d * exclude_object1 = nullptr,
+                          const ggo::object3d * exclude_object2 = nullptr) const override;
 
   private:
 

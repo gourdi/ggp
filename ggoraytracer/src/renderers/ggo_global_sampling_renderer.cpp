@@ -22,8 +22,7 @@ namespace ggo
       static ggo::color  process_ray(const ggo::ray3d_float & ray,
                                      const ggo::scene & scene,
                                      const ggo::raycaster_abc * raycaster,
-                                     int depth, int sample, 
-                                     const ggo::object3d * inside_object,
+                                     int depth, int sample,
                                      const ggo::object3d * previous_hit_object);
                                      
       static ggo::color  get_fog_ambient_color(const ggo::object3d * hit_object,
@@ -53,7 +52,7 @@ namespace ggo
     for (int sample = 0; sample < _samples_count; ++sample)
     {
       std::vector<const::ggo::object3d*> inside_stack;
-      color += process_ray(camera_rays[sample], scene, raycaster, raytrace_params._depth, sample, nullptr, nullptr);
+      color += process_ray(camera_rays[sample], scene, raycaster, raytrace_params._depth, sample, nullptr);
     }
     
     return color / static_cast<float>(_samples_count);
@@ -64,15 +63,19 @@ namespace ggo
                                                       const ggo::scene & scene,
                                                       const ggo::raycaster_abc * raycaster,
                                                       int depth, int sample,
-                                                      const ggo::object3d * inside_object,
                                                       const ggo::object3d * previous_hit_object)
   {
+    if (depth < 0)
+    {
+      return ggo::color::BLACK;
+    }
+
     // Handle self-intersection.
     ggo::ray3d_float safe_ray(ray);
     const ggo::object3d * exclude_object = nullptr;
     if (previous_hit_object != nullptr)
     {
-      exclude_object = previous_hit_object->handle_self_intersection(safe_ray, inside_object != nullptr);
+      exclude_object = previous_hit_object->handle_self_intersection(safe_ray, false);
     }
 
     // Does the current ray hit an object? If not, process background.
@@ -90,8 +93,8 @@ namespace ggo
       
       return color;
     }
-    GGO_ASSERT(local_normal.dir().is_normalized(0.0001));
-    GGO_ASSERT(world_normal.dir().is_normalized(0.0001));
+    GGO_ASSERT(local_normal.dir().is_normalized(0.0001f));
+    GGO_ASSERT(world_normal.dir().is_normalized(0.0001f));
 
     float random_variable1 = ggo::best_candidate_table[sample].x();
     float random_variable2 = ggo::best_candidate_table[sample].y();
@@ -103,48 +106,19 @@ namespace ggo
     // The hit object is transparent.
     if (hit_object->is_transparent() == true)
     {
-      if (depth > 0)
+      ggo::ray3d_float transmitted_ray(safe_ray);
+
+      // The input ray is below the incidence angle => full reflection.
+      if (hit_object->transmit_ray(transmitted_ray, world_normal, depth) == false)
       {
-        float cos_input = ggo::dot(safe_ray.dir(), world_normal.dir());
-        GGO_ASSERT(cos_input <= 0.001f); // Expected negative dot product.
+        reflection_factor = 1.f;
+      }
+      // The ray went through the object: recursion.
+      else
+      {
+        object_color = process_ray(transmitted_ray, scene, raycaster, depth - 1, sample, hit_object);
 
-        // Snell-Descartes's law.
-        float sin_input = std::sqrt(1 - cos_input * cos_input);
-        float current_density = inside_object ? inside_object->get_density() : 1.f;
-        float sin_output = sin_input * current_density / hit_object->get_density();
-
-        // The input ray is below the incidence angle => full reflection.
-        if (sin_output >= 1.f || sin_output <= -1.f)
-        {
-          reflection_factor = 1.f;
-        }
-        // Transmission: the ray goes inside or leaves the hit object.
-        else
-        {
-          const ggo::object3d * transmission_object = inside_object ? nullptr : hit_object;
-          float next_density = transmission_object ? transmission_object->get_density() : 1.f;
-
-          // Recursion.
-          ggo::vector3d_float parallel_dir = safe_ray.dir() - cos_input * world_normal.dir();
-          parallel_dir.set_length(sin_output);
-
-          float cos_output = std::sqrt(1 - ggo::square(sin_output));
-          ggo::vector3d_float orthogonal_dir = -world_normal.dir();
-          orthogonal_dir.set_length(cos_output);
-
-          ggo::ray3d_float transmitted_ray(world_normal.pos(), parallel_dir + orthogonal_dir, false);
-          GGO_ASSERT(transmitted_ray.is_normalized());
-          GGO_ASSERT_LE(ggo::dot(world_normal.dir(), transmitted_ray.dir()), 0.001f);
-
-          object_color = process_ray(transmitted_ray, scene, raycaster, depth - 1, sample, transmission_object, hit_object);
-
-          // Compute reflection factor with Slick's approximation.
-          float num = current_density - next_density;
-          float den = current_density + next_density;
-          float parallel_reflection_factor = ggo::square(num / den);
-          reflection_factor = parallel_reflection_factor + (1 - parallel_reflection_factor) * std::pow(1.f + cos_input, 5.f);
-          GGO_ASSERT_BTW(reflection_factor, -0.001f, 0.001f);
-        }
+        reflection_factor = ggo::raytracer::compute_reflexion_factor(safe_ray, world_normal, 1.f, hit_object->get_density());
       }
     }
     // If the object is not transparent, process diffuse shading.
@@ -173,7 +147,7 @@ namespace ggo
     {
       ggo::ray3d_float reflection_ray = hit_object->sample_reflection_ray(safe_ray, world_normal, random_variable1, random_variable2);
 
-      ggo::color reflexion_color = process_ray(reflection_ray, scene, raycaster, depth - 1, sample, inside_object, hit_object);
+      ggo::color reflexion_color = process_ray(reflection_ray, scene, raycaster, depth - 1, sample, hit_object);
 
       object_color = (1 - reflection_factor) * object_color + reflection_factor * reflexion_color;
     }
@@ -181,15 +155,11 @@ namespace ggo
     // Output color.
     ggo::color output_color(hit_object->get_emissive_color() + object_color + scene.ambient_color());
 
-    // Volumetric processing.
-    if (inside_object != nullptr) // inside an object.
-    {
-      output_color *= inside_object->get_transmission_color();
-    }
-    else if (scene.fog() != nullptr) // Fog (only if outside any object).
+    // Fog.
+    if (scene.fog() != nullptr)
     {
       // Ambient color.
-      output_color += object_color * get_fog_ambient_color(hit_object, scene, world_normal, raycaster, sample);
+      output_color += output_color * get_fog_ambient_color(hit_object, scene, world_normal, raycaster, sample);
       
       // Handle attenuation.
       output_color = scene.fog()->process_segment(safe_ray.pos(), world_normal.pos(), output_color);

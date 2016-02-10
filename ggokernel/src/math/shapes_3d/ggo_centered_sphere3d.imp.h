@@ -68,8 +68,8 @@ namespace ggo
 
     for (int i = 0; i < samples_count; ++i)
     {
-      ggo::vector3d_float sphere_sample = ggo::sphere_sampling(ggo::best_candidate_table[i].x() + 0.5f, ggo::best_candidate_table[i].y() + 0.5f);
-      ggo::vector3d_float hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, ggo::best_candidate_table[i].x() + 0.5f, ggo::best_candidate_table[i].y() + 0.5f);
+      ggo::vector3d_float sphere_sample = ggo::sphere_sampling(ggo::best_candidate_table[i].x(), ggo::best_candidate_table[i].y());
+      ggo::vector3d_float hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, ggo::best_candidate_table[i].x(), ggo::best_candidate_table[i].y());
 
       rays.emplace_back(_radius * sphere_sample, hemisphere_sample, false);
     }

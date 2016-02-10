@@ -1,5 +1,6 @@
 #include "ggo_object3d.h"
 #include <ggo_solid_color_material.h>
+#include <ggo_raytracer.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_shape_sampling.h>
 #include <ggo_phong_shader.h>
@@ -181,7 +182,11 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::ray3d_float object3d::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const
   {
-    return ggo::ray3d_float(world_normal.pos(), ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+    ggo::vector3d_float reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+    GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+    GGO_ASSERT(ggo::dot(reflected_dir, world_normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
+
+    return ggo::ray3d_float(world_normal.pos(), reflected_dir, false);
   }
 
   //////////////////////////////////////////////////////////////
@@ -206,6 +211,43 @@ namespace ggo
     GGO_ASSERT_GE(ggo::dot(reflected_dir, world_normal.dir()), -0.001f);
 
     return ggo::ray3d_float(world_normal.pos(), reflected_dir, false);
+  }
+
+  //////////////////////////////////////////////////////////////
+  bool object3d::transmit_ray(ggo::ray3d_float & ray, ggo::ray3d_float world_normal, int & depth) const
+  {
+    // Transmit the ray into the current object.
+    if (ggo::raytracer::transmit_ray(ray, world_normal, 1.0f, _density) == false)
+    {
+      return false;
+    }
+
+    // Bounce if ray internally until it leaves the current object.
+    while (true)
+    {
+      depth -= 1;
+      if (depth <= 0)
+      {
+        return false;
+      }
+
+      // Find intersection between the current ray and the current object.
+      float dist = -1.f;
+      if (_shape->intersect_ray(ray, dist, world_normal) == false)
+      {
+        return false;
+      }
+
+      // Does the ray gest out of the objects?
+      if (ggo::raytracer::transmit_ray(ray, world_normal, _density, 1.f) == true)
+      {
+        return true;
+      }
+    }
+
+    GGO_FAIL();
+
+    return false;
   }
 }
 

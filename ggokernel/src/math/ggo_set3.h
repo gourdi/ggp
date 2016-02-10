@@ -285,7 +285,7 @@ namespace ggo
   template <typename T>
   void set3<T>::build_basis(set3 & b1, set3 & b2) const
   {
-    GGO_ASSERT(this->is_normalized(0.001) == true);
+    GGO_ASSERT(this->is_normalized(T(0.001)) == true);
     
     // Get 2 orthogonal vectors.
     float x = std::abs(_x);

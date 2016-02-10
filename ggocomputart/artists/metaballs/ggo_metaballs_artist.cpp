@@ -226,7 +226,7 @@ namespace
           GGO_ASSERT(hypot <= 1.001);
 
           diff /= r; // Normalize.
-          GGO_ASSERT(diff.is_normalized(0.01) == true);
+          GGO_ASSERT(diff.is_normalized(0.01f) == true);
           diff *= influence;
           dir += diff;
         }

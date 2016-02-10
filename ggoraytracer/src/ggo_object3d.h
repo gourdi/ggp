@@ -62,6 +62,9 @@ namespace ggo
 
     const ggo::object3d *             handle_self_intersection(ggo::ray3d_float & ray, bool inside) const;
 
+    // Return false if the ray is reflected (below incidence angle) or if we have reach recursion depth.
+    bool                              transmit_ray(ggo::ray3d_float & ray, ggo::ray3d_float world_normal, int & depth) const;
+
   private:
 
     ggo::basis3d_float                                        _basis;

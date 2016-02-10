@@ -9,20 +9,21 @@
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
+  template <typename T>
   class tree3d
   {
   public:
 
-                                    tree3d(const std::vector<ggo::point3d_float> & points);
+                                                  tree3d(const std::vector<std::pair<ggo::point3d_float, T>> & points);
 
-    void                            dump(std::ostream & os) const;
+    void                                          dump(std::ostream & os) const;
 
-    std::vector<ggo::point3d_float> find_points(const ggo::point3d_float & p, float radius) const;
+    std::vector<std::pair<ggo::point3d_float, T>> find_points(const ggo::point3d_float & p, float radius) const;
 
   private:
 
-    void                            dump_aux(const std::string & indent, std::ostream & os) const;
-    void                            find_points_aux(const ggo::point3d_float & p, float radius, float hypot, std::vector<ggo::point3d_float> & result) const;
+    void                                          dump_aux(const std::string & indent, std::ostream & os) const;
+    void                                          find_points_aux(const ggo::point3d_float & p, float radius, float hypot, std::vector<std::pair<ggo::point3d_float, T>> & result) const;
 
   private:
 
@@ -34,6 +35,7 @@ namespace ggo
     };
 
     ggo::point3d_float      _pos;
+    T                       _data;
     split_axis              _split_axis;
     std::unique_ptr<tree3d> _inf_child;
     std::unique_ptr<tree3d> _sup_child;
@@ -44,24 +46,25 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  tree3d::tree3d(const std::vector<ggo::point3d_float> & points)
+  template <typename T>
+  tree3d<T>::tree3d(const std::vector<std::pair<ggo::point3d_float, T>> & points)
   {
-    auto sort_x = [](const ggo::point3d_float& p1, const ggo::point3d_float& p2) { return p1.x() < p2.x(); };
-    auto sort_y = [](const ggo::point3d_float& p1, const ggo::point3d_float& p2) { return p1.y() < p2.y(); };
-    auto sort_z = [](const ggo::point3d_float& p1, const ggo::point3d_float& p2) { return p1.z() < p2.z(); };
+    auto sort_x = [](const std::pair<ggo::point3d_float, T> & p1, const std::pair<ggo::point3d_float, T> & p2) { return p1.first.x() < p2.first.x(); };
+    auto sort_y = [](const std::pair<ggo::point3d_float, T> & p1, const std::pair<ggo::point3d_float, T> & p2) { return p1.first.y() < p2.first.y(); };
+    auto sort_z = [](const std::pair<ggo::point3d_float, T> & p1, const std::pair<ggo::point3d_float, T> & p2) { return p1.first.z() < p2.first.z(); };
 
     auto range_x = std::minmax_element(points.begin(), points.end(), sort_x);
     auto range_y = std::minmax_element(points.begin(), points.end(), sort_y);
     auto range_z = std::minmax_element(points.begin(), points.end(), sort_z);
-    GGO_ASSERT_LE(range_x.first, range_x.second);
-    GGO_ASSERT_LE(range_y.first, range_y.second);
-    GGO_ASSERT_LE(range_z.first, range_z.second);
 
-    float size_x = range_x.second->x() - range_x.first->x();
-    float size_y = range_y.second->y() - range_y.first->y();
-    float size_z = range_z.second->z() - range_z.first->z();
+    float size_x = range_x.second->first.x() - range_x.first->first.x();
+    float size_y = range_y.second->first.y() - range_y.first->first.y();
+    float size_z = range_z.second->first.z() - range_z.first->first.z();
+    GGO_ASSERT_GE(size_x, 0.f);
+    GGO_ASSERT_GE(size_y, 0.f);
+    GGO_ASSERT_GE(size_z, 0.f);
 
-    std::vector<ggo::point3d_float> sorted_points(points);
+    std::vector<std::pair<ggo::point3d_float, T>> sorted_points(points);
 
     if (size_x >= size_y && size_x >= size_z)
     {
@@ -81,31 +84,34 @@ namespace ggo
     }
 
     auto middle = sorted_points.begin() + sorted_points.size() / 2;
-    _pos = *middle;
+    _pos = middle->first;
+    _data = middle->second;
 
-    std::vector<ggo::point3d_float> inf_points(sorted_points.begin(), middle);
-    std::vector<ggo::point3d_float> sup_points(middle + 1, sorted_points.end());
+    std::vector<std::pair<ggo::point3d_float, T>> inf_points(sorted_points.begin(), middle);
+    std::vector<std::pair<ggo::point3d_float, T>> sup_points(middle + 1, sorted_points.end());
     GGO_ASSERT_EQ(inf_points.size() + sup_points.size() + 1, points.size());
 
     if (inf_points.empty() == false)
     {
-      _inf_child.reset(new tree3d(inf_points));
+      _inf_child.reset(new tree3d<T>(inf_points));
     }
 
     if (sup_points.empty() == false)
     {
-      _sup_child.reset(new tree3d(sup_points));
+      _sup_child.reset(new tree3d<T>(sup_points));
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  void tree3d::dump(std::ostream & os) const
+  template <typename T>
+  void tree3d<T>::dump(std::ostream & os) const
   {
     dump_aux("", os);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void tree3d::dump_aux(const std::string & indent, std::ostream & os) const
+  template <typename T>
+  void tree3d<T>::dump_aux(const std::string & indent, std::ostream & os) const
   {
     std::cout << indent;
 
@@ -136,9 +142,10 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  std::vector<ggo::point3d_float> tree3d::find_points(const ggo::point3d_float & p, float radius) const
+  template <typename T>
+  std::vector<std::pair<ggo::point3d_float, T>> tree3d<T>::find_points(const ggo::point3d_float & p, float radius) const
   {
-    std::vector<ggo::point3d_float> result;
+    std::vector<std::pair<ggo::point3d_float, T>> result;
 
     find_points_aux(p, radius, radius * radius, result);
 
@@ -146,12 +153,13 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void tree3d::find_points_aux(const ggo::point3d_float & p, float radius, float hypot, std::vector<ggo::point3d_float> & result) const
+  template <typename T>
+  void tree3d<T>::find_points_aux(const ggo::point3d_float & p, float radius, float hypot, std::vector<std::pair<ggo::point3d_float, T>> & result) const
   {
     // First check current point.
     if (ggo::hypot(_pos, p) < hypot)
     {
-      result.push_back(_pos);
+      result.push_back(std::make_pair(_pos, _data));
     }
 
     // Process children only if needed.

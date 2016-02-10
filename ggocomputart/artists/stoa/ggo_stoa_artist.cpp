@@ -137,10 +137,10 @@ const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::r
   return hit_object;
 }
 
-bool ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                   float dist_max,
-                                                   const ggo::object3d * exclude_object1,
-                                                   const ggo::object3d * exclude_object2) const
+bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_float & ray,
+                                                           float dist_max,
+                                                           const ggo::object3d * exclude_object1,
+                                                           const ggo::object3d * exclude_object2) const
 {
   for (const auto & map_item : _aggregates)
   {

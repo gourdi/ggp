@@ -28,7 +28,7 @@ GGO_TEST(test_scene, transmission)
   scene_builder.add_sphere_light(ggo::color(1.25f), 100.f, ggo::point3d_float(-20.f, -100.f, 200.f));
 
   // Objects.
-  std::array<float, 5> densities { 0.8f, 0.95f, 1.f, 1.f / 0.95f, 1.f / 0.5f };
+  std::array<float, 5> densities { 1.0f, 1.01f, 1.05f, 1.1f, 1.5f };
   auto densities_it = densities.cbegin();
   for (int i = -2; i <= 2; ++i)
   {

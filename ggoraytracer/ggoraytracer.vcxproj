@@ -33,7 +33,7 @@
     <ClCompile Include="src\raycasters\ggo_raycaster_abc.cpp" />
     <ClCompile Include="src\renderers\ggo_antialiasing_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_bidirectional_lighting.cpp" />
-    <ClCompile Include="src\renderers\ggo_caustic_lighting.cpp" />
+    <ClCompile Include="src\renderers\ggo_photon_mapping.cpp" />
     <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_mono_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_renderer_abc.cpp" />
@@ -59,7 +59,7 @@
     <ClInclude Include="src\raycasters\ggo_raycaster_abc.h" />
     <ClInclude Include="src\renderers\ggo_antialiasing_renderer.h" />
     <ClInclude Include="src\renderers\ggo_bidirectional_lighting.h" />
-    <ClInclude Include="src\renderers\ggo_caustic_lighting.h" />
+    <ClInclude Include="src\renderers\ggo_photon_mapping.h" />
     <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h" />
     <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h" />
     <ClInclude Include="src\renderers\ggo_mono_sampling_renderer.h" />
@@ -143,7 +143,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>

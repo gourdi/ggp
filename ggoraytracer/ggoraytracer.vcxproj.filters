@@ -88,10 +88,10 @@
     <ClInclude Include="src\renderers\ggo_bidirectional_lighting.h">
       <Filter>renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_caustic_lighting.h">
+    <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h">
       <Filter>renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h">
+    <ClInclude Include="src\renderers\ggo_photon_mapping.h">
       <Filter>renderers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,7 +144,7 @@
     <ClCompile Include="src\renderers\ggo_bidirectional_lighting.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderers\ggo_caustic_lighting.cpp">
+    <ClCompile Include="src\renderers\ggo_photon_mapping.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
   </ItemGroup>

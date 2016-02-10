@@ -73,7 +73,7 @@ namespace ggo
         // Increase normalization factor before checking visibility.
         normalization_factor += 1;
 
-        if (_raycaster.hit_test(close_ray, length, exclude_light_object, exclude_camera_object) == true)
+        if (_raycaster.check_visibility(close_ray, length, exclude_light_object, exclude_camera_object) == true)
         {
           continue;
         }
