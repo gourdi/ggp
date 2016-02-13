@@ -37,7 +37,6 @@
     <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_mono_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_renderer_abc.cpp" />
-    <ClCompile Include="src\shaders\ggo_phong_shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backgrounds\ggo_background3d_abc.h" />
@@ -64,8 +63,6 @@
     <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h" />
     <ClInclude Include="src\renderers\ggo_mono_sampling_renderer.h" />
     <ClInclude Include="src\renderers\ggo_renderer_abc.h" />
-    <ClInclude Include="src\shaders\ggo_phong_shader.h" />
-    <ClInclude Include="src\shaders\ggo_shader_abc.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1F1819A9-3C40-4A9F-A69D-B950AC01CBDD}</ProjectGuid>

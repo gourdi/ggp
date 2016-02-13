@@ -7,7 +7,6 @@
 #include <ggo_global_sampling_renderer.h>
 #include <ggo_brute_force_raycaster.h>
 #include <ggo_photon_mapping.h>
-#include <ggo_phong_shader.h>
 
 GGO_TEST(caustics, test)
 {
@@ -31,7 +30,7 @@ GGO_TEST(caustics, test)
   auto light = scene_builder.add_sphere_light(ggo::color(0.9f), 1.f, ggo::point3d_float(0, 0, 20));
 
   // Objects.
-  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f), ggo::color::RED, std::make_shared<ggo::phong_shader>(5.f, 500.f), true);
+  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f), ggo::color::RED, true);
   auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 1.f), 1.f), ggo::color::WHITE, true);
   sphere->set_transparent(true);
   sphere->set_density(1.1f);
@@ -43,8 +42,8 @@ GGO_TEST(caustics, test)
   ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
 
   // Without indirect lighting.
-  //renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  //ggo::save_bmp("caustics_off.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
+  renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
+  ggo::save_bmp("caustics_off.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
 
   // With indirect lighting.
   std::vector<ggo::point3d_float> target_samples;

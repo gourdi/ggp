@@ -3,22 +3,18 @@
 #include <ggo_raytracer.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_shape_sampling.h>
-#include <ggo_phong_shader.h>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
   object3d::object3d()
-    :
-    _shader(std::make_shared<ggo::phong_shader>())
   {
   }
 
   //////////////////////////////////////////////////////////////
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape)
     :
-    _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>())
+    _shape(shape)
   {
   }
 
@@ -26,7 +22,6 @@ namespace ggo
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color)
     :
     _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>()),
     _material(std::make_shared<ggo::solid_color_material>(color))
   {
   }
@@ -35,25 +30,6 @@ namespace ggo
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material)
     :
     _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>()),
-    _material(material)
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, std::shared_ptr<const ggo::shader_abc> shader)
-    :
-    _shape(shape),
-    _shader(shader),
-    _material(std::make_shared<ggo::solid_color_material>(color))
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader)
-    :
-    _shape(shape),
-    _shader(shader),
     _material(material)
   {
   }

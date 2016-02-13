@@ -3,7 +3,6 @@
 
 #include <ggo_shapes3d.h>
 #include <ggo_material_abc.h>
-#include <ggo_shader_abc.h>
 #include <memory>
 
 namespace ggo
@@ -16,8 +15,6 @@ namespace ggo
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape);
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color);
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material);
-                                      object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, std::shared_ptr<const ggo::shader_abc> shader);
-                                      object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader);
 
     ggo::point3d_float                sample_point(const ggo::point3d_float & target_pos, float random_variable1, float random_variable2) const;
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const;
@@ -78,7 +75,6 @@ namespace ggo
     ggo::color                                                _emissive_color = ggo::color::BLACK;
     std::shared_ptr<const ggo::raytracable_shape3d_abc_float> _shape;
     std::shared_ptr<const ggo::material_abc>                  _material;
-    std::shared_ptr<const ggo::shader_abc>                    _shader;
   };
 
   std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color & color, const ggo::point3d_float & pos);

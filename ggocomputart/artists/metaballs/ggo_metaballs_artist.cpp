@@ -2,7 +2,6 @@
 #include <iostream>
 #include <algorithm>
 #include <ggo_object3d.h>
-#include <ggo_phong_shader.h>
 #include <ggo_background3d_color.h>
 
 //#define GGO_METABALLS_DEBUG
@@ -292,8 +291,9 @@ void ggo_metaballs_artist::render_bitmap(uint8_t * buffer, ggo::renderer_abc & r
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(params._background_color));
 
   auto shape = std::make_shared<ggo_metaball>(params._centers, params._threshold);
-  auto shader = std::make_shared<ggo::phong_shader>(params._phong_factor, params._phong_shininess);
-  scene_builder.add_object(shape, params._background_color, shader);
+  auto object = scene_builder.add_object(shape, params._background_color);
+  object->set_phong_factor(params._phong_factor);
+  object->set_phong_shininess(params._phong_shininess);
 
 	scene_builder.add_sphere_light(ggo::color(0.8f), 0.1f, params._light1);
   scene_builder.add_sphere_light(ggo::color(0.8f), 0.1f, params._light2);

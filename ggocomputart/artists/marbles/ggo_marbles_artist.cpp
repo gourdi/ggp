@@ -6,7 +6,6 @@
 #include <ggo_linear_fog.h>
 #include <ggo_material_abc.h>
 #include <ggo_background3d_color.h>
-#include <ggo_phong_shader.h>
 #include <iostream>
 #include <algorithm>
 
@@ -127,9 +126,10 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
     {
       auto shape = std::make_shared<ggo::centered_sphere3d_float>(sphere.radius());
       auto material = std::make_shared<const my_material>(sphere.radius());
-      auto shader = std::make_shared<const ggo::phong_shader>(ggo::rand_float(3, 5), ggo::rand_float(250, 500));
-      auto object = scene_builder.add_object(shape, material, shader);
+      auto object = scene_builder.add_object(shape, material);
 
+      object->set_phong_factor(ggo::rand_float(3, 5));
+      object->set_phong_shininess(ggo::rand_float(250, 500));
       object->basis().rotate_x(ggo::rand_float(0, 2 * ggo::PI<float>()));
       object->basis().rotate_y(ggo::rand_float(0, 2 * ggo::PI<float>()));
       object->basis().rotate_z(ggo::rand_float(0, 2 * ggo::PI<float>()));

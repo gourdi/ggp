@@ -19,9 +19,6 @@
     <Filter Include="renderers">
       <UniqueIdentifier>{6b7fa60e-4217-459a-917a-dc769db9a867}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{a20f5782-b361-46cf-837d-29452358276d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backgrounds\ggo_background3d_abc.h">
@@ -79,12 +76,6 @@
     <ClInclude Include="src\materials\ggo_material_abc.h">
       <Filter>materials</Filter>
     </ClInclude>
-    <ClInclude Include="src\shaders\ggo_shader_abc.h">
-      <Filter>shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="src\shaders\ggo_phong_shader.h">
-      <Filter>shaders</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderers\ggo_bidirectional_lighting.h">
       <Filter>renderers</Filter>
     </ClInclude>
@@ -135,9 +126,6 @@
     <ClCompile Include="src\ggo_object3d.cpp" />
     <ClCompile Include="src\ggo_raytracer.cpp" />
     <ClCompile Include="src\ggo_scene.cpp" />
-    <ClCompile Include="src\shaders\ggo_phong_shader.cpp">
-      <Filter>shaders</Filter>
-    </ClCompile>
     <ClCompile Include="src\raycasters\ggo_brute_force_raycaster.cpp">
       <Filter>raycasters</Filter>
     </ClCompile>
