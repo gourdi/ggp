@@ -59,23 +59,6 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color object3d::shade(const ggo::color & object_color, 
-                             const ggo::color & light_color,
-                             const ggo::ray3d_float & ray,
-                             const ggo::ray3d_float & world_normal,
-                             const ggo::ray3d_float & ray_to_light) const
-  {
-    if (_shader)
-    {
-      return _shader->shade(object_color, light_color, ray, world_normal, ray_to_light);
-    }
-    else
-    {
-      return ggo::color::BLACK;
-    }
-  }
-
-  //////////////////////////////////////////////////////////////
   ggo::color object3d::get_color(const ggo::point3d_float & world_pos) const
   {
     if (!_material)
@@ -159,24 +142,21 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::vector<ggo::ray3d_float> object3d::sample_rays(int samples_count) const
+  ggo::ray3d_float object3d::sample_ray(float random_variable1, float random_variable2) const
   {
     if (!_shape)
     {
-      return std::vector<ggo::ray3d_float>();
+      return ggo::ray3d_float();
     }
 
-    auto rays = _shape->sample_rays(samples_count);
+    ggo::ray3d_float ray = _shape->sample_ray(random_variable1, random_variable2);
 
     if (_discard_basis == false)
     {
-      for (auto & ray : rays)
-      {
-        _basis.ray_from_local_to_world(ray);
-      }
+      _basis.ray_from_local_to_world(ray);
     }
 
-    return rays;
+    return ray;
   }
 
   //////////////////////////////////////////////////////////////

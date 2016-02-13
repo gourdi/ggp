@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    virtual ggo::color shade(const ggo::color & object_color,
+    virtual ggo::color diffuse_shading(const ggo::color & object_color,
                              const ggo::color & light_color,
                              const ggo::ray3d_float & ray,
                              const ggo::ray3d_float & world_normal,

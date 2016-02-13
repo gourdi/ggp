@@ -1,5 +1,4 @@
 #include "ggo_mono_sampling_renderer.h"
-#include <ggo_array.h>
 #include <ggo_raytracer.h>
 
 namespace
@@ -14,7 +13,7 @@ namespace
                              const ggo::scene & scene,
                              const ggo::raytrace_params & raytrace_params) const override
     {
-      return ggo::raytracer::mono_sampling_raytrace(_camera.get_ray(x, y), scene, raytrace_params);
+      return ggo::raytracer::process(_camera.get_ray(x, y), scene, raytrace_params);
     }
 
   public:

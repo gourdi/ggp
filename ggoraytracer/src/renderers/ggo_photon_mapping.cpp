@@ -14,11 +14,13 @@ namespace ggo
 
     for (const auto light : lights)
     {
+      std::vector<std::pair<ggo::point3d_float, ggo::color>> current_light_photons;
+
       for (int i = 0; i < target_samples.size(); ++i)
       {
         // Build a ray from the light to the object.
-        float random_variable1 = ggo::best_candidate_table[i].x();
-        float random_variable2 = ggo::best_candidate_table[i].y();
+        float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].x();
+        float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].y();
 
         ggo::point3d_float target_sample = target_samples[i];
         ggo::point3d_float light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
@@ -34,7 +36,7 @@ namespace ggo
         }
 
         // Check visibility between the light and the object.
-        if (raycaster.check_visibility(ray, dist, light.get(), &object) == false)
+        if (raycaster.check_visibility(ray, dist, light.get(), &object) == true)
         {
           continue;
         }
@@ -42,34 +44,49 @@ namespace ggo
         // Check if the ray goes into the object or if the is full reflection.
         if (ggo::raytracer::transmit_ray(ray, world_normal, 1.f, object.get_density()) == false)
         {
+          // TODO reflected photons should be stored too.
           continue;
         }
 
         // Let the ray get outside the object.
-        bool ray_out = false;
+        bool transmission = false;
         for (int depth = 0; depth < 3; ++depth) // Allow 3 internal reflections.
         {
-          // Interect the ray with the current object.
+          // Intersect the ray with the current object.
           if (object.intersect_ray(ray, dist, local_normal, world_normal) == false)
           {
             // Should never happen, but with rounding error...
-            ray_out = false;
+            transmission = false;
             break;
           }
 
           // Check if the ray gets out the object.
           if (ggo::raytracer::transmit_ray(ray, world_normal, object.get_density(), 1.0f) == true)
           {
-            ray_out = true;
+            transmission = true;
             break;
           }
         }
+        if (transmission == false)
+        {
+          continue;
+        }
 
         // OK we have the ray that passed through the transparent object. We now cast it to the scene.
-        if (raycaster.hit_test(ray, dist, local_normal, world_normal, &object) != nullptr)
+        auto hit_object = raycaster.hit_test(ray, dist, local_normal, world_normal, &object);
+        if (hit_object != nullptr)
         {
-          photons.push_back(std::make_pair(ray.pos() + dist * ray.dir(), light->get_emissive_color()));
+          ggo::color photon_color = -ggo::dot(world_normal.dir(), ray.dir()) * (light->get_emissive_color() * hit_object->get_color(world_normal.pos()));
+          current_light_photons.push_back(std::make_pair(ray.pos() + dist * ray.dir(), photon_color));
         }
+      }
+
+      // Normalize photons and store them.
+      float normalization = 1.f / current_light_photons.size();
+      for (auto & photon : current_light_photons)
+      {
+        photon.second *= normalization;
+        photons.push_back(photon);
       }
     }
 
@@ -77,11 +94,28 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color photon_mapping::render(int x, int y, const ggo::scene & scene) const
+  ggo::color photon_mapping::process(const ggo::ray3d_float & ray,
+                                     const ggo::ray3d_float & world_normal,
+                                     const ggo::object3d & hit_object,
+                                     const ggo::color & hit_color,
+                                     float random_variable1,
+                                     float random_variable2) const
   {
-    
+    const float radius = 0.1f;
 
+    ggo::color output_color(ggo::color::BLACK);
 
-    return ggo::color::BLACK;
+    auto photons = _tree->find_points(world_normal.pos(), radius);
+        
+    for (const auto & photon : photons)
+    {
+      output_color += photon.second;
+    }
+
+    // Normalization: divide by sphere surface.
+    //output_color /= 4 * ggo::PI<float>() * ggo::square(radius);
+    output_color /= ggo::PI<float>() * ggo::square(radius);
+
+    return output_color;
   }
 }

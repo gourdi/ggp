@@ -28,15 +28,15 @@ namespace ggo
   {
   public:
       
-    virtual                            ~raytracable_shape3d_abc() {}
+    virtual                ~raytracable_shape3d_abc() {}
 
-    virtual bool                        intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const = 0;
-    virtual bool                        is_convex() const = 0;
+    virtual bool            intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const = 0;
+    virtual bool            is_convex() const = 0;
 
-    virtual ggo::set3<T>                sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const { return ggo::set3<T>(0, 0, 0); }
-    virtual std::vector<ggo::ray3d<T>>  sample_rays(int samples_count) const { return std::vector<ggo::ray3d<T>>(); }
+    virtual ggo::set3<T>    sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const { return ggo::set3<T>(0, 0, 0); }
+    virtual ggo::ray3d<T>   sample_ray(T random_variable1, T random_variable2) const { return ggo::ray3d<T>(); }
 
-    virtual std::string                 desc() const = 0;
+    virtual std::string     desc() const = 0;
   };
 }
 

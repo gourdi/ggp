@@ -4,6 +4,7 @@
 #include <ggo_indirect_lighting_abc.h>
 #include <ggo_tree3d.h>
 #include <ggo_raycaster_abc.h>
+#include <ggo_camera_abc.h>
 #include <memory>
 
 namespace ggo
@@ -18,11 +19,16 @@ namespace ggo
                                const ggo::object3d & object,
                                const ggo::raycaster_abc & raycaster);
 
-    ggo::color  render(int x, int y, const ggo::scene & scene) const override;
+    ggo::color  process(const ggo::ray3d_float & ray,
+                        const ggo::ray3d_float & world_normal,
+                        const ggo::object3d & hit_object,
+                        const ggo::color & hit_color,
+                        float random_variable1,
+                        float random_variable2) const override;
 
   private:
 
-    std::unique_ptr<ggo::tree3d<ggo::color>> _tree;
+    std::unique_ptr<ggo::tree3d<ggo::color>>  _tree;
   };
 }
 

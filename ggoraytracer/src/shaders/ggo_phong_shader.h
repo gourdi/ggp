@@ -12,7 +12,7 @@ namespace ggo
                 phong_shader() = default;
                 phong_shader(float phong_factor, float phong_shininess) : _phong_factor(phong_factor), _phong_shininess(phong_shininess) {}
 
-    ggo::color  shade(const ggo::color & object_color,
+    ggo::color  diffuse_shading(const ggo::color & object_color,
                       const ggo::color & light_color,
                       const ggo::ray3d_float & ray,
                       const ggo::ray3d_float & world_normal,

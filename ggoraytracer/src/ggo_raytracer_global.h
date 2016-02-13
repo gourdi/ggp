@@ -5,8 +5,6 @@
 
 namespace ggo
 {
-  class fog_abc;
-  class background3d_abc;
   class indirect_lighting_abc;
 
   //////////////////////////////////////////////////////////////

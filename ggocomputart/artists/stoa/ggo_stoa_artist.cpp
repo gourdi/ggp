@@ -172,7 +172,7 @@ bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_floa
 }
 
 //////////////////////////////////////////////////////////////
-ggo_stoa_artist::ggo_stoa_artist()
+ggo_stoa_artist::ggo_stoa_artist(int steps)
 {
   // Objects.
   std::vector<ggo_noise3d> noises;
@@ -205,7 +205,6 @@ ggo_stoa_artist::ggo_stoa_artist()
   };
 
   const float range = 3.2f;
-  const int steps = 384;
   auto cells = ggo::marching_cubes(density_func, ggo::point3d_float(-range, -range, -range), steps, 2 * range / steps);
 
   std::vector<ggo_raycaster_cell> raycaster_cells;

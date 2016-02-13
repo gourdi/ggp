@@ -9,6 +9,8 @@ namespace ggo
   std::vector<ggo::point2d_float> best_candidate_sequence_2d(int count);
 }
 
+#define GGO_BEST_CANDITATE_TABLE_SIZE 1000
+
 namespace ggo
 {
   const point2d_float best_candidate_table[] = {

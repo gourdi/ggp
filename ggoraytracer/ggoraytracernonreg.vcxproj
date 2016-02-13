@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\ggo_bidirectional_lighting.cpp" />
+    <ClCompile Include="test\ggo_caustics_nonreg.cpp" />
     <ClCompile Include="test\ggo_marching_cubes_nonreg.cpp" />
     <ClCompile Include="test\ggo_parallelogram3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_polygon3d_nonreg.cpp" />

@@ -1,6 +1,4 @@
 #include "ggo_antialiasing_renderer.h"
-#include <ggo_array.h>
-#include <ggo_kernel.h>
 #include <ggo_raytracer.h>
 
 //////////////////////////////////////////////////////////////
@@ -29,10 +27,10 @@ namespace ggo
     
     auto first_pass_rays = _camera.get_first_pass_rays(x, y);
     
-    colors[0] = ggo::raytracer::mono_sampling_raytrace(first_pass_rays[0], scene, raytrace_params);
-    colors[1] = ggo::raytracer::mono_sampling_raytrace(first_pass_rays[1], scene, raytrace_params);
-    colors[2] = ggo::raytracer::mono_sampling_raytrace(first_pass_rays[2], scene, raytrace_params);
-    colors[3] = ggo::raytracer::mono_sampling_raytrace(first_pass_rays[3], scene, raytrace_params);
+    colors[0] = ggo::raytracer::process(first_pass_rays[0], scene, raytrace_params);
+    colors[1] = ggo::raytracer::process(first_pass_rays[1], scene, raytrace_params);
+    colors[2] = ggo::raytracer::process(first_pass_rays[2], scene, raytrace_params);
+    colors[3] = ggo::raytracer::process(first_pass_rays[3], scene, raytrace_params);
     
     float sum_r = colors[0].r() + colors[1].r() + colors[2].r() + colors[3].r();
     float sum_g = colors[0].g() + colors[1].g() + colors[2].g() + colors[3].g();
@@ -54,18 +52,18 @@ namespace ggo
     auto second_pass_rays = _camera.get_second_pass_rays(x, y);
     
     ggo::color result(sum_r, sum_g, sum_b);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[0], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[1], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[2], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[3], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[4], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[5], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[6], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[7], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[8], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[9], scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[10],scene, raytrace_params);
-    result += ggo::raytracer::mono_sampling_raytrace(second_pass_rays[11],scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[0], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[1], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[2], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[3], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[4], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[5], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[6], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[7], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[8], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[9], scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[10],scene, raytrace_params);
+    result += ggo::raytracer::process(second_pass_rays[11],scene, raytrace_params);
 
     return result / 16.f;
   };

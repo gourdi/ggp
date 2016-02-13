@@ -48,7 +48,7 @@ GGO_TEST(bidirectional_lighting, test)
   // With indirect lighting.
   ggo::scene scene = scene_builder.build_scene();
   ggo::brute_force_raycaster raycaster(scene.objects());
-  ggo::bidirectional_lighting indirect_lighting(camera, raycaster, GGO_INDIRECT_LIGHTING_SAMPLES_COUNT);
+  ggo::bidirectional_lighting indirect_lighting(raycaster, scene);
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &indirect_lighting;
   

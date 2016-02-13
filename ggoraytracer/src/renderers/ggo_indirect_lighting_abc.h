@@ -10,7 +10,12 @@ namespace ggo
   {
   public:
 
-    virtual ggo::color  render(int x, int y, const ggo::scene & scene) const = 0;
+    virtual ggo::color  process(const ggo::ray3d_float & ray,
+                                const ggo::ray3d_float & world_normal,
+                                const ggo::object3d & hit_object,
+                                const ggo::color & hit_color,
+                                float random_variable1,
+                                float random_variable2) const = 0;
   };
 }
 

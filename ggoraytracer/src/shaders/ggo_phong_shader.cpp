@@ -3,7 +3,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::color phong_shader::shade(const ggo::color & object_color, const ggo::color & light_color, const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, const ggo::ray3d_float & ray_to_light) const
+  ggo::color phong_shader::diffuse_shading(const ggo::color & object_color, const ggo::color & light_color, const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, const ggo::ray3d_float & ray_to_light) const
   {
     GGO_ASSERT_BTW(world_normal.pos().x() - ray_to_light.pos().x(), -0.01, 0.01);
     GGO_ASSERT_BTW(world_normal.pos().y() - ray_to_light.pos().y(), -0.01, 0.01);

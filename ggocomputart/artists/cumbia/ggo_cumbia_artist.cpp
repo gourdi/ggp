@@ -127,7 +127,7 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo_cumbia_artist::init_common(ggo:
 {
   float dimension = ggo::rand_float(0.2f, 0.5f);
 	float search_ratio = ggo::rand_float(0, 0.3f);
-	float reflexion_factor = ggo::rand_float(0.2f, 0.4f);
+	float reflection_factor = ggo::rand_float(0.2f, 0.4f);
 	
 	delete _boxes_tree;
 	_boxes_tree = new ggo::tree<ggo::aabox3d_float>(ggo::aabox3d_float(-1, 1, -1, 1, -1, 1));

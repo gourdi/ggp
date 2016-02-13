@@ -1,5 +1,4 @@
 #include <ggo_shape_sampling.h>
-#include <ggo_best_candidate_sequence.h>
 
 namespace ggo
 {
@@ -62,19 +61,12 @@ namespace ggo
 
    //////////////////////////////////////////////////////////////
   template <typename T>
-  std::vector<ggo::ray3d<T>> centered_sphere3d<T>::sample_rays(int samples_count) const
+  ggo::ray3d<T> centered_sphere3d<T>::sample_ray(T random_variable1, T random_variable2) const
   {
-    std::vector<ggo::ray3d_float> rays;
+    ggo::vector3d_float sphere_sample = ggo::sphere_sampling(random_variable1, random_variable2);
+    ggo::vector3d_float hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, random_variable1, random_variable2);
 
-    for (int i = 0; i < samples_count; ++i)
-    {
-      ggo::vector3d_float sphere_sample = ggo::sphere_sampling(ggo::best_candidate_table[i].x(), ggo::best_candidate_table[i].y());
-      ggo::vector3d_float hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, ggo::best_candidate_table[i].x(), ggo::best_candidate_table[i].y());
-
-      rays.emplace_back(_radius * sphere_sample, hemisphere_sample, false);
-    }
-
-    return rays;
+    return ggo::ray3d<T>(_radius * sphere_sample, hemisphere_sample, false);
   }
   
   //////////////////////////////////////////////////////////////

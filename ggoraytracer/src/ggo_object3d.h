@@ -20,7 +20,7 @@ namespace ggo
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader);
 
     ggo::point3d_float                sample_point(const ggo::point3d_float & target_pos, float random_variable1, float random_variable2) const;
-    std::vector<ggo::ray3d_float>     sample_rays(int samples_count) const;
+    ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const;
 
     ggo::ray3d_float                  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const;
     ggo::ray3d_float                  sample_reflection_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float random_variable1, float random_variable2) const;
@@ -52,18 +52,17 @@ namespace ggo
     const ggo::color &                get_transmission_color() const { return _transmission_color; }
     void                              set_transmission_color(const ggo::color & color) { _transmission_color = color; }
 
-    ggo::color                        shade(const ggo::color & object_color,
-                                            const ggo::color & light_color,
-                                            const ggo::ray3d_float & ray,
-                                            const ggo::ray3d_float & world_normal,
-                                            const ggo::ray3d_float & ray_to_light) const;
-
     bool	                            intersect_ray(const ggo::ray3d_float & ray, float & dist, ggo::ray3d_float & local_normal, ggo::ray3d_float & world_normal) const;
 
     const ggo::object3d *             handle_self_intersection(ggo::ray3d_float & ray, bool inside) const;
 
     // Return false if the ray is reflected (below incidence angle) or if we have reach recursion depth.
     bool                              transmit_ray(ggo::ray3d_float & ray, ggo::ray3d_float world_normal, int & depth) const;
+
+    void                              set_phong_factor(float phong_factor) { _phong_factor = phong_factor; }
+    float                             get_phong_factor() const { return _phong_factor; }
+    void                              set_phong_shininess(float phong_shininess) { _phong_shininess = phong_shininess; }
+    float                             get_phong_shininess() const { return _phong_shininess; }
 
   private:
 
@@ -73,6 +72,8 @@ namespace ggo
     bool                                                      _transparent = false;
     float                                                     _density = 1;
     float                                                     _roughness = 0;
+    float                                                     _phong_factor = 0;
+    float                                                     _phong_shininess = 0;
     ggo::color                                                _transmission_color = ggo::color::WHITE;
     ggo::color                                                _emissive_color = ggo::color::BLACK;
     std::shared_ptr<const ggo::raytracable_shape3d_abc_float> _shape;

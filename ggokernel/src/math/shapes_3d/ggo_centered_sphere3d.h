@@ -6,18 +6,18 @@ namespace ggo
   {
   public:
 
-                                centered_sphere3d(T radius) : _radius(radius) {};
+                  centered_sphere3d(T radius) : _radius(radius) {};
        
-    bool                        intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
-    bool                        is_convex() const override { return true; }
+    bool          intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
+    bool          is_convex() const override { return true; }
 
-    ggo::set3<T>                sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const override;
-    std::vector<ggo::ray3d<T>>  sample_rays(int samples_count) const override;
+    ggo::set3<T>  sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const override;
+    ggo::ray3d<T> sample_ray(T random_variable1, T random_variable2) const override;
        
-    T &                         radius() { return _radius; }
-    const T &                   radius() const { return _radius; }
+    T &           radius() { return _radius; }
+    const T &     radius() const { return _radius; }
     
-    std::string                 desc() const override;
+    std::string   desc() const override;
 
   private:
 
