@@ -5,18 +5,19 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   chronometer::chronometer()
+    :
+    _start_time(std::chrono::system_clock::now())
   {
-    time(&_start_time);
   }
 
   //////////////////////////////////////////////////////////////
   double chronometer::get_elapsed_time() const
   {
-    time_t end_time;
-    
-    time(&end_time);
-    
-    return difftime(end_time, _start_time);
+    std::chrono::system_clock::time_point end_time = std::chrono::system_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - _start_time);
+
+    return static_cast<double>(duration.count()) / 1000.f;
   }
 
   //////////////////////////////////////////////////////////////

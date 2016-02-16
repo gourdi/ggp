@@ -1,7 +1,7 @@
 #ifndef __GGO_CHRONOMETER__
 #define __GGO_CHRONOMETER__
 
-#include <time.h>
+#include <chrono>
 #include <string>
 
 namespace ggo
@@ -18,7 +18,7 @@ namespace ggo
     
   private:
     
-    time_t _start_time;
+    std::chrono::system_clock::time_point _start_time;
   };
 }
 
