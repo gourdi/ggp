@@ -25,15 +25,15 @@ GGO_TEST(test_scene, scene3)
 
   // Objects.
   auto sphere1 = std::make_shared<ggo::sphere3d_float>(ggo::point3d_float(std::cos(0.f), std::sin(0.f), 0), 0.8f);
-  auto sphere1_obj = scene_builder.add_object(sphere1, ggo::color::RED);
+  auto sphere1_obj = scene_builder.add_object(sphere1, ggo::color::RED, false);
   sphere1_obj->set_reflection_factor(0.75f);
 
   auto sphere2 = std::make_shared<ggo::sphere3d_float>(ggo::point3d_float(std::cos(2.f * ggo::PI<float>() / 3.f), std::sin(2.f * ggo::PI<float>() / 3.f), 0.f), 0.8f);
-  auto sphere2_obj = scene_builder.add_object(sphere2, ggo::color::GREEN);
+  auto sphere2_obj = scene_builder.add_object(sphere2, ggo::color::GREEN, false);
   sphere2_obj->set_reflection_factor(0.75f);
   
   auto sphere3 = std::make_shared<ggo::sphere3d_float>(ggo::point3d_float(std::cos(-2.f * ggo::PI<float>() / 3.f), std::sin(-2.f * ggo::PI<float>() / 3.f), 0.f), 0.8f);
-  auto sphere3_obj = scene_builder.add_object(sphere3, ggo::color::BLUE);
+  auto sphere3_obj = scene_builder.add_object(sphere3, ggo::color::BLUE, false);
   sphere3_obj->set_reflection_factor(0.75f);
   
   // Rendering.

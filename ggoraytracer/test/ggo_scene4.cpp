@@ -31,10 +31,10 @@ GGO_TEST(test_scene, scene4)
 
   // Objects.
   auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 0.f), 1.f);
-  scene_builder.add_object(sphere, ggo::color::RED);
+  scene_builder.add_object(sphere, ggo::color::RED, false);
   
   auto aabox3d = std::make_shared<ggo::aabox3d_float>(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f);
-  scene_builder.add_object(aabox3d, ggo::color::WHITE);
+  scene_builder.add_object(aabox3d, ggo::color::WHITE, false);
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

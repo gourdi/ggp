@@ -23,10 +23,10 @@ GGO_TEST(parallelogram3d, test)
 
   // Objects.
   auto parallelogram1 = std::make_shared<ggo::parallelogram3d_float>(ggo::point3d_float(0.f, 0.f, 1.f), ggo::point3d_float(5.f, 0.f, 0.f), ggo::point3d_float(5.f, 5.f, 0.f));
-  scene_builder.add_object(parallelogram1, ggo::color::RED);
+  scene_builder.add_object(parallelogram1, ggo::color::RED, false);
   
   auto parallelogram2 = std::make_shared<ggo::parallelogram3d_float>(ggo::point3d_float(-11.f, 0.f, 1.f), ggo::point3d_float(5.f, 0.f, 0.f), ggo::point3d_float(5.f, 5.f, 0.f));
-  scene_builder.add_object(parallelogram2, ggo::color::RED);
+  scene_builder.add_object(parallelogram2, ggo::color::RED, false);
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

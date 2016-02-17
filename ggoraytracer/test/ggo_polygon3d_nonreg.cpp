@@ -27,7 +27,7 @@ void test_polygon3d()
   // Objects.
   auto sphere = ggo::polygon3d_float::create_sphere(2, 16, 8);
   auto polygon = std::make_shared<ggo::polygon3d_float>(sphere);
-  scene_builder.add_object(polygon, ggo::color::RED);
+  scene_builder.add_object(polygon, ggo::color::RED, false);
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

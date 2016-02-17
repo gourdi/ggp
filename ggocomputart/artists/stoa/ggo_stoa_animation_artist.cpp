@@ -13,7 +13,7 @@ ggo_stoa_animation_artist::ggo_stoa_animation_artist(int render_width, int rende
 //////////////////////////////////////////////////////////////
 void ggo_stoa_animation_artist::init_sub()
 {
-  _artist.reset(new ggo_stoa_artist(128));
+  _artist.reset(new ggo_stoa_artist(256));
 
   _hue = ggo::rand_float();
 

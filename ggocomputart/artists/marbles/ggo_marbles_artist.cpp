@@ -81,7 +81,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
 	camera.set_depth_of_field(ggo::rand_float(7, 9));
 
 	// Floor plane.
-  auto floor = scene_builder.add_object(std::make_shared<ggo::plane3d_float>(0.f, 0.f, 1.f, 0.F), ggo::color::WHITE);
+  auto floor = scene_builder.add_object(std::make_shared<ggo::plane3d_float>(0.f, 0.f, 1.f, 0.f), ggo::color::WHITE, true);
   floor->set_reflection_factor(0.5f);
   floor->set_roughness(0.1f);
 
@@ -126,7 +126,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
     {
       auto shape = std::make_shared<ggo::centered_sphere3d_float>(sphere.radius());
       auto material = std::make_shared<const my_material>(sphere.radius());
-      auto object = scene_builder.add_object(shape, material);
+      auto object = scene_builder.add_object(shape, material, false);
 
       object->set_phong_factor(ggo::rand_float(3, 5));
       object->set_phong_shininess(ggo::rand_float(250, 500));

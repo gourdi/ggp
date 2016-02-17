@@ -247,7 +247,7 @@ void ggo_stoa_artist::render(uint8_t * buffer, int width, int height, float hue,
 
   for (auto object : _objects)
   {
-    scene_builder.add_object(object);
+    scene_builder.add_object(object, true);
   }
 
   // Lights.

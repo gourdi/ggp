@@ -181,7 +181,7 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo_cumbia_artist::init_common(ggo:
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color(ggo::rand_float(0.25f, 0.75f))));
 
 	auto boxes_tree_shape = std::make_shared<ggo_boxes_tree_shape>(_boxes_tree);
-  auto box_tree_object = scene_builder.add_object(boxes_tree_shape, ggo::color::WHITE);
+  auto box_tree_object = scene_builder.add_object(boxes_tree_shape, ggo::color::WHITE, true);
 
 	// The camera.
 	camera.basis().reset();

@@ -6,7 +6,7 @@ namespace ggo
   {
   public:
 
-                      face3d(const vertex<T> & v1, const vertex<T> & v2, const vertex<T> & v3) : _v1(v1), _v2(v2), _v3(v3) { }
+                      face3d(const vertex<T> & v1, const vertex<T> & v2, const vertex<T> & v3);
 
     const vertex<T> & v1() const { return _v1; }
     const vertex<T> & v2() const { return _v2; }
@@ -22,5 +22,14 @@ namespace ggo
     vertex<T> _v1;
     vertex<T> _v2;
     vertex<T> _v3;
+    T _m00;
+    T _m10;
+    T _m20;
+    T _m01;
+    T _m11;
+    T _m21;
+    T _m10m21subm11m20;
+    T _m20m01subm00m21;
+    T _m00m11subm10m01;
   };
 }

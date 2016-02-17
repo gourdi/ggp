@@ -362,7 +362,7 @@ namespace ggo
     }
 
     ggo::vector3d_float reflection_dir(2 * ggo::dot(world_normal.dir(), ray_to_light.dir()) * world_normal.dir() - ray_to_light.dir());
-    GGO_ASSERT(reflection_dir.is_normalized(0.0001));
+    GGO_ASSERT(reflection_dir.is_normalized(0.0001f));
 
     ggo::vector3d_float viewer_dir(ray.pos() - world_normal.pos());
     viewer_dir.normalize();
