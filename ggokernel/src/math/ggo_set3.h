@@ -48,6 +48,7 @@ namespace ggo
     void				    normalize();
     void				    set_length(T length);
     bool				    is_normalized(T epsilon) const;
+    ggo::set3<T>    get_normalized() const { ggo::set3<T> v(*this); v.normalize(); return v; }
 
     void            build_basis(set3 & b1, set3 & b2) const;
     

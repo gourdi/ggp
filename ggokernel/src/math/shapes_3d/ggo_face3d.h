@@ -19,9 +19,9 @@ namespace ggo
       
   private:
 
-    vertex<T> _v1;
-    vertex<T> _v2;
-    vertex<T> _v3;
+    const vertex<T> _v1;
+    const vertex<T> _v2;
+    const vertex<T> _v3;
     T _m00;
     T _m10;
     T _m20;

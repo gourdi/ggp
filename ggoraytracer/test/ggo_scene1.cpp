@@ -37,7 +37,7 @@ GGO_TEST(test_scene, scene1)
   box_object->basis().rotate(ggo::ray3d_float::O_Z(), 0.3f);
   box_object->basis().move(2, 0, 1);
 
-  auto plane = std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
   scene_builder.add_object(plane, ggo::color::WHITE, false);
 
   // Rendering.

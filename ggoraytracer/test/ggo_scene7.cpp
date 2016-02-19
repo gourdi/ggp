@@ -39,7 +39,7 @@ GGO_TEST(test_scene, scene7)
     roughness /= 5;
   }
   
-  auto plane = std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
   auto checker_material = std::make_shared<ggo::checker_xy_material>(ggo::color::WHITE, ggo::color(0.5f, 0.5f, 0.5f), 0.5f);
   scene_builder.add_object(plane, checker_material, false);
 

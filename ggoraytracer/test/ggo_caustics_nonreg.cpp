@@ -30,7 +30,7 @@ GGO_TEST(caustics, test)
   auto light = scene_builder.add_sphere_light(ggo::color(0.9f), 1.f, ggo::point3d_float(0, 0, 20));
 
   // Objects.
-  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f), ggo::color::RED, true);
+  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f), ggo::color::RED, true);
   auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 1.f), 1.f), ggo::color::WHITE, true);
   sphere->set_transparent(true);
   sphere->set_density(1.1f);

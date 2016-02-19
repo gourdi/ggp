@@ -420,7 +420,7 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
 GGO_TEST(shapes3d, plane3d)
 {
   {
-    ggo::plane3d_float plane(0, 0, 1, 1); // z = -1
+    ggo::plane3d_float plane({ 0, 0, 1 }, -1); // z = -1
     float dist = 0;
     ggo::ray3d_float normal;
 
@@ -438,18 +438,11 @@ GGO_TEST(shapes3d, plane3d)
     GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
 
     ggo::ray3d_float ray3(ggo::point3d_float(1, 5, -2), ggo::vector3d_float(0, 0, 1));
-    GGO_CHECK(plane.intersect_ray(ray3, dist, normal) == true);
-    GGO_CHECK_FABS(dist, 1);
-    GGO_CHECK_FABS(normal.pos().x(), 1);
-    GGO_CHECK_FABS(normal.pos().y(), 5);
-    GGO_CHECK_FABS(normal.pos().z(), -1);
-    GGO_CHECK_FABS(normal.dir().x(), 0);
-    GGO_CHECK_FABS(normal.dir().y(), 0);
-    GGO_CHECK_FABS(normal.dir().z(), -1);
+    GGO_CHECK(plane.intersect_ray(ray3, dist, normal) == false);
   }
 
   {
-    ggo::plane3d_float plane(1, 2, -1, -1);
+    ggo::plane3d_float plane({ 1, 2, -1 }, 1 / std::sqrt(6.f));
     float dist = 0;
     ggo::ray3d_float normal;
 
@@ -459,9 +452,9 @@ GGO_TEST(shapes3d, plane3d)
     GGO_CHECK_FABS(normal.pos().x(), 2);
     GGO_CHECK_FABS(normal.pos().y(), 1);
     GGO_CHECK_FABS(normal.pos().z(), 3);
-    GGO_CHECK_FABS(normal.dir().x(), 1 / std::sqrt(6));
-    GGO_CHECK_FABS(normal.dir().y(), 2 / std::sqrt(6));
-    GGO_CHECK_FABS(normal.dir().z(), -1 / std::sqrt(6));
+    GGO_CHECK_FABS(normal.dir().x(), 1 / std::sqrt(6.f));
+    GGO_CHECK_FABS(normal.dir().y(), 2 / std::sqrt(6.f));
+    GGO_CHECK_FABS(normal.dir().z(), -1 / std::sqrt(6.f));
   }
 }
 

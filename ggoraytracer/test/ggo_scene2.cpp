@@ -41,7 +41,7 @@ GGO_TEST(test_scene, scene2)
   auto sphere3 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(2.f, 0.f, 0.f), 1.f);
   scene_builder.add_object(sphere3, ggo::color::BLACK, false);
 
-  auto plane = std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
   scene_builder.add_object(plane, ggo::color::WHITE, false);
   
   // Rendering.
