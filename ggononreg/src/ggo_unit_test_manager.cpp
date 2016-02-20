@@ -92,7 +92,7 @@ void ggo_unit_test_manager::run_all(int argc, char ** argv)
     }
     
     {
-      ggo::color_stream cs(ggo::console_color::YELLOW);
+      ggo::color_stream cs(ggo::console_color::YELLOW); // Must be scoped.
       cs << "Test case: " << it_map.first << std::endl;
     }
     

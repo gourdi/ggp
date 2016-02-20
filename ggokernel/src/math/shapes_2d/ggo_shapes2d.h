@@ -273,6 +273,7 @@ namespace ggo
 #include <ggo_spline.h>
 #include <ggo_polygon.h>
 #include <ggo_triangle2d.h>
+#include <ggo_half_plane.h>
 #include <ggo_multi_shape.h>
 
 #include <ggo_rect.imp.h>
@@ -283,6 +284,7 @@ namespace ggo
 #include <ggo_spline.imp.h>
 #include <ggo_polygon.imp.h>
 #include <ggo_triangle2d.imp.h>
+#include <ggo_half_plane.imp.h>
 #include <ggo_multi_shape.imp.h>
 
 #endif

@@ -188,6 +188,8 @@
     <ClInclude Include="src\math\shapes_2d\ggo_disc.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.h" />

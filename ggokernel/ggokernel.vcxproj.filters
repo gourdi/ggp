@@ -257,6 +257,12 @@
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_tree3d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
