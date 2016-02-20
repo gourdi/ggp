@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ggo_color_stream.cpp" />
     <ClCompile Include="src\ggo_unit_test.cpp" />
     <ClCompile Include="src\ggo_unit_test_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_nonreg.h" />
     <ClInclude Include="src\ggo_unit_test.h" />
     <ClInclude Include="src\ggo_unit_test_manager.h" />
@@ -101,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

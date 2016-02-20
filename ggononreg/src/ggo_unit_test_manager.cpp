@@ -1,5 +1,6 @@
 #include "ggo_unit_test_manager.h"
 #include "ggo_unit_test.h"
+#include "ggo_color_stream.h"
 #include <iostream>
 #include <regex>
 
@@ -90,7 +91,10 @@ void ggo_unit_test_manager::run_all(int argc, char ** argv)
       continue; 
     }
     
-    std::cout << "\033[1;33mTest case: " << it_map.first << "\033[0m" << std::endl;
+    {
+      ggo::color_stream cs(ggo::console_color::YELLOW);
+      cs << "Test case: " << it_map.first << std::endl;
+    }
     
     for (auto unit_test : it_map.second)
     {
@@ -110,15 +114,18 @@ void ggo_unit_test_manager::run_all(int argc, char ** argv)
   
   if (bypassed_count > 0)
   {
-    std::cout << std::endl << std::endl << "\033[1;33m*** BYPASSED " << bypassed_count << " TEST(S) ***\033[0m" << std::endl;
+    ggo::color_stream cs(ggo::console_color::YELLOW);
+    std::cout << std::endl << std::endl << "*** BYPASSED " << bypassed_count << " TEST(S) ***" << std::endl;
   }
   
   if (failed_count == 0)
   {
-    std::cout << std::endl << std::endl << "\033[1;32m*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***\033[0m" << std::endl << std::endl;
+    ggo::color_stream cs(ggo::console_color::GREEN);
+    cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
   }
   else
   {
-    std::cout << std::endl << std::endl << "\033[31m*** NON-REGRESSION FAILED: " << failed_count << " FAILURE(S) ***\033[0m" << std::endl << std::endl;
+    ggo::color_stream cs(ggo::console_color::RED);
+    cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
   }
 }
