@@ -22,7 +22,7 @@
 #define GGO_CHECK_FABS(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
                                 if (std::fabs(eval1 - eval2) > 0.0001) { \
                                   ++_failed_count; \
-                                  ggo::color_stream cs(ggo::console_color::RED); cs << "\033[31m** TEST FAILED ** (" << __FILE__ << ':' << __LINE__ << ") " << \
+                                  ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** (" << __FILE__ << ':' << __LINE__ << ") " << \
                                   eval1 << " != " << eval2 << std::endl; \
                                 } }
 
