@@ -1,8 +1,3 @@
-#ifdef WIN32
-#pragma warning(disable: 4305) // possible loss of data
-#pragma warning(disable: 4244) // possible loss of data
-#endif
-
 #include "../ggo_kernel_nonreg.h"
 #include <ggo_shapes2d.h>
 

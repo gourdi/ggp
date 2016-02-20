@@ -70,4 +70,7 @@
       <Filter>trees</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test\ggo_kernel_nonreg.h" />
+  </ItemGroup>
 </Project>

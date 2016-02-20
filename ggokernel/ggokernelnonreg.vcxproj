@@ -40,6 +40,9 @@
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test\ggo_kernel_nonreg.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{45BCDA0B-27ED-4D46-848C-A03C9B839E78}</ProjectGuid>
     <RootNamespace>ggokernel</RootNamespace>

@@ -1,7 +1,3 @@
-#ifdef WIN32
-#pragma warning(disable:4305)
-#endif
-
 #include "../ggo_kernel_nonreg.h"
 #include <ggo_shapes3d.h>
 
