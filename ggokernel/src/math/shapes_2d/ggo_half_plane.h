@@ -13,11 +13,15 @@ namespace ggo
   {
   public:
 
-          // The normal points towards the outside of the half-plane.
-          half_plane(const ggo::set2<T> & normal, T dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+    using distancable_shape2d_abc<T>::dist_to_point;
 
-    bool  is_point_inside(T x, T y) const override;
-    T     dist_to_point(T x, T y) const override;
+                          // The normal points towards the outside of the half-plane.
+                          half_plane(const ggo::set2<T> & normal, T dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+
+    bool                  is_point_inside(T x, T y) const override;
+    T                     dist_to_point(T x, T y) const override;
+
+    const ggo::set2<T> &  normal() const { return _normal; }
 
   private:
 
