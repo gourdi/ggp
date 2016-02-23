@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="test\ggo_collisions_nonreg.cpp" />
     <ClCompile Include="test\ggo_intersections_nonreg.cpp" />
     <ClCompile Include="test\ggo_physics_nonreg.cpp" />
   </ItemGroup>

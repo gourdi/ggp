@@ -117,6 +117,21 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////////
+// PHYSICS
+
+namespace ggo
+{
+  template <typename T>
+  class physics_shape2d_abc : public movable_shape2d_abc<T>, public rotatable_shape2d_abc<T>
+  {
+  public:
+
+    virtual const ggo::set2<T> &      get_center() const = 0;
+    virtual std::vector<ggo::set2<T>> get_draw_points() const = 0;
+  };
+}
+
+//////////////////////////////////////////////////////////////////
 // PAINT
 
 namespace ggo

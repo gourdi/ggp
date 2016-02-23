@@ -22,6 +22,7 @@ namespace ggo
     T                     dist_to_point(T x, T y) const override;
 
     const ggo::set2<T> &  normal() const { return _normal; }
+    float                 dist_to_origin() const { return _dist_to_origin; }
 
   private:
 

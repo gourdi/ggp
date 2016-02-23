@@ -22,3 +22,4 @@ x64
 ggp.VC.opendb
 *.psess
 *.vsp
+*.ipch
