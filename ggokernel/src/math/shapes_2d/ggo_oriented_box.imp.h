@@ -2,6 +2,23 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////////
   template <typename T>
+  ggo::set2<T> oriented_box<T>::operator[](int i) const
+  {
+    switch (i)
+    {
+    case 0:
+      return _pos + _size1 * _dir + _size2 * dir2();
+    case 1:
+      return _pos + _size1 * _dir - _size2 * dir2();
+    case 2:
+      return _pos - _size1 * _dir - _size2 * dir2();
+    case 3:
+      return _pos - _size1 * _dir + _size2 * dir2();
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename T>
   void oriented_box<T>::rotate(T angle, const ggo::set2<T> & center)
   {
     _dir.rotate(angle);

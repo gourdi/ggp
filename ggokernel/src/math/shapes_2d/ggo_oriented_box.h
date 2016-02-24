@@ -17,8 +17,10 @@ namespace ggo
     const ggo::set2<T> &      dir() const { return _dir; }
     ggo::set2<T>              dir2() const { return ggo::set2<T>(-_dir.y(), _dir.x()); }
 
+    ggo::set2<T>              operator[](int i) const;
+
     // Interfaces.
-    void	                    move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
+    void                      move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
     void                      rotate(T angle, const ggo::set2<T> & center) override;
     const ggo::set2<T> &      get_center() const override { return _pos; }
     std::vector<ggo::set2<T>> get_draw_points() const override;

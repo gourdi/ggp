@@ -2,6 +2,26 @@
 
 namespace ggo
 {
+  bool test_intersection(const ggo::half_plane<float> & half_plane, const ggo::oriented_box<float> & box, ggo::vector2d_float & normal, float & penetration)
+  {
+    float dist = std::numeric_limits<float>::max();
+
+    for (int i = 0; i < 4; ++i)
+    {
+      dist = std::min(dist, ggo::dot(half_plane.normal(), box[i]) - half_plane.dist_to_origin());
+    }
+    
+    if (dist >= 0)
+    {
+      return false;
+    }
+
+    normal = half_plane.normal();
+    penetration = -dist;
+
+    return true;
+  }
+
   //////////////////////////////////////////////////////////////////
   bool test_intersection(const ggo::disc<float> & disc1, const ggo::disc<float> & disc2, ggo::vector2d_float & normal, float & penetration)
   {
