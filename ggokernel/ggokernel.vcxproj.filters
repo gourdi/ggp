@@ -269,6 +269,15 @@
     <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.imp.h">
       <Filter>math\shapes_2d</Filter>
     </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_nonreg.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_unit_test.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_unit_test_manager.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -314,6 +323,12 @@
     <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp">
       <Filter>math\sampling\pixel_sampling</Filter>
     </ClCompile>
+    <ClCompile Include="src\nonreg\ggo_unit_test.cpp">
+      <Filter>nonreg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonreg\ggo_unit_test_manager.cpp">
+      <Filter>nonreg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -357,6 +372,9 @@
     </Filter>
     <Filter Include="math\shapes_3d">
       <UniqueIdentifier>{9edebc53-6726-45c5-8f84-742bb5e8aef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nonreg">
+      <UniqueIdentifier>{41e13c14-5fa5-4b4b-b378-71121fad7dd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

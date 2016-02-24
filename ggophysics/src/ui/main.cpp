@@ -57,7 +57,7 @@ int main(int argc, char ** argv)
 
     std::vector<ggo::body> bodies;
     ggo::body disc;
-    disc._shape = std::make_shared<ggo::disc_float>(0.f, 0.f, 0.1f); // 10cm radius disc
+    disc._shape = std::make_shared<ggo::oriented_box_float>(ggo::point2d_float(0, 0), ggo::vector2d_float(1, 0), 1.f, 0.1f);
     disc._mass = 1.f; // 1kg
     bodies.push_back(disc);
 

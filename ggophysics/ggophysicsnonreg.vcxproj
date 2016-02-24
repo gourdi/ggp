@@ -77,7 +77,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggophysics\src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggophysics\src</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>

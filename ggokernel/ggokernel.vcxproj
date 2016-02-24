@@ -234,6 +234,9 @@
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
     <ClInclude Include="src\math\signal_proc\ggo_laplacian.h" />
+    <ClInclude Include="src\nonreg\ggo_nonreg.h" />
+    <ClInclude Include="src\nonreg\ggo_unit_test.h" />
+    <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />
     <ClInclude Include="src\time\ggo_chronometer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -251,6 +254,8 @@
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_gaussian_blur.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_laplacian.cpp" />
+    <ClCompile Include="src\nonreg\ggo_unit_test.cpp" />
+    <ClCompile Include="src\nonreg\ggo_unit_test_manager.cpp" />
     <ClCompile Include="src\time\ggo_chronometer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
