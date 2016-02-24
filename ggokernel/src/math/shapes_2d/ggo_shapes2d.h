@@ -289,6 +289,7 @@ namespace ggo
 #include <ggo_polygon.h>
 #include <ggo_triangle2d.h>
 #include <ggo_half_plane.h>
+#include <ggo_oriented_box.h>
 #include <ggo_multi_shape.h>
 
 #include <ggo_rect.imp.h>
@@ -300,6 +301,7 @@ namespace ggo
 #include <ggo_polygon.imp.h>
 #include <ggo_triangle2d.imp.h>
 #include <ggo_half_plane.imp.h>
+#include <ggo_oriented_box.imp.h>
 #include <ggo_multi_shape.imp.h>
 
 #endif

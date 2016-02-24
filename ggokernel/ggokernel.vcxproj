@@ -192,6 +192,8 @@
     <ClInclude Include="src\math\shapes_2d\ggo_half_plane.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_rect.h" />

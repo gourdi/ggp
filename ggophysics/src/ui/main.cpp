@@ -13,6 +13,7 @@ const int SCREEN_HEIGHT = 480;
 ggo::point2d_float origin_pixel_pos{ 0.5f * SCREEN_WIDTH, 0.5f * SCREEN_HEIGHT };
 float              meters_per_pixel = 0.1f; // 10 cm per pixel.
 
+/////////////////////////////////////////////////////////////////////
 void render_physics(const std::vector<ggo::body> & bodies, SDL_Renderer * renderer)
 {
   SDL_CALL(SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF));
@@ -31,6 +32,7 @@ void render_physics(const std::vector<ggo::body> & bodies, SDL_Renderer * render
       mapped_points.push_back({ ggo::to<int>(mapped_point.x()), SCREEN_HEIGHT - ggo::to<int>(mapped_point.y()) });
     }
 
+    // Close the loop.
     if (mapped_points.empty() == false)
     {
       mapped_points.push_back(mapped_points[0]);
@@ -42,6 +44,7 @@ void render_physics(const std::vector<ggo::body> & bodies, SDL_Renderer * render
   SDL_RenderPresent(renderer); // Returns void, so no need for SDL_CALL.
 }
 
+/////////////////////////////////////////////////////////////////////
 int main(int argc, char ** argv)
 {
   try

@@ -63,6 +63,7 @@ namespace ggo
     void				    normalize() { set_length(T(1)); }
     void				    set_length(T length) { T ratio = length / get_length(); _x *= ratio; _y *= ratio; }
     ggo::set2<T>    get_normalized() const { ggo::set2<T> v(*this); v.normalize(); return v; }
+    bool            is_normalized(T epsilon = T(0.001)) const { return std::abs(get_length() - 1) < epsilon; }
 
   private:
 
