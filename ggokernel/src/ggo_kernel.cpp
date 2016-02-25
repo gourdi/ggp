@@ -1,18 +1,18 @@
 #include "ggo_kernel.h"
 
-#if defined WIN32
+#ifdef GGO_WIN
+#ifdef GGO_DEBUG
+
 #include <windows.h>
 
-#if defined GGO_DEBUG
-
 /////////////////////////////////////////////////////////////////////
-void ggo_win32_trace(const char * text)
+void ggo_win_trace(const char * text)
 {
 	OutputDebugString(text);
 };
 
 /////////////////////////////////////////////////////////////////////
-void ggo_assert(bool b)
+void GGO_ASSERT(bool b)
 {
 	if (!b)
 	{
@@ -21,6 +21,5 @@ void ggo_assert(bool b)
 }
 
 #endif
-
 #endif
 
