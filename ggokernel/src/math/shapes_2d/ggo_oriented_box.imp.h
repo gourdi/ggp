@@ -14,6 +14,9 @@ namespace ggo
       return _pos - _size1 * _dir - _size2 * dir2();
     case 3:
       return _pos - _size1 * _dir + _size2 * dir2();
+    default:
+      GGO_FAIL();
+      return ggo::set2<T>(0, 0);
     }
   }
 

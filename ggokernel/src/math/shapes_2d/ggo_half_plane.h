@@ -30,3 +30,10 @@ namespace ggo
     const float         _dist_to_origin;
   };
 }
+
+namespace ggo
+{
+  using half_plane_float  = half_plane<float>;
+  using half_plane_double = half_plane<double>;
+}
+
