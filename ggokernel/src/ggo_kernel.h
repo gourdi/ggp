@@ -238,7 +238,7 @@ namespace ggo
   }
 
   template <typename Container, typename Predicate>
-  bool find(const Container & container, Predicate predicate)
+  bool find_if(const Container & container, Predicate predicate)
   {
     return std::find_if(container.begin(), container.end(), predicate) != container.end();
   }
