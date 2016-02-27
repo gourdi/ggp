@@ -12,6 +12,7 @@ namespace ggo
   {
   public:
 
+    using physics_shape2d_abc<T>::rotate;
     using physics_shape2d_abc<T>::move;
 
                               oriented_box(ggo::set2<T> pos, ggo::set2<T> dir, T size1, T size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
@@ -26,7 +27,7 @@ namespace ggo
 
     // Interfaces.
     void                      move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
-    void                      rotate(T angle, const ggo::set2<T> & center) override;
+    void                      rotate(T angle) override;
     const ggo::set2<T> &      get_center() const override { return _pos; }
     std::vector<ggo::set2<T>> get_draw_points() const override;
 
@@ -37,6 +38,19 @@ namespace ggo
     T            _size1;
     T            _size2;
   };
+}
+
+/////////////////////////////////////////////////////////////////////
+// I/O operators.
+namespace ggo
+{
+  template <typename T>
+  std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<T> & box)
+  {
+    auto points = box.get_draw_points();
+    os << "(" << points[0] << "; " << points[1] << "; " << points[2] << "; " << points[3] << ")";
+    return os;
+  }
 }
 
 namespace ggo

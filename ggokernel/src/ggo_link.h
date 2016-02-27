@@ -45,10 +45,10 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename IT, typename T, typename CONTAINER = std::vector<T>>
-  CONTAINER find_linked(IT first, IT end, T v)
+  template <typename it, typename data_type, typename container = std::vector<data_type>>
+  container find_linked(it first, it end, data_type v)
   {
-    CONTAINER result;
+    container result;
     for (; first != end; ++first)
     {
       if (first->_v1 == v)
@@ -64,10 +64,10 @@ namespace ggo
     return result;
   }
 
-  template <typename INPUT_CONTAINER, typename T, typename OUTPUT_CONTAINER = std::vector<T>>
-  OUTPUT_CONTAINER find_linked(INPUT_CONTAINER container, T v)
+  template <typename input_container, typename data_type, typename output_container = std::vector<data_type>>
+  output_container find_linked(input_container container, data_type v)
   {
-    return find_linked<INPUT_CONTAINER::const_iterator, T, OUTPUT_CONTAINER>(container.begin(), container.end(), v);
+    return find_linked<input_container::const_iterator, data_type, output_container>(container.begin(), container.end(), v);
   }
 }
 

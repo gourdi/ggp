@@ -38,7 +38,7 @@ namespace ggo
     const ggo::set2<T> &      get_center() const override { return _center; }
     std::vector<ggo::set2<T>> get_draw_points() const override;
     void				              move(T dx, T dy) override { _center.move(dx, dy); }
-    void				              rotate(T angle, const ggo::set2<T> & center) override { _center.rotate(angle, center); }
+    void				              rotate(T angle) override { _center.rotate(angle); }
     T                         dist_to_point(T x, T y) const override;
     bool	                    is_point_inside(T x, T y) const override;
     rect_data<T>              get_bounding_rect() const override;

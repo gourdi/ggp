@@ -22,10 +22,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////////
   template <typename T>
-  void oriented_box<T>::rotate(T angle, const ggo::set2<T> & center)
+  void oriented_box<T>::rotate(T angle)
   {
     _dir.rotate(angle);
-    _pos.rotate(angle, center);
   }
   
   //////////////////////////////////////////////////////////////////

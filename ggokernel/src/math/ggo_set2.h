@@ -24,7 +24,7 @@ namespace ggo
     set2<T>&		    operator+=(const set2<T> & param);
     set2<T>&		    operator-=(const set2<T> & param);
       
-    set2<T>         operator-() { return set2<T>(-_x, -_y); }
+    set2<T>         operator-() const { return set2<T>(-_x, -_y); }
 
     set2<T>&		    operator*=(T param) { _x *= param, _y *= param; return *this; }
     set2<T>&		    operator/=(T param) { _x /= param, _y /= param; return *this; }
@@ -204,20 +204,11 @@ namespace ggo
 // I/O operators.
 namespace ggo
 {
-  /////////////////////////////////////////////////////////////////////
   template <typename T>
   std::ostream & operator<<(std::ostream & os, const set2<T> & s)
   {
-    os << s.x() << ' ' << s.y();
+    os << "(" << s.x() << "; " << s.y() << ")";
     return os;
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::istream & operator>>(std::istream & is, set2<T> & s)
-  {
-    is >> s.x() >> s.y();
-    return is;
   }
 }
 

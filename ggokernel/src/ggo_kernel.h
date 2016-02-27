@@ -214,33 +214,48 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// Containers
+// containers
 namespace ggo
 {
-  template <typename Container, typename Predicate>
-  void remove_if(Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  void remove_if(container & c, predicate p)
   {
-    auto new_end = std::remove_if(container.begin(), container.end(), predicate);
+    auto new_end = std::remove_if(c.begin(), c.end(), p);
 
-    container.erase(new_end, container.end()); // Because std::remove_if does not remove, it just moves actually.
+    c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
   }
 
-  template <typename Container>
-  void shuffle(Container & container)
+  template <typename container>
+  void shuffle(container & c)
   {
-    std::shuffle(container.begin(), container.end(), get_random_generator());
+    std::shuffle(c.begin(), c.end(), get_random_generator());
   }
   
-  template <typename Container, typename Predicate>
-  void sort(Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  void sort(container & c, predicate p)
   {
-    std::sort(container.begin(), container.end(), predicate);
+    std::sort(c.begin(), c.end(), p);
   }
 
-  template <typename Container, typename Predicate>
-  bool find_if(const Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  bool find_if(const container & c, predicate p)
   {
-    return std::find_if(container.begin(), container.end(), predicate) != container.end();
+    return std::find_if(c.begin(), c.end(), p) != c.end();
+  }
+
+  template <typename container, typename data_type>
+  bool find(const container & c, const data_type & v)
+  {
+    return std::find(c.begin(), c.end(), v) != c.end();
+  }
+
+  template <typename container, typename data_type>
+  void push_once(container & c, const data_type & v)
+  {
+    if (std::find(c.begin(), c.end(), v) == c.end())
+    {
+      c.push_back(v);
+    }
   }
 }
 

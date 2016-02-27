@@ -13,24 +13,29 @@ namespace
     {
       return false;
     }
-    
+
     for (const auto arg : args)
     {
-      if (test_case_name == arg)
+      auto pos = arg.find('.');
+      if (pos == std::string::npos)
       {
-        return false;
+        if (test_case_name == arg)
+        {
+          return false;
+        }
       }
-      
-      std::string regex_str = std::string("^") + test_case_name + "\\.\\w*";
-      if (std::regex_match(arg, std::regex(regex_str)) == true)
+      else
       {
-        return false;
+        if (test_case_name == arg.substr(0, pos - 1))
+        {
+          return false;
+        }
       }
     }
-    
+
     return true;
   }
-  
+
   /////////////////////////////////////////////////////////////////////
   bool bypass_unit_test(const std::string & test_case_name, const std::string & unit_test_name, const std::vector<std::string> & args)
   {
@@ -41,14 +46,20 @@ namespace
     
     for (const auto arg : args)
     {
-      if (arg == test_case_name)
+      auto pos = arg.find('.');
+      if (pos == std::string::npos)
       {
-        return false;
+        if (test_case_name == arg)
+        {
+          return false;
+        }
       }
-      
-      if (test_case_name + '.' + unit_test_name == arg)
+      else
       {
-        return false;
+        if (test_case_name + '.' + unit_test_name == arg)
+        {
+          return false;
+        }
       }
     }
     
