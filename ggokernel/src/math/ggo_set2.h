@@ -150,13 +150,12 @@ namespace ggo
   template <typename T>
   void set2<T>::rotate(T angle, const set2<T> & center)
   {
-    _x -= center.x();
-    _y -= center.y();
-    
-    rotate(angle);
+    set2<T> rotated(*this); // We have to use a temporary in case &center == this.
 
-    _x += center.x();
-    _y += center.y();	
+    rotated -= center;
+    rotated.rotate(angle);
+
+    *this = center + rotated;
   }
 
   /////////////////////////////////////////////////////////////////////
