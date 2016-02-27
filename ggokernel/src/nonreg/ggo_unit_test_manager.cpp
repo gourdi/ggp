@@ -56,76 +56,81 @@ namespace
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-ggo_unit_test_manager & ggo_unit_test_manager::instance()
+namespace ggo
 {
-  static ggo_unit_test_manager instance;
-  
-  return instance;
-}
 
-/////////////////////////////////////////////////////////////////////
-void ggo_unit_test_manager::add_test(const std::string & test_case_name, ggo_unit_test * unit_test)
-{
-  _tests[test_case_name].push_back(unit_test);
-}
-
-/////////////////////////////////////////////////////////////////////
-void ggo_unit_test_manager::run_all(int argc, char ** argv)
-{
-  std::vector<std::string> args;
-  for (int i = 1; i < argc; ++i)
+  /////////////////////////////////////////////////////////////////////
+  unit_test_manager & unit_test_manager::instance()
   {
-    args.push_back(argv[i]);
+    static unit_test_manager instance;
+
+    return instance;
   }
 
-  int unit_test_count = 0;
-  int failed_count = 0;
-  int bypassed_count = 0;
-  
-  for (auto & it_map : _tests)
+  /////////////////////////////////////////////////////////////////////
+  void unit_test_manager::add_test(const std::string & test_case_name, unit_test * unit_test)
   {
-    if (bypass_test_case(it_map.first, args) == true)
+    _tests[test_case_name].push_back(unit_test);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  void unit_test_manager::run_all(int argc, char ** argv)
+  {
+    std::vector<std::string> args;
+    for (int i = 1; i < argc; ++i)
     {
-      bypassed_count += static_cast<int>(it_map.second.size());
-      continue; 
+      args.push_back(argv[i]);
     }
-    
+
+    int unit_test_count = 0;
+    int failed_count = 0;
+    int bypassed_count = 0;
+
+    for (auto & it_map : _tests)
     {
-      ggo::color_stream cs(ggo::console_color::YELLOW); // Must be scoped.
-      cs << "Test case: " << it_map.first << std::endl;
-    }
-    
-    for (auto unit_test : it_map.second)
-    {
-      if (bypass_unit_test(it_map.first, unit_test->get_name(), args) == true)
+      if (bypass_test_case(it_map.first, args) == true)
       {
-        ++bypassed_count;
+        bypassed_count += static_cast<int>(it_map.second.size());
         continue;
       }
-      
-      std::cout << "  Unit test: " << unit_test->get_name() << std::endl;
-      unit_test->run_test();
-      
-      failed_count += unit_test->get_failed_count();
-      ++unit_test_count;
+
+      {
+        ggo::color_stream cs(ggo::console_color::YELLOW); // Must be scoped.
+        cs << "Test case: " << it_map.first << std::endl;
+      }
+
+      for (auto unit_test : it_map.second)
+      {
+        if (bypass_unit_test(it_map.first, unit_test->get_name(), args) == true)
+        {
+          ++bypassed_count;
+          continue;
+        }
+
+        std::cout << "  Unit test: " << unit_test->get_name() << std::endl;
+        unit_test->run_test();
+
+        failed_count += unit_test->get_failed_count();
+        ++unit_test_count;
+      }
+    }
+
+    if (bypassed_count > 0)
+    {
+      ggo::color_stream cs(ggo::console_color::YELLOW);
+      std::cout << std::endl << std::endl << "*** BYPASSED " << bypassed_count << " TEST(S) ***" << std::endl;
+    }
+
+    if (failed_count == 0)
+    {
+      ggo::color_stream cs(ggo::console_color::GREEN);
+      cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
+    }
+    else
+    {
+      ggo::color_stream cs(ggo::console_color::RED);
+      cs << std::endl << std::endl << "*** NON-REGRESSION FAILED: " << failed_count << " TEST(S) FAILED ***" << std::endl << std::endl;
     }
   }
-  
-  if (bypassed_count > 0)
-  {
-    ggo::color_stream cs(ggo::console_color::YELLOW);
-    std::cout << std::endl << std::endl << "*** BYPASSED " << bypassed_count << " TEST(S) ***" << std::endl;
-  }
-  
-  if (failed_count == 0)
-  {
-    ggo::color_stream cs(ggo::console_color::GREEN);
-    cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
-  }
-  else
-  {
-    ggo::color_stream cs(ggo::console_color::RED);
-    cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
-  }
+
 }

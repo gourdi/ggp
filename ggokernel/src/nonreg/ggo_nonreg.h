@@ -9,13 +9,13 @@
 #define GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) ggo_##test_case_name##_##unit_test_name##_unit_test
 #define GGO_UNIT_TEST_INSTANCE_NAME(test_case_name, unit_test_name) instance_##test_case_name##_##unit_test_name##_unit_test
 
-#define GGO_TEST(test_case_name, unit_test_name) class GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) : public ggo_unit_test { public: \
-                                                 GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name)() : ggo_unit_test(#test_case_name, #unit_test_name) {} \
+#define GGO_TEST(test_case_name, unit_test_name) class GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) : public ggo::unit_test { public: \
+                                                 GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name)() : ggo::unit_test(#test_case_name, #unit_test_name) {} \
                                                  void run_test() override; }; \
                                                  static GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) GGO_UNIT_TEST_INSTANCE_NAME(test_case_name, unit_test_name); \
                                                  void GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name)::run_test()
 
-#define RUN_ALL_TESTS(argc, argv) ggo_unit_test_manager::instance().run_all(argc, argv);
+#define RUN_ALL_TESTS(argc, argv) ggo::unit_test_manager::instance().run_all(argc, argv);
 
 #define GGO_CHECK(cond) if (!(cond)) { ++_failed_count; ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** " << '[' << __FILE__ << ':' << __LINE__ << "\n"; }
 

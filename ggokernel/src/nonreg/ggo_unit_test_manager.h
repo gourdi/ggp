@@ -5,26 +5,30 @@
 #include <map>
 #include <vector>
 
-class ggo_unit_test;
-
-class ggo_unit_test_manager
+namespace ggo
 {
-public:
+  class unit_test;
 
-                                  ggo_unit_test_manager(const ggo_unit_test_manager &) = delete;
-          ggo_unit_test_manager&  operator=(const ggo_unit_test_manager &) = delete;
-  
-  static  ggo_unit_test_manager & instance();
+  class unit_test_manager
+  {
+  public:
 
-          void                    add_test(const std::string & test_case_name, ggo_unit_test * unit_test);
-          void                    run_all(int argc, char ** argv);
-  
-private:
+    unit_test_manager(const unit_test_manager &) = delete;
+    unit_test_manager&  operator=(const unit_test_manager &) = delete;
 
-                                  ggo_unit_test_manager() {}
+    static  unit_test_manager & instance();
 
-  std::map<std::string, std::vector<ggo_unit_test *>> _tests;
-};
+    void                    add_test(const std::string & test_case_name, unit_test * unit_test);
+    void                    run_all(int argc, char ** argv);
+
+  private:
+
+    unit_test_manager() {}
+
+    std::map<std::string, std::vector<unit_test *>> _tests;
+  };
+}
+
 
 #endif
 
