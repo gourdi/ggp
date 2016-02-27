@@ -35,20 +35,23 @@ namespace ggo
     }
     return true;
   }
+
+  template<class T>
+  using edge = ggo::link<const ggo::set2<T> *>;
 } 
 
 namespace
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  bool find_common_edge(const ggo::delaunay_triangle<T> & triangle1, const ggo::delaunay_triangle<T> & triangle2, ggo::link<ggo::set2<T>> & common_edge)
+  bool find_common_edge(const ggo::delaunay_triangle<T> & triangle1, const ggo::delaunay_triangle<T> & triangle2, ggo::edge<T> & common_edge)
   {
-    ggo::link<ggo::set2<T>> edge1_1(triangle1._v1, triangle1._v2);
-    ggo::link<ggo::set2<T>> edge1_2(triangle1._v2, triangle1._v3);
-    ggo::link<ggo::set2<T>> edge1_3(triangle1._v3, triangle1._v1);
-    ggo::link<ggo::set2<T>> edge2_1(triangle2._v1, triangle2._v2);
-    ggo::link<ggo::set2<T>> edge2_2(triangle2._v2, triangle2._v3);
-    ggo::link<ggo::set2<T>> edge2_3(triangle2._v3, triangle2._v1);
+    ggo::edge<T> edge1_1(triangle1._v1, triangle1._v2);
+    ggo::edge<T> edge1_2(triangle1._v2, triangle1._v3);
+    ggo::edge<T> edge1_3(triangle1._v3, triangle1._v1);
+    ggo::edge<T> edge2_1(triangle2._v1, triangle2._v2);
+    ggo::edge<T> edge2_2(triangle2._v2, triangle2._v3);
+    ggo::edge<T> edge2_3(triangle2._v3, triangle2._v1);
 
     if ((edge1_1 == edge2_1) || (edge1_1 == edge2_2) || (edge1_1 == edge2_3))
     {
@@ -97,24 +100,24 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  T compute_opposite_angle(const ggo::delaunay_triangle<T> & triangle, const ggo::link<ggo::set2<T>> & opposite_edge)
+  T compute_opposite_angle(const ggo::delaunay_triangle<T> & triangle, const ggo::edge<T> & opposite_edge)
   {
     GGO_ASSERT(opposite_edge._v1 != opposite_edge._v2);
     GGO_ASSERT(triangle.is_valid());
     GGO_ASSERT((triangle._v1 == opposite_edge._v1) || (triangle._v2 == opposite_edge._v1) || (triangle._v3 == opposite_edge._v1));
     GGO_ASSERT((triangle._v1 == opposite_edge._v2) || (triangle._v2 == opposite_edge._v2) || (triangle._v3 == opposite_edge._v2));
     
-    if (ggo::link<ggo::set2<T>>(triangle._v1, triangle._v2) == opposite_edge)
+    if (ggo::edge<T>(triangle._v1, triangle._v2) == opposite_edge)
     {
       return compute_angle(triangle._v3, triangle._v1, triangle._v2);
     }
     else
-    if (ggo::link<ggo::set2<T>>(triangle._v2, triangle._v3) == opposite_edge)
+    if (ggo::edge<T>(triangle._v2, triangle._v3) == opposite_edge)
     {
       return compute_angle(triangle._v1, triangle._v2, triangle._v3);
     }
     else
-    if (ggo::link<ggo::set2<T>>(triangle._v3, triangle._v1) == opposite_edge)
+    if (ggo::edge<T>(triangle._v3, triangle._v1) == opposite_edge)
     {
       return compute_angle(triangle._v2, triangle._v3, triangle._v1);
     }
@@ -127,7 +130,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  bool are_triangles_valid(const ggo::delaunay_triangle<T> & triangle1, const ggo::delaunay_triangle<T> & triangle2, const ggo::link<ggo::set2<T>> & common_edge, T epsilon)
+  bool are_triangles_valid(const ggo::delaunay_triangle<T> & triangle1, const ggo::delaunay_triangle<T> & triangle2, const ggo::edge<T> & common_edge, T epsilon)
   {
     GGO_ASSERT(triangle1.is_valid());
     GGO_ASSERT(triangle2.is_valid());
@@ -143,7 +146,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void flip_triangle(ggo::delaunay_triangle<T> & triangle1, ggo::delaunay_triangle<T> & triangle2, const ggo::link<ggo::set2<T>> & common_edge)
+  void flip_triangle(ggo::delaunay_triangle<T> & triangle1, ggo::delaunay_triangle<T> & triangle2, const ggo::edge<T> & common_edge)
   {
     GGO_ASSERT(triangle1.compare(triangle2) == false);
     GGO_ASSERT(triangle1.is_valid() == true);
@@ -181,7 +184,7 @@ namespace
     GGO_ASSERT(triangle1.compare(triangle2) == false);
     GGO_ASSERT(triangle1.is_valid() == true);
     GGO_ASSERT(triangle2.is_valid() == true);
-    GGO_ASSERT(are_triangles_valid(triangle1, triangle2, ggo::link<ggo::set2<T>>(opposite1, opposite2), T(0.01)) == true);
+    GGO_ASSERT(are_triangles_valid(triangle1, triangle2, ggo::edge<T>(opposite1, opposite2), T(0.01)) == true);
   }
 
   //////////////////////////////////////////////////////////////
@@ -225,7 +228,7 @@ namespace
   template <typename T>
   bool update_triangulation(std::list<ggo::delaunay_triangle<T>> & triangles)
   {
-    ggo::link<ggo::set2<T>> common_edge;
+    ggo::edge<T> common_edge(nullptr, nullptr);
     
     for (auto it1 = triangles.begin(); it1 != triangles.end(); ++it1)
     {
@@ -249,14 +252,9 @@ namespace
   void check_integrity(std::list<ggo::delaunay_triangle<T>> & triangles)
   {
 #ifdef GGO_DEBUG
-    ggo::link<ggo::set2<T>> common_edge;
-    
-    typename std::list<ggo::delaunay_triangle<T>>::iterator it1;
-    typename std::list<ggo::delaunay_triangle<T>>::iterator it2;
-
-    for (it1 = triangles.begin(); it1 != triangles.end(); ++it1)
+    for (auto it1 = triangles.begin(); it1 != triangles.end(); ++it1)
     {
-      for (it2 = triangles.begin(); it2 != triangles.end(); ++it2)
+      for (auto it2 = triangles.begin(); it2 != triangles.end(); ++it2)
       {	
         if ((it1 != it2) && (it1->compare(*it2) == true))
         {
@@ -285,12 +283,12 @@ namespace
     }
     
     // Second pass to check if the new vertex lies on an edge.
-    typename std::list<ggo::delaunay_triangle<T>>::iterator it_triangle = triangles.begin();
+    auto it_triangle = triangles.begin();
     
     std::list<ggo::delaunay_triangle<T>> new_triangles;
     std::list<ggo::delaunay_triangle<T>> old_triangles;
     
-    ggo::link<ggo::set2<T>> edge;
+    ggo::edge<T> edge(nullptr, nullptr);
     
     for (it_triangle = triangles.begin(); it_triangle != triangles.end(); ++it_triangle)
     {
@@ -301,34 +299,37 @@ namespace
       T d23 = s23.dist_to_point(new_vertex->x(), new_vertex->y());
       T d13 = s13.dist_to_point(new_vertex->x(), new_vertex->y());
 
-      ggo::link<ggo::set2<T>> current_edge;
-      ggo::link<ggo::set2<T>> edge1;
-      ggo::link<ggo::set2<T>> edge2;
+      ggo::edge<T> current_edge(nullptr, nullptr);
+      ggo::edge<T> edge1(nullptr, nullptr);
+      ggo::edge<T> edge2(nullptr, nullptr);
 
       if (d12 < EPSILON)
       {
-        current_edge = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v2);
-        edge1 = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v3);			
-        edge2 = ggo::link<ggo::set2<T>>(it_triangle->_v2, it_triangle->_v3);
+        current_edge = ggo::edge<T>(it_triangle->_v1, it_triangle->_v2);
+        edge1 = ggo::edge<T>(it_triangle->_v1, it_triangle->_v3);
+        edge2 = ggo::edge<T>(it_triangle->_v2, it_triangle->_v3);
       }
       else if (d23 < EPSILON)
       {
-        current_edge = ggo::link<ggo::set2<T>>(it_triangle->_v2, it_triangle->_v3);
-        edge1 = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v2);			
-        edge2 = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v3);
+        current_edge = ggo::edge<T>(it_triangle->_v2, it_triangle->_v3);
+        edge1 = ggo::edge<T>(it_triangle->_v1, it_triangle->_v2);
+        edge2 = ggo::edge<T>(it_triangle->_v1, it_triangle->_v3);
       }
       else if (d13 < EPSILON)
       {
-        current_edge = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v3);
-        edge1 = ggo::link<ggo::set2<T>>(it_triangle->_v1, it_triangle->_v2);			
-        edge2 = ggo::link<ggo::set2<T>>(it_triangle->_v2, it_triangle->_v3);
+        current_edge = ggo::edge<T>(it_triangle->_v1, it_triangle->_v3);
+        edge1 = ggo::edge<T>(it_triangle->_v1, it_triangle->_v2);
+        edge2 = ggo::edge<T>(it_triangle->_v2, it_triangle->_v3);
       }
       
-      if (current_edge.is_set() == true)
+      if (current_edge._v1 != nullptr && current_edge._v2 != nullptr)
       {
-        GGO_ASSERT(edge1.is_set() && edge2.is_set());
-        
-        if ((edge.is_set() == true) && (current_edge != edge))
+        GGO_ASSERT(edge1._v1 != nullptr);
+        GGO_ASSERT(edge1._v2 != nullptr);
+        GGO_ASSERT(edge2._v1 != nullptr);
+        GGO_ASSERT(edge2._v2 != nullptr);
+
+        if (edge._v1 != nullptr && edge._v2 != nullptr && current_edge != edge)
         {
           GGO_TRACE("vertex detected to be on several edges, discarding it\n");
           return;

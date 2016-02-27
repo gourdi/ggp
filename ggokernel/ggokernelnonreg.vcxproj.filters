@@ -69,6 +69,7 @@
     <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp">
       <Filter>trees</Filter>
     </ClCompile>
+    <ClCompile Include="test\ggo_link_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />
