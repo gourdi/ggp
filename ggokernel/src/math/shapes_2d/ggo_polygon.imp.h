@@ -255,11 +255,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void polygon2d<T>::rotate(T angle, const ggo::set2<T> & center)
+  void polygon2d<T>::rotate(T angle)
   {
     for (auto & point : _points)
     {
-      point.rotate(angle, center);
+      point.rotate(angle);
     }
   }
 }
