@@ -10,7 +10,7 @@ namespace ggo
   template <typename T>
   struct gaussian_parameters
   {
-    std::shared_ptr<data_fetcher1d_abc<T>>  _data_fetcher = std::make_shared<duplicated_edge_mirror_data_fetcher1d<T>>();
+    std::shared_ptr<data_fetcher1d_abc<T>>  _data_fetcher(new duplicated_edge_mirror_data_fetcher1d<T>());
     int                                     _stride_in = 1;
     int                                     _stride_out = 1;
     int                                     _max_filter_size = 128;
