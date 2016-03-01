@@ -2,56 +2,78 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T, bool double_sided>
+  face3d<T, double_sided>::face3d(const vertex<T> & v1, const vertex<T> & v2, const vertex<T> & v3)
+    :
+    _v1(v1), _v2(v2), _v3(v3)
+  {
+    _m00 = _v2._pos.x() - _v1._pos.x();
+    _m10 = _v2._pos.y() - _v1._pos.y();
+    _m20 = _v2._pos.z() - _v1._pos.z();
+
+    _m01 = _v3._pos.x() - _v1._pos.x();
+    _m11 = _v3._pos.y() - _v1._pos.y();
+    _m21 = _v3._pos.z() - _v1._pos.z();
+
+    _m10m21subm11m20 = _m10 * _m21 - _m11 * _m20;
+    _m20m01subm00m21 = _m20 * _m01 - _m00 * _m21;
+    _m00m11subm10m01 = _m00 * _m11 - _m10 * _m01;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T, bool double_sided>
   bool face3d<T, double_sided>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
   {
-    T	m[3][3], c[3], s[3];
+    // If P is the intersection point, we have P=v1+s0*(v2-v1)+s1*(v3-v1) since
+    // P is inside the face place. We also have P=ray_pos+s2*ray_dir. This leads to:
+    // s0*(v2-v1)+s1*(v3-v1)=ray_pos+s2*ray_dir, or
+    // s0*(v2-v1)+s1*(v3-v1)-s2*ray_dir=ray_pos,
+    // which is a 3 equations with 3 unknowns (s0, s1 and s2) linear system.
 
-    // If P is the intersection point, we have P=v1+k1*(v2-v1)+k2*(v3*-v1) since
-    // P is inside the face place. We also have P=ray_pos+k3*ray_dir. This leads to:
-    // k1*(v2-v1)+k2*(v3*-v1)=ray_pos+k3*ray_dir, or
-    // k1*(v2-v1)+k2*(v3*-v1)-k3*ray_dir=ray_pos,
-    // which is a 3 equations with 3 unknowns (k1, k2 and k3) linear system.
+    T m02 = -ray.dir().x();
+    T m12 = -ray.dir().y();
+    T m22 = -ray.dir().z();
 
-    m[0][0] = _v2._pos.x() - _v1._pos.x();
-    m[1][0] = _v2._pos.y() - _v1._pos.y();
-    m[2][0] = _v2._pos.z() - _v1._pos.z();
-
-    m[0][1] = _v3._pos.x() - _v1._pos.x();
-    m[1][1] = _v3._pos.y() - _v1._pos.y();
-    m[2][1] = _v3._pos.z() - _v1._pos.z();
-
-    m[0][2] = -ray.dir().x();
-    m[1][2] = -ray.dir().y();
-    m[2][2] = -ray.dir().z();
-
-    c[0] = ray.pos().x() - _v1._pos.x();
-    c[1] = ray.pos().y() - _v1._pos.y();
-    c[2] = ray.pos().z() - _v1._pos.z();
-
-    // Solve the linear system. If it is not possible, it is because
-    // the ray is parallel to the face place.
-    if (ggo::linsolve3d(m, c, s) == false)
+    T det = _m00m11subm10m01 * m22 + _m20m01subm00m21 * m12 + _m10m21subm11m20 * m02;
+    if (det == 0)
     {
       return false;
     }
 
-    // If k3 is negative, this means that the intersection point is
+    T c0 = ray.pos().x() - _v1._pos.x();
+    T c1 = ray.pos().y() - _v1._pos.y();
+    T c2 = ray.pos().z() - _v1._pos.z();
+
+    T t1 = c1 *  m22 - c2 *  m12;
+    T t2 = c1 * _m21 - c2 * _m11;
+    T t3 = c2 * _m10 - c1 * _m20;
+
+    T inv_det = 1 / det;
+    T s2 = (c0 * _m10m21subm11m20 - _m00 * t2 - _m01 * t3) * inv_det;
+
+    // If s2 is negative, this means that the intersection point is
     // on the wrong side of the ray line.
-    if (s[2] <= 0)
+    if (s2 <= 0)
     {
       return false;
     }
 
     // We also have to make sure the intersection point is inside the face.
-    if ((s[0] < 0) || (s[1] < 0) || (s[0] + s[1] > 1))
+    T s0 = (c0 * (_m11 *  m22 - m12 * _m21) - _m01 * t1 + m02 * t2) * inv_det;
+    if (s0 < 0)
+    {
+      return false;
+    }
+
+    T s1 = (c0 * (m12 * _m20 - _m10 *  m22) + _m00 * t1 + m02 * t3) * inv_det;
+    if (s1 < 0 || s0 + s1 > 1)
     {
       return false;
     }
 
     // The normal.
-    dist = s[2];
-    normal.pos() = ray.pos() + s[2] * ray.dir();
-    normal.set_normalized_dir((1 - s[0] - s[1]) * _v1._normal + s[0] * _v2._normal + s[1] * _v3._normal);
+    dist = s2;
+    normal.pos() = ray.pos() + s2 * ray.dir();
+    normal.set_normalized_dir((1 - s0 - s1) * _v1._normal + s0 * _v2._normal + s1 * _v3._normal);
 
     if (ggo::dot(normal.dir(), ray.dir()) > 0)
     {

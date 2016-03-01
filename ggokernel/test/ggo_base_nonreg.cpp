@@ -1,6 +1,5 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
-#include <ggo_array.h>
 #include <ggo_set2.h>
 
 /////////////////////////////////////////////////////////////////////
@@ -56,52 +55,15 @@ GGO_TEST(base, mirror_index)
 GGO_TEST(base, min_max)
 {
   GGO_CHECK(ggo::min(1, 2) == 1);
-#if __cplusplus >= 201103L
   GGO_CHECK(ggo::min(1, 2, 5) == 1);
   GGO_CHECK(ggo::min(5, 2, 1) == 1);
   GGO_CHECK(ggo::min(-1, 2, 5, 8, 9) == -1);
-#endif
 
   GGO_CHECK(ggo::max(1, 2) == 2);
-#if __cplusplus >= 201103L
   GGO_CHECK(ggo::max(1, 2, 5) == 5);
   GGO_CHECK(ggo::max(5, 2, 1) == 5);
   GGO_CHECK(ggo::max(-1, 2, 5, 8, 9) == 9);
-#endif
 }
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(base, range_loop)
-{
-  auto test_range_loop_aux = [&](const ggo::array_int & array, int ref_sum, int ref_count)
-  {
-    int sum = 0;
-    int count = 0;
-    for (const auto & v : array)
-    {
-      sum += v;
-      count += 1;
-    }
-
-    GGO_CHECK(sum == ref_sum);
-    GGO_CHECK(count == ref_count);
-  };
-  
-  ggo::array_int array(3);
-  array[0] = 2;
-  array[1] = 5;
-  array[2] = 7;
-
-  test_range_loop_aux(array, 14, 3);
-
-  for (auto & v : array)
-  {
-    v += 2;
-  }
-
-  test_range_loop_aux(array, 20, 3);
-}
-
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, type_casting)

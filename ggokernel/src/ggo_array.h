@@ -69,7 +69,6 @@ namespace ggo
 
 namespace ggo
 {
-#if __cplusplus >= 201103L
   using array_char    = array<char>;
   using array_int     = array<int>;
   using array_uint8   = array<uint8_t>;
@@ -82,20 +81,6 @@ namespace ggo
   using array_int64   = array<int64_t>;
   using array_float   = array<float>;
   using array_double  = array<double>;
-#else
-  typedef array<char>     array_char;
-  typedef array<int>      array_int;   
-  typedef array<uint8_t>  array_uint8;
-  typedef array<uint16_t> array_uint16;
-  typedef array<uint32_t> array_uint32;
-  typedef array<uint64_t> array_uint64;
-  typedef array<int8_t>   array_int8;  
-  typedef array<int16_t>  array_int16; 
-  typedef array<int32_t>  array_int32; 
-  typedef array<int64_t>  array_int64; 
-  typedef array<float>    array_float; 
-  typedef array<double>   array_double;
-#endif
 }
 
 namespace ggo

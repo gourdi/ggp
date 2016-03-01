@@ -24,7 +24,7 @@ namespace ggo
     set2<T>&		    operator+=(const set2<T> & param);
     set2<T>&		    operator-=(const set2<T> & param);
       
-    set2<T>         operator-() { return set2<T>(-_x, -_y); }
+    set2<T>         operator-() const { return set2<T>(-_x, -_y); }
 
     set2<T>&		    operator*=(T param) { _x *= param, _y *= param; return *this; }
     set2<T>&		    operator/=(T param) { _x /= param, _y /= param; return *this; }
@@ -62,6 +62,8 @@ namespace ggo
         
     void				    normalize() { set_length(T(1)); }
     void				    set_length(T length) { T ratio = length / get_length(); _x *= ratio; _y *= ratio; }
+    ggo::set2<T>    get_normalized() const { ggo::set2<T> v(*this); v.normalize(); return v; }
+    bool            is_normalized(T epsilon = T(0.001)) const { return std::abs(get_length() - 1) < epsilon; }
 
   private:
 
@@ -148,13 +150,12 @@ namespace ggo
   template <typename T>
   void set2<T>::rotate(T angle, const set2<T> & center)
   {
-    _x -= center.x();
-    _y -= center.y();
-    
-    rotate(angle);
+    set2<T> rotated(*this); // We have to use a temporary in case &center == this.
 
-    _x += center.x();
-    _y += center.y();	
+    rotated -= center;
+    rotated.rotate(angle);
+
+    *this = center + rotated;
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -203,20 +204,11 @@ namespace ggo
 // I/O operators.
 namespace ggo
 {
-  /////////////////////////////////////////////////////////////////////
   template <typename T>
   std::ostream & operator<<(std::ostream & os, const set2<T> & s)
   {
-    os << s.x() << ' ' << s.y();
+    os << "(" << s.x() << "; " << s.y() << ")";
     return os;
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::istream & operator>>(std::istream & is, set2<T> & s)
-  {
-    is >> s.x() >> s.y();
-    return is;
   }
 }
 

@@ -33,16 +33,16 @@ GGO_TEST(test_scene, scene2)
 
   // The objects.
   auto sphere1 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(-2.f, 0.f, 0.f), 1.f);
-  scene_builder.add_object(sphere1, ggo::color::RED);
+  scene_builder.add_object(sphere1, ggo::color::RED, false);
   
   auto sphere2 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 0.f), 1.f);
-  scene_builder.add_object(sphere2, ggo::color::WHITE);
+  scene_builder.add_object(sphere2, ggo::color::WHITE, false);
   
   auto sphere3 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(2.f, 0.f, 0.f), 1.f);
-  scene_builder.add_object(sphere3, ggo::color::BLACK);
+  scene_builder.add_object(sphere3, ggo::color::BLACK, false);
 
-  auto plane = std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f);
-  scene_builder.add_object(plane, ggo::color::WHITE);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
+  scene_builder.add_object(plane, ggo::color::WHITE, false);
   
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, GGO_SAMPLES_COUNT);

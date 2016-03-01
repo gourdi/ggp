@@ -28,23 +28,6 @@ namespace ggo
 
     return text;
   }
-
-  class string_stream
-  {
-  public:
-
-      template <typename T>
-      string_stream(const T & v) { _oss << v; };
-
-      template <typename T>
-      string_stream & append(const T & v) { _oss << v; return *this; };
-      
-      std::string str() { return _oss.str(); };
-      
-  private:
-
-      std::ostringstream _oss;
-  };
 }
 
 #endif

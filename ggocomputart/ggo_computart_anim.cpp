@@ -105,7 +105,7 @@ int main(int argc, char ** argv)
 	std::cout << "Output resolution: " << params._width << 'x' << params._height << std::endl;
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
-	std::auto_ptr<ggo_animation_artist_abc> artist(ggo_animation_artist_abc::create(params._artist_id, params._width, params._height));
+	std::unique_ptr<ggo_animation_artist_abc> artist(ggo_animation_artist_abc::create(params._artist_id, params._width, params._height));
     
   if (artist.get() == nullptr)
   {

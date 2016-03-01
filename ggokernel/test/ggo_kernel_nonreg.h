@@ -29,17 +29,17 @@ inline bool find_point(const std::vector<ggo::point2d_float> & v, float x, float
 inline bool compare_segment(const ggo::segment_float & s1, const ggo::segment_float & s2)
 {
   if (std::fabs(s1.p1().x() - s2.p1().x()) < 0.001 &&
-    std::fabs(s1.p1().y() - s2.p1().y()) < 0.001 &&
-    std::fabs(s1.p2().x() - s2.p2().x()) < 0.001 &&
-    std::fabs(s1.p2().y() - s2.p2().y()) < 0.001)
+      std::fabs(s1.p1().y() - s2.p1().y()) < 0.001 &&
+      std::fabs(s1.p2().x() - s2.p2().x()) < 0.001 &&
+      std::fabs(s1.p2().y() - s2.p2().y()) < 0.001)
   {
     return true;
   }
 
   if (std::fabs(s1.p1().x() - s2.p2().x()) < 0.001 &&
-    std::fabs(s1.p1().y() - s2.p2().y()) < 0.001 &&
-    std::fabs(s1.p2().x() - s2.p1().x()) < 0.001 &&
-    std::fabs(s1.p2().y() - s2.p1().y()) < 0.001)
+      std::fabs(s1.p1().y() - s2.p2().y()) < 0.001 &&
+      std::fabs(s1.p2().x() - s2.p1().x()) < 0.001 &&
+      std::fabs(s1.p2().y() - s2.p1().y()) < 0.001)
   {
     return true;
   }

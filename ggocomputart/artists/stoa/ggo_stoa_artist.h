@@ -14,7 +14,7 @@ class ggo_stoa_artist
 {
 public:
 
-        ggo_stoa_artist();
+        ggo_stoa_artist(int steps);
 
   void  render(uint8_t * buffer, int width, int height, float hue,
                const ggo::point3d_float& light_pos1, const ggo::point3d_float& light_pos2, 
@@ -60,17 +60,17 @@ private:
                                    const ggo::object3d * exclude_object1 = nullptr,
                                    const ggo::object3d * exclude_object2 = nullptr) const override;
 
-    bool hit_test(const ggo::ray3d_float & ray,
-                  float dist_max,
-                  const ggo::object3d * exclude_object1 = nullptr,
-                  const ggo::object3d * exclude_object2 = nullptr) const override;
+    bool check_visibility(const ggo::ray3d_float & ray,
+                          float dist_max,
+                          const ggo::object3d * exclude_object1 = nullptr,
+                          const ggo::object3d * exclude_object2 = nullptr) const override;
 
   private:
 
     std::map<std::string, ggo_raycaster_cells_aggregate> _aggregates;
   };
 
-  std::auto_ptr<ggo_stoa_raycaster>           _raycaster;
+  std::unique_ptr<ggo_stoa_raycaster>         _raycaster;
   std::vector<std::shared_ptr<ggo::object3d>> _objects;
 };
 

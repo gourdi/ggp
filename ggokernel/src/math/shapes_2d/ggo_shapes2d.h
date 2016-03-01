@@ -103,7 +103,7 @@ namespace ggo
   {
   public:
 
-    virtual	void  rotate(T angle, const ggo::set2<T> & center) = 0;
+    virtual	void  rotate(T angle) = 0;
   };
 
   template <typename T> 
@@ -113,6 +113,33 @@ namespace ggo
 
     virtual	T dist_to_point(T x, T y) const = 0;
             T	dist_to_point(const ggo::set2<T> & p) const { return dist_to_point(p.x(), p.y()); }
+  };
+}
+
+//////////////////////////////////////////////////////////////////
+// PHYSICS
+
+namespace ggo
+{
+  template <typename T>
+  class physics_shape2d_abc : public movable_shape2d_abc<T>, public rotatable_shape2d_abc<T>
+  {
+  public:
+
+    using movable_shape2d_abc<T>::move;
+    using rotatable_shape2d_abc<T>::rotate;
+
+    virtual const ggo::set2<T> &      get_center() const = 0;
+    virtual std::vector<ggo::set2<T>> get_draw_points() const = 0;
+
+            void                      rotate(T angle, const ggo::set2<T> & center)
+            {
+              ggo::set2<T> diff(get_center() - center);
+              move(-diff);
+              diff.rotate(angle);
+              rotate(angle);
+              move(diff);
+            }
   };
 }
 
@@ -152,108 +179,6 @@ namespace ggo
   public:
     
     using samplable_shape2d_abc<T>::is_point_inside;
-
-    std::vector<ggo::set2<T>> uniform_sampling(T delta_sample) const
-    {
-      std::vector<ggo::set2<T>> samples;
-
-      auto rect_data = this->get_bounding_rect(); 
-      T width = rect_data._width;
-      T height = rect_data._height;
-      ggo::set2<T> center(rect_data._pos.x() + width / 2, rect_data._pos.y() + height / 2);
-    
-      for (T y = delta_sample / 2; y < height / 2; y += delta_sample)
-      {
-        for (T x = delta_sample / 2; x < width / 2; x += delta_sample)
-        {
-          T x1 = center.x() - x;
-          T x2 = center.x() + x;
-          T y1 = center.y() - y;
-          T y2 = center.y() + y;
-
-          if (is_point_inside(x1, y1) == true)
-          {
-            samples.push_back(ggo::set2<T>(x1, y1));
-          }
-          if (is_point_inside(x1, y2) == true)
-          {
-            samples.push_back(ggo::set2<T>(x1, y2));
-          }
-          if (is_point_inside(x2, y1) == true)
-          {
-            samples.push_back(ggo::set2<T>(x2, y1));
-          }
-          if (is_point_inside(x2, y2) == true)
-          {
-            samples.push_back(ggo::set2<T>(x2, y2));
-          }
-        }
-      }
-
-      return samples;
-    }
-
-    std::vector<ggo::set2<T>> minimum_uniform_sampling(int samples_count, int iterations_count = 100) const
-    {
-      auto rect_data = this->get_bounding_rect();
-      T width = rect_data._width;
-      T height = rect_data._height;
-      ggo::set2<T> center(rect_data._pos.x() + width / 2, rect_data._pos.y() + height / 2);
-      
-      if (samples_count == 1)
-      {
-        std::vector<ggo::set2<T>> samples;
-        samples.emplace_back(center);
-        return samples;
-      }
-
-      // Get the inf limit.
-      T delta_inf = std::max(width, height);
-      auto samples_inf = uniform_sampling(delta_inf);
-
-      // Decrease delta_sup until we get more samples than required.
-      T delta_sup = std::max(width, height);
-      auto samples_sup = uniform_sampling(delta_sup);
-      while (static_cast<int>(samples_sup.size()) < samples_count)
-      {
-        delta_sup /= 2;
-        samples_sup = uniform_sampling(delta_sup);
-      }
-
-      GGO_ASSERT(samples_inf.size() <= samples_count);
-      GGO_ASSERT(samples_sup.size() >= samples_count);
-
-      // Then 'dichotomize'.
-      for (int i = 0; i < iterations_count; ++i)
-      {
-        GGO_ASSERT(samples_inf.size() <= samples_sup.size());
-
-        T delta_middle = (delta_inf + delta_sup) / 2;
-
-        auto samples_middle = uniform_sampling(delta_middle);
-
-        if (samples_count > static_cast<int>(samples_middle.size()))
-        {
-          delta_inf = delta_middle;
-          samples_inf = samples_middle;
-        }
-        else
-        {
-          if (samples_count < static_cast<int>(samples_middle.size()))
-          {
-            delta_sup = delta_middle;
-            samples_sup = samples_middle;
-          }
-          else
-          {
-            GGO_ASSERT(samples_middle.size() == samples_count);
-            return samples_middle;
-          }
-        }
-      }
-
-      return samples_sup;
-    }
   };
 
   template <typename T>
@@ -273,6 +198,8 @@ namespace ggo
 #include <ggo_spline.h>
 #include <ggo_polygon.h>
 #include <ggo_triangle2d.h>
+#include <ggo_half_plane.h>
+#include <ggo_oriented_box.h>
 #include <ggo_multi_shape.h>
 
 #include <ggo_rect.imp.h>
@@ -283,6 +210,8 @@ namespace ggo
 #include <ggo_spline.imp.h>
 #include <ggo_polygon.imp.h>
 #include <ggo_triangle2d.imp.h>
+#include <ggo_half_plane.imp.h>
+#include <ggo_oriented_box.imp.h>
 #include <ggo_multi_shape.imp.h>
 
 #endif

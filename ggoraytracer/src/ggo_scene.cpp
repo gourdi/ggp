@@ -84,28 +84,4 @@ namespace ggo
 
     return object;
   }
-
-  //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, std::shared_ptr<const ggo::shader_abc> shader, bool discard_basis)
-  {
-    auto object = std::make_shared<ggo::object3d>(shape, color, shader);
-
-    object->set_discard_basis(discard_basis);
-
-    _objects.push_back(object);
-
-    return object;
-  }
-
-  //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader, bool discard_basis)
-  {
-    auto object = std::make_shared<ggo::object3d>(shape, material, shader);
-
-    object->set_discard_basis(discard_basis);
-
-    _objects.push_back(object);
-
-    return object;
-  }
 }

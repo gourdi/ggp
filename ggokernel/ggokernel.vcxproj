@@ -96,6 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <PreprocessorDefinitions>GGO_DEBUG;GGO_WIN;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -136,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ggo_tree3d.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />
     <ClInclude Include="src\ggo_best_match.h" />
@@ -174,6 +176,7 @@
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.h" />
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.h" />
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.h" />
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_grid_sampling.h" />
     <ClInclude Include="src\math\sampling\shape_sampling\ggo_shape_sampling.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_gaussian_field_2d.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_multi_scalar_field_2d.h" />
@@ -186,8 +189,12 @@
     <ClInclude Include="src\math\shapes_2d\ggo_disc.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_rect.h" />
@@ -228,6 +235,9 @@
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
     <ClInclude Include="src\math\signal_proc\ggo_laplacian.h" />
+    <ClInclude Include="src\nonreg\ggo_nonreg.h" />
+    <ClInclude Include="src\nonreg\ggo_unit_test.h" />
+    <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />
     <ClInclude Include="src\time\ggo_chronometer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +255,8 @@
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_gaussian_blur.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_laplacian.cpp" />
+    <ClCompile Include="src\nonreg\ggo_unit_test.cpp" />
+    <ClCompile Include="src\nonreg\ggo_unit_test_manager.cpp" />
     <ClCompile Include="src\time\ggo_chronometer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

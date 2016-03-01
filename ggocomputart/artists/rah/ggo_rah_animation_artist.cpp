@@ -393,7 +393,7 @@ bool ggo_rah_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame
   else
   {
     // Check there is only fog items left.
-    return ggo::find(_items, [](const ggo_rah_item_ptr & item_ptr) { return item_ptr->is_fog() == false; });
+    return ggo::find_if(_items, [](const ggo_rah_item_ptr & item_ptr) { return item_ptr->is_fog() == false; });
   }
 }
 

@@ -137,10 +137,10 @@ const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::r
   return hit_object;
 }
 
-bool ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                   float dist_max,
-                                                   const ggo::object3d * exclude_object1,
-                                                   const ggo::object3d * exclude_object2) const
+bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_float & ray,
+                                                           float dist_max,
+                                                           const ggo::object3d * exclude_object1,
+                                                           const ggo::object3d * exclude_object2) const
 {
   for (const auto & map_item : _aggregates)
   {
@@ -172,7 +172,7 @@ bool ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::ray3d_float & ray,
 }
 
 //////////////////////////////////////////////////////////////
-ggo_stoa_artist::ggo_stoa_artist()
+ggo_stoa_artist::ggo_stoa_artist(int steps)
 {
   // Objects.
   std::vector<ggo_noise3d> noises;
@@ -205,7 +205,6 @@ ggo_stoa_artist::ggo_stoa_artist()
   };
 
   const float range = 3.2f;
-  const int steps = 384;
   auto cells = ggo::marching_cubes(density_func, ggo::point3d_float(-range, -range, -range), steps, 2 * range / steps);
 
   std::vector<ggo_raycaster_cell> raycaster_cells;
@@ -248,7 +247,7 @@ void ggo_stoa_artist::render(uint8_t * buffer, int width, int height, float hue,
 
   for (auto object : _objects)
   {
-    scene_builder.add_object(object);
+    scene_builder.add_object(object, true);
   }
 
   // Lights.

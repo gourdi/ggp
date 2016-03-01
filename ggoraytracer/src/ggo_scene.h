@@ -46,11 +46,9 @@ namespace ggo
     std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color & color, const ggo::point3d_float & pos);
     std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color & color, float radius, const ggo::point3d_float & pos);
 
-    void                            add_object(std::shared_ptr<ggo::object3d> object, bool discard_basis = false);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, bool discard_basis = false);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, bool discard_basis = false);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, std::shared_ptr<const ggo::shader_abc> shader, bool discard_basis = false);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader, bool discard_basis = false);
+    void                            add_object(std::shared_ptr<ggo::object3d> object, bool discard_basis);
+    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, bool discard_basis);
+    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, bool discard_basis);
 
     void                            set_fog(std::shared_ptr<const ggo::fog_abc> fog) { _fog = fog; }
     void                            set_ambient_color(const ggo::color & ambient_color) { _ambient_color = ambient_color; }

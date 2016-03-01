@@ -1,23 +1,20 @@
 #include "ggo_object3d.h"
 #include <ggo_solid_color_material.h>
+#include <ggo_raytracer.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_shape_sampling.h>
-#include <ggo_phong_shader.h>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
   object3d::object3d()
-    :
-    _shader(std::make_shared<ggo::phong_shader>())
   {
   }
 
   //////////////////////////////////////////////////////////////
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape)
     :
-    _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>())
+    _shape(shape)
   {
   }
 
@@ -25,7 +22,6 @@ namespace ggo
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color)
     :
     _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>()),
     _material(std::make_shared<ggo::solid_color_material>(color))
   {
   }
@@ -34,44 +30,8 @@ namespace ggo
   object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material)
     :
     _shape(shape),
-    _shader(std::make_shared<ggo::phong_shader>()),
     _material(material)
   {
-  }
-
-  //////////////////////////////////////////////////////////////
-  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, std::shared_ptr<const ggo::shader_abc> shader)
-    :
-    _shape(shape),
-    _shader(shader),
-    _material(std::make_shared<ggo::solid_color_material>(color))
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, std::shared_ptr<const ggo::shader_abc> shader)
-    :
-    _shape(shape),
-    _shader(shader),
-    _material(material)
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  ggo::color object3d::shade(const ggo::color & object_color, 
-                             const ggo::color & light_color,
-                             const ggo::ray3d_float & ray,
-                             const ggo::ray3d_float & world_normal,
-                             const ggo::ray3d_float & ray_to_light) const
-  {
-    if (_shader)
-    {
-      return _shader->shade(object_color, light_color, ray, world_normal, ray_to_light);
-    }
-    else
-    {
-      return ggo::color::BLACK;
-    }
   }
 
   //////////////////////////////////////////////////////////////
@@ -158,24 +118,31 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::vector<ggo::ray3d_float> object3d::sample_rays(int samples_count) const
+  ggo::ray3d_float object3d::sample_ray(float random_variable1, float random_variable2) const
   {
     if (!_shape)
     {
-      return std::vector<ggo::ray3d_float>();
+      return ggo::ray3d_float();
     }
 
-    auto rays = _shape->sample_rays(samples_count);
+    ggo::ray3d_float ray = _shape->sample_ray(random_variable1, random_variable2);
 
     if (_discard_basis == false)
     {
-      for (auto & ray : rays)
-      {
-        _basis.ray_from_local_to_world(ray);
-      }
+      _basis.ray_from_local_to_world(ray);
     }
 
-    return rays;
+    return ray;
+  }
+
+  //////////////////////////////////////////////////////////////
+  ggo::ray3d_float object3d::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const
+  {
+    ggo::vector3d_float reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+    GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+    GGO_ASSERT(ggo::dot(reflected_dir, world_normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
+
+    return ggo::ray3d_float(world_normal.pos(), reflected_dir, false);
   }
 
   //////////////////////////////////////////////////////////////
@@ -200,6 +167,43 @@ namespace ggo
     GGO_ASSERT_GE(ggo::dot(reflected_dir, world_normal.dir()), -0.001f);
 
     return ggo::ray3d_float(world_normal.pos(), reflected_dir, false);
+  }
+
+  //////////////////////////////////////////////////////////////
+  bool object3d::transmit_ray(ggo::ray3d_float & ray, ggo::ray3d_float world_normal, int & depth) const
+  {
+    // Transmit the ray into the current object.
+    if (ggo::raytracer::transmit_ray(ray, world_normal, 1.0f, _density) == false)
+    {
+      return false;
+    }
+
+    // Bounce if ray internally until it leaves the current object.
+    while (true)
+    {
+      depth -= 1;
+      if (depth <= 0)
+      {
+        return false;
+      }
+
+      // Find intersection between the current ray and the current object.
+      float dist = -1.f;
+      if (_shape->intersect_ray(ray, dist, world_normal) == false)
+      {
+        return false;
+      }
+
+      // Does the ray gest out of the objects?
+      if (ggo::raytracer::transmit_ray(ray, world_normal, _density, 1.f) == true)
+      {
+        return true;
+      }
+    }
+
+    GGO_FAIL();
+
+    return false;
   }
 }
 

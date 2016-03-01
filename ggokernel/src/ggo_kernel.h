@@ -17,32 +17,24 @@
 //////////////////////////////////////////////////////////////
 // Debug.
 #ifdef GGO_DEBUG
-#ifdef WIN32
-	void	ggo_win32_trace(const char * text);
-	void	ggo_assert(bool b);
-	#define GGO_TRACE(zzz,...) { char text[2000]; sprintf_s(text, 2000, zzz, __VA_ARGS__); ggo_win32_trace( text ); }
-	#define GGO_ASSERT(zzz) ggo_assert(zzz)
+#ifdef GGO_WIN
+  void GGO_ASSERT(bool b);
 #else
-	#include <assert.h>
-	#define	GGO_TRACE(...) printf(__VA_ARGS__)
-	#define	GGO_ASSERT(zzz) assert(zzz)
-  #define	GGO_ASSERT_EQ(v1, v2) if ((v1) != (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] != " << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_NE(v1, v2) if ((v1) == (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] == " << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_LT(v1, v2) if ((v1) >= (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] >= " << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_LE(v1, v2) if ((v1) >  (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] > "  << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_GT(v1, v2) if ((v1) <= (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] <= " << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_GE(v1, v2) if ((v1) <  (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] < "  << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); }
-  #define	GGO_ASSERT_BTW(v1, v2, v3) if ((v1) < (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] < "  << #v2 << " [=" << (v2) << "] !" << std::endl; assert(false); } \
-                                     if ((v1) > (v3)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] > "  << #v3 << " [=" << (v3) << "] !" << std::endl; assert(false); }
+  #include <assert.h>
+  #define	GGO_ASSERT(zzz) assert(zzz)
 #endif
-	#define	GGO_FAIL() (GGO_ASSERT(0))
+  #define	GGO_TRACE(...) printf(__VA_ARGS__)
+  #define	GGO_ASSERT_EQ(v1, v2) if ((v1) != (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] != " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_NE(v1, v2) if ((v1) == (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] == " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_LT(v1, v2) if ((v1) >= (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] >= " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_LE(v1, v2) if ((v1) >  (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] > "  << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_GT(v1, v2) if ((v1) <= (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] <= " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_GE(v1, v2) if ((v1) <  (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] < "  << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define GGO_ASSERT_FLOAT_EQ(v1, v2) if (std::abs(v1 - v2) > 0.001f) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] != "  << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
+  #define	GGO_ASSERT_BTW(v1, v2, v3) if ((v1) < (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] < "  << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); } \
+                                     if ((v1) > (v3)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] > "  << #v3 << " [=" << (v3) << "] !" << std::endl; GGO_FAIL(); }
 #else
-#ifdef WIN32
-	#define GGO_TRACE(...)
-#else
-	#define NDEBUG
-	#define GGO_TRACE(...)
-#endif
+ #define	GGO_TRACE(...)
 	#define	GGO_ASSERT(zzz)
   #define	GGO_ASSERT_EQ(v1, v2)
   #define	GGO_ASSERT_NE(v1, v2)
@@ -50,9 +42,10 @@
   #define	GGO_ASSERT_LE(v1, v2)
   #define	GGO_ASSERT_GT(v1, v2)
   #define	GGO_ASSERT_GE(v1, v2)
+  #define GGO_ASSERT_FLOAT_EQ(v1, v2)
   #define	GGO_ASSERT_BTW(v1, v2, v3)
-	#define	GGO_FAIL()
 #endif
+#define	GGO_FAIL() GGO_ASSERT(0)
 
 //////////////////////////////////////////////////////////////
 // Enumerations.
@@ -221,33 +214,48 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// Containers
+// Containers.
 namespace ggo
 {
-  template <typename Container, typename Predicate>
-  void remove_if(Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  void remove_if(container & c, predicate p)
   {
-    auto new_end = std::remove_if(container.begin(), container.end(), predicate);
+    auto new_end = std::remove_if(c.begin(), c.end(), p);
 
-    container.erase(new_end, container.end()); // Because std::remove_if does not remove, it just moves actually.
+    c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
   }
 
-  template <typename Container>
-  void shuffle(Container & container)
+  template <typename container>
+  void shuffle(container & c)
   {
-    std::shuffle(container.begin(), container.end(), get_random_generator());
+    std::shuffle(c.begin(), c.end(), get_random_generator());
   }
   
-  template <typename Container, typename Predicate>
-  void sort(Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  void sort(container & c, predicate p)
   {
-    std::sort(container.begin(), container.end(), predicate);
+    std::sort(c.begin(), c.end(), p);
   }
 
-  template <typename Container, typename Predicate>
-  bool find(const Container & container, Predicate predicate)
+  template <typename container, typename predicate>
+  bool find_if(const container & c, predicate p)
   {
-    return std::find_if(container.begin(), container.end(), predicate) != container.end();
+    return std::find_if(c.begin(), c.end(), p) != c.end();
+  }
+
+  template <typename container, typename data_type>
+  bool find(const container & c, const data_type & v)
+  {
+    return std::find(c.begin(), c.end(), v) != c.end();
+  }
+
+  template <typename container, typename data_type>
+  void push_once(container & c, const data_type & v)
+  {
+    if (std::find(c.begin(), c.end(), v) == c.end())
+    {
+      c.push_back(v);
+    }
   }
 }
 

@@ -32,16 +32,16 @@ GGO_TEST(test_scene, scene7)
   for (int i = -1; i <= 1; ++i)
   {
     auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(2.f * static_cast<float>(i), 0.f, 0.f), 1.f);
-    auto object = scene_builder.add_object(sphere, ggo::color::RED);
+    auto object = scene_builder.add_object(sphere, ggo::color::RED, false);
     object->set_reflection_factor(1);
     object->set_roughness(roughness);
     
     roughness /= 5;
   }
   
-  auto plane = std::make_shared<ggo::plane3d<float>>(0.f, 0.f, 1.f, 1.f);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
   auto checker_material = std::make_shared<ggo::checker_xy_material>(ggo::color::WHITE, ggo::color(0.5f, 0.5f, 0.5f), 0.5f);
-  scene_builder.add_object(plane, checker_material);
+  scene_builder.add_object(plane, checker_material, false);
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, GGO_SAMPLES_COUNT);

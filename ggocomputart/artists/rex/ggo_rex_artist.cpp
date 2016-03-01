@@ -13,7 +13,7 @@ namespace
   const int GGO_EDGES_VERTICES_COUNT = 15;
   const int GGO_TRIANGLES_COUNT 		 = GGO_EDGES_VERTICES_COUNT * GGO_EDGES_VERTICES_COUNT;
   
-  using ggo_edge = ggo::link<ggo::point2d_float>;
+  using ggo_edge = ggo::link<const ggo::point2d_float *>;
 }
 
 //////////////////////////////////////////////////////////////
@@ -87,36 +87,36 @@ void ggo_rex_artist::init()
 	std::vector<ggo_edge> edges;
 	for (const auto & triangle : triangles)
 	{
-		ggo_edge edge;
+		ggo_edge edge(nullptr, nullptr);
 
 		// The 3 edges of the current triangle. Store them only once.
 		edge = ggo_edge(triangle._v1, triangle._v2);
 		if (std::find(edges.begin(), edges.end(), edge) == edges.end())
 		{
 			edges.push_back(edge);
-			_edges.push_back(ggo::segment_float(*(edge._v1), *(edge._v2)));
+			_edges.push_back(ggo::segment_float(*edge._v1, *edge._v2));
 		}
 		
 		edge = ggo_edge(triangle._v2, triangle._v3);
 		if (std::find(edges.begin(), edges.end(), edge) == edges.end())
 		{
 			edges.push_back(edge);
-			_edges.push_back(ggo::segment_float(*(edge._v1), *(edge._v2)));
+			_edges.push_back(ggo::segment_float(*edge._v1, *edge._v2));
 		}
 		
 		edge = ggo_edge(triangle._v3, triangle._v1);
 		if (std::find(edges.begin(), edges.end(), edge) == edges.end())
 		{
 			edges.push_back(edge);
-			_edges.push_back(ggo::segment_float(*(edge._v1), *(edge._v2)));
+			_edges.push_back(ggo::segment_float(*edge._v1, *edge._v2));
 		}
 		
-		GGO_ASSERT((triangle._v1->x() > -0.0001) && (triangle._v1->x() < 1.0001));
-		GGO_ASSERT((triangle._v1->y() > -0.0001) && (triangle._v1->y() < 1.0001));
-		GGO_ASSERT((triangle._v2->x() > -0.0001) && (triangle._v2->x() < 1.0001));
-		GGO_ASSERT((triangle._v2->y() > -0.0001) && (triangle._v2->y() < 1.0001));
-		GGO_ASSERT((triangle._v3->x() > -0.0001) && (triangle._v3->x() < 1.0001));
-		GGO_ASSERT((triangle._v3->y() > -0.0001) && (triangle._v3->y() < 1.0001));
+		GGO_ASSERT_BTW(triangle._v1->x(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v1->y(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v2->x(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v2->y(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v3->x(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v3->y(), -0.0001f, 1.0001f);
 		
 		// Save the triangles.
 		ggo_color_triangle color_triangle;

@@ -32,7 +32,7 @@ GGO_TEST(test_scene, scene6)
   for (int i = -2; i < 5; ++i)
   {
     auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(static_cast<float>(i), 2.f * static_cast<float>(i), 0.f), 0.5f);
-    scene_builder.add_object(sphere, ggo::color::YELLOW);
+    scene_builder.add_object(sphere, ggo::color::YELLOW, false);
   }
 
   // Rendering.

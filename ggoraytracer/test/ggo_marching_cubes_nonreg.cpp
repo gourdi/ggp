@@ -38,7 +38,7 @@ GGO_TEST(marching_cubes, test)
                                                                  ggo::vertex<float>(triangle.v2(), triangle.v2()),
                                                                  ggo::vertex<float>(triangle.v3(), triangle.v3()));
 
-      scene_builder.add_object(face_ptr, ggo::color::WHITE);
+      scene_builder.add_object(face_ptr, ggo::color::WHITE, true);
     }
   }
   

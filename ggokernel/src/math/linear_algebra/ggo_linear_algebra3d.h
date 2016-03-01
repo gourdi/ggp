@@ -35,7 +35,7 @@ namespace ggo
                         m[1][0], m[1][1], m[1][2],
                         m[2][0], m[2][1], m[2][2]);
 
-    if (std::abs(det) < 0.000001) 
+    if (std::abs(det) < T(0.000001))
     {
       return false;
     }

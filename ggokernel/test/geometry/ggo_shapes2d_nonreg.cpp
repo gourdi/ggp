@@ -1,16 +1,11 @@
-#ifdef WIN32
-#pragma warning(disable: 4305) // possible loss of data
-#pragma warning(disable: 4244) // possible loss of data
-#endif
-
 #include "../ggo_kernel_nonreg.h"
 #include <ggo_shapes2d.h>
 
 /////////////////////////////////////////////////////////////////////
 #define GGO_CHECK_RECT_INTERSECTION(shape, left, right, bottom, top, res) \
   { ggo::rect_data<float> rect_data {{static_cast<float>(left), static_cast<float>(bottom)}, \
-                                     static_cast<float>(right - left), \
-                                     static_cast<float>(top - bottom)}; \
+                                      static_cast<float>(right - left), \
+                                      static_cast<float>(top - bottom)}; \
   GGO_CHECK(shape.get_rect_intersection(rect_data) == res); }
 
 /////////////////////////////////////////////////////////////////////
@@ -651,4 +646,52 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 3, 5, ggo::rect_intersection::UNKNOWN);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 5, 6, ggo::rect_intersection::DISJOINTS);
   }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(shapes2d, half_plane)
+{
+  ggo::half_plane<float> half_plane({ 1.f, 1.f }, 1.f);
+
+  GGO_CHECK(half_plane.is_point_inside(0.f, 0.f) == true);
+  GGO_CHECK(half_plane.is_point_inside(1.f, 1.f) == false);
+  GGO_CHECK(half_plane.is_point_inside(2.f, 0.f) == false);
+  GGO_CHECK(half_plane.is_point_inside(0.f, 2.f) == false);
+  GGO_CHECK(half_plane.is_point_inside(-1.f, 0.f) == true);
+  GGO_CHECK(half_plane.is_point_inside(0.f, -1.f) == true);
+
+  GGO_CHECK_FABS(half_plane.dist_to_point(0, 0), 0);
+  GGO_CHECK_FABS(half_plane.dist_to_point(0, 1), 0);
+  GGO_CHECK_FABS(half_plane.dist_to_point(1, 0), 0);
+  GGO_CHECK_FABS(half_plane.dist_to_point(1, 1), std::sqrt(2.f) - 1.f);
+  GGO_CHECK_FABS(half_plane.dist_to_point(2, 0), std::sqrt(2.f) - 1.f);
+  GGO_CHECK_FABS(half_plane.dist_to_point(0, 2), std::sqrt(2.f) - 1.f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(shapes2d, oriented_box)
+{
+  ggo::oriented_box<float> box({ 3.f, 2.f }, { 2.f, 0.f }, 2.f, 1.f);
+
+  // Check second direction.
+  GGO_CHECK(box.dir().is_normalized());
+
+  // Check second direction.
+  GGO_CHECK(box.dir2().is_normalized());
+  GGO_CHECK_FABS(ggo::dot(box.dir(), box.dir2()), 0.f);
+
+  // Vertices.
+  auto points = box.get_draw_points();
+  GGO_CHECK(find_point(points, 1.0f, 1.0f));
+  GGO_CHECK(find_point(points, 1.0f, 3.0f));
+  GGO_CHECK(find_point(points, 5.0f, 1.0f));
+  GGO_CHECK(find_point(points, 5.0f, 3.0f));
+
+  // Rotation.
+  box.rotate(ggo::PI<float>() / 4.f, { 1.f, 1.f });
+  auto points2 = box.get_draw_points();
+  GGO_CHECK(find_point(points2, 1.0f, 1.0f));
+  GGO_CHECK(find_point(points2, 1.0f - std::sqrt(2.f), 1.0f + std::sqrt(2.f)));
+  GGO_CHECK(find_point(points2, 1.0f + 2.f * std::sqrt(2.f), 1.0f + 2.f * std::sqrt(2.f)));
+  GGO_CHECK(find_point(points2, 1.0f + std::sqrt(2.f), 1.0f + 3.0f * std::sqrt(2.f)));
 }

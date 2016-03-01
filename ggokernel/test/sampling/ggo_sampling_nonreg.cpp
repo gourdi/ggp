@@ -1,9 +1,5 @@
-#ifdef WIN32
-#pragma warning(disable: 4305) // possible loss of data
-#pragma warning(disable: 4244) // possible loss of data
-#endif
-
 #include "../ggo_kernel_nonreg.h"
+#include <ggo_grid_sampling.h>
 #include <ggo_halton.h>
 #include <ggo_best_candidate_sequence.h>
 
@@ -13,7 +9,7 @@ GGO_TEST(sampling, disc)
   // Delta sampling.
   {
     ggo::disc_float disc(0, 0, 2);
-    auto samples = disc.uniform_sampling(1);
+    auto samples = ggo::grid_sampling(disc, 1.f);
 
     GGO_CHECK(samples.size() == 12);
 
@@ -35,7 +31,7 @@ GGO_TEST(sampling, disc)
 
   {
     ggo::disc_float disc(2.5, 1.5, 1);
-    auto samples = disc.uniform_sampling(1);
+    auto samples = ggo::grid_sampling(disc, 1.f);
 
     GGO_CHECK(samples.size() == 4);
 
@@ -48,7 +44,7 @@ GGO_TEST(sampling, disc)
   // Samples count sampling.
   {
     ggo::disc_float disc(4, 3, 1);
-    auto samples = disc.minimum_uniform_sampling(3, 1000);
+    auto samples = minimum_grid_sampling(disc, 3, 1000);
 
     GGO_CHECK(samples.size() == 4);
 
@@ -60,7 +56,7 @@ GGO_TEST(sampling, disc)
 
   {
     ggo::disc_float disc(-2, 5, 7);
-    auto samples = disc.minimum_uniform_sampling(12345);
+    auto samples = minimum_grid_sampling(disc, 12345);
 
     GGO_CHECK(samples.size() == 12352);
 
@@ -77,7 +73,7 @@ GGO_TEST(sampling, rect)
   {
     ggo::rect_float rect { 1.5, 0.5, 2, 4 };
 
-    auto samples = rect.uniform_sampling(1);
+    auto samples = grid_sampling(rect, 1.f);
 
     GGO_CHECK(samples.size() == 8);
     GGO_CHECK(find_point(samples, ggo::point2d_float(2, 1)));
@@ -93,7 +89,7 @@ GGO_TEST(sampling, rect)
   {
     ggo::rect_float rect{ 1, 1, 3, 2 };
 
-    auto samples = rect.minimum_uniform_sampling(3);
+    auto samples = minimum_grid_sampling(rect, 3);
 
     GGO_CHECK(samples.size() == 4);
     GGO_CHECK(find_point(samples, ggo::point2d_float(1.5, 1)));

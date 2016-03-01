@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{635fd782-a7f2-4626-88bb-daf5816b96ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interpolation">
+      <UniqueIdentifier>{2ee0da41-c37f-4396-bfdf-80eefbf71027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="linear_algebra">
+      <UniqueIdentifier>{b6c8ebd2-d7c5-48d4-9b2b-4ca597d93b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sampling">
+      <UniqueIdentifier>{c113e208-af58-4b18-a1c8-b4e0d52cde28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="signal_proc">
+      <UniqueIdentifier>{434b1d57-32fa-4cd1-b00a-e3c5aace5795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{3e96d46e-e6c4-4da1-ba4e-ac66dd4cd53c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp">
+      <Filter>interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="test\interpolation\ggo_interpolation2d_nonreg.cpp">
+      <Filter>interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="test\sampling\ggo_pixel_sampling_nonreg.cpp">
+      <Filter>sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp">
+      <Filter>sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp">
+      <Filter>signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp">
+      <Filter>signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp">
+      <Filter>signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_linear_algebra2d_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_linear_algebra3d_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_matrix_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_sparse_matrix_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ggo_base_nonreg.cpp" />
+    <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
+    <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />
+    <ClCompile Include="test\ggo_kernel_nonreg.cpp" />
+    <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
+    <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
+    <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp">
+      <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ggo_link_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array2d_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array_nonreg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test\ggo_kernel_nonreg.h" />
+  </ItemGroup>
+</Project>

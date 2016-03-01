@@ -1,7 +1,7 @@
 include ../Makefile.config
 
 CFLAGS+=-Isrc \
-        -Isrc/io \
+        -Isrc/nonreg \
         -Isrc/math \
         -Isrc/math/linear_algebra \
         -Isrc/math/interpolation \
@@ -13,9 +13,7 @@ CFLAGS+=-Isrc \
         -Isrc/math/sampling \
         -Isrc/math/sampling/pixel_sampling \
         -Isrc/math/sampling/low_discrepancy_sequences \
-        -Isrc/math/sampling/shape_sampling \
-        -I../ggononreg/include
-LIBS=../ggononreg/$(LIBDIR)/libggononreg.a
+        -Isrc/math/sampling/shape_sampling
 
 NONREG_EXE=./test/kernel_nonreg
 HALTON_TOOL=./tools/halton
@@ -114,7 +112,10 @@ HEADERS=src/ggo_kernel.h \
         src/math/scalar_fields_2d/ggo_perlin_noise_field_2d.h
 LIB=$(LIBDIR)/libggokernel.a
 OBJ=src/ggo_kernel.o \
+    src/ggo_color_stream.o \
     src/time/ggo_chronometer.o \
+    src/nonreg/ggo_unit_test.o \
+    src/nonreg/ggo_unit_test_manager.o \
     src/math/sampling/low_discrepancy_sequences/ggo_halton.o \
     src/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.o \
     src/math/sampling/pixel_sampling/ggo_pixel_sampler_abc.o \
@@ -128,6 +129,8 @@ OBJ=src/ggo_kernel.o \
     src/math/delaunay_triangulation/ggo_delaunay_triangulation.o \
     src/math/marching_cubes/ggo_marching_cubes.o
 NONREG_OBJ=test/ggo_kernel_nonreg.o \
+           test/ggo_array_nonreg.o \
+           test/ggo_array2d_nonreg.o \
            test/ggo_scalar_field2d_nonreg.o \
            test/ggo_base_nonreg.o \
            test/ggo_quadratic_nonreg.o \
@@ -155,7 +158,7 @@ check: $(NONREG_EXE)
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NONREG_EXE): $(OBJ) $(NONREG_OBJ) $(LIBS)
+$(NONREG_EXE): $(OBJ) $(NONREG_OBJ)
 	$(CC) $^ $(LDFLAGS) -o $(NONREG_EXE)
 
 $(HALTON_TOOL): src/math/sampling/low_discrepancy_sequences/ggo_halton.o tools/halton.cpp

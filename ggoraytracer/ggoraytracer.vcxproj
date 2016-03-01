@@ -32,11 +32,11 @@
     <ClCompile Include="src\raycasters\ggo_brute_force_raycaster.cpp" />
     <ClCompile Include="src\raycasters\ggo_raycaster_abc.cpp" />
     <ClCompile Include="src\renderers\ggo_antialiasing_renderer.cpp" />
-    <ClCompile Include="src\renderers\ggo_bidirectional_path_tracing_renderer.cpp" />
+    <ClCompile Include="src\renderers\ggo_bidirectional_lighting.cpp" />
+    <ClCompile Include="src\renderers\ggo_photon_mapping.cpp" />
     <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_mono_sampling_renderer.cpp" />
     <ClCompile Include="src\renderers\ggo_renderer_abc.cpp" />
-    <ClCompile Include="src\shaders\ggo_phong_shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backgrounds\ggo_background3d_abc.h" />
@@ -57,13 +57,12 @@
     <ClInclude Include="src\raycasters\ggo_brute_force_raycaster.h" />
     <ClInclude Include="src\raycasters\ggo_raycaster_abc.h" />
     <ClInclude Include="src\renderers\ggo_antialiasing_renderer.h" />
-    <ClInclude Include="src\renderers\ggo_bidirectional_path_tracing_renderer.h" />
+    <ClInclude Include="src\renderers\ggo_bidirectional_lighting.h" />
+    <ClInclude Include="src\renderers\ggo_photon_mapping.h" />
     <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h" />
-    <ClInclude Include="src\renderers\ggo_indirect_lighting_renderer_abc.h" />
+    <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h" />
     <ClInclude Include="src\renderers\ggo_mono_sampling_renderer.h" />
     <ClInclude Include="src\renderers\ggo_renderer_abc.h" />
-    <ClInclude Include="src\shaders\ggo_phong_shader.h" />
-    <ClInclude Include="src\shaders\ggo_shader_abc.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1F1819A9-3C40-4A9F-A69D-B950AC01CBDD}</ProjectGuid>
@@ -119,12 +118,12 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\materials;$(SolutionDir)\ggoraytracer\src\shaders</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\materials;$(SolutionDir)\ggoraytracer\src\shaders</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -141,7 +140,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>

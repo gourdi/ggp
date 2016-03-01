@@ -48,7 +48,7 @@ namespace ggo
 
     // Interfaces.
     void	                move(T dx, T dy) override { _p1.move(dx, dy); _p2.move(dx, dy); };
-    void	                rotate(T angle, const ggo::set2<T> & center) override { _p1.rotate(angle, center); _p2.rotate(angle, center); };
+    void	                rotate(T angle) override { _p1.rotate(angle); _p2.rotate(angle); };
     T                     dist_to_point(T x, T y) const override;
 
   private:

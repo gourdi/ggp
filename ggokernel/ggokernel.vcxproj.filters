@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="src\ggo_array.h" />
+    <ClInclude Include="src\ggo_array2d.h" />
+    <ClInclude Include="src\ggo_best_match.h" />
+    <ClInclude Include="src\ggo_data_fetcher.h" />
+    <ClInclude Include="src\ggo_ease.h" />
+    <ClInclude Include="src\ggo_helpers.h" />
+    <ClInclude Include="src\ggo_io.h" />
+    <ClInclude Include="src\ggo_kernel.h" />
+    <ClInclude Include="src\ggo_link.h" />
+    <ClInclude Include="src\ggo_memory.h" />
+    <ClInclude Include="src\ggo_stdint.h" />
+    <ClInclude Include="src\ggo_tree.h" />
+    <ClInclude Include="src\math\ggo_distance2d.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_distance3d.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_harmonic_curve.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_harmonic_surface.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_quadratic.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_set2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_set3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_box_filter.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_dct.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_dwt.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_fourier.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_laplacian.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\time\ggo_chronometer.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h">
+      <Filter>math\delaunay_triangulation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\interpolation\ggo_interpolation2d.h">
+      <Filter>math\interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\interpolation\ggo_interpolation3d.h">
+      <Filter>math\interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\interpolation\ggo_triangle_interpolation.h">
+      <Filter>math\interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\interpolation\ggo_curve.h">
+      <Filter>math\interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\interpolation\ggo_interpolation1d.h">
+      <Filter>math\interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra3d.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra2d.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_matrix.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_matrix.imp.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_sparse_matrix.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\marching_cubes\ggo_marching_cubes.h">
+      <Filter>math\marching_cubes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.h">
+      <Filter>math\sampling\low_discrepancy_sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.h">
+      <Filter>math\sampling\low_discrepancy_sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_poisson_sampling.h">
+      <Filter>math\sampling\low_discrepancy_sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.h">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.h">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.h">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_shape_sampling.h">
+      <Filter>math\sampling\shape_sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_perlin_noise_field_2d.h">
+      <Filter>math\scalar_fields_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_scalar_field_2d_abc.h">
+      <Filter>math\scalar_fields_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_shape_field_2d.h">
+      <Filter>math\scalar_fields_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_gaussian_field_2d.h">
+      <Filter>math\scalar_fields_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\scalar_fields_2d\ggo_multi_scalar_field_2d.h">
+      <Filter>math\scalar_fields_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_disc.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_extended_segment.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_multi_shape.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_polygon.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_polygon.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_rect.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_rect.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_segment.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_segment.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_shapes2d.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_spline.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_spline.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_circle.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_circle.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_disc.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_basis3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_basis3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_disc3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_disc3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_parallelogram3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_parallelogram3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_plane3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_plane3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_ray3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_segment3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_shapes3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_face3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_face3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ggo_tree3d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_half_plane.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_oriented_box.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_nonreg.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_unit_test.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\nonreg\ggo_unit_test_manager.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_grid_sampling.h">
+      <Filter>math\sampling\shape_sampling</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ggo_kernel.cpp" />
+    <ClCompile Include="src\math\signal_proc\ggo_box_filter.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\signal_proc\ggo_dct.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\signal_proc\ggo_gaussian_blur.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\signal_proc\ggo_laplacian.cpp">
+      <Filter>math\signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\time\ggo_chronometer.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.cpp">
+      <Filter>math\delaunay_triangulation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\marching_cubes\ggo_marching_cubes.cpp">
+      <Filter>math\marching_cubes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp">
+      <Filter>math\sampling\low_discrepancy_sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp">
+      <Filter>math\sampling\low_discrepancy_sequences</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.cpp">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.cpp">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp">
+      <Filter>math\sampling\pixel_sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonreg\ggo_unit_test.cpp">
+      <Filter>nonreg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\nonreg\ggo_unit_test_manager.cpp">
+      <Filter>nonreg</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{cffffe31-1181-47a2-a165-9d34cc7703bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\signal_proc">
+      <UniqueIdentifier>{c870758e-8780-4792-8bf7-da315e55235c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{0593e7e5-984e-4e20-b4e7-70a3a4cc9149}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\delaunay_triangulation">
+      <UniqueIdentifier>{ce3a7511-1b4a-4ac8-9790-209962539fde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\interpolation">
+      <UniqueIdentifier>{042c0fe8-7fec-464d-9735-05af4781d9d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\linear_algebra">
+      <UniqueIdentifier>{329ec35f-a87e-410c-86e5-f997b9fccd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\marching_cubes">
+      <UniqueIdentifier>{a95367df-6a81-4683-b9a5-71d83cbb63fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\sampling">
+      <UniqueIdentifier>{e67109c4-19ef-4af8-945c-44f32bca4ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\sampling\low_discrepancy_sequences">
+      <UniqueIdentifier>{f29c2192-c36c-408d-9b72-200caa083906}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\sampling\pixel_sampling">
+      <UniqueIdentifier>{e97bdbc2-7579-4e2b-be93-834bdd19d3fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\sampling\shape_sampling">
+      <UniqueIdentifier>{f7562b5c-e6d5-4731-8f85-192a39939ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\scalar_fields_2d">
+      <UniqueIdentifier>{8a97cc12-d064-4ad2-82b8-1afa1ae58ec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\shapes_2d">
+      <UniqueIdentifier>{d32c2eba-1508-4588-bf12-5c827bec239c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\shapes_3d">
+      <UniqueIdentifier>{9edebc53-6726-45c5-8f84-742bb5e8aef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nonreg">
+      <UniqueIdentifier>{41e13c14-5fa5-4b4b-b378-71121fad7dd1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

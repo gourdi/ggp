@@ -251,7 +251,7 @@ private:
 
   std::vector<std::shared_ptr<const ggo::object3d>> _objects;
   ggo::axis_aligned_box3d<float>                    _bounding_box;
-  std::auto_ptr<ggo::brute_force_raycaster>         _brute_force_raycaster;
+  std::unique_ptr<ggo::brute_force_raycaster>       _brute_force_raycaster;
 };
 
 //////////////////////////////////////////////////////////////
@@ -323,10 +323,10 @@ public:
 
 private:
 
-  bool hit_test(const ggo::ray3d_float & ray,
-                float dist_max,
-                const ggo::object3d * exclude_object1, 
-                const ggo::object3d * exclude_object2) const override
+  bool check_visibility(const ggo::ray3d_float & ray,
+                        float dist_max,
+                        const ggo::object3d * exclude_object1, 
+                        const ggo::object3d * exclude_object2) const override
   {
     ggo::ray3d_float normal_tmp;
 

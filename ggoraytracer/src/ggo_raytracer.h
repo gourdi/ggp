@@ -15,27 +15,37 @@ namespace ggo
   {
   public:
 
-    static ggo::color shade(const ggo::ray3d_float & ray,
-                            const ggo::object3d * hit_object,
-                            const ggo::color & hit_object_color,
-                            const ggo::ray3d_float & world_normal,
-                            const ggo::object3d * light,
-                            const ggo::point3d_float & light_point,
-                            const ggo::scene & scene,
-                            const ggo::raycaster_abc * raycaster);
+    static ggo::color process(const ggo::ray3d_float & ray,
+                              const ggo::scene & scene,
+                              const ggo::raytrace_params & raytrace_params);
 
-    static ggo::color mono_sampling_raytrace(const ggo::ray3d_float & ray,
-                                             const ggo::scene & scene,
-                                             const ggo::raytrace_params & raytrace_params);
+    static ggo::color process(const ggo::ray3d_float & ray,
+                              const ggo::scene & scene,
+                              const ggo::raytrace_params & raytrace_params,
+                              float random_variable1,
+                              float random_variable2);
 
-  private:
+    //////////////////////////////////////////////////////////////
+    // Transmission/reflection.
 
-    static ggo::color mono_sampling_raytrace_recursive(const ggo::ray3d_float & ray,
-                                                       const ggo::scene & scene,
-                                                       const ggo::raycaster_abc * raycaster,
-                                                       int depth,
-                                                       const ggo::object3d * inside_object,
-                                                       const ggo::object3d * previous_hit_object);
+    // Returns 'false' in case the ray is below the incidence angle and gets reflected.
+    static bool transmit_ray(ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float current_density, float next_density);
+
+    static float compute_reflection_factor(const ggo::ray3d_float& ray, const ggo::ray3d_float& world_normal, float current_density, float next_density);
+
+    //////////////////////////////////////////////////////////////
+    // Shadings.
+    static ggo::color diffuse_shading(const ggo::color & object_color,
+                                      const ggo::color & light_color,
+                                      const ggo::ray3d_float & world_normal,
+                                      const ggo::ray3d_float & ray_to_light);
+
+    static ggo::color specular_shading(float phong_factor,
+                                       float phong_shininess,
+                                       const ggo::color & light_color,
+                                       const ggo::ray3d_float & ray,
+                                       const ggo::ray3d_float & world_normal,
+                                       const ggo::ray3d_float & ray_to_light);
   };
 }
 

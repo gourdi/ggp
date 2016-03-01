@@ -22,8 +22,8 @@ HEADERS=src/ggo_object3d.h \
         src/renderers/ggo_mono_sampling_renderer.h \
         src/renderers/ggo_antialiasing_renderer.h \
         src/renderers/ggo_global_sampling_renderer.h \
-        src/renderers/ggo_indirect_lighting_renderer_abc.h \
-        src/renderers/ggo_bidirectional_path_tracing_renderer.h \
+        src/renderers/ggo_indirect_lighting_abc.h \
+        src/renderers/ggo_bidirectional_lighting.h \
         src/cameras/ggo_camera_abc.h \
         src/cameras/ggo_point_camera.h \
         src/cameras/ggo_isometric_camera.h \
@@ -47,7 +47,7 @@ OBJ=src/ggo_object3d.o \
     src/renderers/ggo_mono_sampling_renderer.o \
     src/renderers/ggo_antialiasing_renderer.o \
     src/renderers/ggo_global_sampling_renderer.o \
-    src/renderers/ggo_bidirectional_path_tracing_renderer.o \
+    src/renderers/ggo_bidirectional_lighting.o \
     src/materials/ggo_solid_color_material.o \
     src/materials/ggo_checker_material.o \
     src/cameras/ggo_camera_abc.o \
@@ -68,7 +68,8 @@ NONREG_OBJ=test/ggo_raytracer_nonreg.o \
            test/ggo_marching_cubes_nonreg.o \
            test/ggo_polygon3d_nonreg.o \
            test/ggo_bidirectional_lighting.o \
-           test/ggo_parallelogram3d_nonreg.o
+           test/ggo_parallelogram3d_nonreg.o \
+           test/ggo_transmission_nonreg.o
 NONREG_EXE=./test/raytracer_nonreg  
     
 all: $(LIB) $(NONREG_EXE)
