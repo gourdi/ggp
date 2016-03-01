@@ -65,9 +65,9 @@ namespace ggo
   }
 
   template <typename input_container, typename data_type, typename output_container = std::vector<data_type>>
-  output_container find_linked(input_container container, data_type v)
+  output_container find_linked(const input_container & c, data_type v)
   {
-    return find_linked<input_container::const_iterator, data_type, output_container>(container.begin(), container.end(), v);
+    return find_linked<input_container::const_iterator, data_type, output_container>(c.begin(), c.end(), v);
   }
 }
 

@@ -176,6 +176,7 @@
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.h" />
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.h" />
     <ClInclude Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.h" />
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_grid_sampling.h" />
     <ClInclude Include="src\math\sampling\shape_sampling\ggo_shape_sampling.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_gaussian_field_2d.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_multi_scalar_field_2d.h" />

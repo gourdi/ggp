@@ -214,7 +214,7 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// containers
+// Containers.
 namespace ggo
 {
   template <typename container, typename predicate>

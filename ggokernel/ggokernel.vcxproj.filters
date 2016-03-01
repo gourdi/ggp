@@ -278,6 +278,9 @@
     <ClInclude Include="src\nonreg\ggo_unit_test_manager.h">
       <Filter>nonreg</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\sampling\shape_sampling\ggo_grid_sampling.h">
+      <Filter>math\sampling\shape_sampling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

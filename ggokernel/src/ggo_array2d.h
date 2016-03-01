@@ -11,29 +11,32 @@ namespace ggo
   {
   public:
 
-              array2d();
-              array2d(int size_x, int size_y);
-              array2d(int size_x, int size_y, const T & value);
-             ~array2d() { delete[] _data; };
+                  array2d();
+                  array2d(int size_x, int size_y);
+                  array2d(int size_x, int size_y, const T & value);
+                  array2d(const array2d<T> & rhs);
+                  array2d(array2d<T> && rhs);
+                 ~array2d() { if (_data != nullptr) delete[] _data; };
 
-    T &			  operator()(unsigned x, unsigned y) { return _data[y * _size_x + x];}
-    const T &	operator()(unsigned x, unsigned y) const { return _data[y * _size_x + x];}
+    T &			      operator()(unsigned x, unsigned y) { return _data[y * _size_x + x]; }
+    const T &	    operator()(unsigned x, unsigned y) const { return _data[y * _size_x + x]; }
 
-    int			  get_size_x() const { return _size_x; }
-    int			  get_size_y() const { return _size_y; }
-    void		  set_size(int size_x, int size_y);
-  
-    void		  fill(const T & value) { std::fill(_data, _data + _size_x * _size_y, value); }
+    int			      get_size_x() const { return _size_x; }
+    int			      get_size_y() const { return _size_y; }
+    void		      set_size(int size_x, int size_y);
 
-    T *			  get_pointer() { return _data; }
-    const T *	get_pointer() const { return _data; }
-    
-    T *       begin() { return _data; }
-    const T * begin() const { return _data; }
-    T *       end() { return _data + _size_x * _size_y; }
-    const T * end() const { return _data + _size_x * _size_y; }
-    
-    void      operator=(const array2d & array) = delete;
+    void		      fill(const T & value) { std::fill(_data, _data + _size_x * _size_y, value); }
+
+    T *			      get_pointer() { return _data; }
+    const T *	    get_pointer() const { return _data; }
+
+    T *           begin() { return _data; }
+    const T *     begin() const { return _data; }
+    T *           end() { return _data + _size_x * _size_y; }
+    const T *     end() const { return _data + _size_x * _size_y; }
+
+    array2d<T> &  operator=(const array2d<T> & rhs);
+    array2d<T> &  operator=(array2d<T> && rhs);
 
   private:
 
@@ -41,7 +44,10 @@ namespace ggo
     int _size_x;
     int _size_y;
   };
+}
 
+namespace ggo
+{
   //////////////////////////////////////////////////////////////
   template <typename T>
   array2d<T>::array2d()
@@ -71,13 +77,74 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
+  array2d<T>::array2d(const array2d<T> & rhs)
+  {
+    _data = new T[rhs._size_x * rhs._size_y];
+    _size_x = rhs._size_x;
+    _size_y = rhs._size_y;
+  
+    std::copy(rhs._data, rhs._data + rhs._size_x * rhs._size_y, _data);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  array2d<T>::array2d(array2d<T> && rhs)
+  {
+    _data = rhs._data;
+    _size_x = rhs._size_x;
+    _size_y = rhs._size_y;
+
+    rhs._data = nullptr;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
   void array2d<T>::set_size(int size_x, int size_y)
   {
-    delete[] _data;
+    if (_data != nullptr)
+    {
+      delete[] _data;
+    }
 
     _data	= new T[size_x*size_y];
     _size_x	= size_x;
     _size_y	= size_y;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  array2d<T> & array2d<T>::operator=(const array2d<T> & rhs)
+  {
+    if (_data != nullptr)
+    {
+      delete[] _data;
+    }
+
+    _data = new T[rhs._size_x * rhs._size_y];
+    _size_x = rhs._size_x;
+    _size_y = rhs._size_y;
+
+    std::copy(rhs._data, rhs._data + rhs._size_x * rhs._size_y, _data);
+
+    return *this;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  array2d<T> & array2d<T>::operator=(array2d<T> && rhs)
+  {
+    if (_data != nullptr)
+    {
+      delete[] _data;
+    }
+
+    _data = rhs._data;
+    _size_x = rhs._size_x;
+    _size_y = rhs._size_y;
+
+    rhs._data = nullptr;
+
+    return *this;
   }
 }
 

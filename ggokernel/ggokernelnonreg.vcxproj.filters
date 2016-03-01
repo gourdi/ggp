@@ -70,6 +70,8 @@
       <Filter>trees</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_link_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array2d_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

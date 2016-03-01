@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp" />
     <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
     <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
+    <ClCompile Include="test\ggo_array_nonreg.cpp" />
     <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;_SCL_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -154,6 +156,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <PreprocessorDefinitions>_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
