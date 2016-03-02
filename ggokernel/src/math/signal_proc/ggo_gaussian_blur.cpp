@@ -80,7 +80,7 @@ namespace
                          int stride_out,
                          T_FILTER * filter,
                          int filter_size,
-                         const ggo::data_fetcher1d_abc<T_DATA> & data_fetcher)
+                         const ggo::const_data_fetcher1d_abc<T_DATA> & data_fetcher)
   {
     for (int x = 0; x < size; ++x)
     {
@@ -114,7 +114,7 @@ namespace
     int filter_size = setup_gaussian_filter_T<T_FILTER>(filter, params._max_filter_size, variance, params._filter_threshold);
       
     // Apply the filter.
-    apply_filter_1d_T<T_DATA, T_FILTER>(in, out, size, params._stride_in, params._stride_out, filter, filter_size, *params._data_fetcher);
+    apply_filter_1d_T<T_DATA, T_FILTER>(in, out, size, params._stride_in, params._stride_out, filter, filter_size, params._data_fetcher);
   }
   
   /////////////////////////////////////////////////////////////////////
@@ -143,7 +143,7 @@ namespace
     T_DATA * it_out = tmp;
     for (int y = 0; y < height; ++y)
     {
-      apply_filter_1d_T<T_DATA, T_FILTER>(it_in, it_out, width, params._stride_in, 1, filter, filter_size, *params._data_fetcher);
+      apply_filter_1d_T<T_DATA, T_FILTER>(it_in, it_out, width, params._stride_in, 1, filter, filter_size, params._data_fetcher);
       it_in += width * params._stride_in;
       it_out += width;
     }
@@ -153,7 +153,7 @@ namespace
     it_out = out;
     for (int x = 0; x < width; ++x)
     {
-      apply_filter_1d_T<T_DATA, T_FILTER>(it_in, it_out, height, width, params._stride_out * width, filter, filter_size, *params._data_fetcher);
+      apply_filter_1d_T<T_DATA, T_FILTER>(it_in, it_out, height, width, params._stride_out * width, filter, filter_size, params._data_fetcher);
       it_in += 1;
       it_out += params._stride_out;
     }
@@ -164,6 +164,8 @@ namespace
 // 1D
 namespace ggo
 {
+  gaussian_parameters<float> p;
+
   /////////////////////////////////////////////////////////////////////
   void gaussian_blur_1d(const uint8_t * in, uint8_t * out, int size, float variance, const gaussian_parameters<uint8_t> & params)
   {

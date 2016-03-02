@@ -17,7 +17,7 @@
 
 #define RUN_ALL_TESTS(argc, argv) ggo::unit_test_manager::instance().run_all(argc, argv);
 
-#define GGO_CHECK(cond) if (!(cond)) { ++_failed_count; ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** " << '[' << __FILE__ << ':' << __LINE__ << "\n"; }
+#define GGO_CHECK(cond) if (!((cond))) { ++_failed_count; ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** " << '[' << __FILE__ << ':' << __LINE__ << "\n"; }
 
 #define GGO_CHECK_FABS(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
                                 if (std::fabs(eval1 - eval2) > 0.0001) { \

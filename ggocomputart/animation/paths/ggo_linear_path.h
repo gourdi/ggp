@@ -7,10 +7,10 @@ class ggo_linear_path : public ggo_path_abc
 {
 public:
 	
-                              ggo_linear_path(float delta, float angle);
-                              ggo_linear_path(const ggo::vector2d_float & velocity) : _velocity(velocity) {};
-			
-	virtual	ggo::point2d_float	get_pos(int counter);
+                      ggo_linear_path(float delta, float angle);
+                      ggo_linear_path(const ggo::vector2d_float & velocity) : _velocity(velocity) {};
+	
+	ggo::point2d_float	get_pos(int counter) override;
 	
 private:
 	

@@ -8,23 +8,25 @@
 // Definition.
 namespace ggo
 {
-  template <typename INPUT_T, typename OUTPUT_T>
-  OUTPUT_T bilinear_interpolation2d(const INPUT_T * input,
-                                    int width,
-                                    int height,
-                                    float x,
-                                    float y,  
-                                    int stride = 1,
-                                    const ggo::data_fetcher2d_abc<INPUT_T> & data_fetcher = duplicated_edge_mirror_data_fetcher2d<INPUT_T>());
-  
-  template <typename INPUT_T, typename OUTPUT_T>
-  OUTPUT_T bicubic_interpolation2d(const INPUT_T * input,
-                                   int width,
-                                   int height,
-                                   float x,
-                                   float y,
-                                   int stride = 1,
-                                   const ggo::data_fetcher2d_abc<INPUT_T> & data_fetcher = duplicated_edge_mirror_data_fetcher2d<INPUT_T>());
+  template <typename input_type,
+            typename output_type = input_type,
+            input_type(fetch_func)(const input_type *, int, int, int, int, int) = ggo::fetch_data_standard_const<input_type>>
+  output_type bilinear_interpolation2d(const input_type * input,
+                                       int width,
+                                       int height,
+                                       float x,
+                                       float y,
+                                       int stride = 1);
+
+  template <typename input_type,
+            typename output_type = input_type,
+            input_type(fetch_func)(const input_type *, int, int, int, int, int) = ggo::fetch_data_duplicated_edge_mirror2d_const<input_type>>
+  output_type bicubic_interpolation2d(const input_type * input,
+                                      int width,
+                                      int height,
+                                      float x,
+                                      float y,
+                                      int stride);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -32,14 +34,15 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename INPUT_T, typename OUTPUT_T>
-  OUTPUT_T bilinear_interpolation2d(const INPUT_T * input,
-                                    int width,
-                                    int height,
-                                    float x,
-                                    float y,
-                                    int stride,
-                                    const ggo::data_fetcher2d_abc<INPUT_T> & data_fetcher)
+  template <typename input_type,
+            typename output_type,
+            input_type(fetch_func)(const input_type *, int, int, int, int, int)>
+  output_type bilinear_interpolation2d(const input_type * input,
+                                       int width,
+                                       int height,
+                                       float x,
+                                       float y,
+                                       int stride)
   {
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
@@ -57,26 +60,27 @@ namespace ggo
     GGO_ASSERT_GE(dy, 0);
     GGO_ASSERT_LE(dy, 1);
     
-    OUTPUT_T v00 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i, y_i));
-    OUTPUT_T v01 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i, y_i + 1));
-    OUTPUT_T v10 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i));
-    OUTPUT_T v11 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i + 1));
+    float v00 = ggo::to<float>(fetch_func(input, width, height, stride, x_i, y_i));
+    float v01 = ggo::to<float>(fetch_func(input, width, height, stride, x_i, y_i + 1));
+    float v10 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i));
+    float v11 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i + 1));
     
-    OUTPUT_T v1 = (1.f - dy) * v00 + dy * v01;
-    OUTPUT_T v2 = (1.f - dy) * v10 + dy * v11;
+    float v1 = (1 - dy) * v00 + dy * v01;
+    float v2 = (1 - dy) * v10 + dy * v11;
 
-    return (1.f - dx) * v1 + dx * v2;
+    return ggo::to<output_type>((1 - dx) * v1 + dx * v2);
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename INPUT_T, typename OUTPUT_T>
-  OUTPUT_T bicubic_interpolation2d(const INPUT_T * input,
-                                   int width,
-                                   int height,
-                                   float x,
-                                   float y,
-                                   int stride,
-                                   const ggo::data_fetcher2d_abc<INPUT_T> & data_fetcher)
+  template <typename input_type,
+            typename output_type,
+            input_type(fetch_func)(const input_type *, int, int, int, int, int)>
+  output_type bicubic_interpolation2d(const input_type * input,
+                                      int width,
+                                      int height,
+                                      float x,
+                                      float y,
+                                      int stride)
   {
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
@@ -87,46 +91,46 @@ namespace ggo
     GGO_ASSERT_LE(y, y_i + 1);
 
     // Interpolate.
-    OUTPUT_T v00 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i - 1, y_i - 1));
-    OUTPUT_T v10 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 0, y_i - 1));
-    OUTPUT_T v20 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i - 1));
-    OUTPUT_T v30 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 2, y_i - 1));
-    OUTPUT_T v0 = cubic_interpolation(static_cast<float>(x_i - 1), v00,
-                                      static_cast<float>(x_i + 0), v10,
-                                      static_cast<float>(x_i + 1), v20,
-                                      static_cast<float>(x_i + 2), v30, x);
+    float v00 = ggo::to<float>(fetch_func(input, width, height, stride, x_i - 1, y_i - 1));
+    float v10 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 0, y_i - 1));
+    float v20 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i - 1));
+    float v30 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 2, y_i - 1));
+    float v0 = cubic_interpolation(static_cast<float>(x_i - 1), v00,
+                                   static_cast<float>(x_i + 0), v10,
+                                   static_cast<float>(x_i + 1), v20,
+                                   static_cast<float>(x_i + 2), v30, x);
     
-    OUTPUT_T v01 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i - 1, y_i));
-    OUTPUT_T v11 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 0, y_i));
-    OUTPUT_T v21 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i));
-    OUTPUT_T v31 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 2, y_i));
-    OUTPUT_T v1 = cubic_interpolation(static_cast<float>(x_i - 1), v01,
-                                      static_cast<float>(x_i + 0), v11,
-                                      static_cast<float>(x_i + 1), v21,
-                                      static_cast<float>(x_i + 2), v31, x);
+    float v01 = ggo::to<float>(fetch_func(input, width, height, stride, x_i - 1, y_i));
+    float v11 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 0, y_i));
+    float v21 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i));
+    float v31 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 2, y_i));
+    float v1 = cubic_interpolation(static_cast<float>(x_i - 1), v01,
+                                   static_cast<float>(x_i + 0), v11,
+                                   static_cast<float>(x_i + 1), v21,
+                                   static_cast<float>(x_i + 2), v31, x);
     
-    OUTPUT_T v02 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i - 1, y_i + 1));
-    OUTPUT_T v12 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 0, y_i + 1));
-    OUTPUT_T v22 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i + 1));
-    OUTPUT_T v32 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 2, y_i + 1));
-    OUTPUT_T v2 = cubic_interpolation(static_cast<float>(x_i - 1), v02,
-                                      static_cast<float>(x_i + 0), v12,
-                                      static_cast<float>(x_i + 1), v22,
-                                      static_cast<float>(x_i + 2), v32, x);
+    float v02 = ggo::to<float>(fetch_func(input, width, height, stride, x_i - 1, y_i + 1));
+    float v12 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 0, y_i + 1));
+    float v22 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i + 1));
+    float v32 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 2, y_i + 1));
+    float v2 = cubic_interpolation(static_cast<float>(x_i - 1), v02,
+                                   static_cast<float>(x_i + 0), v12,
+                                   static_cast<float>(x_i + 1), v22,
+                                   static_cast<float>(x_i + 2), v32, x);
     
-    OUTPUT_T v03 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i - 1, y_i + 2));
-    OUTPUT_T v13 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 0, y_i + 2));
-    OUTPUT_T v23 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 1, y_i + 2));
-    OUTPUT_T v33 = static_cast<OUTPUT_T>(data_fetcher.fetch(input, width, height, stride, x_i + 2, y_i + 2));
-    OUTPUT_T v3 = cubic_interpolation(static_cast<float>(x_i - 1), v03,
-                                      static_cast<float>(x_i + 0), v13,
-                                      static_cast<float>(x_i + 1), v23,
-                                      static_cast<float>(x_i + 2), v33, x);
+    float v03 = ggo::to<float>(fetch_func(input, width, height, stride, x_i - 1, y_i + 2));
+    float v13 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 0, y_i + 2));
+    float v23 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 1, y_i + 2));
+    float v33 = ggo::to<float>(fetch_func(input, width, height, stride, x_i + 2, y_i + 2));
+    float v3 = cubic_interpolation(static_cast<float>(x_i - 1), v03,
+                                   static_cast<float>(x_i + 0), v13,
+                                   static_cast<float>(x_i + 1), v23,
+                                   static_cast<float>(x_i + 2), v33, x);
     
-    return cubic_interpolation(static_cast<float>(y_i - 1), v0,
-                               static_cast<float>(y_i + 0), v1,
-                               static_cast<float>(y_i + 1), v2,
-                               static_cast<float>(y_i + 2), v3, y);
+    return ggo::to<output_type>(cubic_interpolation(static_cast<float>(y_i - 1), v0,
+                                                    static_cast<float>(y_i + 0), v1,
+                                                    static_cast<float>(y_i + 1), v2,
+                                                    static_cast<float>(y_i + 2), v3, y));
   }
 }
 

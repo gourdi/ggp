@@ -59,4 +59,6 @@ GGO_TEST(array2d, copy)
   GGO_CHECK(c(0, 1) == 2);
   GGO_CHECK(c(1, 0) == 3);
   GGO_CHECK(c(1, 1) == 4);
+
+
 }

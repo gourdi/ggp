@@ -7,16 +7,14 @@
 
 namespace ggo
 {
-  template <typename T>
+  template <typename T, typename const_data_fetcher_type = duplicated_edge_mirror_const_data_fetcher1d<T>>
   struct gaussian_parameters
   {
-    gaussian_parameters() : _data_fetcher(new duplicated_edge_mirror_data_fetcher1d<T>()) {}
-
-    std::shared_ptr<data_fetcher1d_abc<T>>  _data_fetcher;
-    int                                     _stride_in = 1;
-    int                                     _stride_out = 1;
-    int                                     _max_filter_size = 128;
-    float                                   _filter_threshold = 0.01f;
+    const_data_fetcher_type _data_fetcher;
+    int                     _stride_in = 1;
+    int                     _stride_out = 1;
+    int                     _max_filter_size = 128;
+    float                   _filter_threshold = 0.01f;
   };
   
   void gaussian_blur_1d(const uint8_t * in, uint8_t * out, int size, float variance, const gaussian_parameters<uint8_t> & params = gaussian_parameters<uint8_t>());
