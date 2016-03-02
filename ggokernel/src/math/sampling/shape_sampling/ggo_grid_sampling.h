@@ -47,7 +47,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  std::vector<ggo::set2<T>> minimum_grid_sampling(const paintable_shape2d_abc<T> & shape, int samples_count, int iterations_count = 100)
+  std::vector<ggo::set2<T>> adaptive_grid_sampling(const paintable_shape2d_abc<T> & shape, int samples_count, int iterations_count = 100)
   {
     auto rect_data = shape.get_bounding_rect();
     T width = rect_data._width;

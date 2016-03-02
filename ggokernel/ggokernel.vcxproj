@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_tree3d.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />
@@ -241,6 +242,7 @@
     <ClInclude Include="src\time\ggo_chronometer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ggo_color_stream.cpp" />
     <ClCompile Include="src\ggo_kernel.cpp" />
     <ClCompile Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.cpp" />
     <ClCompile Include="src\math\marching_cubes\ggo_marching_cubes.cpp" />

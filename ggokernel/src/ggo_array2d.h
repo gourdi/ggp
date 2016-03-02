@@ -1,6 +1,8 @@
 #ifndef GGO_ARRAY2D_H_
 #define GGO_ARRAY2D_H_
 
+#include <ggo_kernel.h>
+
 //////////////////////////////////////////////////////////////
 // ARRAY2D
 namespace ggo
@@ -18,8 +20,8 @@ namespace ggo
                   array2d(array2d<T> && rhs);
                  ~array2d() { if (_data != nullptr) delete[] _data; };
 
-    T &			      operator()(unsigned x, unsigned y) { return _data[y * _size_x + x]; }
-    const T &	    operator()(unsigned x, unsigned y) const { return _data[y * _size_x + x]; }
+    T &			      operator()(int x, int y);
+    const T &	    operator()(int x, int y) const;
 
     int			      get_size_x() const { return _size_x; }
     int			      get_size_y() const { return _size_y; }
@@ -145,6 +147,24 @@ namespace ggo
     rhs._data = nullptr;
 
     return *this;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  T & array2d<T>::operator()(int x, int y)
+  {
+    GGO_ASSERT_BTW(x, 0, _size_x - 1);
+    GGO_ASSERT_BTW(y, 0, _size_y - 1); 
+    return _data[y * _size_x + x];
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  const T & array2d<T>::operator()(int x, int y) const
+  {
+    GGO_ASSERT_BTW(x, 0, _size_x - 1);
+    GGO_ASSERT_BTW(y, 0, _size_y - 1);
+    return _data[y * _size_x + x];
   }
 }
 

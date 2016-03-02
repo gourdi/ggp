@@ -26,7 +26,7 @@ namespace
       }
       else
       {
-        if (test_case_name == arg.substr(0, pos - 1))
+        if (test_case_name == arg.substr(0, pos))
         {
           return false;
         }
@@ -143,5 +143,4 @@ namespace ggo
       cs << std::endl << std::endl << "*** NON-REGRESSION FAILED: " << failed_count << " TEST(S) FAILED ***" << std::endl << std::endl;
     }
   }
-
 }

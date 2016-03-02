@@ -44,7 +44,7 @@ GGO_TEST(sampling, disc)
   // Samples count sampling.
   {
     ggo::disc_float disc(4, 3, 1);
-    auto samples = minimum_grid_sampling(disc, 3, 1000);
+    auto samples = adaptive_grid_sampling(disc, 3, 1000);
 
     GGO_CHECK(samples.size() == 4);
 
@@ -56,7 +56,7 @@ GGO_TEST(sampling, disc)
 
   {
     ggo::disc_float disc(-2, 5, 7);
-    auto samples = minimum_grid_sampling(disc, 12345);
+    auto samples = adaptive_grid_sampling(disc, 12345);
 
     GGO_CHECK(samples.size() == 12352);
 
@@ -89,7 +89,7 @@ GGO_TEST(sampling, rect)
   {
     ggo::rect_float rect{ 1, 1, 3, 2 };
 
-    auto samples = minimum_grid_sampling(rect, 3);
+    auto samples = adaptive_grid_sampling(rect, 3);
 
     GGO_CHECK(samples.size() == 4);
     GGO_CHECK(find_point(samples, ggo::point2d_float(1.5, 1)));

@@ -12,16 +12,16 @@ GGO_TEST(array2d, swap)
 
   ggo::array2d<int> b(3, 1);
   b(0, 0) = 5;
-  b(1, 1) = 6;
-  b(2, 2) = 7;
+  b(1, 0) = 6;
+  b(2, 0) = 7;
 
   std::swap(a, b);
 
   GGO_CHECK(a.get_size_x() == 3);
   GGO_CHECK(a.get_size_y() == 1);
   GGO_CHECK(a(0, 0) == 5);
-  GGO_CHECK(a(1, 1) == 6);
-  GGO_CHECK(a(2, 2) == 7);
+  GGO_CHECK(a(1, 0) == 6);
+  GGO_CHECK(a(2, 0) == 7);
 
   GGO_CHECK(b.get_size_x() == 2);
   GGO_CHECK(b.get_size_y() == 2);
