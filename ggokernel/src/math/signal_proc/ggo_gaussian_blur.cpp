@@ -72,29 +72,28 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   // Apply 1D gaussian filter.
-  template<typename T_DATA, typename T_FILTER>
-  void apply_filter_1d_T(const T_DATA * in, 
-                         T_DATA * out,
+  template<typename data_type, typename filter_type, data_type(fetch_func)(const data_type *, int, int, int)>
+  void apply_filter_1d_T(const data_type * in,
+                         data_type * out,
                          int size,
                          int stride_in,
                          int stride_out,
-                         T_FILTER * filter,
-                         int filter_size,
-                         const ggo::const_data_fetcher1d_abc<T_DATA> & data_fetcher)
+                         const filter_type * filter,
+                         int filter_size)
   {
     for (int x = 0; x < size; ++x)
     {
-      T_FILTER v = in[x * stride_in] * filter[0];
+      filter_type v = in[x * stride_in] * filter[0];
       for (int i = 1; i < filter_size; ++i)
       {
         int i1 = x + i;
         int i2 = x - i;
-        T_FILTER tmp1 = static_cast<T_FILTER>(data_fetcher.fetch(in, size, stride_in, i1));
-        T_FILTER tmp2 = static_cast<T_FILTER>(data_fetcher.fetch(in, size, stride_in, i2));
+        filter_type tmp1 = ggo::to<filter_type>(data_fetcher.fetch(in, size, stride_in, i1));
+        filter_type tmp2 = ggo::to<filter_type>(data_fetcher.fetch(in, size, stride_in, i2));
         v += (tmp1 + tmp2) * filter[i];
       }
       
-      *out = ggo::to<T_DATA>(v);
+      *out = ggo::to<data_type>(v);
       
       out += stride_out;
     }

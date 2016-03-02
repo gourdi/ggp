@@ -41,6 +41,7 @@
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
+    <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp" />
     <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
