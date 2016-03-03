@@ -1,6 +1,5 @@
 #define GGO_GAUSSIAN_DEBUG 1
 
-#include <array>
 #include <ggo_nonreg.h>
 #include <ggo_gaussian_blur.h>
 #include <ggo_rgb_image_data.h>
