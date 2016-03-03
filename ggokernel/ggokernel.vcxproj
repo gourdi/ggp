@@ -72,7 +72,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,6 +231,7 @@
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h" />
     <ClInclude Include="src\math\signal_proc\ggo_box_filter.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_convolution1d.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dct.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />

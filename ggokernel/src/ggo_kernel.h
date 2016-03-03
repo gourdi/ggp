@@ -172,14 +172,14 @@ namespace ggo
   template <> inline uint16_t  to(int8_t v) { return v < 0 ? 0 : v; }
   template <> inline uint32_t  to(int8_t v) { return v < 0 ? 0 : v; }
 
-  //From int16_t
+  // From int16_t
   template <> inline int8_t    to(int16_t v) { return hidden::clamp_min_max<int8_t, int16_t>(v); }
   
   template <> inline uint8_t   to(int16_t v) { return hidden::clamp_min_max<uint8_t, int16_t>(v); }
   template <> inline uint16_t  to(int16_t v) { return v < 0 ? 0 : v; }
   template <> inline uint32_t  to(int16_t v) { return v < 0 ? 0 : v; }
   
-  //From int32_t
+  // From int32_t
   template <> inline int8_t    to(int32_t v) { return hidden::clamp_min_max<int8_t, int32_t>(v); }
   template <> inline int16_t   to(int32_t v) { return hidden::clamp_min_max<int16_t, int32_t>(v); }
   
