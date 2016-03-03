@@ -236,7 +236,6 @@
     <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
-    <ClInclude Include="src\math\signal_proc\ggo_laplacian.h" />
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />
@@ -256,8 +255,6 @@
     <ClCompile Include="src\math\signal_proc\ggo_dct.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_gaussian_blur.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_laplacian.cpp" />
     <ClCompile Include="src\nonreg\ggo_unit_test.cpp" />
     <ClCompile Include="src\nonreg\ggo_unit_test_manager.cpp" />
     <ClCompile Include="src\time\ggo_chronometer.cpp" />

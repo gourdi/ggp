@@ -53,11 +53,6 @@ namespace ggo
 
 namespace ggo
 {
-#if __cplusplus >= 201103L
   using disc_float  = disc<float>;
   using disc_double = disc<double>;
-#else
-  typedef disc<float>   disc_float;
-  typedef disc<double>  disc_double;
-#endif
 }

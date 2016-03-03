@@ -37,19 +37,29 @@ namespace ggo
 // Some usefull shortcuts.
 namespace ggo
 {
-  uint8_t bilinear_interpolation2d_uint8(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
+  inline uint8_t bilinear_interpolation2d_uint8(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
   {
     return bilinear_interpolation2d<uint8_t, float, float>(input, width, height, x, y, stride);
   }
 
-  uint8_t bilinear_interpolation2d_uint8_mirror(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
+  inline uint8_t bilinear_interpolation2d_uint8_zero(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
+  {
+    return bilinear_interpolation2d<uint8_t, float, float, uint8_t, ggo::fetch_data_fixed2d>(input, width, height, x, y, stride);
+  }
+
+  inline uint8_t bilinear_interpolation2d_uint8_mirror(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
   {
     return bilinear_interpolation2d<uint8_t, float, float, uint8_t, ggo::fetch_data_duplicated_edge_mirror2d_const<uint8_t>>(input, width, height, x, y, stride);
   }
 
-  uint8_t bicubic_interpolation2d_uint8(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
+  inline uint8_t bicubic_interpolation2d_uint8(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
   {
     return bicubic_interpolation2d<uint8_t, float, float>(input, width, height, x, y, stride);
+  }
+
+  inline uint8_t bicubic_interpolation2d_uint8_zero(const uint8_t * input, int width, int height, float x, float y, int stride = 1)
+  {
+    return bicubic_interpolation2d<uint8_t, float, float, uint8_t, ggo::fetch_data_fixed2d>(input, width, height, x, y, stride);
   }
 }
 

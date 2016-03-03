@@ -22,6 +22,7 @@
     <ClCompile Include="test\ggo_2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_box_filter_nonreg.cpp" />
     <ClCompile Include="test\ggo_color_nonreg.cpp" />
+    <ClCompile Include="test\ggo_gaussian_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonic_surface_nonreg.cpp" />
     <ClCompile Include="test\ggo_interpolation_nonreg.cpp" />
     <ClCompile Include="test\ggo_layer_nonreg.cpp" />
