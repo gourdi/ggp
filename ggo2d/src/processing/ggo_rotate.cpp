@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_rotate.h"
 #include "../ggo_2d_helpers.h"
 #include "../ggo_pixel_interpolation.h"
@@ -122,5 +124,7 @@ void ggo_rotate_180(const uint8_t * in, uint8_t * out, int width, int height, gg
 		}
 	}
 }
+
+#endif
 
 

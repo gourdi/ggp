@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_pixel_processing.h"
 #include "ggo_color_reduction.h"
 #include <ggo_kernel.h>
@@ -557,5 +559,7 @@ void ggo_wind(uint8_t * buffer, int width, int height, float direction, int leng
 		}
 	}
 }
+
+#endif
 
 

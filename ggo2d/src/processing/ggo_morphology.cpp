@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_morphology.h"
 #include <functional>
 
@@ -98,3 +100,6 @@ namespace ggo
     morpho_disc_kernel_t(input, output, width, height, radius, std::less<int>());
   }
 }
+
+#endif
+
