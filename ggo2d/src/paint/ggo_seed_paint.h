@@ -2,7 +2,6 @@
 #define __GGO_SEED_PAINT__
 
 #include <stdint.h>
-#include <ggo_2d.h>
 #include <ggo_rgb_image_data.h>
 #include <ggo_gray_image_data.h>
 #include <ggo_blender_abc.h>

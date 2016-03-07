@@ -25,7 +25,6 @@
     <ClInclude Include="src\brush\ggo_triangle_interpolation_brush.h" />
     <ClInclude Include="src\color\ggo_color.h" />
     <ClInclude Include="src\color\ggo_color_conv.h" />
-    <ClInclude Include="src\ggo_2d.h" />
     <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_layer.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
