@@ -71,17 +71,5 @@ namespace ggo
     
     return true;
   }
-
-  //////////////////////////////////////////////////////////////
-  void pixel_rect::for_each_pixel(std::function<void(int, int)> fct) const
-  {
-    for (int y = _bottom; y <= _top; ++y)
-    {
-      for (int x = _left; x <= _right; ++x)
-      {
-        fct(x, y);
-      }
-    }
-  }
 }
   

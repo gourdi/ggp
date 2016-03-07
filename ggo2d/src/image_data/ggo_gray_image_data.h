@@ -49,6 +49,7 @@ namespace ggo
 
                   gray_image_data_float(float * buffer, int width, int height);
                   gray_image_data_float(int width, int height);
+                  gray_image_data_float(int width, int height, float fill_value);
     virtual      ~gray_image_data_float();
         
     void          do_pack(int x, int y, const float & value) override;

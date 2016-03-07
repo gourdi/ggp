@@ -67,6 +67,16 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
+  gray_image_data_float::gray_image_data_float(int width, int height, float fill_value)
+  :
+  gray_image_data_abc(width, height),
+  _delete_buffer(true),
+  _buffer(new float[width * height]) 
+  {
+    std::fill(_buffer, _buffer + width * height, fill_value);
+  }
+
+  /////////////////////////////////////////////////////////////////////
   gray_image_data_float::~gray_image_data_float()
   {
     if (_delete_buffer)

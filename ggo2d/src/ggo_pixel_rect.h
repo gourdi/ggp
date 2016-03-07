@@ -31,8 +31,18 @@ namespace ggo
     bool  is_visible(int image_width, int image_height) const;
           
     bool  crop(int image_width, int image_height);
-          
-    void  for_each_pixel(std::function<void(int, int)> fct) const;
+     
+    template <typename pixel_func>
+    void  for_each_pixel(const pixel_func & f) const
+    {
+      for (int y = _bottom; y <= _top; ++y)
+      {
+        for (int x = _left; x <= _right; ++x)
+        {
+          f(x, y);
+        }
+      }
+    }
     
   public:
     

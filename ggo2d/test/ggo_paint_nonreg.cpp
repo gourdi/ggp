@@ -47,13 +47,11 @@ GGO_TEST(paint, multi_paint2)
   polygon2->add_point(50, 90);
   polygon2->add_point(90, 90);
 
-  ggo::shapes_collection_rgb shapes_collection;
-  shapes_collection.add(polygon1, std::make_shared<ggo::rgb_solid_brush>(ggo::color::WHITE));
-  shapes_collection.add(polygon2, std::make_shared<ggo::rgb_solid_brush>(ggo::color::WHITE));
+  const std::vector<ggo::rgb_layer> layers{ {polygon1, ggo::color::WHITE}, {polygon2, ggo::color::WHITE} };
 
   ggo::array_uint8 buffer(WIDTH * HEIGHT * 3);
   ggo::fill_solid_rgb(buffer, WIDTH * HEIGHT, ggo::color::BLUE);
-  ggo::paint(buffer, WIDTH, HEIGHT, shapes_collection, ggo::pixel_sampler_16X16());
+  ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo::pixel_sampler_16X16());
 
   ggo::save_bmp("test_multi2.bmp", buffer, WIDTH, HEIGHT);
 }
@@ -64,22 +62,20 @@ GGO_TEST(paint, multi_paint3)
   const int WIDTH = 60;
   const int HEIGHT = 60;
     
-  auto disc = std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 20.f);
-  ggo::shapes_collection_gray shapes_collection(disc, 0.8f, 1);
+  const std::vector<ggo::gray_layer> layers{ {std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 20.f), 0.8f, 1} };
+
+  ggo::gray_image_data_float image_data(WIDTH, HEIGHT, 0.f);
+  ggo::paint(image_data, layers);
     
-  ggo::array_float buffer1(WIDTH * HEIGHT, 0);
-  ggo::gray_image_data_float image_data(buffer1, WIDTH, HEIGHT);
-  ggo::paint(image_data, shapes_collection);
-    
-  ggo::array_uint8 buffer2(3 * WIDTH * HEIGHT, 0);
+  ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
   for (int i = 0; i < WIDTH * HEIGHT; ++i)
   {
-    buffer2[3 * i + 0] = ggo::to<uint8_t>(255.f * buffer1[i]);
-    buffer2[3 * i + 1] = ggo::to<uint8_t>(255.f * buffer1[i]);
-    buffer2[3 * i + 2] = ggo::to<uint8_t>(255.f * buffer1[i]);
+    buffer[3 * i + 0] = ggo::to<uint8_t>(255.f * image_data[i]);
+    buffer[3 * i + 1] = ggo::to<uint8_t>(255.f * image_data[i]);
+    buffer[3 * i + 2] = ggo::to<uint8_t>(255.f * image_data[i]);
   }
 
-  ggo::save_bmp("test_multi3.bmp", buffer2, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi3.bmp", buffer, WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -197,18 +193,19 @@ GGO_TEST(paint, blur)
     
   {
     auto disc = std::make_shared<ggo::disc_float>(10.f, 10.f, 30.f);
-    ggo::paint(buffer, WIDTH, HEIGHT, ggo::shapes_collection_rgb(disc, ggo::color::BLUE, 1.f), ggo::blur_pixel_sampler(10, 30));
+
+    const std::vector<ggo::rgb_layer> layers{ { disc, ggo::color::BLUE, 1.f } };
+
+    ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo::blur_pixel_sampler(10, 30));
   }
     
   {
     auto disc1 = std::make_shared<ggo::disc_float>(80.f, 80.f, 30.f);
     auto disc2 = std::make_shared<ggo::disc_float>(80.f, 80.f, 15.f);
         
-    ggo::shapes_collection_rgb shapes_collection;
-    shapes_collection.add(disc1, std::make_shared<ggo::rgb_solid_brush>(ggo::color::RED));
-    shapes_collection.add(disc2, std::make_shared<ggo::rgb_solid_brush>(ggo::color::YELLOW));
+    const std::vector<ggo::rgb_layer> layers{ {disc1, ggo::color::RED}, {disc2, ggo::color::YELLOW} };
         
-    ggo::paint(buffer, WIDTH, HEIGHT, shapes_collection, ggo_blur_sampler2(10, 40));
+    ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo_blur_sampler2(10, 40));
   }
     
   ggo::save_bmp("test_blur.bmp", buffer, WIDTH, HEIGHT);

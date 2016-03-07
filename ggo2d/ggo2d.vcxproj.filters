@@ -19,9 +19,6 @@
     <Filter Include="paint">
       <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="space_partitionning">
-      <UniqueIdentifier>{86339f62-8e0b-438a-9506-69f9d0d75e7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="processing">
       <UniqueIdentifier>{5dd0f5bf-d68a-4499-ab2d-ee308ec9f440}</UniqueIdentifier>
     </Filter>
@@ -69,29 +66,11 @@
     <ClInclude Include="src\paint\ggo_seed_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
-    <ClInclude Include="src\paint\ggo_shapes_collection.h">
-      <Filter>paint</Filter>
-    </ClInclude>
-    <ClInclude Include="src\paint\ggo_shapes_collection.imp.h">
-      <Filter>paint</Filter>
-    </ClInclude>
     <ClInclude Include="src\paint\ggo_soft_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
     <ClInclude Include="src\paint\ggo_hard_paint.h">
       <Filter>paint</Filter>
-    </ClInclude>
-    <ClInclude Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.h">
-      <Filter>space_partitionning</Filter>
-    </ClInclude>
-    <ClInclude Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.h">
-      <Filter>space_partitionning</Filter>
-    </ClInclude>
-    <ClInclude Include="src\space_partitionning\ggo_space_partitionning_2d_abc.h">
-      <Filter>space_partitionning</Filter>
-    </ClInclude>
-    <ClInclude Include="src\space_partitionning\ggo_basic_space_partitionning_2d.h">
-      <Filter>space_partitionning</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_2d.h" />
     <ClInclude Include="src\ggo_fill.h" />
@@ -128,18 +107,6 @@
     </ClCompile>
     <ClCompile Include="src\paint\ggo_hard_paint.cpp">
       <Filter>paint</Filter>
-    </ClCompile>
-    <ClCompile Include="src\space_partitionning\ggo_pixel_space_partitionning_2d.cpp">
-      <Filter>space_partitionning</Filter>
-    </ClCompile>
-    <ClCompile Include="src\space_partitionning\ggo_recursive_space_partitionning_2d.cpp">
-      <Filter>space_partitionning</Filter>
-    </ClCompile>
-    <ClCompile Include="src\space_partitionning\ggo_space_partitionning_2d_abc.cpp">
-      <Filter>space_partitionning</Filter>
-    </ClCompile>
-    <ClCompile Include="src\space_partitionning\ggo_basic_space_partitionning_2d.cpp">
-      <Filter>space_partitionning</Filter>
     </ClCompile>
     <ClCompile Include="src\ggo_fill.cpp" />
     <ClCompile Include="src\ggo_layer.cpp" />

@@ -72,8 +72,8 @@ namespace ggo
     
     x = x_tmp;
     y = y_tmp;
-    
-    return ggo::bilinear_interpolation2d<T, T>(_noise, _noise_size, _noise_size, x, y);
+
+    return ggo::bilinear_interpolation2d<T, T, T, T, ggo::fetch_data_duplicated_edge_mirror2d_const<T>>(_noise, _noise_size, _noise_size, x, y);
   }
       
   template <typename T>
