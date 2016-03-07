@@ -70,16 +70,12 @@ namespace
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
+  /////////////////////////////////////////////////////////////////////
   void paint_dot_rgb(uint8_t * buffer, int width, int height, float x, float y, float radius, const ggo::color & color, float opacity)
   {
     ggo::rgb_image_data_uint8 image_data(buffer, width, height);
     
-    ::paint_dot<ggo::color>(image_data,
-                            x, y, radius,
-                            color,
-                            opacity,
-                            ggo::pixel_sampler_1(),
-                            ggo::rgb_alpha_blender());
+    ::paint_dot<ggo::color>(image_data, x, y, radius, color, opacity, ggo::pixel_sampler_1(), ggo::rgb_alpha_blender());
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -94,12 +90,12 @@ namespace ggo
   }
                       
   /////////////////////////////////////////////////////////////////////
-  void ggo_paint_dot(ggo::gray_image_data_abc & image_data,
-                     float x, float y, float radius,
-                     float gray,
-                     float opacity,
-                     const ggo::pixel_sampler_abc & sampler,
-                     const ggo::gray_blender_abc & blender)
+  void paint_dot(ggo::gray_image_data_abc & image_data,
+                 float x, float y, float radius,
+                 float gray,
+                 float opacity,
+                 const ggo::pixel_sampler_abc & sampler,
+                 const ggo::gray_blender_abc & blender)
   {
     ::paint_dot<float>(image_data, x, y, radius, gray, opacity, sampler, blender);
   }
