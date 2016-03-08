@@ -102,11 +102,11 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 		ggo::paint(shadow_image_data, square, 0x40 / 255.f);
 	}
 
-	ggo::gaussian_blur_2d(shadow_image_data.get_buffer(),
-                        shadow_image_data.get_buffer(),
-                        get_render_width(),
-                        get_render_height(),
-                        0.05f * get_render_min_size());
+	ggo::gaussian_blur_2d_uint8(shadow_image_data.get_buffer(),
+                              shadow_image_data.get_buffer(),
+                              get_render_width(),
+                              get_render_height(),
+                              0.05f * get_render_min_size());
 
 	image_data.fill(shadow_image_data);
 	

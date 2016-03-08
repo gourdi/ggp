@@ -2,7 +2,6 @@
 #define __GGO_NEON_ARTIST__
 
 #include "ggo_animation_artist_abc.h"
-#include <ggo_2d.h>
 
 class ggo_neon_artist : public ggo_accumulation_animation_artist_abc
 {

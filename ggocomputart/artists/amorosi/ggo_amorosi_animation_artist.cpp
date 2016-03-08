@@ -3,7 +3,6 @@
 #include <ggo_paint.h>
 #include <ggo_triangle_interpolation_brush.h>
 #include <ggo_shape_sampling_coef.h>
-#include <ggo_recursive_space_partitionning_2d.h>
 
 //////////////////////////////////////////////////////////////
 void ggo_amorosi_animation_artist::ggo_random_angle_interpolator::get_random_data(float & data, float & dt)
@@ -124,7 +123,7 @@ void ggo_amorosi_animation_artist::ggo_curve::update()
 //////////////////////////////////////////////////////////////
 void ggo_amorosi_animation_artist::ggo_curve::paint(uint8_t * buffer) const
 {
-  ggo::shapes_collection_rgb shapes_collection;
+  std::vector<ggo::rgb_layer> layers;
   
   for (const auto & triangle : _triangles)
   {
@@ -136,11 +135,11 @@ void ggo_amorosi_animation_artist::ggo_curve::paint(uint8_t * buffer) const
                                                                                      triangle[1]._pos, triangle[1]._opacity, 
                                                                                      triangle[2]._pos, triangle[2]._opacity);
 
-    shapes_collection.add(triangle_shape, color_brush, opacity_brush);
+    layers.emplace_back(triangle_shape, color_brush, opacity_brush);
   }
   
   ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
-  shapes_collection.paint(image_data);
+  ggo::paint(image_data, layers);
 }
 
 //////////////////////////////////////////////////////////////

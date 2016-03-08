@@ -681,7 +681,7 @@ GGO_TEST(shapes2d, oriented_box)
   GGO_CHECK_FABS(ggo::dot(box.dir(), box.dir2()), 0.f);
 
   // Vertices.
-  auto points = box.get_draw_points();
+  auto points = box.get_points();
   GGO_CHECK(find_point(points, 1.0f, 1.0f));
   GGO_CHECK(find_point(points, 1.0f, 3.0f));
   GGO_CHECK(find_point(points, 5.0f, 1.0f));
@@ -689,7 +689,7 @@ GGO_TEST(shapes2d, oriented_box)
 
   // Rotation.
   box.rotate(ggo::PI<float>() / 4.f, { 1.f, 1.f });
-  auto points2 = box.get_draw_points();
+  auto points2 = box.get_points();
   GGO_CHECK(find_point(points2, 1.0f, 1.0f));
   GGO_CHECK(find_point(points2, 1.0f - std::sqrt(2.f), 1.0f + std::sqrt(2.f)));
   GGO_CHECK(find_point(points2, 1.0f + 2.f * std::sqrt(2.f), 1.0f + 2.f * std::sqrt(2.f)));

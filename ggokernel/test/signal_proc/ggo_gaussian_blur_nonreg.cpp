@@ -50,7 +50,7 @@ GGO_TEST(gaussian_blur, 1d)
     std::vector<float> in(7, 0);
     std::vector<float> out(7, 0);
     in[3] = 255.f;
-    ggo::gaussian_blur_1d(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+    ggo::gaussian_blur_1d_float(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
     GGO_CHECK_FABS(out[0], 0.f);
     GGO_CHECK_FABS(out[1], 5.59206057f);
     GGO_CHECK_FABS(out[2], 58.2705956f);

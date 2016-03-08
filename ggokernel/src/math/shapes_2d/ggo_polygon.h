@@ -39,7 +39,7 @@ namespace ggo
           
     // Interfaces.        
     void	                move(T dx, T dy) override;
-    void	                rotate(T angle) override;
+    void	                rotate(T angle, const ggo::set2<T> & center) override;
     T                     dist_to_point(T x, T y) const override;
     bool	                is_point_inside(T x, T y) const override;
     rect_data<T>          get_bounding_rect() const override;

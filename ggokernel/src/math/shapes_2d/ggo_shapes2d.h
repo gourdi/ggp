@@ -94,8 +94,8 @@ namespace ggo
   {
   public:
 
-    virtual	void	move(T dx, T dy) = 0;
-            void	move(const ggo::set2<T> & m) { move(m.x(), m.y()); }
+    virtual	void move(T dx, T dy) = 0;
+            void move(const ggo::set2<T> & m) { move(m.x(), m.y()); }
   };
 
   template <typename T>
@@ -103,7 +103,7 @@ namespace ggo
   {
   public:
 
-    virtual	void  rotate(T angle) = 0;
+    virtual	void rotate(T angle, const ggo::set2<T> & center) = 0;
   };
 
   template <typename T> 
@@ -114,32 +114,17 @@ namespace ggo
     virtual	T dist_to_point(T x, T y) const = 0;
             T	dist_to_point(const ggo::set2<T> & p) const { return dist_to_point(p.x(), p.y()); }
   };
-}
 
-//////////////////////////////////////////////////////////////////
-// PHYSICS
-
-namespace ggo
-{
   template <typename T>
-  class physics_shape2d_abc : public movable_shape2d_abc<T>, public rotatable_shape2d_abc<T>
+  class affine_shape2d_abc : public movable_shape2d_abc<T>, public rotatable_shape2d_abc<T>
   {
   public:
 
-    using movable_shape2d_abc<T>::move;
     using rotatable_shape2d_abc<T>::rotate;
 
-    virtual const ggo::set2<T> &      get_center() const = 0;
-    virtual std::vector<ggo::set2<T>> get_draw_points() const = 0;
+    virtual ggo::set2<T> get_center() const = 0;
 
-            void                      rotate(T angle, const ggo::set2<T> & center)
-            {
-              ggo::set2<T> diff(get_center() - center);
-              move(-diff);
-              diff.rotate(angle);
-              rotate(angle);
-              move(diff);
-            }
+    void rotate(T angle) { rotate(angle, get_center()); }
   };
 }
 

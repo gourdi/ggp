@@ -8,12 +8,12 @@
 namespace ggo
 {
   template <typename T>
-  class oriented_box : public physics_shape2d_abc<T>
+  class oriented_box : public affine_shape2d_abc<T>
   {
   public:
 
-    using physics_shape2d_abc<T>::rotate;
-    using physics_shape2d_abc<T>::move;
+    using affine_shape2d_abc<T>::rotate;
+    using affine_shape2d_abc<T>::move;
 
                               oriented_box(ggo::set2<T> pos, ggo::set2<T> dir, T size1, T size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
 
@@ -25,11 +25,12 @@ namespace ggo
 
     ggo::set2<T>              operator[](int i) const;
 
+    std::vector<ggo::set2<T>> get_points() const;
+
     // Interfaces.
     void                      move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
-    void                      rotate(T angle) override;
-    const ggo::set2<T> &      get_center() const override { return _pos; }
-    std::vector<ggo::set2<T>> get_draw_points() const override;
+    void                      rotate(T angle, const ggo::set2<T> & center) override;
+    ggo::set2<T>              get_center() const override { return _pos; }
 
   private:
 

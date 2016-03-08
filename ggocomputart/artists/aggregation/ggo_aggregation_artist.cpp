@@ -234,10 +234,8 @@ namespace ggo
       // Gaussian blur.
       float variance = ggo::square(0.1f * min_size);
       
-      ggo::gaussian_parameters<uint8_t> params;
-      params._data_fetcher = std::make_shared<fixed_value_data_fetcher1d<uint8_t>>(ggo::to<int>(255 * background));
-      
-      ggo::gaussian_blur_2d(buffer, buffer, width, height, variance, params);
+      //fetch_data fetch_data{ ggo::to<uint8_t>(255 * background) };
+      //ggo::gaussian_blur_2d<uint8_t, float, float, uint8_t, fetch_data>(buffer, buffer, width, height, variance);
       
       // Render points.
       for (const auto & point : rotated_points)

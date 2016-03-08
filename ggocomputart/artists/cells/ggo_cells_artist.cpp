@@ -71,14 +71,10 @@ void ggo_cells_artist::render_bitmap(uint8_t * buffer)
       float variance = 0.0005f * get_render_min_size();
       
       ggo::array_uint8 tmp_buffer(3 * get_render_width() * get_render_height());
-      
-      ggo::gaussian_parameters<uint8_t> params;
-      params._stride_in = 3;
-      params._stride_out = 3;
-  
-      ggo::gaussian_blur_2d(buffer + 0, tmp_buffer + 0, get_render_width(), get_render_height(), variance, params);
-      ggo::gaussian_blur_2d(buffer + 1, tmp_buffer + 1, get_render_width(), get_render_height(), variance, params);
-      ggo::gaussian_blur_2d(buffer + 2, tmp_buffer + 2, get_render_width(), get_render_height(), variance, params);
+
+      ggo::gaussian_blur_2d_uint8(buffer + 0, tmp_buffer + 0, get_render_width(), get_render_height(), variance, 3, 3);
+      ggo::gaussian_blur_2d_uint8(buffer + 1, tmp_buffer + 1, get_render_width(), get_render_height(), variance, 3, 3);
+      ggo::gaussian_blur_2d_uint8(buffer + 2, tmp_buffer + 2, get_render_width(), get_render_height(), variance, 3, 3);
       
       memcpy(buffer, tmp_buffer, tmp_buffer.get_size());
     }

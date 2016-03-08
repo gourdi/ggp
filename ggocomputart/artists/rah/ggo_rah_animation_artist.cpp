@@ -1,6 +1,7 @@
 #include "ggo_rah_animation_artist.h"
 #include <ggo_fill.h>
 #include <ggo_paint.h>
+#include <ggo_pixel_rect.h>
 #include <ggo_blur_pixel_sampler.h>
 
 namespace
@@ -101,11 +102,11 @@ void ggo_rah_animation_artist::ggo_particle::paint(uint8_t * buffer, int width, 
   auto shapes = std::make_shared<ggo::multi_shape_float>();
   fill_multi_shapes(*borders, *shapes, min_size);
   
-  ggo::shapes_collection_rgb shapes_collection;
-  shapes_collection.add(borders, ggo::color::BLACK);
-  shapes_collection.add(shapes, _color);
+  std::vector<ggo::rgb_layer> layers;
+  layers.emplace_back(borders, ggo::color::BLACK);
+  layers.emplace_back(shapes, _color);
   
-  ggo::paint(buffer, width, height, shapes_collection, ggo::blur_pixel_sampler(blur_radius(min_size, focus_dist), 7));
+  ggo::paint(buffer, width, height, layers, ggo::blur_pixel_sampler(blur_radius(min_size, focus_dist), 7));
 }
 
 //////////////////////////////////////////////////////////////

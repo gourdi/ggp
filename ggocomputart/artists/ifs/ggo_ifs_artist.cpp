@@ -78,7 +78,7 @@ void ggo_ifs_artist::render(uint8_t * buffer, float transform[4], float hue, flo
 	std::cout << "Rendering shadow" << std::endl;
 	
 	ggo::array_float shadow_buffer(accumul_buffer);
-	ggo::gaussian_blur_2d(shadow_buffer, shadow_buffer, get_render_width(), get_render_height(), 0.4f * get_render_min_size());
+	ggo::gaussian_blur_2d_float(shadow_buffer, shadow_buffer, get_render_width(), get_render_height(), 0.4f * get_render_min_size());
 	paint_buffer(buffer, 255, shadow_buffer);
 
 	// Render the shape.

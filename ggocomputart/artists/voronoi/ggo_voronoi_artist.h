@@ -2,7 +2,6 @@
 #define __GGO_VORONOI_ARTIST__
 
 #include <ggo_bitmap_artist_abc.h>
-#include <ggo_2d.h>
 
 class ggo_voronoi_artist : public ggo_bitmap_artist_abc
 {

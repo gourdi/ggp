@@ -2,7 +2,6 @@
 #define __GGO_BITMAP_ARTIST_MONDRIAN__
 
 #include "ggo_bitmap_artist_abc.h"
-#include <ggo_2d.h>
 
 class ggo_mondrian_artist : public ggo_bitmap_artist_abc
 {

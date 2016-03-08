@@ -3,7 +3,6 @@
 
 #include "ggo_bitmap_artist_abc.h"
 #include "ggo_crystal_artist.h"
-#include <ggo_2d.h>
 
 class ggo_crystal_bitmap_artist : public ggo_bitmap_artist_abc
 {

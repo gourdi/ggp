@@ -3,7 +3,6 @@
 
 #include <ggo_animation_artist_abc.h>
 #include <ggo_array.h>
-#include <ggo_2d.h>
 #include <ggo_animator.h>
 #include <ggo_animate_abc.h>
 
@@ -21,21 +20,21 @@ private:
 			
 private:
 
-    struct ggo_circle_animate : public ggo_position_animate_abc
-    {
-            ggo_circle_animate(const ggo::point2d_float & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
+  struct ggo_circle_animate : public ggo_position_animate_abc
+  {
+          ggo_circle_animate(const ggo::point2d_float & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
     
-      bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
+    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
 
-      float       _radius;
-      ggo::color  _color;
-      float       _attenuation_factor;
-      float       _bounding_factor;
+    float       _radius;
+    ggo::color  _color;
+    float       _attenuation_factor;
+    float       _bounding_factor;
       
-      static  bool bkgd_rendering_allowed;
-    };
+    static  bool bkgd_rendering_allowed;
+  };
     
-    ggo_animator  _animator;
+  ggo_animator  _animator;
 };
 
 #endif

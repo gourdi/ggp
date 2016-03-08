@@ -92,18 +92,4 @@ namespace ggo
   {
     return ggo::circle<T>(_center, _radius).intersect_segment(x_from, y_from, x_to, y_to);
   }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::vector<ggo::set2<T>> disc<T>::get_draw_points() const
-  {
-    const int POINTS_COUNT = 32;
-    std::vector<ggo::set2<T>> points;
-    for (int i = 0; i < POINTS_COUNT; ++i)
-    {
-      float angle = i * 2 * ggo::PI<T>() / POINTS_COUNT;
-      points.push_back(_center + ggo::set2<T>::from_polar(angle, _radius));
-    }
-    return points;
-  }
 }

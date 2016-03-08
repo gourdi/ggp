@@ -73,13 +73,9 @@ void ggo_worms_artist::render_bitmap(uint8_t * buffer)
 
     // Blur the render buffer.
 		float variance = 0.02f * get_render_min_size();
-    
-    ggo::gaussian_parameters<uint8_t> params;
-    params._stride_in = 3;
-    params._stride_out = 3;
-		
-    ggo::gaussian_blur_2d(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, params);
-    ggo::gaussian_blur_2d(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, params);
-    ggo::gaussian_blur_2d(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, params);
+
+    ggo::gaussian_blur_2d_uint8(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, 3, 3);
+    ggo::gaussian_blur_2d_uint8(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, 3, 3);
+    ggo::gaussian_blur_2d_uint8(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, 3, 3);
 	}
 }

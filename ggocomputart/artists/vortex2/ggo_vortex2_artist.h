@@ -2,7 +2,6 @@
 #define __GGO_VORTEX2_ARTIST__
 
 #include "ggo_bitmap_artist_abc.h"
-#include <ggo_2d.h>
 #include <ggo_array.h>
 
 class ggo_vortex2_artist

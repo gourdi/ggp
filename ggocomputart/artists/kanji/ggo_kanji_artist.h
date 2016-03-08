@@ -2,7 +2,6 @@
 #define __GGO_ARTIST_KANJI__
 
 #include "ggo_artist_abc.h"
-#include <ggo_2d.h>
 #include <vector>
 
 class ggo_kanji_artist : public ggo_artist_abc

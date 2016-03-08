@@ -2,7 +2,6 @@
 #define __GGO_NEWTON_ARTIST__
 
 #include "ggo_animation_artist_abc.h"
-#include <ggo_2d.h>
 
 class ggo_newton_artist : public ggo_static_background_animation_artist_abc
 {

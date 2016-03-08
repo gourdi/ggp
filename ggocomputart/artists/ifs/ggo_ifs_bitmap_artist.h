@@ -3,7 +3,6 @@
 
 #include "ggo_bitmap_artist_abc.h"
 #include "ggo_ifs_artist.h"
-#include <ggo_2d.h>
 
 class ggo_ifs_bitmap_artist : public ggo_bitmap_artist_abc
 {

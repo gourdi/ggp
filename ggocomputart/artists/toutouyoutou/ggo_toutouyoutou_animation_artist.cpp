@@ -403,19 +403,19 @@ void ggo_toutouyoutou_anim_artist::paint_flow(uint8_t * buffer) const
   }
   
   // Border.
-  ggo::array_uint8 border_buffer(get_render_width() * get_render_height());
-  float radius = 0.0025f * get_render_min_size();
-  ggo::dilate_circle_kernel(sample_buffer, border_buffer, get_render_width(), get_render_height(), radius);
+  //ggo::array_uint8 border_buffer(get_render_width() * get_render_height());
+  //float radius = 0.0025f * get_render_min_size();
+  //ggo::dilate_circle_kernel(sample_buffer, border_buffer, get_render_width(), get_render_height(), radius);
   
-  for (int i = 0; i < border_buffer.get_size(); ++i)
-  {   
-    if (border_buffer[i] > 0)
-    {
-      buffer[3 * i + 0] = ((16 - border_buffer[i]) * buffer[3 * i + 0] + 8) / 16;
-      buffer[3 * i + 1] = ((16 - border_buffer[i]) * buffer[3 * i + 1] + 8) / 16;
-      buffer[3 * i + 2] = ((16 - border_buffer[i]) * buffer[3 * i + 2] + 8) / 16;
-    }
-  }
+  //for (int i = 0; i < border_buffer.get_size(); ++i)
+  //{   
+  //  if (border_buffer[i] > 0)
+  //  {
+  //    buffer[3 * i + 0] = ((16 - border_buffer[i]) * buffer[3 * i + 0] + 8) / 16;
+  //    buffer[3 * i + 1] = ((16 - border_buffer[i]) * buffer[3 * i + 1] + 8) / 16;
+  //    buffer[3 * i + 2] = ((16 - border_buffer[i]) * buffer[3 * i + 2] + 8) / 16;
+  //  }
+  //}
   
   // Inside.
   uint8_t * ptr_sample = sample_buffer;

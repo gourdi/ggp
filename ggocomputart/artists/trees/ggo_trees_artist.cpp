@@ -2,7 +2,6 @@
 #include <iostream>
 #include <ggo_tree.h>
 #include <ggo_gaussian_blur.h>
-#include <ggo_2d.h>
 #include <ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
@@ -202,11 +201,7 @@ void ggo_trees_artist::render_tree(uint8_t * buffer, const std::vector<ggo::poly
 //////////////////////////////////////////////////////////////
 void ggo_trees_artist::blur_buffer(uint8_t * buffer, float variance) const
 {
-  ggo::gaussian_parameters<uint8_t> params;
-  params._stride_in = 3;
-  params._stride_out = 3;
-  
-	ggo::gaussian_blur_2d(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, params);
-	ggo::gaussian_blur_2d(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, params);
-	ggo::gaussian_blur_2d(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, params);
+	ggo::gaussian_blur_2d_uint8(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, 3, 3);
+	ggo::gaussian_blur_2d_uint8(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, 3, 3);
+	ggo::gaussian_blur_2d_uint8(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, 3, 3);
 }

@@ -3,7 +3,6 @@
 
 #include "ggo_animation_artist_abc.h"
 #include <ggo_harmonic_curve.h>
-#include <ggo_2d.h>
 
 class ggo_ikeda_artist : public ggo_animation_artist_abc
 {
