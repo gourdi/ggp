@@ -81,7 +81,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void erode_rectanglee_kernel(const uint8_t * input, uint8_t * output, int width, int height, int kernel_width, int kernel_height)
+  void erode_rectangle_kernel(const uint8_t * input, uint8_t * output, int width, int height, int kernel_width, int kernel_height)
   {
     morpho_rectangle_kernel_t(input, output, width, height, kernel_width, kernel_height, std::less<int>());
   }
