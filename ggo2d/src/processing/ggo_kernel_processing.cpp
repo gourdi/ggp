@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_kernel_processing.h"
 #include <ggo_memory.h>
 #include <ggo_array.h>
@@ -219,3 +221,6 @@ void	ggo_median_cut(uint8_t * r, uint8_t * g, uint8_t * b, int width, int height
   ggo_apply_disps( g, disps, width, height, feedback );
   ggo_apply_disps( b, disps, width, height, feedback );
 }*/
+
+#endif
+

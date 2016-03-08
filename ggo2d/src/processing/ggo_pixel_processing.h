@@ -1,6 +1,8 @@
 #ifndef __GGO_PIXEL_PROCESSING__
 #define __GGO_PIXEL_PROCESSING__
 
+#if 0
+
 #include <stdint.h>
 #include <ggo_2d.h>
 
@@ -21,6 +23,8 @@ void	ggo_wind(uint8_t * buffer, int width, int height, float direction, int leng
 
 void	ggo_grayscale(uint8_t * r, uint8_t * g, uint8_t * b, int size, ggo_user_feedback_abc * feedback);
 void	ggo_invert(uint8_t * buffer, int size, ggo_user_feedback_abc * feedback);
+
+#endif
 
 #endif
 

@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_scale.h"
 
 //////////////////////////////////////////////////////////////
@@ -201,3 +203,6 @@ void	ggo_scale_2d(const uint8_t * input, int width_in, int height_in, uint8_t * 
 {
 	ggo_scale2d_t<uint8_t>( input, width_in, height_in, output, width_out, height_out, algo, 0, 255 );
 }
+
+#endif
+

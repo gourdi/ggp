@@ -1,3 +1,5 @@
+#if 0
+
 #include "ggo_color_reduction.h"
 #include <vector>
 #include <algorithm>
@@ -308,3 +310,6 @@ void	ggo_color_reduction_median_cut(const uint8_t * r, const uint8_t * g, const 
 		}
 	}
 }
+
+#endif
+

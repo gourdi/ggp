@@ -1,6 +1,8 @@
 #ifndef __GGO_KERNEL_PROCESSING__
 #define __GGO_KERNEL_PROCESSING__
 
+#if 0
+
 #include <stdint.h>
 
 namespace ggo
@@ -13,3 +15,6 @@ namespace ggo
 }
 
 #endif
+
+#endif
+
