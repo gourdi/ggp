@@ -18,11 +18,11 @@ GGO_TEST(gaussian_blur, filter)
     return norm;
   };
 
-  std::vector<std::pair<float, float>> stddev_threasholds{ { 1.f, 0.01f }, { 2.f, 0.01f }, { 5.f, 0.01f }, { 5.f, 0.0001f } };
+  std::vector<std::pair<float, float>> stddev_thresholds{ { 1.f, 0.01f }, { 2.f, 0.01f }, { 5.f, 0.01f }, { 5.f, 0.0001f } };
 
-  for (const auto & stddev_threashold : stddev_threasholds)
+  for (const auto & stddev_threshold : stddev_thresholds)
   {
-    auto filter = ggo::build_gaussian_filter(stddev_threashold.first, stddev_threashold.second);
+    auto filter = ggo::build_gaussian_filter(stddev_threshold.first, stddev_threshold.second);
     GGO_CHECK_FABS(compute_norm(filter), 1.f);
   }
 }
@@ -65,7 +65,7 @@ GGO_TEST(gaussian_blur, 1d)
     std::vector<std::complex<double>> in(7, 0);
     std::vector<std::complex<double>> out(7, 0);
     in[3] = { 1.0, 2.0 };
-    ggo::gaussian_blur_1d<std::complex<double>, double, std::complex<double>, std::complex<double>>(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+    ggo::gaussian_blur_1d<std::complex<double>, double>(&in[0], &out[0], static_cast<int>(in.size()), 0.8);
     GGO_CHECK_FABS(out[0].real(), 0.f);
     GGO_CHECK_FABS(out[0].imag(), 0.f);
     GGO_CHECK_FABS(out[1].real(), 0.021929646581818646);
@@ -103,7 +103,7 @@ GGO_TEST(gaussian_blur, 2d)
 
     for (size_t i = 0; i < out.size(); ++i)
     {
-      GGO_CHECK(out[i] == ref[i]);
+      GGO_CHECK_EQ(static_cast<int>(out[i]), static_cast<int>(ref[i]));
     }
   }
 }

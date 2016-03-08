@@ -1,13 +1,11 @@
-#if 0
-
 #include "ggo_morphology.h"
 #include <functional>
 
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <typename T, typename Compare>
-  void morpho_rectangle_kernel_t(const T * input, T * output, int width, int height, int kernel_width, int kernel_height, Compare comp)
+  template <typename data_type, typename compare_func>
+  void morpho_rectangle_kernel(const T * input, T * output, int width, int height, int kernel_width, int kernel_height, compare_func compare)
   {
     for (int y = 0; y < height; ++y)
     {

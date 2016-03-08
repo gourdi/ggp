@@ -9,14 +9,15 @@ namespace ggo
             typename filter_type,
             typename data_type,
             typename output_type,
-            input_type(fetch_func)(const input_type *, int, int, int)>
+            typename fetch_func>
   void apply_symetric_filter_1d(const input_type * in,
                                 output_type * out,
                                 int size,
                                 int stride_in,
                                 int stride_out,
                                 const filter_type * filter,
-                                int filter_size)
+                                int filter_size,
+                                fetch_func fetch)
   {
     for (int x = 0; x < size; ++x)
     {
@@ -25,8 +26,8 @@ namespace ggo
       {
         int i1 = x + i;
         int i2 = x - i;
-        data_type tmp1 = ggo::to<data_type>(fetch_func(in, size, stride_in, i1));
-        data_type tmp2 = ggo::to<data_type>(fetch_func(in, size, stride_in, i2));
+        data_type tmp1 = ggo::to<data_type>(fetch(in, size, stride_in, i1));
+        data_type tmp2 = ggo::to<data_type>(fetch(in, size, stride_in, i2));
         v += (tmp1 + tmp2) * filter[i];
       }
 

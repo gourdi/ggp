@@ -1,7 +1,5 @@
-#ifndef __GGO_KERNEL_PROCESSING__
-#define __GGO_KERNEL_PROCESSING__
-
-#if 0
+#ifndef __GGO_MORPHOLOGY__
+#define __GGO_MORPHOLOGY__
 
 #include <stdint.h>
 
@@ -13,8 +11,6 @@ namespace ggo
   void	dilate_circle_kernel(const uint8_t * input, uint8_t * output, int width, int height, float radius);
   void	erode_circle_kernel(const uint8_t * input, uint8_t * output, int width, int height, float radius);
 }
-
-#endif
 
 #endif
 

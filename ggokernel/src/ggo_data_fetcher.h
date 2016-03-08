@@ -20,7 +20,7 @@ namespace ggo
     GGO_ASSERT(x >= 0 && x < size);
     return data[stride * x];
   }
-
+  
   template <typename data_type>
   data_type & fetch_data_duplicated_edge_mirror1d(data_type * data, int size, int stride, int x)
   {
@@ -34,6 +34,15 @@ namespace ggo
     int index = mirror_index_edge_duplicated(x, size);
     return data[stride * index];
   }
+    
+  template <typename data_type>
+  struct fetch_data_duplicated_edge_mirror1d_const_struct
+  {
+    data_type operator()(const data_type * data, int size, int stride, int x)
+    {
+      return fetch_data_duplicated_edge_mirror1d_const(data, size, stride, x);
+    }
+  };
 }
 
 //////////////////////////////////////////////////////////////
