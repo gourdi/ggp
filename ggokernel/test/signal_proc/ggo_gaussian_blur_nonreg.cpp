@@ -28,83 +28,102 @@ GGO_TEST(gaussian_blur, filter)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(gaussian_blur, 1d)
+GGO_TEST(gaussian_blur, 1d_uint8)
 {
-  // uint8_t
-  {
-    std::vector<uint8_t> in(7, 0);
-    std::vector<uint8_t> out(7, 0);
-    in[3] = 0xff;
-    ggo::gaussian_blur_1d_uint8(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
-    GGO_CHECK(out[0] == 0);
-    GGO_CHECK(out[1] == 6);
-    GGO_CHECK(out[2] == 58);
-    GGO_CHECK(out[3] == 127);
-    GGO_CHECK(out[4] == 58);
-    GGO_CHECK(out[5] == 6);
-    GGO_CHECK(out[6] == 0);
-  }
+  std::vector<uint8_t> in(7, 0);
+  std::vector<uint8_t> out(7, 0);
+  in[3] = 0xff;
+  ggo::gaussian_blur_1d_uint8(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+  GGO_CHECK(out[0] == 0);
+  GGO_CHECK(out[1] == 6);
+  GGO_CHECK(out[2] == 58);
+  GGO_CHECK(out[3] == 127);
+  GGO_CHECK(out[4] == 58);
+  GGO_CHECK(out[5] == 6);
+  GGO_CHECK(out[6] == 0);
+}
 
-  // float
-  {
-    std::vector<float> in(7, 0);
-    std::vector<float> out(7, 0);
-    in[3] = 255.f;
-    ggo::gaussian_blur_1d_float(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
-    GGO_CHECK_FABS(out[0], 0.f);
-    GGO_CHECK_FABS(out[1], 5.59206057f);
-    GGO_CHECK_FABS(out[2], 58.2705956f);
-    GGO_CHECK_FABS(out[3], 127.274673f);
-    GGO_CHECK_FABS(out[4], 58.2705956f);
-    GGO_CHECK_FABS(out[5], 5.59206057f);
-    GGO_CHECK_FABS(out[6], 0.f);
-  }
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian_blur, 1d_float)
+{
+  std::vector<float> in(7, 0);
+  std::vector<float> out(7, 0);
+  in[3] = 255.f;
+  ggo::gaussian_blur_1d(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+  GGO_CHECK_FABS(out[0], 0.f);
+  GGO_CHECK_FABS(out[1], 5.59206057f);
+  GGO_CHECK_FABS(out[2], 58.2705956f);
+  GGO_CHECK_FABS(out[3], 127.274673f);
+  GGO_CHECK_FABS(out[4], 58.2705956f);
+  GGO_CHECK_FABS(out[5], 5.59206057f);
+  GGO_CHECK_FABS(out[6], 0.f);
+}
 
-  // std::complex<double>
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian_blur, 1d_complex)
+{
+  std::vector<std::complex<double>> in(7, 0);
+  std::vector<std::complex<double>> out(7, 0);
+  in[3] = { 1.0, 2.0 };
+  ggo::gaussian_blur_1d<std::complex<double>, double>(&in[0], &out[0], static_cast<int>(in.size()), 0.8);
+  GGO_CHECK_FABS(out[0].real(), 0.f);
+  GGO_CHECK_FABS(out[0].imag(), 0.f);
+  GGO_CHECK_FABS(out[1].real(), 0.021929646581818646);
+  GGO_CHECK_FABS(out[1].imag(), 0.043859293163637292);
+  GGO_CHECK_FABS(out[2].real(), 0.22851214883994622);
+  GGO_CHECK_FABS(out[2].imag(), 0.45702429767989244);
+  GGO_CHECK_FABS(out[3].real(), 0.49911640915647038);
+  GGO_CHECK_FABS(out[3].imag(), 0.99823281831294075);
+  GGO_CHECK_FABS(out[4].real(), 0.22851214883994622);
+  GGO_CHECK_FABS(out[4].imag(), 0.45702429767989244);
+  GGO_CHECK_FABS(out[5].real(), 0.021929646581818646);
+  GGO_CHECK_FABS(out[5].imag(), 0.043859293163637292);
+  GGO_CHECK_FABS(out[6].real(), 0.f);
+  GGO_CHECK_FABS(out[6].imag(), 0.f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian_blur, 2d_uint8)
+{
+  std::vector<uint8_t> in(5 * 5, 0);
+  std::vector<uint8_t> out(5 * 5, 0);
+  in[2*5+2] = 0xff;
+  ggo::gaussian_blur_2d_uint8(&in[0], &out[0], 5, 5, 0.8f);
+
+  const std::vector<uint8_t> ref{
+    0, 1, 3, 1, 0,
+    1, 13, 29, 13, 1,
+    3, 29, 64, 29, 3,
+    1, 13, 29, 13, 1,
+    0, 1, 3, 1, 0 
+  };
+
+  for (size_t i = 0; i < out.size(); ++i)
   {
-    std::vector<std::complex<double>> in(7, 0);
-    std::vector<std::complex<double>> out(7, 0);
-    in[3] = { 1.0, 2.0 };
-    ggo::gaussian_blur_1d<std::complex<double>, double>(&in[0], &out[0], static_cast<int>(in.size()), 0.8);
-    GGO_CHECK_FABS(out[0].real(), 0.f);
-    GGO_CHECK_FABS(out[0].imag(), 0.f);
-    GGO_CHECK_FABS(out[1].real(), 0.021929646581818646);
-    GGO_CHECK_FABS(out[1].imag(), 0.043859293163637292);
-    GGO_CHECK_FABS(out[2].real(), 0.22851214883994622);
-    GGO_CHECK_FABS(out[2].imag(), 0.45702429767989244);
-    GGO_CHECK_FABS(out[3].real(), 0.49911640915647038);
-    GGO_CHECK_FABS(out[3].imag(), 0.99823281831294075);
-    GGO_CHECK_FABS(out[4].real(), 0.22851214883994622);
-    GGO_CHECK_FABS(out[4].imag(), 0.45702429767989244);
-    GGO_CHECK_FABS(out[5].real(), 0.021929646581818646);
-    GGO_CHECK_FABS(out[5].imag(), 0.043859293163637292);
-    GGO_CHECK_FABS(out[6].real(), 0.f);
-    GGO_CHECK_FABS(out[6].imag(), 0.f);
+    GGO_CHECK_EQ(static_cast<int>(out[i]), static_cast<int>(ref[i]));
   }
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(gaussian_blur, 2d)
+GGO_TEST(gaussian_blur, 2d_float)
 {
-  // uint8_t
+  std::vector<float> in(5 * 5, 0);
+  std::vector<float> out(5 * 5, 0);
+  in[2*5+2] = 1.f;
+  ggo::gaussian_blur_2d(&in[0], &out[0], 5, 5, 0.8f);
+  
+  const std::vector<float> ref{
+    0.000481f, 0.005011f, 0.010945f, 0.005011f, 0.000481f,
+    0.005011f, 0.052218f, 0.114054f, 0.052218f, 0.005011f,
+    0.010945f, 0.114054f, 0.249117f, 0.114054f, 0.010945f,
+    0.005011f, 0.052218f, 0.114054f, 0.052218f, 0.005011f,
+    0.000481f, 0.005011f, 0.010945f, 0.005011f, 0.000481f
+  };
+
+  for (size_t i = 0; i < out.size(); ++i)
   {
-    std::vector<uint8_t> in(5 * 5, 0);
-    std::vector<uint8_t> out(5 * 5, 0);
-    in[2*5+2] = 0xff;
-    ggo::gaussian_blur_2d_uint8(&in[0], &out[0], 5, 5, 0.8f);
-
-    const std::vector<uint8_t> ref{
-      0, 1, 3, 1, 0,
-      1, 13, 29, 13, 1,
-      3, 29, 64, 29, 3,
-      1, 13, 29, 13, 1,
-      0, 1, 3, 1, 0 
-    };
-
-    for (size_t i = 0; i < out.size(); ++i)
-    {
-      GGO_CHECK_EQ(static_cast<int>(out[i]), static_cast<int>(ref[i]));
-    }
+    GGO_CHECK_FABS(out[i], ref[i]);
   }
 }
+
 
