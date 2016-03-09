@@ -35,13 +35,14 @@ namespace ggo
             typename filter_type,
             typename data_type,
             typename output_type,
-            input_type(fetch_func)(const input_type *, int, int, int) = ggo::fetch_data_duplicated_edge_mirror1d_const<input_type>>
+            typename fetch_func>
   void gaussian_blur_2d(const input_type * in,
                         output_type * out,
                         int width,
                         int height,
                         filter_type stddev,
-                        int stride_in = 1, int stride_out = 1, filter_type filter_threshold = filter_type(0.01));
+                        int stride_in, int stride_out, filter_type filter_threshold,
+                        fetch_func fetch);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -60,12 +61,12 @@ namespace ggo
 
   inline void gaussian_blur_2d_uint8(const uint8_t * in, uint8_t * out, int width, int height, float stddev, int stride_in = 1, int stride_out = 1, float filter_threshold = 0.01f)
   {
-    gaussian_blur_2d<uint8_t, float, float, uint8_t>(in, out, width, height, stddev, stride_in, stride_out, filter_threshold);
+    gaussian_blur_2d<uint8_t, float, float, uint8_t>(in, out, width, height, stddev, stride_in, stride_out, filter_threshold, fetch_data_duplicated_edge_mirror1d_const_struct<float>());
   }
 
   inline void gaussian_blur_2d_float(const float * in, float * out, int width, int height, float stddev, int stride_in = 1, int stride_out = 1, float filter_threshold = 0.01f)
   {
-    gaussian_blur_2d<float, float, float, float>(in, out, width, height, stddev, stride_in, stride_out, filter_threshold);
+    //gaussian_blur_2d<float, float, float, float>(in, out, width, height, stddev, stride_in, stride_out, filter_threshold);
   }
 }
 
@@ -161,53 +162,68 @@ namespace ggo
             typename filter_type,
             typename data_type,
             typename output_type,
-            input_type(fetch_func)(const input_type *, int, int, int)>
+            typename fetch_func>
   void gaussian_blur_2d(const input_type * in,
                         output_type * out,
                         int width,
                         int height,
                         filter_type stddev,
-                        int stride_in, int stride_out, filter_type filter_threshold)
+                        int stride_in, int stride_out, filter_type filter_threshold,
+                        fetch_func fetch)
   {
-  #if 0
     // Setup the filter.
     auto filter = build_gaussian_filter<filter_type>(stddev, filter_threshold);
+    int filter_size = static_cast<int>(filter.size());
 
     if (filter.size() == 1 && in == out)
     {
       return;
     }
 
-    ggo::array<data_type> tmp(width * height);
-
-    // Horizontal filtering.
+    // Cast input.
+    ggo::array<data_type> tmp1(width * height);
     {
       const input_type * it_in = in;
-      data_type * it_out = tmp;
+      data_type * it_out = tmp1;
+      for (int y = 0; y < height; ++y)
+      {
+        for (int x = 0; x < width; ++x)
+        {
+          *it_out = ggo::to<data_type>(*it_in);
+          ++it_out;
+          it_in += stride_in;
+        }
+      }
+    }
+
+    // Horizontal filtering.
+    ggo::array<data_type> tmp2(width * height);
+    {
+      const data_type * it_in = tmp1;
+      data_type * it_out = tmp2;
       for (int y = 0; y < height; ++y)
       {
         apply_symetric_filter_1d
-          <input_type, filter_type, data_type, data_type, fetch_func>
-          (it_in, it_out, width, stride_in, 1, &filter[0], static_cast<int>(filter.size()));
-        it_in += width * stride_in;
+          <data_type, filter_type, data_type, data_type, fetch_func>
+          (it_in, it_out, width, 1, 1, &filter[0], filter_size, fetch);
+        it_in += width;
         it_out += width;
       }
     }
 
     // Vertical filtering.
     {
-      const data_type * it_in = tmp;
+      const data_type * it_in = tmp2;
       output_type * it_out = out;
       for (int x = 0; x < width; ++x)
       {
         apply_symetric_filter_1d
           <data_type, filter_type, data_type, output_type, fetch_func>
-          (it_in, it_out, height, width, stride_out * width, &filter[0], static_cast<int>(filter.size()));
+          (it_in, it_out, height, width, stride_out * width, &filter[0], filter_size, fetch);
         it_in += 1;
         it_out += stride_out;
       }
     }
-#endif
   }
 }
 

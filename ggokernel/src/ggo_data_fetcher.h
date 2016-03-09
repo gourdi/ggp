@@ -86,6 +86,15 @@ namespace ggo
     y = mirror_index_edge_duplicated(y, height);
     return data[stride * (y * width + x)];
   }
+
+  template <typename data_type>
+  struct fetch_data_duplicated_edge_mirror2d_const_struct
+  {
+    data_type operator()(const data_type * data, int width, int height, int stride, int x, int y)
+    {
+      return fetch_data_duplicated_edge_mirror2d_const(data, width, height, stride, x, y);
+    }
+  };
 }
 
 #endif

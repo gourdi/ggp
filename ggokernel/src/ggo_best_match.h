@@ -6,17 +6,17 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T, typename CandidateFunc, typename CompareFunc>
-  T best_match(CandidateFunc candidate_func, CompareFunc compare_func, int tries_count)
+  template <typename data_type, typename create_func, typename compare_func>
+  data_type best_match(create_func create, compare_func compare, int tries_count)
   {
-    T candidate = candidate_func();
+    data_type candidate = create();
     --tries_count;
     
     while (tries_count > 0)
     {
-      T new_candidate = candidate_func();
+      data_type new_candidate = create();
       
-      if (compare_func(new_candidate, candidate) == true)
+      if (compare(new_candidate, candidate) == true)
       {
         candidate = new_candidate;
       }
@@ -28,19 +28,19 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, typename CandidateFunc, typename EvaluateFunc, typename CompareFunc>
-  T best_match(CandidateFunc candidate_func, EvaluateFunc evaluate_func, CompareFunc compare_func, int tries_count)
+  template <typename data_type, typename create_func, typename evaluate_func, typename compare_func>
+  data_type best_match(create_func create, evaluate_func evaluate, compare_func compare, int tries_count)
   {
-    T candidate = candidate_func();
-    auto best_eval = evaluate_func(candidate);
+    data_type candidate = create();
+    auto best_eval = evaluate(candidate);
     --tries_count;
     
     while (tries_count > 0)
     {
-      T new_candidate = candidate_func();
-      auto new_eval = evaluate_func(new_candidate);
+      data_type new_candidate = create();
+      auto new_eval = evaluate(new_candidate);
 
-      if (compare_func(new_eval, best_eval) == true)
+      if (compare(new_eval, best_eval) == true)
       {
         candidate = new_candidate;
         best_eval = new_eval;
@@ -53,17 +53,17 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T, typename CandidateFunc, typename EvaluateFunc>
-  T best_match_min(CandidateFunc candidate_func, EvaluateFunc evaluate_func, int tries_count)
+  template <typename data_type, typename create_func, typename evaluate_func>
+  data_type best_match_min(create_func create, evaluate_func evaluate, int tries_count)
   {
-    return best_match<T>(candidate_func, evaluate_func, std::less<T>(), tries_count);
+    return best_match<data_type>(create, evaluate, std::less<data_type>(), tries_count);
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T, typename CandidateFunc, typename EvaluateFunc>
-  T best_match_max(CandidateFunc candidate_func, EvaluateFunc evaluate_func, int tries_count)
+  template <typename data_type, typename create_func, typename evaluate_func>
+  data_type best_match_max(create_func create, evaluate_func evaluate, int tries_count)
   {
-    return best_match<T>(candidate_func, evaluate_func, std::greater<T>(), tries_count);
+    return best_match<data_type>(create, evaluate, std::greater<data_type>(), tries_count);
   }
 }
 
