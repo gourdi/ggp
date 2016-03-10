@@ -1,4 +1,5 @@
 #ifndef __GGO_COLOR_STREAM__
+#define __GGO_COLOR_STREAM__
 
 #include <string>
 #include <iostream>
@@ -33,11 +34,9 @@ namespace ggo
 
   private:
 #ifdef _WIN32
-      int _old_color;
+    int _old_color;
 #endif
   };
 }
-
-
 
 #endif
