@@ -2,7 +2,7 @@
 #include <ggo_link.h>
 #include "ggo_physics.h"
 #include "ggo_collisions.h"
-#include "ggo_intersections.h"
+#include "ggo_impulse.h"
 #include <fstream>
 
 const float GRAVITY = 9.8f;
@@ -14,7 +14,7 @@ std::vector<ggo::link<const void *>> cur_contacts;
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  void update_physics(oriented_box_body & body, const ggo::half_plane_float & half_plane, float dt)
+  void update_physics(oriented_box_body & body, const std::vector<ggo::half_plane_float> & half_planes, float dt)
   {
     cur_contacts.clear();
 
@@ -23,93 +23,61 @@ namespace ggo
       return;
     }
 
-    std::ofstream log("d:/log.txt", std::ios::app);
-    log << "dt: " << dt << std::endl;
+    // Subdivide current time step to safely process collisions.
+    const float dl_max = std::min(body._box.size1(), body._box.size2()) / 64.f;
+    GGO_ASSERT_GT(dl_max, 0.f);
+    int time_steps = 1;
 
-    // Process collisions and contacts.
-    //ggo::link<const void *> contact_link(&half_plane, &body);
-    //if (ggo::find(contacts, contact_link) == false)
-    //{
-    //while (dt > 0.f)
-    //{
-
-      // Check for collisions.
-    float dt_tmp = dt;
-    ggo::point2d_float pos{ 0.f, 0.f };
-    ggo::vector2d_float normal{ 0.f, 0.f };
-    if (test_collision(half_plane, body._box, body._linear_velocity, body._angular_velocity, pos, normal, dt_tmp) == true)
+    while (true)
     {
-      log << "collision detected: dt_tmp=" << dt_tmp << std::endl;
+      float dt_inc = dt / time_steps;
+      float dl1 = dt_inc * body._linear_velocity.get_length();
+      float dl2 = dt_inc * std::max(body._box.size1(), body._box.size2()) * body._angular_velocity;
 
-      // Collision: first move the body to the collision position.
-      body._box.move(dt_tmp * body._linear_velocity);
-      body._box.rotate(dt_tmp * body._angular_velocity);
-      log << "position correction: box=" << body._box << std::endl;
+      if (dl1 < dl_max && dl2 < dl_max)
+      {
+        break;
+      }
 
-      // Handle bouncing: update velocities by computing impulses.
-      ggo::vector2d_float diff = body._box.get_center() - pos;
-      float impulse = compute_static_impulse(body, pos, normal);
-
-      body._linear_velocity += impulse * normal / body._mass;
-      body._angular_velocity += impulse * ggo::ortho_dot(diff, normal) / body.moment_of_intertia();
-
-      // Remove elapsed time.
-      dt -= dt_tmp;
+      time_steps *= 2;
     }
+    float dt_sub = dt / time_steps;
 
-    // Process gravity.
-    body._linear_velocity += dt * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
-    
+    //std::ofstream log("d:/log.txt", std::ios::app);
+    auto& log = std::cout;
+    log << "-----------------------" << std::endl << "dt (ms)= " << 1000.f * dt << "; time_steps=" << time_steps << std::endl ;
 
-    // Apply velocities.
-    body._box.move(dt * body._linear_velocity);
-    body._box.rotate(dt * body._angular_velocity, body._box.get_center());
+    for (int i = 0; i < time_steps; ++i)
+    {
+      // Process gravity.
+      //body._linear_velocity += dt_sub * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
 
-    log << "applied velocities: linear=" << body._linear_velocity << "; angular=" << body._angular_velocity << "; box=" << body._box << std::endl;
+      // Apply velocities.
+      body._box.move(dt_sub * body._linear_velocity);
+      body._box.rotate(dt_sub * body._angular_velocity, body._box.get_center());
+      log << "applied velocities:" << std::endl;
+      log << "linear vel.=" << body._linear_velocity << "; angular vel.=" << body._angular_velocity << "; box = " << body._box << std::endl;
 
-    float linear_kinetic_engery = 0.5f * body._mass * ggo::square(body._linear_velocity.get_length());
-    float angular_kinetic_engery = 0.5f * body.moment_of_intertia() * ggo::square(body._angular_velocity);
-    float total_kinetic_engery = linear_kinetic_engery + angular_kinetic_engery;
-    log << "kinetic energies: linear=" << linear_kinetic_engery << "; angular=" << angular_kinetic_engery << "; sum=" << total_kinetic_engery << std::endl << std::endl;
-    //}
+      for (const auto & half_plane : half_planes)
+      {
+        ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f }, correction{ 0.f, 0.f };
+        if (test_collision(half_plane, body._box, pos, normal, correction) == true)
+        {
+          // Collision: first move the body to the collision position.
+          body._box.move(correction);
 
+          // Handle bouncing: update velocities by computing impulses.
+          ggo::vector2d_float diff = body._box.get_center() - pos;
+          float impulse = compute_static_impulse(body, pos, normal);
 
-      // The body is moving away => discard detected collision.
-      //if (ggo::dot(body._linear_velocity, normal) > 0.001f)
-      //{
-      //  log << "moving away" << std::endl;
-      //  break;
-      //}
+          body._linear_velocity += impulse * normal / body._mass;
+          body._angular_velocity += impulse * ggo::ortho_dot(diff, normal) / body.moment_of_intertia();
 
-
-
-      // Contact if the objects were intersectiong at the previous frame already.
-      //if (ggo::find(prv_contacts, contact_link) == true)
-      //{
-      //  log << "contact detected" << std::endl;
-      //  push_once(contacts, contact_link);
-      //  break;
-      //}
-      //ggo::push_once(cur_contacts, contact_link);
-
+          log << "collision => applied impulse=" << impulse << std::endl;
+          log << "linear vel.=" << body._linear_velocity << "; angular vel.=" << body._angular_velocity << "; box = " << body._box << std::endl;
+        }
+      }
+    }
   }
-
-  // Physics is not the same with or without contacts.
-  //if (ggo::find(contacts, contact_link) == true)
-  //{
-  //  log << "contact:" << std::endl;
-  //}
-  //else
-  //{
-  //  // Process gravity.
-  //  body._linear_velocity += dt * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
-  //  log << "gravity: linear_velocity=" << body._linear_velocity << "; angle_velocity=" << body._angular_velocity << "; pos = " << body._box.get_center() << std::endl;
-
-  //  // Apply velocities.
-  //  body._box.move(dt * body._linear_velocity);
-  //  body._box.rotate(dt * body._angular_velocity, body._box.get_center());
-  //}
-
-  //std::swap(prv_contacts, cur_contacts);
 }
 

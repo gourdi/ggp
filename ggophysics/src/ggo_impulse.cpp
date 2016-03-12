@@ -1,4 +1,4 @@
-#include <ggo_collisions.h>
+#include <ggo_impulse.h>
 #include <ggo_physics.h>
 
 namespace ggo

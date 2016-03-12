@@ -9,9 +9,8 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////////
   // Oriented box.
-  bool test_collision(const ggo::half_plane<float> & half_plane,
-                      const ggo::oriented_box<float> & box, const ggo::vector2d_float & linear_velocity, const float angular_velocity,
-                      ggo::point2d_float & pos, ggo::vector2d_float & normal, float & dt);
+  bool test_collision(const ggo::half_plane<float> & half_plane, const ggo::oriented_box<float> & box,
+                      ggo::point2d_float & pos, ggo::vector2d_float & normal, ggo::vector2d_float & correction);
 }
 
 #endif

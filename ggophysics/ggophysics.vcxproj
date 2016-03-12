@@ -117,12 +117,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_collisions.cpp" />
-    <ClCompile Include="src\ggo_intersections.cpp" />
+    <ClCompile Include="src\ggo_impulse.cpp" />
     <ClCompile Include="src\ggo_physics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ggo_collisions.h" />
-    <ClInclude Include="src\ggo_intersections.h" />
+    <ClInclude Include="src\ggo_impulse.h" />
     <ClInclude Include="src\ggo_physics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
