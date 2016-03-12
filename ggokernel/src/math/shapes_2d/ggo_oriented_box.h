@@ -48,7 +48,7 @@ namespace ggo
   template <typename T>
   std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<T> & box)
   {
-    auto points = box.get_draw_points();
+    auto points = box.get_points();
     os << "(" << points[0] << "; " << points[1] << "; " << points[2] << "; " << points[3] << ")";
     return os;
   }
