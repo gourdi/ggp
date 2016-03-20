@@ -14,7 +14,7 @@ std::vector<ggo::link<const void *>> cur_contacts;
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  void update_physics(oriented_box_body & body, const std::vector<ggo::half_plane_float> & half_planes, float dt)
+  void update_physics(std::vector<oriented_box_body> & bodies, const std::vector<ggo::half_plane_float> & half_planes, float dt)
   {
     cur_contacts.clear();
 
@@ -24,22 +24,19 @@ namespace ggo
     }
 
     // Subdivide current time step to safely process collisions.
-    const float dl_max = std::min(body._box.size1(), body._box.size2()) / 64.f;
-    GGO_ASSERT_GT(dl_max, 0.f);
-    int time_steps = 1;
-
-    while (true)
+    float size_min = std::numeric_limits<float>::max();
+    float disp_max = 0.f;
+    for (const auto & body : bodies)
     {
-      float dt_inc = dt / time_steps;
-      float dl1 = dt_inc * body._linear_velocity.get_length();
-      float dl2 = dt_inc * std::max(body._box.size1(), body._box.size2()) * body._angular_velocity;
+      size_min = std::min(size_min, std::min(body._box.size1(), body._box.size2()));
+      disp_max = std::max(disp_max, body._linear_velocity.get_length());
+      disp_max = std::max(disp_max, std::max(body._box.size1(), body._box.size2()) * body._angular_velocity);
+    }
 
-      if (dl1 < dl_max && dl2 < dl_max)
-      {
-        break;
-      }
-
-      time_steps *= 2;
+    int time_steps = 1;
+    if (disp_max > 0.f && size_min > 0.f)
+    {
+      time_steps = static_cast<int>(64 * dt * disp_max / size_min + 1); // For robustness, don't round but cast to the upper ineger.
     }
     float dt_sub = dt / time_steps;
 
@@ -49,32 +46,47 @@ namespace ggo
 
     for (int i = 0; i < time_steps; ++i)
     {
-      // Process gravity.
-      //body._linear_velocity += dt_sub * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
-
-      // Apply velocities.
-      body._box.move(dt_sub * body._linear_velocity);
-      body._box.rotate(dt_sub * body._angular_velocity, body._box.get_center());
-      log << "applied velocities:" << std::endl;
-      log << "linear vel.=" << body._linear_velocity << "; angular vel.=" << body._angular_velocity << "; box = " << body._box << std::endl;
-
-      for (const auto & half_plane : half_planes)
+      for (auto it_body = bodies.begin(); it_body != bodies.end(); ++it_body)
       {
-        ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f }, correction{ 0.f, 0.f };
-        if (test_collision(half_plane, body._box, pos, normal, correction) == true)
+        // Process gravity.
+        //body._linear_velocity += dt_sub * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
+
+        // Apply velocities.
+        it_body->_box.move(dt_sub * it_body->_linear_velocity);
+        it_body->_box.rotate(dt_sub * it_body->_angular_velocity, it_body->_box.get_center());
+        log << "applied velocities:" << std::endl;
+        log << "linear vel.=" << it_body->_linear_velocity << "; angular vel.=" << it_body->_angular_velocity << "; box = " << it_body->_box << std::endl;
+
+        // Collisions with half-planes.
+        for (const auto & half_plane : half_planes)
         {
-          // Collision: first move the body to the collision position.
-          body._box.move(correction);
+          ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
+          if (test_collision(half_plane, it_body->_box, pos, normal) == true)
+          {
+            // Handle bouncing: update velocities by computing impulses.
+            ggo::vector2d_float diff = it_body->_box.get_center() - pos;
+            float impulse = compute_impulse(*it_body, pos, normal);
 
-          // Handle bouncing: update velocities by computing impulses.
-          ggo::vector2d_float diff = body._box.get_center() - pos;
-          float impulse = compute_static_impulse(body, pos, normal);
+            it_body->apply_impulse(impulse, pos, normal);
 
-          body._linear_velocity += impulse * normal / body._mass;
-          body._angular_velocity += impulse * ggo::ortho_dot(diff, normal) / body.moment_of_intertia();
+            log << "collision => applied impulse=" << impulse << std::endl;
+            log << "linear vel.=" << it_body->_linear_velocity << "; angular vel.=" << it_body->_angular_velocity << "; box = " << it_body->_box << std::endl;
+          }
+        }
 
-          log << "collision => applied impulse=" << impulse << std::endl;
-          log << "linear vel.=" << body._linear_velocity << "; angular vel.=" << body._angular_velocity << "; box = " << body._box << std::endl;
+        // Collisions with other oriented boxes.
+        for (auto it_body2 = it_body + 1; it_body2 != bodies.end(); ++it_body2)
+        {
+          GGO_ASSERT(it_body != it_body2);
+
+          ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
+          if (test_collision(it_body->_box, it_body2->_box, pos, normal) == true)
+          {
+            float impulse = compute_impulse(*it_body, *it_body2, pos, normal);
+
+            it_body->apply_impulse(impulse, pos, normal);
+            it_body2->apply_impulse(-impulse, pos, normal);
+          }
         }
       }
     }

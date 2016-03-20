@@ -14,6 +14,7 @@ namespace ggo
 
     using affine_shape2d_abc<T>::rotate;
     using affine_shape2d_abc<T>::move;
+    using samplable_shape2d_abc<T>::is_point_inside;
 
                               oriented_box(ggo::set2<T> pos, ggo::set2<T> dir, T size1, T size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
 
