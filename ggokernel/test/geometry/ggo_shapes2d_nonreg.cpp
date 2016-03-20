@@ -687,6 +687,16 @@ GGO_TEST(shapes2d, oriented_box)
   GGO_CHECK(find_point(points, 5.0f, 1.0f));
   GGO_CHECK(find_point(points, 5.0f, 3.0f));
 
+  //Point inside.
+  GGO_CHECK(box.is_point_inside(4.f, 1.5f) == true);
+  GGO_CHECK(box.is_point_inside(4.f, 2.5f) == true);
+  GGO_CHECK(box.is_point_inside(4.5f, 1.5f) == true);
+  GGO_CHECK(box.is_point_inside(2.5f, 2.5f) == true);
+  GGO_CHECK(box.is_point_inside(3.f, 3.5f) == false);
+  GGO_CHECK(box.is_point_inside(3.f, 0.5f) == false);
+  GGO_CHECK(box.is_point_inside(0.5f, 2.f) == false);
+  GGO_CHECK(box.is_point_inside(5.5f, 2.f) == false);
+
   // Rotation.
   box.rotate(ggo::PI<float>() / 4.f, { 1.f, 1.f });
   auto points2 = box.get_points();

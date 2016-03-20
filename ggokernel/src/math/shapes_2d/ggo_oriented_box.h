@@ -8,7 +8,7 @@
 namespace ggo
 {
   template <typename T>
-  class oriented_box : public affine_shape2d_abc<T>
+  class oriented_box : public affine_shape2d_abc<T>, public samplable_shape2d_abc<T>
   {
   public:
 
@@ -31,6 +31,7 @@ namespace ggo
     void                      move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
     void                      rotate(T angle, const ggo::set2<T> & center) override;
     ggo::set2<T>              get_center() const override { return _pos; }
+    bool                      is_point_inside(T x, T y) const override;
 
   private:
 

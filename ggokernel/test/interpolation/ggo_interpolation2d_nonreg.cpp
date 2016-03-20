@@ -14,12 +14,12 @@ GGO_TEST(interpolation2d, bilinear)
   int stride = 2;
 
   // Interpolate directly on input points.
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 0.f, 0.f, stride) == 0);
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 1.f, 0.f, stride) == 2);
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 2.f, 0.f, stride) == 2);
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 0.f, 1.f, stride) == 1);
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 1.f, 1.f, stride) == 2);
-  GGO_CHECK(ggo::bilinear_interpolation2d_uint8(data.data(), 3, 2, 2.f, 1.f, stride) == 3);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 0.f, 0.f, stride) == 0);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 1.f, 0.f, stride) == 2);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 2.f, 0.f, stride) == 2);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 0.f, 1.f, stride) == 1);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 1.f, 1.f, stride) == 2);
+  GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, 2.f, 1.f, stride) == 3);
   
   // Check mirroring.
   GGO_CHECK(ggo::bilinear_interpolation2d_uint8_mirror(data.data(), 3, 2, -1, -1, stride) == 0);

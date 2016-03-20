@@ -37,4 +37,25 @@ namespace ggo
                                        _pos - _size1 * _dir - _size2 * dir2(),
                                        _pos - _size1 * _dir + _size2 * dir2() };
   }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename T>
+  bool oriented_box<T>::is_point_inside(T x, T y) const
+  {
+    ggo::set2<T> diff(x - _pos.x(), y - _pos.y());
+
+    T dot1 = ggo::dot(diff, _dir);
+    if (std::abs(dot1) > _size1)
+    {
+      return false;
+    }
+
+    T dot2 = ggo::dot(diff, dir2());
+    if (std::abs(dot2) > _size2)
+    {
+      return false;
+    }
+
+    return true;
+  }
 }
