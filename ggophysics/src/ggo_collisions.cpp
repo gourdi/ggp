@@ -28,12 +28,12 @@ namespace ggo
     normal = half_plane.normal();
 
     // Average inside points in case there is more than one.
-    pos = half_plane.normal() * half_plane.dist_to_origin();
+    pos = { 0.f, 0.f };
     for (const auto & point : inside_points)
     {
-      pos += point - half_plane.normal() * ggo::dot(half_plane.normal(), point);
+      pos += point + half_plane.normal() * (half_plane.dist_to_origin() - ggo::dot(half_plane.normal(), point));
     }
-    pos /= inside_points.size();
+    pos /= static_cast<float>(inside_points.size());
 
     return true;
   }
@@ -64,7 +64,7 @@ namespace ggo
         front_dist1 += box.size1() - dot.first;
         back_dist1  += box.size1() + dot.first;
         front_dist2 += box.size2() - dot.second;
-        back_dist1  += box.size2() + dot.second;
+        back_dist2  += box.size2() + dot.second;
       }
 
       auto offset_dir1 = [&]() { return std::accumulate(dots.begin(), dots.end(), 0.f, [](float acc, const std::pair<float, float> dots_pair) { return acc + dots_pair.first; }); };
@@ -72,23 +72,23 @@ namespace ggo
 
       if (front_dist1 <= back_dist1  && front_dist1 <= front_dist2 && front_dist1 <= back_dist2)
       {
-        pos = box.size1() * box.dir() + offset_dir2() * box.dir2();
+        pos = box.get_center() + box.size1() * box.dir() + offset_dir2() * box.dir2();
         normal = box.dir();
       }
       else if (back_dist1 <= front_dist1  && back_dist1 <= front_dist2 && back_dist1 <= back_dist2)
       {
-        pos = -box.size1() * box.dir() + offset_dir2() * box.dir2();
+        pos = box.get_center() - box.size1() * box.dir() + offset_dir2() * box.dir2();
         normal = -box.dir();
       }
       else if (front_dist2 <= front_dist1  && front_dist2 <= back_dist1 && front_dist2 <= back_dist2)
       {
-        pos = box.size2() * box.dir2() + offset_dir1() * box.dir();
+        pos = box.get_center() + box.size2() * box.dir2() + offset_dir1() * box.dir();
         normal = box.dir2();
       }
       else
       {
         GGO_ASSERT(back_dist2 <= front_dist1  && back_dist2 <= back_dist1 && back_dist2 <= front_dist2);
-        pos = -box.size2() * box.dir2() + offset_dir1() * box.dir();
+        pos = box.get_center() - box.size2() * box.dir2() + offset_dir1() * box.dir();
         normal = -box.dir2();
       }
     }
@@ -100,8 +100,8 @@ namespace ggo
   bool test_collision(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2,
                       ggo::point2d_float & pos, ggo::vector2d_float & normal)
   {
-    std::vector<ggo::point2d_float> inside_box1(4);
-    std::vector<ggo::point2d_float> inside_box2(4);
+    std::vector<ggo::point2d_float> inside_box1;
+    std::vector<ggo::point2d_float> inside_box2;
 
     for (const auto & point : box2.get_points())
     {
@@ -124,15 +124,16 @@ namespace ggo
       return false;
     }
 
-    if (inside_box1.empty() == true)
+    if (inside_box1.empty() == false)
     {
       find_collision_info(box1, inside_box1, pos, normal);
       return true;
     }
 
-    if (inside_box2.empty() == true)
+    if (inside_box2.empty() == false)
     {
       find_collision_info(box2, inside_box2, pos, normal);
+      normal = -normal; // Invert normal since it is relative to box1.
       return true;
     }
 
