@@ -23,13 +23,13 @@ namespace ggo
     }
 
     float                   _mass = 1.f; // 1 kg.
-    float                   _restitution = 0.8f;
+    float                   _restitution = 0.9f;
     ggo::oriented_box_float _box;
     ggo::vector2d_float     _linear_velocity = { 0.f, 0.f };
     float                   _angular_velocity = 0.f;
   };
 
-  void update_physics(std::vector<oriented_box_body> & bodies, const std::vector<ggo::half_plane_float> & half_planes, float dt);
+  void update_physics(std::vector<oriented_box_body> & bodies, const std::vector<ggo::half_plane_float> & half_planes, float dt, float attenuation);
 }
 
 #endif

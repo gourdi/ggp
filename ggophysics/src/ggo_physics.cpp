@@ -5,19 +5,11 @@
 #include "ggo_impulse.h"
 #include <fstream>
 
-const float GRAVITY = 9.8f;
-
-std::vector<ggo::link<const void *>> contacts;
-std::vector<ggo::link<const void *>> prv_contacts;
-std::vector<ggo::link<const void *>> cur_contacts;
-
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  void update_physics(std::vector<oriented_box_body> & bodies, const std::vector<ggo::half_plane_float> & half_planes, float dt)
+  void update_physics(std::vector<oriented_box_body> & bodies, const std::vector<ggo::half_plane_float> & half_planes, float dt, float attenuation)
   {
-    cur_contacts.clear();
-
     if (dt <= 0.f)
     {
       return;
@@ -48,8 +40,9 @@ namespace ggo
     {
       for (auto it_body = bodies.begin(); it_body != bodies.end(); ++it_body)
       {
-        // Process gravity.
-        //body._linear_velocity += dt_sub * ggo::vector2d_float(0.f, -GRAVITY) / body._mass;
+        // Apply attenuation.
+        it_body->_angular_velocity *= attenuation;
+        it_body->_linear_velocity *= attenuation;
 
         // Apply velocities.
         it_body->_box.move(dt_sub * it_body->_linear_velocity);
@@ -63,7 +56,7 @@ namespace ggo
           ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
           if (test_collision(half_plane, it_body->_box, pos, normal) == true)
           {
-            // Handle bouncing: update velocities by computing impulses.
+            // Handle bouncing: update velocities by computing impulse.
             ggo::vector2d_float diff = it_body->_box.get_center() - pos;
             float impulse = compute_impulse(*it_body, pos, normal);
 
@@ -82,6 +75,7 @@ namespace ggo
           ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
           if (test_collision(it_body->_box, it_body2->_box, pos, normal) == true)
           {
+            // Handle bouncing: update velocities by computing impulse.
             float impulse = compute_impulse(*it_body, *it_body2, pos, normal);
 
             it_body->apply_impulse(impulse, pos, normal);

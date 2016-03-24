@@ -7,10 +7,11 @@
                         std::cerr << __FILE__ << ":" << __LINE__ << "\"" << #zzz << "\" failed (" << SDL_GetError() << ")" << std::endl; \
                         throw std::runtime_error(SDL_GetError()); }
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int screen_width = 640;
+const int screen_height = 480;
+const float attenuation = 0.999f;
 
-ggo::point2d_float origin_pixel_pos{ 0.5f * SCREEN_WIDTH, 0.5f * SCREEN_HEIGHT };
+ggo::point2d_float origin_pixel_pos{ 0.5f * screen_width, 0.5f * screen_height };
 float              meters_per_pixel = 0.001f;
 
 std::vector<std::vector<ggo::oriented_box_body>> history;
@@ -27,7 +28,7 @@ void render_physics(const std::vector<ggo::oriented_box_body> & bodies, const st
     ggo::point2d_float mapped_point = origin_pixel_pos + p / meters_per_pixel;
     SDL_Point sdl_point;
     sdl_point.x = ggo::to<int>(mapped_point.x());
-    sdl_point.y = SCREEN_HEIGHT - ggo::to<int>(mapped_point.y());
+    sdl_point.y = screen_height - ggo::to<int>(mapped_point.y());
     return sdl_point;
   };
 
@@ -69,7 +70,7 @@ int main(int argc, char ** argv)
     SDL_Window * window = nullptr;
     SDL_Renderer * renderer = nullptr;
     SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
-    SDL_CALL(SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer));
+    SDL_CALL(SDL_CreateWindowAndRenderer(screen_width, screen_height, SDL_WINDOW_SHOWN, &window, &renderer));
 
     std::vector<ggo::half_plane_float> half_planes{
       { { 0.f, 1.f }, -0.2f },
@@ -77,10 +78,15 @@ int main(int argc, char ** argv)
       { { 1.f, 0.f }, -0.25f },
       { { -1.f, 0.f }, -0.25f } };
 
-    ggo::oriented_box_body body(ggo::oriented_box_float({ 0.f, 0.0f }, { 5.f, 1.f }, 0.1f, 0.05f));
-    body._mass = 1.f;
-    body._linear_velocity = { 0.15f, -0.1f };
-    std::vector<ggo::oriented_box_body> bodies{ body };
+    ggo::oriented_box_body body1(ggo::oriented_box_float({ 0.0f, 0.1f }, { 5.f, 1.f }, 0.1f, 0.02f));
+    body1._mass = 1.f;
+    body1._linear_velocity = { 0.15f, -0.1f };
+
+    ggo::oriented_box_body body2(ggo::oriented_box_float({ 0.2f, 0.0f }, { 0.f, 1.f }, 0.1f, 0.02f));
+    body2._mass = 1.f;
+    body2._linear_velocity = { 0.0f, 0.f };
+
+    std::vector<ggo::oriented_box_body> bodies{ body1, body2 };
 
     // Main loop.
     int previous_frame_duration = 0;
@@ -109,7 +115,7 @@ int main(int argc, char ** argv)
           case SDL_SCANCODE_RIGHT:
             if (paused == true)
             {
-              update_physics(bodies, half_planes, 0.01f);
+              update_physics(bodies, half_planes, 0.01f, attenuation);
               render_physics(bodies, half_planes, renderer);
               history.push_back(bodies);
             }
@@ -130,7 +136,7 @@ int main(int argc, char ** argv)
       // Update physics.
       if (paused == false)
       {
-        update_physics(bodies, half_planes, 0.01f);// previous_frame_duration / 1000.f); // Duration of the previous frame (in s).
+        update_physics(bodies, half_planes, 0.01f, attenuation);// previous_frame_duration / 1000.f); // Duration of the previous frame (in s).
         history.push_back(bodies);
       }
 
