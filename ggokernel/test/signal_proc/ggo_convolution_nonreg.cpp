@@ -12,8 +12,8 @@ GGO_TEST(convolution1d, uint8_fixed_value)
   uint8_t out[7] = { 0, 0, 0, 0, 0, 0, 0 };
   const float filter[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto input = [&](int x, int width) { return ggo::to<float>(ggo::get1d_fixed_value<uint8_t>(in, x, width, 255)); };
-  auto output = [&](int x, int width, float v) { ggo::set1d_standard(out, x, width, ggo::to<uint8_t>(v)); };
+  auto input = [&](int x) { return ggo::to<float>(ggo::get1d_fixed_value<uint8_t>(in, x, 7, 255)); };
+  auto output = [&](int x, float v) { ggo::set1d_standard(out, x, 7, ggo::to<uint8_t>(v)); };
 
   ggo::apply_symetric_filter_1d(input, output, 7, filter, 2);
 
@@ -33,8 +33,8 @@ GGO_TEST(convolution1d, float_mirror)
   float out[7] = { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
   const float filter[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto input = [&](int x, int width) { return ggo::get1d_duplicated_edge_mirror(in, x, width); };
-  auto output = [&](int x, int width, float v) { ggo::set1d_standard(out, x, width, v); };
+  auto input = [&](int x) { return ggo::get1d_duplicated_edge_mirror(in, x, 7); };
+  auto output = [&](int x, float v) { ggo::set1d_standard(out, x, 7, v); };
 
   ggo::apply_symetric_filter_1d(input, output, 7, filter, 2);
 
@@ -58,8 +58,8 @@ GGO_TEST(convolution2d, float_mirror_horz)
     0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
   const float filter[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto input = [&](int x, int y, int width, int height) { return ggo::get2d_duplicated_edge_mirror(in, x, y, width, height); };
-  auto output = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(out, x, y, width, height, v); };
+  auto input = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(in, x, y, 7, 2); };
+  auto output = [&](int x, int y, float v) { ggo::set2d_standard(out, x, y, 7, 2, v); };
 
   ggo::apply_symetric_filter_2d_horz(input, output, 7, 2, filter, 2);
 
@@ -94,8 +94,8 @@ GGO_TEST(convolution2d, float_mirror_vert)
     0.f, 0.f, 0.f };
   const float filter[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto input = [&](int x, int y, int width, int height) { return ggo::get2d_fixed_value(in, x, y, width, height, 0.f); };
-  auto output = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(out, x, y, width, height, v); };
+  auto input = [&](int x, int y) { return ggo::get2d_fixed_value(in, x, y, 3, 3, 0.f); };
+  auto output = [&](int x, int y, float v) { ggo::set2d_standard(out, x, y, 3, 3, v); };
 
   ggo::apply_symetric_filter_2d_vert(input, output, 3, 3, filter, 2);
 

@@ -282,6 +282,9 @@
     <ClInclude Include="src\math\signal_proc\ggo_convolution.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_morphology.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

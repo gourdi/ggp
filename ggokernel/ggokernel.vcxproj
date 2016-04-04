@@ -236,6 +236,7 @@
     <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_morphology.h" />
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />

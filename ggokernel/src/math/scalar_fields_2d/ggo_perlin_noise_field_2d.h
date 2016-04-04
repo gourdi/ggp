@@ -6,18 +6,18 @@
 
 namespace ggo
 {
-  template <typename T = float>
-  class perlin_noise_field2d : public scalar_field_2d_abc<T>
+  template <typename data_type = float>
+  class perlin_noise_field2d : public scalar_field_2d_abc<data_type>
   {
   public:
 
-    void  add_octave(T scale, T amplitude, T angle = 0, int noise_size = 16);
+    void      add_octave(data_type scale, data_type amplitude, data_type angle = 0, int noise_size = 16);
     
-    T     evaluate(T x, T y) const override;
+    data_type evaluate(data_type x, data_type y) const override;
     
   private:
 
-    T     get(int x, int y) const;
+    data_type get(int x, int y) const;
     
   private:
 
@@ -25,16 +25,16 @@ namespace ggo
     {
     public:
     
-        octave(T scale, T amplitude, T angle, int noise_size);
+                  octave(data_type scale, data_type amplitude, data_type angle, int noise_size);
       
-      T evaluate(T x, T y) const;
+        data_type evaluate(data_type x, data_type y) const;
       
-      T get(int x, int y) const;
+        data_type get(int x, int y) const;
 
     private:
       
-      T                 _scale;
-      T                 _angle;
+      data_type         _scale;
+      data_type         _angle;
       int               _noise_size;
       ggo::array_float  _noise;
     };
@@ -47,8 +47,8 @@ namespace ggo
 // Implementation
 namespace ggo
 {
-  template <typename T>
-  perlin_noise_field2d<T>::octave::octave(T scale, T amplitude, T angle, int noise_size)
+  template <typename data_type>
+  perlin_noise_field2d<data_type>::octave::octave(data_type scale, data_type amplitude, data_type angle, int noise_size)
   :
   _scale(scale),
   _angle(angle),
@@ -57,27 +57,27 @@ namespace ggo
   {
     for (auto & noise_value : _noise)
     {
-      noise_value = ggo::rand_real<T>(0, amplitude);
+      noise_value = ggo::rand_real<data_type>(0, amplitude);
     }
   }
 
-  template <typename T>
-  T perlin_noise_field2d<T>::octave::evaluate(T x, T y) const
+  template <typename data_type>
+  data_type perlin_noise_field2d<data_type>::octave::evaluate(data_type x, data_type y) const
   {
     x /= _scale;
     y /= _scale;
     
-    T x_tmp = x * std::cos(_angle) - y * std::sin(_angle);
-    T y_tmp = x * std::sin(_angle) + y * std::cos(_angle);
+    data_type x_tmp = x * std::cos(_angle) - y * std::sin(_angle);
+    data_type y_tmp = x * std::sin(_angle) + y * std::cos(_angle);
     
     x = x_tmp;
     y = y_tmp;
 
-    return ggo::bilinear_interpolation2d<T, T, T, T, ggo::fetch_data_duplicated_edge_mirror2d_const<T>>(_noise, _noise_size, _noise_size, x, y);
+    return ggo::bilinear_interpolation2d_mirror(_noise.get_pointer(), _noise_size, _noise_size, x, y, 1);
   }
       
-  template <typename T>
-  T perlin_noise_field2d<T>::octave::get(int x, int y) const
+  template <typename data_type>
+  data_type perlin_noise_field2d<data_type>::octave::get(int x, int y) const
   {
     x = ggo::pos_mod(x, _noise_size);
     y = ggo::pos_mod(y, _noise_size);
@@ -85,16 +85,16 @@ namespace ggo
     return _noise[y * _noise_size + x];
   }
 
-  template <typename T>
-  void perlin_noise_field2d<T>::add_octave(T scale, T amplitude, T angle, int noise_size)
+  template <typename data_type>
+  void perlin_noise_field2d<data_type>::add_octave(data_type scale, data_type amplitude, data_type angle, int noise_size)
   {
     _octaves.emplace_back(scale, amplitude, angle, noise_size);
   }
 
-  template <typename T>
-  T perlin_noise_field2d<T>::evaluate(T x, T y) const
+  template <typename data_type>
+  data_type perlin_noise_field2d<data_type>::evaluate(data_type x, data_type y) const
   {
-    T result(0);
+    data_type result(0);
     for (const auto & octave : _octaves)
     {
       result += octave.evaluate(x, y);

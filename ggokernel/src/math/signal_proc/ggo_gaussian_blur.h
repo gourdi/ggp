@@ -55,13 +55,13 @@ namespace ggo
     auto filter = build_gaussian_filter<filter_type>(stddev, filter_threshold);
 
     // Horizontal filtering.
-    auto in_horz = [&](int x, int y, int width, int height) { return ggo::get2d_duplicated_edge_mirror(in, x, y, width, height, stride_in); };
-    auto out_horz = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(tmp.get_pointer(), x, y, width, height, v, 1); };
+    auto in_horz = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(in, x, y, width, height, stride_in); };
+    auto out_horz = [&](int x, int y, float v) { ggo::set2d_standard(tmp.get_pointer(), x, y, width, height, v, 1); };
     ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
 
     // Vertical filtering.
-    auto in_vert = [&](int x, int y, int width, int height) { return ggo::get2d_duplicated_edge_mirror(tmp.get_pointer(), x, y, width, height, 1); };
-    auto out_vert = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(out, x, y, width, height, v, stride_out); };
+    auto in_vert = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(tmp.get_pointer(), x, y, width, height, 1); };
+    auto out_vert = [&](int x, int y, float v) { ggo::set2d_standard(out, x, y, width, height, v, stride_out); };
     ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
   }
 
@@ -76,13 +76,13 @@ namespace ggo
     auto filter = build_gaussian_filter<float>(stddev, filter_threshold);
 
     // Horizontal filtering.
-    auto in_horz = [&](int x, int y, int width, int height) { return ggo::to<float>(ggo::get2d_duplicated_edge_mirror(in, x, y, width, height, stride_in)); };
-    auto out_horz = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(tmp.get_pointer(), x, y, width, height, v, 1); };
+    auto in_horz = [&](int x, int y) { return ggo::to<float>(ggo::get2d_duplicated_edge_mirror(in, x, y, width, height, stride_in)); };
+    auto out_horz = [&](int x, int y, float v) { ggo::set2d_standard(tmp.get_pointer(), x, y, width, height, v, 1); };
     ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
 
     // Vertical filtering.
-    auto in_vert = [&](int x, int y, int width, int height) { return ggo::get2d_duplicated_edge_mirror(tmp.get_pointer(), x, y, width, height, 1); };
-    auto out_vert = [&](int x, int y, int width, int height, float v) { ggo::set2d_standard(out, x, y, width, height, ggo::to<uint8_t>(v), stride_out); };
+    auto in_vert = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(tmp.get_pointer(), x, y, width, height, 1); };
+    auto out_vert = [&](int x, int y, float v) { ggo::set2d_standard(out, x, y, width, height, ggo::to<uint8_t>(v), stride_out); };
     ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
   }
 }
