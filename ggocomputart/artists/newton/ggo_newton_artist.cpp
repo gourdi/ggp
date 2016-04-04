@@ -261,11 +261,11 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
                ggo::pixel_sampler_2X2());
 	}
 	
-	ggo::gaussian_blur_2d_uint8(shadow_image_data.get_buffer(),
-                              shadow_image_data.get_buffer(),
-                              get_render_width(),
-                              get_render_height(),
-                              0.05f * get_render_min_size());
+	ggo::gaussian_blur_2d_mirror(shadow_image_data.get_buffer(),
+                               shadow_image_data.get_buffer(),
+                               get_render_width(),
+                               get_render_height(),
+                               0.05f * get_render_min_size(), 1, 1, 0.001f);
 	
   ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
   image_data.fill(shadow_image_data);

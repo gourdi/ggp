@@ -26,6 +26,7 @@
 #include "artists/hexa/ggo_hexa_animation_artist.h"
 #include "artists/chryzode/ggo_chryzode_animation_artist.h"
 #include "artists/stoa/ggo_stoa_animation_artist.h"
+#include "artists/sonson/ggo_sonson_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS
@@ -75,9 +76,9 @@ ggo_animation_artist_abc * ggo_animation_artist_abc::create(ggo_animation_artist
 	case GGO_ANIMATION_ARTIST_SMOKE:
 		artist = new ggo_smoke_animation_artist(render_width, render_height);
 		break;
-	case GGO_ANIMATION_ARTIST_FLIES:
-		artist = new ggo_flies_artist(render_width, render_height);
-		break;
+  case GGO_ANIMATION_ARTIST_SONSON:
+    artist = new ggo_sonson_animation_artist(render_width, render_height);
+    break;
 	case GGO_ANIMATION_ARTIST_NEWTON:
 		artist = new ggo_newton_artist(render_width, render_height);
 		break;
@@ -125,6 +126,9 @@ ggo_animation_artist_abc * ggo_animation_artist_abc::create(ggo_animation_artist
 		break;
   case GGO_ANIMATION_ARTIST_STOA:
     artist = new ggo_stoa_animation_artist(render_width, render_height);
+    break;
+  case GGO_ANIMATION_ARTIST_FLIES:
+    artist = new ggo_flies_artist(render_width, render_height);
     break;
 	default:
 		GGO_FAIL();

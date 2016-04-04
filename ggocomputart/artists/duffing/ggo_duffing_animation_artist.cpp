@@ -145,11 +145,11 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	}
 
 	// Blur and blend the shadow.
-	ggo::gaussian_blur_2d_float(shadow_image_data.get_buffer(),
-                              shadow_image_data.get_buffer(),
-                              get_render_width(),
-                              get_render_height(),
-                              0.4f * get_render_min_size());
+	ggo::gaussian_blur_2d_mirror(shadow_image_data.get_buffer(),
+                               shadow_image_data.get_buffer(),
+                               get_render_width(),
+                               get_render_height(),
+                               0.4f * get_render_min_size(), 1, 1, 0.001f);
 
 	apply_shadow(image_data_float.get_buffer(), shadow_image_data.get_buffer());
 

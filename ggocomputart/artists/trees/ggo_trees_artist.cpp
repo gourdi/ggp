@@ -201,7 +201,7 @@ void ggo_trees_artist::render_tree(uint8_t * buffer, const std::vector<ggo::poly
 //////////////////////////////////////////////////////////////
 void ggo_trees_artist::blur_buffer(uint8_t * buffer, float variance) const
 {
-	ggo::gaussian_blur_2d_uint8(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, 3, 3);
-	ggo::gaussian_blur_2d_uint8(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, 3, 3);
-	ggo::gaussian_blur_2d_uint8(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, 3, 3);
+	ggo::gaussian_blur_2d_mirror(buffer + 0, buffer + 0, get_render_width(), get_render_height(), variance, 3, 3, 0.001f);
+	ggo::gaussian_blur_2d_mirror(buffer + 1, buffer + 1, get_render_width(), get_render_height(), variance, 3, 3, 0.001f);
+	ggo::gaussian_blur_2d_mirror(buffer + 2, buffer + 2, get_render_width(), get_render_height(), variance, 3, 3, 0.001f);
 }
