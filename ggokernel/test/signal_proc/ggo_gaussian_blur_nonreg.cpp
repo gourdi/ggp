@@ -30,10 +30,13 @@ GGO_TEST(gaussian_blur, filter)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, 1d_uint8)
 {
-  std::vector<uint8_t> in(7, 0);
-  std::vector<uint8_t> out(7, 0);
-  in[3] = 0xff;
-  ggo::gaussian_blur_1d_uint8(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+  const uint8_t in[7] = { 0, 0, 0, 255, 0, 0, 0 };
+  uint8_t out[7] = { 0, 0, 0, 0, 0, 0, 0 };
+
+  auto input = [&](int x, int width) { return ggo::to<float>(ggo::get1d_duplicated_edge_mirror<uint8_t>(in, x, width)); };
+  auto output = [&](int x, int width, float v) { ggo::set1d_standard(out, x, width, ggo::to<uint8_t>(v)); };
+
+  ggo::gaussian_blur_1d(input, output, 7, 0.8f);
   GGO_CHECK(out[0] == 0);
   GGO_CHECK(out[1] == 6);
   GGO_CHECK(out[2] == 58);
@@ -46,16 +49,19 @@ GGO_TEST(gaussian_blur, 1d_uint8)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, 1d_float)
 {
-  std::vector<float> in(7, 0);
-  std::vector<float> out(7, 0);
-  in[3] = 255.f;
-  ggo::gaussian_blur_1d(&in[0], &out[0], static_cast<int>(in.size()), 0.8f);
+  const float in[7] = { 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f };
+  float out[7] = { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
+
+  auto input = [&](int x, int width) { return ggo::get1d_duplicated_edge_mirror(in, x, width); };
+  auto output = [&](int x, int width, float v) { ggo::set1d_standard(out, x, width, v); };
+
+  ggo::gaussian_blur_1d(input, output, 7, 0.8f);
   GGO_CHECK_FABS(out[0], 0.f);
-  GGO_CHECK_FABS(out[1], 5.59206057f);
-  GGO_CHECK_FABS(out[2], 58.2705956f);
-  GGO_CHECK_FABS(out[3], 127.274673f);
-  GGO_CHECK_FABS(out[4], 58.2705956f);
-  GGO_CHECK_FABS(out[5], 5.59206057f);
+  GGO_CHECK_FABS(out[1], 0.0219296496f);
+  GGO_CHECK_FABS(out[2], 0.228512138f);
+  GGO_CHECK_FABS(out[3], 0.499116361f);
+  GGO_CHECK_FABS(out[4], 0.228512138f);
+  GGO_CHECK_FABS(out[5], 0.0219296496f);
   GGO_CHECK_FABS(out[6], 0.f);
 }
 
@@ -65,7 +71,11 @@ GGO_TEST(gaussian_blur, 1d_complex)
   std::vector<std::complex<double>> in(7, 0);
   std::vector<std::complex<double>> out(7, 0);
   in[3] = { 1.0, 2.0 };
-  ggo::gaussian_blur_1d<std::complex<double>, double>(&in[0], &out[0], static_cast<int>(in.size()), 0.8);
+
+  auto input = [&](int x, int width) { return ggo::get1d_duplicated_edge_mirror(&in[0], x, width); };
+  auto output = [&](int x, int width, std::complex<double> v) { ggo::set1d_standard(&out[0], x, width, v); };
+
+  ggo::gaussian_blur_1d(input, output, 7, 0.8);
   GGO_CHECK_FABS(out[0].real(), 0.f);
   GGO_CHECK_FABS(out[0].imag(), 0.f);
   GGO_CHECK_FABS(out[1].real(), 0.021929646581818646);
@@ -88,7 +98,7 @@ GGO_TEST(gaussian_blur, 2d_uint8)
   std::vector<uint8_t> in(5 * 5, 0);
   std::vector<uint8_t> out(5 * 5, 0);
   in[2*5+2] = 0xff;
-  ggo::gaussian_blur_2d_uint8(&in[0], &out[0], 5, 5, 0.8f);
+  ggo::gaussian_blur_2d_mirror(&in[0], &out[0], 5, 5, 0.8f, 1, 1, 0.001f);
 
   const std::vector<uint8_t> ref{
     0, 1, 3, 1, 0,
@@ -110,7 +120,7 @@ GGO_TEST(gaussian_blur, 2d_float)
   std::vector<float> in(5 * 5, 0);
   std::vector<float> out(5 * 5, 0);
   in[2*5+2] = 1.f;
-  ggo::gaussian_blur_2d(&in[0], &out[0], 5, 5, 0.8f);
+  ggo::gaussian_blur_2d_mirror(&in[0], &out[0], 5, 5, 0.8f, 1, 1, 0.001f);
   
   const std::vector<float> ref{
     0.000481f, 0.005011f, 0.010945f, 0.005011f, 0.000481f,

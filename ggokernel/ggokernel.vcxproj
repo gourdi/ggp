@@ -231,7 +231,7 @@
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h" />
     <ClInclude Include="src\math\signal_proc\ggo_box_filter.h" />
-    <ClInclude Include="src\math\signal_proc\ggo_convolution1d.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_convolution.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dct.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />

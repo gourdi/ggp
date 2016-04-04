@@ -75,6 +75,9 @@
     <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp">
       <Filter>signal_proc</Filter>
     </ClCompile>
+    <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp">
+      <Filter>signal_proc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

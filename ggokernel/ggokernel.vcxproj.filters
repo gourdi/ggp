@@ -279,7 +279,7 @@
       <Filter>math\sampling\shape_sampling</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_color_stream.h" />
-    <ClInclude Include="src\math\signal_proc\ggo_convolution1d.h">
+    <ClInclude Include="src\math\signal_proc\ggo_convolution.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>
   </ItemGroup>

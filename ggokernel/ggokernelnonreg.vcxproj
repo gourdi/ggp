@@ -38,6 +38,7 @@
     <ClCompile Include="test\sampling\ggo_pixel_sampling_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
+    <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
