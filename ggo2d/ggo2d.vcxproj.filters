@@ -19,9 +19,6 @@
     <Filter Include="paint">
       <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="processing">
-      <UniqueIdentifier>{5dd0f5bf-d68a-4499-ab2d-ee308ec9f440}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\blender\ggo_blender_abc.h">
@@ -75,9 +72,6 @@
     <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_layer.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
-    <ClInclude Include="src\processing\ggo_morphology.h">
-      <Filter>processing</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\color\ggo_color.cpp">
@@ -110,8 +104,5 @@
     <ClCompile Include="src\ggo_fill.cpp" />
     <ClCompile Include="src\ggo_layer.cpp" />
     <ClCompile Include="src\ggo_pixel_rect.cpp" />
-    <ClCompile Include="src\processing\ggo_morphology.cpp">
-      <Filter>processing</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

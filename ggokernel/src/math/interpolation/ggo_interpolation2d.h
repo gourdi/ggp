@@ -21,7 +21,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_type, typename interpolation_type>
-  data_type bilinear_interpolation2d_mirror(const data_type * input, int width, int height, interpolation_type x, interpolation_type y, int stride)
+  inline data_type bilinear_interpolation2d_mirror(const data_type * input, int width, int height, interpolation_type x, interpolation_type y, int stride)
   {
     auto in = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(input, x, y, width, height, stride); };
 
@@ -30,7 +30,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <>
-  uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y, int stride)
+  inline uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y, int stride)
   {
     auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_duplicated_edge_mirror(input, x, y, width, height, stride)); };
 
@@ -39,7 +39,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_type, typename interpolation_type>
-  data_type bicubic_interpolation2d_mirror(const data_type * input, int width, int height, interpolation_type x, interpolation_type y, int stride)
+  inline data_type bicubic_interpolation2d_mirror(const data_type * input, int width, int height, interpolation_type x, interpolation_type y, int stride)
   {
     auto in = [&](int x, int y) { return ggo::get2d_duplicated_edge_mirror(input, x, y, width, height, stride); };
 
@@ -48,7 +48,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <>
-  uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y, int stride)
+  inline uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y, int stride)
   {
     auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_duplicated_edge_mirror(input, x, y, width, height, stride)); };
 

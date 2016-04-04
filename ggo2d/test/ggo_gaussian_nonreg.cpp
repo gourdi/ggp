@@ -18,9 +18,9 @@ namespace
 
     ggo::paint(image_data, std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 0.25f * std::min(WIDTH, HEIGHT)), ggo::color::WHITE);
 
-    ggo::gaussian_blur_2d_uint8(image_data.get_buffer() + 0, image_data.get_buffer() + 0, WIDTH, HEIGHT, 5, 3, 3);
-    ggo::gaussian_blur_2d_uint8(image_data.get_buffer() + 1, image_data.get_buffer() + 1, WIDTH, HEIGHT, 5, 3, 3);
-    ggo::gaussian_blur_2d_uint8(image_data.get_buffer() + 2, image_data.get_buffer() + 2, WIDTH, HEIGHT, 5, 3, 3);
+    ggo::gaussian_blur_2d_mirror(image_data.get_buffer() + 0, image_data.get_buffer() + 0, WIDTH, HEIGHT, 5, 3, 3, 0.001f);
+    ggo::gaussian_blur_2d_mirror(image_data.get_buffer() + 1, image_data.get_buffer() + 1, WIDTH, HEIGHT, 5, 3, 3, 0.001f);
+    ggo::gaussian_blur_2d_mirror(image_data.get_buffer() + 2, image_data.get_buffer() + 2, WIDTH, HEIGHT, 5, 3, 3, 0.001f);
 
     ggo::save_bmp("gaussian.bmp", image_data.get_buffer(), WIDTH, HEIGHT);
   }

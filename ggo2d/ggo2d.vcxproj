@@ -38,7 +38,6 @@
     <ClInclude Include="src\paint\ggo_paint_params.h" />
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_soft_paint.h" />
-    <ClInclude Include="src\processing\ggo_morphology.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\color\ggo_color.cpp" />
@@ -53,7 +52,6 @@
     <ClCompile Include="src\paint\ggo_paint_helpers.cpp" />
     <ClCompile Include="src\paint\ggo_seed_paint.cpp" />
     <ClCompile Include="src\paint\ggo_soft_paint.cpp" />
-    <ClCompile Include="src\processing\ggo_morphology.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{28E4FCBA-8918-406F-A8CC-ADE4FD341F4F}</ProjectGuid>
