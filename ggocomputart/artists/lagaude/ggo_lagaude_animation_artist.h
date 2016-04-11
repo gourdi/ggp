@@ -39,7 +39,7 @@ private:
 	};
 
 	//////////////////////////////////////////////////////////////
-	class ggo_angle_generator : public ggo_random_interpolator_abc<float, float>
+	class ggo_angle_generator : public ggo::random_interpolator_abc<float, float>
 	{
 		void	get_random_data(float & data, float & dt) override;
 	};

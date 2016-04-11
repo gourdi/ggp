@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ggo_color_stream.h" />
+    <ClInclude Include="src\ggo_random_interpolator_abc.h" />
     <ClInclude Include="src\ggo_tree3d.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />

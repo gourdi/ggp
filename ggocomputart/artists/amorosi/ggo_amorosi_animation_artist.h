@@ -21,12 +21,12 @@ public:
 
 private:
 
-  class ggo_random_angle_interpolator : public ggo_random_interpolator_abc<float, float>
+  class ggo_random_angle_interpolator : public ggo::random_interpolator_abc<float, float>
   {
     void get_random_data(float & data, float & dt) override;
   };
     
-  class ggo_random_width_interpolator : public ggo_random_interpolator_abc<float, float>
+  class ggo_random_width_interpolator : public ggo::random_interpolator_abc<float, float>
   {
     void get_random_data(float & data, float & dt) override;
   };

@@ -145,7 +145,6 @@
     <ClInclude Include="artists\ggo_artist_abc.h" />
     <ClInclude Include="artists\ggo_artist_ids.h" />
     <ClInclude Include="artists\ggo_bitmap_artist_abc.h" />
-    <ClInclude Include="artists\ggo_random_interpolator_abc.h" />
     <ClInclude Include="artists\hexa\ggo_hexa_animation_artist.h" />
     <ClInclude Include="artists\hexa\ggo_hexa_artist.h" />
     <ClInclude Include="artists\hexa\ggo_hexa_bitmap_artist.h" />

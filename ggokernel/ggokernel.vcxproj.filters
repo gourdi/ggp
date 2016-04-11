@@ -285,6 +285,7 @@
     <ClInclude Include="src\math\signal_proc\ggo_morphology.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_random_interpolator_abc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

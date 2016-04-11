@@ -617,9 +617,6 @@
     <ClInclude Include="artists\worms\ggo_worms_artist.h">
       <Filter>artists\worms</Filter>
     </ClInclude>
-    <ClInclude Include="artists\ggo_random_interpolator_abc.h">
-      <Filter>artists</Filter>
-    </ClInclude>
     <ClInclude Include="artists\ggo_animation_artist_abc.h">
       <Filter>artists</Filter>
     </ClInclude>

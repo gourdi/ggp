@@ -30,7 +30,7 @@ private:
   // FOG
   struct ggo_fog : public ggo_rah_item
   {
-    struct ggo_position_interpolator : public ggo_random_interpolator_abc<ggo::point2d_float, float>
+    struct ggo_position_interpolator : public ggo::random_interpolator_abc<ggo::point2d_float, float>
     {
       ggo_position_interpolator(int width, int height) : _width(width), _height(height) {}
     
@@ -60,7 +60,7 @@ private:
   // PARTICLE
   struct ggo_particle : public ggo_rah_item
   {
-    struct ggo_vertical_offset_interpolator : public ggo_random_interpolator_abc<float, float>
+    struct ggo_vertical_offset_interpolator : public ggo::random_interpolator_abc<float, float>
     {
       void get_random_data(float & data, float & dt) override
       {
@@ -96,7 +96,7 @@ private:
     void  update(int min_size) override;
     void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & shapes, int min_size) const override;
     
-    struct ggo_radius_interpolator : public ggo_random_interpolator_abc<float, float>
+    struct ggo_radius_interpolator : public ggo::random_interpolator_abc<float, float>
     {
       void get_random_data(float & data, float & dt) override
       {
@@ -129,7 +129,7 @@ private:
     void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & shapes, int min_size) const override;
     void  update(int min_size) override;
     
-    struct ggo_radius_interpolator : public ggo_random_interpolator_abc<float, float>
+    struct ggo_radius_interpolator : public ggo::random_interpolator_abc<float, float>
     {
       void get_random_data(float & data, float & dt) override
       {
@@ -153,7 +153,7 @@ private:
     void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & shapes, int min_size) const override;
   };
   
-  struct ggo_focus_dist_interpolator : public ggo_random_interpolator_abc<float, float>
+  struct ggo_focus_dist_interpolator : public ggo::random_interpolator_abc<float, float>
   {
     float _near;
     float _far;
