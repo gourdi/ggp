@@ -6,8 +6,6 @@
 
 namespace ggo
 {
-  inline float ortho_dot(const ggo::vector2d_float & v1, const ggo::vector2d_float & v2) { return v1.y() * v2.x() - v1.x() * v2.y(); }
-
   struct oriented_box_body
   {
     oriented_box_body(const ggo::oriented_box_float & box) : _box(box) {}

@@ -22,7 +22,7 @@ namespace ggo
         throw dimension_mismatch_exception();
       }
       
-      for_each_pixel([&](int x, int y, int width, int height)
+      for_each_pixel([&](int x, int y)
       {
         float gray = gray_image_data.unpack(x, y);
         pack(x, y, ggo::color(gray, gray, gray));

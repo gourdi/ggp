@@ -19,14 +19,19 @@ GGO_TEST(space_partitionning, compare)
     ggo::paint(image_data1, layers, sampler);
     
     ggo::rgb_image_data_uint8 image_data2(WIDTH, HEIGHT, ggo::color::BLACK);
-    ggo::paint(image_data2, layers, sampler, ggo::space_partitionning::NONE);
+    ggo::paint(image_data2, layers, sampler, ggo::space_partitionning::none);
 
-#if 0
-    ggo::save_bmp(std::string("sp_recursive").append(str).append(".bmp"), buffer1, width, height);
-    ggo::save_bmp(std::string("sp_basic").append(str).append(".bmp"), buffer2, width, height);
+    ggo::rgb_image_data_uint8 image_data3(WIDTH, HEIGHT, ggo::color::BLACK);
+    ggo::paint(image_data3, layers, sampler, ggo::space_partitionning::block8x8);
+
+#if 1
+    ggo::save_bmp(std::string("sp_recursive_").append(str).append(".bmp"), image_data1.get_buffer(), WIDTH, HEIGHT);
+    ggo::save_bmp(std::string("sp_none_").append(str).append(".bmp"), image_data2.get_buffer(), WIDTH, HEIGHT);
+    ggo::save_bmp(std::string("sp_block8x8_").append(str).append(".bmp"), image_data3.get_buffer(), WIDTH, HEIGHT);
 #endif
       
     GGO_CHECK(memcmp(image_data1.get_buffer(), image_data2.get_buffer(), WIDTH * HEIGHT * 3) == 0);
+    GGO_CHECK(memcmp(image_data1.get_buffer(), image_data3.get_buffer(), WIDTH * HEIGHT * 3) == 0);
   };
   
   ggo_space_partitionning_nonreg(ggo::pixel_sampler_1(), "1");

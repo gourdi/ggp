@@ -14,8 +14,8 @@ GGO_TEST(triangular_interpolation, function)
 {
   const int IMAGE_SIZE = 200;
   ggo::rgb_image_data_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
-  
-  image.for_each_pixel([&](int x, int y, int width, int height)
+
+  image.for_each_pixel([&](int x, int y)
   {
     const ggo::point2d_float p(static_cast<float>(x), static_cast<float>(y));
     const ggo::point2d_float p0(50, 50);

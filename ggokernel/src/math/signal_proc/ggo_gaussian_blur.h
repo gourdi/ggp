@@ -47,7 +47,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   // Mirroring generic gaussian 2D.
   template <typename data_type, typename filter_type>
-  void gaussian_blur_2d_mirror(const data_type * in, data_type * out, int width, int height, float stddev, int stride_in, int stride_out, filter_type filter_threshold)
+  inline void gaussian_blur_2d_mirror(const data_type * in, data_type * out, int width, int height, float stddev, int stride_in, int stride_out, filter_type filter_threshold)
   {
     ggo::array<data_type> tmp(width * height);
 
@@ -68,7 +68,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   // Mirroring uint8_t specialization.
   template <>
-  void gaussian_blur_2d_mirror(const uint8_t * in, uint8_t * out, int width, int height, float stddev, int stride_in, int stride_out, float filter_threshold)
+  inline void gaussian_blur_2d_mirror(const uint8_t * in, uint8_t * out, int width, int height, float stddev, int stride_in, int stride_out, float filter_threshold)
   {
     ggo::array<float> tmp(width * height);
 

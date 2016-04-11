@@ -71,5 +71,16 @@ namespace ggo
     
     return true;
   }
+
+  //////////////////////////////////////////////////////////////
+  ggo::rect_float pixel_rect::get_rect_float() const
+  {
+    float left = static_cast<float>(_left) - 0.5f;
+    float right = static_cast<float>(_right) + 0.5f;
+    float bottom = static_cast<float>(_bottom) - 0.5f;
+    float top = static_cast<float>(_top) + 0.5f;
+
+    return ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
+  }
 }
   

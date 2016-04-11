@@ -13,7 +13,10 @@ namespace
                            const T & color1,
                            const T & color2)
   {
-    image_data.for_each_pixel([&](int x, int y, int width, int height)
+    const int width = image_data.get_width();
+    const int height = image_data.get_height();
+
+    image_data.for_each_pixel([&](int x, int y)
     {
       float val = scalar_field2d.evaluate(static_cast<float>(x), static_cast<float>(y));
       
@@ -30,7 +33,7 @@ namespace ggo
   template <typename T>
   void fill_solid(ggo::image_data_abc<T> & image_data, const T & color)
   {
-    image_data.for_each_pixel([&](int x, int y, int width, int height)
+    image_data.for_each_pixel([&](int x, int y)
     {
       image_data.pack(x, y, color);
     });
@@ -92,7 +95,10 @@ namespace ggo
                     const T & color2,
                     int tile_size)
   {
-    image_data.for_each_pixel([&](int x, int y, int width, int height)
+    const int width = image_data.get_width();
+    const int height = image_data.get_height();
+
+    image_data.for_each_pixel([&](int x, int y)
     {
       int index_x = x / tile_size;
       int index_y = y / tile_size;
@@ -130,12 +136,15 @@ namespace ggo
                         const ggo::curve_abc<float, T> & color_curve)
   {
     T color;
+
+    const int width = image_data.get_width();
+    const int height = image_data.get_height();
     
-    image_data.for_each_pixel([&](int y, int height)
+    image_data.for_each_pixel([&](int y)
     {
       color = color_curve.evaluate(y / float(height));
     },
-    [&](int x, int y, int width, int height)
+    [&](int x, int y)
     {
       image_data.pack(x, y, color);
     });
@@ -209,14 +218,17 @@ namespace ggo
                      const T & color4)
   {
     T color5, color6;
+
+    const int width = image_data.get_width();
+    const int height = image_data.get_height();
     
-    image_data.for_each_pixel([&](int y, int height)
+    image_data.for_each_pixel([&](int y)
     {
       color5 = (static_cast<float>(y) * color1 + static_cast<float>(height - y) * color2) / static_cast<float>(height);
       color6 = (static_cast<float>(y) * color3 + static_cast<float>(height - y) * color4) / static_cast<float>(height);
     },
-    [&](int x, int y, int width, int height)
-    {
+    [&](int x, int y)
+    { 
       image_data.pack(x, y, (static_cast<float>(x) * color5 + static_cast<float>(width - x) * color6) / static_cast<float>(width));
     });
   }
@@ -254,13 +266,13 @@ namespace ggo
   {
     ggo::rect_float bounding_rect = ggo::rect_float::from_left_right_bottom_top(-0.5f, image_data.get_width() - 0.5f, -0.5f, image_data.get_height() - 0.5f);
 
-    image_data.for_each_pixel([&](int x, int y, int width, int height)
+    image_data.for_each_pixel([&](int x, int y)
     {
       T color(0);
 
       sampler.sample_pixel(x, y, [&](float x_f, float y_f)
       {
-        color += brush.get(x_f, y_f, bounding_rect, width, height);
+        color += brush.get(x_f, y_f, bounding_rect, image_data.get_width(), image_data.get_height());
       });
       color /= static_cast<float>(sampler.get_samples_count());
       

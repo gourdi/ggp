@@ -1,6 +1,7 @@
 #ifndef __GGO_SET2__
 #define __GGO_SET2__
 
+#include <ggo_kernel.h>
 #include <cmath>
 #include <iostream>
 
@@ -61,7 +62,7 @@ namespace ggo
     void				    rotate(T angle, const set2<T> & center);
         
     void				    normalize() { set_length(T(1)); }
-    void				    set_length(T length) { T ratio = length / get_length(); _x *= ratio; _y *= ratio; }
+    void				    set_length(T length) { GGO_ASSERT(get_hypot() > 0); T ratio = length / get_length(); _x *= ratio; _y *= ratio; }
     ggo::set2<T>    get_normalized() const { ggo::set2<T> v(*this); v.normalize(); return v; }
     bool            is_normalized(T epsilon = T(0.001)) const { return std::abs(get_length() - 1) < epsilon; }
 
@@ -76,10 +77,16 @@ namespace ggo
 // Dot product.
 namespace ggo
 {
-  template <typename T>
-  T dot(const set2<T> & v1, const set2<T> & v2)
+  template <typename data_type>
+  data_type dot(const set2<data_type> & v1, const set2<data_type> & v2)
   {
     return v1.x() * v2.x() + v1.y() * v2.y();
+  }
+
+  template <typename data_type>
+  data_type ortho_dot(const set2<data_type> & v1, const set2<data_type> & v2)
+  {
+    return v1.y() * v2.x() - v1.x() * v2.y();
   }
 }
 

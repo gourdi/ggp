@@ -83,12 +83,12 @@ namespace ggo
 // Functions.
 namespace ggo
 {
-  template <typename T>
-	T map(T v, T inf_from, T sup_from, T inf_to, T sup_to)
+  template <typename data_type>
+  data_type map(data_type v, data_type inf_from, data_type sup_from, data_type inf_to, data_type sup_to)
   { 
     return inf_to + (v - inf_from ) * (sup_to - inf_to ) / (sup_from - inf_from);
   }
-  
+
   template <typename T>	T	      clamp(T v, T inf, T sup)				      { return v > sup ? sup : (v < inf ? inf : v); };
   template <typename T>	T	      square(T value)							          { return value*value; };
   template <typename T>	T	      sign(T value)							            { return value > T(0) ? T(1) : T(-1); };

@@ -26,9 +26,9 @@ namespace ggo
             void  fill(const T & color);
             void  copy(const image_data_abc<T> & other);
             
-            void  for_each_pixel(std::function<void(int x, int y, int width, int height)> func) const;
-            void  for_each_pixel(std::function<void(int y, int height)> line_func,
-                                 std::function<void(int x, int y, int width, int height)> pixel_func) const;
+            void  for_each_pixel(const std::function<void(int x, int y)> & func) const;
+            void  for_each_pixel(const std::function<void(int y)> & line_func,
+                                 const std::function<void(int x, int y)> & pixel_func) const;
 
   private:
 
@@ -101,29 +101,29 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::for_each_pixel(std::function<void(int x, int y, int width, int height)> func) const
+  void image_data_abc<T>::for_each_pixel(const std::function<void(int x, int y)> & func) const
   {
     for (int y = 0; y < _height; ++y)
     {
       for (int x = 0; x < _width; ++x)
       {
-        func(x, y, _width, _height);
+        func(x, y);
       }
     }
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::for_each_pixel(std::function<void(int y, int height)> line_func,
-                                             std::function<void(int x, int y, int width, int height)> pixel_func) const
+  void image_data_abc<T>::for_each_pixel(const std::function<void(int y)> & line_func,
+                                         const std::function<void(int x, int y)> & pixel_func) const
   {
     for (int y = 0; y < _height; ++y)
     {
-      line_func(y, _height);
+      line_func(y);
       
       for (int x = 0; x < _width; ++x)
       {
-        pixel_func(x, y, _width, _height);
+        pixel_func(x, y);
       }
     }
   }

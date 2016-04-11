@@ -43,6 +43,8 @@ namespace ggo
         }
       }
     }
+
+    ggo::rect_float get_rect_float() const;
     
   public:
     

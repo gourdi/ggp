@@ -11,8 +11,7 @@ namespace
                                 int y,
                                 int width,
                                 int height,
-                                const ggo::pixel_sampler_abc & sampler,
-                                bool sample_shapes)
+                                const ggo::pixel_sampler_abc & sampler)
   {
     color_type pixel_color(0);
 
@@ -23,7 +22,7 @@ namespace
       for (const auto & layer : layers)
       {
         // The current sample is inside the layer's shape.
-        if (sample_shapes == false || layer._shape->is_point_inside(x_f, y_f) == true)
+        if (layer._shape->is_point_inside(x_f, y_f) == true)
         {
           float opacity = layer._opacity_brush->get(x_f, y_f, *layer._shape, width, height);
 
@@ -47,13 +46,12 @@ namespace
   void process_block(ggo::image_data_abc<color_type> & image_data,
                      const std::vector<ggo::layer<color_type>> & layers,
                      const ggo::pixel_rect & pixel_rect,
-                     const ggo::pixel_sampler_abc & sampler,
-                     bool sample_shapes)
+                     const ggo::pixel_sampler_abc & sampler)
   {
     pixel_rect.for_each_pixel([&](int x, int y)
     {
       color_type color = image_data.unpack(x, y);
-      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler, sample_shapes);
+      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler);
       image_data.pack(x, y, color);
     });
   }
@@ -78,7 +76,7 @@ namespace
 
       if (intersection == ggo::rect_intersection::RECT_IN_SHAPE)
       {
-        process_block(image_data, layers, pixel_rect, sampler, false);
+        process_block(image_data, layers, pixel_rect, sampler);
         return;
       }
 
@@ -102,7 +100,7 @@ namespace
       int y = pixel_rect.bottom();
 
       color_type color = image_data.unpack(x, y);
-      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler, true);
+      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler);
       image_data.pack(x, y, color);
     }
     else
@@ -129,6 +127,71 @@ namespace
 
       paint_recursive(image_data, layers, pixel_rect1, sampler);
       paint_recursive(image_data, layers, pixel_rect2, sampler);
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename color_type>
+  void paint_block8x8(ggo::image_data_abc<color_type> & image_data,
+                      const std::vector<ggo::layer<color_type>> & layers,
+                      const ggo::pixel_rect & pixel_rect,
+                      const ggo::pixel_sampler_abc & sampler)
+  {
+    int x = pixel_rect.left();
+    int y = pixel_rect.bottom();
+
+    int x_end = std::min(x + 7, pixel_rect.right());
+    int y_end = std::min(y + 7, pixel_rect.top());
+
+    while (true)
+    {
+      // Check for shapes intersecting the current block.
+      ggo::pixel_rect block_pixel_rect = ggo::pixel_rect::from_left_right_bottom_top(x, x_end, y, y_end);
+      ggo::rect_float block_rect_float = block_pixel_rect.get_rect_float();
+
+      std::vector<ggo::layer<color_type>> current_block_layers;
+      for (const auto & layer : layers)
+      {
+        switch (layer._shape->get_rect_intersection(block_rect_float))
+        {
+        case ggo::rect_intersection::RECT_IN_SHAPE:
+        case ggo::rect_intersection::SHAPE_IN_RECT:
+        case ggo::rect_intersection::PARTIAL_OVERLAP:
+          current_block_layers.push_back(layer);
+          break;
+        case ggo::rect_intersection::DISJOINTS:
+          break;
+        }
+      }
+
+      // Paint.
+      process_block(image_data, current_block_layers, block_pixel_rect, sampler);
+
+      // Move to the next block.
+      if (x_end < pixel_rect.right())
+      {
+        x += 8;
+        x_end = std::min(x + 7, pixel_rect.right());
+      }
+      else
+      {
+        GGO_ASSERT(x_end == pixel_rect.right());
+
+        if (y_end == pixel_rect.top())
+        {
+          // Done.
+          break;
+        }
+        else
+        {
+          // Go to next line.
+          x = pixel_rect.left();
+          x_end = std::min(x + 7, pixel_rect.right());
+          
+          y += 8;
+          y_end = std::min(y + 7, pixel_rect.top());
+        }
+      }
     }
   }
 
@@ -170,17 +233,20 @@ namespace
     {
       switch (partitionning)
       {
-      case ggo::space_partitionning::RECURSIVE:
+      case ggo::space_partitionning::recursive  :
         paint_recursive(image_data, layers, pixel_rect, sampler);
         break;
-      case ggo::space_partitionning::NONE:
-        process_block(image_data, layers, pixel_rect, sampler, true);
+      case ggo::space_partitionning::none:
+        process_block(image_data, layers, pixel_rect, sampler);
+        break;
+      case ggo::space_partitionning::block8x8:
+        paint_block8x8(image_data, layers, pixel_rect, sampler);
         break;
       }
     }
     else
     {
-      process_block(image_data, layers, pixel_rect, sampler, true);
+      process_block(image_data, layers, pixel_rect, sampler);
     }
   }
 }
