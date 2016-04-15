@@ -281,7 +281,7 @@ void ggo_rex_artist::render_patterns(uint8_t * buffer) const
 		v3.y() -= int(min_y);
 
 		// Paint the mask.
-		ggo::gray_image_data_uint8 mask_image_data(size_x, size_y);
+		ggo::gray_image_buffer_uint8 mask_image_data(size_x, size_y);
     mask_image_data.fill(0);
     
 		auto mapped_triangle = std::make_shared<ggo::polygon2d_float>();
@@ -294,7 +294,7 @@ void ggo_rex_artist::render_patterns(uint8_t * buffer) const
                ggo::pixel_sampler_1());
 
 		// Paint the pattern.
-		ggo::gray_image_data_uint8 pattern_image_data(size_x, size_y);
+		ggo::gray_image_buffer_uint8 pattern_image_data(size_x, size_y);
     mask_image_data.fill(0);
     
 		float delta = pattern_triangle._delta * get_render_min_size();
@@ -344,7 +344,7 @@ void ggo_rex_artist::render_patterns(uint8_t * buffer) const
 void ggo_rex_artist::render_clipped_discs(uint8_t * buffer) const
 {
   // Paint clipped circle triangles.
-	ggo::gray_image_data_uint8 mask1_image_data(get_render_width(), get_render_height());
+	ggo::gray_image_buffer_uint8 mask1_image_data(get_render_width(), get_render_height());
   mask1_image_data.fill(0);
   
 	for (const auto & disc_clip_triangle : _discs_clip_triangles)
@@ -362,7 +362,7 @@ void ggo_rex_artist::render_clipped_discs(uint8_t * buffer) const
 	}
 
 	// Paint circles.
-	ggo::gray_image_data_uint8 mask2_image_data(get_render_width(), get_render_height());
+	ggo::gray_image_buffer_uint8 mask2_image_data(get_render_width(), get_render_height());
   mask2_image_data.fill(0);
   
 	for (const auto & opened_disc : _opened_discs)

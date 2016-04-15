@@ -8,14 +8,14 @@ GGO_TEST(layer, test)
 {
   const int IMAGE_WIDTH = 200;
   const int IMAGE_HEIGHT = 150;
-  ggo::rgb_image_data_uint8 image(IMAGE_WIDTH, IMAGE_HEIGHT);
+  ggo::rgb_image_buffer_uint8 image(IMAGE_WIDTH, IMAGE_HEIGHT);
   
   image.fill(ggo::color(0.2f, 0.1f, 0.1f));
   
   const int SPRITE_WIDTH = 200;
   const int SPRITE_HEIGHT = 160;
-  ggo::gray_image_data_uint8 sprite_opacity(SPRITE_WIDTH, SPRITE_HEIGHT);
-  ggo::rgb_image_data_float sprite_image(SPRITE_WIDTH, SPRITE_HEIGHT);
+  ggo::gray_image_buffer_uint8 sprite_opacity(SPRITE_WIDTH, SPRITE_HEIGHT);
+  ggo::rgb_image_buffer_float sprite_image(SPRITE_WIDTH, SPRITE_HEIGHT);
   
   sprite_opacity.fill(0.1f);
   sprite_image.fill(ggo::color::BLUE);

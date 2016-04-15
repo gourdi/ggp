@@ -136,6 +136,9 @@
     <Filter Include="artists\stoa">
       <UniqueIdentifier>{c3c02a9a-28fe-4def-b9d0-5786aeb09e61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\sonson">
+      <UniqueIdentifier>{2a5519e5-1141-4391-a0c9-521642a58c65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -383,6 +386,9 @@
     </ClCompile>
     <ClCompile Include="artists\stoa\ggo_stoa_animation_artist.cpp">
       <Filter>artists\stoa</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\sonson\ggo_sonson_animation_artist.cpp">
+      <Filter>artists\sonson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -637,6 +643,9 @@
     </ClInclude>
     <ClInclude Include="artists\stoa\ggo_stoa_animation_artist.h">
       <Filter>artists\stoa</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\sonson\ggo_sonson_animation_artist.h">
+      <Filter>artists\sonson</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

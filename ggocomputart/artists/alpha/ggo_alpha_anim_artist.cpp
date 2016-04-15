@@ -77,7 +77,7 @@ bool ggo_alpha_anim_artist::render_next_frame_sub(uint8_t * buffer, int frame_in
 {
 	if (buffer != NULL)
 	{
-    ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+    ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
 		ggo::fill_4_colors(image_data, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
 	}
 	

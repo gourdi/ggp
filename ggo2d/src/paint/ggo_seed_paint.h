@@ -9,14 +9,14 @@
 
 namespace ggo
 {
-  void	paint_seed_shape(ggo::rgb_image_data_abc & image_data,
+  void	paint_seed_shape(ggo::rgb_image_buffer_abc & image_data,
                          const ggo::seed_paintable_shape2d_abc<float> & shape,
                          const ggo::color & color,
                          float opacity = 1,
                          const ggo::pixel_aligned_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
                          const ggo::rgb_blender_abc & blender = ggo::rgb_alpha_blender());
 
-  void	paint_seed_shape(ggo::gray_image_data_abc & image_data,
+  void	paint_seed_shape(ggo::gray_image_buffer_abc & image_data,
                          const ggo::seed_paintable_shape2d_abc<float> & shape,
                          float gray,
                          float opacity = 1,

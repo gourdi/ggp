@@ -10,12 +10,12 @@
 namespace ggo
 {
   template <typename T>
-  class image_data_abc
+  class image_buffer_abc
   {
   public:
 
-                  image_data_abc(int width, int height) : _width(width), _height(height) {}
-    virtual      ~image_data_abc() {}
+                  image_buffer_abc(int width, int height) : _width(width), _height(height) {}
+    virtual      ~image_buffer_abc() {}
 
             void  pack(int x, int y, const T & value);
             T     unpack(int x, int y) const;
@@ -24,7 +24,7 @@ namespace ggo
             int   get_height() const { return _height; }
             
             void  fill(const T & color);
-            void  copy(const image_data_abc<T> & other);
+            void  copy(const image_buffer_abc<T> & other);
             
             void  for_each_pixel(const std::function<void(int x, int y)> & func) const;
             void  for_each_pixel(const std::function<void(int y)> & line_func,
@@ -46,7 +46,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::pack(int x, int y, const T & value)
+  void image_buffer_abc<T>::pack(int x, int y, const T & value)
   {
     GGO_ASSERT(_width > 0 && _height > 0);
     GGO_ASSERT(x >= 0 && x < _width);
@@ -57,7 +57,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  T image_data_abc<T>::unpack(int x, int y) const
+  T image_buffer_abc<T>::unpack(int x, int y) const
   {
     GGO_ASSERT(_width > 0 && _height > 0);
     GGO_ASSERT(x >= 0 && x < _width);
@@ -68,7 +68,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::fill(const T & color)
+  void image_buffer_abc<T>::fill(const T & color)
   {
     for (int y = 0; y < _height; ++y)
     {
@@ -81,7 +81,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::copy(const image_data_abc<T> & other)
+  void image_buffer_abc<T>::copy(const image_buffer_abc<T> & other)
   {
     if (get_width() != other.get_width() ||
         get_height() != other.get_height())
@@ -101,7 +101,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::for_each_pixel(const std::function<void(int x, int y)> & func) const
+  void image_buffer_abc<T>::for_each_pixel(const std::function<void(int x, int y)> & func) const
   {
     for (int y = 0; y < _height; ++y)
     {
@@ -114,8 +114,8 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void image_data_abc<T>::for_each_pixel(const std::function<void(int y)> & line_func,
-                                         const std::function<void(int x, int y)> & pixel_func) const
+  void image_buffer_abc<T>::for_each_pixel(const std::function<void(int y)> & line_func,
+                                           const std::function<void(int x, int y)> & pixel_func) const
   {
     for (int y = 0; y < _height; ++y)
     {

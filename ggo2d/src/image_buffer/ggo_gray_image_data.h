@@ -5,24 +5,24 @@
 
 namespace ggo
 {
-  class gray_image_data_abc : public image_data_abc<float>
+  class gray_image_buffer_abc : public image_buffer_abc<float>
   {
   public:
 
-    gray_image_data_abc(int width, int height) : ggo::image_data_abc<float>(width, height) {}
+    gray_image_buffer_abc(int width, int height) : ggo::image_buffer_abc<float>(width, height) {}
   };
 }
 
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  class gray_image_data_uint8 : public gray_image_data_abc
+  class gray_image_buffer_uint8 : public gray_image_buffer_abc
   {
   public:
 
-                    gray_image_data_uint8(uint8_t * buffer, int width, int height);
-                    gray_image_data_uint8(int width, int height);
-    virtual        ~gray_image_data_uint8();
+                    gray_image_buffer_uint8(uint8_t * buffer, int width, int height);
+                    gray_image_buffer_uint8(int width, int height);
+    virtual        ~gray_image_buffer_uint8();
 
     void            do_pack(int x, int y, const float & value) override;
     float           do_unpack(int x, int y) const override;
@@ -32,6 +32,12 @@ namespace ggo
     
     uint8_t         operator[](int i) const { return _buffer[i]; }
     uint8_t &       operator[](int i) { return _buffer[i]; }
+
+    uint8_t *       begin() { return _buffer; }
+    uint8_t *       end() { return _buffer + get_width() * get_height(); }
+
+    const uint8_t * begin() const { return _buffer; }
+    const uint8_t * end() const { return _buffer + get_width() * get_height(); }
     
   private:
 
@@ -43,14 +49,14 @@ namespace ggo
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  class gray_image_data_float : public gray_image_data_abc
+  class gray_image_buffer_float : public gray_image_buffer_abc
   {
   public:
 
-                  gray_image_data_float(float * buffer, int width, int height);
-                  gray_image_data_float(int width, int height);
-                  gray_image_data_float(int width, int height, float fill_value);
-    virtual      ~gray_image_data_float();
+                  gray_image_buffer_float(float * buffer, int width, int height);
+                  gray_image_buffer_float(int width, int height);
+                  gray_image_buffer_float(int width, int height, float fill_value);
+    virtual      ~gray_image_buffer_float();
         
     void          do_pack(int x, int y, const float & value) override;
     float         do_unpack(int x, int y) const override;

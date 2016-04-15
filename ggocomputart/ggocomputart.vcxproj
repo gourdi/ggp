@@ -88,6 +88,7 @@
     <ClCompile Include="artists\rah\ggo_rah_animation_artist.cpp" />
     <ClCompile Include="artists\rex\ggo_rex_artist.cpp" />
     <ClCompile Include="artists\smoke\ggo_smoke_animation_artist.cpp" />
+    <ClCompile Include="artists\sonson\ggo_sonson_animation_artist.cpp" />
     <ClCompile Include="artists\stoa\ggo_stoa_animation_artist.cpp" />
     <ClCompile Include="artists\stoa\ggo_stoa_artist.cpp" />
     <ClCompile Include="artists\stoa\ggo_stoa_bitmap_artist.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="artists\rah\ggo_rah_animation_artist.h" />
     <ClInclude Include="artists\rex\ggo_rex_artist.h" />
     <ClInclude Include="artists\smoke\ggo_smoke_animation_artist.h" />
+    <ClInclude Include="artists\sonson\ggo_sonson_animation_artist.h" />
     <ClInclude Include="artists\stoa\ggo_stoa_animation_artist.h" />
     <ClInclude Include="artists\stoa\ggo_stoa_artist.h" />
     <ClInclude Include="artists\stoa\ggo_stoa_bitmap_artist.h" />

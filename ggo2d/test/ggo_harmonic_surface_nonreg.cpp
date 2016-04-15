@@ -12,7 +12,7 @@ GGO_TEST(harmonic_surface, test1)
   ggo::harmonic_surface<float> harmonic_surface;
   harmonic_surface.push_harmonic({1, 1}, SIZE / 2, 1, 0);
 
-  ggo::rgb_image_data_uint8 image_data(SIZE, SIZE);
+  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
   for (int y = 0; y < SIZE; ++y)
   {
     for (int x = 0; x < SIZE; ++x)
@@ -42,7 +42,7 @@ GGO_TEST(harmonic_surface, test2)
     harmonic_surface.push_harmonic(ggo::vector2d_float::from_polar(angle, length), wavelength, amplitude, 0);
   }
 
-  ggo::rgb_image_data_uint8 image_data(SIZE, SIZE);
+  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
   for (int y = 0; y < SIZE; ++y)
   {
     for (int x = 0; x < SIZE; ++x)

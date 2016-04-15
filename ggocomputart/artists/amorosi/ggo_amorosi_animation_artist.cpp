@@ -138,7 +138,7 @@ void ggo_amorosi_animation_artist::ggo_curve::paint(uint8_t * buffer) const
     layers.emplace_back(triangle_shape, color_brush, opacity_brush);
   }
   
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
   ggo::paint(image_data, layers);
 }
 

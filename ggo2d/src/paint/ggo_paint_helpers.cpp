@@ -6,7 +6,7 @@
 namespace
 {
   template <typename T>
-  void paint_dot(ggo::image_data_abc<T> & image_data,
+  void paint_dot(ggo::image_buffer_abc<T> & image_data,
                  float pos_x, float pos_y, float radius,
                  const T & color,
                  float opacity,
@@ -73,13 +73,13 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_dot_rgb(uint8_t * buffer, int width, int height, float x, float y, float radius, const ggo::color & color, float opacity)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     ::paint_dot<ggo::color>(image_data, x, y, radius, color, opacity, ggo::pixel_sampler_1(), ggo::rgb_alpha_blender());
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint_dot(ggo::rgb_image_data_abc & image_data,
+  void paint_dot(ggo::rgb_image_buffer_abc & image_data,
                      float x, float y, float radius,
                      const ggo::color & color,
                      float opacity,
@@ -90,7 +90,7 @@ namespace ggo
   }
                       
   /////////////////////////////////////////////////////////////////////
-  void paint_dot(ggo::gray_image_data_abc & image_data,
+  void paint_dot(ggo::gray_image_buffer_abc & image_data,
                  float x, float y, float radius,
                  float gray,
                  float opacity,

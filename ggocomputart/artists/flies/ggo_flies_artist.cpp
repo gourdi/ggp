@@ -39,12 +39,12 @@ void ggo_flies_artist::init_sub()
 //////////////////////////////////////////////////////////////
 void ggo_flies_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 {
-  ggo::rgb_image_data_uint8 image_data(bkgd_buffer, get_render_width(), get_render_height());
-	ggo::fill_4_colors(image_data, 
-                    ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                    ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                    ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                    ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)));
+  ggo::rgb_image_buffer_uint8 image_buffer(bkgd_buffer, get_render_width(), get_render_height());
+	ggo::fill_4_colors(image_buffer, 
+                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
+                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
+                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
+                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)));
 		
 	uint8_t * it = bkgd_buffer;
 	for (int y = 0; y < get_render_height(); ++y)

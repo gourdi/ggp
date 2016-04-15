@@ -52,7 +52,7 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	}
 
 	float radius = get_render_min_size() / 1500.f;
-	ggo::rgb_image_data_float image_data_float(get_render_width(), get_render_height());
+	ggo::rgb_image_buffer_float image_buffer_float(get_render_width(), get_render_height());
 
 	// Render the background.
 	std::cout << "Rendering background" << std::endl;
@@ -62,12 +62,12 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	ggo::color color3 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
 	ggo::color color4 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
 	
-	ggo::fill_4_colors(image_data_float, color1, color2, color3, color4);
+	ggo::fill_4_colors(image_buffer_float, color1, color2, color3, color4);
 
 	// Render the shadow points.
 	std::cout << "Rendering the shadow" << std::endl;
 	
-	ggo::gray_image_data_float shadow_image_data(get_render_width(), get_render_height());
+	ggo::gray_image_buffer_float shadow_image_data(get_render_width(), get_render_height());
 	shadow_image_data.fill(1);
 	for (int i = 0; i < points.size(); ++i)
 	{
@@ -92,7 +92,7 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	
 	std::cout << "Blending the shadow" << std::endl;
 
-	apply_shadow(image_data_float.get_buffer(), shadow_image_data.get_buffer());
+	apply_shadow(image_buffer_float.get_buffer(), shadow_image_data.get_buffer());
 
 	// Render the points.
 	std::cout << "Rendering points" << std::endl;
@@ -113,12 +113,12 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 
     auto disc = std::make_shared<const ggo::disc_float>(points[i], radius);
     
-		ggo::paint(image_data_float, disc, color, 0.02f);
+		ggo::paint(image_buffer_float, disc, color, 0.02f);
 	}
 
 	// From float to uint8_t.
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
-	image_data.copy(image_data_float);
+  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
+	image_buffer.copy(image_buffer_float);
 }
 
 //////////////////////////////////////////////////////////////

@@ -12,7 +12,7 @@ GGO_TEST(tree3d, random_points)
   const int SIZE = 500;
   const float RADIUS = 50;
 
-  ggo::rgb_image_data_uint8 image_data(SIZE, SIZE, ggo::color::BLACK);
+  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE, ggo::color::BLACK);
 
   // Create random points.
   std::vector<std::pair<ggo::point3d_float, void*>> points;

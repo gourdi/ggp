@@ -111,7 +111,7 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	}
 	
 	float radius = get_render_min_size() / 100.f;
-	ggo::rgb_image_data_float image_data_float(get_render_width(), get_render_height());
+	ggo::rgb_image_buffer_float image_buffer_float(get_render_width(), get_render_height());
 
 	// Render the background.
 	float t = float(GGO_POINTS_PER_FRAME) * frame_index / _points.size();
@@ -122,10 +122,10 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	ggo::color color3 = ggo::color::from_hsv(hue, 0.2f, _val_curve3.evaluate(t));
 	ggo::color color4 = ggo::color::from_hsv(hue, 0.2f, _val_curve4.evaluate(t));
 	
-	ggo::fill_4_colors(image_data_float, color1, color2, color3, color4);
+	ggo::fill_4_colors(image_buffer_float, color1, color2, color3, color4);
 
 	// Render the shadow points.
-	ggo::gray_image_data_float shadow_image_data(get_render_width(), get_render_height());
+	ggo::gray_image_buffer_float shadow_image_data(get_render_width(), get_render_height());
 	shadow_image_data.fill(1);
 	for (int i = first_point; i <= last_point; ++i)
 	{
@@ -151,7 +151,7 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
                                get_render_height(),
                                0.4f * get_render_min_size(), 1, 1, 0.001f);
 
-	apply_shadow(image_data_float.get_buffer(), shadow_image_data.get_buffer());
+	apply_shadow(image_buffer_float.get_buffer(), shadow_image_data.get_buffer());
 
 	// Render the points.
 	float point_opacity = 0.02f;
@@ -168,13 +168,13 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 
       auto disc = std::make_shared<const ggo::disc_float>(_points[i], radius);
       
-      ggo::paint(image_data_float, disc, color, opacity);
+      ggo::paint(image_buffer_float, disc, color, opacity);
 		}
 	}
 
 	// From float to uint8_t.
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
-	image_data.copy(image_data_float);
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
+	image_data.copy(image_buffer_float);
 
 	return true;
 }

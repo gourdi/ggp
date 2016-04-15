@@ -140,7 +140,7 @@ void ggo_bozons_animation_artist::init_output_buffer(uint8_t * buffer)
 	ggo::color bkgd_color3 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
 	ggo::color bkgd_color4 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
   
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
   
 	ggo::fill_4_colors(image_data, bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
 }

@@ -8,7 +8,7 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_scalar_field2d(ggo::image_data_abc<T> & image_data, 
+  void fill_scalar_field2d(ggo::image_buffer_abc<T> & image_data, 
                            const ggo::scalar_field_2d_abc<float> & scalar_field2d,
                            const T & color1,
                            const T & color2)
@@ -31,7 +31,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_solid(ggo::image_data_abc<T> & image_data, const T & color)
+  void fill_solid(ggo::image_buffer_abc<T> & image_data, const T & color)
   {
     image_data.for_each_pixel([&](int x, int y)
     {
@@ -40,13 +40,13 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_solid(ggo::gray_image_data_abc & gray_image_data, float gray)
+  void fill_solid(ggo::gray_image_buffer_abc & gray_image_data, float gray)
   {
     fill_solid<float>(gray_image_data, gray);
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_solid(ggo::rgb_image_data_abc & rgb_image_data, const ggo::color & color)
+  void fill_solid(ggo::rgb_image_buffer_abc & rgb_image_data, const ggo::color & color)
   {
     fill_solid<ggo::color>(rgb_image_data, color);
   }
@@ -90,7 +90,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_checker(ggo::image_data_abc<T> & image_data, 
+  void fill_checker(ggo::image_buffer_abc<T> & image_data, 
                     const T & color1,
                     const T & color2,
                     int tile_size)
@@ -108,7 +108,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_checker(ggo::gray_image_data_abc & gray_image_data,
+  void fill_checker(ggo::gray_image_buffer_abc & gray_image_data,
                     float gray1, 
                     float gray2, 
                     int tile_size)
@@ -117,7 +117,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_checker(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_checker(ggo::rgb_image_buffer_abc & rgb_image_data,
                     const ggo::color & color1,
                     const ggo::color & color2,
                     int tile_size)
@@ -132,7 +132,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_color_curve(ggo::image_data_abc<T> & image_data, 
+  void fill_color_curve(ggo::image_buffer_abc<T> & image_data, 
                         const ggo::curve_abc<float, T> & color_curve)
   {
     T color;
@@ -151,14 +151,14 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_color_curve(ggo::gray_image_data_abc & gray_image_data,
+  void fill_color_curve(ggo::gray_image_buffer_abc & gray_image_data,
                         const ggo::curve_abc<float, float> & color_curve)
   {
     fill_color_curve<float>(gray_image_data, color_curve);
   }
        
   //////////////////////////////////////////////////////////////
-  void fill_color_curve(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_color_curve(ggo::rgb_image_buffer_abc & rgb_image_data,
                         const ggo::curve_abc<float, ggo::color> & color_curve)
   {
     fill_color_curve<ggo::color>(rgb_image_data, color_curve);
@@ -171,7 +171,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_gaussian(ggo::image_data_abc<T> & image_data, 
+  void fill_gaussian(ggo::image_buffer_abc<T> & image_data, 
                      float var,
                      const T & color1,
                      const T & color2)
@@ -187,7 +187,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_gaussian(ggo::gray_image_data_abc & gray_image_data,
+  void fill_gaussian(ggo::gray_image_buffer_abc & gray_image_data,
                      float var,
                      float gray1,
                      float gray2)
@@ -196,7 +196,7 @@ namespace ggo
   }
                           
   //////////////////////////////////////////////////////////////
-  void fill_gaussian(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_gaussian(ggo::rgb_image_buffer_abc & rgb_image_data,
                      float var,
                      const ggo::color & color1,
                      const ggo::color & color2)
@@ -211,7 +211,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_4_colors(ggo::image_data_abc<T> & image_data,
+  void fill_4_colors(ggo::image_buffer_abc<T> & image_data,
                      const T & color1,
                      const T & color2,
                      const T & color3,
@@ -234,7 +234,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_4_colors(ggo::gray_image_data_abc & gray_image_data,
+  void fill_4_colors(ggo::gray_image_buffer_abc & gray_image_data,
                      float gray1,
                      float gray2,
                      float gray3,
@@ -244,7 +244,7 @@ namespace ggo
   }
                           
   //////////////////////////////////////////////////////////////
-  void fill_4_colors(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_4_colors(ggo::rgb_image_buffer_abc & rgb_image_data,
                      const ggo::color & color1,
                      const ggo::color & color2,
                      const ggo::color & color3,
@@ -260,7 +260,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_brush(ggo::image_data_abc<T> & image_data, 
+  void fill_brush(ggo::image_buffer_abc<T> & image_data, 
                   const ggo::brush_abc<T> & brush,
                   const ggo::pixel_sampler_abc & sampler)
   {
@@ -281,7 +281,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_brush(ggo::gray_image_data_abc & gray_image_data,
+  void fill_brush(ggo::gray_image_buffer_abc & gray_image_data,
                   const ggo::gray_brush_abc & brush,
                   const ggo::pixel_sampler_abc & sampler)
   {
@@ -289,7 +289,7 @@ namespace ggo
   }
         
   //////////////////////////////////////////////////////////////                                         
-  void fill_brush(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_brush(ggo::rgb_image_buffer_abc & rgb_image_data,
                   const ggo::rgb_brush_abc & brush,
                   const ggo::pixel_sampler_abc & sampler)
   {
@@ -304,7 +304,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void fill_perlin(ggo::image_data_abc<T> & image_data, 
+  void fill_perlin(ggo::image_buffer_abc<T> & image_data, 
                    float size,
                    const T & color1,
                    const T & color2)
@@ -317,7 +317,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void fill_perlin(ggo::gray_image_data_abc & gray_image_data,
+  void fill_perlin(ggo::gray_image_buffer_abc & gray_image_data,
                    float size,
                    float gray1,
                    float gray2)
@@ -326,7 +326,7 @@ namespace ggo
   }
          
   //////////////////////////////////////////////////////////////                      
-  void fill_perlin(ggo::rgb_image_data_abc & rgb_image_data,
+  void fill_perlin(ggo::rgb_image_buffer_abc & rgb_image_data,
                    float size,
                    const ggo::color & color1,
                    const ggo::color & color2)

@@ -9,7 +9,7 @@ namespace
 {
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_pixel(ggo::image_data_abc<T> & image_data, 
+  void paint_pixel(ggo::image_buffer_abc<T> & image_data, 
                    int x, int y,
                    const T & color,
                    float opacity = 1,
@@ -25,7 +25,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_horz_line(ggo::image_data_abc<T> & image_data,
+  void paint_horz_line(ggo::image_buffer_abc<T> & image_data,
                        int x_from, int x_to, int y, 
                        const T & color,
                        float opacity = 1,
@@ -58,7 +58,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_vert_line(ggo::image_data_abc<T> & image_data,
+  void paint_vert_line(ggo::image_buffer_abc<T> & image_data,
                        int y_from, int y_to, int x,
                        const T & color,
                        float opacity = 1,
@@ -93,7 +93,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_line(ggo::image_data_abc<T> & image_data,
+  void paint_line(ggo::image_buffer_abc<T> & image_data,
                   float x_from, float y_from, float x_to, float y_to,
                   const T & color,
                   float opacity = 1,
@@ -194,7 +194,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_rect(ggo::image_data_abc<T> & image_data,
+  void paint_rect(ggo::image_buffer_abc<T> & image_data,
                   int left, int right, int top, int bottom,
                   const T & color,
                   float opacity = 1,
@@ -229,7 +229,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_horz_line_rgb(uint8_t * buffer, int width, int height, int x_from, int x_to, int y, const ggo::color & color)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     paint_horz_line<ggo::color>(image_data, x_from, x_to, y, color);
   }
@@ -237,7 +237,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_vert_line_rgb(uint8_t * buffer, int width, int height, int y_from, int y_to, int x, const ggo::color & color)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     paint_vert_line<ggo::color>(image_data, y_from, y_to, x, color);
   }
@@ -245,7 +245,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_line_rgb(uint8_t * buffer, int width, int height, float x_from, float y_from, float x_to, float y_to, const ggo::color & color)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     paint_line<ggo::color>(image_data, x_from, y_from, x_to, y_to, color);
   }
@@ -253,7 +253,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_rect_rgb(uint8_t * buffer, int width, int height, int left, int right, int top, int bottom, const ggo::color & color, float opacity)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     paint_rect<ggo::color>(image_data, left, right, top, bottom, color, opacity);
   }
@@ -261,7 +261,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_rect_rgb(float * buffer, int width, int height, int left, int right, int top, int bottom, const ggo::color & color, float opacity)
   {
-    ggo::rgb_image_data_float image_data(buffer, width, height);
+    ggo::rgb_image_buffer_float image_data(buffer, width, height);
     
     paint_rect<ggo::color>(image_data, left, right, top, bottom, color, opacity);
   }
@@ -269,7 +269,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void paint_pixel(uint8_t * buffer, int width, int height, int x, int y, const ggo::color & color, float opacity)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
     
     ::paint_pixel(image_data, x, y, color, opacity);
   }

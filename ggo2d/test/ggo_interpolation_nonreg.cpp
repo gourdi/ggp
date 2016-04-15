@@ -28,7 +28,7 @@ namespace
   template <uint8_t(interpolate_func)(const uint8_t *, int, int, float, float, int)>
   void test_interpolation(const std::string & filename)
   {
-    ggo::rgb_image_data_uint8 image_data(SIZE, SIZE);
+    ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
     
     const std::array<uint8_t, 9> input {{
         50, 25, 185,

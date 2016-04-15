@@ -55,7 +55,7 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 		return false;
 	}
 	
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
   
 	ggo::fill_4_colors(image_data, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	

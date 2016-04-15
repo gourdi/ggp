@@ -13,7 +13,7 @@
 GGO_TEST(triangular_interpolation, function)
 {
   const int IMAGE_SIZE = 200;
-  ggo::rgb_image_data_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
+  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
 
   image.for_each_pixel([&](int x, int y)
   {
@@ -34,7 +34,7 @@ GGO_TEST(triangular_interpolation, function)
 GGO_TEST(triangular_interpolation, brush)
 {
   const int IMAGE_SIZE = 200;
-  ggo::rgb_image_data_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
+  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
   
   const ggo::point2d_float p0(50, 50);
   const ggo::point2d_float p1(150, 50);
@@ -54,7 +54,7 @@ GGO_TEST(triangular_interpolation, brush)
 GGO_TEST(triangular_interpolation, opacity)
 {
   const int IMAGE_SIZE = 200;
-  ggo::rgb_image_data_uint8 image(IMAGE_SIZE, IMAGE_SIZE);
+  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE);
   
   fill_checker(image, ggo::color::WHITE, ggo::color::BLACK, 20);
   

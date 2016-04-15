@@ -4,7 +4,7 @@ namespace
 {
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  void paint_shape_seed(ggo::image_data_abc<T> & image_data,
+  void paint_shape_seed(ggo::image_buffer_abc<T> & image_data,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
                         const T & color,
                         float opacity,
@@ -113,7 +113,7 @@ namespace
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  void paint_seed_shape(ggo::rgb_image_data_abc & image_data,
+  void paint_seed_shape(ggo::rgb_image_buffer_abc & image_data,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
                         const ggo::color & color,
                         float opacity,
@@ -124,7 +124,7 @@ namespace ggo
   }                          
 
   /////////////////////////////////////////////////////////////////////
-  void paint_seed_shape(ggo::gray_image_data_abc & image_data,
+  void paint_seed_shape(ggo::gray_image_buffer_abc & image_data,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
                         float gray,
                         float opacity,

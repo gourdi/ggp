@@ -216,7 +216,7 @@ namespace ggo
       float z_sup = rotated_points.back().z();
 
       // Render shadow.
-      ggo::gray_image_data_uint8 image_data(buffer, width, height);
+      ggo::gray_image_buffer_uint8 image_data(buffer, width, height);
       
       for (const auto & point : rotated_points)
       {

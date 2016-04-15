@@ -44,8 +44,8 @@ void ggo_ifs_animation_artist::init_sub()
 //////////////////////////////////////////////////////////////
 bool ggo_ifs_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
-	ggo::fill_4_colors(image_data, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
+	ggo::fill_4_colors(image_buffer, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	float t =  ggo::ease_inout(frame_index, FRAMES_COUNT);
 	

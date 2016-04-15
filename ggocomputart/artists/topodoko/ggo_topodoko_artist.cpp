@@ -23,7 +23,7 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 	ggo::color bkgd_color3 = ggo::color::from_hsv(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
 	ggo::color bkgd_color4 = ggo::color::from_hsv(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
 	
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
   
 	ggo::fill_4_colors(image_data, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
 	
@@ -83,7 +83,7 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 	std::cout << "Rendering shadow" << std::endl;
 	
 	// Render the shadow.
-	ggo::gray_image_data_uint8 shadow_image_data(get_render_width(), get_render_height());
+	ggo::gray_image_buffer_uint8 shadow_image_data(get_render_width(), get_render_height());
   shadow_image_data.fill(0xFF);
 	
 	float shadow_offset_scalar = 0.25f * SQUARE_SIZE;

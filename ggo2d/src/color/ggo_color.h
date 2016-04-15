@@ -98,7 +98,7 @@ namespace ggo
 
   inline ggo::color operator-(const ggo::color & c)
   {
-    return ggo::color(-c.r(), -c.g(), c.b());
+    return ggo::color(-c.r(), -c.g(), -c.b());
   }
 
   inline ggo::color operator+(const ggo::color & c1, const ggo::color & c2)

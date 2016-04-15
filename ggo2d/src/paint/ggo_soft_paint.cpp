@@ -43,7 +43,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void process_block(ggo::image_data_abc<color_type> & image_data,
+  void process_block(ggo::image_buffer_abc<color_type> & image_data,
                      const std::vector<ggo::layer<color_type>> & layers,
                      const ggo::pixel_rect & pixel_rect,
                      const ggo::pixel_sampler_abc & sampler)
@@ -58,7 +58,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint_recursive(ggo::image_data_abc<color_type> & image_data,
+  void paint_recursive(ggo::image_buffer_abc<color_type> & image_data,
                        const std::vector<ggo::layer<color_type>> & layers,
                        const ggo::pixel_rect & pixel_rect,
                        const ggo::pixel_sampler_abc & sampler)
@@ -132,7 +132,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint_block8x8(ggo::image_data_abc<color_type> & image_data,
+  void paint_block8x8(ggo::image_buffer_abc<color_type> & image_data,
                       const std::vector<ggo::layer<color_type>> & layers,
                       const ggo::pixel_rect & pixel_rect,
                       const ggo::pixel_sampler_abc & sampler)
@@ -197,7 +197,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint(ggo::image_data_abc<color_type> & image_data, 
+  void paint(ggo::image_buffer_abc<color_type> & image_data, 
              const std::vector<ggo::layer<color_type>> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
@@ -262,7 +262,7 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
 
     std::vector<ggo::layer<ggo::color>> layers{ { shape,
                                                   std::make_shared<ggo::rgb_solid_brush>(color),
@@ -281,7 +281,7 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
 
     std::vector<ggo::layer<ggo::color>> layers{ { shape, color_brush, opacity_brush, blender } };
 
@@ -294,13 +294,13 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_data_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
 
     ::paint<ggo::color>(image_data, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_data_abc & image_data,
+  void paint(ggo::gray_image_buffer_abc & image_data,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              float gray,
              float opacity,
@@ -316,7 +316,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_data_abc & image_data,
+  void paint(ggo::rgb_image_buffer_abc & image_data,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              const ggo::color & color,
              float opacity,
@@ -332,7 +332,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_data_abc & image_data,
+  void paint(ggo::gray_image_buffer_abc & image_data,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::gray_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush,
@@ -348,7 +348,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_data_abc & image_data,
+  void paint(ggo::rgb_image_buffer_abc & image_data,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::rgb_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush,
@@ -362,7 +362,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_data_abc & image_data,
+  void paint(ggo::gray_image_buffer_abc & image_data,
              const std::vector<ggo::gray_layer> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
@@ -371,7 +371,7 @@ namespace ggo
   }               
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_data_abc & image_data,
+  void paint(ggo::rgb_image_buffer_abc & image_data,
              const std::vector<ggo::rgb_layer> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)

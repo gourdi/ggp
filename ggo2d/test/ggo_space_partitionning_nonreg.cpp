@@ -15,13 +15,13 @@ GGO_TEST(space_partitionning, compare)
     auto disc = std::make_shared<ggo::disc_float>(ggo::point2d_float(20.f, 20.f), 10.f);
     const std::vector<ggo::rgb_layer> layers{ {disc, ggo::color::RED, 1.f} };
 
-    ggo::rgb_image_data_uint8 image_data1(WIDTH, HEIGHT, ggo::color::BLACK);
+    ggo::rgb_image_buffer_uint8 image_data1(WIDTH, HEIGHT, ggo::color::BLACK);
     ggo::paint(image_data1, layers, sampler);
     
-    ggo::rgb_image_data_uint8 image_data2(WIDTH, HEIGHT, ggo::color::BLACK);
+    ggo::rgb_image_buffer_uint8 image_data2(WIDTH, HEIGHT, ggo::color::BLACK);
     ggo::paint(image_data2, layers, sampler, ggo::space_partitionning::none);
 
-    ggo::rgb_image_data_uint8 image_data3(WIDTH, HEIGHT, ggo::color::BLACK);
+    ggo::rgb_image_buffer_uint8 image_data3(WIDTH, HEIGHT, ggo::color::BLACK);
     ggo::paint(image_data3, layers, sampler, ggo::space_partitionning::block8x8);
 
 #if 1

@@ -36,7 +36,7 @@ void ggo_cells_artist::render_bitmap(uint8_t * buffer)
 	polynom2._deg1 = ggo::rand_float(-2, 2);
 	polynom2._deg0 = ggo::rand_float(-2, 2);
   
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
 	
 	ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(), ggo::rand_float()));
 	

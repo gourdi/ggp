@@ -2,37 +2,37 @@
 #include <ggo_fill.h>
 
 /////////////////////////////////////////////////////////////////////
-// rgb_image_data_uint8
+// rgb_image_buffer_uint8
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_uint8::rgb_image_data_uint8(uint8_t * buffer, int width, int height)
+  rgb_image_buffer_uint8::rgb_image_buffer_uint8(uint8_t * buffer, int width, int height)
   :
-  rgb_image_data_abc(width, height),
+  rgb_image_buffer_abc(width, height),
   _delete_buffer(false),
   _buffer(buffer)
   {
   }
 
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_uint8::rgb_image_data_uint8(int width, int height)
+  rgb_image_buffer_uint8::rgb_image_buffer_uint8(int width, int height)
   :
-  rgb_image_data_abc(width, height),
+  rgb_image_buffer_abc(width, height),
   _delete_buffer(true),
   _buffer(new uint8_t[3 * width * height])
   {
   }
   
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_uint8::rgb_image_data_uint8(int width, int height, const ggo::color & fill_color)
+  rgb_image_buffer_uint8::rgb_image_buffer_uint8(int width, int height, const ggo::color & fill_color)
   :
-  rgb_image_data_uint8(width, height)
+  rgb_image_buffer_uint8(width, height)
   {
     fill_solid_rgb(_buffer, width * height, fill_color);
   }
 
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_uint8::~rgb_image_data_uint8()
+  rgb_image_buffer_uint8::~rgb_image_buffer_uint8()
   {
     if (_delete_buffer)
     {
@@ -41,7 +41,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void rgb_image_data_uint8::do_pack(int x, int y, const ggo::color & color)
+  void rgb_image_buffer_uint8::do_pack(int x, int y, const ggo::color & color)
   {
     GGO_ASSERT(_buffer);
     
@@ -53,7 +53,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  ggo::color rgb_image_data_uint8::do_unpack(int x, int y) const
+  ggo::color rgb_image_buffer_uint8::do_unpack(int x, int y) const
   {
     GGO_ASSERT(_buffer);
     
@@ -64,29 +64,29 @@ namespace ggo
 }
 
 /////////////////////////////////////////////////////////////////////
-// rgb_image_data_float
+// rgb_image_buffer_float
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_float::rgb_image_data_float(float * buffer, int width, int height)
+  rgb_image_buffer_float::rgb_image_buffer_float(float * buffer, int width, int height)
   :
-  rgb_image_data_abc(width, height),
+  rgb_image_buffer_abc(width, height),
   _delete_buffer(false),
   _buffer(buffer)
   {
   }
 
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_float:: rgb_image_data_float(int width, int height)
+  rgb_image_buffer_float:: rgb_image_buffer_float(int width, int height)
   :
-  rgb_image_data_abc(width, height),
+  rgb_image_buffer_abc(width, height),
   _delete_buffer(true),
   _buffer(new float[3 * width * height])
   {
   }
 
   /////////////////////////////////////////////////////////////////////
-  rgb_image_data_float::~rgb_image_data_float()
+  rgb_image_buffer_float::~rgb_image_buffer_float()
   {
     if (_delete_buffer)
     {
@@ -95,7 +95,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void rgb_image_data_float::do_pack(int x, int y, const ggo::color & color)
+  void rgb_image_buffer_float::do_pack(int x, int y, const ggo::color & color)
   {
     GGO_ASSERT(_buffer);
     
@@ -107,7 +107,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  ggo::color rgb_image_data_float::do_unpack(int x, int y) const
+  ggo::color rgb_image_buffer_float::do_unpack(int x, int y) const
   {
     GGO_ASSERT(_buffer);
     

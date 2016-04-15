@@ -14,20 +14,16 @@ namespace ggo
   {
   public:
 
-    void		    reset();
-    void		    push_point(T_X x, T_Y y);
+    void		                      reset();
+    void		                      push_point(T_X x, T_Y y);
 
-    virtual	T_Y	evaluate(T_X x) const = 0;
+    const std::pair<T_X, T_Y> &   back() const { return _points.back(); }
+
+    virtual	T_Y	                  evaluate(T_X x) const = 0;
 
   protected:
-      
-    struct curve_point
-    {
-      T_X _x;
-      T_Y _y;
-    };
 
-    std::vector<curve_point>	_points;
+    std::vector<std::pair<T_X, T_Y>>	_points;
   };
 
   template <typename T_X, typename T_Y>
@@ -76,17 +72,13 @@ namespace ggo
     
     for (; it != _points.end(); ++it)
     {
-      if (it->_x > x)
+      if (it->first > x)
       {
         break;
       }
     }
     
-    curve_point point;
-    point._x = x;
-    point._y = y;
-    
-    _points.insert(it, point);
+    _points.insert(it, std::make_pair(x, y));
   }
 
   //////////////////////////////////////////////////////////////
@@ -100,12 +92,12 @@ namespace ggo
     
     int inf = -1;
     
-    if ((this->_points.size() == 2) || (x <= this->_points[1]._x))
+    if ((this->_points.size() == 2) || (x <= this->_points[1].first))
     {
       inf = 0;
     }
     else
-    if (x >= this->_points[this->_points.size() - 2]._x)
+    if (x >= this->_points[this->_points.size() - 2].first)
     {
       inf = static_cast<int>(this->_points.size()) - 2;
     }
@@ -116,7 +108,7 @@ namespace ggo
         const auto & p_inf = this->_points[i];
         const auto & p_sup = this->_points[i + 1];
 
-        if ((p_inf._x <= x) && (x <= p_sup._x))
+        if ((p_inf.first <= x) && (x <= p_sup.first))
         {
           inf = i;
           break;
@@ -127,7 +119,7 @@ namespace ggo
     const auto & p0 = this->_points[inf];
     const auto & p1 = this->_points[inf + 1];
 
-    return linear_interpolation(p0._x, p0._y, p1._x, p1._y, x);
+    return linear_interpolation(p0.first, p0.second, p1.first, p1.second, x);
   }
 
   //////////////////////////////////////////////////////////////
@@ -141,12 +133,12 @@ namespace ggo
 
     int inf = -1;
     
-    if ((this->_points.size() == 4) || (x <= this->_points[2]._x))
+    if ((this->_points.size() == 4) || (x <= this->_points[2].first))
     {
       inf = 0;
     }
     else
-    if (x >= this->_points[this->_points.size() - 3]._x)
+    if (x >= this->_points[this->_points.size() - 3].first)
     {
       inf = static_cast<int>(this->_points.size()) - 4;
     }
@@ -157,7 +149,7 @@ namespace ggo
         const auto & p_inf = this->_points[i];
         const auto & p_sup = this->_points[i + 1];
 
-        if ((p_inf._x <= x) && (x <= p_sup._x))
+        if ((p_inf.first <= x) && (x <= p_sup.first))
         {
           inf = i - 1;
           break;
@@ -170,7 +162,7 @@ namespace ggo
     const auto & p2 = this->_points[inf + 2];
     const auto & p3 = this->_points[inf + 3];
 
-    return cubic_interpolation(p0._x, p0._y, p1._x, p1._y, p2._x, p2._y, p3._x, p3._y, x);
+    return cubic_interpolation(p0.first, p0.second, p1.first, p1.second, p2.first, p2.second, p3.first, p3.second, x);
   }
 }
 

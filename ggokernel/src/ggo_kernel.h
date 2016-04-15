@@ -257,6 +257,12 @@ namespace ggo
       c.push_back(v);
     }
   }
+
+  template <typename container, typename data_type>
+  void fill(container & c, const data_type & v)
+  {
+    std::fill(c.begin(), c.end(), v);
+  }
 }
 
 //////////////////////////////////////////////////////////////

@@ -1,20 +1,20 @@
-#ifndef __GGO_RGB_IMAGE_DATA__
-#define __GGO_RGB_IMAGE_DATA__
+#ifndef __GGO_RGB_IMAGE_BUFFER__
+#define __GGO_RGB_IMAGE_BUFFER__
 
 #include <ggo_image_data_abc.h>
 #include <ggo_color.h>
 
 namespace ggo
 {
-  class rgb_image_data_abc : public image_data_abc<ggo::color>
+  class rgb_image_buffer_abc : public image_buffer_abc<ggo::color>
   {
   public:
 
-          rgb_image_data_abc(int width, int height) : ggo::image_data_abc<ggo::color>(width, height) {}
+          rgb_image_buffer_abc(int width, int height) : ggo::image_buffer_abc<ggo::color>(width, height) {}
           
-    using ggo::image_data_abc<ggo::color>::fill;
+    using ggo::image_buffer_abc<ggo::color>::fill;
 
-    void  fill(const ggo::image_data_abc<float> & gray_image_data)
+    void  fill(const ggo::image_buffer_abc<float> & gray_image_data)
     {
       if (get_width() != gray_image_data.get_width() ||
           get_height() != gray_image_data.get_height())
@@ -34,14 +34,14 @@ namespace ggo
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  class rgb_image_data_uint8 : public ggo::rgb_image_data_abc
+  class rgb_image_buffer_uint8 : public ggo::rgb_image_buffer_abc
   {
   public:
     
-                    rgb_image_data_uint8(uint8_t * buffer, int width, int height);
-                    rgb_image_data_uint8(int width, int height);
-                    rgb_image_data_uint8(int width, int height, const ggo::color & fill_color);
-    virtual        ~rgb_image_data_uint8();
+                    rgb_image_buffer_uint8(uint8_t * buffer, int width, int height);
+                    rgb_image_buffer_uint8(int width, int height);
+                    rgb_image_buffer_uint8(int width, int height, const ggo::color & fill_color);
+    virtual        ~rgb_image_buffer_uint8();
 
     void            do_pack(int x, int y, const ggo::color & color) override;
     ggo::color      do_unpack(int x, int y) const override;
@@ -59,13 +59,13 @@ namespace ggo
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  class rgb_image_data_float : public ggo::rgb_image_data_abc
+  class rgb_image_buffer_float : public ggo::rgb_image_buffer_abc
   {
   public:
     
-                  rgb_image_data_float(float * buffer, int width, int height);
-                  rgb_image_data_float(int width, int height);
-    virtual      ~rgb_image_data_float();
+                  rgb_image_buffer_float(float * buffer, int width, int height);
+                  rgb_image_buffer_float(int width, int height);
+    virtual      ~rgb_image_buffer_float();
 
     void          do_pack(int x, int y, const ggo::color & color) override;
     ggo::color    do_unpack(int x, int y) const override;

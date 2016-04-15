@@ -64,7 +64,7 @@ GGO_TEST(paint, multi_paint3)
     
   const std::vector<ggo::gray_layer> layers{ {std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 20.f), 0.8f, 1} };
 
-  ggo::gray_image_data_float image_data(WIDTH, HEIGHT, 0.f);
+  ggo::gray_image_buffer_float image_data(WIDTH, HEIGHT, 0.f);
   ggo::paint(image_data, layers);
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
@@ -188,7 +188,7 @@ GGO_TEST(paint, blur)
   const int HEIGHT = 100;
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 255);
-  ggo::rgb_image_data_uint8 image_data(buffer, WIDTH, HEIGHT);
+  ggo::rgb_image_buffer_uint8 image_data(buffer, WIDTH, HEIGHT);
   ggo::fill_checker(image_data, ggo::color::WHITE, ggo::color::BLACK, 10);
     
   {

@@ -1,5 +1,6 @@
 #include <ggo_nonreg.h>
 #include <array>
+#include <ggo_interpolation1d.h>
 #include <ggo_interpolation2d.h>
 
 /////////////////////////////////////////////////////////////////////

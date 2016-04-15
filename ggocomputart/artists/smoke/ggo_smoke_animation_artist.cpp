@@ -132,8 +132,8 @@ void ggo_smoke_animation_artist::init_sub()
 	ggo::color color3 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
 	ggo::color color4 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
   
-  ggo::rgb_image_data_uint8 image_data(_bkgd_buffer, get_render_width(), get_render_height());
-	ggo::fill_4_colors(image_data, color1, color2, color3, color4);
+  ggo::rgb_image_buffer_uint8 image_buffer(_bkgd_buffer, get_render_width(), get_render_height());
+	ggo::fill_4_colors(image_buffer, color1, color2, color3, color4);
 }
 
 //////////////////////////////////////////////////////////////

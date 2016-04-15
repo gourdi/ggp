@@ -15,7 +15,7 @@ ggo_artist_abc(render_width, render_height)
 void ggo_chryzode_artist::render_chryzode(uint8_t * buffer, float radius, const ggo_chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.
-  ggo::gray_image_data_float image_data(get_render_width(), get_render_height());
+  ggo::gray_image_buffer_float image_data(get_render_width(), get_render_height());
   image_data.fill(0);
 
   // Render the chryzode.

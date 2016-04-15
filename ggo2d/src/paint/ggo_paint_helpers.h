@@ -15,13 +15,13 @@ namespace ggo
   void	paint_dot_rgb(uint8_t * buffer, int width, int height,
                       float x, float y, float radius,
                       const ggo::color & color, float opacity = 1);
-  void	paint_dot(ggo::rgb_image_data_abc & image_data,
+  void	paint_dot(ggo::rgb_image_buffer_abc & image_data,
                   float x, float y, float radius,
                   const ggo::color & color,
                   float opacity = 1,
                   const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
                   const ggo::rgb_blender_abc & blender = ggo::rgb_alpha_blender());
-  void	paint_dot(ggo::gray_image_data_abc & image_data,
+  void	paint_dot(ggo::gray_image_buffer_abc & image_data,
                   float x, float y, float radius,
                   float gray,
                   float opacity = 1,

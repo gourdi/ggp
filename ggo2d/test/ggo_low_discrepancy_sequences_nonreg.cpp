@@ -14,7 +14,7 @@ namespace
   {
     const int SIZE = 400;
     
-    ggo::rgb_image_data_uint8 image_data(SIZE, SIZE);
+    ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
     image_data.fill(ggo::color::BLACK);
 
     for (int i = 0; i < points_count; ++i)

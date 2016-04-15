@@ -14,7 +14,7 @@ namespace
     const int WIDTH = 800;
     const int HEIGHT = 600;
 
-    ggo::rgb_image_data_uint8 image_data(WIDTH, HEIGHT, ggo::color::BLUE);
+    ggo::rgb_image_buffer_uint8 image_data(WIDTH, HEIGHT, ggo::color::BLUE);
 
     ggo::paint(image_data, std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 0.25f * std::min(WIDTH, HEIGHT)), ggo::color::WHITE);
 

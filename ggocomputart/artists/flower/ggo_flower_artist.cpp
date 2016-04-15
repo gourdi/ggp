@@ -34,7 +34,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 	petal_shape_curve.push_point(ggo::rand_float(0.1f, 0.5f), ggo::rand_float(0.1f, 0.5f));
 	petal_shape_curve.push_point(ggo::rand_float(0.5f, 0.9f), ggo::rand_float(0.5f, 0.9f));
 		
-  ggo::rgb_image_data_float render_buffer(get_render_width(), get_render_height());
+  ggo::rgb_image_buffer_float render_buffer(get_render_width(), get_render_height());
 	render_buffer.fill(ggo::color::BLACK);
 
 	for (int counter = 0; counter < petals_count; ++counter)
@@ -79,7 +79,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 		}
 	}
   
-  ggo::rgb_image_data_uint8 image_data(buffer, get_render_width(), get_render_height());
-	image_data.copy(render_buffer);
+  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
+	image_buffer.copy(render_buffer);
 }
 
