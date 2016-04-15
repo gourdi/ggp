@@ -9,7 +9,6 @@
 #include <ggo_pixel_sampler_abc.h>
 #include <ggo_blur_pixel_sampler.h>
 #include <ggo_hard_paint.h>
-#include <ggo_paint_params.h>
 #include <ggo_soft_paint.h>
 #include <ggo_seed_paint.h>
 #include <ggo_paint_helpers.h>

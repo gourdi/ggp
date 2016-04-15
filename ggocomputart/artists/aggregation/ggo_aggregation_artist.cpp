@@ -216,7 +216,7 @@ namespace ggo
       float z_sup = rotated_points.back().z();
 
       // Render shadow.
-      ggo::gray_image_buffer_uint8 image_data(buffer, width, height);
+      ggo::gray_image_buffer_uint8 image_buffer(width, height, buffer);
       
       for (const auto & point : rotated_points)
       {
@@ -226,7 +226,7 @@ namespace ggo
         pt.x() += 0.15f * min_size;
         pt.y() += 0.10f * min_size;
 
-        ggo::paint(image_data,
+        ggo::paint(image_buffer,
                    std::make_shared<ggo::disc_float>(pt, 0.0015f * min_size),
                    0, 0.5f);
       }
@@ -245,7 +245,7 @@ namespace ggo
         float gray = ggo::map<float>(point.z(), z_inf, z_sup, 0.1f, 1);
         float blur = 0.75f + 0.005f * min_size * std::abs(point.z() - 0.75f * z_sup);
         
-        ggo::paint(image_data,
+        ggo::paint(image_buffer,
                    std::make_shared<ggo::disc_float>(render_point, 0.0015f * min_size),
                    gray, 1, std::make_shared<ggo::gray_alpha_blender>(), ggo::blur_pixel_sampler(blur, 24));
       }

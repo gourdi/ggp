@@ -3,29 +3,29 @@
 namespace
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void paint_shape_seed(ggo::image_buffer_abc<T> & image_data,
+  template <typename color_type>
+  void paint_shape_seed(ggo::image_abc<color_type> & image,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
-                        const T & color,
+                        const color_type & color,
                         float opacity,
                         const ggo::pixel_aligned_sampler_abc & sampler,
-                        const ggo::blender_abc<T> & blender)
+                        const ggo::blender_abc<color_type> & blender)
   {
     ggo::rect_float rect = shape.get_seed_rect();
 
-    int seed_left   = ggo::clamp<int>(static_cast<int>(rect.left()),      0, image_data.get_width() - 1);
-    int seed_right  = ggo::clamp<int>(static_cast<int>(rect.right() + 1), 0, image_data.get_width() - 1);
-    int seed_bottom = ggo::clamp<int>(static_cast<int>(rect.bottom()),    0, image_data.get_height() - 1);
-    int seed_top    = ggo::clamp<int>(static_cast<int>(rect.top() + 1),   0, image_data.get_height() - 1);
+    int seed_left   = ggo::clamp<int>(static_cast<int>(rect.left()),      0, image.get_width() - 1);
+    int seed_right  = ggo::clamp<int>(static_cast<int>(rect.right() + 1), 0, image.get_width() - 1);
+    int seed_bottom = ggo::clamp<int>(static_cast<int>(rect.bottom()),    0, image.get_height() - 1);
+    int seed_top    = ggo::clamp<int>(static_cast<int>(rect.top() + 1),   0, image.get_height() - 1);
 
     // First paint the seed.
     for (int y = seed_bottom; y <= seed_top; ++y)
     {
       for (int x = seed_left; x <= seed_right; ++x)
       {
-        T pixel_color = image_data.unpack(x, y);
+        color_type pixel_color = image.read(x, y);
         pixel_color = blender.blend(pixel_color, opacity, color);
-        image_data.pack(x, y, pixel_color);
+        image.write(x, y, pixel_color);
       }
     }
     
@@ -44,15 +44,15 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            T pixel_color = image_data.unpack(seed_left, y);
+            color_type pixel_color = image.read(seed_left, y);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image_data.pack(seed_left, y, pixel_color);
+            image.write(seed_left, y, pixel_color);
           }
         }
       }
       
       // Right
-      if (seed_right < image_data.get_width() - 1)
+      if (seed_right < image.get_width() - 1)
       {
         seed_right += 1;
         for (int y = seed_bottom; y <= seed_top; ++y)
@@ -61,15 +61,15 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            T pixel_color = image_data.unpack(seed_right, y);
+            color_type pixel_color = image.read(seed_right, y);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image_data.pack(seed_right, y, pixel_color);
+            image.write(seed_right, y, pixel_color);
           }
         }
       }
 
       // Top
-      if (seed_top < image_data.get_height() - 1)
+      if (seed_top < image.get_height() - 1)
       {
         seed_top += 1;
         for (int x = seed_left; x <= seed_right; ++x)
@@ -78,9 +78,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            T pixel_color = image_data.unpack(x, seed_top);
+            color_type pixel_color = image.read(x, seed_top);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image_data.pack(x, seed_top, pixel_color);
+            image.write(x, seed_top, pixel_color);
           }
         }
       }
@@ -95,9 +95,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            T pixel_color = image_data.unpack(x, seed_bottom);
+            color_type pixel_color = image.read(x, seed_bottom);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image_data.pack(x, seed_bottom, pixel_color);
+            image.write(x, seed_bottom, pixel_color);
           }
         }
       }
@@ -113,25 +113,25 @@ namespace
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  void paint_seed_shape(ggo::rgb_image_buffer_abc & image_data,
+  void paint_seed_shape(ggo::rgb_image_abc & image,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
                         const ggo::color & color,
                         float opacity,
                         const ggo::pixel_aligned_sampler_abc & sampler,
                         const ggo::rgb_blender_abc & blender)
   {
-    paint_shape_seed<ggo::color>(image_data, shape, color, opacity, sampler, blender);
+    paint_shape_seed<ggo::color>(image, shape, color, opacity, sampler, blender);
   }                          
 
   /////////////////////////////////////////////////////////////////////
-  void paint_seed_shape(ggo::gray_image_buffer_abc & image_data,
+  void paint_seed_shape(ggo::gray_image_abc & image,
                         const ggo::seed_paintable_shape2d_abc<float> & shape,
                         float gray,
                         float opacity,
                         const ggo::pixel_aligned_sampler_abc & sampler,
                         const ggo::gray_blender_abc & blender)
   {
-    paint_shape_seed<float>(image_data, shape, gray, opacity, sampler, blender);
+    paint_shape_seed<float>(image, shape, gray, opacity, sampler, blender);
   }
 }
 

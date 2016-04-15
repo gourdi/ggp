@@ -12,13 +12,13 @@ ggo_bitmap_artist_abc(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo_bubbles_artist::render_bitmap(uint8_t * buffer)
 {
-  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
+  auto image = make_image_buffer(buffer);
   
   // Render background.
 	ggo::linear_curve<float, ggo::color> bkgd_gradient;
   bkgd_gradient.push_point(0, ggo::color::get_random());
   bkgd_gradient.push_point(1, ggo::color::get_random());
-	ggo::fill_color_curve(image_data, bkgd_gradient);
+	ggo::fill_color_curve(image, bkgd_gradient);
     
   int bubbles_count = 100;
   for (int i = 0; i < bubbles_count; ++i)

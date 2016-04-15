@@ -5,8 +5,8 @@
 #include <vector>
 #include <ggo_color.h>
 #include <ggo_pixel_sampler_abc.h>
-#include <ggo_gray_image_data.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_gray_image_buffer.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_blender_abc.h>
 #include <ggo_brush_abc.h>
 
@@ -87,15 +87,15 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
 
-  // image_data functions.
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  // image functions.
+  void paint(ggo::gray_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              float gray,
              float opacity = 1,
              std::shared_ptr<const ggo::gray_blender_abc> blender = std::make_shared<ggo::gray_alpha_blender>(),
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              const ggo::color & color,
              float opacity = 1,
@@ -103,14 +103,14 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
 
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  void paint(ggo::gray_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::gray_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush = std::make_shared<opacity_solid_brush>(1.f),
              std::shared_ptr<const ggo::gray_blender_abc> blender = std::make_shared<ggo::gray_alpha_blender>(),
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::rgb_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush = std::make_shared<opacity_solid_brush>(1.f),
@@ -118,11 +118,11 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
 
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  void paint(ggo::gray_image_abc & image,
              const std::vector<gray_layer> & layers,
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              const std::vector<rgb_layer> & layers,
              const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4(),
              ggo::space_partitionning partitionning = space_partitionning::recursive);

@@ -1,7 +1,7 @@
 #include <array>
 #include <ggo_nonreg.h>
 #include <ggo_interpolation2d.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_bmp.h>
 
 namespace

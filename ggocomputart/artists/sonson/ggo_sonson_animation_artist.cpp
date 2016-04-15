@@ -40,7 +40,7 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
     return false;
   }
 
-  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
+  auto image_buffer = make_image_buffer(buffer);
 
   // Update the mask.
 
@@ -52,7 +52,7 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
   {
     for (int x = 0; x < get_render_width(); ++x)
     {
-      image_buffer.pack(x, y, get_color(x, y));
+      image_buffer.write(x, y, get_color(x, y));
     }
   }
 

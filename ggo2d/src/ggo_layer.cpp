@@ -4,12 +4,12 @@
 namespace 
 {
   //////////////////////////////////////////////////////////////
-  template <typename T, typename Func>
-  void flatten_sprite_func(ggo::image_buffer_abc<T> & image,
-                           const ggo::gray_image_buffer_abc & sprite,
-                           Func fct, 
+  template <typename color_type, typename func>
+  void flatten_sprite_func(ggo::image_abc<color_type> & image,
+                           const ggo::gray_image_abc & sprite,
+                           func fct, 
                            int sprite_pos_x, int sprite_pos_y,
-                           const ggo::blender_abc<T> & blender)
+                           const ggo::blender_abc<color_type> & blender)
   {
     for (int y_sprite = 0; y_sprite < sprite.get_height(); ++y_sprite)
     {
@@ -23,14 +23,14 @@ namespace
                   
           if (x_image >= 0 && x_image < image.get_width())
           {
-            T color = image.unpack(x_image, y_image);   
-            float opacity = sprite.unpack(x_sprite, y_sprite);
+            color_type color = image.read(x_image, y_image);
+            float opacity = sprite.read(x_sprite, y_sprite);
                       
-            T sprite_color = fct(x_sprite, y_sprite);
+            color_type sprite_color = fct(x_sprite, y_sprite);
       
             color = blender.blend(color, opacity, sprite_color);
                       
-            image.pack(x_image, y_image, color);
+            image.write(x_image, y_image, color);
           }
         }
       }
@@ -38,13 +38,13 @@ namespace
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void flatten_sprite_t(ggo::image_buffer_abc<T> & image,
-                        const ggo::gray_image_buffer_abc & sprite,
-                        const ggo::brush_abc<T> & brush,
+  template <typename color_type>
+  void flatten_sprite_t(ggo::image_abc<color_type> & image,
+                        const ggo::gray_image_abc & sprite,
+                        const ggo::brush_abc<color_type> & brush,
                         const ggo::pixel_aligned_sampler_abc & brush_sampler, 
                         int sprite_pos_x, int sprite_pos_y,
-                        const ggo::blender_abc<T> & blender)
+                        const ggo::blender_abc<color_type> & blender)
   {
     float left    = sprite_pos_x - 0.5f;
     float right   = sprite_pos_y + sprite.get_width() - 0.5f;
@@ -54,7 +54,7 @@ namespace
       
     auto fct = [&](int x_sprite, int y_sprite)
     {
-      T sprite_color(0);
+      color_type sprite_color(0);
       brush_sampler.sample_pixel(x_sprite, y_sprite, [&](float x_f, float y_f)
       {
         sprite_color += brush.get(x_f, y_f, rect, sprite.get_width(), sprite.get_height());
@@ -67,16 +67,16 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void flatten_sprite_t(ggo::image_buffer_abc<T> & image,
-                        const ggo::gray_image_buffer_abc & sprite_opacity,
-                        const ggo::image_buffer_abc<T> & sprite_image,
+  template <typename color_type>
+  void flatten_sprite_t(ggo::image_abc<color_type> & image,
+                        const ggo::gray_image_abc & sprite_opacity,
+                        const ggo::image_abc<color_type> & sprite_image,
                         int sprite_pos_x, int sprite_pos_y,
-                        const ggo::blender_abc<T> & blender)
+                        const ggo::blender_abc<color_type> & blender)
   {
     auto fct = [&](int x_sprite, int y_sprite)
     {
-      return sprite_image.unpack(x_sprite, y_sprite);
+      return sprite_image.read(x_sprite, y_sprite);
     };
 
     flatten_sprite_func(image, sprite_opacity, fct, sprite_pos_x, sprite_pos_y, blender);
@@ -88,8 +88,8 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  void flatten_sprite(ggo::gray_image_buffer_abc & image,
-                      const ggo::gray_image_buffer_abc & sprite,
+  void flatten_sprite(ggo::gray_image_abc & image,
+                      const ggo::gray_image_abc & sprite,
                       const ggo::gray_brush_abc & brush,
                       const ggo::pixel_aligned_sampler_abc & brush_sampler, 
                       int sprite_pos_x, int sprite_pos_y,
@@ -99,8 +99,8 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  void flatten_sprite(ggo::rgb_image_buffer_abc & image,
-                      const ggo::gray_image_buffer_abc & sprite,
+  void flatten_sprite(ggo::rgb_image_abc & image,
+                      const ggo::gray_image_abc & sprite,
                       const ggo::rgb_brush_abc & brush,
                       const ggo::pixel_aligned_sampler_abc & brush_sampler, 
                       int sprite_pos_x, int sprite_pos_y,
@@ -111,9 +111,9 @@ namespace ggo
   
 
   //////////////////////////////////////////////////////////////
-  void flatten_sprite(ggo::rgb_image_buffer_abc & image,
-                      const ggo::gray_image_buffer_abc & sprite_opacity,
-                      const ggo::rgb_image_buffer_abc & sprite_image,
+  void flatten_sprite(ggo::rgb_image_abc & image,
+                      const ggo::gray_image_abc & sprite_opacity,
+                      const ggo::rgb_image_abc & sprite_image,
                       int sprite_pos_x, int sprite_pos_y,
                       const ggo::rgb_blender_abc & blender)
   {
@@ -126,8 +126,8 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  void flatten_layer(ggo::rgb_image_buffer_abc & image,
-                     const ggo::gray_image_buffer_abc & opacity,
+  void flatten_layer(ggo::rgb_image_abc & image,
+                     const ggo::gray_image_abc & opacity,
                      const ggo::rgb_brush_abc & brush,
                      const ggo::pixel_aligned_sampler_abc & brush_sampler, 
                      const ggo::rgb_blender_abc & blender)
@@ -141,8 +141,8 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  void flatten_layer(ggo::gray_image_buffer_abc & image,
-                     const ggo::gray_image_buffer_abc & opacity,
+  void flatten_layer(ggo::gray_image_abc & image,
+                     const ggo::gray_image_abc & opacity,
                      const ggo::gray_brush_abc & brush,
                      const ggo::pixel_aligned_sampler_abc & brush_sampler, 
                      const ggo::gray_blender_abc & blender)
@@ -156,9 +156,9 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void flatten_layer(ggo::rgb_image_buffer_abc & image,
-                     const ggo::gray_image_buffer_abc & opacity,
-                     const ggo::rgb_image_buffer_abc & layer,
+  void flatten_layer(ggo::rgb_image_abc & image,
+                     const ggo::gray_image_abc & opacity,
+                     const ggo::rgb_image_abc & layer,
                      const ggo::rgb_blender_abc & blender)
   {
     if ((image.get_width() != opacity.get_width()) || (image.get_height() != opacity.get_height()))

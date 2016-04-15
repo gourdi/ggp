@@ -55,9 +55,9 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 		return false;
 	}
 	
-  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
+  auto image_buffer = make_image_buffer(buffer);
   
-	ggo::fill_4_colors(image_data, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+	ggo::fill_4_colors(image_buffer, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	std::vector<ggo_particle> particles = _seeds;
 	
@@ -99,7 +99,7 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 			float radius = 0.0025f * particle._radius * get_render_max_size();
 			radius = std::max(1.5f, radius);
 
-      ggo::paint_dot(image_data, point.x(), point.y(), radius, particle._color,0.15f);
+      ggo::paint_dot(image_buffer, point.x(), point.y(), radius, particle._color,0.15f);
 				
 			// Move points slowly.
 			particle._pos.x() += 0.005f * (next_pt.x() - particle._pos.x());

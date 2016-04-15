@@ -75,16 +75,15 @@ void ggo_alpha_anim_artist::add_new_item()
 //////////////////////////////////////////////////////////////
 bool ggo_alpha_anim_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
-	if (buffer != NULL)
+	if (buffer != nullptr)
 	{
-    ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
-		ggo::fill_4_colors(image_data, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
+		ggo::fill_4_colors(make_image_buffer(buffer), _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
 	}
 	
 	// Oscillos.
   ggo::remove_if(_oscillos, [&](ggo_oscillo & oscillo) { return oscillo.update() == false; });
 
-	if (buffer != NULL)
+	if (buffer != nullptr)
 	{
 		for (const ggo_oscillo & oscillo : _oscillos)
 		{
@@ -114,7 +113,7 @@ bool ggo_alpha_anim_artist::render_next_frame_sub(uint8_t * buffer, int frame_in
 	// Items.
   ggo::remove_if(_items, [&](ggo_item & item) { return item.update(get_render_width(), get_render_height()) == false; });
 	
-	if (buffer != NULL)
+	if (buffer != nullptr)
 	{
 		for (const auto & item : _items)
 		{

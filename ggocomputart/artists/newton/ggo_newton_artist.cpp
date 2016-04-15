@@ -82,8 +82,7 @@ void ggo_newton_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 	ggo::color color3 = ggo::color::from_hsv(_hue, ggo::rand_float(0, 0.5), 1);
 	ggo::color color4 = ggo::color::from_hsv(_hue, ggo::rand_float(0, 0.5), 1);
   
-  ggo::rgb_image_buffer_uint8 image_data(bkgd_buffer, get_render_width(), get_render_height());
-	ggo::fill_4_colors(image_data, color1, color2, color3, color4);
+	ggo::fill_4_colors(make_image_buffer(bkgd_buffer), color1, color2, color3, color4);
 
   ggo::gray_image_buffer_uint8 perlin_image_data(get_render_width(), get_render_height());
 	ggo::fill_perlin(perlin_image_data, 0.4f * get_render_min_size(), 0, 192);
@@ -267,8 +266,8 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
                                get_render_height(),
                                0.05f * get_render_min_size(), 1, 1, 0.001f);
 	
-  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
-  image_data.fill(shadow_image_data);
+  auto image_buffer = make_image_buffer(buffer);
+  image_buffer.from_gray(shadow_image_data);
 	
 	// Paint shapes.
 	for (const auto & string : _strings)

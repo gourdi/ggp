@@ -79,7 +79,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 		}
 	}
   
-  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
-	image_buffer.copy(render_buffer);
+  auto image_buffer = make_image_buffer(buffer);
+	image_buffer.convert(render_buffer);
 }
 

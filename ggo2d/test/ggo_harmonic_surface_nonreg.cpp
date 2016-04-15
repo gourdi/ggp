@@ -1,7 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_set2.h>
 #include <ggo_harmonic_surface.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
@@ -12,17 +12,17 @@ GGO_TEST(harmonic_surface, test1)
   ggo::harmonic_surface<float> harmonic_surface;
   harmonic_surface.push_harmonic({1, 1}, SIZE / 2, 1, 0);
 
-  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
+  ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
   for (int y = 0; y < SIZE; ++y)
   {
     for (int x = 0; x < SIZE; ++x)
     {
       float value = ggo::map(harmonic_surface.evaluate(static_cast<float>(x), static_cast<float>(y)), -1.f, 1.f, 0.f, 1.f);
-      image_data.pack(x, y, ggo::color(value));
+      image.write(x, y, ggo::color(value));
     }
   }
   
-  ggo::save_bmp("test_harmonic_surface1.bmp", image_data.get_buffer(), SIZE, SIZE);
+  ggo::save_bmp("test_harmonic_surface1.bmp", image.get_buffer(), SIZE, SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -42,15 +42,15 @@ GGO_TEST(harmonic_surface, test2)
     harmonic_surface.push_harmonic(ggo::vector2d_float::from_polar(angle, length), wavelength, amplitude, 0);
   }
 
-  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
+  ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
   for (int y = 0; y < SIZE; ++y)
   {
     for (int x = 0; x < SIZE; ++x)
     {
       float value = ggo::map<float>(harmonic_surface.evaluate(static_cast<float>(x), static_cast<float>(y)), -4.f, 4.f, 0.f, 1.f);
-      image_data.pack(x, y, ggo::color(value));
+      image.write(x, y, ggo::color(value));
     }
   }
   
-  ggo::save_bmp("test_harmonic_surface2.bmp", image_data.get_buffer(), SIZE, SIZE);
+  ggo::save_bmp("test_harmonic_surface2.bmp", image.get_buffer(), SIZE, SIZE);
 }

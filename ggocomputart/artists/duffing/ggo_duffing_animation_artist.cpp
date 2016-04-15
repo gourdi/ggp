@@ -173,8 +173,8 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	}
 
 	// From float to uint8_t.
-  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
-	image_data.copy(image_buffer_float);
+  auto image_buffer = make_image_buffer(buffer);
+  image_buffer.convert(image_buffer_float);
 
 	return true;
 }

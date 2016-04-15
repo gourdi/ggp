@@ -3,7 +3,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_halton.h>
 #include <ggo_best_candidate_sequence.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_paint.h>
 #include <ggo_bmp.h>
 

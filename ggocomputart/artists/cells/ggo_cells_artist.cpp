@@ -36,9 +36,9 @@ void ggo_cells_artist::render_bitmap(uint8_t * buffer)
 	polynom2._deg1 = ggo::rand_float(-2, 2);
 	polynom2._deg0 = ggo::rand_float(-2, 2);
   
-  ggo::rgb_image_buffer_uint8 image_data(buffer, get_render_width(), get_render_height());
+  auto image = make_image_buffer(buffer);
 	
-	ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(), ggo::rand_float()));
+	ggo::fill_solid(image, ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(), ggo::rand_float()));
 	
 	for (int counter = 0; counter < CELLS_COUNT; ++counter)
 	{
@@ -63,7 +63,7 @@ void ggo_cells_artist::render_bitmap(uint8_t * buffer)
 			color = ggo::color::from_hsv(hue3, sat3, ggo::rand_float());
 		}
 
-		ggo::paint_seed_shape(image_data, cell, color);
+		ggo::paint_seed_shape(image, cell, color);
         
     // Blur.
     if (counter % 10 == 0)

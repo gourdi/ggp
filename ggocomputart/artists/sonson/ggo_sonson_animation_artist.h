@@ -1,7 +1,7 @@
 #ifndef __GGO_SONSON_ANIMATION_ARTIST__
 #define __GGO_SONSON_ANIMATION_ARTIST__
 
-#include <ggo_gray_image_data.h>
+#include <ggo_gray_image_buffer.h>
 #include <ggo_animation_artist_abc.h>
 #include <ggo_curve.h>
 

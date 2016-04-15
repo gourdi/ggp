@@ -43,22 +43,22 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void process_block(ggo::image_buffer_abc<color_type> & image_data,
+  void process_block(ggo::image_abc<color_type> & image,
                      const std::vector<ggo::layer<color_type>> & layers,
                      const ggo::pixel_rect & pixel_rect,
                      const ggo::pixel_sampler_abc & sampler)
   {
     pixel_rect.for_each_pixel([&](int x, int y)
     {
-      color_type color = image_data.unpack(x, y);
-      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler);
-      image_data.pack(x, y, color);
+      color_type color = image.read(x, y);
+      color = get_color_at_pixel(layers, color, x, y, image.get_width(), image.get_height(), sampler);
+      image.write(x, y, color);
     });
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint_recursive(ggo::image_buffer_abc<color_type> & image_data,
+  void paint_recursive(ggo::image_abc<color_type> & image,
                        const std::vector<ggo::layer<color_type>> & layers,
                        const ggo::pixel_rect & pixel_rect,
                        const ggo::pixel_sampler_abc & sampler)
@@ -76,7 +76,7 @@ namespace
 
       if (intersection == ggo::rect_intersection::RECT_IN_SHAPE)
       {
-        process_block(image_data, layers, pixel_rect, sampler);
+        process_block(image, layers, pixel_rect, sampler);
         return;
       }
 
@@ -99,9 +99,9 @@ namespace
       int x = pixel_rect.left();
       int y = pixel_rect.bottom();
 
-      color_type color = image_data.unpack(x, y);
-      color = get_color_at_pixel(layers, color, x, y, image_data.get_width(), image_data.get_height(), sampler);
-      image_data.pack(x, y, color);
+      color_type color = image.read(x, y);
+      color = get_color_at_pixel(layers, color, x, y, image.get_width(), image.get_height(), sampler);
+      image.write(x, y, color);
     }
     else
     {
@@ -125,14 +125,14 @@ namespace
       GGO_ASSERT(pixel_rect1.width() >= 1 && pixel_rect1.height() >= 1);
       GGO_ASSERT(pixel_rect2.width() >= 1 && pixel_rect2.height() >= 1);
 
-      paint_recursive(image_data, layers, pixel_rect1, sampler);
-      paint_recursive(image_data, layers, pixel_rect2, sampler);
+      paint_recursive(image, layers, pixel_rect1, sampler);
+      paint_recursive(image, layers, pixel_rect2, sampler);
     }
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint_block8x8(ggo::image_buffer_abc<color_type> & image_data,
+  void paint_block8x8(ggo::image_abc<color_type> & image,
                       const std::vector<ggo::layer<color_type>> & layers,
                       const ggo::pixel_rect & pixel_rect,
                       const ggo::pixel_sampler_abc & sampler)
@@ -165,7 +165,7 @@ namespace
       }
 
       // Paint.
-      process_block(image_data, current_block_layers, block_pixel_rect, sampler);
+      process_block(image, current_block_layers, block_pixel_rect, sampler);
 
       // Move to the next block.
       if (x_end < pixel_rect.right())
@@ -197,7 +197,7 @@ namespace
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void paint(ggo::image_buffer_abc<color_type> & image_data, 
+  void paint(ggo::image_abc<color_type> & image, 
              const std::vector<ggo::layer<color_type>> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
@@ -223,7 +223,7 @@ namespace
     bounding_rect.inflate(sampler.get_horz_extent(), sampler.get_vert_extent());
 
     ggo::pixel_rect pixel_rect(bounding_rect);
-    if (pixel_rect.crop(image_data.get_width(), image_data.get_height()) == false)
+    if (pixel_rect.crop(image.get_width(), image.get_height()) == false)
     {
       return;
     }
@@ -234,19 +234,19 @@ namespace
       switch (partitionning)
       {
       case ggo::space_partitionning::recursive  :
-        paint_recursive(image_data, layers, pixel_rect, sampler);
+        paint_recursive(image, layers, pixel_rect, sampler);
         break;
       case ggo::space_partitionning::none:
-        process_block(image_data, layers, pixel_rect, sampler);
+        process_block(image, layers, pixel_rect, sampler);
         break;
       case ggo::space_partitionning::block8x8:
-        paint_block8x8(image_data, layers, pixel_rect, sampler);
+        paint_block8x8(image, layers, pixel_rect, sampler);
         break;
       }
     }
     else
     {
-      process_block(image_data, layers, pixel_rect, sampler);
+      process_block(image, layers, pixel_rect, sampler);
     }
   }
 }
@@ -262,14 +262,14 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image(width, height, buffer);
 
     std::vector<ggo::layer<ggo::color>> layers{ { shape,
                                                   std::make_shared<ggo::rgb_solid_brush>(color),
                                                   std::make_shared<ggo::opacity_solid_brush>(opacity),
                                                   blender } };
 
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -281,11 +281,11 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image(width, height, buffer);
 
     std::vector<ggo::layer<ggo::color>> layers{ { shape, color_brush, opacity_brush, blender } };
 
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -294,13 +294,13 @@ namespace ggo
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ggo::rgb_image_buffer_uint8 image_data(buffer, width, height);
+    ggo::rgb_image_buffer_uint8 image(width, height, buffer);
 
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  void paint(ggo::gray_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              float gray,
              float opacity,
@@ -312,11 +312,11 @@ namespace ggo
     
     layers.emplace_back(shape, gray, opacity, blender);
 
-    ::paint<float>(image_data, layers, sampler, partitionning);
+    ::paint<float>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              const ggo::color & color,
              float opacity,
@@ -328,11 +328,11 @@ namespace ggo
     
     layers.emplace_back(shape, color, opacity, blender);
 
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  void paint(ggo::gray_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::gray_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush,
@@ -344,11 +344,11 @@ namespace ggo
     
     layers.emplace_back(shape, color_brush, opacity_brush, blender);
 
-    ::paint<float>(image_data, layers, sampler, partitionning);
+    ::paint<float>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
              std::shared_ptr<const ggo::rgb_brush_abc> color_brush,
              std::shared_ptr<const ggo::opacity_brush_abc> opacity_brush,
@@ -358,24 +358,24 @@ namespace ggo
   {
     std::vector<ggo::layer<ggo::color>> layers{ { shape, color_brush, opacity_brush, blender } };
 
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::gray_image_buffer_abc & image_data,
+  void paint(ggo::gray_image_abc & image,
              const std::vector<ggo::gray_layer> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ::paint<float>(image_data, layers, sampler, partitionning);
+    ::paint<float>(image, layers, sampler, partitionning);
   }               
 
   /////////////////////////////////////////////////////////////////////
-  void paint(ggo::rgb_image_buffer_abc & image_data,
+  void paint(ggo::rgb_image_abc & image,
              const std::vector<ggo::rgb_layer> & layers,
              const ggo::pixel_sampler_abc & sampler,
              ggo::space_partitionning partitionning)
   {
-    ::paint<ggo::color>(image_data, layers, sampler, partitionning);
+    ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
 }

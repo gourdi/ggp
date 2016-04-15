@@ -187,16 +187,15 @@ GGO_TEST(paint, blur)
   const int WIDTH = 100;
   const int HEIGHT = 100;
     
-  ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 255);
-  ggo::rgb_image_buffer_uint8 image_data(buffer, WIDTH, HEIGHT);
-  ggo::fill_checker(image_data, ggo::color::WHITE, ggo::color::BLACK, 10);
+  ggo::rgb_image_buffer_uint8 image(WIDTH, HEIGHT, ggo::color::WHITE);
+  ggo::fill_checker(image, ggo::color::WHITE, ggo::color::BLACK, 10);
     
   {
     auto disc = std::make_shared<ggo::disc_float>(10.f, 10.f, 30.f);
 
     const std::vector<ggo::rgb_layer> layers{ { disc, ggo::color::BLUE, 1.f } };
 
-    ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo::blur_pixel_sampler(10, 30));
+    ggo::paint(image, layers, ggo::blur_pixel_sampler(10, 30));
   }
     
   {
@@ -205,10 +204,10 @@ GGO_TEST(paint, blur)
         
     const std::vector<ggo::rgb_layer> layers{ {disc1, ggo::color::RED}, {disc2, ggo::color::YELLOW} };
         
-    ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo_blur_sampler2(10, 40));
+    ggo::paint(image, layers, ggo_blur_sampler2(10, 40));
   }
     
-  ggo::save_bmp("test_blur.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_blur.bmp", image.get_buffer(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////

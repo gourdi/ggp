@@ -28,14 +28,14 @@
     <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_layer.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
-    <ClInclude Include="src\image_data\ggo_gray_image_data.h" />
-    <ClInclude Include="src\image_data\ggo_image_data_abc.h" />
-    <ClInclude Include="src\image_data\ggo_rgb_image_data.h" />
+    <ClInclude Include="src\image_buffer\ggo_gray_image_buffer.h" />
+    <ClInclude Include="src\image_buffer\ggo_image_buffer_abc.h" />
+    <ClInclude Include="src\image_buffer\ggo_rgb_image_buffer.h" />
+    <ClInclude Include="src\image_buffer\ggo_image_abc.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
     <ClInclude Include="src\paint\ggo_hard_paint.h" />
     <ClInclude Include="src\paint\ggo_paint.h" />
     <ClInclude Include="src\paint\ggo_paint_helpers.h" />
-    <ClInclude Include="src\paint\ggo_paint_params.h" />
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_soft_paint.h" />
   </ItemGroup>
@@ -45,8 +45,8 @@
     <ClCompile Include="src\ggo_fill.cpp" />
     <ClCompile Include="src\ggo_layer.cpp" />
     <ClCompile Include="src\ggo_pixel_rect.cpp" />
-    <ClCompile Include="src\image_data\ggo_gray_image_data.cpp" />
-    <ClCompile Include="src\image_data\ggo_rgb_image_data.cpp" />
+    <ClCompile Include="src\image_buffer\ggo_gray_image_buffer.cpp" />
+    <ClCompile Include="src\image_buffer\ggo_rgb_image_buffer.cpp" />
     <ClCompile Include="src\io\ggo_bmp.cpp" />
     <ClCompile Include="src\paint\ggo_hard_paint.cpp" />
     <ClCompile Include="src\paint\ggo_paint_helpers.cpp" />
@@ -107,13 +107,13 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_data;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_buffer;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\Debug</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_data;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_buffer;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

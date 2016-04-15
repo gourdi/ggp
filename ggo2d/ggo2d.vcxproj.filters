@@ -10,14 +10,14 @@
     <Filter Include="color">
       <UniqueIdentifier>{4a3ae842-ca2b-422b-b612-2495cdf0255b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="image_data">
-      <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
-    </Filter>
     <Filter Include="io">
       <UniqueIdentifier>{e9775c00-0c97-45e7-9916-9f6dc1b82635}</UniqueIdentifier>
     </Filter>
     <Filter Include="paint">
       <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image_buffer">
+      <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,15 +39,6 @@
     <ClInclude Include="src\color\ggo_color_conv.h">
       <Filter>color</Filter>
     </ClInclude>
-    <ClInclude Include="src\image_data\ggo_image_data_abc.h">
-      <Filter>image_data</Filter>
-    </ClInclude>
-    <ClInclude Include="src\image_data\ggo_rgb_image_data.h">
-      <Filter>image_data</Filter>
-    </ClInclude>
-    <ClInclude Include="src\image_data\ggo_gray_image_data.h">
-      <Filter>image_data</Filter>
-    </ClInclude>
     <ClInclude Include="src\io\ggo_bmp.h">
       <Filter>io</Filter>
     </ClInclude>
@@ -55,9 +46,6 @@
       <Filter>paint</Filter>
     </ClInclude>
     <ClInclude Include="src\paint\ggo_paint_helpers.h">
-      <Filter>paint</Filter>
-    </ClInclude>
-    <ClInclude Include="src\paint\ggo_paint_params.h">
       <Filter>paint</Filter>
     </ClInclude>
     <ClInclude Include="src\paint\ggo_seed_paint.h">
@@ -72,6 +60,18 @@
     <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_layer.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
+    <ClInclude Include="src\image_buffer\ggo_gray_image_buffer.h">
+      <Filter>image_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_buffer\ggo_image_buffer_abc.h">
+      <Filter>image_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_buffer\ggo_rgb_image_buffer.h">
+      <Filter>image_buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image_buffer\ggo_image_abc.h">
+      <Filter>image_buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\color\ggo_color.cpp">
@@ -79,12 +79,6 @@
     </ClCompile>
     <ClCompile Include="src\color\ggo_color_conv.cpp">
       <Filter>color</Filter>
-    </ClCompile>
-    <ClCompile Include="src\image_data\ggo_rgb_image_data.cpp">
-      <Filter>image_data</Filter>
-    </ClCompile>
-    <ClCompile Include="src\image_data\ggo_gray_image_data.cpp">
-      <Filter>image_data</Filter>
     </ClCompile>
     <ClCompile Include="src\io\ggo_bmp.cpp">
       <Filter>io</Filter>
@@ -104,5 +98,11 @@
     <ClCompile Include="src\ggo_fill.cpp" />
     <ClCompile Include="src\ggo_layer.cpp" />
     <ClCompile Include="src\ggo_pixel_rect.cpp" />
+    <ClCompile Include="src\image_buffer\ggo_gray_image_buffer.cpp">
+      <Filter>image_buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\image_buffer\ggo_rgb_image_buffer.cpp">
+      <Filter>image_buffer</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@
 #include <ggo_shapes2d.h>
 #include <ggo_triangle_interpolation.h>
 #include <ggo_triangle_interpolation_brush.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_paint.h>
 #include <ggo_fill.h>
 #include <ggo_bmp.h>
@@ -24,7 +24,7 @@ GGO_TEST(triangular_interpolation, function)
     
     ggo::color pixel_color(0);
     ggo::triangular_interpolation(p0, ggo::color::RED, p1, ggo::color::GREEN, p2, ggo::color::BLUE, p, pixel_color);
-    image.pack(x, y, pixel_color);
+    image.write(x, y, pixel_color);
   });
   
   ggo::save_bmp("test_triangular_interpolation_function.bmp", image.get_buffer(), IMAGE_SIZE, IMAGE_SIZE);

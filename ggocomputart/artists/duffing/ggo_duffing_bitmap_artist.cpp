@@ -1,7 +1,7 @@
 #include "ggo_duffing_bitmap_artist.h"
 #include <ggo_gaussian_blur.h>
-#include <ggo_gray_image_data.h>
-#include <ggo_rgb_image_data.h>
+#include <ggo_gray_image_buffer.h>
+#include <ggo_rgb_image_buffer.h>
 #include <ggo_paint.h>
 #include <ggo_fill.h>
 
@@ -117,8 +117,8 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	}
 
 	// From float to uint8_t.
-  ggo::rgb_image_buffer_uint8 image_buffer(buffer, get_render_width(), get_render_height());
-	image_buffer.copy(image_buffer_float);
+  auto image_buffer = make_image_buffer(buffer);
+	image_buffer.convert(image_buffer_float);
 }
 
 //////////////////////////////////////////////////////////////
