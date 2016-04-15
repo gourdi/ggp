@@ -11,6 +11,5 @@
 #include <ggo_hard_paint.h>
 #include <ggo_soft_paint.h>
 #include <ggo_seed_paint.h>
-#include <ggo_paint_helpers.h>
 
 #endif

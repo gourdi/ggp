@@ -267,7 +267,7 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
                                0.05f * get_render_min_size(), 1, 1, 0.001f);
 	
   auto image_buffer = make_image_buffer(buffer);
-  image_buffer.from_gray(shadow_image_data);
+  image_buffer.from(shadow_image_data);
 	
 	// Paint shapes.
 	for (const auto & string : _strings)

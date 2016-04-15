@@ -174,7 +174,7 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 
 	// From float to uint8_t.
   auto image_buffer = make_image_buffer(buffer);
-  image_buffer.convert(image_buffer_float);
+  image_buffer.from(image_buffer_float);
 
 	return true;
 }

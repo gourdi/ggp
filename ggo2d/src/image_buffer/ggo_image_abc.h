@@ -28,7 +28,7 @@ namespace ggo
            
             void        fill(const color_type & color);
 
-            void        convert(const image_abc<color_type> & other);
+            void        from(const image_abc<color_type> & other);
            
             void        for_each_pixel(const std::function<void(int x, int y)> & func) const;
             void        for_each_pixel(const std::function<void(int y)> & line_func,
@@ -61,10 +61,9 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void image_abc<color_type>::convert(const image_abc<color_type> & other)
+  void image_abc<color_type>::from(const image_abc<color_type> & other)
   {
-    if (get_width() != other.get_width() ||
-      get_height() != other.get_height())
+    if (get_width() != other.get_width() || get_height() != other.get_height())
     {
       throw dimension_mismatch_exception();
     }

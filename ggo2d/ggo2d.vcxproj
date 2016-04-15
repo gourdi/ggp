@@ -35,7 +35,6 @@
     <ClInclude Include="src\io\ggo_bmp.h" />
     <ClInclude Include="src\paint\ggo_hard_paint.h" />
     <ClInclude Include="src\paint\ggo_paint.h" />
-    <ClInclude Include="src\paint\ggo_paint_helpers.h" />
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_soft_paint.h" />
   </ItemGroup>
@@ -49,7 +48,6 @@
     <ClCompile Include="src\image_buffer\ggo_rgb_image_buffer.cpp" />
     <ClCompile Include="src\io\ggo_bmp.cpp" />
     <ClCompile Include="src\paint\ggo_hard_paint.cpp" />
-    <ClCompile Include="src\paint\ggo_paint_helpers.cpp" />
     <ClCompile Include="src\paint\ggo_seed_paint.cpp" />
     <ClCompile Include="src\paint\ggo_soft_paint.cpp" />
   </ItemGroup>

@@ -54,9 +54,11 @@ bool ggo_lagaude_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	{
 		return false;
 	}
+
+  auto image_buffer = make_image_buffer(buffer);
 	
 	// Render background.
-	ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::WHITE);
+	ggo::fill_solid(image_buffer, ggo::color::WHITE);
 
 	for (auto & bkgd_disc : _bkgd_discs)
 	{
@@ -64,7 +66,7 @@ bool ggo_lagaude_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 		float y = get_render_height() * bkgd_disc._pos.y();
 		float radius = get_render_min_size() * bkgd_disc._radius;
 		
-    ggo::paint_dot_rgb(buffer, get_render_width(), get_render_height(), x, y, radius, ggo::color::BLACK, 0.1f);
+    ggo::paint(image_buffer, std::make_shared<ggo::disc_float>(x, y, radius), ggo::color::BLACK, 0.1f);
 			
 		bkgd_disc._pos += bkgd_disc._vel;
 	}

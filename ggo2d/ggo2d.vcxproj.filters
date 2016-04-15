@@ -45,9 +45,6 @@
     <ClInclude Include="src\paint\ggo_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
-    <ClInclude Include="src\paint\ggo_paint_helpers.h">
-      <Filter>paint</Filter>
-    </ClInclude>
     <ClInclude Include="src\paint\ggo_seed_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="src\io\ggo_bmp.cpp">
       <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="src\paint\ggo_paint_helpers.cpp">
-      <Filter>paint</Filter>
     </ClCompile>
     <ClCompile Include="src\paint\ggo_seed_paint.cpp">
       <Filter>paint</Filter>

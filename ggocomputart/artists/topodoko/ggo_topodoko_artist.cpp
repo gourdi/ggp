@@ -108,7 +108,7 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
                                get_render_height(),
                                0.05f * get_render_min_size(), 1, 1, 0.001f);
 
-  image_buffer.from_gray(shadow_image_buffer);
+  image_buffer.from(shadow_image_buffer);
 	
 	std::cout << "Rendering squares" << std::endl;
 	

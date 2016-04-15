@@ -99,7 +99,7 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 			float radius = 0.0025f * particle._radius * get_render_max_size();
 			radius = std::max(1.5f, radius);
 
-      ggo::paint_dot(image_buffer, point.x(), point.y(), radius, particle._color,0.15f);
+      ggo::paint(image_buffer, std::make_shared<ggo::disc_float>(point, radius), particle._color,0.15f);
 				
 			// Move points slowly.
 			particle._pos.x() += 0.005f * (next_pt.x() - particle._pos.x());

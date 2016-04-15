@@ -10,11 +10,11 @@ namespace ggo
   {
   public:
 
-    using ggo::image_abc<ggo::color>::fill;
+    using ggo::image_abc<ggo::color>::from;
 
           rgb_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<ggo::color, data_type>(width, height, buffer, delete_buffer) { }
 
-    void  from_gray(const ggo::gray_image_abc & gray_image)
+    void  from(const ggo::gray_image_abc & gray_image)
     {
       if (get_width() != gray_image.get_width() ||
           get_height() != gray_image.get_height())

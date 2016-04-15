@@ -118,7 +118,7 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 
 	// From float to uint8_t.
   auto image_buffer = make_image_buffer(buffer);
-	image_buffer.convert(image_buffer_float);
+	image_buffer.from(image_buffer_float);
 }
 
 //////////////////////////////////////////////////////////////

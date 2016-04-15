@@ -80,6 +80,6 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 	}
   
   auto image_buffer = make_image_buffer(buffer);
-	image_buffer.convert(render_buffer);
+	image_buffer.from(render_buffer);
 }
 
