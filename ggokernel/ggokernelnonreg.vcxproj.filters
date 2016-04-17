@@ -66,9 +66,6 @@
     <ClCompile Include="test\ggo_kernel_nonreg.cpp" />
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
     <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
-    <ClCompile Include="test\trees\ggo_tree3d_nonreg.cpp">
-      <Filter>trees</Filter>
-    </ClCompile>
     <ClCompile Include="test\ggo_link_nonreg.cpp" />
     <ClCompile Include="test\ggo_array2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
@@ -77,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp">
       <Filter>signal_proc</Filter>
+    </ClCompile>
+    <ClCompile Include="test\trees\ggo_kdtree_nonreg.cpp">
+      <Filter>trees</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

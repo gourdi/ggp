@@ -138,8 +138,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ggo_color_stream.h" />
+    <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
-    <ClInclude Include="src\ggo_tree3d.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />
     <ClInclude Include="src\ggo_best_match.h" />
@@ -150,7 +150,6 @@
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
     <ClInclude Include="src\ggo_memory.h" />
-    <ClInclude Include="src\ggo_stdint.h" />
     <ClInclude Include="src\ggo_tree.h" />
     <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />
     <ClInclude Include="src\math\ggo_distance2d.h" />

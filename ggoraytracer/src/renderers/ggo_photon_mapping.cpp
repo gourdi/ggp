@@ -10,11 +10,13 @@ namespace ggo
                                  const ggo::object3d & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-    std::vector<std::pair<ggo::point3d_float, ggo::color>> photons;
+    using color_point = ggo::kdtree<3, ggo::color>::data_point;
+
+    std::vector<color_point> photons;
 
     for (const auto light : lights)
     {
-      std::vector<std::pair<ggo::point3d_float, ggo::color>> current_light_photons;
+      std::vector<color_point> current_light_photons;
 
       for (int i = 0; i < target_samples.size(); ++i)
       {
@@ -77,7 +79,8 @@ namespace ggo
         if (hit_object != nullptr)
         {
           ggo::color photon_color = -ggo::dot(world_normal.dir(), ray.dir()) * (light->get_emissive_color() * hit_object->get_color(world_normal.pos()));
-          current_light_photons.push_back(std::make_pair(ray.pos() + dist * ray.dir(), photon_color));
+          ggo::point3d_float photon_pos = ray.pos() + dist * ray.dir();
+          current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
         }
       }
 
@@ -85,12 +88,12 @@ namespace ggo
       float normalization = 1.f / current_light_photons.size();
       for (auto & photon : current_light_photons)
       {
-        photon.second *= normalization;
+        photon._data *= normalization;
         photons.push_back(photon);
       }
     }
 
-    _tree = std::make_unique<ggo::tree3d<ggo::color>>(photons);
+    _tree = std::make_unique<ggo::kdtree<3, ggo::color>>(photons);
   }
 
   //////////////////////////////////////////////////////////////
@@ -105,11 +108,11 @@ namespace ggo
 
     ggo::color output_color(ggo::color::BLACK);
 
-    auto photons = _tree->find_points(world_normal.pos(), radius);
+    auto photons = _tree->find_points({ world_normal.pos().x(), world_normal.pos().y(), world_normal.pos().z() }, radius);
         
     for (const auto & photon : photons)
     {
-      output_color += photon.second;
+      output_color += photon._data;
     }
 
     // Normalization: divide by sphere surface.

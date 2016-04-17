@@ -2,7 +2,7 @@
 #define __GGO_BMP_CODEC__
 
 #include <string>
-#include <ggo_stdint.h>
+#include <stdint.h>
 
 namespace ggo
 {

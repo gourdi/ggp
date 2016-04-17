@@ -2,7 +2,7 @@
 #define __GGO_PHOTON_MAPPING__
 
 #include <ggo_indirect_lighting_abc.h>
-#include <ggo_tree3d.h>
+#include <ggo_kdtree.h>
 #include <ggo_raycaster_abc.h>
 #include <ggo_camera_abc.h>
 #include <memory>
@@ -28,7 +28,7 @@ namespace ggo
 
   private:
 
-    std::unique_ptr<ggo::tree3d<ggo::color>>  _tree;
+    std::unique_ptr<ggo::kdtree<3, ggo::color>>  _tree;
   };
 }
 
