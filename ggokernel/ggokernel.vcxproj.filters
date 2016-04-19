@@ -285,6 +285,9 @@
     </ClInclude>
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
+    <ClInclude Include="src\rle\ggo_rle.h">
+      <Filter>rle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -377,6 +380,9 @@
     </Filter>
     <Filter Include="nonreg">
       <UniqueIdentifier>{41e13c14-5fa5-4b4b-b378-71121fad7dd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rle">
+      <UniqueIdentifier>{6218313e-2364-4ec5-8bff-56b0618901cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

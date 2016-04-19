@@ -16,7 +16,7 @@
     <Filter Include="paint">
       <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="image_buffer">
+    <Filter Include="image">
       <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -57,17 +57,20 @@
     <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_layer.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
-    <ClInclude Include="src\image_buffer\ggo_gray_image_buffer.h">
-      <Filter>image_buffer</Filter>
+    <ClInclude Include="src\image\ggo_gray_image_buffer.h">
+      <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="src\image_buffer\ggo_image_buffer_abc.h">
-      <Filter>image_buffer</Filter>
+    <ClInclude Include="src\image\ggo_image_abc.h">
+      <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="src\image_buffer\ggo_rgb_image_buffer.h">
-      <Filter>image_buffer</Filter>
+    <ClInclude Include="src\image\ggo_image_buffer_abc.h">
+      <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="src\image_buffer\ggo_image_abc.h">
-      <Filter>image_buffer</Filter>
+    <ClInclude Include="src\image\ggo_rgb_image_buffer.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\image\ggo_rle_image.h">
+      <Filter>image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,11 +95,11 @@
     <ClCompile Include="src\ggo_fill.cpp" />
     <ClCompile Include="src\ggo_layer.cpp" />
     <ClCompile Include="src\ggo_pixel_rect.cpp" />
-    <ClCompile Include="src\image_buffer\ggo_gray_image_buffer.cpp">
-      <Filter>image_buffer</Filter>
+    <ClCompile Include="src\image\ggo_gray_image_buffer.cpp">
+      <Filter>image</Filter>
     </ClCompile>
-    <ClCompile Include="src\image_buffer\ggo_rgb_image_buffer.cpp">
-      <Filter>image_buffer</Filter>
+    <ClCompile Include="src\image\ggo_rgb_image_buffer.cpp">
+      <Filter>image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

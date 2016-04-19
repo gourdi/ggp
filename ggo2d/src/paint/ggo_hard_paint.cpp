@@ -235,11 +235,11 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void paint_vert_line_rgb(uint8_t * buffer, int width, int height, int y_from, int y_to, int x, const ggo::color & color)
+  void paint_vert_line_rgb(uint8_t * buffer, int width, int height, int x, int y_from, int y_to, const ggo::color & color)
   {
     ggo::rgb_image_buffer_uint8 image(width, height, buffer);
     
-    paint_vert_line<ggo::color>(image, y_from, y_to, x, color);
+    paint_vert_line<ggo::color>(image, x, y_from, y_to, color);
   }
 
   /////////////////////////////////////////////////////////////////////

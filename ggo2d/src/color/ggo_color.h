@@ -51,6 +51,7 @@ namespace ggo
     bool      is_black(float epsilon = 0.001f) const { return _r < epsilon && _g < epsilon && _b < epsilon; }
 
     color &   operator=(const color & c) = default;
+    bool      operator==(const color & c) const { return _r == c._r && _g == c._g && _b == c._b; }
 
   public:
 

@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <ggo_color.h>
+#include <ggo_blender_abc.h>
 
 /////////////////////////////////////////////////////////////////////
 // Here, const methods keep content unchanged, while non-const method 
@@ -29,6 +30,8 @@ namespace ggo
             void        fill(const color_type & color);
 
             void        from(const image_abc<color_type> & other);
+
+            void        set_pixel(int x, int y, color_type color, float opacity, const ggo::blender_abc<color_type> & blender = ggo::alpha_blender<color_type>());
            
             void        for_each_pixel(const std::function<void(int x, int y)> & func) const;
             void        for_each_pixel(const std::function<void(int y)> & line_func,
@@ -76,6 +79,16 @@ namespace ggo
         write(x, y, color);
       }
     }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename color_type>
+  void image_abc<color_type>::set_pixel(int x, int y, color_type color, float opacity, const ggo::blender_abc<color_type> & blender)
+  {
+    GGO_ASSERT(x >= 0 && x < _width);
+    GGO_ASSERT(y >= 0 && y < _height);
+
+    write(x, y, blender.blend(read(x, y), opacity, color));
   }
 
   /////////////////////////////////////////////////////////////////////

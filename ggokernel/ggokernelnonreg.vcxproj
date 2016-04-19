@@ -35,6 +35,7 @@
     <ClCompile Include="test\linear_algebra\ggo_linear_algebra3d_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_matrix_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_sparse_matrix_nonreg.cpp" />
+    <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_pixel_sampling_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
@@ -102,7 +103,7 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>

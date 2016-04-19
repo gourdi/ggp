@@ -240,6 +240,7 @@
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />
+    <ClInclude Include="src\rle\ggo_rle.h" />
     <ClInclude Include="src\time\ggo_chronometer.h" />
   </ItemGroup>
   <ItemGroup>

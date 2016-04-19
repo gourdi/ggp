@@ -19,6 +19,9 @@
     <Filter Include="trees">
       <UniqueIdentifier>{3e96d46e-e6c4-4da1-ba4e-ac66dd4cd53c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rle">
+      <UniqueIdentifier>{373210a1-ba9f-41c0-819f-49cb421787ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="test\trees\ggo_kdtree_nonreg.cpp">
       <Filter>trees</Filter>
+    </ClCompile>
+    <ClCompile Include="test\rle\ggo_rle_nonreg.cpp">
+      <Filter>rle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
