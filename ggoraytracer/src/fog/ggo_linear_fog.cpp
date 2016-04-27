@@ -1,4 +1,5 @@
 #include "ggo_linear_fog.h"
+#include <ggo_interpolation1d.h>
 
 namespace ggo
 {
@@ -21,7 +22,7 @@ namespace ggo
     }
     else
     {
-      return ggo::color::linear_interpolate(0, color, _far, _color, dist);
+      return ggo::linear_interpolation(0.f, color, _far, _color, dist);
     }
   }
 

@@ -58,8 +58,6 @@ namespace ggo
     static color	from_hsv(float hue, float saturation, float value);
     static color	get_random();
 
-    static color	linear_interpolate(float x0, const color & color0, float x1, const color & c1, float x);
-
     static float	max_diff(const color & c1, const color & c2);
 
   public:

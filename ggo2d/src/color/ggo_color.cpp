@@ -39,32 +39,6 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  color color::linear_interpolate(float x0, const color & color0, float x1, const color & color1, float x)
-  {
-    float det = x0 - x1;
-    if (std::abs(det) < 0.000001)
-    {
-      return 0.5 * (color0 + color1);
-    }
-
-    float inv = 1 / det;
-
-    float a_r = color0.r() - color1.r();
-    float b_r = x0 * color1.r() - x1 * color0.r();
-    float r = (a_r * x + b_r) * inv;
-
-    float a_g = color0.g() - color1.g();
-    float b_g = x0 * color1.g() - x1 * color0.g();
-    float g = (a_g * x + b_g) * inv;
-
-    float a_b = color0.b() - color1.b();
-    float b_b = x0 * color1.b() - x1 * color0.b();
-    float b = (a_b * x + b_b) * inv;
-
-    return color(r, g, b);
-  }
-
-  //////////////////////////////////////////////////////////////
   float color::max_diff(const color & color1, const color & color2)
   {
     float dr = std::abs(color1.r() - color2.r());
