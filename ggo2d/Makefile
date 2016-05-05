@@ -10,28 +10,15 @@ CFLAGS+=-Isrc \
         -I../ggokernel/include
 LIBS=../ggokernel/$(LIBDIR)/libggokernel.a
 
-NONREG_EXE=./test/2d_nonreg
-
 HEADERS=src/ggo_fill.h \
         src/ggo_layer.h \
         src/ggo_pixel_rect.h \
-        src/brush/ggo_brush_abc.h \
-        src/brush/ggo_gradient_brush.h \
-        src/brush/ggo_triangle_interpolation_brush.h \
-        src/blender/ggo_blender_abc.h \
-        src/image_data/ggo_image_data_abc.h \
-        src/image_data/ggo_gray_image_data.h \
-        src/image_data/ggo_rgb_image_data.h \
-        src/paint/ggo_paint_helpers.h \
-        src/paint/ggo_paint.h \
-        src/paint/ggo_paint_params.h \
-        src/paint/ggo_soft_paint.h \
-        src/paint/ggo_seed_paint.h \
-        src/paint/ggo_hard_paint.h \
-        src/color/ggo_color.h \
-        src/color/ggo_color_conv.h \
-        src/processing/ggo_morphology.h \
-        src/io/ggo_bmp.h  
+        $(wildcard src/image/*.h) \
+        $(wildcard src/blender/*.h) \
+        $(wildcard src/image/*.h) \
+        $(wildcard src/paint/*.h) \
+        $(wildcard src/color/*.h) \
+        $(wildcard src/io/*.h)  
 LIB=$(LIBDIR)/libggo2d.a
 
 SRC=$(call rwildcard, src/, *.cpp)
@@ -39,6 +26,7 @@ OBJ=$(patsubst %.cpp, %.o, $(SRC))
 
 NONREG_SRC=$(call rwildcard, test/, *.cpp)
 NONREG_OBJ=$(patsubst %.cpp, %.o, $(NONREG_SRC))
+NONREG_EXE=./test/2d_nonreg
 
 all: $(LIB) $(NONREG_EXE)
 

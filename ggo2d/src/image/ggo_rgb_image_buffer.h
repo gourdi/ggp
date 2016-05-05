@@ -12,22 +12,7 @@ namespace ggo
 
     using ggo::image_abc<ggo::color>::from;
 
-          rgb_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<ggo::color, data_type>(width, height, buffer, delete_buffer) { }
-
-    void  from(const ggo::gray_image_abc & gray_image)
-    {
-      if (get_width() != gray_image.get_width() ||
-          get_height() != gray_image.get_height())
-      {
-        throw dimension_mismatch_exception();
-      }
-      
-      for_each_pixel([&](int x, int y)
-      {
-        float gray = gray_image.read(x, y);
-        write(x, y, ggo::color(gray));
-      });
-    }
+    rgb_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<ggo::color, data_type>(width, height, buffer, delete_buffer) { }
   };
 }
 

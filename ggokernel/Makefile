@@ -17,13 +17,13 @@ CFLAGS+=-Isrc \
         -Isrc/math/shapes_3d \
         -Isrc/math/signal_proc
 
-NONREG_EXE=./test/kernel_nonreg
 HALTON_TOOL=./tools/halton
 BEST_CANDIDATE_TOOL=./tools/best_candidate
 
 HEADERS=$(wildcard src/*.h) \
         $(wildcard src/time/*.h) \
         $(wildcard src/nonreg/*.h) \
+        $(wildcard src/rle/*.h) \
         src/math/ggo_harmonic_curve.h \
         src/math/ggo_harmonic_surface.h \
         src/math/ggo_set2.h \
@@ -61,6 +61,7 @@ OBJ=$(patsubst %.cpp, %.o, $(SRC))
 
 NONREG_SRC=$(call rwildcard, test/, *.cpp)
 NONREG_OBJ=$(patsubst %.cpp, %.o, $(NONREG_SRC))
+NONREG_EXE=./test/kernel_nonreg
 
 all: $(LIB) $(NONREG_EXE) $(HALTON_TOOL) $(BEST_CANDIDATE_TOOL)
 

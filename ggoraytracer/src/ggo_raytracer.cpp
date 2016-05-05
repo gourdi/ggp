@@ -373,7 +373,7 @@ namespace ggo
       return ggo::color::BLACK;
     }
 
-    float specular = phong_factor * std::powf(phong, phong_shininess);
+    float specular = phong_factor * std::pow(phong, phong_shininess);
     return light_color * specular;
   }
 }

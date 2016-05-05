@@ -12,14 +12,14 @@ namespace ggo
 
                       gray_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<float, data_type>(width, height, buffer, delete_buffer) { }
 
-    data_type         operator[](int i) const { return _buffer[i]; }
-    data_type &       operator[](int i) { return _buffer[i]; }
+    data_type         operator[](int i) const { return this->_buffer[i]; }
+    data_type &       operator[](int i) { return this->_buffer[i]; }
 
-    data_type *       begin() { return _buffer; }
-    data_type *       end() { return _buffer + get_width() * get_height(); }
+    data_type *       begin() { return this->_buffer; }
+    data_type *       end() { return this->_buffer + this->get_width() * this->get_height(); }
 
-    const data_type * begin() const { return _buffer; }
-    const data_type * end() const { return _buffer + get_width() * get_height(); }
+    const data_type * begin() const { return this->_buffer; }
+    const data_type * end() const { return this->_buffer + this->get_width() * this->get_height(); }
   };
 }
 

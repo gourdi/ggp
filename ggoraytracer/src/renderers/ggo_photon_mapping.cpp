@@ -93,7 +93,7 @@ namespace ggo
       }
     }
 
-    _tree = std::make_unique<ggo::kdtree<3, ggo::color>>(photons);
+    _tree.reset(new ggo::kdtree<3, ggo::color>(photons));
   }
 
   //////////////////////////////////////////////////////////////

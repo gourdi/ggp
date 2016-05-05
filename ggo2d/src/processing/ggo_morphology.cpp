@@ -1,6 +1,7 @@
 #include "ggo_morphology.h"
 #include <functional>
 
+#if 0
 namespace
 {
   //////////////////////////////////////////////////////////////
