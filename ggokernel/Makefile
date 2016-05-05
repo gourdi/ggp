@@ -1,19 +1,21 @@
 include ../Makefile.config
 
 CFLAGS+=-Isrc \
+        -Isrc/rle \
         -Isrc/nonreg \
         -Isrc/math \
-        -Isrc/math/linear_algebra \
+        -Isrc/math/delaunay_interpolation \
         -Isrc/math/interpolation \
-        -Isrc/math/pcg \
-        -Isrc/math/shapes_2d \
-        -Isrc/math/shapes_3d \
-        -Isrc/math/scalar_fields_2d \
-        -Isrc/math/signal_proc \
+        -Isrc/math/linear_algebra \
+        -Isrc/math/marching_cubes \
         -Isrc/math/sampling \
         -Isrc/math/sampling/pixel_sampling \
         -Isrc/math/sampling/low_discrepancy_sequences \
-        -Isrc/math/sampling/shape_sampling
+        -Isrc/math/sampling/shape_sampling \
+        -Isrc/math/scalar_fields_2d \
+        -Isrc/math/shapes_2d \
+        -Isrc/math/shapes_3d \
+        -Isrc/math/signal_proc
 
 NONREG_EXE=./test/kernel_nonreg
 HALTON_TOOL=./tools/halton

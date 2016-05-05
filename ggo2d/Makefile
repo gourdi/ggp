@@ -1,14 +1,12 @@
 include ../Makefile.config
 
 CFLAGS+=-Isrc \
-        -Isrc/io \
-        -Isrc/color \
-        -Isrc/brush \
         -Isrc/blender \
-        -Isrc/sampling \
-        -Isrc/image_data \
+        -Isrc/brush \
+        -Isrc/color \
+        -Isrc/image \
+        -Isrc/io \
         -Isrc/paint \
-        -Isrc/space_partitionning \
         -I../ggokernel/include
 LIBS=../ggokernel/$(LIBDIR)/libggokernel.a
 
