@@ -84,7 +84,8 @@ void ggo_toutouyoutou_anim_artist::init_sub()
 ////////////////////////////////////////////////////////////// 
 void ggo_toutouyoutou_anim_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 {
-  ggo::fill_gaussian(make_image_buffer(bkgd_buffer), static_cast<float>(get_render_min_size()), ggo::color::WHITE, ggo::color(0.5f, 0.5f, 0.5f));
+  auto bkgd_image = make_image_buffer(bkgd_buffer);
+  ggo::fill_gaussian(bkgd_image, static_cast<float>(get_render_min_size()), ggo::color::WHITE, ggo::color(0.5f, 0.5f, 0.5f));
 }
 
 //////////////////////////////////////////////////////////////

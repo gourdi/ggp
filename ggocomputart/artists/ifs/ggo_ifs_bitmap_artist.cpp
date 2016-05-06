@@ -21,7 +21,8 @@ void ggo_ifs_bitmap_artist::render_bitmap(uint8_t * buffer)
 	
 	float hue = ggo::rand_float();
 	
-	ggo::fill_4_colors(make_image_buffer(buffer), 
+	auto image = make_image_buffer(buffer);
+	ggo::fill_4_colors(image,
                      ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float(0, 0.25)),
                      ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float(0.5, 0.75)),
                      ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float(0, 0.25)),

@@ -13,12 +13,13 @@ LIBS=../ggokernel/$(LIBDIR)/libggokernel.a
 HEADERS=src/ggo_fill.h \
         src/ggo_layer.h \
         src/ggo_pixel_rect.h \
-        $(wildcard src/image/*.h) \
         $(wildcard src/blender/*.h) \
-        $(wildcard src/image/*.h) \
-        $(wildcard src/paint/*.h) \
+        $(wildcard src/brush/*.h) \
         $(wildcard src/color/*.h) \
-        $(wildcard src/io/*.h)  
+        $(wildcard src/image/*.h) \
+        $(wildcard src/io/*.h) \
+        $(wildcard src/paint/*.h)
+
 LIB=$(LIBDIR)/libggo2d.a
 
 SRC=$(call rwildcard, src/, *.cpp)

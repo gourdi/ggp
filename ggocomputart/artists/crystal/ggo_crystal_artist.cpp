@@ -14,7 +14,8 @@ _render_buffer(3 * get_render_width() * get_render_height())
 //////////////////////////////////////////////////////////////
 void ggo_crystal_artist::render_bitmap(uint8_t * buffer, const ggo_params & params, const ggo::color bkgd_colors[4])
 {
-	ggo::fill_4_colors(make_image_buffer(buffer), bkgd_colors[0], bkgd_colors[1], bkgd_colors[2], bkgd_colors[3]);
+  auto image = make_image_buffer(buffer);
+	ggo::fill_4_colors(image, bkgd_colors[0], bkgd_colors[1], bkgd_colors[2], bkgd_colors[3]);
 
 	for (int j = 0; j < 16 * get_render_width() * get_render_height(); ++j)
 	{

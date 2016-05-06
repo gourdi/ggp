@@ -7,7 +7,6 @@ CFLAGS+=-Isrc \
         -Isrc/fog \
         -Isrc/backgrounds \
         -Isrc/cameras \
-        -Isrc/shaders \
         -I../ggononreg/include \
         -I../ggokernel/include \
         -I../ggo2d/include

@@ -6,16 +6,16 @@ export MODE
 
 all: $(TARGETS)
 
-ggokernel: ggononreg
+ggokernel:
 	$(MAKE) -C $@
 
-ggo2d: ggononreg ggokernel
+ggo2d: ggokernel
 	$(MAKE) -C $@
 
-ggoraytracer: ggononreg ggokernel ggo2d
+ggoraytracer: ggokernel ggo2d
 	$(MAKE) -C $@
 
-ggocomputart: ggononreg ggokernel ggo2d ggoraytracer
+ggocomputart: ggokernel ggo2d ggoraytracer
 	$(MAKE) -C $@
 
 clean:
