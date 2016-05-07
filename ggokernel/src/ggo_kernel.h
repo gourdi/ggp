@@ -34,7 +34,7 @@
   #define	GGO_ASSERT_BTW(v1, v2, v3) if ((v1) < (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] < "  << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); } \
                                      if ((v1) > (v3)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] > "  << #v3 << " [=" << (v3) << "] !" << std::endl; GGO_FAIL(); }
 #else
- #define	GGO_TRACE(...)
+  #define	GGO_TRACE(...)
 	#define	GGO_ASSERT(zzz)
   #define	GGO_ASSERT_EQ(v1, v2)
   #define	GGO_ASSERT_NE(v1, v2)

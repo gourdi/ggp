@@ -23,9 +23,9 @@ namespace
 namespace
 {
   //////////////////////////////////////////////////////////////
-  bool tree_intersect_ray(const ggo::tree<ggo::aabox3d_float> * tree, const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal)
+  bool tree_intersect_ray(const ggo::tree<ggo::aabox3d_float> & tree, const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal)
   {
-    const ggo::aabox3d_float & box = tree->data();
+    const ggo::aabox3d_float & box = tree.data();
     bool intersect = box.intersect_ray(ray, dist, normal);
     
     if (intersect == false)
@@ -33,7 +33,7 @@ namespace
       return false;
     }
     
-    if (tree->is_leaf() == true)
+    if (tree.is_leaf() == true)
     {
       return intersect;
     }
@@ -43,7 +43,7 @@ namespace
       dist = std::numeric_limits<float>::max();
       intersect = false;
           
-      for (const auto & subtree : tree->subtrees())
+      for (const auto & subtree : tree.subtrees())
       {
         ggo::ray3d<float> current_normal;
         float current_dist = 0;
@@ -63,7 +63,7 @@ namespace
   //////////////////////////////////////////////////////////////
   bool ggo_boxes_tree_shape::intersect_ray(const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal) const
   {
-    return tree_intersect_ray(_tree, ray, dist, normal);
+    return tree_intersect_ray(*_tree, ray, dist, normal);
   }
 }
 
@@ -167,7 +167,8 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo_cumbia_artist::init_common(ggo:
 						break;
 					}
 				}
-				leaves.insert(insert_it, leaf->create_leaf(new_box));
+				auto & sub_leaf = leaf->create_leaf(new_box);
+				leaves.insert(insert_it, &sub_leaf);
 			}
 			if (leaves.size() > boxes_count)
 			{

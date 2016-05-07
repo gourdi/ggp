@@ -11,7 +11,7 @@
 // Definitions.
 namespace ggo
 {
-  // Gauddien filter coefs.
+  // Gaussian filter coefs.
   template <typename filter_type>
   std::vector<filter_type> build_gaussian_filter(filter_type stddev, filter_type filter_threshold);
 
@@ -96,10 +96,10 @@ namespace ggo
   {
     std::vector<filter_type> filter;
 
-    // fill filter and compute norm at the same time.
-    bool first = true;
-    filter_type i = 0;
-    filter_type norm = 0;
+    // Fill filter and compute norm at the same time.
+    filter.push_back(1);
+    filter_type i = 1;
+    filter_type norm = 1;
     filter_type variance2 = 2 * stddev * stddev;
     while (true)
     {
@@ -109,21 +109,12 @@ namespace ggo
         break;
       }
       filter.push_back(coef);
-
-      if (first == true)
-      {
-        norm = coef;
-        first = false;
-      }
-      else
-      {
-        norm += 2 * coef;
-      }
+      norm += 2 * coef;
 
       ++i;
     }
 
-    // normalize.
+    // Normalize.
     for (auto & coef : filter)
     {
       coef /= norm;
