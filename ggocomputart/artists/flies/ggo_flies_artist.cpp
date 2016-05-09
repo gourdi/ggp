@@ -39,7 +39,8 @@ void ggo_flies_artist::init_sub()
 //////////////////////////////////////////////////////////////
 void ggo_flies_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 {
-	ggo::fill_4_colors(make_image_buffer(bkgd_buffer),
+  auto image = make_image_buffer(bkgd_buffer);
+	ggo::fill_4_colors(image,
                      ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
                      ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
                      ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),

@@ -29,7 +29,8 @@ namespace ggo
            
             void        fill(const color_type & color);
 
-            void        from(const image_abc<color_type> & other);
+            template <typename color_type2>
+            void        from(const image_abc<color_type2> & other);
 
             void        set_pixel(int x, int y, color_type color, float opacity, const ggo::blender_abc<color_type> & blender = ggo::alpha_blender<color_type>());
            
@@ -64,7 +65,8 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void image_abc<color_type>::from(const image_abc<color_type> & other)
+  template <typename color_type2>
+  void image_abc<color_type>::from(const image_abc<color_type2> & other)
   {
     if (get_width() != other.get_width() || get_height() != other.get_height())
     {
@@ -75,7 +77,7 @@ namespace ggo
     {
       for (int x = 0; x < _width; ++x)
       {
-        color_type color = other.read(x, y);
+        color_type color = ggo::to<color_type>(other.read(x, y));
         write(x, y, color);
       }
     }

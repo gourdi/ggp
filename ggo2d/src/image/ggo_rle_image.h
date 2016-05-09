@@ -35,7 +35,7 @@ namespace ggo
   template <typename color_type>
   rle_image<color_type>::rle_image(int width, int height, const color_type & fill_value, int cache_size)
   :
-  image_abc(width, height),
+  image_abc<color_type>(width, height),
   _lines(height),
   _cache_size(cache_size)
   {

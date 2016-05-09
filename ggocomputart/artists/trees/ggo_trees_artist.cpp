@@ -96,11 +96,11 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
   // Create sub-leaves.
   for (int depth = 0; depth < max_depth; ++depth)
   {
-    tree.visit_leaves([&] (ggo::tree<ggo_leaf> * leaf_tree)
+    tree.visit_leaves([&](ggo::tree<ggo_leaf> & leaf_tree)
     {
       for (const auto & rule : rules)
       {                
-        ggo_leaf & leaf = leaf_tree->data();
+        ggo_leaf & leaf = leaf_tree.data();
         
         if (leaf._dead == true)
         {
@@ -158,7 +158,7 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
           new_leaf._top_points[1] -= dy;
         }
         
-        leaf_tree->create_leaf(new_leaf);
+        leaf_tree.create_leaf(new_leaf);
         
         // Create the matching polygon too.
         ggo::polygon2d_float polygon;

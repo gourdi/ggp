@@ -77,7 +77,8 @@ bool ggo_alpha_anim_artist::render_next_frame_sub(uint8_t * buffer, int frame_in
 {
 	if (buffer != nullptr)
 	{
-		ggo::fill_4_colors(make_image_buffer(buffer), _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
+  	auto image = make_image_buffer(buffer);
+		ggo::fill_4_colors(image, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
 	}
 	
 	// Oscillos.

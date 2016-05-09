@@ -33,7 +33,7 @@ namespace ggo
   template <typename color_type, typename data_type>
   image_buffer_abc<color_type, data_type>::image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer)
   :
-  image_abc(width, height),
+  image_abc<color_type>(width, height),
   _buffer(buffer),
   _delete_buffer(delete_buffer)
   {

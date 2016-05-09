@@ -1,28 +1,30 @@
 include ../Makefile.config
 
 CFLAGS+=-Isrc \
+        -Isrc/rle \
         -Isrc/nonreg \
         -Isrc/rle \
         -Isrc/math \
-        -Isrc/math/linear_algebra \
+        -Isrc/math/delaunay_interpolation \
         -Isrc/math/interpolation \
-        -Isrc/math/pcg \
-        -Isrc/math/shapes_2d \
-        -Isrc/math/shapes_3d \
-        -Isrc/math/scalar_fields_2d \
-        -Isrc/math/signal_proc \
+        -Isrc/math/linear_algebra \
+        -Isrc/math/marching_cubes \
         -Isrc/math/sampling \
         -Isrc/math/sampling/pixel_sampling \
         -Isrc/math/sampling/low_discrepancy_sequences \
-        -Isrc/math/sampling/shape_sampling
+        -Isrc/math/sampling/shape_sampling \
+        -Isrc/math/scalar_fields_2d \
+        -Isrc/math/shapes_2d \
+        -Isrc/math/shapes_3d \
+        -Isrc/math/signal_proc
 
-NONREG_EXE=./test/kernel_nonreg
 HALTON_TOOL=./tools/halton
 BEST_CANDIDATE_TOOL=./tools/best_candidate
 
 HEADERS=$(wildcard src/*.h) \
         $(wildcard src/time/*.h) \
         $(wildcard src/nonreg/*.h) \
+        $(wildcard src/rle/*.h) \
         src/math/ggo_harmonic_curve.h \
         src/math/ggo_harmonic_surface.h \
         src/math/ggo_set2.h \
@@ -60,6 +62,7 @@ OBJ=$(patsubst %.cpp, %.o, $(SRC))
 
 NONREG_SRC=$(call rwildcard, test/, *.cpp)
 NONREG_OBJ=$(patsubst %.cpp, %.o, $(NONREG_SRC))
+NONREG_EXE=./test/kernel_nonreg
 
 all: $(LIB) $(NONREG_EXE) $(HALTON_TOOL) $(BEST_CANDIDATE_TOOL)
 
