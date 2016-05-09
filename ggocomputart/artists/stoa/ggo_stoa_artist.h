@@ -16,7 +16,7 @@ public:
 
         ggo_stoa_artist(int steps);
 
-  void  render(uint8_t * buffer, int width, int height, float hue,
+  void  render_masks(uint8_t * buffer, int width, int height, float hue,
                const ggo::point3d_float& light_pos1, const ggo::point3d_float& light_pos2, 
                ggo::renderer_abc& renderer) const;
 

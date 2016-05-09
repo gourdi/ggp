@@ -87,6 +87,8 @@ void ggo_bitmap_artist_animation_wrapper::render_bitmap(uint8_t * buffer)
     {
       bool done = false;
 
+      printf("%d\n", artist->get_frame_index());
+
       if (_frames_count > 0 && artist->get_frame_index() >= _frames_count)
       {
         done = true;
@@ -207,6 +209,8 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_BOZONS, render_width, render_height);
   case GGO_BITMAP_ARTIST_RAH:
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_RAH, render_width, render_height, 800, true);
+  case GGO_BITMAP_ARTIST_SONSON:
+    return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_SONSON, render_width, render_height, 200, true);
 	default:
 		GGO_FAIL();
 		return nullptr;

@@ -112,7 +112,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image_buffer;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -131,7 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

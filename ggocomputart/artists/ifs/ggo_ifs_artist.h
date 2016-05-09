@@ -9,7 +9,7 @@ class ggo_ifs_artist : public ggo_artist_abc
 {
 public:
 
-			ggo_ifs_artist(int render_width, int render_height);
+			  ggo_ifs_artist(int render_width, int render_height);
 
 	void	render(uint8_t * buffer, float transform[4], float hue, float angle1, float angle2);
 

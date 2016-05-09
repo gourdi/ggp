@@ -58,6 +58,6 @@ bool ggo_plastic_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	
 	ggo_plastic_artist artist(get_render_width(), get_render_height());
 	artist.render(buffer, bitmap_params, _color, _altitude_factor);
-	
+
 	return true;
 }

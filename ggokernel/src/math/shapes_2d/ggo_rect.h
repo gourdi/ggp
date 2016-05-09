@@ -18,6 +18,7 @@ namespace ggo
     using ggo::distancable_shape2d_abc<T>::dist_to_point;
 
                       rect(const rect<T> & rect);
+                      rect(const set2<T> & p1, const set2<T> & p2);
                       rect(T left, T bottom, T width, T height);
                       rect(const rect_data<T> & rect_data);
                       

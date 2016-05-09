@@ -93,7 +93,7 @@
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image_buffer;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\io</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\io</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
@@ -114,7 +114,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

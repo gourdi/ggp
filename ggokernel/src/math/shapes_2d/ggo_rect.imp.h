@@ -11,6 +11,20 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
+  rect<T>::rect(const set2<T> & p1, const set2<T> & p2)
+  {
+    T left    = std::min(p1.x(), p2.x());
+    T right   = std::max(p1.x(), p2.x());
+    T bottom  = std::min(p1.y(), p2.y());
+    T top     = std::max(p1.y(), p2.y());
+
+    _rect_data._pos = { left, bottom };
+    _rect_data._width = right - left;
+    _rect_data._height = top - bottom;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename T>
   rect<T>::rect(T left, T bottom, T width, T height)
   {
     _rect_data._pos = { left, bottom };

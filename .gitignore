@@ -23,3 +23,5 @@ ggp.VC.opendb
 *.psess
 *.vsp
 *.ipch
+ggp.VC.VC.opendb
+ggp.VC.db

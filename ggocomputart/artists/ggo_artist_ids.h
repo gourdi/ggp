@@ -42,6 +42,7 @@ enum ggo_bitmap_artist_id
   GGO_BITMAP_ARTIST_HEXA,
   GGO_BITMAP_ARTIST_CHRYZODE,
   GGO_BITMAP_ARTIST_STOA,
+  GGO_BITMAP_ARTIST_SONSON,
 };
 
 enum ggo_animation_artist_id

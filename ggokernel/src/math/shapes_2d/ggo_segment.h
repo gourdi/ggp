@@ -60,15 +60,9 @@ namespace ggo
 
 namespace ggo
 {
-#if __cplusplus >= 201103L
-  using segment_int       = segment<int>;
-  using segment_float     = segment<float>;
-  using segment_double    = segment<double>;
-#else
-  typedef segment<int>    segment_int;
-  typedef segment<float>  segment_float;
-  typedef segment<double> segment_double;
-#endif
+  using segment_int     = segment<int>;
+  using segment_float   = segment<float>;
+  using segment_double  = segment<double>;
 }
 
 namespace ggo

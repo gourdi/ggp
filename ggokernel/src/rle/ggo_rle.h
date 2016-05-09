@@ -8,11 +8,11 @@
 /////////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename data_type, typename read, typename done>
-  std::vector<std::pair<data_type, int>> rle_encode(read read, done done);
+  template <typename data_type, typename read_func, typename done_func>
+  std::vector<std::pair<data_type, int>> rle_encode(read_func read, done_func done);
 
-  template <typename data_type, typename write>
-  void rle_decode(const std::vector<std::pair<data_type, int>> & rle_data, write write);
+  template <typename data_type, typename write_func>
+  void rle_decode(const std::vector<std::pair<data_type, int>> & rle_data, write_func write);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -43,8 +43,8 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_type, typename read, typename done>
-  std::vector<std::pair<data_type, int>> rle_encode(read read, done done)
+  template <typename data_type, typename read_func, typename done_func>
+  std::vector<std::pair<data_type, int>> rle_encode(read_func read, done_func done)
   {
     std::vector<std::pair<data_type, int>> rle_data;
 
@@ -71,8 +71,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_type, typename write>
-  void rle_decode(const std::vector<std::pair<data_type, int>> & rle_data, write write)
+  template <typename data_type, typename write_func>
+  void rle_decode(const std::vector<std::pair<data_type, int>> & rle_data, write_func write)
   {
     for (const auto & rle_item : rle_data)
     {

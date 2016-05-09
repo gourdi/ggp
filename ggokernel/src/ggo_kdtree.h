@@ -46,9 +46,14 @@ namespace ggo
   template <int dim, typename data_type>
   kdtree<dim, data_type>::kdtree(const std::vector<data_point> & points)
   {
-    float size_max = 0.f;
     _split_axis = -1;
 
+    if (points.empty() == true)
+    {
+      return;
+    }
+
+    float size_max = 0.f;
     for (int cur_dim = 0; cur_dim < dim; ++cur_dim)
     {
       auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos[cur_dim] < p2._pos[cur_dim]; };
@@ -95,6 +100,11 @@ namespace ggo
   std::vector<typename ggo::kdtree<dim, data_type>::data_point> kdtree<dim, data_type>::find_points(const std::array<float, dim> & p, float radius) const
   {
     std::vector<data_point> result;
+
+    if (_split_axis < 0)
+    {
+      return result;
+    }
 
     find_points_aux(p, radius, radius * radius, result);
 

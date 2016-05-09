@@ -41,5 +41,5 @@ void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
   float hue = ggo::rand_float();
 
   ggo_stoa_artist artist(384);
-  artist.render(buffer, get_render_width(), get_render_height(), hue, light_pos1, light_pos2, renderer);
+  artist.render_masks(buffer, get_render_width(), get_render_height(), hue, light_pos1, light_pos2, renderer);
 }

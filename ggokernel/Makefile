@@ -2,6 +2,7 @@ include ../Makefile.config
 
 CFLAGS+=-Isrc \
         -Isrc/nonreg \
+        -Isrc/rle \
         -Isrc/math \
         -Isrc/math/linear_algebra \
         -Isrc/math/interpolation \

@@ -12,20 +12,20 @@ namespace ggo
   {
   public:
 
-                rle_image(int width, int height, const color_type & fill_value = color_type(0));
+                              rle_image(int width, int height, const color_type & fill_value = color_type(0), int cache_size = 8);
 
-    void        write(int x, int y, const color_type & value) override;
-    color_type  read(int x, int y) const override;
+    void                      write(int x, int y, const color_type & value) override;
+    color_type                read(int x, int y) const override;
 
   private:
 
-    void        update_cache(int y) const;
+    ggo::array<color_type> &  get_cache_line(int y) const;
 
   private:
 
     mutable ggo::array<std::vector<std::pair<color_type, int>>> _lines;
-    mutable ggo::array<color_type>                              _cache_line;
-    mutable int                                                 _cache_index = -1;
+    mutable std::vector<std::pair<int, ggo::array<color_type>>> _cache_lines;
+            const int                                           _cache_size;
   };
 }
 
@@ -33,11 +33,11 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  rle_image<color_type>::rle_image(int width, int height, const color_type & fill_value)
+  rle_image<color_type>::rle_image(int width, int height, const color_type & fill_value, int cache_size)
   :
   image_abc(width, height),
   _lines(height),
-  _cache_line(width)
+  _cache_size(cache_size)
   {
     for (int i = 0; i < height; ++i)
     {
@@ -49,40 +49,48 @@ namespace ggo
   template <typename color_type>
   void rle_image<color_type>::write(int x, int y, const color_type & value)
   {
-    update_cache(y);
+    auto & cache_line = get_cache_line(y);
 
-    _cache_line[x] = value;
+    cache_line[x] = value;
   }
   
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
   color_type rle_image<color_type>::read(int x, int y) const
   {
-    update_cache(y);
+    const auto & cache_line = get_cache_line(y);
 
-    return _cache_line[x];
+    return cache_line[x];
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_type>
-  void rle_image<color_type>::update_cache(int y) const
+  ggo::array<color_type> & rle_image<color_type>::get_cache_line(int y) const
   {
     GGO_ASSERT_BTW(y, 0, _height - 1);
 
-    // Check if the current cache line is the right one.
-    if (_cache_index != y)
+    // Check if the requiredd line already is in the cache.
+    auto find_func = [&](const std::pair<int, ggo::array<color_type>> & cache_line) { return cache_line.first == y; };
+    auto it = std::find_if(_cache_lines.begin(), _cache_lines.end(), find_func);
+
+    if (it != _cache_lines.end())
     {
-      // If not, the current cache must be RLE encoded.
-      if (_cache_index >= 0)
-      {
-        _lines[_cache_index] = rle_encode(_cache_line);
-      }
-
-      // Then the requested line must be RLE decoded.
-      rle_decode(_lines[y], _cache_line);
-
-      _cache_index = y;
+      return it->second;
     }
+
+    // Encode the first cache line if the cache is full.
+    if (_cache_lines.size() == _cache_size)
+    {
+      _lines[_cache_lines.front().first] = rle_encode(_cache_lines.front().second);
+      _cache_lines.erase(_cache_lines.begin());
+    }
+
+    // Decode the requested line.
+    _cache_lines.emplace_back(std::make_pair(y, ggo::array<color_type>(_width)));
+
+    rle_decode(_lines[y], _cache_lines.back().second);
+
+    return _cache_lines.back().second;
   }
 }
 

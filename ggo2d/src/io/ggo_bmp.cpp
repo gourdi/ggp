@@ -50,27 +50,11 @@ namespace ggo
 
     stream.write(reinterpret_cast<char*>(header), 40);
 
-    // Write header (note that pixels are stored BGR from bottom to top.
-    ggo::array_uint8 line(line_size);
-    for (int y = 0; y < height; ++y)
+    // Write pixels (note that pixels are stored BGR from bottom to top.
+    stream.write(reinterpret_cast<const char*>(rgb), 3 * width * height);
+    if (!stream)
     {
-      uint8_t * line_it = line;
-      const uint8_t * rgb_it = rgb + 3 * (width * (height - y - 1));
-      for (int x = 0; x < width; ++x )
-      {
-        line_it[2] = rgb_it[0];
-        line_it[1] = rgb_it[1];
-        line_it[0] = rgb_it[2];
-        
-        line_it += 3;
-        rgb_it += 3;
-      }
-
-      stream.write(line.to_char(), line_size);
-      if (!stream)
-      {
-        return false;
-      }
+      return false;
     }
 
     return true;

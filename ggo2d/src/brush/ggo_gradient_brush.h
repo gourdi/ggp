@@ -7,13 +7,13 @@
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename T>
-  struct gradient_brush : public brush_abc<T>
+  template <typename color_type, bool global_coordinates = false>
+  struct gradient_brush : public brush_abc<color_type>
   {
-    T get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const override;
+    color_type get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const override;
       
-    T                   _value1;
-    T                   _value2;
+    color_type          _value1;
+    color_type          _value2;
     ggo::point2d_float  _pos1;
     ggo::point2d_float  _pos2;
   };
@@ -30,13 +30,13 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename T>
-  T gradient_brush<T>::get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const
+  template <typename color_type, bool global_coordinates>
+  color_type gradient_brush<color_type, global_coordinates>::get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const
   {
     ggo::rect_float bounding_rect(shape.get_bounding_rect());
     
-    float x_f = x - bounding_rect.left();
-    float y_f = y - bounding_rect.bottom();
+    float x_f = global_coordinates ? x : x - bounding_rect.left();
+    float y_f = global_coordinates ? y : y - bounding_rect.bottom();
 
     ggo::vector2d_float diff1(x_f - _pos1.x(), y_f - _pos1.y());
     ggo::vector2d_float diff2(_pos2 - _pos1);
