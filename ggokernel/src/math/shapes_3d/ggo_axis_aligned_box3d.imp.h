@@ -14,6 +14,18 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
+  axis_aligned_box3d<T>::axis_aligned_box3d(const ggo::set3<T> & p)
+  {
+    _x_min = p.x();
+    _x_max = p.x();
+    _y_min = p.y();
+    _y_max = p.y();
+    _z_min = p.z();
+    _z_max = p.z();
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
   ggo::set3<T> axis_aligned_box3d<T>::get_center() const
   {
     T x = T(0.5) * (_x_min + _x_max);

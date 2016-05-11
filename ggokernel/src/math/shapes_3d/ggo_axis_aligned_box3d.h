@@ -8,6 +8,7 @@ namespace ggo
 
                   axis_aligned_box3d() {};
                   axis_aligned_box3d(T x_min, T x_max, T y_min, T y_max, T z_min, T z_max);
+                  axis_aligned_box3d(const ggo::set3<T> & p);
   
     T			        x_min() const { return _x_min; }
     T			        x_max() const { return _x_max; }
