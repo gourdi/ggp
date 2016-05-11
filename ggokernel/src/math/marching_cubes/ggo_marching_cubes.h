@@ -14,7 +14,7 @@ namespace ggo
     int                                 _x;
     int                                 _y;
     int                                 _z;
-    ggo::aabox3d_float                  _bounding_box;
+    ggo::aabox3d_float                  _cell_box; // Might be larger than the bouding box of the triangles.
     std::vector<ggo::triangle3d_float>  _triangles;
   };
 

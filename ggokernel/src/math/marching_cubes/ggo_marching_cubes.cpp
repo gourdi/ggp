@@ -460,7 +460,7 @@ namespace ggo
             output_cell._x = x;
             output_cell._y = y;
             output_cell._z = z;
-            output_cell._bounding_box = ggo::aabox3d_float(x_inf, x_sup, y_inf, y_sup, z_inf, z_sup);
+            output_cell._cell_box = ggo::aabox3d_float(x_inf, x_sup, y_inf, y_sup, z_inf, z_sup);
             output_cell._triangles = cell_triangles;
 
             result.push_back(output_cell);
