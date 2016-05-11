@@ -58,7 +58,7 @@ bool ggo_stoa_animation_artist::render_next_frame_sub(uint8_t * buffer, int fram
   ggo::antialiasing_renderer renderer(camera);
 #endif
 
-  _artist->render_masks(buffer, get_render_width(), get_render_height(), _hue, light_pos1, light_pos2, renderer);
+  _artist->render(buffer, get_render_width(), get_render_height(), _hue, light_pos1, light_pos2, renderer);
 
   return true;
 }

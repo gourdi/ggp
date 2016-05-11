@@ -8,6 +8,23 @@
 
 namespace
 {
+  //////////////////////////////////////////////////////////////
+  template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
+  bool compare_point(const ggo::point3d_float & p1, const ggo::point3d_float & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  {
+    return cmp_x(p1.x(), p2.x()) && cmp_y(p1.y(), p2.y()) && cmp_z(p1.z(), p2.z());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
+  bool compare_face(const ggo::face3d<float, true> & f, const ggo::point3d_float & p, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  {
+    return compare_point(f.v1()._pos, p, cmp_x, cmp_y, cmp_z) ||
+           compare_point(f.v2()._pos, p, cmp_x, cmp_y, cmp_z) ||
+           compare_point(f.v3()._pos, p, cmp_x, cmp_y, cmp_z);
+  }
+
+  //////////////////////////////////////////////////////////////
   struct ggo_noise3d
   {
     ggo_noise3d(float amplitude, float scale) : _amplitude(amplitude), _scale(scale)
@@ -47,6 +64,7 @@ namespace
     float _rotation[3][3];
   };
 
+  //////////////////////////////////////////////////////////////
   template <typename DensityFunc>
   ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::point3d_float & p)
   {
@@ -61,39 +79,49 @@ namespace
 
 //////////////////////////////////////////////////////////////
 // RAYCASTER
-ggo_stoa_artist::ggo_stoa_raycaster::ggo_stoa_raycaster(const std::vector<ggo_stoa_artist::ggo_raycaster_cell> & cells)
+ggo_stoa_artist::ggo_stoa_raycaster::ggo_stoa_raycaster(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects)
+:
+_octree({ get_bounding_box(face_objects), face_objects })
 {
-  std::cout << "cells: " << cells.size() << std::endl;
-
-  // Sort cells.
-  for (const auto & cell : cells)
+  auto recursion = [](ggo::tree<ggo_node> & tree)
   {
-    std::ostringstream oss;
+    ggo::point3d_float center = tree.data()._bounding_box.get_center();
 
-    int x = cell._x / 4;
-    int y = cell._y / 4;
-    int z = cell._z / 4;
+    std::array<ggo_node, 8> nodes;
 
-    oss << x << "-" << y << "-" << z;
+    std::less_equal<float> le;
+    std::greater_equal<float> ge;
 
-    _aggregates[oss.str()]._cells.push_back(cell);
-  }
-
-  std::cout << "aggregates: " << _aggregates.size() << std::endl;
-
-  // Build each aggregates' bounding box.
-  for (auto & map_item : _aggregates)
-  {
-    auto & aggregate = map_item.second;
-
-    aggregate._bounding_box = aggregate._cells.front()._bounding_box;
-    for (const auto & cell : aggregate._cells)
+    for (const auto & face_object : tree.data()._face_objects)
     {
-      aggregate._bounding_box.merge_with(cell._bounding_box);
+      if (compare_face(*face_object._face, center, le, le, le)) { nodes[0]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, le, le, ge)) { nodes[1]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, le, ge, le)) { nodes[2]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, le, ge, ge)) { nodes[3]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, ge, le, le)) { nodes[4]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, ge, le, ge)) { nodes[5]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, ge, ge, le)) { nodes[6]._face_objects.push_back(face_object); }
+      if (compare_face(*face_object._face, center, ge, ge, ge)) { nodes[7]._face_objects.push_back(face_object); }
     }
-  }
+
+    for (auto & node : nodes)
+    {
+      if (node._face_objects.empty() == false)
+      {
+        node._bounding_box = get_bounding_box(node._face_objects);
+        tree.create_leaf(node);
+      }
+    }
+
+    tree.data()._face_objects.clear();
+  };
+
+  _octree.visit_leaves(recursion);
+  _octree.visit_leaves(recursion);
+  _octree.visit_leaves(recursion);
 }
 
+//////////////////////////////////////////////////////////////
 const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::ray3d_float & ray,
                                                                     float & dist,
                                                                     ggo::ray3d_float & local_normal,
@@ -102,74 +130,112 @@ const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::r
                                                                     const ggo::object3d * exclude_object2) const
 {
   const ggo::object3d * hit_object = nullptr;
+  std::vector<const ggo::tree<ggo_node> *> trees{ &_octree };
 
   dist = std::numeric_limits<float>::max();
 
-  for (const auto & map_item : _aggregates)
+  while (trees.empty() == false)
   {
-    const auto & aggregate = map_item.second;
-    if (aggregate._bounding_box.intersect_ray(ray) == true)
+    std::vector<const ggo::tree<ggo_node> *> sub_trees;
+
+    for (const auto * tree : trees)
     {
-      for (const auto & cell : aggregate._cells)
+      // Fast reject.
+      if (tree->data()._bounding_box.is_point_inside(ray.pos()) == true || tree->data()._bounding_box.intersect_ray(ray) == true)
       {
-        if (cell._bounding_box.intersect_ray(ray) == true)
+        // Check for intersection.
+        for (const auto & face_object : tree->data()._face_objects)
         {
-          for (const auto & face_object : cell._face_objects)
+          float dist_cur = 0.f;
+          ggo::ray3d_float normal_cur;
+          if (face_object._face->intersect_ray(ray, dist_cur, normal_cur) == true &&
+              dist_cur < dist &&
+              exclude_object1 != face_object._object.get() &&
+              exclude_object2 != face_object._object.get())
           {
-            float dist_cur = 0.f;
-            ggo::ray3d_float normal_cur;
-            if (face_object._face->intersect_ray(ray, dist_cur, normal_cur) == true &&
-                dist_cur < dist &&
-                exclude_object1 != face_object._object &&
-                exclude_object2 != face_object._object)
-            {
-              dist = dist_cur;
-              local_normal = normal_cur;
-              world_normal = normal_cur;
-              hit_object = face_object._object;
-            }
+            dist = dist_cur;
+            local_normal = normal_cur;
+            world_normal = normal_cur;
+            hit_object = face_object._object.get();
           }
+        }
+
+        // Recursion.
+        for (const auto & subtree : tree->subtrees())
+        {
+          sub_trees.push_back(&subtree);
         }
       }
     }
+
+    trees = sub_trees;
   }
 
   return hit_object;
 }
 
+//////////////////////////////////////////////////////////////
 bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_float & ray,
                                                            float dist_max,
                                                            const ggo::object3d * exclude_object1,
                                                            const ggo::object3d * exclude_object2) const
 {
-  for (const auto & map_item : _aggregates)
+  std::vector<const ggo::tree<ggo_node> *> trees{ &_octree };
+
+  while (trees.empty() == false)
   {
-    const auto & aggregate = map_item.second;
-    if (aggregate._bounding_box.intersect_ray(ray) == true)
+    std::vector<const ggo::tree<ggo_node> *> sub_trees;
+
+    for (const auto * tree : trees)
     {
-      for (const auto & cell : aggregate._cells)
+      // Fast reject.
+      if (tree->data()._bounding_box.is_point_inside(ray.pos()) == true || tree->data()._bounding_box.intersect_ray(ray) == true)
       {
-        if (cell._bounding_box.intersect_ray(ray) == true)
+        // Check for intersection.
+        for (const auto & face_object : tree->data()._face_objects)
         {
-          for (const auto & face_object : cell._face_objects)
-          {
-            float dist = 0.f;
-            ggo::ray3d_float normal_cur;
-            if (face_object._face->intersect_ray(ray, dist, normal_cur) == true &&
+          float dist = 0.f;
+          ggo::ray3d_float normal_cur;
+          if (face_object._face->intersect_ray(ray, dist, normal_cur) == true &&
               dist < dist_max &&
-              exclude_object1 != face_object._object &&
-              exclude_object2 != face_object._object)
-            {
-              return true;
-            }
+              exclude_object1 != face_object._object.get() &&
+              exclude_object2 != face_object._object.get())
+          {
+            return true;
           }
+        }
+
+        // Recursion.
+        for (const auto & subtree : tree->subtrees())
+        {
+          sub_trees.push_back(&subtree);
         }
       }
     }
+
+    trees = sub_trees;
   }
 
   return false;
 }
+
+//////////////////////////////////////////////////////////////
+ggo::aabox3d_float ggo_stoa_artist::ggo_stoa_raycaster::get_bounding_box(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects)
+{
+  ggo::aabox3d_float bounding_box(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
+
+  for (const auto & face_object : face_objects)
+  {
+    bounding_box.merge_with(face_object._face->v1()._pos);
+    bounding_box.merge_with(face_object._face->v2()._pos);
+    bounding_box.merge_with(face_object._face->v3()._pos);
+  }
+
+  return bounding_box;
+}
+
+//////////////////////////////////////////////////////////////
+// ARTIST
 
 //////////////////////////////////////////////////////////////
 ggo_stoa_artist::ggo_stoa_artist(int steps)
@@ -207,53 +273,41 @@ ggo_stoa_artist::ggo_stoa_artist(int steps)
   const float range = 3.2f;
   auto cells = ggo::marching_cubes(density_func, ggo::point3d_float(-range, -range, -range), steps, 2 * range / steps);
 
-  std::vector<ggo_raycaster_cell> raycaster_cells;
+  std::vector<ggo_face_object> face_objects;
 
   for (const auto & cell : cells)
   {
-    ggo_raycaster_cell raycaster_cell;
-    raycaster_cell._bounding_box = cell._bounding_box;
-    raycaster_cell._x = cell._x;
-    raycaster_cell._y = cell._y;
-    raycaster_cell._z = cell._z;
-
     for (const auto & triangle : cell._triangles)
     {
       auto v1 = compute_vertex(density_func, triangle.v1());
       auto v2 = compute_vertex(density_func, triangle.v2());
       auto v3 = compute_vertex(density_func, triangle.v3());
 
-      auto face_ptr = std::make_shared<ggo::face3d<float, true>>(v1, v2, v3);
-      auto object_ptr = std::make_shared<ggo::object3d>(face_ptr, ggo::color::WHITE);
+      auto face_ptr = std::make_shared<const ggo::face3d<float, true>>(v1, v2, v3);
+      auto object_ptr = std::make_shared<const ggo::object3d>(face_ptr, ggo::color::WHITE);
 
-      _objects.push_back(object_ptr);
+      ggo_face_object face_object{ object_ptr, face_ptr };
 
-      raycaster_cell._face_objects.emplace_back(object_ptr.get(), face_ptr.get());
+      face_objects.push_back(face_object);
     }
-
-    raycaster_cells.push_back(raycaster_cell);
   }
 
-  _raycaster.reset(new ggo_stoa_raycaster(raycaster_cells));
-
+  _raycaster.reset(new ggo_stoa_raycaster(face_objects));
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_stoa_artist::render_masks(uint8_t * buffer, int width, int height, float hue,
+void ggo_stoa_artist::render(uint8_t * buffer, int width, int height, float hue,
                              const ggo::point3d_float& light_pos1, const ggo::point3d_float& light_pos2,
                              ggo::renderer_abc& renderer) const
 {
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::from_hsv(hue, 1.f, 1.f)));
-
-  for (auto object : _objects)
-  {
-    scene_builder.add_object(object, true);
-  }
 
   // Lights.
   scene_builder.add_sphere_light(ggo::color::from_hsv(hue, 0.5f, 0.8f), 1, light_pos1);
   scene_builder.add_sphere_light(ggo::color::from_hsv(hue, 0.5f, 0.2f), 1, light_pos2);
 
   // Rendering.
-  renderer.render(buffer, width, height, scene_builder);
+  ggo::raytrace_params params;
+  params._raycaster = _raycaster.get();
+  renderer.render(buffer, width, height, scene_builder, params);
 }
