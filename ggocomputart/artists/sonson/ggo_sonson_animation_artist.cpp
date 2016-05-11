@@ -483,7 +483,8 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
 {
   if (buffer != nullptr)
   {
-    ggo::fill_4_colors(make_image_buffer(buffer), ggo::color::WHITE, ggo::color::WHITE, ggo::color::WHITE, ggo::color::BLACK);
+    auto image = make_image_buffer(buffer);
+    ggo::fill_4_colors(image, ggo::color::WHITE, ggo::color::WHITE, ggo::color::WHITE, ggo::color::BLACK);
   }
 
   // Create new lines.
@@ -509,11 +510,12 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
   // Paint lines.
   if (buffer != nullptr)
   {
+    auto image = make_image_buffer(buffer);
     for (const auto & sub_lines : _lines)
     {
       for (const auto & line : sub_lines)
       {
-        line->render(make_image_buffer(buffer));
+        line->render(image);
       }
 
       // Blur (only when needed).

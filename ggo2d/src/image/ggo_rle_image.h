@@ -86,7 +86,7 @@ namespace ggo
     }
 
     // Decode the requested line.
-    _cache_lines.emplace_back(std::make_pair(y, ggo::array<color_type>(_width)));
+    _cache_lines.emplace_back(std::make_pair(y, ggo::array<color_type>(this->_width)));
 
     rle_decode(_lines[y], _cache_lines.back().second);
 
