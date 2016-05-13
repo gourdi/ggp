@@ -48,8 +48,8 @@ namespace ggo
     int					      get_size() const { return _size; };
     void				      set_size(int size); // Clears data.
 
-    T *					      get_pointer() { return _buffer; };
-    const T *		      get_pointer() const  { return _buffer; };
+    T *					      data() { return _buffer; };
+    const T *		      data() const { return _buffer; };
 
     void				      fill(T value);
     void				      zero();
@@ -152,20 +152,14 @@ namespace ggo
   template <typename T>
   array<T>::~array()
   {
-    if (_buffer != nullptr)
-    {
-      delete[] _buffer;
-    }
+    delete[] _buffer;
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
   void array<T>::set_size(int size)
   {
-    if (_buffer != nullptr)
-    {
-      delete[] _buffer;
-    }
+    delete[] _buffer;
 
     _buffer	= new T[size];
     _size	= size;
@@ -177,10 +171,7 @@ namespace ggo
   {
     _size = a._size;
 
-    if (_buffer != nullptr)
-    {
-      delete[] _buffer;
-    }
+    delete[] _buffer;
 
     if (a._buffer == nullptr)
     {
@@ -199,10 +190,7 @@ namespace ggo
   template <typename T>
   array<T> & array<T>::operator=(array && a)
   {
-    if (_buffer != nullptr)
-    {
-      delete[] _buffer;
-    }
+    delete[] _buffer;
 
     _buffer = a._buffer;
     _size = a._size;

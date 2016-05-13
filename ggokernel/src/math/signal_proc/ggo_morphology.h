@@ -1,7 +1,7 @@
 #ifndef __GGO_MORPHOLOGY__
 #define __GGO_MORPHOLOGY__
 
-#include <ggo_data_fetcher.h>
+#include <ggo_buffer_access.h>
 
 namespace ggo
 {

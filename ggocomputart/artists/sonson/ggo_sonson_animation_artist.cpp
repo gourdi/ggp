@@ -412,7 +412,7 @@ ggo::extended_segment_float ggo_sonson_animation_artist::ggo_line::get_glow_segm
 //////////////////////////////////////////////////////////////
 void ggo_sonson_animation_artist::ggo_line::render(ggo::rgb_image_buffer_uint8 & image) const
 {
-  uint8_t * buffer = image.get_buffer();
+  uint8_t * buffer = image.data();
 
   // Paint the strips.
   uint8_t * it = buffer;
@@ -522,9 +522,9 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
       if (&sub_lines != &_lines.back())
       {
         float stddev = 0.001f * get_render_min_size();
-        ggo::gaussian_blur_2d_mirror(buffer + 0, buffer + 0, get_render_width(), get_render_height(), stddev, 3, 3, 0.01f);
-        ggo::gaussian_blur_2d_mirror(buffer + 1, buffer + 1, get_render_width(), get_render_height(), stddev, 3, 3, 0.01f);
-        ggo::gaussian_blur_2d_mirror(buffer + 2, buffer + 2, get_render_width(), get_render_height(), stddev, 3, 3, 0.01f);
+        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, buffer + 0, get_render_width(), get_render_height(), stddev, 0.01f);
+        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, buffer + 1, get_render_width(), get_render_height(), stddev, 0.01f);
+        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, buffer + 2, get_render_width(), get_render_height(), stddev, 0.01f);
       }
     }
   }

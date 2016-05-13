@@ -67,8 +67,8 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	// Render the shadow points.
 	std::cout << "Rendering the shadow" << std::endl;
 	
-	ggo::gray_image_buffer_float shadow_image_data(get_render_width(), get_render_height());
-	shadow_image_data.fill(1);
+	ggo::gray_image_buffer_float shadow_image(get_render_width(), get_render_height());
+	shadow_image.fill(1);
 	for (int i = 0; i < points.size(); ++i)
 	{
 		// Offset the shadow.
@@ -78,21 +78,21 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 
     auto disc = std::make_shared<const ggo::disc_float>(render_pt, radius);
     
-		ggo::paint(shadow_image_data, disc, 0, 0.2f);
+		ggo::paint(shadow_image, disc, 0, 0.2f);
 	}
 
 	// Blur and blend the shadow.
 	std::cout << "Blurring the shadow" << std::endl;
 	
-	ggo::gaussian_blur_2d_mirror(shadow_image_data.get_buffer(),
-                               shadow_image_data.get_buffer(),
+	ggo::gaussian_blur_2d_mirror(shadow_image.data(),
+                               shadow_image.data(),
                                get_render_width(),
                                get_render_height(),
-                               0.4f * get_render_min_size(), 1, 1, 0.001f);
+                               0.4f * get_render_min_size(), 0.001f);
 	
 	std::cout << "Blending the shadow" << std::endl;
 
-	apply_shadow(image_buffer_float.get_buffer(), shadow_image_data.get_buffer());
+	apply_shadow(image_buffer_float.data(), shadow_image.data());
 
 	// Render the points.
 	std::cout << "Rendering points" << std::endl;

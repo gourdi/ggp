@@ -83,8 +83,8 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 	std::cout << "Rendering shadow" << std::endl;
 	
 	// Render the shadow.
-	ggo::gray_image_buffer_uint8 shadow_image_buffer(get_render_width(), get_render_height());
-  shadow_image_buffer.fill(1.f);
+	ggo::gray_image_buffer_uint8 shadow_image(get_render_width(), get_render_height());
+  shadow_image.fill(1.f);
 	
 	float shadow_offset_scalar = 0.25f * SQUARE_SIZE;
 	ggo::point2d_float shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
@@ -99,16 +99,16 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 			square->add_point(point);
 		}
 
-		ggo::paint(shadow_image_buffer, square, 0x40 / 255.f);
+		ggo::paint(shadow_image, square, 0x40 / 255.f);
 	}
 
-	ggo::gaussian_blur_2d_mirror(shadow_image_buffer.get_buffer(),
-                               shadow_image_buffer.get_buffer(),
+	ggo::gaussian_blur_2d_mirror(shadow_image.data(),
+                               shadow_image.data(),
                                get_render_width(),
                                get_render_height(),
-                               0.05f * get_render_min_size(), 1, 1, 0.001f);
+                               0.05f * get_render_min_size(), 0.001f);
 
-  image_buffer.from(shadow_image_buffer);
+  image_buffer.from(shadow_image);
 	
 	std::cout << "Rendering squares" << std::endl;
 	

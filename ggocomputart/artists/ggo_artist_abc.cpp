@@ -122,7 +122,7 @@ ggo::point2d_float ggo_artist_abc::vert_mirror(const ggo::point2d_float & p) con
 }
 
 //////////////////////////////////////////////////////////////
-ggo::point2d_float ggo_artist_abc::center() const
+ggo::point2d_float ggo_artist_abc::get_center() const
 {
   return ggo::point2d_float(static_cast<float>(_render_width - 1) / 2, static_cast<float>(_render_height - 1) / 2);
 }

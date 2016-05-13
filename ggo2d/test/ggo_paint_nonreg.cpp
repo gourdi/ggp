@@ -207,7 +207,7 @@ GGO_TEST(paint, blur)
     ggo::paint(image, layers, ggo_blur_sampler2(10, 40));
   }
     
-  ggo::save_bmp("test_blur.bmp", image.get_buffer(), WIDTH, HEIGHT);
+  ggo::save_bmp("test_blur.bmp", image.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////

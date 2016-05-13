@@ -2,6 +2,7 @@
 #define __GGO_ARTIST_ABC__
 
 #include <ggo_kernel.h>
+#include <ggo_buffer_access.h>
 #include <ggo_set2.h>
 #include <ggo_shapes2d.h>
 #include <ggo_ease.h>
@@ -31,6 +32,9 @@ public:
 
           ggo::rgb_image_buffer_uint8 make_image_buffer(uint8_t * buffer) const { return ggo::rgb_image_buffer_uint8(_render_width, _render_height, buffer); }
 
+          template <typename func_t>
+          void                        for_each_pixel(func_t f) { for (int y = 0; y < _render_height; ++y) { for (int x = 0; x < _render_width; ++x) { f(x, y); } } }
+
 protected:
 
                                       ggo_artist_abc(int render_width, int render_height);
@@ -45,7 +49,7 @@ protected:
           ggo::point2d_float 	        get_random_point(float margin = 0.f) const;
           ggo::point2d_float	        get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const;
           
-          ggo::point2d_float 	        center() const;
+          ggo::point2d_float 	        get_center() const;
   
           ggo::point2d_float          horz_mirror(const ggo::point2d_float & p) const;
           ggo::point2d_float          vert_mirror(const ggo::point2d_float & p) const;

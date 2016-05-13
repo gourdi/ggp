@@ -4,7 +4,6 @@
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />
     <ClInclude Include="src\ggo_best_match.h" />
-    <ClInclude Include="src\ggo_data_fetcher.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_helpers.h" />
     <ClInclude Include="src\ggo_io.h" />
@@ -288,6 +287,7 @@
     <ClInclude Include="src\rle\ggo_rle.h">
       <Filter>rle</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_buffer_access.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

@@ -5,8 +5,8 @@
 
 //////////////////////////////////////////////////////////////
 ggo_stoa_animation_artist::ggo_stoa_animation_artist(int render_width, int render_height)
-  :
-  ggo_animation_artist_abc(render_width, render_height)
+:
+ggo_animation_artist_abc(render_width, render_height)
 {
 }
 

@@ -27,7 +27,7 @@ GGO_TEST(triangular_interpolation, function)
     image.write(x, y, pixel_color);
   });
   
-  ggo::save_bmp("test_triangular_interpolation_function.bmp", image.get_buffer(), IMAGE_SIZE, IMAGE_SIZE);
+  ggo::save_bmp("test_triangular_interpolation_function.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ GGO_TEST(triangular_interpolation, brush)
   
   ggo::paint(image, triangle, brush);
   
-  ggo::save_bmp("test_triangular_interpolation_brush.bmp", image.get_buffer(), IMAGE_SIZE, IMAGE_SIZE);
+  ggo::save_bmp("test_triangular_interpolation_brush.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -70,6 +70,6 @@ GGO_TEST(triangular_interpolation, opacity)
   
   paint(image, triangle, color_brush, opacity_brush);
   
-  ggo::save_bmp("test_triangular_interpolation_opacity.bmp", image.get_buffer(), IMAGE_SIZE, IMAGE_SIZE);
+  ggo::save_bmp("test_triangular_interpolation_opacity.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
 }
 

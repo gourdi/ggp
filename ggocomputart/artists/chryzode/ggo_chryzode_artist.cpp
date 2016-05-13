@@ -33,8 +33,8 @@ void ggo_chryzode_artist::render_chryzode(uint8_t * buffer, float radius, const 
       angle1 += ggo::PI<float>() / 2;
       angle2 += ggo::PI<float>() / 2;
       
-      ggo::point2d_float p1 = center() + ggo::point2d_float::from_polar(angle1, radius);
-      ggo::point2d_float p2 = center() + ggo::point2d_float::from_polar(angle2, radius);
+      ggo::point2d_float p1 = get_center() + ggo::point2d_float::from_polar(angle1, radius);
+      ggo::point2d_float p2 = get_center() + ggo::point2d_float::from_polar(angle2, radius);
       
       ggo::point2d_float middle = (p1 + p2) / 2.f;
       ggo::vector2d_float diff = p2 - p1;

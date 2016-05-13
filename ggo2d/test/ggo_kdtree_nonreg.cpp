@@ -12,7 +12,7 @@ GGO_TEST(tree3d, random_points)
   const int SIZE = 500;
   const float RADIUS = 50;
 
-  ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE, ggo::color::BLACK);
+  ggo::rgb_image_buffer_uint8 data(SIZE, SIZE, ggo::color::BLACK);
 
   // Create random points.
   using tree_point = ggo::kdtree<2, void *>::data_point;
@@ -26,11 +26,11 @@ GGO_TEST(tree3d, random_points)
 
   auto disc = std::make_shared<ggo::disc_float>(SIZE / 2.f, SIZE / 2.f, RADIUS);
 
-  ggo::paint(image_data, disc, ggo::color::RED);
+  ggo::paint(data, disc, ggo::color::RED);
 
   for (const auto & point : points)
   {
-    ggo::paint(image_data, std::make_shared<ggo::disc_float>(point._pos[0], point._pos[1], 2.f), ggo::color::WHITE);
+    ggo::paint(data, std::make_shared<ggo::disc_float>(point._pos[0], point._pos[1], 2.f), ggo::color::WHITE);
   }
 
   ggo::kdtree<2, void *> tree(points);
@@ -38,8 +38,8 @@ GGO_TEST(tree3d, random_points)
 
   for (const auto & point : inside_points)
   {
-    ggo::paint(image_data, std::make_shared<ggo::disc_float>(point._pos[0], point._pos[1], 4.f), ggo::color::BLUE);
+    ggo::paint(data, std::make_shared<ggo::disc_float>(point._pos[0], point._pos[1], 4.f), ggo::color::BLUE);
   }
 
-  ggo::save_bmp("kdtree.bmp", image_data.get_buffer(), SIZE, SIZE);
+  ggo::save_bmp("kdtree.bmp", data.data(), SIZE, SIZE);
 }

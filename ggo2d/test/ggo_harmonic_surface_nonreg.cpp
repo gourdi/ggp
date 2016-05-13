@@ -22,7 +22,7 @@ GGO_TEST(harmonic_surface, test1)
     }
   }
   
-  ggo::save_bmp("test_harmonic_surface1.bmp", image.get_buffer(), SIZE, SIZE);
+  ggo::save_bmp("test_harmonic_surface1.bmp", image.data(), SIZE, SIZE);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -52,5 +52,5 @@ GGO_TEST(harmonic_surface, test2)
     }
   }
   
-  ggo::save_bmp("test_harmonic_surface2.bmp", image.get_buffer(), SIZE, SIZE);
+  ggo::save_bmp("test_harmonic_surface2.bmp", image.data(), SIZE, SIZE);
 }

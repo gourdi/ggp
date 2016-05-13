@@ -17,5 +17,5 @@ GGO_TEST(rle_image, test)
   ggo::rgb_image_buffer_uint8 image(width, height);
   image.from(rle_image);
 
-  ggo::save_bmp("rle.bmp", image.get_buffer(), width, height);
+  ggo::save_bmp("rle.bmp", image.data(), width, height);
 }

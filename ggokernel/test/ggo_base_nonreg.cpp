@@ -12,6 +12,27 @@ GGO_TEST(base, set2)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(base, loop_index)
+{
+  GGO_CHECK(ggo::loop_index(-6, 4) == 2);
+  GGO_CHECK(ggo::loop_index(-5, 4) == 3);
+  GGO_CHECK(ggo::loop_index(-4, 4) == 0);
+  GGO_CHECK(ggo::loop_index(-3, 4) == 1);
+  GGO_CHECK(ggo::loop_index(-2, 4) == 2);
+  GGO_CHECK(ggo::loop_index(-1, 4) == 3);
+  GGO_CHECK(ggo::loop_index( 0, 4) == 0);
+  GGO_CHECK(ggo::loop_index( 1, 4) == 1);
+  GGO_CHECK(ggo::loop_index( 2, 4) == 2);
+  GGO_CHECK(ggo::loop_index( 3, 4) == 3);
+  GGO_CHECK(ggo::loop_index( 4, 4) == 0);
+  GGO_CHECK(ggo::loop_index( 5, 4) == 1);
+  GGO_CHECK(ggo::loop_index( 6, 4) == 2);
+  GGO_CHECK(ggo::loop_index( 7, 4) == 3);
+  GGO_CHECK(ggo::loop_index( 8, 4) == 0);
+  GGO_CHECK(ggo::loop_index( 9, 4) == 1);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, mirror_index)
 {
   // Edge duplicated.

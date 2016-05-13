@@ -32,5 +32,5 @@ GGO_TEST(layer, test)
 
   ggo::flatten_sprite(image, sprite_opacity, sprite_image, 10, 15, ggo::rgb_alpha_blender());
   
-  ggo::save_bmp("test_sprite_image.bmp", image.get_buffer(), IMAGE_WIDTH, IMAGE_HEIGHT);
+  ggo::save_bmp("test_sprite_image.bmp", image.data(), IMAGE_WIDTH, IMAGE_HEIGHT);
 }

@@ -16,8 +16,8 @@ namespace ggo
                               image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer);
     virtual                  ~image_buffer_abc();
 
-            const data_type * get_buffer() const { return _buffer; }
-            data_type *       get_buffer() { return _buffer; }
+            const data_type * data() const { return _buffer; }
+            data_type *       data() { return _buffer; }
             
 
   protected:

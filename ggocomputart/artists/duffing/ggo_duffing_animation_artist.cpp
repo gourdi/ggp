@@ -125,8 +125,8 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	ggo::fill_4_colors(image_buffer_float, color1, color2, color3, color4);
 
 	// Render the shadow points.
-	ggo::gray_image_buffer_float shadow_image_data(get_render_width(), get_render_height());
-	shadow_image_data.fill(1);
+	ggo::gray_image_buffer_float shadow_image(get_render_width(), get_render_height());
+	shadow_image.fill(1);
 	for (int i = first_point; i <= last_point; ++i)
 	{
 		if (i >= 0 && i < _points.size())
@@ -140,18 +140,18 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 
       auto disc = std::make_shared<const ggo::disc_float>(render_pt, radius);
       
-      ggo::paint(shadow_image_data, disc, 0, opacity);
+      ggo::paint(shadow_image, disc, 0, opacity);
 		}
 	}
 
 	// Blur and blend the shadow.
-	ggo::gaussian_blur_2d_mirror(shadow_image_data.get_buffer(),
-                               shadow_image_data.get_buffer(),
+	ggo::gaussian_blur_2d_mirror(shadow_image.data(),
+                               shadow_image.data(),
                                get_render_width(),
                                get_render_height(),
-                               0.4f * get_render_min_size(), 1, 1, 0.001f);
+                               0.4f * get_render_min_size(), 0.001f);
 
-	apply_shadow(image_buffer_float.get_buffer(), shadow_image_data.get_buffer());
+	apply_shadow(image_buffer_float.data(), shadow_image.data());
 
 	// Render the points.
 	float point_opacity = 0.02f;

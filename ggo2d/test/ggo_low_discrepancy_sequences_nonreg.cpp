@@ -14,15 +14,15 @@ namespace
   {
     const int SIZE = 400;
     
-    ggo::rgb_image_buffer_uint8 image_data(SIZE, SIZE);
-    image_data.fill(ggo::color::BLACK);
+    ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
+    image.fill(ggo::color::BLACK);
 
     for (int i = 0; i < points_count; ++i)
     {
-      ggo::paint(image_data, std::make_shared<ggo::disc_float>(SIZE * points[i].x(), SIZE * (1 - points[i].y()), 2.f), ggo::color::WHITE);
+      ggo::paint(image, std::make_shared<ggo::disc_float>(SIZE * points[i].x(), SIZE * (1 - points[i].y()), 2.f), ggo::color::WHITE);
     }
     
-    ggo::save_bmp(filename, image_data.get_buffer(), image_data.get_width(), image_data.get_height());
+    ggo::save_bmp(filename, image.data(), image.get_width(), image.get_height());
   }
   
   /////////////////////////////////////////////////////////////////////  

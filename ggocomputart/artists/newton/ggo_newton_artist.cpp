@@ -90,7 +90,7 @@ void ggo_newton_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 	
 	for (int i = 0; i < get_render_width() * get_render_height(); ++i)
 	{
-		float val = perlin_image_data.get_buffer()[i] / 255.f;
+		float val = perlin_image_data.data()[i] / 255.f;
 		
 		bkgd_buffer[3 * i + 0] = ggo::to<uint8_t>(val * bkgd_buffer[3 * i + 0]);
 		bkgd_buffer[3 * i + 1] = ggo::to<uint8_t>(val * bkgd_buffer[3 * i + 1]);
@@ -233,8 +233,8 @@ void ggo_newton_artist::newton_update()
 void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 {
 	// Painting shadow.
-	ggo::gray_image_buffer_uint8 shadow_image_data(get_render_width(), get_render_height());
-  shadow_image_data.fill(0xFF);
+	ggo::gray_image_buffer_uint8 shadow_image(get_render_width(), get_render_height());
+  shadow_image.fill(0xFF);
 
 	for (const auto & string : _strings)
 	{
@@ -247,7 +247,7 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 		float dist = ggo::distance(p1, p2);
 		float coef = 1 - 1 / (1 + 25 * std::fabs(dist - string._length) / get_render_min_size());
 		float opacity = 0.25f + 0.75f * coef;
-		ggo::paint(shadow_image_data,
+		ggo::paint(shadow_image,
                line,
                0, opacity, std::make_shared<ggo::gray_alpha_blender>(),
                ggo::pixel_sampler_2X2());
@@ -255,20 +255,20 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 	
 	for (const auto & newton : _newtons)
 	{
-		ggo::paint(shadow_image_data,
+		ggo::paint(shadow_image,
                std::make_shared<ggo::disc_float>(newton._cur_pos + _shadow_offset, 0.025f * get_render_min_size()),
                0, 1, std::make_shared<ggo::gray_alpha_blender>(),
                ggo::pixel_sampler_2X2());
 	}
 	
-	ggo::gaussian_blur_2d_mirror(shadow_image_data.get_buffer(),
-                               shadow_image_data.get_buffer(),
+	ggo::gaussian_blur_2d_mirror(shadow_image.data(),
+                               shadow_image.data(),
                                get_render_width(),
                                get_render_height(),
-                               0.05f * get_render_min_size(), 1, 1, 0.001f);
+                               0.05f * get_render_min_size(), 0.001f);
 	
   auto image_buffer = make_image_buffer(buffer);
-  image_buffer.from(shadow_image_data);
+  image_buffer.from(shadow_image);
 	
 	// Paint shapes.
 	for (const auto & string : _strings)

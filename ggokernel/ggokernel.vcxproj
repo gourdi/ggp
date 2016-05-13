@@ -137,13 +137,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\ggo_buffer_access.h" />
     <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_array2d.h" />
     <ClInclude Include="src\ggo_best_match.h" />
-    <ClInclude Include="src\ggo_data_fetcher.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_helpers.h" />
     <ClInclude Include="src\ggo_io.h" />

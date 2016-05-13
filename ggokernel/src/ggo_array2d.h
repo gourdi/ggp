@@ -18,7 +18,7 @@ namespace ggo
                   array2d(int size_x, int size_y, const T & value);
                   array2d(const array2d<T> & rhs);
                   array2d(array2d<T> && rhs);
-                 ~array2d() { if (_data != nullptr) delete[] _data; };
+                 ~array2d() { delete[] _data; }
 
     T &			      operator()(int x, int y);
     const T &	    operator()(int x, int y) const;
@@ -103,10 +103,7 @@ namespace ggo
   template <typename T>
   void array2d<T>::set_size(int size_x, int size_y)
   {
-    if (_data != nullptr)
-    {
-      delete[] _data;
-    }
+    delete[] _data;
 
     _data	= new T[size_x*size_y];
     _size_x	= size_x;
@@ -117,10 +114,7 @@ namespace ggo
   template <typename T>
   array2d<T> & array2d<T>::operator=(const array2d<T> & rhs)
   {
-    if (_data != nullptr)
-    {
-      delete[] _data;
-    }
+    delete[] _data;
 
     _data = new T[rhs._size_x * rhs._size_y];
     _size_x = rhs._size_x;
@@ -135,10 +129,7 @@ namespace ggo
   template <typename T>
   array2d<T> & array2d<T>::operator=(array2d<T> && rhs)
   {
-    if (_data != nullptr)
-    {
-      delete[] _data;
-    }
+    delete[] _data;
 
     _data = rhs._data;
     _size_x = rhs._size_x;
@@ -182,8 +173,8 @@ namespace ggo
               grid2d(int size) : _array2d(size, size) {}
               grid2d(int size, const T & value) : _array2d(size, size, value) {}
 
-    T &			  operator()(unsigned x, unsigned y) { return _array2d(x, y); }
-    const T &	operator()(unsigned x, unsigned y) const { return _array2d(x, y); }
+    T &			  operator()(int x, int y) { return _array2d(x, y); }
+    const T &	operator()(int x, int y) const { return _array2d(x, y); }
 
     int			  get_size() const { return _array2d.get_size_x(); }
     void		  set_size(int size) { _array2d.set_size(size, size); }

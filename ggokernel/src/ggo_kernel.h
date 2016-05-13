@@ -48,17 +48,6 @@
 #define	GGO_FAIL() GGO_ASSERT(0)
 
 //////////////////////////////////////////////////////////////
-// Enumerations.
-namespace ggo
-{
-  enum class interpolation
-  {
-    INTERPOLATION_LINEAR,
-    INTERPOLATION_CUBIC
-  };
-}
-
-//////////////////////////////////////////////////////////////
 // Random.
 namespace ggo
 {
@@ -209,6 +198,7 @@ namespace ggo
 // Edges fucntions.
 namespace ggo
 {
+  inline int loop_index(int i, int w)                   { return pos_mod(i, w); }
   inline int mirror_index_edge_duplicated(int i, int w) { i = pos_mod(i, 2 * w); return i < w ? i : 2 * w - i - 1; }
   inline int mirror_index_single_edge(int i, int w)     { i = pos_mod(i, 2 * w - 2) ; return i < w ? i : 2 * w - i- 2; }
 }
