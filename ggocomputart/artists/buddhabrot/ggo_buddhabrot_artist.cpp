@@ -84,7 +84,7 @@ bool ggo_buddhabrot_artist::discard_point(const std::complex<double> & p)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array2d<int> & accumulation) const
+void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & accumulation) const
 {
 	std::complex<double> z(0, 0);
 

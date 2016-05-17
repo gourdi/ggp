@@ -6,7 +6,6 @@
 // http://cg.informatik.uni-freiburg.de/publications/2007_SCA_SPH.pdf
 
 #include "ggo_animation_artist_abc.h"
-#include <ggo_array2d.h>
 
 class ggo_toutouyoutou_anim_artist : public ggo_static_background_animation_artist_abc
 {
@@ -86,7 +85,7 @@ private:
     constexpr static float VIEW_HEIGHT = 20;
 
     std::vector<ggo_particle>                       _particles;
-    ggo::array2d<std::vector<const ggo_particle *>> _grid;
+    ggo::array<std::vector<const ggo_particle *>, 2> _grid;
     ggo_particle_emitter                            _emitter1;
     ggo_particle_emitter                            _emitter2;
     float                                           _rest_density;

@@ -120,7 +120,7 @@ int main(int argc, char ** argv)
 	{
 		ggo::chronometer frame_chronometer;
 
-		if (artist->render_next_frame(buffer) == false)
+		if (artist->render_next_frame(buffer.data()) == false)
 		{
 			break;
 		}
@@ -135,7 +135,7 @@ int main(int argc, char ** argv)
 		filename << i << ".bmp";
 		std::cout << "Saved image " << filename.str() << " (image computed in " << frame_chronometer.get_display_time() << ")" << std::endl;
 
-		ggo::save_bmp(filename.str(), buffer, params._width, params._height);
+		ggo::save_bmp(filename.str(), buffer.data(), params._width, params._height);
 
 		++i;
 	}

@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp" />
     <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp" />
-    <ClCompile Include="test\ggo_array2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
     <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />

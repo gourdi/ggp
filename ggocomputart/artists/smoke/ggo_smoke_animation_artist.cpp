@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////
 ggo_smoke_animation_artist::ggo_loop_array2d::ggo_loop_array2d(int size_x, int size_y)
 :
-ggo::array2d<double>(size_x, size_y)
+ggo::array<double, 2>(size_x, size_y)
 {
 }
 
@@ -24,11 +24,11 @@ double ggo_smoke_animation_artist::ggo_loop_array2d::interpolate(double x, doubl
 	GGO_ASSERT(alpha_x >= -0.0001 && alpha_x <= 1.0001);
 	GGO_ASSERT(alpha_y >= -0.0001 && alpha_y <= 1.0001);
 	
-	src_left = ggo::pos_mod(src_left, get_size_x());
-	src_bottom = ggo::pos_mod(src_bottom, get_size_y());
+	src_left = ggo::pos_mod(src_left, get_size<0>());
+	src_bottom = ggo::pos_mod(src_bottom, get_size<1>());
 	
-	int src_right = (src_left + 1) % get_size_x();
-	int src_top = (src_bottom + 1) % get_size_y();
+	int src_right = (src_left + 1) % get_size<0>();
+	int src_top = (src_bottom + 1) % get_size<1>();
 
 	double bottom = (1. - alpha_x) * this->operator()(src_left, src_bottom) + alpha_x * this->operator()(src_right, src_bottom);
 	double top = (1. - alpha_x) * this->operator()(src_left, src_top) + alpha_x * this->operator()(src_right, src_top);
@@ -39,8 +39,8 @@ double ggo_smoke_animation_artist::ggo_loop_array2d::interpolate(double x, doubl
 //////////////////////////////////////////////////////////////
 double ggo_smoke_animation_artist::ggo_loop_array2d::loop_value(int x, int y) const
 {
-	x = ggo::pos_mod(x, get_size_x());
-	y = ggo::pos_mod(y, get_size_y());
+	x = ggo::pos_mod(x, get_size<0>());
+	y = ggo::pos_mod(y, get_size<1>());
 	
 	return this->operator()(x, y);
 }

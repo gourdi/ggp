@@ -2,7 +2,6 @@
 #define _GGO_SMOKE_ANIMATION_ARTIST__
 
 #include <ggo_array.h>
-#include <ggo_array2d.h>
 #include "ggo_animation_artist_abc.h"
 
 #define GGO_SMOKE_FRAMES_COUNT 600
@@ -18,7 +17,7 @@ public:
 
 private:
 	
-	class ggo_loop_array2d : public ggo::array2d<double>
+	class ggo_loop_array2d : public ggo::array<double, 2>
 	{
 	public:
 		

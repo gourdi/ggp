@@ -216,11 +216,11 @@ void render_images(const ggo_params & params, int thread_id)
     ggo_logger(thread_id, filename.str()) << "Starting rendering image";
 
 		ggo::chronometer chronometer;
-    memset(buffer, 0, buffer.get_size());
-		artist->render_bitmap(buffer);
+    buffer.fill(0);
+		artist->render_bitmap(buffer.data());
     ggo_logger(thread_id, filename.str()) << "Image rendered in " << chronometer.get_display_time();
 
-		if (ggo::save_bmp(filename.str(), buffer, params._width, params._height) == false)
+		if (ggo::save_bmp(filename.str(), buffer.data(), params._width, params._height) == false)
     {
       ggo_logger(thread_id, filename.str()) << "Failed saving file";
     }
