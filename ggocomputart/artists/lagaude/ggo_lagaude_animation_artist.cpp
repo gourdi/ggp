@@ -133,7 +133,7 @@ ggo_lagaude_animation_artist::ggo_seed::ggo_seed(const ggo::point2d_float & pos,
 :
 ggo_scale_animate_abc(pos, path, scale)
 {
-	_angle_generators.set_size(ggo::rand_int(3, 5));
+	_angle_generators.resize(ggo::rand_int(3, 5));
 	_life = ggo::rand_int(80, 120);
 	_dangle = ggo::rand_float(-0.1f, 0.1f);
 	_color = ggo::color::from_hsv(hue, ggo::rand_float(0.5f, 1), ggo::rand_float(0.5f, 1));
@@ -151,9 +151,9 @@ bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uin
 	
 	if (opacity > 0) 
 	{
-		for (int i = 0; i < _angle_generators.get_size(); ++i)
+		for (int i = 0; i < _angle_generators.get_count(); ++i)
 		{
-			float angle = _angle_generators[i].update(1) + 2 * ggo::PI<float>() * i / _angle_generators.get_size();
+			float angle = _angle_generators(i).update(1) + 2 * ggo::PI<float>() * i / _angle_generators.get_count();
 
 			ggo_particle * particle = new ggo_particle(pos + ggo::point2d_float::from_polar(angle, 0.02f * _scale), new ggo_linear_path(0.02f * _scale, angle));
 			particle->_angle = angle;

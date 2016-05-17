@@ -39,6 +39,6 @@ GGO_TEST(test_scene, scene3)
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
-  renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("scene3.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
+  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
+  ggo::save_bmp("scene3.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 }

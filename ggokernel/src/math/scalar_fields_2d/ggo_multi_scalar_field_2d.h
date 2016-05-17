@@ -6,15 +6,14 @@
 namespace ggo
 {
   template <template <typename> class field2d_type,
-            typename T = float,          
-            template <typename, typename...> class container = std::vector>
+            typename data_t = float>
   class multi_scalar_field2d
   {
   public:
     
-    T evaluate(T x, T y) const
+    data_t evaluate(data_t x, data_t y) const
     {
-      T v(0);
+      data_t v(0);
       for (const auto & field : _fields)
       {
         v += field.evaluate(x, y);
@@ -22,7 +21,7 @@ namespace ggo
       return v;
     }
     
-    container<field2d_type<T>> _fields;
+    std::vector<field2d_type<data_t>> _fields;
   };
 }
 

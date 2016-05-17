@@ -346,7 +346,7 @@ void ggo_toutouyoutou_anim_artist::paint_flow(uint8_t * buffer) const
   
   ggo::array_uint8 sample_buffer(get_render_width() * get_render_height());
 
-  uint8_t * ptr = sample_buffer;
+  uint8_t * ptr = sample_buffer.data();
   for (int render_y = 0; render_y < get_render_height(); ++render_y)
   {
     for (int render_x = 0; render_x < get_render_width(); ++render_x)
@@ -417,7 +417,7 @@ void ggo_toutouyoutou_anim_artist::paint_flow(uint8_t * buffer) const
   //}
   
   // Inside.
-  uint8_t * ptr_sample = sample_buffer;
+  uint8_t * ptr_sample = sample_buffer.data();
   for (int render_y = 0; render_y < get_render_height(); ++render_y)
   {
     for (int render_x = 0; render_x < get_render_width(); ++render_x)

@@ -33,7 +33,7 @@ public:
           ggo::rgb_image_buffer_uint8 make_image_buffer(uint8_t * buffer) const { return ggo::rgb_image_buffer_uint8(_render_width, _render_height, buffer); }
 
           template <typename func_t>
-          void                        for_each_pixel(func_t f) { for (int y = 0; y < _render_height; ++y) { for (int x = 0; x < _render_width; ++x) { f(x, y); } } }
+          void                        for_each_pixel(func_t f) const { for (int y = 0; y < _render_height; ++y) { for (int x = 0; x < _render_width; ++x) { f(x, y); } } }
 
 protected:
 

@@ -8,40 +8,39 @@
 // Color are stored in buffers.
 namespace ggo
 {
-  template <typename color_type, typename data_type>
-  class image_buffer_abc : public image_abc<color_type>
+  template <typename color_t, typename data_t>
+  class image_buffer_abc : public image_abc<color_t>
   {
   public:
 
-                              image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer);
-    virtual                  ~image_buffer_abc();
+                           image_buffer_abc(int width, int height, data_t * buffer, bool delete_buffer);
+    virtual               ~image_buffer_abc();
 
-            const data_type * data() const { return _buffer; }
-            data_type *       data() { return _buffer; }
-            
+            const data_t * data() const { return _buffer; }
+            data_t *       data() { return _buffer; }
 
   protected:
     
-    data_type * _buffer = nullptr;
-    bool        _delete_buffer = false;
+    data_t * _buffer = nullptr;
+    bool     _delete_buffer = false;
   };
 }
 
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type, typename data_type>
-  image_buffer_abc<color_type, data_type>::image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer)
+  template <typename color_t, typename data_t>
+  image_buffer_abc<color_t, data_t>::image_buffer_abc(int width, int height, data_t * buffer, bool delete_buffer)
   :
-  image_abc<color_type>(width, height),
+  image_abc<color_t>(width, height),
   _buffer(buffer),
   _delete_buffer(delete_buffer)
   {
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type, typename data_type>
-  image_buffer_abc<color_type, data_type>::~image_buffer_abc()
+  template <typename color_t, typename data_t>
+  image_buffer_abc<color_t, data_t>::~image_buffer_abc()
   {
     if (_delete_buffer)
     {

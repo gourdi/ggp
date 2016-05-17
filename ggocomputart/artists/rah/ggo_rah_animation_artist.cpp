@@ -134,7 +134,7 @@ ggo_particle(render_width, render_height, focus_dist),
 _polygon(std::make_shared<ggo::polygon2d_float>())
 {    
   int points_count = ggo::rand_int(3, 6);
-  _radius_interpolators.set_size(points_count);
+  _radius_interpolators.resize(points_count);
   for (int i = 0; i < points_count; ++i)
   {
     _polygon->add_point(0, 0);
@@ -146,10 +146,10 @@ void ggo_rah_animation_artist::ggo_particle1::update(int min_size)
 {
   ggo_particle::update(min_size);
 
-  for (int i = 0; i < _radius_interpolators.get_size(); ++i)
+  for (int i = 0; i < _radius_interpolators.get_count(); ++i)
   {
-    float radius = _radius_interpolators[i].update(1) * disc_radius(min_size);
-    float angle = _angle + i * 2 * ggo::PI<float>() / _radius_interpolators.get_size();
+    float radius = _radius_interpolators(i).update(1) * disc_radius(min_size);
+    float angle = _angle + i * 2 * ggo::PI<float>() / _radius_interpolators.get_count();
     _polygon->get_point(i) = _pos + ggo::point2d_float::from_polar(angle, radius);
   }
 }

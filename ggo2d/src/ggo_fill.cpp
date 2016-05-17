@@ -20,7 +20,7 @@ namespace
     {
       float val = scalar_field2d.evaluate(static_cast<float>(x), static_cast<float>(y));
       
-      image.write(x, y, val * color1 + (1 - val) * color2);
+      image.set(x, y, val * color1 + (1 - val) * color2);
     });
   }
 }
@@ -35,7 +35,7 @@ namespace ggo
   {
     image.for_each_pixel([&](int x, int y)
     {
-      image.write(x, y, color);
+      image.set(x, y, color);
     });
   }
 
@@ -103,7 +103,7 @@ namespace ggo
       int index_x = x / tile_size;
       int index_y = y / tile_size;
                   
-      image.write(x, y, ((index_x + index_y) % 2) ? color1 : color2);
+      image.set(x, y, ((index_x + index_y) % 2) ? color1 : color2);
     });
   }
 
@@ -146,7 +146,7 @@ namespace ggo
     },
     [&](int x, int y)
     {
-      image.write(x, y, color);
+      image.set(x, y, color);
     });
   }
 
@@ -229,7 +229,7 @@ namespace ggo
     },
     [&](int x, int y)
     { 
-      image.write(x, y, (static_cast<float>(x) * color5 + static_cast<float>(width - x) * color6) / static_cast<float>(width));
+      image.set(x, y, (static_cast<float>(x) * color5 + static_cast<float>(width - x) * color6) / static_cast<float>(width));
     });
   }
 
@@ -276,7 +276,7 @@ namespace ggo
       });
       color /= static_cast<float>(sampler.get_samples_count());
       
-      image.write(x, y, color);
+      image.set(x, y, color);
     });
   }
 

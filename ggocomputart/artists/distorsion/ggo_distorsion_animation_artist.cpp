@@ -10,7 +10,8 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo_distorsion_animation_artist::ggo_distorsion_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height)
+ggo_animation_artist_abc(render_width, render_height),
+_transforms(32)
 {
 }
 
@@ -24,8 +25,6 @@ void ggo_distorsion_animation_artist::render_last_frame(uint8_t * buffer)
 void ggo_distorsion_animation_artist::init_sub()
 {
   _hue = ggo::rand_float();
-  
-  _transforms.set_size(32);
 
   for (auto & transform : _transforms)
   {

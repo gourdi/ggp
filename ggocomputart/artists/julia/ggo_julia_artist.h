@@ -28,7 +28,7 @@ private:
 		uint8_t _b;
 	};
 
-	ggo::array<ggo_rgb>	_palette;
+	ggo::array<ggo_rgb, 1>	_palette;
 };
 
 #endif

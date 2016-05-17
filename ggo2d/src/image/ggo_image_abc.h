@@ -13,30 +13,32 @@
 // Base interface that let color being packed/unpacked.
 namespace ggo
 {
-  template <typename color_type>
+  template <typename color_t>
   class image_abc
   {
   public:
 
-                        image_abc(int width, int height) : _width(width), _height(height) { }
-    virtual            ~image_abc() {}
+                    image_abc(int width, int height) : _width(width), _height(height) { }
+    virtual        ~image_abc() {}
 
-    virtual void        write(int x, int y, const color_type & value) = 0;
-    virtual color_type  read(int x, int y) const = 0;
+    virtual void    set(int x, int y, const color_t & value) = 0;
+    virtual color_t get(int x, int y) const = 0;
 
-            int         get_width() const { return _width; }
-            int         get_height() const { return _height; }
+            int     get_width() const { return _width; }
+            int     get_height() const { return _height; }
            
-            void        fill(const color_type & color);
+            void    fill(const color_t & color);
 
-            template <typename color_type2>
-            void        from(const image_abc<color_type2> & other);
+            template <typename color_t2>
+            void    from(const image_abc<color_t2> & other);
 
-            void        set_pixel(int x, int y, color_type color, float opacity, const ggo::blender_abc<color_type> & blender = ggo::alpha_blender<color_type>());
+            color_t get_loop(int x, int y) const;
+
+            void    set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender = ggo::alpha_blender<color_t>());
            
-            void        for_each_pixel(const std::function<void(int x, int y)> & func) const;
-            void        for_each_pixel(const std::function<void(int y)> & line_func,
-                                       const std::function<void(int x, int y)> & pixel_func) const;
+            void    for_each_pixel(const std::function<void(int x, int y)> & func) const;
+            void    for_each_pixel(const std::function<void(int y)> & line_func,
+                                   const std::function<void(int x, int y)> & pixel_func) const;
 
   protected:
 
@@ -51,22 +53,22 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
-  void image_abc<color_type>::fill(const color_type & color)
+  template <typename color_t>
+  void image_abc<color_t>::fill(const color_t & color)
   {
     for (int y = 0; y < _height; ++y)
     {
       for (int x = 0; x < _width; ++x)
       {
-        write(x, y, color);
+        set(x, y, color);
       }
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
-  template <typename color_type2>
-  void image_abc<color_type>::from(const image_abc<color_type2> & other)
+  template <typename color_t>
+  template <typename color_t2>
+  void image_abc<color_t>::from(const image_abc<color_t2> & other)
   {
     if (get_width() != other.get_width() || get_height() != other.get_height())
     {
@@ -77,25 +79,32 @@ namespace ggo
     {
       for (int x = 0; x < _width; ++x)
       {
-        color_type color = ggo::to<color_type>(other.read(x, y));
-        write(x, y, color);
+        color_t color = ggo::to<color_t>(other.get(x, y));
+        set(x, y, color);
       }
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
-  void image_abc<color_type>::set_pixel(int x, int y, color_type color, float opacity, const ggo::blender_abc<color_type> & blender)
+  template <typename color_t>
+  color_t image_abc<color_t>::get_loop(int x, int y) const
+  {
+    return get(ggo::loop_index(x, _width), ggo::loop_index(y, _height));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename color_t>
+  void image_abc<color_t>::set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender)
   {
     GGO_ASSERT(x >= 0 && x < _width);
     GGO_ASSERT(y >= 0 && y < _height);
 
-    write(x, y, blender.blend(read(x, y), opacity, color));
+    set(x, y, blender.blend(get(x, y), opacity, color));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
-  void image_abc<color_type>::for_each_pixel(const std::function<void(int x, int y)> & func) const
+  template <typename color_t>
+  void image_abc<color_t>::for_each_pixel(const std::function<void(int x, int y)> & func) const
   {
     for (int y = 0; y < _height; ++y)
     {
@@ -107,9 +116,9 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
-  void image_abc<color_type>::for_each_pixel(const std::function<void(int y)> & line_func,
-                                             const std::function<void(int x, int y)> & pixel_func) const
+  template <typename color_t>
+  void image_abc<color_t>::for_each_pixel(const std::function<void(int y)> & line_func,
+                                          const std::function<void(int x, int y)> & pixel_func) const
   {
     for (int y = 0; y < _height; ++y)
     {

@@ -41,21 +41,21 @@ private:
 		double				      _density;
 	};
 
-	ggo_loop_array2d	            _velocity_x1;
-	ggo_loop_array2d	            _velocity_x2;
-	ggo_loop_array2d	            _velocity_y1;
-	ggo_loop_array2d	            _velocity_y2;
-	ggo_loop_array2d *            _velocity_x_cur;
-	ggo_loop_array2d *            _velocity_x_tmp;
-	ggo_loop_array2d *            _velocity_y_cur;
-	ggo_loop_array2d *            _velocity_y_tmp;
-	ggo_loop_array2d	            _density1;
-	ggo_loop_array2d	            _density2;
-	ggo_loop_array2d *            _density_cur;
-	ggo_loop_array2d *            _density_tmp;
-	ggo::array<ggo_fluid_source>	_sources;
-	ggo::array<uint8_t>			      _bkgd_buffer;
-	ggo::color					          _smoke_color;
+	ggo_loop_array2d	              _velocity_x1;
+	ggo_loop_array2d	              _velocity_x2;
+	ggo_loop_array2d	              _velocity_y1;
+	ggo_loop_array2d	              _velocity_y2;
+	ggo_loop_array2d *              _velocity_x_cur;
+	ggo_loop_array2d *              _velocity_x_tmp;
+	ggo_loop_array2d *              _velocity_y_cur;
+	ggo_loop_array2d *              _velocity_y_tmp;
+	ggo_loop_array2d	              _density1;
+	ggo_loop_array2d	              _density2;
+	ggo_loop_array2d *              _density_cur;
+	ggo_loop_array2d *              _density_tmp;
+	ggo::array<ggo_fluid_source, 1> _sources;
+	ggo::array<uint8_t, 1>			    _bkgd_buffer;
+	ggo::color					            _smoke_color;
 };
 
 #endif

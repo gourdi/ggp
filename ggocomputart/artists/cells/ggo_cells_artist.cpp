@@ -72,11 +72,11 @@ void ggo_cells_artist::render_bitmap(uint8_t * buffer)
       
       ggo::array_uint8 tmp_buffer(3 * get_render_width() * get_render_height());
 
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, tmp_buffer + 0, get_render_width(), get_render_height(), variance, 0.001f);
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, tmp_buffer + 1, get_render_width(), get_render_height(), variance, 0.001f);
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, tmp_buffer + 2, get_render_width(), get_render_height(), variance, 0.001f);
+      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, tmp_buffer.data() + 0, get_render_width(), get_render_height(), variance, 0.001f);
+      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, tmp_buffer.data() + 1, get_render_width(), get_render_height(), variance, 0.001f);
+      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, tmp_buffer.data() + 2, get_render_width(), get_render_height(), variance, 0.001f);
       
-      memcpy(buffer, tmp_buffer, tmp_buffer.get_size());
+      memcpy(buffer, tmp_buffer.data(), tmp_buffer.get_count());
     }
 	}
 }

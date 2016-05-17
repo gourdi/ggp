@@ -42,8 +42,8 @@ GGO_TEST(caustics, test)
   ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
 
   // Without indirect lighting.
-  renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("caustics_off.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
+  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
+  ggo::save_bmp("caustics_off.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 
   // With indirect lighting.
   std::vector<ggo::point3d_float> target_samples;
@@ -63,6 +63,6 @@ GGO_TEST(caustics, test)
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &photon_mapping;
 
-  renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene, raytrace_params);
-  ggo::save_bmp("caustics_on.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
+  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene, raytrace_params);
+  ggo::save_bmp("caustics_on.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 }

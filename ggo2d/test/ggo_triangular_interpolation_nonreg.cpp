@@ -24,7 +24,7 @@ GGO_TEST(triangular_interpolation, function)
     
     ggo::color pixel_color(0);
     ggo::triangular_interpolation(p0, ggo::color::RED, p1, ggo::color::GREEN, p2, ggo::color::BLUE, p, pixel_color);
-    image.write(x, y, pixel_color);
+    image.set(x, y, pixel_color);
   });
   
   ggo::save_bmp("test_triangular_interpolation_function.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);

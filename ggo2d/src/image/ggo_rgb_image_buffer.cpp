@@ -30,7 +30,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  void rgb_image_buffer_uint8::write(int x, int y, const ggo::color & color)
+  void rgb_image_buffer_uint8::set(int x, int y, const ggo::color & color)
   {
     GGO_ASSERT(_buffer);
     GGO_ASSERT(_width > 0 && _height > 0);
@@ -45,7 +45,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  ggo::color rgb_image_buffer_uint8::read(int x, int y) const
+  ggo::color rgb_image_buffer_uint8::get(int x, int y) const
   {
     GGO_ASSERT(_buffer);
     GGO_ASSERT(_width > 0 && _height > 0);
@@ -94,7 +94,7 @@ namespace ggo
 
 
   /////////////////////////////////////////////////////////////////////
-  void rgb_image_buffer_float::write(int x, int y, const ggo::color & color)
+  void rgb_image_buffer_float::set(int x, int y, const ggo::color & color)
   {
     GGO_ASSERT(_buffer);
     GGO_ASSERT(_width > 0 && _height > 0);
@@ -109,7 +109,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  ggo::color rgb_image_buffer_float::read(int x, int y) const
+  ggo::color rgb_image_buffer_float::get(int x, int y) const
   {
     GGO_ASSERT(_buffer);
     GGO_ASSERT(_width > 0 && _height > 0);

@@ -24,7 +24,7 @@ void ggo_crystal_artist::render_bitmap(uint8_t * buffer, const ggo_params & para
 
 	for (int i = 0; i < 3 * get_render_width() * get_render_height(); ++i)
 	{
-		buffer[i] = ggo::clamp(ggo::to<int>(255 * _render_buffer[i]), 0, 255);
+		buffer[i] = ggo::clamp(ggo::to<int>(255 * _render_buffer(i)), 0, 255);
 	}
 }
 
@@ -52,27 +52,27 @@ void ggo_crystal_artist::process_transform(const ggo_params & params)
 		if ((x >= 0) && (x < get_render_width()) &&
 			  (y >= 0) && (y < get_render_height()))
 		{
-			float * ptr = _render_buffer + 3 * (y * get_render_width() + x);
+			float * ptr = _render_buffer.data() + 3 * (y * get_render_width() + x);
 
 			float diff = 4 * (ptr[0] + ptr[1] + ptr[2]);
 			if (x > 0)
 			{
-				float * it_diff = _render_buffer + 3 * (y * get_render_width() + x - 1);
+				float * it_diff = _render_buffer.data() + 3 * (y * get_render_width() + x - 1);
 				diff -= it_diff[0] + it_diff[1] + it_diff[2];
 			}
 			if (x < get_render_width() - 1)
 			{
-				float * it_diff = _render_buffer + 3 * (y * get_render_width() + x + 1);
+				float * it_diff = _render_buffer.data() + 3 * (y * get_render_width() + x + 1);
 				diff -= it_diff[0]+it_diff[1]+it_diff[2];
 			}
 			if (y > 0)
 			{
-				float * it_diff = _render_buffer + 3 * ((y - 1) * get_render_width() + x);
+				float * it_diff = _render_buffer.data() + 3 * ((y - 1) * get_render_width() + x);
 				diff -= it_diff[0] + it_diff[1] + it_diff[2];
 			}
 			if (y < get_render_height() - 1)
 			{
-				float * it_diff = _render_buffer + 3 * ((y + 1) * get_render_width() + x);
+				float * it_diff = _render_buffer.data() + 3 * ((y + 1) * get_render_width() + x);
 				diff -= it_diff[0] + it_diff[1] + it_diff[2];
 			}
 

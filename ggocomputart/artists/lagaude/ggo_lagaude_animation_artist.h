@@ -69,11 +69,11 @@ private:
     
 	private:
 
-		ggo::array<ggo_angle_generator>	_angle_generators;
-		ggo_animator					          _particles_animator;
-		int								              _life;
-		ggo::color					            _color;
-		float							              _dangle;
+		ggo::array<ggo_angle_generator, 1>  _angle_generators;
+		ggo_animator					              _particles_animator;
+		int								                  _life;
+		ggo::color					                _color;
+		float							                  _dangle;
 	};
 
 	//////////////////////////////////////////////////////////////

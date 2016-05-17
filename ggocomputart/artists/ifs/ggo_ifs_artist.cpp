@@ -69,7 +69,7 @@ void ggo_ifs_artist::render(uint8_t * buffer, float transform[4], float hue, flo
 			if ((x_i >= 0) && (x_i < get_render_width()) &&
 				(y_i >= 0) && (y_i < get_render_height()))
 			{
-				accumul_buffer[index] = std::min(1.f, accumul_buffer[index] + 0.00015f);
+				accumul_buffer(index) = std::min(1.f, accumul_buffer(index) + 0.00015f);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ void ggo_ifs_artist::paint_buffer(uint8_t * buffer, uint8_t color, const ggo::ar
 {
 	for (int i = 0; i < get_render_width() * get_render_height(); ++i)
 	{
-		float alpha = accumul_buffer[i];
+		float alpha = accumul_buffer(i);
 
 		float r = (1 - alpha) * buffer[0] + alpha * color;
 		float g = (1 - alpha) * buffer[1] + alpha * color;

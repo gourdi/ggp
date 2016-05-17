@@ -49,7 +49,7 @@ namespace ggo
   template <typename data_t, typename filter_t, int stride_in = 1, int stride_out = 1>
   void gaussian_blur_2d_mirror(const data_t * in, data_t * out, int width, int height, float stddev, filter_t filter_threshold)
   {
-    ggo::array<data_t> tmp(width * height);
+    ggo::array<data_t, 1> tmp(width * height);
 
     // Setup the filter.
     auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
@@ -66,11 +66,32 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
+  // Looping generic gaussian 2D.
+  template <typename data_t, typename filter_t, int stride_in = 1, int stride_out = 1>
+  void gaussian_blur_2d_loop(const data_t * in, data_t * out, int width, int height, float stddev, filter_t filter_threshold)
+  {
+    ggo::array<data_t, 1> tmp(width * height);
+
+    // Setup the filter.
+    auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
+
+    // Horizontal filtering.
+    auto in_horz = [&](int x, int y) { return ggo::get2d_loop_ref<const data_t, stride_in>(in, x, y, width, height); };
+    auto out_horz = [&](int x, int y, const data_t & v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
+    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
+
+    // Vertical filtering.
+    auto in_vert = [&](int x, int y) { return ggo::get2d_loop_ref(tmp.data(), x, y, width, height); };
+    auto out_vert = [&](int x, int y, const data_t & v) { ggo::set2d<data_t, stride_out>(out, x, y, width, height, v); };
+    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
+  }
+
+  /////////////////////////////////////////////////////////////////////
   // Mirroring uint8_t specialization.
   template <int stride_in = 1, int stride_out = 1>
   void gaussian_blur_2d_mirror(const uint8_t * in, uint8_t * out, int width, int height, float stddev, float filter_threshold)
   {
-    ggo::array<float> tmp(width * height);
+    ggo::array<float, 1> tmp(width * height);
 
     // Setup the filter.
     auto filter = build_gaussian_filter<float>(stddev, filter_threshold);
@@ -82,6 +103,27 @@ namespace ggo
 
     // Vertical filtering.
     auto in_vert = [&](int x, int y) { return ggo::get2d_mirror(tmp.data(), x, y, width, height); };
+    auto out_vert = [&](int x, int y, float v) { ggo::set2d<uint8_t, stride_out>(out, x, y, width, height, ggo::to<uint8_t>(v)); };
+    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  // Looping uint8_t specialization.
+  template <int stride_in = 1, int stride_out = 1>
+  void gaussian_blur_2d_loop(const uint8_t * in, uint8_t * out, int width, int height, float stddev, float filter_threshold)
+  {
+    ggo::array<float> tmp(width * height);
+
+    // Setup the filter.
+    auto filter = build_gaussian_filter<float>(stddev, filter_threshold);
+
+    // Horizontal filtering.
+    auto in_horz = [&](int x, int y) { return ggo::to<float>(ggo::get2d_loop<const uint8_t, stride_in>(in, x, y, width, height)); };
+    auto out_horz = [&](int x, int y, float v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
+    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
+
+    // Vertical filtering.
+    auto in_vert = [&](int x, int y) { return ggo::get2d_loop(tmp.data(), x, y, width, height); };
     auto out_vert = [&](int x, int y, float v) { ggo::set2d<uint8_t, stride_out>(out, x, y, width, height, ggo::to<uint8_t>(v)); };
     ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
   }

@@ -18,13 +18,13 @@ public:
 	
 	struct ggo_vortex2_params
 	{
-		ggo::array<ggo_vortex> 	_vortices;
-		ggo::color 				      _color1;
-		ggo::color 				      _color2;
-		ggo::color 				      _color3;
-		ggo::color 				      _color4;
-		float 					        _split_horz;
-		float 					        _split_vert;
+		ggo::array<ggo_vortex, 1> _vortices;
+		ggo::color 				        _color1;
+		ggo::color 				        _color2;
+		ggo::color 				        _color3;
+		ggo::color 				        _color4;
+		float 					          _split_horz;
+		float 					          _split_vert;
 	};
 	
 	static	void	render(uint8_t * buffer, int render_width, int render_height, const ggo_vortex2_params & params);

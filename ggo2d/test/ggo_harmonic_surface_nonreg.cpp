@@ -18,7 +18,7 @@ GGO_TEST(harmonic_surface, test1)
     for (int x = 0; x < SIZE; ++x)
     {
       float value = ggo::map(harmonic_surface.evaluate(static_cast<float>(x), static_cast<float>(y)), -1.f, 1.f, 0.f, 1.f);
-      image.write(x, y, ggo::color(value));
+      image.set(x, y, ggo::color(value));
     }
   }
   
@@ -48,7 +48,7 @@ GGO_TEST(harmonic_surface, test2)
     for (int x = 0; x < SIZE; ++x)
     {
       float value = ggo::map<float>(harmonic_surface.evaluate(static_cast<float>(x), static_cast<float>(y)), -4.f, 4.f, 0.f, 1.f);
-      image.write(x, y, ggo::color(value));
+      image.set(x, y, ggo::color(value));
     }
   }
   

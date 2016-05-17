@@ -27,6 +27,7 @@
 #include "artists/chryzode/ggo_chryzode_animation_artist.h"
 #include "artists/stoa/ggo_stoa_animation_artist.h"
 #include "artists/sonson/ggo_sonson_animation_artist.h"
+#include "artists/rediff/ggo_rediff_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS
@@ -130,6 +131,9 @@ ggo_animation_artist_abc * ggo_animation_artist_abc::create(ggo_animation_artist
   case GGO_ANIMATION_ARTIST_FLIES:
     artist = new ggo_flies_artist(render_width, render_height);
     break;
+  case GGO_ANIMATION_ARTIST_REDIFF:
+    artist = new ggo_rediff_animation_artist(render_width, render_height);
+    break;
 	default:
 		GGO_FAIL();
 		break;
@@ -177,12 +181,12 @@ ggo_animation_artist_abc(render_width, render_height)
 //////////////////////////////////////////////////////////////
 bool ggo_accumulation_animation_artist_abc::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
-    if (frame_index == 0)
-    {
-        init_output_buffer(buffer);
-    }
+  if (frame_index == 0)
+  {
+    init_output_buffer(buffer);
+  }
 
-    return render_next_frame_acc(buffer, frame_index);
+  return render_next_frame_acc(buffer, frame_index);
 };
 
 //////////////////////////////////////////////////////////////
@@ -199,17 +203,17 @@ _bkgd_buffer(3 * render_width * render_height)
 //////////////////////////////////////////////////////////////
 bool ggo_static_background_animation_artist_abc::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
-    if (frame_index == 0)
-    {
-        init_bkgd_buffer(_bkgd_buffer);
-    }
-    
-    if (buffer != nullptr)
-    {
-        memcpy(buffer, _bkgd_buffer, _bkgd_buffer.get_size());
-    }
+  if (frame_index == 0)
+  {
+    init_bkgd_buffer(_bkgd_buffer.data());
+  }
 
-    return render_next_frame_bkgd(buffer, frame_index);
+  if (buffer != nullptr)
+  {
+    memcpy(buffer, _bkgd_buffer.data(), _bkgd_buffer.get_count());
+  }
+
+  return render_next_frame_bkgd(buffer, frame_index);
 };
 
 //////////////////////////////////////////////////////////////
@@ -226,13 +230,13 @@ _bkgd_buffer(3 * render_width * render_height)
 //////////////////////////////////////////////////////////////
 bool ggo_dynamic_background_animation_artist_abc::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
-    if (frame_index == 0)
-    {
-        init_bkgd_buffer(_bkgd_buffer);
-    }
-    
-    memcpy(buffer, _bkgd_buffer, _bkgd_buffer.get_size());
+  if (frame_index == 0)
+  {
+    init_bkgd_buffer(_bkgd_buffer.data());
+  }
 
-    return render_next_frame_bkgd(buffer, _bkgd_buffer, frame_index);
+  memcpy(buffer, _bkgd_buffer.data(), _bkgd_buffer.get_count());
+
+  return render_next_frame_bkgd(buffer, _bkgd_buffer.data(), frame_index);
 };
 

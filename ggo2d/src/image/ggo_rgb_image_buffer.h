@@ -5,14 +5,14 @@
 
 namespace ggo
 {
-  template <typename data_type>
-  class rgb_image_buffer_abc : public image_buffer_abc<ggo::color, data_type>
+  template <typename data_t>
+  class rgb_image_buffer_abc : public image_buffer_abc<ggo::color, data_t>
   {
   public:
 
     using ggo::image_abc<ggo::color>::from;
 
-    rgb_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<ggo::color, data_type>(width, height, buffer, delete_buffer) { }
+    rgb_image_buffer_abc(int width, int height, data_t * buffer, bool delete_buffer) : image_buffer_abc<ggo::color, data_t>(width, height, buffer, delete_buffer) { }
   };
 }
 
@@ -27,8 +27,8 @@ namespace ggo
                 rgb_image_buffer_uint8(int width, int height, uint8_t * buffer);
                 rgb_image_buffer_uint8(int width, int height, const ggo::color & color);
 
-    void        write(int x, int y, const ggo::color & color) override;
-    ggo::color  read(int x, int y) const override;
+    void        set(int x, int y, const ggo::color & color) override;
+    ggo::color  get(int x, int y) const override;
   };
 }
 
@@ -43,8 +43,8 @@ namespace ggo
                 rgb_image_buffer_float(int width, int height, float * buffer);
                 rgb_image_buffer_float(int width, int height, const ggo::color & fill_value);
     
-    void        write(int x, int y, const ggo::color & color) override;
-    ggo::color  read(int x, int y) const override;
+    void        set(int x, int y, const ggo::color & color) override;
+    ggo::color  get(int x, int y) const override;
   };
 }
 

@@ -14,7 +14,7 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
   int counter_max = render_width * render_height;
   int max_size = std::max(render_width, render_height);
   
-  ggo::array<ggo::color> color_buffer(render_width * render_height, ggo::color::BLACK);
+  ggo::array<ggo::color, 2> color_buffer(render_width, render_height, ggo::color::BLACK);
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
@@ -47,16 +47,16 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
 		{
 			// Apply the vortices.
 			ggo::vector2d_float move(0, 0);
-			for (int vortex = 0; vortex < params._vortices.get_size(); ++vortex )
+			for (const auto & vortex : params._vortices)
 			{
-				float dx	= particle.x() - params._vortices[vortex]._pos.x();
-				float dy	= particle.y() - params._vortices[vortex]._pos.y();
+				float dx	= particle.x() - vortex._pos.x();
+				float dy	= particle.y() - vortex._pos.y();
 				float angle	= std::atan2(dy, dx);
 				float dist	= std::sqrt(dx * dx + dy * dy) / max_size;
-				float force	= params._vortices[vortex]._speed * std::pow(1 / (1 + dist), params._vortices[vortex]._power);
+				float force	= vortex._speed * std::pow(1 / (1 + dist), vortex._power);
 
-				move.x() += force * std::cos(angle + params._vortices[vortex]._angle);
-				move.y() += force * std::sin(angle + params._vortices[vortex]._angle);
+				move.x() += force * std::cos(angle + vortex._angle);
+				move.y() += force * std::sin(angle + vortex._angle);
 			}
 			particle += move;
 
@@ -71,9 +71,9 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
 			int render_y = ggo::to<int>(particle.y());
 
 			if ((render_x >= 0) && (render_x < render_width) &&
-				(render_y >= 0) && (render_y < render_height))
+				  (render_y >= 0) && (render_y < render_height))
 			{
-				color_buffer[render_y * render_width + render_x] += color;
+				color_buffer(render_x, render_y) += color;
 			}
 		}
 	}
@@ -81,7 +81,7 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
     // Merge render buffer from each thread.
 	for (int i = 0; i < render_width * render_height; ++i)
 	{
-    const ggo::color & color = ggo::color::WHITE - color_buffer[i];
+    const ggo::color & color = ggo::color::WHITE - color_buffer.data()[i];
     
 		*buffer++ = color.r8();
 		*buffer++ = color.g8();

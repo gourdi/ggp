@@ -13,13 +13,13 @@ GGO_TEST(box_filter, box_filter3x3)
   auto disc = std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 20.f);
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
-  ggo::paint(buffer, WIDTH, HEIGHT, disc, ggo::color::WHITE, 0.8f);
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, disc, ggo::color::WHITE, 0.8f);
   
   ggo::box_filter3_2d(buffer.data() + 0, WIDTH, HEIGHT, 3);
   ggo::box_filter3_2d(buffer.data() + 1, WIDTH, HEIGHT, 3);
   ggo::box_filter3_2d(buffer.data() + 2, WIDTH, HEIGHT, 3);
 
-  ggo::save_bmp("box_filter3x3.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("box_filter3x3.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -31,11 +31,11 @@ GGO_TEST(box_filter, box_filter5x5)
   auto disc = std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 20.f);
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
-  ggo::paint(buffer, WIDTH, HEIGHT, disc, ggo::color::WHITE, 0.8f);
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, disc, ggo::color::WHITE, 0.8f);
   
   ggo::box_filter5_2d(buffer.data() + 0, WIDTH, HEIGHT, 3);
   ggo::box_filter5_2d(buffer.data() + 1, WIDTH, HEIGHT, 3);
   ggo::box_filter5_2d(buffer.data() + 2, WIDTH, HEIGHT, 3);
 
-  ggo::save_bmp("box_filter5x5.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("box_filter5x5.bmp", buffer.data(), WIDTH, HEIGHT);
 }

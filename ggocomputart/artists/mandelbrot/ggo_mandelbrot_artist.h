@@ -29,9 +29,9 @@ private:
 		uint8_t _b;
 	};
 	
-	std::complex<double>	_center;
-	double					      _range;				
-	ggo::array<ggo_rgb>		_palette;
+	std::complex<double>	  _center;
+	double					        _range;				
+	ggo::array<ggo_rgb, 1>  _palette;
 };
 
 #endif

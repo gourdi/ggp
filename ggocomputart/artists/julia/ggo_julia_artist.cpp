@@ -5,7 +5,8 @@
 //////////////////////////////////////////////////////////////
 ggo_julia_artist::ggo_julia_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height)
+ggo_artist_abc(render_width, render_height),
+_palette(1000)
 {
 	// Build the palette.
 	float hue = ggo::rand_float();
@@ -18,19 +19,18 @@ ggo_artist_abc(render_width, render_height)
 	val_curve.push_point(0, ggo::rand_float(0.75, 1));
 	val_curve.push_point(1, ggo::rand_float(0, 0.25));
 	
-	_palette.set_size(1000);
-	for (int i = 0; i < _palette.get_size(); ++i)
+	for (int i = 0; i < _palette.get_count(); ++i)
 	{
-		float x = float(i) / _palette.get_size();
+		float x = float(i) / _palette.get_count();
 		
 		float sat = sat_curve.evaluate(x);
 		float val = val_curve.evaluate(x);
 		
 		ggo::color color = ggo::color::from_hsv(hue, sat, val);
 		
-		_palette[i]._r = color.r8();
-		_palette[i]._b = color.g8();
-		_palette[i]._g = color.b8();
+		_palette(i)._r = color.r8();
+		_palette(i)._b = color.g8();
+		_palette(i)._g = color.b8();
 	}
 }
 	
@@ -113,10 +113,10 @@ void ggo_julia_artist::render_bitmap(uint8_t * buffer, const std::complex<float>
 			}
 		
 			// Set the proper pixel color.
-			index = std::min(_palette.get_size() - 1, index);
-			buffer[0] = _palette[index]._r;
-			buffer[1] = _palette[index]._g;
-			buffer[2] = _palette[index]._b;
+			index = std::min(_palette.get_count() - 1, index);
+			buffer[0] = _palette(index)._r;
+			buffer[1] = _palette(index)._g;
+			buffer[2] = _palette(index)._b;
 			buffer += 3;
 		}
 	}
@@ -129,7 +129,7 @@ int ggo_julia_artist::iterate(float x, float y, const std::complex<float> & seed
 	
 	int i;
 	
-	for (i = 0; i < _palette.get_size(); ++i)
+	for (i = 0; i < _palette.get_count(); ++i)
 	{
 		z = z * z + seed;
 

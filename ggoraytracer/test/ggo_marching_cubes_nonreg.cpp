@@ -45,6 +45,6 @@ GGO_TEST(marching_cubes, test)
   // Rendering.
   ggo::antialiasing_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
-  renderer.render(buffer, GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("marching_cubes.bmp", buffer, GGO_SIZE_X, GGO_SIZE_Y);
+  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
+  ggo::save_bmp("marching_cubes.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 }

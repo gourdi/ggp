@@ -23,14 +23,14 @@ namespace
                   
           if (x_image >= 0 && x_image < image.get_width())
           {
-            color_type color = image.read(x_image, y_image);
-            float opacity = sprite.read(x_sprite, y_sprite);
+            color_type color = image.get(x_image, y_image);
+            float opacity = sprite.get(x_sprite, y_sprite);
                       
             color_type sprite_color = fct(x_sprite, y_sprite);
       
             color = blender.blend(color, opacity, sprite_color);
                       
-            image.write(x_image, y_image, color);
+            image.set(x_image, y_image, color);
           }
         }
       }
@@ -76,7 +76,7 @@ namespace
   {
     auto fct = [&](int x_sprite, int y_sprite)
     {
-      return sprite_image.read(x_sprite, y_sprite);
+      return sprite_image.get(x_sprite, y_sprite);
     };
 
     flatten_sprite_func(image, sprite_opacity, fct, sprite_pos_x, sprite_pos_y, blender);

@@ -15,7 +15,7 @@ namespace
                                 bool bypass_shape_sampling = false)
   {
     color_type pixel_color(0);
-    color_type bkgd_color(image.read(x, y));
+    color_type bkgd_color(image.get(x, y));
 
     sampler.sample_pixel(x, y, [&](float x_f, float y_f)
     {
@@ -52,7 +52,7 @@ namespace
   {
     pixel_rect.for_each_pixel([&](int x, int y)
     {
-      image.write(x, y, get_color_at_pixel(layers, image, x, y, image.get_width(), image.get_height(), sampler));
+      image.set(x, y, get_color_at_pixel(layers, image, x, y, image.get_width(), image.get_height(), sampler));
     });
   }
 
@@ -101,7 +101,7 @@ namespace
     {
       pixel_rect.for_each_pixel([&](int x, int y)
       {
-        image.write(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler, true));
+        image.set(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler, true));
       });
       return;
     }
@@ -112,7 +112,7 @@ namespace
       int x = pixel_rect.left();
       int y = pixel_rect.bottom();
 
-      image.write(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler));
+      image.set(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler));
     }
     else
     {

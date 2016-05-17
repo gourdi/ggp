@@ -21,7 +21,8 @@ static bool sort_func(const ggo_block & v1, const ggo_block & v2)
 //////////////////////////////////////////////////////////////
 ggo_mandelbrot_artist::ggo_mandelbrot_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+ggo_bitmap_artist_abc(render_width, render_height),
+_palette(1000)
 {
 }
 	
@@ -59,10 +60,10 @@ void ggo_mandelbrot_artist::render_bitmap(uint8_t * buffer)
 			int index = 0;
 			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
 			{
-				int index = std::min(_palette.get_size() - 1, iterations[0]);
-				buffer[0] = _palette[index]._r;
-				buffer[1] = _palette[index]._g;
-				buffer[2] = _palette[index]._b;
+				int index = std::min(_palette.get_count() - 1, iterations[0]);
+				buffer[0] = _palette(index)._r;
+				buffer[1] = _palette(index)._g;
+				buffer[2] = _palette(index)._b;
 			}
 			else
 			{
@@ -87,10 +88,10 @@ void ggo_mandelbrot_artist::render_bitmap(uint8_t * buffer)
 				int b = 0;
 				for (int i = 0; i < 16; ++i)
 				{
-					int index = std::min(_palette.get_size() - 1, iterations[i]);
-					r += _palette[index]._r;
-					g += _palette[index]._g;
-					b += _palette[index]._b;
+					int index = std::min(_palette.get_count() - 1, iterations[i]);
+					r += _palette(index)._r;
+					g += _palette(index)._g;
+					b += _palette(index)._b;
 				}
 			
 				buffer[0] = (r + 8) / 16;
@@ -110,7 +111,7 @@ int ggo_mandelbrot_artist::iterate(double x, double y) const
 	
 	int i;
 	
-	for (i = 0; i < _palette.get_size(); ++i)
+	for (i = 0; i < _palette.get_count(); ++i)
 	{
 		z = z * z + c;
 
@@ -140,8 +141,7 @@ void ggo_mandelbrot_artist::setup_palette()
 	val_curve.push_point(0, ggo::rand_float(0, 0.5));
 	val_curve.push_point(1, 1);
 	
-	_palette.set_size(PALETTE_SIZE);
-	for (int i = 0; i < _palette.get_size(); ++i)
+	for (int i = 0; i < _palette.get_count(); ++i)
 	{
 		float x = i / float(PALETTE_SIZE);
 		
@@ -151,9 +151,9 @@ void ggo_mandelbrot_artist::setup_palette()
 		
 		ggo::color color = ggo::color::from_hsv(hue, sat, val);
 		
-		_palette[i]._r = color.r8();
-		_palette[i]._b = color.g8();
-		_palette[i]._g = color.b8();
+		_palette(i)._r = color.r8();
+		_palette(i)._b = color.g8();
+		_palette(i)._g = color.b8();
 	}
 }
 

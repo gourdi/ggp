@@ -80,9 +80,9 @@ void ggo_smoke_animation_artist::init_sub()
 	double center_x = get_render_width() / 2;
 	double center_y = get_render_height() / 2;
 
-	for (int i = 0; i < _sources.get_size(); ++i)
+	for (int i = 0; i < _sources.get_count(); ++i)
 	{
-		ggo_fluid_source & source = _sources[i];
+		ggo_fluid_source & source = _sources(i);
 		
 		switch (i)
 		{
@@ -122,7 +122,7 @@ void ggo_smoke_animation_artist::init_sub()
 		source._density = 0;
 	}
 	
-	ggo_fluid_source & source = _sources[ggo::rand_int(0, 3)];
+	ggo_fluid_source & source = _sources(ggo::rand_int(0, 3));
 	source._timer1 = 0;
 
 	float hue = ggo::rand_float();
@@ -132,7 +132,7 @@ void ggo_smoke_animation_artist::init_sub()
 	ggo::color color3 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
 	ggo::color color4 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
   
-  auto bkgd_image = make_image_buffer(_bkgd_buffer);
+  auto bkgd_image = make_image_buffer(_bkgd_buffer.data());
 	ggo::fill_4_colors(bkgd_image, color1, color2, color3, color4);
 }
 
@@ -145,10 +145,8 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 	}
 	
 	// Process the sources.
-	for (int i = 0; i < _sources.get_size(); ++i)
+	for (auto & source : _sources)
 	{
-		ggo_fluid_source & source = _sources[i];
-		
 		if (source._timer1 > 0)
 		{
 			source._timer1 -= 1;
@@ -168,10 +166,8 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 	{
 		for (int x = 0; x < get_render_width(); ++x)
 		{
-			for (int i = 0; i < _sources.get_size(); ++i)
+			for (const auto & source : _sources)
 			{
-				ggo_fluid_source & source = _sources[i];
-				
 				if (source._density > 0)
 				{
 					double dist = ggo::distance(double(x), double(y), source._circle.center().x(), source._circle.center().y());
@@ -280,7 +276,7 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 	std::swap(_density_cur, _density_tmp);
 	
 	// Draw the density.
-	uint8_t * bkgd_it = _bkgd_buffer;
+	uint8_t * bkgd_it = _bkgd_buffer.data();
 	for (int y = 0; y < get_render_height(); ++y) 
 	{
 		for (int x = 0; x < get_render_width(); ++x)

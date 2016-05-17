@@ -23,9 +23,9 @@ namespace
     {
       for (int x = seed_left; x <= seed_right; ++x)
       {
-        color_type pixel_color = image.read(x, y);
+        color_type pixel_color = image.get(x, y);
         pixel_color = blender.blend(pixel_color, opacity, color);
-        image.write(x, y, pixel_color);
+        image.set(x, y, pixel_color);
       }
     }
     
@@ -44,9 +44,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            color_type pixel_color = image.read(seed_left, y);
+            color_type pixel_color = image.get(seed_left, y);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image.write(seed_left, y, pixel_color);
+            image.set(seed_left, y, pixel_color);
           }
         }
       }
@@ -61,9 +61,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            color_type pixel_color = image.read(seed_right, y);
+            color_type pixel_color = image.get(seed_right, y);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image.write(seed_right, y, pixel_color);
+            image.set(seed_right, y, pixel_color);
           }
         }
       }
@@ -78,9 +78,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            color_type pixel_color = image.read(x, seed_top);
+            color_type pixel_color = image.get(x, seed_top);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image.write(x, seed_top, pixel_color);
+            image.set(x, seed_top, pixel_color);
           }
         }
       }
@@ -95,9 +95,9 @@ namespace
           if (sampling > 0)
           {
             done = false;
-            color_type pixel_color = image.read(x, seed_bottom);
+            color_type pixel_color = image.get(x, seed_bottom);
             pixel_color = blender.blend(pixel_color, sampling * opacity, color);
-            image.write(x, seed_bottom, pixel_color);
+            image.set(x, seed_bottom, pixel_color);
           }
         }
       }

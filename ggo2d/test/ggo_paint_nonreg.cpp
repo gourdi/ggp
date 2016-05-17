@@ -24,9 +24,9 @@ GGO_TEST(paint, multi_paint1)
 
   ggo::array_uint8 buffer(WIDTH * HEIGHT * 3);
   buffer.fill(0);
-  ggo::paint(buffer, WIDTH, HEIGHT, multi_shape, ggo::color::RED, 0.5, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_4X4());
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, multi_shape, ggo::color::RED, 0.5, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_4X4());
 
-  ggo::save_bmp("test_multi1.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi1.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -50,10 +50,10 @@ GGO_TEST(paint, multi_paint2)
   const std::vector<ggo::rgb_layer> layers{ {polygon1, ggo::color::WHITE}, {polygon2, ggo::color::WHITE} };
 
   ggo::array_uint8 buffer(WIDTH * HEIGHT * 3);
-  ggo::fill_solid_rgb(buffer, WIDTH * HEIGHT, ggo::color::BLUE);
-  ggo::paint(buffer, WIDTH, HEIGHT, layers, ggo::pixel_sampler_16X16());
+  ggo::fill_solid_rgb(buffer.data(), WIDTH * HEIGHT, ggo::color::BLUE);
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, layers, ggo::pixel_sampler_16X16());
 
-  ggo::save_bmp("test_multi2.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi2.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -70,12 +70,12 @@ GGO_TEST(paint, multi_paint3)
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
   for (int i = 0; i < WIDTH * HEIGHT; ++i)
   {
-    buffer[3 * i + 0] = ggo::to<uint8_t>(255.f * image_data[i]);
-    buffer[3 * i + 1] = ggo::to<uint8_t>(255.f * image_data[i]);
-    buffer[3 * i + 2] = ggo::to<uint8_t>(255.f * image_data[i]);
+    buffer(3 * i + 0) = ggo::to<uint8_t>(255.f * image_data[i]);
+    buffer(3 * i + 1) = ggo::to<uint8_t>(255.f * image_data[i]);
+    buffer(3 * i + 2) = ggo::to<uint8_t>(255.f * image_data[i]);
   }
 
-  ggo::save_bmp("test_multi3.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi3.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -87,9 +87,9 @@ GGO_TEST(paint, multi_paint4)
   auto segment = std::make_shared<ggo::extended_segment_float>(ggo::point2d_float(10, 10), ggo::point2d_float(50, 15), 0.48f);
 
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 255);
-  ggo::paint(buffer, WIDTH, HEIGHT, segment, ggo::color::RED, 1, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_8X8());
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, segment, ggo::color::RED, 1, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_8X8());
 
-  ggo::save_bmp("test_multi4.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi4.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -109,9 +109,9 @@ GGO_TEST(paint, multi_paint5)
   auto disc = std::make_shared<ggo::disc_float>(50.f, 50.f, 40.f);
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 255);
-  ggo::paint(buffer, WIDTH, HEIGHT, disc, color_brush, opacity_brush, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_8X8());
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, disc, color_brush, opacity_brush, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_8X8());
 
-  ggo::save_bmp("test_multi5.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi5.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -125,9 +125,9 @@ GGO_TEST(paint, multi_paint6)
   shape->add_shape(std::make_shared<ggo::disc_float>(70.f, 70.f, 30.f));
     
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 128);
-  ggo::paint(buffer, WIDTH, HEIGHT, shape, ggo::color::RED);
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, shape, ggo::color::RED);
 
-  ggo::save_bmp("test_multi6.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi6.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -141,9 +141,9 @@ GGO_TEST(paint, multi_paint7)
   shape->add_shape(std::make_shared<ggo::disc_float>(70.f, 70.f, 30.f));
 
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 0);
-  ggo::paint(buffer, WIDTH, HEIGHT, shape, ggo::color::YELLOW);
+  ggo::paint(buffer.data(), WIDTH, HEIGHT, shape, ggo::color::YELLOW);
 
-  ggo::save_bmp("test_multi7.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_multi7.bmp", buffer.data(), WIDTH, HEIGHT);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -234,11 +234,11 @@ GGO_TEST(paint, perlin)
     for (int x = 0; x < HEIGHT; ++x)
     {
       float v = f.evaluate(x - 0.5f * WIDTH, y - 0.5f * HEIGHT);
-      buffer[3 * (y * WIDTH + x) + 0] = ggo::to<uint8_t>(v);
-      buffer[3 * (y * WIDTH + x) + 1] = ggo::to<uint8_t>(v);
-      buffer[3 * (y * WIDTH + x) + 2] = ggo::to<uint8_t>(v);
+      buffer(3 * (y * WIDTH + x) + 0) = ggo::to<uint8_t>(v);
+      buffer(3 * (y * WIDTH + x) + 1) = ggo::to<uint8_t>(v);
+      buffer(3 * (y * WIDTH + x) + 2) = ggo::to<uint8_t>(v);
     }
   }
   
-  ggo::save_bmp("test_perlin.bmp", buffer, WIDTH, HEIGHT);
+  ggo::save_bmp("test_perlin.bmp", buffer.data(), WIDTH, HEIGHT);
 }

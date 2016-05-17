@@ -52,8 +52,8 @@ private:
     
 private:
 
-  std::vector<ggo_colored_stripe>     _stripes;
-  ggo::array<ggo_animated_transform>  _transforms;
+  std::vector<ggo_colored_stripe>       _stripes;
+  ggo::array<ggo_animated_transform, 1> _transforms;
 };
 
 #endif

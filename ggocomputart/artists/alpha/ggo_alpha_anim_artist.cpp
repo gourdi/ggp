@@ -176,21 +176,21 @@ void ggo_alpha_anim_artist::ggo_oscillo::draw(uint8_t * buffer, int width, int h
 {
 	int min_size = std::min(width, height);
 	
-	ggo::array_float freq(GGO_OSCILLO_SIZE, 0), spat(GGO_OSCILLO_SIZE);
+	ggo::array_float freq(GGO_OSCILLO_SIZE, 0.f), spat(GGO_OSCILLO_SIZE, 0.f);
 	for (int i = 0; i < _threshold; ++i)
 	{
-		freq[i] = ggo::to<float>(ggo::rand_int(-1, 1));
+		freq(i) = ggo::to<float>(ggo::rand_int(-1, 1));
 	}
-	ggo::dct(freq, spat, GGO_OSCILLO_SIZE);
+	ggo::dct(freq.data(), spat.data(), GGO_OSCILLO_SIZE);
 
   auto multi_shape = std::make_shared<ggo::multi_shape_float>();
 	for (int i = 1; i < GGO_OSCILLO_SIZE; ++i)
 	{
 		float x1 = (i - 1) * width / float(GGO_OSCILLO_SIZE);
-		float y1 = _y + 0.025f * spat[i - 1] * min_size;
+		float y1 = _y + 0.025f * spat(i - 1) * min_size;
         
     float x2 = i * width / float(GGO_OSCILLO_SIZE);
-		float y2 = _y + 0.025f * spat[i] * min_size;
+		float y2 = _y + 0.025f * spat(i) * min_size;
 
     multi_shape->add_shape(std::make_shared<ggo::extended_segment_float>(ggo::point2d_float(x1, y1), ggo::point2d_float(x2, y2), 0.001f * min_size));
 	}

@@ -48,14 +48,13 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 		float dy 			      = petal_height / GGO_VERT_COUNT;
 		float radius_coef 	= flower_shape_curve.evaluate(ratio);
 
-		ggo::array_float freq(GGO_HORZ_COUNT / 2);
-		ggo::array_float spat(GGO_HORZ_COUNT / 2);
-		freq.fill(0);
+		ggo::array_float freq(GGO_HORZ_COUNT / 2, 0);
+		ggo::array_float spat(GGO_HORZ_COUNT / 2, 0);
 		for (int i = 1; i < 10; ++i)
 		{
-			freq[i] = ggo::rand_float(-1, 1);
+			freq(i) = ggo::rand_float(-1, 1);
 		}
-		ggo::dct(freq, spat, GGO_HORZ_COUNT/2);
+		ggo::dct(freq.data(), spat.data(), GGO_HORZ_COUNT/2);
 
 		for (int i = 0; i < GGO_VERT_COUNT; ++i)
 		{
@@ -68,7 +67,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 				int   k = j < GGO_HORZ_COUNT/2 ? j : GGO_HORZ_COUNT-j-1;
 				float t = 2 * ggo::PI<float>() * j / GGO_HORZ_COUNT;
 				float x = center.x() + s * cos(t);
-				float y = center.y() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat[k];
+				float y = center.y() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
 
 				ggo::paint(render_buffer, 
                    std::make_shared<ggo::disc_float>(x, y, 0.001f * get_render_min_size()),

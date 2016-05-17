@@ -17,9 +17,9 @@ namespace
   {
     if (x >= 0 && x < image.get_width() && y >= 0 && y < image.get_height())
     {
-      color_type bkgd_color = image.read(x, y);
+      color_type bkgd_color = image.get(x, y);
       color_type final_color = blender.blend(bkgd_color, opacity, color);
-      image.write(x, y, final_color);
+      image.set(x, y, final_color);
     }
   }
 

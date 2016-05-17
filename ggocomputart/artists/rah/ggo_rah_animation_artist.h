@@ -105,8 +105,8 @@ private:
       }
     };
     
-    ggo::array<ggo_radius_interpolator>   _radius_interpolators;
-    std::shared_ptr<ggo::polygon2d_float> _polygon;
+    ggo::array<ggo_radius_interpolator, 1>  _radius_interpolators;
+    std::shared_ptr<ggo::polygon2d_float>   _polygon;
   };
   
   //////////////////////////////////////////////////////////////

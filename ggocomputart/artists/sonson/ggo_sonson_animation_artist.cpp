@@ -53,8 +53,8 @@ namespace
         return;
       }
 
-      opacity_mask.write(x, y, 1.0f);
-      color_mask.write(x, y, color);
+      opacity_mask.set(x, y, 1.0f);
+      color_mask.set(x, y, color);
     };
 
     pixel_rect.for_each_pixel(paint_pixel);
@@ -364,8 +364,8 @@ std::pair<float, ggo::color> ggo_sonson_animation_artist::ggo_line::get_pixel(in
   {
     for (int x_mask = _scale_factor * x; x_mask < _scale_factor * (x + 1); ++x_mask)
     {
-      opacity += _opacity_mask.read(x_mask, y_mask);
-      layer_color += _color_mask.read(x_mask, y_mask);
+      opacity += _opacity_mask.get(x_mask, y_mask);
+      layer_color += _color_mask.get(x_mask, y_mask);
     }
   }
 

@@ -5,21 +5,21 @@
 
 namespace ggo
 {
-  template <typename data_type>
-  class gray_image_buffer_abc : public image_buffer_abc<float, data_type>
+  template <typename data_t>
+  class gray_image_buffer_abc : public image_buffer_abc<float, data_t>
   {
   public:
 
-                      gray_image_buffer_abc(int width, int height, data_type * buffer, bool delete_buffer) : image_buffer_abc<float, data_type>(width, height, buffer, delete_buffer) { }
+                    gray_image_buffer_abc(int width, int height, data_t * buffer, bool delete_buffer) : image_buffer_abc<float, data_t>(width, height, buffer, delete_buffer) { }
 
-    data_type         operator[](int i) const { return this->_buffer[i]; }
-    data_type &       operator[](int i) { return this->_buffer[i]; }
+    data_t          operator[](int i) const { return this->_buffer[i]; }
+    data_t &        operator[](int i) { return this->_buffer[i]; }
 
-    data_type *       begin() { return this->_buffer; }
-    data_type *       end() { return this->_buffer + this->get_width() * this->get_height(); }
+    data_t *        begin() { return this->_buffer; }
+    data_t *        end() { return this->_buffer + this->get_width() * this->get_height(); }
 
-    const data_type * begin() const { return this->_buffer; }
-    const data_type * end() const { return this->_buffer + this->get_width() * this->get_height(); }
+    const data_t *  begin() const { return this->_buffer; }
+    const data_t *  end() const { return this->_buffer + this->get_width() * this->get_height(); }
   };
 }
 
@@ -34,8 +34,8 @@ namespace ggo
           gray_image_buffer_uint8(int width, int height, uint8_t * buffer);
           gray_image_buffer_uint8(int width, int height, float fill_value);
 
-    void  write(int x, int y, const float & value) override;
-    float read(int x, int y) const override;
+    void  set(int x, int y, const float & value) override;
+    float get(int x, int y) const override;
   };
 }
 
@@ -50,8 +50,8 @@ namespace ggo
           gray_image_buffer_float(int width, int height, float * buffer);
           gray_image_buffer_float(int width, int height, float fill_value);
 
-    void  write(int x, int y, const float & value) override;
-    float read(int x, int y) const override;
+    void  set(int x, int y, const float & value) override;
+    float get(int x, int y) const override;
   };
 }
 

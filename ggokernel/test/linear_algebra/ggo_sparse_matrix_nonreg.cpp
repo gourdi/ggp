@@ -39,15 +39,15 @@ GGO_TEST(sparse_matrix, sparse_matrix)
 	
 	ggo::array_float b(3), r(3);
 	ggo::sparse_matrix<float> a(3);
-	b[0] = 3;
-	b[1] = -5;
-	b[2] = 4;
+	b(0) = 3;
+	b(1) = -5;
+	b(2) = 4;
 	a.set(0, 0, 1);
 	a.set(0, 2, -1);
 	a.set(1, 1, 2);
 	a.set(2, 2, -2);
-	a.apply(b, r);
-	GGO_CHECK(std::fabs(r[0] + 1) < 0.0001);
-	GGO_CHECK(std::fabs(r[1] + 10) < 0.0001);
-	GGO_CHECK(std::fabs(r[2] + 8) < 0.0001);
+	a.apply(b.data(), r.data());
+	GGO_CHECK(std::fabs(r(0) + 1) < 0.0001);
+	GGO_CHECK(std::fabs(r(1) + 10) < 0.0001);
+	GGO_CHECK(std::fabs(r(2) + 8) < 0.0001);
 }
