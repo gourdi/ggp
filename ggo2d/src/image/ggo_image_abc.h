@@ -32,8 +32,6 @@ namespace ggo
             template <typename color_t2>
             void    from(const image_abc<color_t2> & other);
 
-            color_t get_loop(int x, int y) const;
-
             void    set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender = ggo::alpha_blender<color_t>());
            
             void    for_each_pixel(const std::function<void(int x, int y)> & func) const;
@@ -83,13 +81,6 @@ namespace ggo
         set(x, y, color);
       }
     }
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename color_t>
-  color_t image_abc<color_t>::get_loop(int x, int y) const
-  {
-    return get(ggo::loop_index(x, _width), ggo::loop_index(y, _height));
   }
 
   /////////////////////////////////////////////////////////////////////

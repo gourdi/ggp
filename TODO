@@ -1,4 +1,5 @@
 - factoriser rayon specular
 - obb 2d
 - utilise le blending additif pour l'artiste bubble
-- morphogenese
+- montagne (en haut et en bas) avec l'algo diamant
+- voronoi : ameliorer avec ouverture morpho

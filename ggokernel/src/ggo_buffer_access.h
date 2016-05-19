@@ -1,5 +1,5 @@
-#ifndef __GGO_DATA_FETCHER__
-#define __GGO_DATA_FETCHER__
+#ifndef __GGO_BUFFER_ACCESS__
+#define __GGO_BUFFER_ACCESS__
 
 #include <ggo_kernel.h>
 

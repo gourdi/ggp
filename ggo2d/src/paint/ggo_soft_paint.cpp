@@ -389,4 +389,18 @@ namespace ggo
   {
     ::paint<ggo::color>(image, layers, sampler, partitionning);
   }
+
+  /////////////////////////////////////////////////////////////////////
+  void paint(ggo::array<float, 2> &  array2d,
+             std::shared_ptr<const ggo::paintable_shape2d_abc<float>> shape,
+             float gray,
+             float opacity,
+             std::shared_ptr<const ggo::gray_blender_abc> blender,
+             const ggo::pixel_sampler_abc & sampler,
+             ggo::space_partitionning partitionning)
+  {
+    ggo::gray_image_buffer_float image(array2d.get_size<0>(), array2d.get_size<1>(), array2d.data());
+
+    paint(image, shape, gray, opacity, blender, sampler, partitionning);
+  }
 }

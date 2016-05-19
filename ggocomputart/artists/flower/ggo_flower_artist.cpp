@@ -48,8 +48,8 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 		float dy 			      = petal_height / GGO_VERT_COUNT;
 		float radius_coef 	= flower_shape_curve.evaluate(ratio);
 
-		ggo::array_float freq(GGO_HORZ_COUNT / 2, 0);
-		ggo::array_float spat(GGO_HORZ_COUNT / 2, 0);
+		ggo::array_float freq(GGO_HORZ_COUNT / 2, 0.f);
+		ggo::array_float spat(GGO_HORZ_COUNT / 2, 0.f);
 		for (int i = 1; i < 10; ++i)
 		{
 			freq(i) = ggo::rand_float(-1, 1);

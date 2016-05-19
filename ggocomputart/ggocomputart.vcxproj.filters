@@ -139,6 +139,9 @@
     <Filter Include="artists\sonson">
       <UniqueIdentifier>{2a5519e5-1141-4391-a0c9-521642a58c65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\rediff">
+      <UniqueIdentifier>{a31c6307-1418-4da7-89f2-58ddcc6da8c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -389,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="artists\sonson\ggo_sonson_animation_artist.cpp">
       <Filter>artists\sonson</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\rediff\ggo_rediff_animation_artist.cpp">
+      <Filter>artists\rediff</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -646,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="artists\sonson\ggo_sonson_animation_artist.h">
       <Filter>artists\sonson</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\rediff\ggo_rediff_animation_artist.h">
+      <Filter>artists\rediff</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

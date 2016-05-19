@@ -2,221 +2,6 @@
 #define __GGO_ARRAY__
 
 #include <ggo_kernel.h>
-//
-//namespace ggo
-//{
-//  template<typename T>
-//  class array
-//  {
-//  public:
-//
-//                      array();
-//                      array(int size);
-//                      array(int size, T value);
-//                      array(const T * buffer, int size);
-//                      array(const array & a);
-//                      array(array && a);
-//                     ~array();
-//
-//    array &           operator=(const array & a);
-//    array &           operator=(array && a);
-//
-//    T &					      front() { return _buffer[0]; };
-//    const T &			    front() const { return _buffer[0]; };
-//    T &					      back() { return _buffer[_size-1]; };
-//    const T &			    back() const { return _buffer[_size-1]; };
-//
-//                      operator T * () { return _buffer; };
-//                      operator const T * () const { return _buffer; };
-//
-//    const char *		  to_char()	const { return (const    char *)(_buffer); };
-//    const uint8_t *		to_uint8()	const { return (const uint8_t *)(_buffer); };
-//    const uint16_t *	to_uint16()	const { return (const uint16_t*)(_buffer); };
-//    const uint32_t *	to_uint32()	const { return (const uint32_t*)(_buffer); };
-//    const int8_t *		to_int8()	const { return (const  int8_t *)(_buffer); };
-//    const int16_t *		to_int16()	const { return (const  int16_t*)(_buffer); };
-//    const int32_t *		to_int32()	const { return (const  int32_t*)(_buffer); };
-//
-//    char *				    to_char()	{ return (   char *)(_buffer); };
-//    uint8_t *			    to_uint8()	{ return (uint8_t *)(_buffer); };
-//    uint16_t *			  to_uint16()	{ return (uint16_t*)(_buffer); };
-//    uint32_t *			  to_uint32()	{ return (uint32_t*)(_buffer); };
-//    int8_t *			    to_int8()	{ return ( int8_t *)(_buffer); };
-//    int16_t *			    to_int16()	{ return ( int16_t*)(_buffer); };
-//    int32_t *			    to_int32()	{ return ( int32_t*)(_buffer); };
-//
-//    int					      get_size() const { return _size; };
-//    void				      set_size(int size); // Clears data.
-//
-//    T *					      data() { return _buffer; };
-//    const T *		      data() const { return _buffer; };
-//
-//    void				      fill(T value);
-//    void				      zero();
-//    void				      copy(const T * buffer);
-//
-//    T *               begin() { return _buffer; }
-//    const T *         begin() const { return _buffer; }
-//    T *               end() { return _buffer + _size; }
-//    const T *         end() const { return _buffer + _size; }
-//
-//  private:
-//
-//    T *	_buffer;
-//    int	_size;
-//  };
-//}
-//
-//
-//
-//namespace ggo
-//{
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array()
-//  {
-//    _size	= 0;
-//    _buffer	= nullptr;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array(int size)
-//  {
-//    _size	= size;
-//    _buffer	= new T[size];
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array(int size, T value)
-//  {
-//    _size	= size;
-//    _buffer	= new T[size];
-//
-//    fill(value);
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array(const T * buffer, int size)
-//  {
-//    _buffer	= new T[size];
-//    _size	= size;
-//    std::copy(buffer, buffer + size, _buffer);
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array(const array & a)
-//  {
-//    _size = a._size;
-//
-//    if (a._buffer == nullptr)
-//    {
-//      _buffer = nullptr;
-//    }
-//    else
-//    {
-//      _buffer = new T[a._size];
-//      std::copy(a._buffer, a._buffer + _size, _buffer);
-//    }
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::array(array && a)
-//  {
-//    _buffer = a._buffer;
-//    _size = a._size;
-//
-//    a._buffer = nullptr;
-//    a._size = 0;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T>::~array()
-//  {
-//    delete[] _buffer;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  void array<T>::set_size(int size)
-//  {
-//    delete[] _buffer;
-//
-//    _buffer	= new T[size];
-//    _size	= size;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T> & array<T>::operator=(const array & a)
-//  {
-//    _size = a._size;
-//
-//    delete[] _buffer;
-//
-//    if (a._buffer == nullptr)
-//    {
-//      _buffer = nullptr;
-//    }
-//    else
-//    {
-//      _buffer	= new T[a._size];
-//      std::copy(a._buffer, a._buffer + _size, _buffer);
-//    }
-//
-//    return *this;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  array<T> & array<T>::operator=(array && a)
-//  {
-//    delete[] _buffer;
-//
-//    _buffer = a._buffer;
-//    _size = a._size;
-//
-//    a._buffer = nullptr;
-//    a._size = 0;
-//
-//    return *this;
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  void array<T>::fill(T value)
-//  {
-//    if (_buffer != nullptr)
-//    {
-//      std::fill(_buffer, _buffer + _size, value);
-//    }
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  void array<T>::zero()
-//  {
-//    fill(0);
-//  }
-//
-//  /////////////////////////////////////////////////////////////////////
-//  template <typename T>
-//  void array<T>::copy(const T * buffer)
-//  {
-//    if (_buffer != nullptr)
-//    {
-//      std::copy(buffer, buffer + _size, _buffer);
-//    }	
-//  }
-//}
-
-
-
 
 namespace ggo
 {
@@ -225,17 +10,20 @@ namespace ggo
   {
   public:
 
+    // Default constructor.
     array()
     {
       _buffer = nullptr;
     }
 
+    // Constructor to specidy the dimensions, and optionnaly a fill value.
     template <typename... args>
     array(args... a)
     {
       array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, a...);
     }
 
+    // Copy constructor.
     array(const array<data_t, n_dims> & rhs)
     {
       int count = rhs.get_count();
@@ -244,6 +32,7 @@ namespace ggo
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
     }
 
+    // Move constructor.
     array(array<data_t, n_dims> && rhs)
     {
       copy_array<n_dims>::copy(_dimensions, rhs._dimensions);
@@ -252,14 +41,16 @@ namespace ggo
       rhs._buffer = nullptr;
     }
 
+    // Destructor.
     ~array()
     {
       delete[] _buffer;
     }
 
+    // Deleted copy for now.
     array<data_t, n_dims> & operator=(const array<data_t, n_dims> & rhs) = delete;
 
-
+    // Move operator=.
     array<data_t, n_dims> & operator=(array<data_t, n_dims> && rhs)
     {
       delete _buffer;
@@ -272,6 +63,7 @@ namespace ggo
       return *this;
     }
 
+    // Returns the size of a dimension given as a template parameter.
     template <int dim>
     int get_size() const
     {
@@ -279,11 +71,13 @@ namespace ggo
       return _dimensions[dim];
     }
 
+    // Returns the full number of elements inside the array.
     int get_count() const
     {
       return multiply_ptr<n_dims, n_dims>::multiply(_dimensions);
     }
 
+    // Resizes the current array. Current data is lost.
     template <typename... args>
     void resize(args... a)
     {
@@ -293,9 +87,11 @@ namespace ggo
       array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, a...);
     }
 
+    // Direct access to the buffer.
     data_t * data() { return _buffer; }
     const data_t * data() const { return _buffer; }
 
+    // Subscripting non-const operator. Must provide as many arguements as array's dimensions.
     template <typename... args>
     data_t & operator()(args... a)
     {
@@ -303,6 +99,7 @@ namespace ggo
       return _buffer[offset<n_dims, n_dims>::compute(_dimensions, a...)];
     }
 
+    // Subscripting const operator. Must provide as many arguements as array's dimensions.
     template <typename... args>
     const data_t & operator()(args... a) const
     {
@@ -310,11 +107,29 @@ namespace ggo
       return _buffer[offset<n_dims, n_dims>::compute(_dimensions, a...)];
     }
 
+    // Accessing array's elements, with indexes looping over array's dimension.
+    template <typename... args>
+    data_t & get_loop(args... a)
+    {
+      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      return _buffer[offset<n_dims, n_dims>::compute_loop(_dimensions, a...)];
+    }
+
+    // Accessing array's elements, with indexes looping over array's dimension.
+    template <typename... args>
+    const data_t & get_loop(args... a) const
+    {
+      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      return _buffer[offset<n_dims, n_dims>::compute_loop(_dimensions, a...)];
+    }
+
+    // Iterators helpers.
     data_t *  begin() { return _buffer; }
     const data_t *  begin() const { return _buffer; }
     data_t *  end() { return _buffer + get_count(); }
     const data_t *  end() const { return _buffer + get_count(); }
 
+    // Fill the array with a giben value.
     void fill(const data_t & v)
     {
       std::fill(_buffer, _buffer + multiply_ptr<n_dims, n_dims>::multiply(_dimensions), v);
@@ -322,6 +137,7 @@ namespace ggo
 
   private:
 
+    // Copy an array into another one.
     template <int remaining>
     struct copy_array
     {
@@ -343,6 +159,7 @@ namespace ggo
       }
     };
 
+    // Multiply all the values of a buffer.
     template <int remaining, int count>
     struct multiply_ptr
     {
@@ -364,7 +181,9 @@ namespace ggo
       }
     };
 
-
+    // Set-up array data members. The trick is that the specialized version that handles the stop case
+    // has 2 methods : one to just just the process once all dimensions parameters have been consuped, 
+    // and another one to fill the array.
     template <int dim_remaining, int dim_count>
     struct array_builder
     {
@@ -396,6 +215,7 @@ namespace ggo
       }
     };
 
+    // Compute a pointer offset given each dimension positions.
     template<int remaining, int count>
     struct offset
     {
@@ -405,6 +225,14 @@ namespace ggo
         static_assert(remaining <= count && remaining > 1, "error");
         GGO_ASSERT(index >= 0 && index < dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute(dimensions, a...);
+      }
+
+      template <typename... args>
+      static int compute_loop(const int * dimensions, int index, args... a)
+      {
+        static_assert(remaining <= count && remaining > 1, "error");
+        index = ggo::loop_index(index, dimensions[count - remaining]);
+        return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_loop(dimensions, a...);
       }
     };
 
@@ -416,8 +244,13 @@ namespace ggo
         GGO_ASSERT(index >= 0 && index < dimensions[count - 1]);
         return index;
       }
-    };
 
+      static int compute_loop(const int * dimensions, int index)
+      {
+        index = ggo::loop_index(index, dimensions[count - 1]);
+        return index;
+      }
+    };
 
   private:
 
@@ -426,7 +259,8 @@ namespace ggo
   };
 }
 
-
+//////////////////////////////////////////////////////////////
+// Usefull aliases.
 namespace ggo
 {
   using array_char    = array<char, 1>;

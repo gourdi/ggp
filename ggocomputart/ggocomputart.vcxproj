@@ -86,6 +86,7 @@
     <ClCompile Include="artists\plastic\ggo_plastic_artist.cpp" />
     <ClCompile Include="artists\plastic\ggo_plastic_bitmap_artist.cpp" />
     <ClCompile Include="artists\rah\ggo_rah_animation_artist.cpp" />
+    <ClCompile Include="artists\rediff\ggo_rediff_animation_artist.cpp" />
     <ClCompile Include="artists\rex\ggo_rex_artist.cpp" />
     <ClCompile Include="artists\smoke\ggo_smoke_animation_artist.cpp" />
     <ClCompile Include="artists\sonson\ggo_sonson_animation_artist.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="artists\plastic\ggo_plastic_artist.h" />
     <ClInclude Include="artists\plastic\ggo_plastic_bitmap_artist.h" />
     <ClInclude Include="artists\rah\ggo_rah_animation_artist.h" />
+    <ClInclude Include="artists\rediff\ggo_rediff_animation_artist.h" />
     <ClInclude Include="artists\rex\ggo_rex_artist.h" />
     <ClInclude Include="artists\smoke\ggo_smoke_animation_artist.h" />
     <ClInclude Include="artists\sonson\ggo_sonson_animation_artist.h" />

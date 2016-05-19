@@ -1,5 +1,6 @@
 #include "ggo_bitmap_artist_abc.h"
 #include "ggo_animation_artist_abc.h"
+#include "ggo_artist_ids.h"
 #include "artists/duffing/ggo_duffing_bitmap_artist.h"
 #include "artists/trees/ggo_trees_artist.h"
 #include "artists/worms/ggo_worms_artist.h"
@@ -34,6 +35,7 @@
 #include "artists/hexa/ggo_hexa_bitmap_artist.h"
 #include "artists/chryzode/ggo_chryzode_bitmap_artist.h"
 #include "artists/stoa/ggo_stoa_bitmap_artist.h"
+#include "artists/rediff/ggo_rediff_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS WRAPPER
@@ -211,6 +213,8 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_RAH, render_width, render_height, 800, true);
   case GGO_BITMAP_ARTIST_SONSON:
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_SONSON, render_width, render_height, 200, true);
+  case GGO_BITMAP_ARTIST_REDIFF:
+    return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_REDIFF, render_width, render_height, 350, true);
 	default:
 		GGO_FAIL();
 		return nullptr;

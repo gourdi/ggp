@@ -43,6 +43,7 @@ enum ggo_bitmap_artist_id
   GGO_BITMAP_ARTIST_CHRYZODE,
   GGO_BITMAP_ARTIST_STOA,
   GGO_BITMAP_ARTIST_SONSON,
+  GGO_BITMAP_ARTIST_REDIFF, // 40
 };
 
 enum ggo_animation_artist_id
