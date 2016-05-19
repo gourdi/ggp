@@ -6,60 +6,60 @@
 
 namespace ggo
 {
-  template<typename T>
+  template<typename data_t>
   class tree final
   {
   public:
   
-                                  tree(const T & data);
-            
-    bool								          is_leaf() const;
+                                      tree(const data_t & data);
+                                     
+    bool								              is_leaf() const;
+                                     
+    data_t &									        data() { return _data; }
+    const data_t &							      data() const { return _data; }
     
-    T &									          data() { return _data; }
-    const T &							        data() const { return _data; }
+    std::vector<tree<data_t>> &		    subtrees() { return _subtrees; }
+    const std::vector<tree<data_t>> & subtrees() const { return _subtrees; }
     
-    std::vector<tree<T>> &		    subtrees() { return _subtrees; }
-    const std::vector<tree<T>> &  subtrees() const { return _subtrees; }
+    tree<data_t> &						        create_leaf(const data_t & data);
     
-    tree<T> &						          create_leaf(const T & data);
-    
-    void								          get_leaves_data(std::vector<T> & data) const;
+    void								              get_leaves_data(std::vector<data_t> & data) const;
       
-    template <typename Func>
-    void                          visit_leaves(Func f);
+    template <typename func_t>
+    void                              visit_leaves(func_t f);
       
   private:
   
-    T 							      _data;
-    std::vector<tree<T>>  _subtrees;
+    data_t 							      _data;
+    std::vector<tree<data_t>> _subtrees;
   };
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  tree<T>::tree(const T & data)
+  template <typename data_t>
+  tree<data_t>::tree(const data_t & data)
   :
   _data(data)
   {
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool tree<T>::is_leaf() const
+  template <typename data_t>
+  bool tree<data_t>::is_leaf() const
   {
     return _subtrees.size() == 0;
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  tree<T> & tree<T>::create_leaf(const T & data)
+  template <typename data_t>
+  tree<data_t> & tree<data_t>::create_leaf(const data_t & data)
   {
     _subtrees.emplace_back(data);
     return _subtrees.back();
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void tree<T>::get_leaves_data(std::vector<T> & data) const
+  template <typename data_t>
+  void tree<data_t>::get_leaves_data(std::vector<data_t> & data) const
   {
     if (is_leaf() == true)
     {
@@ -75,9 +75,9 @@ namespace ggo
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  template <typename Func>
-  void tree<T>::visit_leaves(Func f)
+  template <typename data_t>
+  template <typename func_t>
+  void tree<data_t>::visit_leaves(func_t f)
   {
     if (is_leaf() == true)
     {
