@@ -236,7 +236,9 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 
-	std::cout << "Output resolution: " << params._width << 'x' << params._height << ", threads: " << params._threads_count << std::endl;
+  std::cout << "Artist ID: " << params._artist_id << std::endl;
+  std::cout << "Output resolution: " << params._width << 'x' << params._height << std::endl;
+  std::cout << "Thread(s): " << params._threads_count << std::endl;
     
   image_index = params._from;
 

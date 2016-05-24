@@ -289,6 +289,7 @@ namespace ggo
 namespace ggo
 {
   class dimension_mismatch_exception : public std::exception {};
+  class inplace_exception : public std::exception {};
 }
 
 //////////////////////////////////////////////////////////////

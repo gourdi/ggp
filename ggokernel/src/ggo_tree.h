@@ -27,6 +27,9 @@ namespace ggo
       
     template <typename func_t>
     void                              visit_leaves(func_t f);
+
+    template <typename func_t>
+    void                              visit_leaves(func_t f) const;
       
   private:
   
@@ -78,6 +81,24 @@ namespace ggo
   template <typename data_t>
   template <typename func_t>
   void tree<data_t>::visit_leaves(func_t f)
+  {
+    if (is_leaf() == true)
+    {
+      f(*this);
+    }
+    else
+    {
+      for (auto & subtree : _subtrees)
+      {
+        subtree.visit_leaves(f);
+      }
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  template <typename func_t>
+  void tree<data_t>::visit_leaves(func_t f) const
   {
     if (is_leaf() == true)
     {

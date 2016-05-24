@@ -14,23 +14,63 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_type>
-  void dilatation_rectangle(const data_type * input, data_type * output, int width, int height, int kernel_width, int kernel_height, int stride_in = 1, int stride_out = 1)
+  template <typename data_t, int stride_in = 1, int stride_out = 1>
+  void dilatation_rectangle(const data_t * input, data_t * output, int width, int height, int kernel_width, int kernel_height)
   {
-    auto in = [&](int x, int y){ return get2d_standard(input, x, y, width, height, stride_in); };
-    auto out = [&](int x, int y, const data_type & v){ set2d_standard(output, x, y, width, height, v, stride_out); };
-    auto pred = [](const data_type & cur, const data_type & ref) { return cur > ref; };
+    if (input == output)
+    {
+      throw inplace_exception();
+    }
+
+    auto in = [&](int x, int y){ return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
+    auto out = [&](int x, int y, const data_t & v){ set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
     
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
   
-  template <typename data_type>
-  void dilatation_disc(const data_type * input, data_type * output, int width, int height, float radius, int stride_in = 1, int stride_out = 1)
+  template <typename data_t, int stride_in = 1, int stride_out = 1>
+  void dilatation_disc(const data_t * input, data_t * output, int width, int height, float radius)
   {
-    auto in = [&](int x, int y){ return get2d_standard(input, x, y, width, height, stride_in); };
-    auto out = [&](int x, int y, const data_type & v){ set2d_standard(output, x, y, width, height, v, stride_out); };
-    auto pred = [](const data_type & cur, const data_type & ref) { return cur > ref; };
+    if (input == output)
+    {
+      throw inplace_exception();
+    }
+
+    auto in = [&](int x, int y){ return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
+    auto out = [&](int x, int y, const data_t & v){ set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
     
+    morpho_disc(in, out, width, height, radius, pred);
+  }
+
+  template <typename data_t, int stride_in = 1, int stride_out = 1>
+  void erosion_rectangle(const data_t * input, data_t * output, int width, int height, int kernel_width, int kernel_height)
+  {
+    if (input == output)
+    {
+      throw inplace_exception();
+    }
+
+    auto in = [&](int x, int y) { return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
+    auto out = [&](int x, int y, const data_t & v) { set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
+
+    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
+  }
+
+  template <typename data_t, int stride_in = 1, int stride_out = 1>
+  void erosion_disc(const data_t * input, data_t * output, int width, int height, float radius)
+  {
+    if (input == output)
+    {
+      throw inplace_exception();
+    }
+
+    auto in = [&](int x, int y) { return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
+    auto out = [&](int x, int y, const data_t & v) { set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
+
     morpho_disc(in, out, width, height, radius, pred);
   }
 }

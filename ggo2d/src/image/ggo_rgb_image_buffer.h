@@ -22,6 +22,8 @@ namespace ggo
   class rgb_image_buffer_uint8 : public rgb_image_buffer_abc<uint8_t>
   {
   public:
+
+    using image_abc::set;
     
                 rgb_image_buffer_uint8(int width, int height);
                 rgb_image_buffer_uint8(int width, int height, uint8_t * buffer);

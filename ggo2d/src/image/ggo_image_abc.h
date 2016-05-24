@@ -34,6 +34,7 @@ namespace ggo
 
             void    set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender = ggo::alpha_blender<color_t>());
            
+            void    for_each_pixel(const std::function<void(int x, int y)> & func);
             void    for_each_pixel(const std::function<void(int x, int y)> & func) const;
             void    for_each_pixel(const std::function<void(int y)> & line_func,
                                    const std::function<void(int x, int y)> & pixel_func) const;
@@ -91,6 +92,19 @@ namespace ggo
     GGO_ASSERT(y >= 0 && y < _height);
 
     set(x, y, blender.blend(get(x, y), opacity, color));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename color_t>
+  void image_abc<color_t>::for_each_pixel(const std::function<void(int x, int y)> & func)
+  {
+    for (int y = 0; y < _height; ++y)
+    {
+      for (int x = 0; x < _width; ++x)
+      {
+        func(x, y);
+      }
+    }
   }
 
   /////////////////////////////////////////////////////////////////////
