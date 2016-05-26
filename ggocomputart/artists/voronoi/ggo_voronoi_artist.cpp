@@ -275,8 +275,8 @@ namespace
 
       mask = round_mask(mask);
       auto downsampled = downsample(mask, scale_factor);
-      GGO_ASSERT_EQ(downsampled.get_size<0>(), get_render_width());
-      GGO_ASSERT_EQ(downsampled.get_size<1>(), get_render_height());
+      GGO_ASSERT_EQ(downsampled.get_size<0>(), image.get_width());
+      GGO_ASSERT_EQ(downsampled.get_size<1>(), image.get_height());
 
       image.for_each_pixel([&](int x, int y)
       {

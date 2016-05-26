@@ -89,8 +89,6 @@ void ggo_bitmap_artist_animation_wrapper::render_bitmap(uint8_t * buffer)
     {
       bool done = false;
 
-      printf("%d\n", artist->get_frame_index());
-
       if (_frames_count > 0 && artist->get_frame_index() >= _frames_count)
       {
         done = true;
