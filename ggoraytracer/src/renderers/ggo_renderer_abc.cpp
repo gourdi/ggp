@@ -119,7 +119,7 @@ namespace ggo
       {
         print_line_number(y + 1);
         
-        uint8_t * line = buffer + 3 * (height - y - 1) * width;
+        uint8_t * line = buffer + 3 * y * width;
 
         for (int x = 0; x < width; ++x)
         {
