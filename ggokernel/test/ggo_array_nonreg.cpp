@@ -98,7 +98,7 @@ GGO_TEST(ggo_array, access)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, loop)
+GGO_TEST(ggo_array, loop_access)
 {
   {
     ggo::array_uint8 a(3);
@@ -152,6 +152,64 @@ GGO_TEST(ggo_array, loop)
     GGO_CHECK_EQ(a.get_loop( 3, 2), 1);
   }
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(ggo_array, loop_mirror)
+{
+  {
+    ggo::array_uint8 a(3);
+    a(0) = 1;
+    a(1) = 2;
+    a(2) = 3;
+    GGO_CHECK_EQ(a.get_mirror(-4), 3);
+    GGO_CHECK_EQ(a.get_mirror(-3), 3);
+    GGO_CHECK_EQ(a.get_mirror(-2), 2);
+    GGO_CHECK_EQ(a.get_mirror(-1), 1);
+    GGO_CHECK_EQ(a.get_mirror(0), 1);
+    GGO_CHECK_EQ(a.get_mirror(1), 2);
+    GGO_CHECK_EQ(a.get_mirror(2), 3);
+    GGO_CHECK_EQ(a.get_mirror(3), 3);
+    GGO_CHECK_EQ(a.get_mirror(4), 2);
+    GGO_CHECK_EQ(a.get_mirror(5), 1);
+    GGO_CHECK_EQ(a.get_mirror(6), 1);
+    GGO_CHECK_EQ(a.get_mirror(7), 2);
+  }
+
+  {
+    ggo::array<uint16_t, 2> a(3, 2);
+    a(0, 0) = 1;
+    a(1, 0) = 2;
+    a(2, 0) = 3;
+    a(0, 1) = 4;
+    a(1, 1) = 5;
+    a(2, 1) = 6;
+    GGO_CHECK_EQ(a.get_mirror(-1, -1), 1);
+    GGO_CHECK_EQ(a.get_mirror(0, -1), 1);
+    GGO_CHECK_EQ(a.get_mirror(1, -1), 2);
+    GGO_CHECK_EQ(a.get_mirror(2, -1), 3);
+    GGO_CHECK_EQ(a.get_mirror(3, -1), 3);
+
+    GGO_CHECK_EQ(a.get_mirror(-1, 0), 1);
+    GGO_CHECK_EQ(a.get_mirror(0, 0), 1);
+    GGO_CHECK_EQ(a.get_mirror(1, 0), 2);
+    GGO_CHECK_EQ(a.get_mirror(2, 0), 3);
+    GGO_CHECK_EQ(a.get_mirror(3, 0), 3);
+
+    GGO_CHECK_EQ(a.get_mirror(-1, 1), 4);
+    GGO_CHECK_EQ(a.get_mirror(0, 1), 4);
+    GGO_CHECK_EQ(a.get_mirror(1, 1), 5);
+    GGO_CHECK_EQ(a.get_mirror(2, 1), 6);
+    GGO_CHECK_EQ(a.get_mirror(3, 1), 6);
+
+    GGO_CHECK_EQ(a.get_mirror(-1, 2), 4);
+    GGO_CHECK_EQ(a.get_mirror(0, 2), 4);
+    GGO_CHECK_EQ(a.get_mirror(1, 2), 5);
+    GGO_CHECK_EQ(a.get_mirror(2, 2), 6);
+    GGO_CHECK_EQ(a.get_mirror(3, 2), 6);
+  }
+}
+
+
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(ggo_array, fill)

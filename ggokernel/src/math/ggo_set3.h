@@ -45,6 +45,8 @@ namespace ggo
     T					      get_hypot() const { return _x*_x+_y*_y+_z*_z; }
     T					      get_length() const { return std::sqrt(_x*_x+_y*_y+_z*_z); }
 
+    void            flip() { _x = -_x; _y = -_y; _z = -_z; }
+
     void				    normalize();
     void				    set_length(T length);
     bool				    is_normalized(T epsilon) const;

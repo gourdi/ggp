@@ -123,6 +123,22 @@ namespace ggo
       return _buffer[offset<n_dims, n_dims>::compute_loop(_dimensions, a...)];
     }
 
+    // Accessing array's elements, with indexes looping over array's dimension.
+    template <typename... args>
+    data_t & get_mirror(args... a)
+    {
+      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      return _buffer[offset<n_dims, n_dims>::compute_mirror(_dimensions, a...)];
+    }
+
+    // Accessing array's elements, with indexes looping over array's dimension.
+    template <typename... args>
+    const data_t & get_mirror(args... a) const
+    {
+      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      return _buffer[offset<n_dims, n_dims>::compute_mirror(_dimensions, a...)];
+    }
+
     // Iterators helpers.
     data_t *  begin() { return _buffer; }
     const data_t *  begin() const { return _buffer; }
@@ -234,6 +250,14 @@ namespace ggo
         index = ggo::loop_index(index, dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_loop(dimensions, a...);
       }
+
+      template <typename... args>
+      static int compute_mirror(const int * dimensions, int index, args... a)
+      {
+        static_assert(remaining <= count && remaining > 1, "error");
+        index = ggo::mirror_index_edge_duplicated(index, dimensions[count - remaining]);
+        return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_mirror(dimensions, a...);
+      }
     };
 
     template<int count>
@@ -248,6 +272,12 @@ namespace ggo
       static int compute_loop(const int * dimensions, int index)
       {
         index = ggo::loop_index(index, dimensions[count - 1]);
+        return index;
+      }
+
+      static int compute_mirror(const int * dimensions, int index)
+      {
+        index = ggo::mirror_index_edge_duplicated(index, dimensions[count - 1]);
         return index;
       }
     };
@@ -275,6 +305,23 @@ namespace ggo
   using array_int64   = array<int64_t, 1>;
   using array_float   = array<float, 1>;
   using array_double  = array<double, 1>;
+}
+
+//////////////////////////////////////////////////////////////
+// For each
+namespace ggo
+{
+  template <typename data_t, typename func_t>
+  void for_each(const ggo::array<data_t, 2> & a, func_t t)
+  {
+    for (int y = 0; y < a.get_size<1>(); ++y)
+    {
+      for (int x = 0; x < a.get_size<0>(); ++x)
+      {
+        f(x, y);
+      }
+    }
+  }
 }
 
 #endif
