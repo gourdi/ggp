@@ -110,8 +110,8 @@ namespace
 
       return color;
     }
-    GGO_ASSERT(local_normal.dir().is_normalized(0.0001f));
-    GGO_ASSERT(world_normal.dir().is_normalized(0.0001f));
+    GGO_ASSERT_FLOAT_EQ(local_normal.dir().get_length(), 1.f);
+    GGO_ASSERT_FLOAT_EQ(world_normal.dir().get_length(), 1.f);
 
     // Let's go.
     float reflection_factor = hit_object->get_reflection_factor();

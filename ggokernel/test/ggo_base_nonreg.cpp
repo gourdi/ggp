@@ -227,3 +227,26 @@ GGO_TEST(base, type_casting)
   GGO_CHECK(ggo::to<int16_t>(uint32_t(0xFFFFFFFF)) == 32767);
   GGO_CHECK(ggo::to<int32_t>(uint32_t(0xFFFFFFFF)) == std::numeric_limits<int32_t>::max());
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, remove_first_if)
+{
+  {
+    std::vector<int> v{ 6, 2, 3, 4, 5 };
+    ggo::remove_first_if(v, [](int i) { return i % 2 == 1; }); // Remove first odd number.
+    GGO_CHECK_EQ(4, v.size());
+    GGO_CHECK_EQ(6, v[0]);
+    GGO_CHECK_EQ(2, v[1]);
+    GGO_CHECK_EQ(4, v[2]);
+    GGO_CHECK_EQ(5, v[3]);
+  }
+
+  {
+    std::vector<int> v{ 5, 1, 3 };
+    ggo::remove_first_if(v, [](int i) { return i % 2 == 0; }); // Remove first even number.
+    GGO_CHECK_EQ(3, v.size());
+    GGO_CHECK_EQ(5, v[0]);
+    GGO_CHECK_EQ(1, v[1]);
+    GGO_CHECK_EQ(3, v[2]);
+  }
+}

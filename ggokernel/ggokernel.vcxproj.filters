@@ -286,6 +286,12 @@
       <Filter>rle</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_buffer_access.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_metaball.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_metaball.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

@@ -215,6 +215,19 @@ namespace ggo
     c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
   }
 
+  template <typename container, typename predicate>
+  void remove_first_if(container & c, predicate p)
+  {
+    for (auto it = c.begin(); it != c.end(); ++it)
+    {
+      if (p(*it) == true)
+      {
+        c.erase(it);
+        return;
+      }
+    }
+  }
+
   template <typename container>
   void shuffle(container & c)
   {
