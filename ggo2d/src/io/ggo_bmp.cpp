@@ -51,7 +51,16 @@ namespace ggo
     stream.write(reinterpret_cast<char*>(header), 40);
 
     // Write pixels (note that pixels are stored BGR from bottom to top.
-    stream.write(reinterpret_cast<const char*>(rgb), 3 * width * height);
+    for (int y = 0; y < height; ++y)
+    {
+      for (int x = 0; x < width; ++x)
+      {
+        stream.write(reinterpret_cast<const char*>(rgb + 2), 1);
+        stream.write(reinterpret_cast<const char*>(rgb + 1), 1);
+        stream.write(reinterpret_cast<const char*>(rgb + 0), 1);
+        rgb += 3;
+      }
+    }
     if (!stream)
     {
       return false;
