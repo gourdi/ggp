@@ -6,6 +6,10 @@ namespace ggo
     :
     _v1(v1), _v2(v2), _v3(v3)
   {
+    GGO_ASSERT_FLOAT_EQ(v1._normal.get_length(), 1.f);
+    GGO_ASSERT_FLOAT_EQ(v2._normal.get_length(), 1.f);
+    GGO_ASSERT_FLOAT_EQ(v3._normal.get_length(), 1.f);
+
     _m00 = _v2._pos.x() - _v1._pos.x();
     _m10 = _v2._pos.y() - _v1._pos.y();
     _m20 = _v2._pos.z() - _v1._pos.z();
@@ -23,6 +27,8 @@ namespace ggo
   template <typename T, bool double_sided>
   bool face3d<T, double_sided>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
   {
+    GGO_ASSERT_FLOAT_EQ(ray.dir().get_length(), 1.f);
+
     // If P is the intersection point, we have P=v1+s0*(v2-v1)+s1*(v3-v1) since
     // P is inside the face place. We also have P=ray_pos+s2*ray_dir. This leads to:
     // s0*(v2-v1)+s1*(v3-v1)=ray_pos+s2*ray_dir, or
@@ -73,7 +79,7 @@ namespace ggo
     // The normal.
     dist = s2;
     normal.pos() = ray.pos() + s2 * ray.dir();
-    normal.set_normalized_dir((1 - s0 - s1) * _v1._normal + s0 * _v2._normal + s1 * _v3._normal);
+    normal.set_dir((1 - s0 - s1) * _v1._normal + s0 * _v2._normal + s1 * _v3._normal);
 
     if (ggo::dot(normal.dir(), ray.dir()) > 0)
     {
