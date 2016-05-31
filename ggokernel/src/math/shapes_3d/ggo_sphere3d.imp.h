@@ -3,43 +3,60 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // Solve the equation (x-center_x)^2+(y-center_y)^2+(z-center_z)^2=r^2
   // injecting the ray into the equation.
-  template <typename T>
-  bool sphere3d<T>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
+  // This equation returns negative distance too (ie. intersection 'behind' the ray).
+  template <typename data_t>
+  bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const
   {
     // Build the quadratic and solve it.
-    const ggo::set3<T> & dir = ray.dir();
-    const ggo::set3<T> & pos = ray.pos();
-    const ggo::set3<T> diff(pos - _center);
-    
+    const ggo::set3<data_t> & dir = ray.dir();
+    const ggo::set3<data_t> & pos = ray.pos();
+    const ggo::set3<data_t> diff(pos - _center);
+
     // Hint 1: deg2 is dot(dir, dir) which is 1
     // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
     // the multiplication simplifies the computations
-    T deg1 = ggo::dot(dir, diff); 
-    T deg0 = ggo::dot(diff, diff) - _radius * _radius;
-    
+    data_t deg1 = ggo::dot(dir, diff);
+    data_t deg0 = ggo::dot(diff, diff) - _radius * _radius;
+
     // Solve it.
-    T d = deg1 * deg1 - deg0;
+    data_t d = deg1 * deg1 - deg0;
     if (d < 0)
     {
       return false;
     }
     d = sqrt(d);
 
-    // Check the lower solution.
-    dist = -deg1 - d;
-    if (dist >= 0)
+    dist_inf = -deg1 - d;
+    dist_sup = -deg1 + d;
+
+    return true;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
+  {
+    data_t dist_inf, dist_sup;
+    if (intersect_ray(ray, dist_inf, dist_sup) == false)
     {
-      normal.pos() = pos + dist * dir;
+      return false;
+    }
+
+    // Check the lower solution.
+    if (dist_inf >= 0)
+    {
+      dist = dist_inf;
+      normal.pos() = ray.pos() + dist * ray.dir();
       normal.set_dir(normal.pos() - _center);
       return true;
     }
 
     // Check the greatest solution (the ray's origin is then inside the sphere, which is a valid case).
     // In that case, the normal points towards the center of the sphere.
-    dist = -deg1 + d;
-    if (dist >= 0)
+    if (dist_sup >= 0)
     {
-      normal.pos() = pos + dist * dir;
+      dist = dist_sup;
+      normal.pos() = ray.pos() + dist * ray.dir();
       normal.set_dir(_center - normal.pos());
       return true;
     }
@@ -48,33 +65,25 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool sphere3d<T>::intersect_ray(const ggo::ray3d<T> & ray) const
+  template <typename data_t>
+  bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
   {
-    const ggo::set3<T> & dir = ray.dir();
-    const ggo::set3<T> & pos = ray.pos();
-    
-    T dx = pos.x() - _center.x();
-    T dy = pos.y() - _center.y();
-    T dz = pos.z() - _center.z();
-    
-    T deg2 = dir.x()*dir.x() + dir.y()*dir.y() + dir.z()*dir.z();
-    T deg1 = 2*(dir.x()*dx + dir.y()*dy + dir.z()*dz);
-    T deg0 = dx*dx + dy*dy + dz*dz - _radius*_radius;
-    GGO_ASSERT(deg2 >= 0);
+    data_t dist_inf, dist_sup;
+    if (intersect_ray(ray, dist_inf, dist_sup) == false)
+    {
+      return false;
+    }
 
-    T d = deg1 * deg1 - T(4) * deg2 * deg0;
-    
-    return (d >= 0) && (-std::sqrt(d) > deg1);
+    return dist_sup >= 0;
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  sphere3d<T> sphere3d<T>::merge(const sphere3d<T> & sphere1, const sphere3d<T> & sphere2)
+  template <typename data_t>
+  sphere3d<data_t> sphere3d<data_t>::merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2)
   {
-    T hypot = ggo::hypot(sphere1.center(), sphere2.center());
-    T squared_radius1 = ggo::square(sphere1.radius());
-    T squared_radius2 = ggo::square(sphere2.radius());
+    data_t hypot = ggo::hypot(sphere1.center(), sphere2.center());
+    data_t squared_radius1 = ggo::square(sphere1.radius());
+    data_t squared_radius2 = ggo::square(sphere2.radius());
       
     // Sphere1 inside sphere2?
     if (hypot + squared_radius1 < squared_radius2)
@@ -88,19 +97,19 @@ namespace ggo
       return sphere1;
     }
       
-    ggo::set3<T> diff(sphere2.center() - sphere1.center());
+    ggo::set3<data_t> diff(sphere2.center() - sphere1.center());
     diff /= diff.get_length(); // Normalize.
       
-    ggo::set3<T> p1(sphere1.center() - sphere1.radius() * diff);
-    ggo::set3<T> p2(sphere2.center() + sphere2.radius() * diff);
-    ggo::set3<T> diff2(p2 - p1);
+    ggo::set3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
+    ggo::set3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
+    ggo::set3<data_t> diff2(p2 - p1);
       
-    return sphere3d((p1 + p2) / T(2), diff2.get_length() / T(2));
+    return sphere3d((p1 + p2) / data_t(2), diff2.get_length() / data_t(2));
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  std::string sphere3d<T>::desc() const
+  template <typename data_t>
+  std::string sphere3d<data_t>::desc() const
   {
     std::ostringstream oss;
     oss << "sphere3d " << "(" << _center << ", " << _radius <<")";
