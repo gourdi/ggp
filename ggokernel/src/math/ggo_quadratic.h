@@ -1,3 +1,6 @@
+#ifndef __GGO_QUADRATIC__
+#define __GGO_QUADRATIC__
+
 namespace ggo
 {
   template <typename T>
@@ -17,3 +20,5 @@ namespace ggo
     return true;
   }
 }
+
+#endif
