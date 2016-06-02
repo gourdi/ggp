@@ -14,7 +14,7 @@ GGO_TEST(test_scene, metaball)
 
   // The camera.
   ggo::mono_sampling_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
-  camera.basis().set_pos(0.f, 0.f, 10.f);
+  camera.basis().set_pos(0.5f, 0.f, 5.f);
   camera.set_aperture(0.1f);
 
   // The scene.
@@ -24,10 +24,10 @@ GGO_TEST(test_scene, metaball)
   scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(-100, 0, 200));
 
   // Objects.
-  auto metaball = std::make_shared<ggo::metaball<float>>(0.8f);
-  metaball->add_influence_sphere({ -0.35f, 0.0f, 0.0f });
-  metaball->add_influence_sphere({  0.35f, 0.0f, 0.0f });
-  auto sphere1_obj = scene_builder.add_object(metaball, ggo::color::WHITE, false);
+  auto metaball = std::make_shared<ggo::metaball<float>>(0.75f);
+  metaball->add_influence_sphere({ { -0.6f, 0.0f, 0.0f }, 1.0f }, 1.0f);
+  metaball->add_influence_sphere({ {  0.6f, 0.0f, 0.0f }, 1.0f }, 1.0f);
+  scene_builder.add_object(metaball, ggo::color::WHITE, false);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

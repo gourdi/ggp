@@ -13,6 +13,7 @@
 #include <random>
 #include <algorithm>
 #include <exception>
+#include <numeric>
 
 //////////////////////////////////////////////////////////////
 // Debug.
@@ -53,7 +54,8 @@ namespace ggo
 {
   inline std::default_random_engine & get_random_generator()
   {
-    static std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
+    //static std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
+    static std::default_random_engine generator(132456798);
     return generator;
   };
 
@@ -72,8 +74,8 @@ namespace ggo
 // Functions.
 namespace ggo
 {
-  template <typename data_type>
-  data_type map(data_type v, data_type inf_from, data_type sup_from, data_type inf_to, data_type sup_to)
+  template <typename data_t>
+  data_t map(data_t v, data_t inf_from, data_t sup_from, data_t inf_to, data_t sup_to)
   { 
     return inf_to + (v - inf_from ) * (sup_to - inf_to ) / (sup_from - inf_from);
   }
@@ -246,14 +248,14 @@ namespace ggo
     return std::find_if(c.begin(), c.end(), p) != c.end();
   }
 
-  template <typename container, typename data_type>
-  bool find(const container & c, const data_type & v)
+  template <typename container, typename data_t>
+  bool find(const container & c, const data_t & v)
   {
     return std::find(c.begin(), c.end(), v) != c.end();
   }
 
-  template <typename container, typename data_type>
-  void push_once(container & c, const data_type & v)
+  template <typename container, typename data_t>
+  void push_once(container & c, const data_t & v)
   {
     if (std::find(c.begin(), c.end(), v) == c.end())
     {
@@ -261,10 +263,16 @@ namespace ggo
     }
   }
 
-  template <typename container, typename data_type>
-  void fill(container & c, const data_type & v)
+  template <typename container, typename data_t>
+  void fill(container & c, const data_t & v)
   {
     std::fill(c.begin(), c.end(), v);
+  }
+
+  template <typename container, typename func_t, typename data_t>
+  data_t accumulate(container & c, func_t f, data_t init)
+  {
+    return std::accumulate(c.begin(), c.end(), init, f);
   }
 }
 

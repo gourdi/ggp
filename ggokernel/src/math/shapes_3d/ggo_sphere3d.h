@@ -22,6 +22,9 @@ namespace ggo
     const data_t &            radius() const { return _radius; }
 
     std::string               desc() const override;
+
+    bool                      is_point_inside(data_t x, data_t y, data_t z) const;
+    bool                      is_point_inside(const ggo::set3<data_t> & p) const;
   
     static  sphere3d<data_t>  merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2);
 

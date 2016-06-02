@@ -2,8 +2,10 @@
 #include "ggo_metaballs_artist.h"
 #include <ggo_point_camera.h>
 #include <ggo_global_sampling_renderer.h>
+#include <ggo_mono_sampling_renderer.h>
 
 #define GGO_BALL_SIZE 3
+#define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
 ggo_metaballs_bitmap_artist::ggo_metaballs_bitmap_artist(int render_width, int render_height)
@@ -17,11 +19,15 @@ void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
 {
 	ggo_metaballs_artist::ggo_metaballs_params params;
 
-	ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
+#ifdef MONO_SAMPLING
+  ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
+#else
+  ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
+  camera.set_depth_of_field_factor(ggo::rand_float(0.2f, 0.5f));
+  camera.set_depth_of_field(22);
+#endif
 	camera.basis().set_pos(0, 0, 25);
 	camera.set_aperture(0.1f);
-	camera.set_depth_of_field_factor(ggo::rand_float(0.2f, 0.5f));
-	camera.set_depth_of_field(22);
 
 	while (params._centers.size() < 200)
 	{
@@ -32,7 +38,11 @@ void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
 		}
 	}
 
+#ifdef MONO_SAMPLING
+  ggo::mono_sampling_renderer renderer(camera);
+#else
   ggo::global_sampling_renderer renderer(camera, 56);
+#endif
 	ggo_metaballs_artist artist(get_render_width(), get_render_height());
 	artist.render_bitmap(buffer, renderer, params);
 }

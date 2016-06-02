@@ -79,6 +79,22 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  bool sphere3d<data_t>::is_point_inside(data_t x, data_t y, data_t z) const
+  {
+    ggo::set3<data_t> diff(x - _center.x(), y - _center.y(), z - _center.z());
+
+    return diff.get_hypot() <= ggo::square(_radius);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool sphere3d<data_t>::is_point_inside(const ggo::set3<data_t> & p) const
+  {
+    return is_point_inside(p.x(), p.y(), p.z());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   sphere3d<data_t> sphere3d<data_t>::merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2)
   {
     data_t hypot = ggo::hypot(sphere1.center(), sphere2.center());

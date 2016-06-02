@@ -7,7 +7,7 @@ namespace ggo
 
                 metaball(float threshold);
 
-    void        add_influence_sphere(const ggo::set3<data_t> & pos);
+    void        add_influence_sphere(const ggo::sphere3d<data_t> & sphere, data_t potential);
 
     bool	      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool	      is_convex() const override { return false; }
@@ -15,10 +15,19 @@ namespace ggo
 
   public:
 
+    struct influence_sphere
+    {
+      ggo::sphere3d<data_t> _sphere;
+      data_t                _potential;
+      data_t                _inv_squared_radius;
+
+      data_t                evaluate(const ggo::set3<data_t> & pos) const;
+    };
+
     struct intersection_info
     {
       bool 						          _entry;
-      const ggo::set3<data_t> * _center;
+      const influence_sphere *  _influence_sphere;
       float 						        _dist;
     };
 
@@ -29,7 +38,10 @@ namespace ggo
                                                                std::vector<const intersection_info*> & active_list,
                                                                typename std::vector<intersection_info>::const_iterator & intersection_it);
 
-    std::vector<ggo::set3<data_t>>  _influence_spheres;
-    float							 		          _threshold;
+    static  data_t                          compute_field_potential(const ggo::set3<data_t> & pos,
+                                                                    const std::vector<const intersection_info*> & active_list);
+
+    std::vector<influence_sphere> _influence_spheres;
+    float							 		        _threshold;
   };
 }

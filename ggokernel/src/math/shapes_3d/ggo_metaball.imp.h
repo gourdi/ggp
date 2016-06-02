@@ -2,6 +2,24 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  data_t metaball<data_t>::influence_sphere::evaluate(const ggo::set3<data_t> & pos) const
+  {
+    // f = potential * ((hypot / r^2)^2 - 2 * hypot / r^2 + 1)
+    // f = potential * (hypot_norm^2 - 2 * hypot_norm + 1) if hypot_norm = hypot / r^2
+
+    data_t hypot_norm = ggo::hypot(pos, _sphere.center()) * _inv_squared_radius;
+    GGO_ASSERT(hypot_norm <= data_t(1.001));
+
+    data_t influence = ggo::square(hypot_norm - 1); // x^2 - 2x + 1 = (x - 1)^2
+    influence *= _potential;
+    
+    GGO_ASSERT(influence >= data_t(0.));
+
+    return influence;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   metaball<data_t>::metaball(float threshold)
   :
   _threshold(threshold)
@@ -10,9 +28,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void metaball<data_t>::add_influence_sphere(const ggo::set3<data_t> & pos)
+  void metaball<data_t>::add_influence_sphere(const ggo::sphere3d<data_t> & sphere, data_t potential)
   {
-    _influence_spheres.push_back(pos);
+    _influence_spheres.push_back({ sphere, potential, 1 / ggo::square(sphere.radius()) });
   }
 
   //////////////////////////////////////////////////////////////
@@ -25,9 +43,8 @@ namespace ggo
     for (const auto & influence_sphere : _influence_spheres)
     {
       // Check for ray / influence sphere intersection.
-      ggo::sphere3d<data_t> sphere(influence_sphere, 1);
       data_t dist_inf, dist_sup;
-      if (sphere.intersect_ray(ray, dist_inf, dist_sup) == false)
+      if (influence_sphere._sphere.intersect_ray(ray, dist_inf, dist_sup) == false)
       {
         continue;
       }
@@ -41,13 +58,13 @@ namespace ggo
 
       intersection_info intersection_info_inf;
       intersection_info_inf._entry = true;
-      intersection_info_inf._center = &influence_sphere;
+      intersection_info_inf._influence_sphere = &influence_sphere;
       intersection_info_inf._dist = dist_inf;
       intersections.push_back(intersection_info_inf);
 
       intersection_info intersection_info_sup;
       intersection_info_sup._entry = false;
-      intersection_info_sup._center = &influence_sphere;
+      intersection_info_sup._influence_sphere = &influence_sphere;
       intersection_info_sup._dist = dist_sup;
       intersections.push_back(intersection_info_sup);
     }
@@ -81,7 +98,7 @@ namespace ggo
         std::cout << "removing center " << intersection_it->_center << " from active list at t=" << dist << std::endl;
 #endif
         // We are leaving an influence sphere, remove it from the active list.
-        ggo::remove_first_if(active_list, [&](const intersection_info * intersection) { return intersection->_center == intersection_it->_center; });
+        ggo::remove_first_if(active_list, [&](const intersection_info * intersection) { return intersection->_influence_sphere == intersection_it->_influence_sphere; });
       }
 
       ++intersection_it;
@@ -96,6 +113,23 @@ namespace ggo
     }
 
     return true;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t metaball<data_t>::compute_field_potential(const ggo::set3<data_t> & pos, 
+                                                   const std::vector<const intersection_info*> & active_list)
+  {
+    data_t v = 0;
+
+    for (const auto * intersection : active_list)
+    {
+      GGO_ASSERT(intersection->_entry == true);
+
+      v += intersection->_influence_sphere->evaluate(pos);
+    }
+
+    return v;
   }
 
   //////////////////////////////////////////////////////////////
@@ -139,6 +173,7 @@ namespace ggo
         GGO_ASSERT(intersection_it->_entry == true);
 
         dist = intersection_it->_dist;
+
 #ifdef GGO_METABALLS_DEBUG
         std::cout << "jumping to dist=" << dist << ", adding sphere " << intersection_it->_center << " into active list" << std::endl;
 #endif	
@@ -149,77 +184,62 @@ namespace ggo
         GGO_ASSERT(intersection_it != intersections.end());
       }
 
-      // Compute field potential.
-      data_t v = 0;
-      ggo::set3<data_t> pos(ray.pos() + dist * ray.dir());
-      for (const auto * intersection : active_list)
+      // Compute field potential
+      normal.pos() = ray.pos() + dist * ray.dir();
+      dist += data_t(0.001);
+
+      auto compute_field_potential = [&](float acc, const intersection_info * intersection)
       {
-        const ggo::set3<data_t> * center = intersection->_center;
+        return acc + intersection->_influence_sphere->evaluate(normal.pos());
+      };
+      data_t v = ggo::accumulate(active_list, compute_field_potential, data_t(0));
 
-        GGO_ASSERT(intersection->_entry == true);
-
-        ggo::set3<data_t> diff = pos - *center;
-
-        data_t hypot = diff.get_length();
-        data_t influence = hypot * hypot - 2 * hypot + 1; // r^4 - 2r^2 + 1
-        GGO_ASSERT(hypot <= 1.001);
-
-        v += influence;
-      }
-
-      // Check for intersection of the surface
+      // Check if inside the surface. If so => intersection.
       if (v > _threshold)
       {
 #ifdef GGO_METABALLS_DEBUG
         std::cout << "intersection detected at t=" << t << "(" << active_list.size() << " active sphere(s))" << std::endl;
 #endif
 
+        // Use previous distance, to avoid self-intersection.
+        dist -= data_t(0.001);
+        normal.pos() = ray.pos() + dist * ray.dir();
+
         // Compute normal direction.
         ggo::set3<data_t> dir(0, 0, 0);
         for (const auto * intersection : active_list)
         {
-          const ggo::set3<data_t> * center = intersection->_center;
-
           GGO_ASSERT(intersection->_entry == true);
 
-          ggo::set3<data_t> diff = pos - *center;
+          const influence_sphere * influence_sphere = intersection->_influence_sphere;
 
-          data_t hypot = diff.get_length();
-          data_t influence = hypot * hypot - 2 * hypot + 1; // r^4 - 2r^2 + 1
-          data_t r = std::sqrt(hypot);
-          GGO_ASSERT(hypot <= 1.001);
+          ggo::set3<data_t> diff = normal.pos() - influence_sphere->_sphere.center();
 
-          diff /= r; // Normalize.
-          GGO_ASSERT(diff.is_normalized(0.01f) == true);
-          diff *= influence;
-          dir += diff;
+          // df/dx = 4 * potential * x * (hypot / r^2 - 1) / r^2
+          // df/dy = 4 * potential * y * (hypot / r^2 - 1) / r^2
+          // df/dz = 4 * potential * z * (hypot / r^2 - 1) / r^2
+          ggo::set3<data_t> cur_grad = (1 - diff.get_hypot() * influence_sphere->_inv_squared_radius) * diff;
+          cur_grad *= influence_sphere->_potential * influence_sphere->_inv_squared_radius; // Don't multiply by 4 since normal is normalized. 
+
+          dir += cur_grad;
         }
 
-        // Make sure the normal is well oriented.
-        data_t overflow = 0.001f + ggo::dot(dir, ray.dir());
-        if (overflow > 0)
-        {
-          dir -= overflow * ray.dir();
-        }
+        normal.set_dir(dir);
 
-        normal = ggo::ray3d<data_t>(pos, dir);
+#if 0 // The following code does not rely on analytic derivaties but on neighborhood sampling.
+        const float eps = 0.001f;
+        float x_inf = compute_field_potential({ pos.x() - eps, pos.y(), pos.z() }, active_list);
+        float x_sup = compute_field_potential({ pos.x() + eps, pos.y(), pos.z() }, active_list);
+        float y_inf = compute_field_potential({ pos.x(), pos.y() - eps, pos.z() }, active_list);
+        float y_sup = compute_field_potential({ pos.x(), pos.y() + eps, pos.z() }, active_list);
+        float z_inf = compute_field_potential({ pos.x(), pos.y(), pos.z() - eps }, active_list);
+        float z_sup = compute_field_potential({ pos.x(), pos.y(), pos.z() + eps }, active_list);
+        
+        normal.set_dir(ggo::vector3d_float(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup));
+#endif
 
         return true;
       }
-
-      if (v < 0.5)
-      {
-        dist += 0.1f;
-      }
-      else
-        if (v < 0.7)
-        {
-          dist += 0.01f;
-        }
-        else
-        {
-          dist += 0.001f;
-        }
     }
 
     return false;

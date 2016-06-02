@@ -190,6 +190,14 @@ GGO_TEST(shapes3d, spheres)
     GGO_CHECK_FABS(normal.dir().y(), -1);
     GGO_CHECK_FABS(normal.dir().z(), 0);
   }
+
+  {
+    ggo::sphere3d_float s({ 3.0f, 1.0f, 0.0f }, 2.f);
+    GGO_CHECK(s.is_point_inside(0.0f, 0.0f, 0.0f) == false);
+    GGO_CHECK(s.is_point_inside(3.0f, 1.0f, 3.0f) == false);
+    GGO_CHECK(s.is_point_inside(3.0f, 1.0f, 0.0f) == true);
+    GGO_CHECK(s.is_point_inside(2.0f, 2.0f, 0.0f) == true);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -694,4 +702,22 @@ GGO_TEST(shapes3d, parallelogram3d)
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({5, 2, 2}, {0, 0, 1}, false), dist, normal) == false);
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({7, 2, 2}, {0, 0, -1}, false), dist, normal) == false);
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({1, 4, 2}, {0, 0, -1}, false), dist, normal) == false);
+}
+
+/////////////////////////////////////////////////////////////////////  
+GGO_TEST(shapes3d, metaball)
+{
+  ggo::metaball<float> metaball(1.f);
+  metaball.add_influence_sphere({ {3.0f, 0.0f, 0.0f}, 2.0f }, 3.0f);
+
+  float dist = 0.f;
+  ggo::ray3d_float normal;
+  ggo::ray3d_float ray({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, false);
+  GGO_CHECK(metaball.intersect_ray(ray, dist, normal) == true);
+  GGO_CHECK_FABS(normal.pos().x(), dist);
+  GGO_CHECK_FABS(normal.pos().y(), 0.f);
+  GGO_CHECK_FABS(normal.pos().z(), 0.f);
+  GGO_CHECK_FABS(normal.dir().x(), -1.f);
+  GGO_CHECK_FABS(normal.dir().y(), 0.f);
+  GGO_CHECK_FABS(normal.dir().z(), 0.f);
 }

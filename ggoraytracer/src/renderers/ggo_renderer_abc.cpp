@@ -64,7 +64,7 @@ namespace ggo
       
       ggo::color color = render_task->render_pixel(x, y, *scene, *raytrace_params);
 
-      uint8_t * ptr = buffer + 3 * ((height - y - 1) * width + x);
+      uint8_t * ptr = buffer + 3 * (y * width + x);
         
       *ptr++ = color.r8();
       *ptr++ = color.g8();
