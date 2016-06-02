@@ -11,7 +11,7 @@ ffmpeg -i $INPUT_FILE _%05d.tga
 convert _00050.tga -resize 1066x600\! -crop 600x600+223+0 +repage -page +265+260 $PLAY -flatten $OUTPUT_FILE.jpg
 
 for b in _*.tga; do
-	convert $b -resize 640x360\! -page +10+10 $LOGO -flatten tmp.tga
+	convert $b -resize 640x360\! -page +10+10 $LOGO -flatten -flip tmp.tga
     rm $b
     mv tmp.tga $b
 done;
