@@ -1,18 +1,18 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool plane3d<T>::intersect_ray(const ggo::ray3d<T> & ray, float & dist, ggo::ray3d<T> & normal) const
+  template <typename data_t>
+  bool plane3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
-    T den = ggo::dot(_normal, ray.dir());
-    if (den >= T(0))
+    data_t den = ggo::dot(_normal, ray.dir());
+    if (den >= 0)
     {
       return false;
     }
     
-    T num = _dist_to_origin - ggo::dot(_normal, ray.pos());
+    data_t num = _dist_to_origin - ggo::dot(_normal, ray.pos());
     dist = num / den;
-    if (dist <= T(0))
+    if (dist <= 0)
     {
       return false;
     }
@@ -24,8 +24,8 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  std::string plane3d<T>::desc() const 
+  template <typename data_t>
+  std::string plane3d<data_t>::desc() const 
   {
     std::ostringstream oss;
     oss << "plane3d (" << _normal << ", " << _dist_to_origin << ")";

@@ -721,3 +721,43 @@ GGO_TEST(shapes3d, metaball)
   GGO_CHECK_FABS(normal.dir().y(), 0.f);
   GGO_CHECK_FABS(normal.dir().z(), 0.f);
 }
+
+/////////////////////////////////////////////////////////////////////  
+GGO_TEST(shapes3d, line3d_distance)
+{
+  // line1 = orig1 + t1 * dir1
+  // line2 = orig2 + t2 * dir2
+
+  {
+    const ggo::point3d_float orig1(-1.f, 2.f, 0.f);
+    const ggo::point3d_float orig2(4.f, -1.f, 1.f);
+    const ggo::vector3d_float dir1(1.f, 0.f, 0.f);
+    const ggo::vector3d_float dir2(0.f, 0.f, 1.f);
+
+    float dist1 = 0.f;
+    float dist2 = 0.f;
+    GGO_CHECK(ggo::find_closest_lines_points(orig1, dir1, orig2, dir2, dist1, dist2) == true);
+
+    GGO_CHECK_FABS(dist1, 5.f);
+    GGO_CHECK_FABS(dist2, -1.f);
+  }
+
+  {
+    const ggo::point3d_float orig1(-1.f, 2.f, 0.f);
+    const ggo::point3d_float orig2(4.f, -1.f, 1.f);
+    const ggo::vector3d_float dir1(1.f, 0.f, 0.f);
+    const ggo::vector3d_float dir2(-ggo::INV_SQRT2<float>(), ggo::INV_SQRT2<float>(), 0.f);
+
+    ggo::point3d_float p1, p2;
+    GGO_CHECK(ggo::find_closest_lines_points(orig1, dir1, orig2, dir2, p1, p2) == true);
+
+    GGO_CHECK_FABS(p1.x(), 1.f);
+    GGO_CHECK_FABS(p1.y(), 2.f);
+    GGO_CHECK_FABS(p1.z(), 0.f);
+
+    GGO_CHECK_FABS(p2.x(), 1.f);
+    GGO_CHECK_FABS(p2.y(), 2.f);
+    GGO_CHECK_FABS(p2.z(), 1.f);
+  }
+}
+

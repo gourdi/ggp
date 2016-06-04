@@ -215,6 +215,8 @@
     <ClInclude Include="src\math\shapes_3d\ggo_disc3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_face3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_face3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_line3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_line3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_metaball.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_metaball.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_parallelogram3d.h" />

@@ -1,20 +1,20 @@
 namespace ggo
 {
-  template <typename T>
-  class plane3d : public raytracable_shape3d_abc<T>
+  template <typename data_t>
+  class plane3d : public raytracable_shape3d_abc<data_t>
   {
   public:
 
-                plane3d(const ggo::set3<T> & normal, T dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+                plane3d(const ggo::set3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
 
-    bool        intersect_ray(const ggo::ray3d<T> & ray, float & dist, ggo::ray3d<T> & normal) const override;
+    bool        intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool        is_convex() const override { return true; }
     std::string desc() const override;
       
   private:
 
-    const ggo::set3<T> _normal;
-    const T            _dist_to_origin;
+    const ggo::set3<data_t> _normal;
+    const data_t            _dist_to_origin;
   };
 }
 

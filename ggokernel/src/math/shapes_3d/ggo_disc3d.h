@@ -1,23 +1,23 @@
 namespace ggo
 {
-  template <typename T>
-  class disc3d : public raytracable_shape3d_abc<T>
+  template <typename data_t>
+  class disc3d : public raytracable_shape3d_abc<data_t>
   {
   public:
   
-                        disc3d(const ggo::ray3d<T> & ray, T radius) : _ray(ray), _radius(radius) {}
+                        disc3d(const ggo::ray3d<data_t> & ray, data_t radius) : _ray(ray), _radius(radius) {}
     
-    const ggo::ray3d<T> ray() const { return _ray; }
-    T                   radius() const { return _radius; }
+    const ggo::ray3d<data_t>  ray() const { return _ray; }
+    data_t                    radius() const { return _radius; }
     
-    bool                intersect_ray(const ggo::ray3d<T> & ray, float & dist, ggo::ray3d<T> & normal) const override;
-    bool                is_convex() const override { return true; }
-    std::string         desc() const override;
+    bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
+    bool                      is_convex() const override { return true; }
+    std::string               desc() const override;
   
   private:
   
-    ggo::ray3d<T> _ray;
-    T             _radius;
+    ggo::ray3d<data_t> _ray;
+    data_t             _radius;
   };
 }
 

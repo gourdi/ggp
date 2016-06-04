@@ -5,7 +5,7 @@ namespace ggo
   // injecting the ray into the equation.
   // This equation returns negative distance too (ie. intersection 'behind' the ray).
   template <typename data_t>
-  bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const
+  bool sphere3d<data_t>::intersect_line(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const
   {
     // Build the quadratic and solve it.
     const ggo::set3<data_t> & dir = ray.dir();
@@ -37,7 +37,7 @@ namespace ggo
   bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     data_t dist_inf, dist_sup;
-    if (intersect_ray(ray, dist_inf, dist_sup) == false)
+    if (intersect_line(ray, dist_inf, dist_sup) == false)
     {
       return false;
     }
@@ -69,7 +69,7 @@ namespace ggo
   bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
   {
     data_t dist_inf, dist_sup;
-    if (intersect_ray(ray, dist_inf, dist_sup) == false)
+    if (intersect_line(ray, dist_inf, dist_sup) == false)
     {
       return false;
     }
@@ -128,7 +128,7 @@ namespace ggo
   std::string sphere3d<data_t>::desc() const
   {
     std::ostringstream oss;
-    oss << "sphere3d " << "(" << _center << ", " << _radius <<")";
+    oss << "sphere3d (" << _center << ", " << _radius <<")";
     return oss.str();
   }
 }

@@ -10,7 +10,7 @@ namespace ggo
                               sphere3d(const ggo::set3<data_t> & center, data_t radius) : _center(center), _radius(radius) {};
 
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray) const;
-    bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const;
+    bool                      intersect_line(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const;
     
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }

@@ -71,6 +71,8 @@ namespace ggo
 #include <ggo_disc3d.h>
 #include <ggo_parallelogram3d.h>
 #include <ggo_metaball.h>
+#include <ggo_line3d.h>
+#include <ggo_cylinder3d.h>
 
 #include <ggo_basis3d.imp.h>
 #include <ggo_centered_sphere3d.imp.h>
@@ -83,5 +85,7 @@ namespace ggo
 #include <ggo_axis_aligned_box3d.imp.h>
 #include <ggo_parallelogram3d.imp.h>
 #include <ggo_metaball.imp.h>
+#include <ggo_line3d.imp.h>
+#include <ggo_cylinder3d.imp.h>
 
 #endif

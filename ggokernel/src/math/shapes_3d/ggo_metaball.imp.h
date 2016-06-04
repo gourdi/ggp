@@ -20,7 +20,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  metaball<data_t>::metaball(float threshold)
+  metaball<data_t>::metaball(data_t threshold)
   :
   _threshold(threshold)
   {
@@ -44,7 +44,7 @@ namespace ggo
     {
       // Check for ray / influence sphere intersection.
       data_t dist_inf, dist_sup;
-      if (influence_sphere._sphere.intersect_ray(ray, dist_inf, dist_sup) == false)
+      if (influence_sphere._sphere.intersect_line(ray, dist_inf, dist_sup) == false)
       {
         continue;
       }
@@ -77,7 +77,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool metaball<data_t>::update_active_list(const float dist,
+  bool metaball<data_t>::update_active_list(const data_t dist,
                                             const std::vector<typename ggo::metaball<data_t>::intersection_info> & intersections,
                                             std::vector<const intersection_info*> & active_list,
                                             typename std::vector<intersection_info>::const_iterator & intersection_it)
@@ -188,7 +188,7 @@ namespace ggo
       normal.pos() = ray.pos() + dist * ray.dir();
       dist += data_t(0.001);
 
-      auto compute_field_potential = [&](float acc, const intersection_info * intersection)
+      auto compute_field_potential = [&](data_t acc, const intersection_info * intersection)
       {
         return acc + intersection->_influence_sphere->evaluate(normal.pos());
       };
@@ -227,15 +227,15 @@ namespace ggo
         normal.set_dir(dir);
 
 #if 0 // The following code does not rely on analytic derivaties but on neighborhood sampling.
-        const float eps = 0.001f;
-        float x_inf = compute_field_potential({ pos.x() - eps, pos.y(), pos.z() }, active_list);
-        float x_sup = compute_field_potential({ pos.x() + eps, pos.y(), pos.z() }, active_list);
-        float y_inf = compute_field_potential({ pos.x(), pos.y() - eps, pos.z() }, active_list);
-        float y_sup = compute_field_potential({ pos.x(), pos.y() + eps, pos.z() }, active_list);
-        float z_inf = compute_field_potential({ pos.x(), pos.y(), pos.z() - eps }, active_list);
-        float z_sup = compute_field_potential({ pos.x(), pos.y(), pos.z() + eps }, active_list);
+        const data_t eps = 0.001f;
+        data_t x_inf = compute_field_potential({ pos.x() - eps, pos.y(), pos.z() }, active_list);
+        data_t x_sup = compute_field_potential({ pos.x() + eps, pos.y(), pos.z() }, active_list);
+        data_t y_inf = compute_field_potential({ pos.x(), pos.y() - eps, pos.z() }, active_list);
+        data_t y_sup = compute_field_potential({ pos.x(), pos.y() + eps, pos.z() }, active_list);
+        data_t z_inf = compute_field_potential({ pos.x(), pos.y(), pos.z() - eps }, active_list);
+        data_t z_sup = compute_field_potential({ pos.x(), pos.y(), pos.z() + eps }, active_list);
         
-        normal.set_dir(ggo::vector3d_float(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup));
+        normal.set_dir(ggo::set3<data_t>(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup));
 #endif
 
         return true;

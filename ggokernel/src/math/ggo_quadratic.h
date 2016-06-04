@@ -3,17 +3,17 @@
 
 namespace ggo
 {
-  template <typename T>
-  bool quadratic_solve(T deg2, T deg1, T deg0, T & sol1, T & sol2)
+  template <typename data_t>
+  bool quadratic_solve(data_t deg2, data_t deg1, data_t deg0, data_t & sol1, data_t & sol2)
   {
-    T d = deg1 * deg1 - 4 * deg2 * deg0;
+    data_t d = deg1 * deg1 - 4 * deg2 * deg0;
     if (d < 0)
     {
       return false;
     }
     
-    T e = std::sqrt(d);
-    T f = -1 / (2 * deg2);
+    data_t e = std::sqrt(d);
+    data_t f = -1 / (2 * deg2);
     sol1 = (deg1 - e) * f;
     sol2 = (deg1 + e) * f;
     

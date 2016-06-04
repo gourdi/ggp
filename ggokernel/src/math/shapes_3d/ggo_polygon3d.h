@@ -35,18 +35,13 @@ namespace ggo
   private:
 
     std::vector<vertex<T>>  _vertices;
-    std::vector<face>        _faces;
+    std::vector<face>       _faces;
   };
 }
 
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-#if __cplusplus >= 201103L
   using polygon3d_double  = polygon3d<double>;
   using polygon3d_float   = polygon3d<float>;
-#else
-  typedef polygon3d<float>  polygon3d_float;
-  typedef polygon3d<double> polygon3d_double;
-#endif
 }
