@@ -211,6 +211,8 @@
     <ClInclude Include="src\math\shapes_3d\ggo_basis3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_cylinder3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_cylinder3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_disc3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_disc3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_face3d.h" />

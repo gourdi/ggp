@@ -761,3 +761,45 @@ GGO_TEST(shapes3d, line3d_distance)
   }
 }
 
+/////////////////////////////////////////////////////////////////////  
+GGO_TEST(shapes3d, cylinder3d)
+{
+  ggo::cylinder3d<float> cylinder({ 2.f, 4.f, 0.f }, { 0.f, 0.f, 1.f }, 2.f);
+  ggo::ray3d<float> ray({ 2.f, 1.f, 0.f }, { 0.f, 1.f, 0.f });
+
+  float dist_inf = 0.f;
+  float dist_sup = 0.f;
+  GGO_CHECK(cylinder.intersect_line(ray, dist_inf, dist_sup) == true);
+  GGO_CHECK_FABS(dist_inf, 1.f);
+  GGO_CHECK_FABS(dist_sup, 5.f);
+
+  // Ray outside the cyulinder.
+  {
+    float dist = 0.f;
+    ggo::ray3d_float normal;
+    GGO_CHECK(cylinder.intersect_ray(ray, dist, normal) == true);
+    GGO_CHECK_FABS(dist, 1.f);
+    GGO_CHECK_FABS(normal.pos().x(), 2.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 0.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), -1.f);
+    GGO_CHECK_FABS(normal.dir().z(), 0.f);
+  }
+
+  // Ray inside the cyulinder.
+  {
+    float dist = 0.f;
+    ggo::ray3d_float normal;
+    GGO_CHECK(cylinder.intersect_ray(ggo::ray3d_float({ 2.f, 4.f, 1.f }, { 0.f, 1.f, 0.f }), dist, normal) == true);
+    GGO_CHECK_FABS(dist, 2.f);
+    GGO_CHECK_FABS(normal.pos().x(), 2.f);
+    GGO_CHECK_FABS(normal.pos().y(), 6.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), -1.f);
+    GGO_CHECK_FABS(normal.dir().z(), 0.f);
+  }
+}
+
+

@@ -5,7 +5,7 @@ namespace ggo
   {
   public:
 
-                metaball(float threshold);
+                metaball(data_t threshold);
 
     void        add_influence_sphere(const ggo::sphere3d<data_t> & sphere, data_t potential);
 
@@ -28,12 +28,12 @@ namespace ggo
     {
       bool 						          _entry;
       const influence_sphere *  _influence_sphere;
-      float 						        _dist;
+      data_t 						        _dist;
     };
 
             std::vector<intersection_info>  get_intersections(const ggo::ray3d<data_t> & ray) const;
 
-    static  bool                            update_active_list(const float dist,
+    static  bool                            update_active_list(const data_t dist,
                                                                const std::vector<typename ggo::metaball<data_t>::intersection_info> & intersections,
                                                                std::vector<const intersection_info*> & active_list,
                                                                typename std::vector<intersection_info>::const_iterator & intersection_it);
@@ -42,6 +42,6 @@ namespace ggo
                                                                     const std::vector<const intersection_info*> & active_list);
 
     std::vector<influence_sphere> _influence_spheres;
-    float							 		        _threshold;
+    data_t  					 		        _threshold;
   };
 }

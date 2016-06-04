@@ -292,6 +292,18 @@
     <ClInclude Include="src\math\shapes_3d\ggo_metaball.imp.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_line3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_line3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_cylinder3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_cylinder3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
