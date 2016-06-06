@@ -44,11 +44,10 @@ namespace ggo
   }
     
   //////////////////////////////////////////////////////////////
-  template <typename T>        
-  std::string parallelogram3d<T>::desc() const
+  template <typename T>
+  std::ostream & parallelogram3d<T>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "parallelogram3d (" << _pos << ", " << _v1 << ", " << _v2 << ")";
-    return oss.str();
+    os << "parallelogram3d (" << _pos << ", " << _v1 << ", " << _v2 << ")";
+    return os;
   }
 }

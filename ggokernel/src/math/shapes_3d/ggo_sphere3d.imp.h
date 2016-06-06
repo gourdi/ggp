@@ -125,11 +125,10 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::string sphere3d<data_t>::desc() const
+  std::ostream & sphere3d<data_t>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "sphere3d (" << _center << ", " << _radius <<")";
-    return oss.str();
+    os << "sphere3d (" << _center << ", " << _radius <<")";
+    return os;
   }
 }
 

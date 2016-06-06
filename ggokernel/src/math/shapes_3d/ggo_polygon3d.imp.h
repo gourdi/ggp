@@ -131,10 +131,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  std::string polygon3d<T>::desc() const
+  std::ostream & polygon3d<T>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "polygon3d";
-    return oss.str();
+    os << "polygon3d";
+    return os;
   }
 }

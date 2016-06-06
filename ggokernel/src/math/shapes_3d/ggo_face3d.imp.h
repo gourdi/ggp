@@ -98,12 +98,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template<typename T, bool double_sided>
-  std::string face3d<T, double_sided>::desc() const
+  std::ostream & face3d<T, double_sided>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "(" << _v1._pos << ", " << _v1._normal << "), ";
-    oss << "(" << _v2._pos << ", " << _v2._normal << "), ";
-    oss << "(" << _v3._pos << ", " << _v3._normal << ")";
-    return oss.str();
+    os << "(" << _v1._pos << ", " << _v1._normal << "), ";
+    os << "(" << _v2._pos << ", " << _v2._normal << "), ";
+    os << "(" << _v3._pos << ", " << _v3._normal << ")";
+    return os;
   }
 }

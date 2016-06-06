@@ -21,14 +21,14 @@ namespace ggo
 
   public:
 
-                polygon3d() {};
-                polygon3d(const std::vector<vertex<T>> & vertices, const std::vector<face> & faces);
+                    polygon3d() {};
+                    polygon3d(const std::vector<vertex<T>> & vertices, const std::vector<face> & faces);
         
-    bool        intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
-    bool        is_convex() const override { return false; } // To be improved...
+    bool            intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
+    bool            is_convex() const override { return false; } // To be improved...
     
-    std::string desc() const override;
-    
+    std::ostream &   operator<<(std::ostream & os) const override;
+
     // Factories.
     static  polygon3d<T>  create_sphere(T radius, int horz_steps, int vert_steps);
 

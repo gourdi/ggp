@@ -299,10 +299,9 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename T>
-  std::string axis_aligned_box3d<T>::desc() const
+  std::ostream & axis_aligned_box3d<T>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "aabb (" << _x_min << ", " << _x_max << ", " << _y_min << ", " << _y_max << ", " << _z_min << ", " << _z_max << ")";
-    return oss.str();
+    os << "aabb (" << _x_min << ", " << _x_max << ", " << _y_min << ", " << _y_max << ", " << _z_min << ", " << _z_max << ")";
+    return os;
   }
 }

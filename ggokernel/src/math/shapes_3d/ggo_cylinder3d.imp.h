@@ -114,10 +114,9 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::string cylinder3d<data_t>::desc() const
+  std::ostream & cylinder3d<data_t>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "cylinder (" << _orig << ", " << _dir << ", " << _radius << ")";
-    return oss.str();
+    os << "cylinder (" << _orig << ", " << _dir << ", " << _radius << ")";
+    return os;
   }
 }

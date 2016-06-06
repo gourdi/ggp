@@ -21,7 +21,7 @@ namespace ggo
     data_t &                  radius() { return _radius; }
     const data_t &            radius() const { return _radius; }
 
-    std::string               desc() const override;
+    std::ostream &            operator<<(std::ostream & os) const override;
 
     bool                      is_point_inside(data_t x, data_t y, data_t z) const;
     bool                      is_point_inside(const ggo::set3<data_t> & p) const;

@@ -5,13 +5,13 @@ namespace ggo
   {
   public:
   
-                parallelogram3d(const ggo::set3<T> & pos, const ggo::set3<T> & v1, const ggo::set3<T> & v2);
+                    parallelogram3d(const ggo::set3<T> & pos, const ggo::set3<T> & v1, const ggo::set3<T> & v2);
         
-    bool        intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
-    bool        is_convex() const override { return true; }
+    bool            intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
+    bool            is_convex() const override { return true; }
         
-    std::string desc() const override;
-    
+    std::ostream &  operator<<(std::ostream & os) const override;
+
   private:
   
     ggo::set3<T>  _pos;

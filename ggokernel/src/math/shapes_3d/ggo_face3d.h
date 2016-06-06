@@ -15,8 +15,8 @@ namespace ggo
     bool              intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
     bool              is_convex() const override { return true; }
 
-    std::string       desc() const override;
-      
+    std::ostream &    operator<<(std::ostream & os) const override;
+
   private:
 
     const vertex<T> _v1;

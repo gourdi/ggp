@@ -28,7 +28,7 @@ namespace ggo
 
     T					            area() const;
     
-    std::string           desc() const override;
+    std::ostream &        operator<<(std::ostream & os) const override;
 
   private:
 

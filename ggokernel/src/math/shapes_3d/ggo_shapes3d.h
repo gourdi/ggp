@@ -10,13 +10,13 @@
 //////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename T>
+  template <typename data_t>
   struct vertex
   {
-    vertex(const ggo::set3<T> & pos, const ggo::set3<T> & normal) : _pos(pos), _normal(normal) { _normal.normalize(); }
+    vertex(const ggo::set3<data_t> & pos, const ggo::set3<data_t> & normal) : _pos(pos), _normal(normal) { _normal.normalize(); }
 
-    ggo::set3<T> _pos;
-    ggo::set3<T> _normal;
+    ggo::set3<data_t> _pos;
+    ggo::set3<data_t> _normal;
   };
 }
 
@@ -30,13 +30,13 @@ namespace ggo
       
     virtual                ~raytracable_shape3d_abc() {}
 
-    virtual bool            intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const = 0;
+    virtual bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const = 0;
     virtual bool            is_convex() const = 0;
 
-    virtual ggo::set3<T>    sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const { return ggo::set3<T>(0, 0, 0); }
-    virtual ggo::ray3d<T>   sample_ray(T random_variable1, T random_variable2) const { return ggo::ray3d<T>(); }
+    virtual ggo::set3<data_t>   sample_point(const ggo::set3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::set3<data_t>(0, 0, 0); }
+    virtual ggo::ray3d<data_t>  sample_ray(data_t random_variable1, data_t random_variable2) const { return ggo::ray3d<data_t>(); }
 
-    virtual std::string     desc() const = 0;
+    virtual std::ostream &      operator<<(std::ostream & os) const = 0;
   };
 }
 
@@ -45,18 +45,6 @@ namespace ggo
 {
   using raytracable_shape3d_abc_double  = raytracable_shape3d_abc<double>;
   using raytracable_shape3d_abc_float   = raytracable_shape3d_abc<float>;
-}
-
-//////////////////////////////////////////////////////////////
-// I/O
-namespace ggo
-{
-  template <typename T>
-  std::ostream & operator<<(std::ostream & os, const raytracable_shape3d_abc<T> & shape)
-  {
-    os << shape.desc();
-    return os;
-  }
 }
 
 #include <ggo_basis3d.h>

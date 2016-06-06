@@ -25,11 +25,10 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::string plane3d<data_t>::desc() const 
+  std::ostream & plane3d<data_t>::operator<<(std::ostream & os) const
   {
-    std::ostringstream oss;
-    oss << "plane3d (" << _normal << ", " << _dist_to_origin << ")";
-    return oss.str();
+    os << "plane3d (" << _normal << ", " << _dist_to_origin << ")";
+    return os;
   }
 }
 
