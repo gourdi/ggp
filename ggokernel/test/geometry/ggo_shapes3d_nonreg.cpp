@@ -708,7 +708,8 @@ GGO_TEST(shapes3d, parallelogram3d)
 GGO_TEST(shapes3d, metaball)
 {
   ggo::metaball<float> metaball(1.f);
-  metaball.add_influence_sphere({ {3.0f, 0.0f, 0.0f}, 2.0f }, 3.0f);
+  std::shared_ptr<ggo::influence_shape3d_abc<float>> sphere(new ggo::sphere3d_float(ggo::point3d_float(3.0f, 0.0f, 0.0f), 2.0f));
+  metaball.add_influence_data(sphere, 3.0f);
 
   float dist = 0.f;
   ggo::ray3d_float normal;
@@ -723,7 +724,7 @@ GGO_TEST(shapes3d, metaball)
 }
 
 /////////////////////////////////////////////////////////////////////  
-GGO_TEST(shapes3d, line3d_distance)
+GGO_TEST(shapes3d, line3d)
 {
   // line1 = orig1 + t1 * dir1
   // line2 = orig2 + t2 * dir2
@@ -736,7 +737,7 @@ GGO_TEST(shapes3d, line3d_distance)
 
     float dist1 = 0.f;
     float dist2 = 0.f;
-    GGO_CHECK(ggo::find_closest_lines_points(orig1, dir1, orig2, dir2, dist1, dist2) == true);
+    GGO_CHECK(ggo::find_closest_lines_points({ orig1, dir1 }, { orig2, dir2 }, dist1, dist2) == true);
 
     GGO_CHECK_FABS(dist1, 5.f);
     GGO_CHECK_FABS(dist2, -1.f);
@@ -749,7 +750,7 @@ GGO_TEST(shapes3d, line3d_distance)
     const ggo::vector3d_float dir2(-ggo::INV_SQRT2<float>(), ggo::INV_SQRT2<float>(), 0.f);
 
     ggo::point3d_float p1, p2;
-    GGO_CHECK(ggo::find_closest_lines_points(orig1, dir1, orig2, dir2, p1, p2) == true);
+    GGO_CHECK(ggo::find_closest_lines_points({ orig1, dir1 }, { orig2, dir2 }, p1, p2) == true);
 
     GGO_CHECK_FABS(p1.x(), 1.f);
     GGO_CHECK_FABS(p1.y(), 2.f);
@@ -758,6 +759,11 @@ GGO_TEST(shapes3d, line3d_distance)
     GGO_CHECK_FABS(p2.x(), 1.f);
     GGO_CHECK_FABS(p2.y(), 2.f);
     GGO_CHECK_FABS(p2.z(), 1.f);
+  }
+
+  {
+    const ggo::line3d<float> line({ 2.f, 1.f, 4.f }, { 0.f, 0.f, 1.f }, false);
+    GGO_CHECK_FABS(ggo::hypot(line, ggo::point3d_float(4.f, 1.f, 1.f)), 4.f);
   }
 }
 

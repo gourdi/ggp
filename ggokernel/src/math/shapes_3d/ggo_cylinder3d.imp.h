@@ -4,9 +4,9 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  cylinder3d<data_t>::cylinder3d(const ggo::set3<data_t> & orig, const ggo::set3<data_t> & dir, data_t radius)
+  cylinder3d<data_t>::cylinder3d(const ggo::set3<data_t> & pos, const ggo::set3<data_t> & dir, data_t radius)
   :
-  _orig(orig),
+  _pos(pos),
   _dir(dir.get_normalized()),
   _radius(radius)
   {
@@ -15,7 +15,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool cylinder3d<data_t>::intersect_line(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const
+  bool cylinder3d<data_t>::intersect_line(const ggo::line3d<data_t> & line, data_t & dist_inf, data_t & dist_sup) const
   {
     // Unrolling logical flow.
     //  hypot(Pproj - P) = r*r
@@ -27,7 +27,7 @@ namespace ggo
     //  hypot(t * dot(ray_dir, cyl_dir) * dir_cyl_x - t * ray_dir_x + dot(diff, cyl_dir) * dir_cyl_x - diff_x) = r*r
     //  hypot(t * [dot(ray_dir, cyl_dir) * dir_cyl_x - ray_dir_x] + [dot(diff, cyl_dir) * dir_cyl_x - diff_x]) = r*r
 
-    ggo::set3<data_t> diff(ray.pos() - _orig);
+    ggo::set3<data_t> diff(line.pos() - _pos);
 
     // Original non-optimized code.
     //  data_t deg2 =
@@ -47,7 +47,7 @@ namespace ggo
     //    ggo::square(_radius);
 
     // Optimized code.
-    ggo::set3<data_t> a = ggo::dot(ray.dir(), _dir) * _dir - ray.dir();
+    ggo::set3<data_t> a = ggo::dot(line.dir(), _dir) * _dir - line.dir();
     ggo::set3<data_t> b = ggo::dot(diff, _dir) * _dir - diff;
 
     data_t deg2 = a.get_hypot();
@@ -95,8 +95,8 @@ namespace ggo
       dist = dist_sup;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::set3<data_t> diff = normal.pos() - _orig;
-      ggo::set3<data_t> proj = _orig + ggo::dot(diff, _dir) * _dir;
+      ggo::set3<data_t> diff = normal.pos() - _pos;
+      ggo::set3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
       normal.set_dir(proj - normal.pos());
     }
     else // The ray's origin is outside of the cylinder.
@@ -104,19 +104,36 @@ namespace ggo
       dist = dist_inf;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::set3<data_t> diff = normal.pos() - _orig;
-      ggo::set3<data_t> proj = _orig + ggo::dot(diff, _dir) * _dir;
+      ggo::set3<data_t> diff = normal.pos() - _pos;
+      ggo::set3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
       normal.set_dir(normal.pos() - proj);
     }
 
     return true;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::vector<data_t> cylinder3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
+  {
+    std::vector<data_t> intersections;
+
+    data_t dist_inf = 0;
+    data_t dist_sup = 0;
+    if (intersect_line(ggo::line3d<data_t>(ray), dist_inf, dist_sup) == true && dist_inf > 0)
+    {
+      intersections.push_back(dist_inf);
+      intersections.push_back(dist_sup);
+    }
+
+    return intersections;
   }
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   std::ostream & cylinder3d<data_t>::operator<<(std::ostream & os) const
   {
-    os << "cylinder (" << _orig << ", " << _dir << ", " << _radius << ")";
+    os << "cylinder (" << _pos << ", " << _dir << ", " << _radius << ")";
     return os;
   }
 }

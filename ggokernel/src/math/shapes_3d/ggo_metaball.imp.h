@@ -2,12 +2,18 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t metaball<data_t>::influence_sphere::evaluate(const ggo::set3<data_t> & pos) const
+  data_t metaball<data_t>::influence_data::evaluate(const ggo::set3<data_t> & pos) const
   {
     // f = potential * ((hypot / r^2)^2 - 2 * hypot / r^2 + 1)
     // f = potential * (hypot_norm^2 - 2 * hypot_norm + 1) if hypot_norm = hypot / r^2
 
-    data_t hypot_norm = ggo::hypot(pos, _sphere.center()) * _inv_squared_radius;
+    data_t hypot = _shape->hypot_to_center(pos);
+    if (hypot >= _shape->get_influence_hypot())
+    {
+      return 0;
+    }
+
+    data_t hypot_norm = hypot / _shape->get_influence_hypot();
     GGO_ASSERT(hypot_norm <= data_t(1.001));
 
     data_t influence = ggo::square(hypot_norm - 1); // x^2 - 2x + 1 = (x - 1)^2
@@ -28,9 +34,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void metaball<data_t>::add_influence_sphere(const ggo::sphere3d<data_t> & sphere, data_t potential)
+  void metaball<data_t>::add_influence_data(std::shared_ptr<influence_shape3d_abc<data_t>> shape, data_t potential)
   {
-    _influence_spheres.push_back({ sphere, potential, 1 / ggo::square(sphere.radius()) });
+    _influences.push_back({ shape, potential });
   }
 
   //////////////////////////////////////////////////////////////
@@ -40,33 +46,24 @@ namespace ggo
     std::vector<intersection_info> intersections;
 
     // Build the intersections list.
-    for (const auto & influence_sphere : _influence_spheres)
+    for (const auto & influence : _influences)
     {
       // Check for ray / influence sphere intersection.
-      data_t dist_inf, dist_sup;
-      if (influence_sphere._sphere.intersect_line(ray, dist_inf, dist_sup) == false)
+      auto distances = influence._shape->intersect_ray(ray);
+
+      GGO_ASSERT((distances.size() % 2) == 0);
+
+      bool entry = true;
+      for (float dist : distances)
       {
-        continue;
+        intersection_info intersection;
+        intersection._entry = entry;
+        intersection._influence = &influence;
+        intersection._dist = dist;
+        intersections.push_back(intersection);
+
+        entry = !entry;
       }
-
-      if (dist_inf <= 0 || dist_sup <= 0 || dist_inf == dist_sup)
-      {
-        continue;
-      }
-
-      GGO_ASSERT(dist_inf <= dist_sup);
-
-      intersection_info intersection_info_inf;
-      intersection_info_inf._entry = true;
-      intersection_info_inf._influence_sphere = &influence_sphere;
-      intersection_info_inf._dist = dist_inf;
-      intersections.push_back(intersection_info_inf);
-
-      intersection_info intersection_info_sup;
-      intersection_info_sup._entry = false;
-      intersection_info_sup._influence_sphere = &influence_sphere;
-      intersection_info_sup._dist = dist_sup;
-      intersections.push_back(intersection_info_sup);
     }
 
     // Sort the intersection list.
@@ -97,8 +94,8 @@ namespace ggo
 #ifdef GGO_METABALLS_DEBUG
         std::cout << "removing center " << intersection_it->_center << " from active list at t=" << dist << std::endl;
 #endif
-        // We are leaving an influence sphere, remove it from the active list.
-        ggo::remove_first_if(active_list, [&](const intersection_info * intersection) { return intersection->_influence_sphere == intersection_it->_influence_sphere; });
+        // We are leaving an influence shape, remove it from the active list.
+        ggo::remove_first_if(active_list, [&](const intersection_info * intersection) { return intersection->_influence == intersection_it->_influence; });
       }
 
       ++intersection_it;
@@ -190,7 +187,7 @@ namespace ggo
 
       auto compute_field_potential = [&](data_t acc, const intersection_info * intersection)
       {
-        return acc + intersection->_influence_sphere->evaluate(normal.pos());
+        return acc + intersection->_influence->evaluate(normal.pos());
       };
       data_t v = ggo::accumulate(active_list, compute_field_potential, data_t(0));
 
@@ -206,34 +203,43 @@ namespace ggo
         normal.pos() = ray.pos() + dist * ray.dir();
 
         // Compute normal direction.
-        ggo::set3<data_t> dir(0, 0, 0);
+        //ggo::set3<data_t> dir(0, 0, 0);
+        //for (const auto * intersection : active_list)
+        //{
+        //  GGO_ASSERT(intersection->_entry == true);
+
+        //  const influence_sphere * influence_sphere = intersection->_influence_sphere;
+
+        //  ggo::set3<data_t> diff = normal.pos() - influence_sphere->_sphere.center();
+
+        //  // df/dx = 4 * potential * x * (hypot / r^2 - 1) / r^2
+        //  // df/dy = 4 * potential * y * (hypot / r^2 - 1) / r^2
+        //  // df/dz = 4 * potential * z * (hypot / r^2 - 1) / r^2
+        //  ggo::set3<data_t> cur_grad = (1 - diff.get_hypot() * influence_sphere->_inv_squared_radius) * diff;
+        //  cur_grad *= influence_sphere->_potential * influence_sphere->_inv_squared_radius; // Don't multiply by 4 since normal is normalized. 
+
+        //  dir += cur_grad;
+        //}
+
+        //normal.set_dir(dir);
+
+#if 1 // The following code does not rely on analytic derivaties but on neighborhood sampling.
+        const data_t eps = 0.001f;
+        data_t x_inf = 0;
+        data_t x_sup = 0;
+        data_t y_inf = 0;
+        data_t y_sup = 0;
+        data_t z_inf = 0;
+        data_t z_sup = 0;
         for (const auto * intersection : active_list)
         {
-          GGO_ASSERT(intersection->_entry == true);
-
-          const influence_sphere * influence_sphere = intersection->_influence_sphere;
-
-          ggo::set3<data_t> diff = normal.pos() - influence_sphere->_sphere.center();
-
-          // df/dx = 4 * potential * x * (hypot / r^2 - 1) / r^2
-          // df/dy = 4 * potential * y * (hypot / r^2 - 1) / r^2
-          // df/dz = 4 * potential * z * (hypot / r^2 - 1) / r^2
-          ggo::set3<data_t> cur_grad = (1 - diff.get_hypot() * influence_sphere->_inv_squared_radius) * diff;
-          cur_grad *= influence_sphere->_potential * influence_sphere->_inv_squared_radius; // Don't multiply by 4 since normal is normalized. 
-
-          dir += cur_grad;
+          x_inf += intersection->_influence->evaluate({ normal.pos().x() - eps, normal.pos().y(), normal.pos().z() });
+          x_sup += intersection->_influence->evaluate({ normal.pos().x() + eps, normal.pos().y(), normal.pos().z() });
+          y_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() - eps, normal.pos().z() });
+          y_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() + eps, normal.pos().z() });
+          z_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() - eps });
+          z_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() + eps });
         }
-
-        normal.set_dir(dir);
-
-#if 0 // The following code does not rely on analytic derivaties but on neighborhood sampling.
-        const data_t eps = 0.001f;
-        data_t x_inf = compute_field_potential({ pos.x() - eps, pos.y(), pos.z() }, active_list);
-        data_t x_sup = compute_field_potential({ pos.x() + eps, pos.y(), pos.z() }, active_list);
-        data_t y_inf = compute_field_potential({ pos.x(), pos.y() - eps, pos.z() }, active_list);
-        data_t y_sup = compute_field_potential({ pos.x(), pos.y() + eps, pos.z() }, active_list);
-        data_t z_inf = compute_field_potential({ pos.x(), pos.y(), pos.z() - eps }, active_list);
-        data_t z_sup = compute_field_potential({ pos.x(), pos.y(), pos.z() + eps }, active_list);
         
         normal.set_dir(ggo::set3<data_t>(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup));
 #endif

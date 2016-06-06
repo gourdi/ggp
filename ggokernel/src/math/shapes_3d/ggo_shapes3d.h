@@ -23,15 +23,31 @@ namespace ggo
 //////////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename T>
-  class raytracable_shape3d_abc
+  template <typename data_t>
+  class influence_shape3d_abc
   {
   public:
       
-    virtual                ~raytracable_shape3d_abc() {}
+    virtual                    ~influence_shape3d_abc() {}
+
+    virtual std::vector<data_t> intersect_ray(const ggo::ray3d<data_t> & ray) const = 0;
+    virtual data_t              hypot_to_center(const ggo::set3<data_t> & p) const = 0;
+    virtual data_t              get_influence_hypot() const = 0;
+  };
+}
+
+//////////////////////////////////////////////////////////////////
+namespace ggo
+{
+  template <typename data_t>
+  class raytracable_shape3d_abc
+  {
+  public:
+
+    virtual                    ~raytracable_shape3d_abc() {}
 
     virtual bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const = 0;
-    virtual bool            is_convex() const = 0;
+    virtual bool                is_convex() const = 0;
 
     virtual ggo::set3<data_t>   sample_point(const ggo::set3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::set3<data_t>(0, 0, 0); }
     virtual ggo::ray3d<data_t>  sample_ray(data_t random_variable1, data_t random_variable2) const { return ggo::ray3d<data_t>(); }

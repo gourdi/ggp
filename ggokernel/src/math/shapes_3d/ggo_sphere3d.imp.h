@@ -3,13 +3,13 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // Solve the equation (x-center_x)^2+(y-center_y)^2+(z-center_z)^2=r^2
   // injecting the ray into the equation.
-  // This equation returns negative distance too (ie. intersection 'behind' the ray).
+  // Returns the (possibly negative) distance of intersections to the line's origin.
   template <typename data_t>
-  bool sphere3d<data_t>::intersect_line(const ggo::ray3d<data_t> & ray, data_t & dist_inf, data_t & dist_sup) const
+  bool sphere3d<data_t>::intersect_line(const ggo::line3d<data_t> & line, data_t & dist_inf, data_t & dist_sup) const
   {
     // Build the quadratic and solve it.
-    const ggo::set3<data_t> & dir = ray.dir();
-    const ggo::set3<data_t> & pos = ray.pos();
+    const ggo::set3<data_t> & dir = line.dir();
+    const ggo::set3<data_t> & pos = line.pos();
     const ggo::set3<data_t> diff(pos - _center);
 
     // Hint 1: deg2 is dot(dir, dir) which is 1
@@ -37,7 +37,7 @@ namespace ggo
   bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     data_t dist_inf, dist_sup;
-    if (intersect_line(ray, dist_inf, dist_sup) == false)
+    if (intersect_line(ggo::line3d<data_t>(ray), dist_inf, dist_sup) == false)
     {
       return false;
     }
@@ -66,15 +66,32 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
+  bool sphere3d<data_t>::intersect_ray_fast(const ggo::ray3d<data_t> & ray) const
   {
     data_t dist_inf, dist_sup;
-    if (intersect_line(ray, dist_inf, dist_sup) == false)
+    if (intersect_line(ggo::line3d<data_t>(ray), dist_inf, dist_sup) == false)
     {
       return false;
     }
 
     return dist_sup >= 0;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::vector<data_t> sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
+  {
+    std::vector<data_t> intersections;
+
+    data_t dist_inf = 0;
+    data_t dist_sup = 0;
+    if (intersect_line(ggo::line3d<data_t>(ray), dist_inf, dist_sup) == true && dist_inf > 0)
+    {
+      intersections.push_back(dist_inf);
+      intersections.push_back(dist_sup);
+    }
+
+    return intersections;
   }
 
   //////////////////////////////////////////////////////////////
