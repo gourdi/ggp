@@ -1,3 +1,4 @@
+//////////////////////////////////////////////////////////////
 namespace ggo
 {
   template <typename data_t>
@@ -15,6 +16,24 @@ namespace ggo
 
     const ggo::set3<data_t> _normal;
     const data_t            _dist_to_origin;
+  };
+}
+
+//////////////////////////////////////////////////////////////
+// Compile-time defined plane. Faster than regular plane, 
+// but must hold integer data.
+namespace ggo
+{
+  template <typename data_t, int normal_x, int normal_y, int normal_z, int dist_to_origin>
+  class const_plane3d : public raytracable_shape3d_abc<data_t>
+  {
+  public:
+
+                    const_plane3d() { static_assert(normal_x * normal_x + normal_y * normal_y + normal_z * normal_z == 1, "normal is not normalized"); }
+
+    bool            intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
+    bool            is_convex() const override { return true; }
+    std::ostream &  operator<<(std::ostream & os) const override;
   };
 }
 

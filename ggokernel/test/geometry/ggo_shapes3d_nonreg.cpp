@@ -460,6 +460,28 @@ GGO_TEST(shapes3d, plane3d)
     GGO_CHECK_FABS(normal.dir().y(), 2 / std::sqrt(6.f));
     GGO_CHECK_FABS(normal.dir().z(), -1 / std::sqrt(6.f));
   }
+
+  {
+    ggo::const_plane3d<float, 0, 0, 1, -1> plane; // z = -1
+    float dist = 0;
+    ggo::ray3d_float normal;
+
+    ggo::ray3d_float ray1(ggo::point3d_float(2, 3, 5), ggo::vector3d_float(0, 0, -1));
+    GGO_CHECK(plane.intersect_ray(ray1, dist, normal) == true);
+    GGO_CHECK_FABS(dist, 6);
+    GGO_CHECK_FABS(normal.pos().x(), 2);
+    GGO_CHECK_FABS(normal.pos().y(), 3);
+    GGO_CHECK_FABS(normal.pos().z(), -1);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
+
+    ggo::ray3d_float ray2(ggo::point3d_float(2, 4, -2), ggo::vector3d_float(-1, 2, -1));
+    GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
+
+    ggo::ray3d_float ray3(ggo::point3d_float(1, 5, -2), ggo::vector3d_float(0, 0, 1));
+    GGO_CHECK(plane.intersect_ray(ray3, dist, normal) == false);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////  
