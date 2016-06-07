@@ -830,4 +830,26 @@ GGO_TEST(shapes3d, cylinder3d)
   }
 }
 
+  /////////////////////////////////////////////////////////////////////  
+GGO_TEST(shapes3d, influence_plane3d)
+{
+  ggo::influence_plane3d<float> plane({ 0.f, 1.f, 0.f }, 3.f, 1.f);
 
+  auto intersections = plane.intersect_ray({ {3.f, 5.f, 0.f}, {0.f, -1.f, 0.f} });
+  GGO_CHECK(intersections.size() == 2);
+  GGO_CHECK_FABS(intersections[0], 1.f);
+  GGO_CHECK_FABS(intersections[1], 3.f);
+
+  intersections = plane.intersect_ray({ { 3.f, -1.f, 0.f }, { 0.f, 1.f, 0.f } });
+  GGO_CHECK(intersections.size() == 2);
+  GGO_CHECK_FABS(intersections[0], 3.f);
+  GGO_CHECK_FABS(intersections[1], 5.f);
+
+  intersections = plane.intersect_ray({ { -2.f, 1.f, 0.f }, { 1.f, 1.f, 0.f } });
+  GGO_CHECK(intersections.size() == 2);
+  GGO_CHECK_FABS(intersections[0], ggo::SQRT2<float>());
+  GGO_CHECK_FABS(intersections[1], 3 * ggo::SQRT2<float>());
+
+  GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 2.5f, 3.14f }), 0.25f);
+  GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 3.0f, 3.14f }), 0.0f);
+}

@@ -21,14 +21,16 @@ GGO_TEST(test_scene, metaball)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::RED));
 
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(-100, 0, 200));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(0, 0, %));
 
   // Objects.
   auto metaball = std::make_shared<ggo::metaball<float>>(0.5f);
   std::shared_ptr<ggo::influence_shape3d_abc<float>> sphere(new ggo::sphere3d<float>({ -0.6f, 0.0f, 0.0f }, 1.0f));
   std::shared_ptr<ggo::influence_shape3d_abc<float>> cylinder(new ggo::cylinder3d<float>({ 0.6f, 0.0f, 0.0f }, { 0.f, 1.f, 0.f }, 1.0f));
+  std::shared_ptr<ggo::influence_shape3d_abc<float>> plane(new ggo::influence_plane3d<float>({ 0.f, 1.0f, 0.0f }, 1.5f, 1.0f));
   metaball->add_influence_data(sphere, 1.0f);
   metaball->add_influence_data(cylinder, 1.0f);
+  metaball->add_influence_data(plane, 1.0f);
   scene_builder.add_object(metaball, ggo::color::WHITE, false);
 
   // Rendering.

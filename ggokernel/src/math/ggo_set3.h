@@ -148,6 +148,9 @@ namespace ggo
   using vector3d_double   = set3<double>;
   using vector3d_float    = set3<float>;
   using vector3d_int      = set3<int>;
+
+  template <typename data_t> using vector3d = set3<data_t>;
+  template <typename data_t> using point3d  = set3<data_t>;
 }
 
 /////////////////////////////////////////////////////////////////////
