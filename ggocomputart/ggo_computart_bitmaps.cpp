@@ -9,19 +9,22 @@
 #include <mutex>
 #include <cstring>
 
-struct ggo_params
+namespace
 {
-	ggo_bitmap_artist_id	_artist_id;
-	std::string				    _output_directory;
-	int						        _from;
-	int						        _to;
-	int						        _width;
-	int						        _height;
-  int                   _threads_count;
-};
+  struct ggo_params
+  {
+    ggo_bitmap_artist_id	_artist_id;
+    std::string				    _output_directory;
+    int						        _from;
+    int						        _to;
+    int						        _width;
+    int						        _height;
+    int                   _threads_count;
+  };
 
-std::mutex  mutex;
-int         image_index(0);
+  std::mutex  mutex;
+  int         image_index(0);
+}
 
 //////////////////////////////////////////////////////////////
 class ggo_logger

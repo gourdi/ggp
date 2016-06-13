@@ -35,12 +35,13 @@ void ggo_metaballs_artist::render_bitmap(uint8_t * buffer, ggo::renderer_abc & r
 
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(params._background_color));
 
-  auto shape = std::make_shared<ggo::metaball<float>>(params._threshold);
+  auto metaball = std::make_shared<ggo::metaball<float>>(params._threshold);
   for (const auto & center : params._centers)
   {
-    shape->add_influence_sphere({ center, 0.7f }, 1.0f);
+    std::shared_ptr<ggo::influence_shape3d_abc<float>> shape(new ggo::sphere3d_float(center, 0.7f));
+    metaball->add_influence_data(shape, 1.0f);
   }
-  auto object = scene_builder.add_object(shape, params._background_color, true);
+  auto object = scene_builder.add_object(metaball, params._background_color, true);
   object->set_phong_factor(params._phong_factor);
   object->set_phong_shininess(params._phong_shininess);
 

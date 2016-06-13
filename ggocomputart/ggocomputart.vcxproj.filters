@@ -142,6 +142,9 @@
     <Filter Include="artists\rediff">
       <UniqueIdentifier>{a31c6307-1418-4da7-89f2-58ddcc6da8c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\entabeni">
+      <UniqueIdentifier>{8f2ea431-e566-4b38-b832-6371c0547465}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -395,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="artists\rediff\ggo_rediff_animation_artist.cpp">
       <Filter>artists\rediff</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\entabeni\ggo_entabeni_bitmap_artist.cpp">
+      <Filter>artists\entabeni</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -655,6 +661,9 @@
     </ClInclude>
     <ClInclude Include="artists\rediff\ggo_rediff_animation_artist.h">
       <Filter>artists\rediff</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\entabeni\ggo_entabeni_bitmap_artist.h">
+      <Filter>artists\entabeni</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

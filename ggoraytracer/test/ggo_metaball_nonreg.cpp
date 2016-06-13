@@ -21,7 +21,7 @@ GGO_TEST(test_scene, metaball)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::RED));
 
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(0, 0, %));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(0, 0, 2));
 
   // Objects.
   auto metaball = std::make_shared<ggo::metaball<float>>(0.5f);

@@ -50,7 +50,7 @@ namespace ggo
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
     T z_min = std::cos(theta_max);
-    T z     = ggo::map<T>(random_variable1, 0, 1, z_min, 1);
+    T z     = ggo::map<T, T>(random_variable1, 0, 1, z_min, 1);
     T phi   = random_variable2 * 2 * PI<T>();
     T r     = std::sqrt(1 - z * z);
 

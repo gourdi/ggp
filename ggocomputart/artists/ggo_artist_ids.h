@@ -44,6 +44,7 @@ enum ggo_bitmap_artist_id
   GGO_BITMAP_ARTIST_STOA,
   GGO_BITMAP_ARTIST_SONSON,
   GGO_BITMAP_ARTIST_REDIFF, // 40
+  GGO_BITMAP_ARTIST_ENTABENI
 };
 
 enum ggo_animation_artist_id

@@ -300,7 +300,7 @@ ggo_bitmap_artist_abc(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo_voronoi_artist::render_bitmap(uint8_t * buffer)
 {
-  int scale_factor = 8;
+  int scale_factor = 4;
 
   auto voronoi_tree = create_voronoi_tree(scale_factor * get_render_width(), scale_factor * get_render_height());
   auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * get_render_width(), scale_factor * get_render_height(), scale_factor);

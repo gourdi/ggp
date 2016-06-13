@@ -129,12 +129,15 @@ namespace ggo
 // Type aliases.
 namespace ggo
 {
-  typedef set2<double>  point2d_double;
-  typedef set2<float>   point2d_float;
-  typedef set2<int>     point2d_int;
-  typedef set2<double>  vector2d_double;
-  typedef set2<float>   vector2d_float;
-  typedef set2<int>     vector2d_int;
+  using point2d_double    = set2<double>;
+  using point2d_float     = set2<float>;
+  using point2d_int       = set2<int>;
+  using vector2d_double   = set2<double>;
+  using vector2d_float    = set2<float>;
+  using vector2d_int      = set2<int>;
+
+  template <typename data_t> using vector2d = set2<data_t>;
+  template <typename data_t> using point2d = set2<data_t>;
 }
 
 namespace ggo

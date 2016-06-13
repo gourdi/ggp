@@ -1,6 +1,8 @@
 #include <ggo_nonreg.h>
 #include <ggo_array.h>
 #include <ggo_bmp.h>
+#include <ggo_shapes2d.h>
+#include <ggo_paint.h>
 #include <ggo_point_camera.h>
 #include <ggo_object3d.h>
 #include <ggo_mono_sampling_renderer.h>
@@ -40,5 +42,12 @@ GGO_TEST(test_scene, scene3)
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
   renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
+
+  // Overlay, to check that basis::project is working as expected.
+  ggo::point2d_float proj1 = camera.basis().project(sphere1->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::paint(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, std::make_shared<ggo::disc_float>(proj1, 5.f), ggo::color::RED);
+  ggo::point2d_float proj2 = camera.basis().project(sphere2->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::paint(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, std::make_shared<ggo::disc_float>(proj2, 5.f), ggo::color::RED);
+
   ggo::save_bmp("scene3.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 }

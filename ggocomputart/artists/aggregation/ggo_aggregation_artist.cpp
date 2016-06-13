@@ -242,7 +242,7 @@ namespace ggo
       {
         ggo::point2d_float render_point = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
 
-        float gray = ggo::map<float>(point.z(), z_inf, z_sup, 0.1f, 1);
+        float gray = ggo::map(point.z(), z_inf, z_sup, 0.1f, 1.0f);
         float blur = 0.75f + 0.005f * min_size * std::abs(point.z() - 0.75f * z_sup);
         
         ggo::paint(image_buffer,

@@ -54,8 +54,7 @@ namespace ggo
 {
   inline std::default_random_engine & get_random_generator()
   {
-    //static std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
-    static std::default_random_engine generator(132456798);
+    static std::default_random_engine generator(static_cast<unsigned int>(std::chrono::system_clock::now().time_since_epoch().count()));
     return generator;
   };
 
@@ -74,8 +73,8 @@ namespace ggo
 // Functions.
 namespace ggo
 {
-  template <typename data_t>
-  data_t map(data_t v, data_t inf_from, data_t sup_from, data_t inf_to, data_t sup_to)
+  template <typename from_t, typename to_t>
+  to_t map(from_t v, from_t inf_from, from_t sup_from, to_t inf_to, to_t sup_to)
   { 
     return inf_to + (v - inf_from ) * (sup_to - inf_to ) / (sup_from - inf_from);
   }
