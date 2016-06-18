@@ -83,6 +83,9 @@
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp">
       <Filter>rle</Filter>
     </ClCompile>
+    <ClCompile Include="test\signal_proc\ggo_downscaling_nonreg.cpp">
+      <Filter>signal_proc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

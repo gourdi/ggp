@@ -239,6 +239,7 @@
     <ClInclude Include="src\math\signal_proc\ggo_box_filter.h" />
     <ClInclude Include="src\math\signal_proc\ggo_convolution.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dct.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_downscaling.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dwt.h" />
     <ClInclude Include="src\math\signal_proc\ggo_fourier.h" />
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />

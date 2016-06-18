@@ -17,7 +17,7 @@ namespace ggo
 
   // 1D.
   template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_1d(getter & in,
+  void gaussian_blur_1d(const getter & in,
                         setter & out,
                         int size,
                         filter_t stddev,
@@ -173,7 +173,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_1d(getter & in,
+  void gaussian_blur_1d(const getter & in,
                         setter & out,
                         int size,
                         filter_t stddev,

@@ -310,6 +310,9 @@
     <ClInclude Include="src\math\shapes_3d\ggo_influence_plane3d.imp.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\signal_proc\ggo_downscaling.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

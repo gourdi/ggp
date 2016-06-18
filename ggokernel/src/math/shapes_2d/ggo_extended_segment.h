@@ -47,3 +47,13 @@ namespace ggo
   using extended_segment_float    = extended_segment<float>;
 }
 
+namespace ggo
+{
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::extended_segment<data_t> & s)
+  {
+    os << "(" << s.p1() << ", " << s.p2() << ", " << s.width() << ")";
+    return os;
+  }
+}
+

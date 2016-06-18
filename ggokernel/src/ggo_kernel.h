@@ -302,6 +302,66 @@ namespace ggo
   {
     return ggo::max(v, ggo::max(args...));
   }
+
+  template <typename data_t>
+  data_t sum(data_t v1, data_t v2)
+  {
+    return v1 + v2;
+  }
+
+  template <typename data_t, typename... args>
+  data_t sum(const data_t & v, args... a)
+  {
+    return v + sum(a...);
+  }
+
+  template <typename output_t, typename data_t>
+  output_t sum_to(const data_t & v1, const data_t & v2)
+  {
+    return static_cast<output_t>(v1) + static_cast<output_t>(v2);
+  }
+
+  template <typename output_t, typename data_t, typename... args>
+  output_t sum_to(data_t v, args... a)
+  {
+    return static_cast<output_t>(v) + sum_to<output_t>(a...);
+  }
+
+  template <typename data_t, typename... args>
+  data_t average(data_t v, args... a)
+  {
+    if (std::is_integral<data_t>::value == true)
+    {
+      if (std::is_unsigned<data_t>::value == true)
+      {
+        return (sum(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
+      }
+      else
+      {
+        auto s = sum(v, a...);
+        if (s > 0)
+        {
+          return (s + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
+        }
+        else
+        {
+          data_t num = s - (1 + sizeof...(a)) / 2;
+          data_t den = 1 + sizeof...(a); // Force conversion to signed type.
+          return num / den;
+        }
+      }
+    }
+    else
+    {
+      return sum(v, a...) / (1 + sizeof...(a));
+    }
+  }
+
+  template <typename... args>
+  uint8_t average(uint8_t v, args... a)
+  {
+    return static_cast<uint8_t>((sum_to<uint32_t>(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a)));
+  }
 }
 
 //////////////////////////////////////////////////////////////

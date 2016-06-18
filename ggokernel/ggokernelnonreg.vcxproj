@@ -40,6 +40,7 @@
     <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
+    <ClCompile Include="test\signal_proc\ggo_downscaling_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp" />

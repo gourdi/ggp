@@ -87,6 +87,50 @@ GGO_TEST(base, min_max)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(base, sum)
+{
+  int s1 = ggo::sum(1, 2, 3);
+  GGO_CHECK_EQ(s1, 6);
+
+  float s2 = ggo::sum(0.1f, 0.2f, 0.3f, 0.4f);
+  GGO_CHECK_FABS(s2, 1.f);
+
+  uint8_t v1 = 0xFF;
+  uint8_t v2 = 0xFF;
+  uint8_t v3 = 0xFF;
+  uint8_t v4 = 0xFF;
+  int s3 = ggo::sum_to<int>(v1, v2, v3, v4);
+  GGO_CHECK_EQ(s3, 1020);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, average)
+{
+  float a1 = ggo::average(1.f, 2.f, 3.f);
+  GGO_CHECK_FABS(a1, 2.f);
+
+  float a2 = ggo::average(1.f, 2.f);
+  GGO_CHECK_FABS(a2, 1.5f);
+
+  uint8_t v1 = 1;
+  uint8_t v2 = 1;
+  uint8_t v3 = 1;
+  uint8_t v4 = 0;
+  uint8_t a3 = ggo::average(v1, v2, v3, v4);
+  GGO_CHECK_EQ(a3, 1);
+
+  v1 = 0xFF;
+  v2 = 0xFF;
+  v3 = 0xFF;
+  v4 = 0xFF;
+  int a4 = ggo::average(v1, v2, v3, v4);
+  GGO_CHECK_EQ(a4, 0xFF);
+
+  int a5 = ggo::average(-1, -1, -1, 0);
+  GGO_CHECK_EQ(a5, -1);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, type_casting)
 {
   // From float.
