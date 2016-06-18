@@ -72,6 +72,9 @@
     <ClInclude Include="src\image\ggo_rle_image.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="src\image\ggo_rle_rgb8_image.h">
+      <Filter>image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\color\ggo_color.cpp">
@@ -99,6 +102,9 @@
       <Filter>image</Filter>
     </ClCompile>
     <ClCompile Include="src\image\ggo_rgb_image_buffer.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="src\image\ggo_rle_rgb8_image.cpp">
       <Filter>image</Filter>
     </ClCompile>
   </ItemGroup>
