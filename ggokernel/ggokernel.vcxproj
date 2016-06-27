@@ -149,6 +149,7 @@
     <ClInclude Include="src\ggo_link.h" />
     <ClInclude Include="src\ggo_memory.h" />
     <ClInclude Include="src\ggo_tree.h" />
+    <ClInclude Include="src\ggo_vec.h" />
     <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />
     <ClInclude Include="src\math\ggo_distance2d.h" />
     <ClInclude Include="src\math\ggo_distance3d.h" />
