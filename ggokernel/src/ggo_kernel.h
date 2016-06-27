@@ -196,7 +196,7 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// Edges fucntions.
+// Edges functions.
 namespace ggo
 {
   inline int loop_index(int i, int w)                   { return pos_mod(i, w); }
@@ -279,6 +279,7 @@ namespace ggo
 // Variadic templates.
 namespace ggo
 {
+  // Min/max.
   template <typename T>
   T min(const T & a, const T & b)
   {
@@ -303,10 +304,11 @@ namespace ggo
     return ggo::max(v, ggo::max(args...));
   }
 
+  // Sum/average.
   template <typename data_t>
-  data_t sum(data_t v1, data_t v2)
+  data_t sum(data_t v)
   {
-    return v1 + v2;
+    return v;
   }
 
   template <typename data_t, typename... args>
@@ -316,9 +318,9 @@ namespace ggo
   }
 
   template <typename output_t, typename data_t>
-  output_t sum_to(const data_t & v1, const data_t & v2)
+  output_t sum_to(const data_t & v)
   {
-    return static_cast<output_t>(v1) + static_cast<output_t>(v2);
+    return static_cast<output_t>(v);
   }
 
   template <typename output_t, typename data_t, typename... args>
@@ -361,6 +363,218 @@ namespace ggo
   uint8_t average(uint8_t v, args... a)
   {
     return static_cast<uint8_t>((sum_to<uint32_t>(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a)));
+  }
+
+  // Copy a buffer.
+  template <typename data_t, int count>
+  struct copy_t
+  {
+    static void copy(data_t * dst, const data_t * src)
+    {
+      copy_t<data_t, count - 1>::copy(dst, src);
+      dst[count - 1] = src[count - 1];
+    }
+  };
+
+  template <typename data_t>
+  struct copy_t<data_t, 0>
+  {
+    static void copy(data_t * dst, const data_t * src)
+    {
+    }
+  };
+
+  template <int count, typename data_t>
+  void copy(data_t * dst, const data_t * src)
+  {
+    copy_t<data_t, count>::copy(dst, src);
+  }
+
+  // Compare a buffer.
+  template <typename data_t, int count>
+  struct compare_t
+  {
+    static bool compare(const data_t * ptr1, const data_t * ptr2)
+    {
+      if (ptr1[0] != ptr2[0])
+      {
+        return false;
+      }
+
+      return compare_t<data_t, count - 1>::compare(ptr1 + 1, ptr2 + 1);
+    }
+
+    static bool compare(const data_t * ptr1, const data_t * ptr2, data_t tolerance)
+    {
+      if (std::abs(ptr1[0] - ptr2[0]) > tolerance)
+      {
+        return false;
+      }
+
+      return compare_t<data_t, count - 1>::compare(ptr1 + 1, ptr2 + 1, tolerance);
+    }
+  };
+
+  template <typename data_t>
+  struct compare_t<data_t, 1>
+  {
+    static bool compare(const data_t * ptr1, const data_t * ptr2)
+    {
+      return ptr1[0] == ptr2[0];
+    }
+
+    static bool compare(const data_t * ptr1, const data_t * ptr2, data_t tolerance)
+    {
+      return std::abs(ptr1[0] - ptr2[0]) <= tolerance;
+    }
+  };
+
+  template <int count, typename data_t>
+  bool compare(const data_t * ptr1, const data_t * ptr2)
+  {
+    return ggo::compare_t<data_t, count>::compare(ptr1, ptr2);
+  }
+
+  template <int count, typename data_t>
+  bool compare(const data_t * ptr1, const data_t * ptr2, data_t tolerance)
+  {
+    return ggo::compare_t<data_t, count>::compare(ptr1, ptr2, tolerance);
+  }
+
+  // Set a buffer from coefs.
+  template <typename data_t>
+  void set(data_t * ptr, const data_t & v)
+  {
+    ptr[0] = v;
+  }
+
+  template <typename data_t, typename... args>
+  void set(data_t * ptr, const data_t & v, args... a)
+  {
+    ptr[0] = v;
+    ggo::set(ptr + 1, a...);
+  }
+
+  // Set a buffer from one or two buffers and a lambda.
+  template <typename data_t, typename func, int count>
+  struct set_t
+  {
+    static void set(data_t * dst, const data_t * src, func f)
+    {
+      dst[0] = f(src[0]);
+      ggo::set_t<data_t, func, count - 1>::set(dst + 1, src + 1, f);
+    }
+
+    static void set(data_t * dst, const data_t * src1, const data_t * src2, func f)
+    {
+      dst[0] = f(src1[0], src2[0]);
+      ggo::set_t<data_t, func, count - 1>::set(dst + 1, src1 + 1, src2 + 1, f);
+    }
+  };
+
+  template <typename data_t, typename func>
+  struct set_t<data_t, func, 1>
+  {
+    static void set(data_t * dst, const data_t * src, func f)
+    {
+      dst[0] = f(src[0]);
+    }
+
+    static void set(data_t * dst, const data_t * src1, const data_t * src2, func f)
+    {
+      dst[0] = f(src1[0], src2[0]);
+    }
+  };
+
+  template <int count, typename data_t, typename func>
+  void set(data_t * dst, const data_t * src, func f)
+  {
+    ggo::set_t<data_t, func, count>::set(dst, src, f);
+  }
+
+  template <int count, typename data_t, typename func>
+  void set(data_t * dst, const data_t * src1, const data_t * src2, func f)
+  {
+    ggo::set_t<data_t, func, count>::set(dst, src1, src2, f);
+  }
+
+  // Dot product.
+  template <typename data_t, int count>
+  struct dot_t
+  {
+    static data_t dot(const data_t* ptr1, const data_t* ptr2)
+    {
+      return ptr1[0] * ptr2[0] + ggo::dot_t<data_t, count - 1>::dot(ptr1 + 1, ptr2 + 1);
+    }
+  };
+
+  template <typename data_t>
+  struct dot_t<data_t, 1>
+  {
+    static data_t dot(const data_t* ptr1, const data_t* ptr2)
+    {
+      return ptr1[0] * ptr2[0];
+    }
+  };
+  
+  template <int count, typename data_t>
+  data_t dot(const data_t* ptr1, const data_t* ptr2)
+  {
+    return ggo::dot_t<data_t, count>::dot(ptr1, ptr2);
+  }
+
+  // Transform.
+  template <typename data_t, typename func, int count>
+  struct transform_t
+  {
+    static void transform(data_t * ptr, func f)
+    {
+      ptr[0] = f(ptr[0]);
+      ggo::transform_t<data_t, func, count - 1>::transform(ptr + 1, f);
+    }
+  };
+
+  template <typename data_t, typename func>
+  struct transform_t<data_t, func, 1>
+  {
+    static void transform(data_t * ptr, func f)
+    {
+      ptr[0] = f(ptr[0]);
+    }
+  };
+
+  template <int count, typename data_t, typename func>
+  void transform(data_t * ptr, func f)
+  {
+    ggo::transform_t<data_t, func, count>::transform(ptr, f);
+  }
+
+  // Dump.
+  template <typename data_t, int count>
+  struct dump_t
+  {
+    static void dump(const data_t * ptr, std::ostream & os)
+    {
+      os << ptr[0] << "; ";
+      ggo::dump_t<data_t, count - 1>::dump(ptr + 1, os);
+    }
+  };
+
+  template <typename data_t>
+  struct dump_t<data_t, 1>
+  {
+    static void dump(const data_t * ptr, std::ostream & os)
+    {
+      os << ptr[0];
+    }
+  };
+
+  template <int count, typename data_t>
+  void dump(const data_t * ptr, std::ostream & os)
+  {
+    os << "(";
+    ggo::dump_t<data_t, count>::dump(ptr, os);
+    os << ")";
   }
 }
 
