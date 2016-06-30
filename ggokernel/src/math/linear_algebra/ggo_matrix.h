@@ -9,25 +9,40 @@
 // Matrices.
 namespace ggo
 {
-  template <int size_y, int size_x, typename T>
+  template <typename data_t, int size_y, int size_x>
   class matrix
   {
   public:
 
-    T &				operator()(unsigned y, unsigned x) { return _data[y * size_x + x]; }
-    const T & operator()(unsigned y, unsigned x) const { return _data[y * size_x + x]; }
+    template <int y, int x>
+    data_t &  get()
+    {
+      static_assert(x >= 0 && x < size_x, "invalid x index");
+      static_assert(y >= 0 && x < size_y, "invalid y index");
+      return _data[y * size_x + x];
+    }
+
+    template <int y, int x>
+    const data_t &  get() const
+    {
+      static_assert(x >= 0 && x < size_x, "invalid x index");
+      static_assert(y >= 0 && x < size_y, "invalid y index");
+      return _data[y * size_x + x];
+    }
+
+    data_t &			  operator()(unsigned y, unsigned x) { return _data[y * size_x + x]; }
+    const data_t &  operator()(unsigned y, unsigned x) const { return _data[y * size_x + x]; }
     
-    matrix &  operator=(const matrix<size_y, size_x, T> & m);
+    matrix &        operator=(const matrix<data_t, size_y, size_x> & m);
 
-    void			operator+=(const matrix & m);
-    void			operator-=(const matrix & m);
+    void			      operator*=(data_t k);
 
-    template <typename T2>
-    void			operator*=(T2 k);
+    data_t *        data() { return _data.data(); };
+    const data_t *  data() const { return _data.data(); };
 
   protected:
     
-    std::array<T, size_x * size_y> _data;
+    std::array<data_t, size_x * size_y> _data;
   };
 }
 
@@ -35,33 +50,35 @@ namespace ggo
 // Matrix operators.
 namespace ggo
 {
-  template <int size_y, int size_x, typename T>
-  matrix<size_y, size_x, T> operator+(const matrix<size_y, size_x, T> & m1, const matrix<size_y, size_x, T> & m2);
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2);
 
-  template <int size_y, int size_x, typename T>
-  matrix<size_y, size_x, T> operator-(const matrix<size_y, size_x, T> & m1, const matrix<size_y, size_x, T> & m2);
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2);
 
-  template <int size_1, int size_2, int size_3, typename T>
-  matrix<size_1, size_3, T> operator*(const matrix<size_1, size_2, T> & m1, const matrix<size_2, size_3, T> & m2);
+  template <typename data_t, int size_1, int size_2, int size_3>
+  matrix<data_t, size_1, size_3> operator*(const matrix<data_t, size_1, size_2> & m1, const matrix<data_t, size_2, size_3> & m2);
 }
 
 /////////////////////////////////////////////////////////////////////
 // Scalar operators.
 namespace ggo
 {
-  template <int size_x, int size_y, typename T1, typename T2>
-  matrix<size_y, size_x, T1> operator*(const matrix<size_y, size_x, T1> & m, T2 k);
+  template <int size_x, int size_y, typename data_t>
+  matrix<data_t, size_y, size_x> operator*(const matrix<data_t, size_y, size_x> & m, data_t k);
 
-  template <int size_x, int size_y, typename T1, typename T2>
-  matrix<size_y, size_x, T1> operator*(T2 k, const matrix<size_y, size_x, T1> & m);
+  template <int size_x, int size_y, typename data_t>
+  matrix<data_t, size_y, size_x> operator*(data_t k, const matrix<data_t, size_y, size_x> & m);
 }
+
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 // Square matrix.
 namespace ggo
 {
-  template <int size, typename T>
-  class square_matrix : public matrix<size, size, T>
+  template <typename data_t, int size>
+  class square_matrix : public matrix<data_t, size, size>
   {
   public:
 
@@ -74,19 +91,21 @@ namespace ggo
 // Square matrix 2D.
 namespace ggo
 {
-  template <typename T>
-  class square_matrix2d : public square_matrix<2, T>
+  template <typename data_t>
+  class square_matrix2d : public square_matrix<data_t, 2>
   {
   public:
       
-    T     det() const;
+    data_t  det() const;
     
-    void  set_rotation(float angle);
+    void    set_rotation(float angle);
   };	
 
   template <typename T>
   ggo::vec2<T> operator*(const square_matrix2d<T> & m, const ggo::vec2<T> & v);
 }
+
+#endif
 
 #include <ggo_matrix.imp.h>
 

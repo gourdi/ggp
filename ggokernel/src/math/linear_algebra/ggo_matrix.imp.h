@@ -1,4 +1,5 @@
 #include <ggo_linear_algebra.h>
+#include <ggo_kernel.h>
 #include <cstring>
 
 //////////////////////////////////////////////////////////////
@@ -7,26 +8,22 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T>
-  matrix<size_y, size_x, T> & matrix<size_y, size_x, T>::operator=(const matrix<size_y, size_x, T> & m)
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> & matrix<data_t, size_y, size_x>::operator=(const matrix<data_t, size_y, size_x> & m)
   {
     if (&m != this)
     {
-      std::memcpy(_data.data(), m._data.data(), size_x * size_y * sizeof(T));
+      ggo::copy<size_x * size_y, data_t>(_data.data(), m._data.data());
     }
     
     return *this;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T>
-  template <typename T2>
-  void matrix<size_y, size_x, T>::operator*=(T2 k)
+  template <typename data_t, int size_y, int size_x>
+  void matrix<data_t, size_y, size_x>::operator*=(data_t k)
   {
-    for (int i = 0; i < size_x * size_y; ++i)
-    {
-      _data[i] *= k;
-    }
+    ggo::mul<size_x * size_y>(_data.data(), k);
   }
 }
 
@@ -36,44 +33,32 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T>
-  matrix<size_y, size_x, T> operator+(const matrix<size_y, size_x, T> & m1, const matrix<size_y, size_x, T> & m2)
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
   {
-    matrix<size_y, size_x, T> result;
-    
-    for (int y = 0; y < size_y; ++y)
-    {
-      for (int x = 0; x < size_x; ++x)
-      {
-        result(y, x) = m1(y, x) + m2(y, x);
-      }
-    }
-    
+    matrix<data_t, size_y, size_x> result;
+
+    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t v1, data_t v2) { return v1 + v2; });
+
     return result;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T>
-  matrix<size_y, size_x, T> operator-(const matrix<size_y, size_x, T> & m1, const matrix<size_y, size_x, T> & m2)
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
   {
-    matrix<size_y, size_x, T> result;
-    
-    for (int y = 0; y < size_y; ++y)
-    {
-      for (int x = 0; x < size_x; ++x)
-      {
-        result(y, x) = m1(y, x) - m2(y, x);
-      }
-    }
-    
+    matrix<data_t, size_y, size_x> result;
+
+    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t v1, data_t v2) { return v1 - v2; });
+
     return result;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int size_1, int size_2, int size_3, typename T>
-  matrix<size_1, size_3, T> operator*(const matrix<size_1, size_2, T> & m1, const matrix<size_2, size_3, T> & m2)
+  template <typename data_t, int size_1, int size_2, int size_3>
+  matrix<data_t, size_1, size_3> operator*(const matrix<data_t, size_1, size_2> & m1, const matrix<data_t, size_2, size_3> & m2)
   {
-    matrix<size_1, size_3, T> result;
+    matrix<data_t, size_1, size_3> result;
     
     for (int y = 0; y < size_1; ++y)
     {
@@ -97,10 +82,10 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T1, typename T2>
-  matrix<size_y, size_x, T1> operator*(const matrix<size_y, size_x, T1> & m, T2 k)
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator*(const matrix<data_t, size_y, size_x> & m, data_t k)
   {
-    matrix<size_y, size_x, T1> result;
+    matrix<data_t, size_y, size_x> result;
     
     for (int y = 0; y < size_y; ++y)
     {
@@ -114,12 +99,14 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int size_y, int size_x, typename T1, typename T2>
-  matrix<size_y, size_x, T1> operator*(T2 k, const matrix<size_y, size_x, T1> & m)
+  template <typename data_t, int size_y, int size_x>
+  matrix<data_t, size_y, size_x> operator*(data_t k, const matrix<data_t, size_y, size_x> & m)
   {
     return m * k;
   }
 }
+
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 // Square matrix.
@@ -171,4 +158,6 @@ namespace ggo
     this->operator()(1, 1) =  cos(angle);
   }
 }
+
+#endif
 

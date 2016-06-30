@@ -379,6 +379,57 @@ namespace ggo
     add(ptr + 1, a...);
   }
 
+  template <typename data_t, int count>
+  struct mul_t
+  {
+    static void mul(data_t * ptr, data_t k)
+    {
+      ptr[0] *= k;
+      mul_t<data_t, count - 1>::mul(ptr + 1, k);
+    }
+  };
+
+  template <typename data_t>
+  struct mul_t<data_t, 1>
+  {
+    static void mul(data_t * ptr, data_t k)
+    {
+      ptr[0] *= k;
+    }
+  };
+
+  template <int count, typename data_t>
+  void mul(data_t * ptr, data_t k)
+  {
+    ggo::mul_t<data_t, count>::mul(ptr, k);
+  }
+
+  // Binary operations.
+  template <typename data_t, typename func, int count>
+  struct binary_operation_t
+  {
+    static void process(data_t * dst, const data_t * src1, const data_t * src2, func f)
+    {
+      dst[0] = f(src1[0], src2[0]);
+      ggo::binary_operation_t<data_t, func, count - 1>::process(dst + 1, src1 + 1, src2 + 1, f);
+    }
+  };
+
+  template <typename data_t, typename func>
+  struct binary_operation_t<data_t, func, 1>
+  {
+    static void process(data_t * dst, const data_t * src1, const data_t * src2, func f)
+    {
+      dst[0] = f(src1[0], src2[0]);
+    }
+  };
+
+  template <int count, typename data_t, typename func>
+  void binary_operation(data_t * dst, const data_t * src1, const data_t * src2, func f)
+  {
+    binary_operation_t<data_t, func, count>::process(dst, src1, src2, f);
+  }
+
   // Copy a buffer.
   template <typename data_t, int count>
   struct copy_t
@@ -455,7 +506,7 @@ namespace ggo
     return ggo::compare_t<data_t, count>::compare(ptr1, ptr2, tolerance);
   }
 
-  // Set a buffer from coefs.
+  // Set a buffer.
   template <typename data_t>
   void set(data_t * ptr, const data_t & v)
   {
@@ -469,7 +520,6 @@ namespace ggo
     ggo::set(ptr + 1, a...);
   }
 
-  // Set a buffer from one or two buffers and a lambda.
   template <typename data_t, typename func, int count>
   struct set_t
   {
