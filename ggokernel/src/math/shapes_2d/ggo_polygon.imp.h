@@ -1,12 +1,12 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void polygon2d<T>::create_oriented_box(const ggo::set2<T> & center, const ggo::set2<T> & direction, T size1, T size2, polygon2d<T> & polygon)
+  template <typename data_t>
+  void polygon2d<data_t>::create_oriented_box(const ggo::pos2<data_t> & center, const ggo::pos2<data_t> & direction, data_t size1, data_t size2, polygon2d<data_t> & polygon)
   {
     // Normalize the direction.
-    T len = direction.get_length();
-    ggo::set2<T> norm(direction);
+    data_t len = direction.get_length();
+    ggo::pos2<data_t> norm(direction);
     if (len > 0)
     {
       norm /= len;
@@ -14,26 +14,26 @@ namespace ggo
 
     polygon.clear();
 
-    T x1 = center.x() + size1*norm.x() + size2*norm.y();
-    T y1 = center.y() + size1*norm.y() - size2*norm.x();
+    data_t x1 = center.template get<0>() + size1*norm.template get<0>() + size2*norm.template get<1>();
+    data_t y1 = center.template get<1>() + size1*norm.template get<1>() - size2*norm.template get<0>();
     polygon.add_point(x1, y1);
 
-    T x2 = center.x() + size1*norm.x() - size2*norm.y();
-    T y2 = center.y() + size1*norm.y() + size2*norm.x();
+    data_t x2 = center.template get<0>() + size1*norm.template get<0>() - size2*norm.template get<1>();
+    data_t y2 = center.template get<1>() + size1*norm.template get<1>() + size2*norm.template get<0>();
     polygon.add_point(x2, y2);
 
-    T x3 = center.x() - size1*norm.x() - size2*norm.y();
-    T y3 = center.y() - size1*norm.y() + size2*norm.x();
+    data_t x3 = center.template get<0>() - size1*norm.template get<0>() - size2*norm.template get<1>();
+    data_t y3 = center.template get<1>() - size1*norm.template get<1>() + size2*norm.template get<0>();
     polygon.add_point(x3, y3);
 
-    T x4 = center.x() - size1*norm.x() + size2*norm.y();
-    T y4 = center.y() - size1*norm.y() - size2*norm.x();
+    data_t x4 = center.template get<0>() - size1*norm.template get<0>() + size2*norm.template get<1>();
+    data_t y4 = center.template get<1>() - size1*norm.template get<1>() - size2*norm.template get<0>();
     polygon.add_point(x4, y4);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void polygon2d<T>::create_axis_aligned_box(T left, T right, T top, T bottom, polygon2d<T> & polygon)
+  template <typename data_t>
+  void polygon2d<data_t>::create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom, polygon2d<data_t> & polygon)
   {
     polygon.clear();
 
@@ -47,8 +47,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  T polygon2d<T>::dist_to_point(T x, T y) const
+  template <typename data_t>
+  data_t polygon2d<data_t>::dist_to_point(data_t x, data_t y) const
   {
     switch (_points.size())
     {
@@ -56,7 +56,7 @@ namespace ggo
       GGO_FAIL();
       return -1;
     case 1:
-      return ggo::distance(x, y, _points.front().x(), _points.front().y());
+      return ggo::distance(x, y, _points.front().template get<0>(), _points.front().template get<1>());
     }
 
     if (is_point_inside(x, y) == true)
@@ -65,44 +65,44 @@ namespace ggo
     }
 
     // First point to last point edge.
-    T hypot = ggo::segment<T>(_points.front(), _points.back()).hypot_to_point(x, y);
+    data_t hypot = ggo::segment<data_t>(_points.front(), _points.back()).hypot_to_point(x, y);
 
     // Other edges.
     for (auto it = _points.begin(); it + 1 != _points.end(); ++it)
     {
-      hypot = std::min(hypot, ggo::segment<T>(*it, *(it + 1)).hypot_to_point(x, y));
+      hypot = std::min(hypot, ggo::segment<data_t>(*it, *(it + 1)).hypot_to_point(x, y));
     }
 
     return std::sqrt(hypot);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  rect_data<T> polygon2d<T>::get_bounding_rect() const
+  template <typename data_t>
+  rect_data<data_t> polygon2d<data_t>::get_bounding_rect() const
   {
     if (_points.empty() == true)
     {
       GGO_FAIL();
     }
 
-    auto it 	= _points.begin();
-    T left    = it->x();
-    T right   = it->x();
-    T bottom  = it->y();
-    T top     = it->y();
+    auto it 	     = _points.begin();
+    data_t left    = it->template get<0>();
+    data_t right   = it->template get<0>();
+    data_t bottom  = it->template get<1>();
+    data_t top     = it->template get<1>();
     it++;
 
     while (it != _points.end())
     {
-      left	  = std::min<T>(it->x(), left);
-      right	  = std::max<T>(it->x(), right);
-      bottom	= std::min<T>(it->y(), bottom);
-      top		  = std::max<T>(it->y(), top);
+      left	  = std::min<data_t>(it->template get<0>(), left);
+      right	  = std::max<data_t>(it->template get<0>(), right);
+      bottom	= std::min<data_t>(it->template get<1>(), bottom);
+      top		  = std::max<data_t>(it->template get<1>(), top);
 
       it++;
     }
 
-    rect_data<T> rect_data;
+    rect_data<data_t> rect_data;
     rect_data._pos = { left, bottom };
     rect_data._width = right - left;
     rect_data._height = top - bottom;
@@ -111,34 +111,34 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool polygon2d<T>::is_point_inside(T x, T y) const
+  template <typename data_t>
+  bool polygon2d<data_t>::is_point_inside(data_t x, data_t y) const
   {
     if (_points.size() <= 2)
     {
       return false; 
     }
 
-    T angle(0);
-    T angle1 = atan2(_points.back().y() - y, _points.back().x() - x);
+    data_t angle(0);
+    data_t angle1 = atan2(_points.back().template get<1>() - y, _points.back().template get<0>() - x);
     for (const auto & point : _points)
     {
-      T angle2 = atan2(point.y() - y, point.x() - x);
-      T dangle = angle2 - angle1;
-      if (dangle >  PI<T>()) { dangle -= 2 * PI<T>(); }
-      if (dangle < -PI<T>()) { dangle += 2 * PI<T>(); }
+      data_t angle2 = atan2(point.template get<1>() - y, point.template get<0>() - x);
+      data_t dangle = angle2 - angle1;
+      if (dangle >  PI<data_t>()) { dangle -= 2 * PI<data_t>(); }
+      if (dangle < -PI<data_t>()) { dangle += 2 * PI<data_t>(); }
       angle += dangle;
       angle1 = angle2;
     }
 
-    return std::abs(angle) > PI<T>();
+    return std::abs(angle) > PI<data_t>();
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  T polygon2d<T>::dist_to_segment(T x_from, T y_from, T x_to, T y_to) const
+  template <typename data_t>
+  data_t polygon2d<data_t>::dist_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
   {
-    ggo::segment<T> segment(x_from, y_from, x_to, y_to);
+    ggo::segment<data_t> segment(x_from, y_from, x_to, y_to);
 
     switch (_points.size())
     {
@@ -154,7 +154,7 @@ namespace ggo
       return 0;
     }
 
-    T hypot = ggo::segment<T>(_points[0], _points[_points.size() - 1]).hypot_to_segment(segment);
+    data_t hypot = ggo::segment<data_t>(_points[0], _points[_points.size() - 1]).hypot_to_segment(segment);
     if (hypot == 0)
     {
       return 0;
@@ -162,7 +162,7 @@ namespace ggo
 
     for (size_t i = 0; i < _points.size() - 1; ++i)
     {
-      T hypot_cur = ggo::segment<T>(_points[i], _points[i + 1]).hypot_to_segment(segment);
+      data_t hypot_cur = ggo::segment<data_t>(_points[i], _points[i + 1]).hypot_to_segment(segment);
       if (hypot_cur == 0)
       {
         return 0;
@@ -175,32 +175,32 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  T polygon2d<T>::dist_to_segment(const ggo::set2<T> & p1, const ggo::set2<T> & p2) const
+  template <typename data_t>
+  data_t polygon2d<data_t>::dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    return dist_to_segment(p1.x(), p1.y(), p2.x(), p2.y());
+    return dist_to_segment(p1.template get<0>(), p1.template get<1>(), p2.template get<0>(), p2.template get<1>());
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  T polygon2d<T>::dist_to_segment(const ggo::segment<T> & segment) const
+  template <typename data_t>
+  data_t polygon2d<data_t>::dist_to_segment(const ggo::segment<data_t> & segment) const
   {
     return dist_to_segment(segment.from(), segment.to());
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::rect_intersection polygon2d<T>::get_rect_intersection(const rect_data<T> & rect_data) const
+  template <typename data_t>
+  ggo::rect_intersection polygon2d<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    T left    = rect_data._pos.x();
-    T bottom  = rect_data._pos.y();
-    T right   = left + rect_data._width;
-    T top     = bottom + rect_data._height;
+    data_t left    = rect_data._pos.template get<0>();
+    data_t bottom  = rect_data._pos.template get<1>();
+    data_t right   = left + rect_data._width;
+    data_t top     = bottom + rect_data._height;
     
     // Border intersection => partial overlap.
     for (size_t i = 0; i < _points.size(); ++i)
     {
-      ggo::segment<T> segment(_points[i], _points[(i + 1) % _points.size()]);
+      ggo::segment<data_t> segment(_points[i], _points[(i + 1) % _points.size()]);
 
       if (segment.intersect_horizontal_segment(left, right, bottom) == true ||
           segment.intersect_horizontal_segment(left, right, top   ) == true)
@@ -220,7 +220,7 @@ namespace ggo
     // - rect in polygon
     // - disjoint
 
-    ggo::rect<T> rect(rect_data);
+    ggo::rect<data_t> rect(rect_data);
     
     // Check if the polygon is inside the rect. Since there is no border
     // intersection, we just need to check if a point of the polygon 
@@ -243,23 +243,23 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void polygon2d<T>::move(T dx, T dy)
+  template <typename data_t>
+  void polygon2d<data_t>::move(data_t dx, data_t dy)
   {
     for (auto & point : _points)
     {
-      point.x() += dx;
-      point.y() += dy;
+      point.template get<0>() += dx;
+      point.template get<1>() += dy;
     }
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void polygon2d<T>::rotate(T angle, const ggo::set2<T> & center)
+  template <typename data_t>
+  void polygon2d<data_t>::rotate(data_t angle, const ggo::pos2<data_t> & center)
   {
     for (auto & point : _points)
     {
-      point.rotate(angle, center);
+      point = ggo::rotate(point, center, angle);
     }
   }
 }

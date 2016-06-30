@@ -22,9 +22,9 @@ private:
 
   struct ggo_circle_animate : public ggo_position_animate_abc
   {
-          ggo_circle_animate(const ggo::point2d_float & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
+          ggo_circle_animate(const ggo::pos2f & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
     
-    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
+    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
 
     float       _radius;
     ggo::color  _color;

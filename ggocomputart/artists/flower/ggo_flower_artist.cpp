@@ -41,7 +41,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 	{
 		std::cout << "Rendering petal " << (counter + 1) << " out of " << petals_count << std::endl; 
 		
-		ggo::point2d_float	center(0.5f * get_render_width(), 0.9f * get_render_height());
+		ggo::pos2f center(0.5f * get_render_width(), 0.9f * get_render_height());
 
 		float ratio 		    = counter / float(petals_count);
 		float petal_height	= 0.8f * get_render_height() * counter / petals_count;
@@ -66,15 +66,15 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 			{
 				int   k = j < GGO_HORZ_COUNT/2 ? j : GGO_HORZ_COUNT-j-1;
 				float t = 2 * ggo::PI<float>() * j / GGO_HORZ_COUNT;
-				float x = center.x() + s * cos(t);
-				float y = center.y() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
+				float x = center.get<0>() + s * cos(t);
+				float y = center.get<1>() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
 
 				ggo::paint(render_buffer, 
                    std::make_shared<ggo::disc_float>(x, y, 0.001f * get_render_min_size()),
                    color, 0.0025f, std::make_shared<ggo::rgb_additive_blender>());
 			}
 
-			center.y() -= dy;
+			center.get<1>() -= dy;
 		}
 	}
   

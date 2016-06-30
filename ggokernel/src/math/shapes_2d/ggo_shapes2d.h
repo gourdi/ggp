@@ -4,7 +4,7 @@
 #include <vector>
 #include <ggo_kernel.h>
 #include <ggo_quadratic.h>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 #include <ggo_distance2d.h>
 #include <ggo_linear_algebra2d.h>
 
@@ -24,7 +24,7 @@ namespace ggo
   template <typename T>
   struct rect_data
   {
-    set2<T>  _pos;
+    pos2<T>  _pos;
     T        _width;
     T        _height;
   };
@@ -32,13 +32,13 @@ namespace ggo
   template <typename T>
   rect_data<T> rect_data_union(const rect_data<T> & rect1, const rect_data<T> & rect2)
   {
-    T left1 = rect1._pos.x();
-    T bottom1 = rect1._pos.y();
+    T left1 = rect1._pos.template get<0>();
+    T bottom1 = rect1._pos.template get<1>();
     T right1 = left1 + rect1._width;
     T top1 = bottom1 + rect1._height;
 
-    T left2 = rect2._pos.x();
-    T bottom2 = rect2._pos.y();
+    T left2 = rect2._pos.template get<0>();
+    T bottom2 = rect2._pos.template get<1>();
     T right2 = left2 + rect2._width;
     T top2 = bottom2 + rect2._height;
 
@@ -53,13 +53,13 @@ namespace ggo
   template <typename T>
   bool rect_data_intersection(const rect_data<T> & rect1, const rect_data<T> & rect2, rect_data<T> & result)
   {
-    T left1 = rect1._pos.x();
-    T bottom1 = rect1._pos.y();
+    T left1 = rect1._pos.template get<0>();
+    T bottom1 = rect1._pos.template get<1>();
     T right1 = left1 + rect1._width;
     T top1 = bottom1 + rect1._height;
 
-    T left2 = rect2._pos.x();
-    T bottom2 = rect2._pos.y();
+    T left2 = rect2._pos.template get<0>();
+    T bottom2 = rect2._pos.template get<1>();
     T right2 = left2 + rect2._width;
     T top2 = bottom2 + rect2._height;
 
@@ -89,30 +89,30 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename T>
+  template <typename data_t>
   class movable_shape2d_abc
   {
   public:
 
-    virtual	void move(T dx, T dy) = 0;
-            void move(const ggo::set2<T> & m) { move(m.x(), m.y()); }
+    virtual	void move(data_t dx, data_t dy) = 0;
+            void move(const ggo::vec2<data_t> & m) { move(m.template get<0>(), m.template get<1>()); }
   };
 
-  template <typename T>
+  template <typename data_t>
   class rotatable_shape2d_abc
   {
   public:
 
-    virtual	void rotate(T angle, const ggo::set2<T> & center) = 0;
+    virtual	void rotate(data_t angle, const ggo::pos2<data_t> & center) = 0;
   };
 
-  template <typename T> 
+  template <typename data_t>
   class distancable_shape2d_abc
   {
   public:
 
-    virtual	T dist_to_point(T x, T y) const = 0;
-            T	dist_to_point(const ggo::set2<T> & p) const { return dist_to_point(p.x(), p.y()); }
+    virtual	data_t  dist_to_point(data_t x, data_t y) const = 0;
+            data_t  dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.template get<0>(), p.template get<1>()); }
   };
 
   template <typename T>
@@ -122,7 +122,7 @@ namespace ggo
 
     using rotatable_shape2d_abc<T>::rotate;
 
-    virtual ggo::set2<T> get_center() const = 0;
+    virtual ggo::pos2<T> get_center() const = 0;
 
     void rotate(T angle) { rotate(angle, get_center()); }
   };
@@ -139,7 +139,7 @@ namespace ggo
   public:
 
     virtual bool  is_point_inside(T x, T y) const = 0;
-            bool  is_point_inside(const ggo::set2<T> & p) const { return is_point_inside(p.x(), p.y()); }
+            bool  is_point_inside(const ggo::pos2<T> & p) const { return is_point_inside(p.template get<0>(), p.template get<1>()); }
   };
 
   template <typename T>

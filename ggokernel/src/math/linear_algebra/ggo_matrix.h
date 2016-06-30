@@ -3,7 +3,7 @@
 
 #include <array>
 #include <functional>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 
 //////////////////////////////////////////////////////////////
 // Matrices.
@@ -85,7 +85,7 @@ namespace ggo
   };	
 
   template <typename T>
-  ggo::set2<T> operator*(const square_matrix2d<T> & m, ggo::set2<T> v);
+  ggo::vec2<T> operator*(const square_matrix2d<T> & m, const ggo::vec2<T> & v);
 }
 
 #include <ggo_matrix.imp.h>

@@ -30,7 +30,7 @@ namespace ggo
     
     for (int sample = 0; sample < _samples_count; ++sample)
     {
-      color += ggo::raytracer::process(camera_rays[sample], scene, raytrace_params, ggo::best_candidate_table[sample].x(), ggo::best_candidate_table[sample].y());
+      color += ggo::raytracer::process(camera_rays[sample], scene, raytrace_params, ggo::best_candidate_table[sample].get<0>(), ggo::best_candidate_table[sample].get<1>());
     }
     
     return color / static_cast<float>(_samples_count);

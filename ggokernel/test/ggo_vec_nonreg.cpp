@@ -214,6 +214,15 @@ GGO_TEST(vec, rotation)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(vec, move)
+{
+  ggo::vec<int, 2> v(1, 2);
+  v.move(3, 4);
+  GGO_CHECK_FABS(4, v.get<0>());
+  GGO_CHECK_FABS(6, v.get<1>());
+}
+
 //////////////////////////////////////////////////////////////////
 GGO_TEST(vec, ortho_dot)
 {

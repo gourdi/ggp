@@ -21,7 +21,7 @@ private:
 	{		
 	public:
 
-          ggo_line(const ggo::point2d_float & center, float angle, float inner_radius, float outter_radius, const ggo::color & color);
+          ggo_line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color & color);
 		
 		bool	update(int width, int height);
 		void	draw(uint8_t * buffer, int width, int height) const;
@@ -30,33 +30,33 @@ private:
 
 	private:
 		
-		int					                                  _counter;
-		ggo::point2d_float	                          _center;
-		float				                                  _angle;
-		float				                                  _angle_offset;
-		float				                                  _inner_radius;
-		float				                                  _outter_radius;
-		ggo::color			                              _color;
-    ggo::point2d_float                            _p1;
-    ggo::point2d_float                            _p2;
-		float				                                  _opacity;
-		float				                                  _blur;
+		int				  _counter;
+		ggo::pos2f  _center;
+		float			  _angle;
+		float			  _angle_offset;
+		float			  _inner_radius;
+		float			  _outter_radius;
+		ggo::color  _color;
+    ggo::pos2f  _p1;
+    ggo::pos2f  _p2;
+		float			  _opacity;
+		float			  _blur;
 	};
 	
 	class ggo_item
 	{
 	public:
 		
-                                ggo_item(const ggo::point2d_float & center, float inner_radius, float outter_radius, float hue, float sat, float val);
+                      ggo_item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
 									
-		bool						            update(int width, int height);
-		void						            draw(uint8_t * buffer, int width, int height) const;
-		const ggo::point2d_float &	get_center() const { return _center; };
+		bool						  update(int width, int height);
+		void						  draw(uint8_t * buffer, int width, int height) const;
+		const ggo::pos2f  get_center() const { return _center; };
 		
 	private:
 		
 		std::vector<ggo_line>	_lines;
-		ggo::point2d_float		_center;
+		ggo::pos2f		        _center;
 	};
 	
 	class ggo_oscillo

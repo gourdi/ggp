@@ -45,7 +45,7 @@ namespace ggo
     ggo::ray3d<T>             ray_from_world_to_local(const ggo::ray3d<T> & ray) const;
 
     // Project a 3D point on a screen, assuming the basis is the one of a point camera looking in the z-negative direction.
-    ggo::point2d<T>           project(const ggo::point3d<T> & p, T aperture, int screen_width, int screen_height) const;
+    ggo::pos2<T>              project(const ggo::point3d<T> & p, T aperture, int screen_width, int screen_height) const;
 
   private:
 

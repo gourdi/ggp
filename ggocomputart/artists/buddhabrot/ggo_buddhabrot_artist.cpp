@@ -107,12 +107,12 @@ void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & a
 	{	
 		for (const auto & complex : points)
 		{
-			ggo::point2d_float point(static_cast<float>(complex.real() - _center.real()), static_cast<float>(complex.imag() - _center.imag()));
+			ggo::pos2f point(static_cast<float>(complex.real() - _center.real()), static_cast<float>(complex.imag() - _center.imag()));
 	
 			point = map_fit(point, -1, 1);
 
-			int x = ggo::to<int>(point.x());
-			int y = ggo::to<int>(point.y());
+			int x = ggo::to<int>(point.get<0>());
+			int y = ggo::to<int>(point.get<1>());
 			if ((x >= 0) && (x < get_render_width()) &&
 		    	(y >= 0) && (y < get_render_height()))
 			{

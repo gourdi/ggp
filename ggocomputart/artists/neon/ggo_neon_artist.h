@@ -15,7 +15,7 @@ private:
   void	init_output_buffer(uint8_t * buffer) override;
 	bool	render_next_frame_sub(uint8_t * buffer, int frame_index) override;
 
-	void	paint_point(uint8_t * buffer, const ggo::point2d_float & point_pos, const ggo::color & color) const;
+	void	paint_point(uint8_t * buffer, const ggo::pos2f & point_pos, const ggo::color & color) const;
 
 private:
 

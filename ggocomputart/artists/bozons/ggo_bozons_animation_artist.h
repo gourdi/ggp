@@ -19,15 +19,15 @@ private:
 
 	struct ggo_particle
 	{
-		ggo::point2d_float  _pos;
-		ggo::color		      _color;
-		float				        _angle;
-		float				        _dangle;
-		int 				        _dangle_counter;
-		float				        _radius;
-		float				        _dradius;
-		int 				        _dradius_counter;
-		float				        _speed;
+		ggo::pos2f  _pos;
+		ggo::color	_color;
+		float				_angle;
+		float				_dangle;
+		int 				_dangle_counter;
+		float				_radius;
+		float				_dradius;
+		int 				_dradius_counter;
+		float				_speed;
 	};
 	
 	struct ggo_color_disc

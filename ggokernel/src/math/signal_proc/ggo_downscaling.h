@@ -54,7 +54,7 @@ namespace ggo
     {
       for (int x = 0; x < width; x += 2)
       {
-        out(x / 2, y / 2, average(in(x, y), in(x + 1, y), in(x, y + 1), in(x + 1, y + 1)));
+        out(x / 2, y / 2, ggo::average(in(x, y), in(x + 1, y), in(x, y + 1), in(x + 1, y + 1)));
       }
     }
   }
@@ -66,10 +66,10 @@ namespace ggo
     {
       for (int x = 0; x < width; x += 4)
       {
-        out(x / 4, y / 4, average(in(x + 0, y + 0), in(x + 1, y + 0), in(x + 2, y + 0), in(x + 3, y + 0),
-                                  in(x + 0, y + 1), in(x + 1, y + 1), in(x + 2, y + 1), in(x + 3, y + 1),
-                                  in(x + 0, y + 2), in(x + 1, y + 2), in(x + 2, y + 2), in(x + 3, y + 2),
-                                  in(x + 0, y + 3), in(x + 1, y + 3), in(x + 2, y + 3), in(x + 3, y + 3)));
+        out(x / 4, y / 4, ggo::average(in(x + 0, y + 0), in(x + 1, y + 0), in(x + 2, y + 0), in(x + 3, y + 0),
+                                       in(x + 0, y + 1), in(x + 1, y + 1), in(x + 2, y + 1), in(x + 3, y + 1),
+                                       in(x + 0, y + 2), in(x + 1, y + 2), in(x + 2, y + 2), in(x + 3, y + 2),
+                                       in(x + 0, y + 3), in(x + 1, y + 3), in(x + 2, y + 3), in(x + 3, y + 3)));
       }
     }
   }

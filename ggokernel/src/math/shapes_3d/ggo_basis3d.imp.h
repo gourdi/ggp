@@ -198,7 +198,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  ggo::point2d<T> basis3d<T>::project(const ggo::point3d<T> & p, T aperture, int screen_width, int screen_height) const
+  ggo::pos2<T> basis3d<T>::project(const ggo::point3d<T> & p, T aperture, int screen_width, int screen_height) const
   {
     ggo::vector3d<T> diff(p - _pos);
 
@@ -209,9 +209,9 @@ namespace ggo
 
     // Optimized code.
     T den = -1 / (ggo::dot(diff, _z) * aperture); // The minus sign is here because the camera is looking is the negative z-axis.
-    ggo::point2d<T> proj(1 + ggo::dot(diff, _x) * den, 1 + ggo::dot(diff, _y) * den);
+    ggo::pos2<T> proj(1 + ggo::dot(diff, _x) * den, 1 + ggo::dot(diff, _y) * den);
     proj *= static_cast<T>(screen_height);
-    proj.x() += static_cast<T>(screen_width - screen_height);
+    proj.template get<0>() += static_cast<T>(screen_width - screen_height);
     proj /= 2;
     
     return proj;

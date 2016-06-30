@@ -1,35 +1,35 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::get_length() const
+  template <typename data_t>
+  data_t segment<data_t>::get_length() const
   {
     return ggo::distance(_p1, _p2); 
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::get_hypot() const
+  template <typename data_t>
+  data_t segment<data_t>::get_hypot() const
   {
     return ggo::hypot(_p1, _p2); 
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::hypot_to_point(T x, T y) const
+  template <typename data_t>
+  data_t segment<data_t>::hypot_to_point(data_t x, data_t y) const
   {
-    ggo::set2<T> p(x, y);
-    ggo::set2<T> v1(_p2 - _p1);
-    ggo::set2<T> v2(p - _p1);
-    T hypot = ggo::dot(v1, v1);
+    ggo::pos2<data_t> p(x, y);
+    ggo::pos2<data_t> v1(_p2 - _p1);
+    ggo::pos2<data_t> v2(p - _p1);
+    data_t hypot = ggo::dot(v1, v1);
 
-    if (hypot < T(0.001))
+    if (hypot < data_t(0.001))
     {
-      return ggo::hypot(x, y, _p1.x(), _p1.y());
+      return ggo::hypot(x, y, _p1.template get<0>(), _p1.template get<1>());
     }
     else
     {
-      T dot = ggo::dot(v1, v2);
+      data_t dot = ggo::dot(v1, v2);
 
       if (dot < 0) 
       {
@@ -42,132 +42,132 @@ namespace ggo
       }
       else
       {
-        ggo::set2<T> proj(_p1 + v1 * dot / hypot);
+        ggo::pos2<data_t> proj(_p1 + v1 * dot / hypot);
         return ggo::hypot(p, proj);
       }
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::dist_to_point(T x, T y) const
+  template <typename data_t>
+  data_t segment<data_t>::dist_to_point(data_t x, data_t y) const
   {
     return std::sqrt(hypot_to_point(x, y));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::hypot_to_segment(T x_p1, T y_p1, T x_p2, T y_p2) const
+  template <typename data_t>
+  data_t segment<data_t>::hypot_to_segment(data_t x_p1, data_t y_p1, data_t x_p2, data_t y_p2) const
   {
-    ggo::set2<T> intersect;
-    if (intersect_segment(segment<T>(x_p1, y_p1, x_p2, y_p2), intersect)  == true)
+    ggo::pos2<data_t> intersect;
+    if (intersect_segment(segment<data_t>(x_p1, y_p1, x_p2, y_p2), intersect)  == true)
     {
       return 0;		
     }
 
-    segment<T> segment(x_p1, y_p1, x_p2, y_p2);
+    segment<data_t> segment(x_p1, y_p1, x_p2, y_p2);
 
-    T d1 = hypot_to_point(segment.p1().x(), segment.p1().y());
-    T d2 = hypot_to_point(segment.p2().x(), segment.p2().y());
-    T d3 = segment.hypot_to_point(p1().x(), p1().y());
-    T d4 = segment.hypot_to_point(p2().x(), p2().y());
+    data_t d1 = hypot_to_point(segment.p1().template get<0>(), segment.p1().template get<1>());
+    data_t d2 = hypot_to_point(segment.p2().template get<0>(), segment.p2().template get<1>());
+    data_t d3 = segment.hypot_to_point(p1().template get<0>(), p1().template get<1>());
+    data_t d4 = segment.hypot_to_point(p2().template get<0>(), p2().template get<1>());
 
     return std::min(std::min(d1, d2), std::min(d3, d4));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::hypot_to_segment(const ggo::set2<T> & p1, const ggo::set2<T> & p2) const
+  template <typename data_t>
+  data_t segment<data_t>::hypot_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    return hypot_to_segment(p1.x(), p1.y(), p2.x(), p2.y());
+    return hypot_to_segment(p1.template get<0>(), p1.template get<1>(), p2.template get<0>(), p2.template get<1>());
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::hypot_to_segment(const segment<T> & segment) const
+  template <typename data_t>
+  data_t segment<data_t>::hypot_to_segment(const segment<data_t> & segment) const
   {
     return hypot_to_segment(segment.p1(), segment.p2());
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::dist_to_segment(T x_p1, T y_p1, T x_p2, T y_p2) const
+  template <typename data_t>
+  data_t segment<data_t>::dist_to_segment(data_t x_p1, data_t y_p1, data_t x_p2, data_t y_p2) const
   {
     return std::sqrt(hypot_to_segment(x_p1, y_p1, x_p2, y_p2));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T segment<T>::dist_to_segment(const segment<T> & segment) const
+  template <typename data_t>
+  data_t segment<data_t>::dist_to_segment(const segment<data_t> & segment) const
   {
-    return dist_to_segment(segment.p1().x(), segment.p1().y(), segment.p2().x(), segment.p2().y());
+    return dist_to_segment(segment.p1().template get<0>(), segment.p1().template get<1>(), segment.p2().template get<0>(), segment.p2().template get<1>());
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool segment<T>::same_side(T x1, T y1, T x2, T y2) const
+  template <typename data_t>
+  bool segment<data_t>::same_side(data_t x1, data_t y1, data_t x2, data_t y2) const
   {
-    T dx		  = _p1.x() - _p2.x();
-    T dy		  = _p1.y() - _p2.y();
-    T dx1		  = _p1.x() - x1;
-    T dy1		  = _p1.y() - y1;
-    T dx2		  = _p1.x() - x2;
-    T dy2		  = _p1.y() - y2;
-    T cross1	= dx * dy1 - dy * dx1;
-    T cross2	= dx * dy2 - dy * dx2;
+    data_t dx		  = _p1.template get<0>() - _p2.template get<0>();
+    data_t dy		  = _p1.template get<1>() - _p2.template get<1>();
+    data_t dx1		= _p1.template get<0>() - x1;
+    data_t dy1		= _p1.template get<1>() - y1;
+    data_t dx2		= _p1.template get<0>() - x2;
+    data_t dy2		= _p1.template get<1>() - y2;
+    data_t cross1	= dx * dy1 - dy * dx1;
+    data_t cross2	= dx * dy2 - dy * dx2;
 
     return cross1 * cross2 > 0;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void segment<T>::get_line(T & a, T & b, T & c) const
+  template <typename data_t>
+  void segment<data_t>::get_line(data_t & a, data_t & b, data_t & c) const
   {
-    T det = _p2.x() * _p1.y() - _p1.x() * _p2.y();
+    data_t det = _p2.template get<0>() * _p1.template get<1>() - _p1.template get<0>() * _p2.template get<1>();
 
     if (std::abs(det) < 0.00001)
     {
       // The line equation is ax+by=0. So let us compute a and b.
-      if (std::abs(_p1.x()) + std::abs(_p1.y()) > std::abs(_p2.x()) + std::abs(_p2.y()))
+      if (std::abs(_p1.template get<0>()) + std::abs(_p1.template get<1>()) > std::abs(_p2.template get<0>()) + std::abs(_p2.template get<1>()))
       { 
-        a = _p1.y();
-        b = -_p1.x();
+        a = _p1.template get<1>();
+        b = -_p1.template get<0>();
       }
       else
       {
-        a = _p2.y();
-        b = -_p2.x();
+        a = _p2.template get<1>();
+        b = -_p2.template get<0>();
       }
       c = 0;
     }
     else
     {
       // The line equation is ax+by+c=0. So let us compute a and b.
-      a = _p2.y() - _p1.y();
-      b = _p1.x() - _p2.x();
+      a = _p2.template get<1>() - _p1.template get<1>();
+      b = _p1.template get<0>() - _p2.template get<0>();
       c = det;
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool segment<T>::intersect_horizontal_segment(T x_inf, T x_sup, T y) const
+  template <typename data_t>
+  bool segment<data_t>::intersect_horizontal_segment(data_t x_inf, data_t x_sup, data_t y) const
   {
     GGO_ASSERT(x_inf <= x_sup);
 
-    T dy = _p2.y() - _p1.y();
-    if (std::abs(dy) < T(0.00001))
+    data_t dy = _p2.template get<1>() - _p1.template get<1>();
+    if (std::abs(dy) < data_t(0.00001))
     {
       return false; // Current segment is horizontal => non intersection.
     }
 
-    T k = (y - _p1.y()) / dy; 
+    data_t k = (y - _p1.template get<1>()) / dy; 
     if (k < 0 || k > 1)
     {
       return false;
     }
 
-    T x = _p1.x() + k * (_p2.x() - _p1.x());
+    data_t x = _p1.template get<0>() + k * (_p2.template get<0>() - _p1.template get<0>());
     if (x < x_inf || x > x_sup)
     {
       return false;
@@ -177,24 +177,24 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool segment<T>::intersect_vertical_segment(T x, T y_inf, T y_sup) const
+  template <typename data_t>
+  bool segment<data_t>::intersect_vertical_segment(data_t x, data_t y_inf, data_t y_sup) const
   {
     GGO_ASSERT(y_inf <= y_sup);
 
-    T dx = _p2.x() - _p1.x();
-    if (std::abs(dx) < T(0.00001))
+    data_t dx = _p2.template get<0>() - _p1.template get<0>();
+    if (std::abs(dx) < data_t(0.00001))
     {
       return false; // Current segment is horizontal => non intersection.
     }
 
-    T k = (x - _p1.x()) / dx; 
+    data_t k = (x - _p1.template get<0>()) / dx; 
     if (k < 0 || k > 1)
     {
       return false;
     }
 
-    T y = _p1.y() + k * (_p2.y() - _p1.y());
+    data_t y = _p1.template get<1>() + k * (_p2.template get<1>() - _p1.template get<1>());
     if (y < y_inf || y > y_sup)
     {
       return false;
@@ -204,45 +204,45 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool segment<T>::intersect_segment(const segment<T> & segment) const
+  template <typename data_t>
+  bool segment<data_t>::intersect_segment(const segment<data_t> & segment) const
   {
-    ggo::set2<T> intersect;
+    ggo::pos2<data_t> intersect;
     return intersect_segment(segment, intersect);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool segment<T>::intersect_segment(const segment<T> & segment, ggo::set2<T> & intersect) const
+  template <typename data_t>
+  bool segment<data_t>::intersect_segment(const segment<data_t> & segment, ggo::pos2<data_t> & intersect) const
   {
-    T dx1 = _p2.x() - _p1.x();
-    T dy1 = _p2.y() - _p1.y();
-    T dx2 = segment._p2.x() - segment._p1.x();
-    T dy2 = segment._p2.y() - segment._p1.y();
+    data_t dx1 = _p2.template get<0>() - _p1.template get<0>();
+    data_t dy1 = _p2.template get<1>() - _p1.template get<1>();
+    data_t dx2 = segment._p2.template get<0>() - segment._p1.template get<0>();
+    data_t dy2 = segment._p2.template get<1>() - segment._p1.template get<1>();
 
-    T det = dx1 * dy2 - dy1 * dx2;
-    if (std::fabs(det) < T(0.00001))
+    data_t det = dx1 * dy2 - dy1 * dx2;
+    if (std::fabs(det) < data_t(0.00001))
     {
       return false;
     }
 
-    T dx3 = _p1.x() - segment._p1.x();
-    T dy3 = _p1.y() - segment._p1.y();
+    data_t dx3 = _p1.template get<0>() - segment._p1.template get<0>();
+    data_t dy3 = _p1.template get<1>() - segment._p1.template get<1>();
 
-    T r1 = (dy3 * dx2 - dx3 * dy2) / det;
+    data_t r1 = (dy3 * dx2 - dx3 * dy2) / det;
     if ((r1 < 0) || (r1 > 1))
     {
       return false;
     }
 
-    T r2 = (dy3 * dx1 - dx3 * dy1) / det;
+    data_t r2 = (dy3 * dx1 - dx3 * dy1) / det;
     if ((r2 < 0) || (r2 > 1))
     {
       return false;
     }
 
-    intersect.x() = _p1.x() + r1 * dx1; 
-    intersect.y() = _p1.y() + r1 * dy1; 
+    intersect.template get<0>() = _p1.template get<0>() + r1 * dx1; 
+    intersect.template get<1>() = _p1.template get<1>() + r1 * dy1; 
 
     return true;
   }

@@ -13,14 +13,14 @@ GGO_TEST(morphology, dilatation)
   ggo::gray_image_buffer_uint8 image_in(width, height, 0.f);
   ggo::gray_image_buffer_uint8 image_out(width, height, 0.f);
   
-  ggo::paint(image_in, std::make_shared<ggo::rect_float>(20, 30, 50, 40), 1.0f);
+  ggo::paint(image_in, std::make_shared<ggo::rect_float>(20.f, 30.f, 50.f, 40.f), 1.0f);
   
-  ggo::dilatation_disc(image_in.get_buffer(), image_out.get_buffer(),
+  ggo::dilatation_disc(image_in.data(), image_out.data(),
                        width, height, 7.f);
   
   ggo::rgb_image_buffer_uint8 rgb_image(width, height);
   rgb_image.from(image_out);
 
-  ggo::save_bmp("dilatation.bmp", rgb_image.get_buffer(), rgb_image.get_width(), rgb_image.get_height());
+  ggo::save_bmp("dilatation.bmp", rgb_image.data(), rgb_image.get_width(), rgb_image.get_height());
 }
 

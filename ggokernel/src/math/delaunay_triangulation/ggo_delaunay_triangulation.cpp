@@ -37,7 +37,7 @@ namespace ggo
   }
 
   template<class T>
-  using edge = ggo::link<const ggo::set2<T> *>;
+  using edge = ggo::link<const ggo::pos2<T> *>;
 } 
 
 namespace
@@ -76,12 +76,12 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  T compute_angle(const ggo::set2<T> * common, const ggo::set2<T> * pt1, const ggo::set2<T> * pt2)
+  T compute_angle(const ggo::pos2<T> * common, const ggo::pos2<T> * pt1, const ggo::pos2<T> * pt2)
   {
-    T dx1 = pt1->x() - common->x();
-    T dy1 = pt1->y() - common->y();
-    T dx2 = pt2->x() - common->x();
-    T dy2 = pt2->y() - common->y();
+    T dx1 = pt1->template get<0>() - common->template get<0>();
+    T dy1 = pt1->template get<1>() - common->template get<1>();
+    T dx2 = pt2->template get<0>() - common->template get<0>();
+    T dy2 = pt2->template get<1>() - common->template get<1>();
 
     T len1 = std::sqrt(dx1 * dx1 + dy1 * dy1);
     T len2 = std::sqrt(dx2 * dx2 + dy2 * dy2);
@@ -157,8 +157,8 @@ namespace
     GGO_ASSERT((triangle2._v1 == common_edge._v1) || (triangle2._v2 == common_edge._v1) || (triangle2._v3 == common_edge._v1));
     GGO_ASSERT((triangle2._v1 == common_edge._v2) || (triangle2._v2 == common_edge._v2) || (triangle2._v3 == common_edge._v2));
 
-    const ggo::set2<T> * opposite1 = NULL;
-    const ggo::set2<T> * opposite2 = NULL;
+    const ggo::pos2<T> * opposite1 = NULL;
+    const ggo::pos2<T> * opposite2 = NULL;
 
     // Build new triangles.
     if ((triangle1._v1 != common_edge._v1) && (triangle1._v1 != common_edge._v2)) { opposite1 = triangle1._v1; }
@@ -267,13 +267,13 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  void add_new_vertex(const ggo::set2<T> * new_vertex, std::list<ggo::delaunay_triangle<T>> & triangles, std::vector<const ggo::set2<T> *> & vertices)
+  void add_new_vertex(const ggo::pos2<T> * new_vertex, std::list<ggo::delaunay_triangle<T>> & triangles, std::vector<const ggo::pos2<T> *> & vertices)
   {
     // First pass to check if the new vertex is not too close of another vertex.
-    typename std::vector<const ggo::set2<T> *>::iterator it_vertex;
+    typename std::vector<const ggo::pos2<T> *>::iterator it_vertex;
     for (it_vertex = vertices.begin(); it_vertex != vertices.end(); ++it_vertex)
     {
-      const ggo::set2<T> * vertex = *it_vertex;
+      const ggo::pos2<T> * vertex = *it_vertex;
     
       // If the new point is too close from a point, discard it. 
       if (ggo::distance(*new_vertex, *vertex) < EPSILON)
@@ -295,9 +295,9 @@ namespace
       ggo::segment<T> s12(*(it_triangle->_v1), *(it_triangle->_v2));
       ggo::segment<T> s23(*(it_triangle->_v2), *(it_triangle->_v3));
       ggo::segment<T> s13(*(it_triangle->_v1), *(it_triangle->_v3));
-      T d12 = s12.dist_to_point(new_vertex->x(), new_vertex->y());
-      T d23 = s23.dist_to_point(new_vertex->x(), new_vertex->y());
-      T d13 = s13.dist_to_point(new_vertex->x(), new_vertex->y());
+      T d12 = s12.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
+      T d23 = s23.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
+      T d13 = s13.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
 
       ggo::edge<T> current_edge(nullptr, nullptr);
       ggo::edge<T> edge1(nullptr, nullptr);
@@ -376,14 +376,14 @@ namespace
     for (it_triangle = triangles.begin(); it_triangle != triangles.end(); ++it_triangle)
     {
       ggo::polygon2d<T> triangle;
-      const ggo::set2<T> * v1 = it_triangle->_v1;
-      const ggo::set2<T> * v2 = it_triangle->_v2;
-      const ggo::set2<T> * v3 = it_triangle->_v3;
+      const ggo::pos2<T> * v1 = it_triangle->_v1;
+      const ggo::pos2<T> * v2 = it_triangle->_v2;
+      const ggo::pos2<T> * v3 = it_triangle->_v3;
       triangle.add_point(*v1);
       triangle.add_point(*v2);
       triangle.add_point(*v3);
 
-      if (triangle.is_point_inside(new_vertex->x(), new_vertex->y()) == true)
+      if (triangle.is_point_inside(new_vertex->template get<0>(), new_vertex->template get<1>()) == true)
       {
         // Add new triangles.
         ggo::delaunay_triangle<T> triangle1(it_triangle->_v1, it_triangle->_v2, new_vertex);
@@ -413,7 +413,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  std::list<ggo::delaunay_triangle<T>> delaunay_triangulation_T(const std::vector<ggo::set2<T>> & input_points)
+  std::list<ggo::delaunay_triangle<T>> delaunay_triangulation_T(const std::vector<ggo::pos2<T>> & input_points)
   {
     if (input_points.size() < 2)
     {
@@ -421,26 +421,26 @@ namespace
     }
     
     std::list<ggo::delaunay_triangle<T>> output_triangles;
-    std::vector<const ggo::set2<T> *> vertices;
+    std::vector<const ggo::pos2<T> *> vertices;
     
     // Add bounding triangles so that they overlap all the points.
-    T min_x = input_points[0].x();
-    T min_y = input_points[0].y();
-    T max_x = input_points[0].x();
-    T max_y = input_points[0].y();
+    T min_x = input_points[0].template get<0>();
+    T min_y = input_points[0].template get<1>();
+    T max_x = input_points[0].template get<0>();
+    T max_y = input_points[0].template get<1>();
     for (size_t i = 1; i < input_points.size(); ++i)
     {
-      min_x = std::min(min_x, input_points[i].x());
-      min_y = std::min(min_y, input_points[i].y());
-      max_x = std::max(max_x, input_points[i].x());
-      max_y = std::max(max_y, input_points[i].y());
+      min_x = std::min(min_x, input_points[i].template get<0>());
+      min_y = std::min(min_y, input_points[i].template get<1>());
+      max_x = std::max(max_x, input_points[i].template get<0>());
+      max_y = std::max(max_y, input_points[i].template get<1>());
     }
     T range_x = max_x - min_x;
     T range_y = max_y - min_y;
-    ggo::set2<T> v1(min_x - range_x, min_y - range_y);
-    ggo::set2<T> v2(min_x - range_x, max_y + range_y);
-    ggo::set2<T> v3(max_x + range_x, max_y + range_y);
-    ggo::set2<T> v4(max_x + range_x, min_y - range_y);
+    ggo::pos2<T> v1(min_x - range_x, min_y - range_y);
+    ggo::pos2<T> v2(min_x - range_x, max_y + range_y);
+    ggo::pos2<T> v3(max_x + range_x, max_y + range_y);
+    ggo::pos2<T> v4(max_x + range_x, min_y - range_y);
     
     vertices.push_back(&v1);
     vertices.push_back(&v2);
@@ -453,7 +453,7 @@ namespace
     // First we build a consistant triangle list.
     for (size_t i = 0; i < input_points.size(); ++i)
     {
-      const ggo::set2<T> & v = input_points[i];
+      const ggo::pos2<T> & v = input_points[i];
       
       add_new_vertex(&v, output_triangles, vertices);
     }
@@ -494,13 +494,13 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::list<delaunay_triangle<double>> delaunay_triangulation(const std::vector<ggo::point2d_double> & input_points)
+  std::list<delaunay_triangle<double>> delaunay_triangulation(const std::vector<ggo::pos2d> & input_points)
   {
     return delaunay_triangulation_T<double>(input_points);
   }
 
   //////////////////////////////////////////////////////////////
-  std::list<delaunay_triangle<float>> delaunay_triangulation(const std::vector<ggo::point2d_float> & input_points)
+  std::list<delaunay_triangle<float>> delaunay_triangulation(const std::vector<ggo::pos2f> & input_points)
   {
     return delaunay_triangulation_T<float>(input_points);
   }

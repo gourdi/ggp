@@ -2,7 +2,7 @@
 #define __GGO_SET3__
 
 #include <ggo_kernel.h>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 
 //////////////////////////////////////////////////////////////////
 namespace ggo
@@ -54,9 +54,9 @@ namespace ggo
 
     void            build_basis(set3 & b1, set3 & b2) const;
     
-    ggo::set2<T>    xy() const { return ggo::set2<T>(_x, _y); }
-    ggo::set2<T>    yz() const { return ggo::set2<T>(_y, _z); }
-    ggo::set2<T>    xz() const { return ggo::set2<T>(_x, _z); }
+    ggo::vec2<T>    xy() const { return ggo::vec2<T>(_x, _y); }
+    ggo::vec2<T>    yz() const { return ggo::vec2<T>(_y, _z); }
+    ggo::vec2<T>    xz() const { return ggo::vec2<T>(_x, _z); }
 
   private:
 

@@ -17,9 +17,9 @@ void ggo_lagaude_animation_artist::init_sub()
 	for (int i = 0; i < 100; ++i)
 	{
 		ggo_bkgd_disc bkgd_disc;
-		bkgd_disc._pos.x() = ggo::rand_float(-1, 3);
-		bkgd_disc._pos.y() = ggo::rand_float(-1, 3);
-		bkgd_disc._vel = ggo::vector2d_float::from_polar(ggo::rand_float(0, 2 * ggo::PI<float>()), 0.001f);
+		bkgd_disc._pos.get<0>() = ggo::rand_float(-1, 3);
+		bkgd_disc._pos.get<1>() = ggo::rand_float(-1, 3);
+		bkgd_disc._vel = ggo::from_polar(ggo::rand_float(0, 2 * ggo::PI<float>()), 0.001f);
 		bkgd_disc._radius = 0.75;
 		
 		_bkgd_discs.push_back(bkgd_disc);
@@ -29,7 +29,7 @@ void ggo_lagaude_animation_artist::init_sub()
 	for (int i = 0; i < 1000; ++i)
 	{
 		float scale = ggo::rand_float(0.5, 1);
-		ggo::point2d_float pos(ggo::rand_float(-2, 2), ggo::rand_float(-0.1f, 1.1f));
+		ggo::pos2f pos(ggo::rand_float(-2, 2), ggo::rand_float(-0.1f, 1.1f));
 		
 		ggo_sinuoid_path * path = new ggo_sinuoid_path();
 		path->_amplitude = ggo::rand_float(0.01f, 0.02f);
@@ -62,8 +62,8 @@ bool ggo_lagaude_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 
 	for (auto & bkgd_disc : _bkgd_discs)
 	{
-		float x = get_render_width() * bkgd_disc._pos.x();
-		float y = get_render_height() * bkgd_disc._pos.y();
+		float x = get_render_width() * bkgd_disc._pos.get<0>();
+		float y = get_render_height() * bkgd_disc._pos.get<1>();
 		float radius = get_render_min_size() * bkgd_disc._radius;
 		
     ggo::paint(image_buffer, std::make_shared<ggo::disc_float>(x, y, radius), ggo::color::BLACK, 0.1f);
@@ -75,7 +75,7 @@ bool ggo_lagaude_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	if ((frame_index % 10 == 0) && (frame_index < 350))
 	{
 		float scale = ggo::rand_float(0.5, 1);
-		ggo::point2d_float pos(ggo::rand_float(), ggo::rand_float());
+		ggo::pos2f pos(ggo::rand_float(), ggo::rand_float());
 		ggo_path_abc * path = new ggo_linear_path(scale * ggo::rand_float(0.002f, 0.005f), ggo::rand_float(0, 2 * ggo::PI<float>()));
 		
 		insert_scale_animator(new ggo_seed(pos, path, scale, _hue));
@@ -129,7 +129,7 @@ void ggo_lagaude_animation_artist::ggo_angle_generator::get_random_data(float & 
 }
 
 //////////////////////////////////////////////////////////////
-ggo_lagaude_animation_artist::ggo_seed::ggo_seed(const ggo::point2d_float & pos, ggo_path_abc * path, float scale, float hue)
+ggo_lagaude_animation_artist::ggo_seed::ggo_seed(const ggo::pos2f & pos, ggo_path_abc * path, float scale, float hue)
 :
 ggo_scale_animate_abc(pos, path, scale)
 {
@@ -140,7 +140,7 @@ ggo_scale_animate_abc(pos, path, scale)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos)
+bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {
 	// Create the particles if not dead.
 	float opacity = 1;
@@ -155,7 +155,7 @@ bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uin
 		{
 			float angle = _angle_generators(i).update(1) + 2 * ggo::PI<float>() * i / _angle_generators.get_count();
 
-			ggo_particle * particle = new ggo_particle(pos + ggo::point2d_float::from_polar(angle, 0.02f * _scale), new ggo_linear_path(0.02f * _scale, angle));
+			ggo_particle * particle = new ggo_particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo_linear_path(0.02f * _scale, angle));
 			particle->_angle = angle;
 			particle->_dangle = _dangle;
 			particle->_radius = 0.025f * _scale;
@@ -173,20 +173,20 @@ bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uin
 }
 
 //////////////////////////////////////////////////////////////
-ggo_lagaude_animation_artist::ggo_particle::ggo_particle(const ggo::point2d_float & pos, ggo_linear_path * path)
+ggo_lagaude_animation_artist::ggo_particle::ggo_particle(const ggo::pos2f & pos, ggo_linear_path * path)
 :
 ggo_path_animate_abc(pos, path)
 {
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_lagaude_animation_artist::ggo_particle::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos)
+bool ggo_lagaude_animation_artist::ggo_particle::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {
-	ggo::point2d_float p1 = map_fit(ggo::point2d_float::from_polar(_angle, _radius), 0, 1, width, height);
-	ggo::point2d_float p2 = map_fit(ggo::point2d_float::from_polar(_angle + 2 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
-	ggo::point2d_float p3 = map_fit(ggo::point2d_float::from_polar(_angle + 4 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
+	ggo::pos2f p1 = map_fit(ggo::from_polar(_angle, _radius), 0, 1, width, height);
+	ggo::pos2f p2 = map_fit(ggo::from_polar(_angle + 2 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
+	ggo::pos2f p3 = map_fit(ggo::from_polar(_angle + 4 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
     
-  ggo::vector2d_float disp(pos.x() * width, pos.y() * height);
+  ggo::vec2f disp(pos.get<0>() * width, pos.get<1>() * height);
   p1 += disp;
   p2 += disp;
   p3 += disp;    
@@ -207,14 +207,14 @@ bool ggo_lagaude_animation_artist::ggo_particle::update(uint8_t * output_buffer,
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_lagaude_animation_artist::ggo_dust::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos)
+bool ggo_lagaude_animation_artist::ggo_dust::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {
-	if (pos.x() > 1.1)
+	if (pos.get<0>() > 1.1)
   {
     return false;
   }
 
-  ggo::point2d_float center(width * pos.x(), height * pos.y());
+  ggo::pos2f center(width * pos.get<0>(), height * pos.get<1>());
   float disc_radius = std::min(width, height) * _radius;
   float disc_width = std::min(width, height) * _width;
 

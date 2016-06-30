@@ -14,7 +14,7 @@ private:
 	struct ggo_seed_positions
 	{
 		float _left, _right, _top, _bottom;
-		std::vector<ggo::point2d_float> _points;
+		std::vector<ggo::pos2f> _points;
 	};
 
 private:

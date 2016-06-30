@@ -30,14 +30,14 @@ private:
   // FOG
   struct ggo_fog : public ggo_rah_item
   {
-    struct ggo_position_interpolator : public ggo::random_interpolator_abc<ggo::point2d_float, float>
+    struct ggo_position_interpolator : public ggo::random_interpolator_abc<ggo::pos2f, float>
     {
       ggo_position_interpolator(int width, int height) : _width(width), _height(height) {}
     
-      void get_random_data(ggo::point2d_float & data, float & dt) override
+      void get_random_data(ggo::pos2f & data, float & dt) override
       {
-        data.x() = ggo::rand_float(-0.2f * _width, 1.2f * _width);
-        data.y() = ggo::rand_float(-0.2f * _height, 1.2f * _height);
+        data.get<0>() = ggo::rand_float(-0.2f * _width, 1.2f * _width);
+        data.get<1>() = ggo::rand_float(-0.2f * _height, 1.2f * _height);
         dt = ggo::rand_float(50, 100);
       }
       
@@ -53,7 +53,7 @@ private:
     bool  is_fog() const override { return true; }
     
     ggo_position_interpolator _position_interpolator;
-    ggo::point2d_float        _position;
+    ggo::pos2f                _position;
   };
 
   //////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ private:
     virtual void fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & shapes, int min_size) const = 0;
     
     ggo_vertical_offset_interpolator  _vertical_offset_interpolator;
-    ggo::point2d_float                _pos;
+    ggo::pos2f                        _pos;
     ggo::color                        _color;
     float                             _angle = 0;
   };

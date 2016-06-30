@@ -33,20 +33,20 @@ class ggo_position_animate_abc : public ggo_animate_abc
 {
 public:
 	
-                      ggo_position_animate_abc(const ggo::point2d_float & pos, int start_offset = 0) : ggo_animate_abc(start_offset), _pos(pos) {};
+                      ggo_position_animate_abc(const ggo::pos2f & pos, int start_offset = 0) : ggo_animate_abc(start_offset), _pos(pos) {};
 
-	ggo::point2d_float	get_position() const { return _pos; }
-  void            	  set_position(const ggo::point2d_float & pos) { _pos = pos; }
-  void            	  set_position(float x, float y) { _pos.x() = x; _pos.y() = y; }
+	        ggo::pos2f	get_position() const { return _pos; }
+          void        set_position(const ggo::pos2f & pos) { _pos = pos; }
+          void        set_position(float x, float y) { _pos.get<0>() = x; _pos.get<1>() = y; }
 	
 private:
 	
           bool			  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter) override;
-	virtual bool        update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) = 0;
+	virtual bool        update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) = 0;
 	
 private:
 	
-	ggo::point2d_float	_pos;
+	ggo::pos2f	_pos;
 };
 
 //////////////////////////////////////////////////////////////
@@ -55,22 +55,22 @@ class ggo_path_animate_abc : public ggo_animate_abc
 {
 public:
 	
-                              ggo_path_animate_abc(const ggo::point2d_float & pos, ggo_path_abc * path, int start_offset = 0) : ggo_animate_abc(start_offset), _pos(pos), _path(path) {};
-	virtual		   			         ~ggo_path_animate_abc() { delete _path; }
+                      ggo_path_animate_abc(const ggo::pos2f & pos, ggo_path_abc * path, int start_offset = 0) : ggo_animate_abc(start_offset), _pos(pos), _path(path) {};
+	virtual		   			 ~ggo_path_animate_abc() { delete _path; }
 
-          ggo::point2d_float	get_position() const { return _pos; };
-          void            	  set_position(const ggo::point2d_float & pos) { _pos = pos; };
-          void            	  set_position(float x, float y) { _pos.x() = x; _pos.y() = y; };
+          ggo::pos2f  get_position() const { return _pos; };
+          void        set_position(const ggo::pos2f & pos) { _pos = pos; };
+          void        set_position(float x, float y) { _pos.get<0>() = x; _pos.get<1>() = y; };
 	
 private:
 	
-          bool			          update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter) override;
-	virtual	bool                update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) = 0;
+          bool			  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter) override;
+	virtual	bool        update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) = 0;
 
 private:
 	
-	ggo::point2d_float	_pos;
-	ggo_path_abc *		  _path;
+	ggo::pos2f	    _pos;
+	ggo_path_abc *	_path;
 };
 
 #endif

@@ -88,26 +88,26 @@ void ggo_smoke_animation_artist::init_sub()
 		{
 		case 0:
 			// Top.
-			source._circle.center().x() = center_x;
-			source._circle.center().y() = center_y + 0.25 * get_render_min_size();
+			source._circle.center().get<0>() = center_x;
+			source._circle.center().get<1>() = center_y + 0.25 * get_render_min_size();
 			source._angle = -ggo::PI<float>() / 2;
 			break;
 		case 1:
 			// Right.
-			source._circle.center().x() = center_x + 0.25 * get_render_min_size();
-			source._circle.center().y() = center_y;
+			source._circle.center().get<0>() = center_x + 0.25 * get_render_min_size();
+			source._circle.center().get<1>() = center_y;
 			source._angle = ggo::PI<float>();
 			break;
 		case 2:
 			// Bottom.
-			source._circle.center().x() = center_x;
-			source._circle.center().y() = center_y - 0.25 * get_render_min_size();
+			source._circle.center().get<0>() = center_x;
+			source._circle.center().get<1>() = center_y - 0.25 * get_render_min_size();
 			source._angle = ggo::PI<float>() / 2;
 			break;
 		case 3:
 			// Left.
-			source._circle.center().x() = center_x - 0.25 * get_render_min_size();
-			source._circle.center().y() = center_y;
+			source._circle.center().get<0>() = center_x - 0.25 * get_render_min_size();
+			source._circle.center().get<1>() = center_y;
 			source._angle = 0;
 			break;
 		}
@@ -170,7 +170,7 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 			{
 				if (source._density > 0)
 				{
-					double dist = ggo::distance(double(x), double(y), source._circle.center().x(), source._circle.center().y());
+					double dist = ggo::distance(double(x), double(y), source._circle.center().get<0>(), source._circle.center().get<1>());
 					if (dist < source._circle.radius())
 					{
 						_density_cur->operator()(x, y) = std::min(_density_cur->operator()(x, y) + source._density, 1.0);

@@ -23,7 +23,7 @@ void ggo_kanji_artist::init()
 	init_attractor();
 
 	// Create the particles.
-	ggo::point2d_float pos(ggo::rand_float(0.3f, 0.7f), ggo::rand_float(0.3f, 0.7f));
+	ggo::pos2f pos(ggo::rand_float(0.3f, 0.7f), ggo::rand_float(0.3f, 0.7f));
 	
 	_particles.clear();
 	
@@ -33,8 +33,8 @@ void ggo_kanji_artist::init()
 		float l = ggo::rand_float(0, 0.02f);
 		
 		ggo_particle particle;
-		particle._prv_pos = pos + ggo::vector2d_float(l * cos(a), l * sin(a));
-		particle._cur_pos = pos + ggo::vector2d_float(l * cos(a), l * sin(a));
+		particle._prv_pos = pos + ggo::vec2f(l * cos(a), l * sin(a));
+		particle._cur_pos = pos + ggo::vec2f(l * cos(a), l * sin(a));
 		_particles.push_back(particle);
 	}
 }
@@ -57,9 +57,9 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 	for (ggo_particle & particle : _particles)
 	{
 		// The further the attractor, the more the particle is attracted.
-		float dx = particle._cur_pos.x() - _attractor.x();
-		float dy = particle._cur_pos.y() - _attractor.y();
-		ggo::vector2d_float force = ggo::vector2d_float(-dx, -dy);
+		float dx = particle._cur_pos.get<0>() - _attractor.get<0>();
+		float dy = particle._cur_pos.get<1>() - _attractor.get<1>();
+		ggo::vec2f force = ggo::vec2f(-dx, -dy);
 		
 		// Clamp force.
 		float l = force.get_length();
@@ -70,10 +70,10 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 		}
 
 		// Newton formula.
-		ggo::point2d_float pos_new	= 2.0f * (particle._cur_pos) - particle._prv_pos + force;
+		ggo::pos2f pos_new	= 2.0f * (particle._cur_pos) - particle._prv_pos + force;
 
 		// Clamp the displacement.
-		ggo::vector2d_float diff = pos_new - particle._cur_pos;
+		ggo::vec2f diff = pos_new - particle._cur_pos;
 		l = diff.get_length();
 		if (l > 0.0002)
 		{ 
@@ -93,7 +93,7 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 			particle._prv_pos = particle._cur_pos;
 			float a = ggo::rand_float(0, 2 * ggo::PI<float>());
 			float l = ggo::rand_float(0.8f, 1 / 0.8f) * 0.00002f;
-			particle._cur_pos	= particle._prv_pos + ggo::vector2d_float(l * cos(a), l * sin(a));
+			particle._cur_pos	= particle._prv_pos + ggo::vec2f(l * cos(a), l * sin(a));
 		}
 		
 		init_shaker();
@@ -110,7 +110,7 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 
 	for (const auto & particle :_particles)
 	{
-		ggo::point2d_float render_pt = map_fit(particle._cur_pos, 0, 1);
+		ggo::pos2f render_pt = map_fit(particle._cur_pos, 0, 1);
 		
 		ggo::paint(buffer, get_render_width(), get_render_height(),
                std::make_shared<ggo::disc_float>(render_pt, radius),
@@ -129,6 +129,6 @@ void ggo_kanji_artist::init_shaker()
 //////////////////////////////////////////////////////////////
 void ggo_kanji_artist::init_attractor()
 {
-	_attractor = ggo::point2d_float(ggo::rand_float(), ggo::rand_float());
+	_attractor = ggo::pos2f(ggo::rand_float(), ggo::rand_float());
 	_attractor_counter = ggo::rand_int(1000, 2000);
 }

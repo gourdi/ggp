@@ -46,11 +46,11 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  inline ggo::point2d_float ease_inout(int index, int count, const ggo::point2d_float & start, const ggo::point2d_float & end)
+  inline ggo::pos2f ease_inout(int index, int count, const ggo::pos2f & start, const ggo::pos2f & end)
   {
     float t = ease_inout(index, count);
 
-    return ggo::point2d_float(start + t * (end - start));
+    return ggo::pos2f(start + t * (end - start));
   }
 }
 

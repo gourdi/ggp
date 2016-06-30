@@ -44,9 +44,9 @@ GGO_TEST(test_scene, scene3)
   renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
 
   // Overlay, to check that basis::project is working as expected.
-  ggo::point2d_float proj1 = camera.basis().project(sphere1->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::pos2f proj1 = camera.basis().project(sphere1->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
   ggo::paint(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, std::make_shared<ggo::disc_float>(proj1, 5.f), ggo::color::RED);
-  ggo::point2d_float proj2 = camera.basis().project(sphere2->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::pos2f proj2 = camera.basis().project(sphere2->center(), camera.get_aperture(), GGO_SIZE_X, GGO_SIZE_Y);
   ggo::paint(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, std::make_shared<ggo::disc_float>(proj2, 5.f), ggo::color::RED);
 
   ggo::save_bmp("scene3.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);

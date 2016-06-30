@@ -1,6 +1,9 @@
 #ifndef __GGO_VEC__
 #define __GGO_VEC__
 
+#include <ostream>
+#include <ggo_kernel.h>
+
 //////////////////////////////////////////////////////////////////
 // Declaration.
 namespace ggo
@@ -62,10 +65,32 @@ namespace ggo
 
     void                      flip();
 
+    template <typename... args>
+    void                      move(args... a)
+    {
+      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      ggo::add(_coords, a...);
+    }
+
   private:
 
     data_t  _coords[n_dims];
   };
+}
+
+//////////////////////////////////////////////////////////////////
+// Aliases.
+namespace ggo
+{
+  template <typename data_t> using pos2 = vec<data_t, 2>;
+  template <typename data_t> using vec2 = vec<data_t, 2>;
+  using pos2f = vec<float, 2>;
+  using vec2f = vec<float, 2>;
+  using pos2d = vec<double, 2>;
+  using vec2d = vec<double, 2>;
+
+  template <typename data_t> using pos3 = vec<data_t, 3>;
+  template <typename data_t> using vec3 = vec<data_t, 3>;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -85,7 +110,7 @@ namespace ggo
   }
 
   template <typename data_t, int n_dims>
-  std::ostream & operator<<(std::ostream & os, const  ggo::vec<data_t, n_dims> & v)
+  std::ostream & operator<<(std::ostream & os, const ggo::vec<data_t, n_dims> & v)
   {
     ggo::dump<n_dims>(v.data(), os);
     return os;
@@ -171,6 +196,18 @@ namespace ggo
   data_t ortho_dot(const ggo::vec<data_t, 2> & v1, const ggo::vec<data_t, 2> & v2)
   {
     return v1.template get<1>() * v2.template get<0>() - v1.template get<0>() * v2.template get<1>();
+  }
+
+  template <typename data_t>
+  ggo::vec<data_t, 2> from_polar(data_t angle, data_t length)
+  {
+    return ggo::vec<data_t, 2>(length * std::cos(angle), length * std::sin(angle));
+  }
+
+  template <typename data_t>
+  data_t get_angle(const ggo::vec<data_t, 2> & v)
+  {
+    return std::atan2(v.template get<1>(), v.template get<0>());
   }
 }
 

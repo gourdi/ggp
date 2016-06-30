@@ -18,12 +18,12 @@ private:
 	
 	struct ggo_fly
 	{
-		ggo::point2d_float	_cur_pos;
-		float				        _velocity;
-		float				        _current_angle;
-		float				        _target_angle;
-		float				        _hue;
-		float 				      _timer;
+		ggo::pos2f  _cur_pos;
+		float				_velocity;
+		float				_current_angle;
+		float				_target_angle;
+		float				_hue;
+		float 			_timer;
 	};
 	
   float                 _hue;

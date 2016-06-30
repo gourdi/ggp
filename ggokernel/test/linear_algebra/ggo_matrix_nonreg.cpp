@@ -107,18 +107,18 @@ GGO_TEST(matrix, diagonally_dominant)
 GGO_TEST(matrix, matrix2d)
 {
   ggo::square_matrix2d<int> m;
-  ggo::vector2d_int			    v;
+  ggo::vec2<int>            v;
   
   m(0, 0) = 5; m(0, 1) =  9;
   m(1, 0) = 2; m(1, 1) = -3;
   
-  v.x() =  2;
-  v.y() = -3;
+  v.get<0>() =  2;
+  v.get<1>() = -3;
   
   v = m * v;
   
-  GGO_CHECK(v.x() == -17);
-  GGO_CHECK(v.y() ==  13);
+  GGO_CHECK(v.get<0>() == -17);
+  GGO_CHECK(v.get<1>() ==  13);
 }
 
 /////////////////////////////////////////////////////////////////////

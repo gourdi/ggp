@@ -12,10 +12,10 @@ namespace ggo
   {
     color_type get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const override;
       
-    color_type          _value1;
-    color_type          _value2;
-    ggo::point2d_float  _pos1;
-    ggo::point2d_float  _pos2;
+    color_type  _value1;
+    color_type  _value2;
+    ggo::pos2f  _pos1;
+    ggo::pos2f  _pos2;
   };
 }
 
@@ -38,8 +38,8 @@ namespace ggo
     float x_f = global_coordinates ? x : x - bounding_rect.left();
     float y_f = global_coordinates ? y : y - bounding_rect.bottom();
 
-    ggo::vector2d_float diff1(x_f - _pos1.x(), y_f - _pos1.y());
-    ggo::vector2d_float diff2(_pos2 - _pos1);
+    ggo::vec2f diff1(x_f - _pos1.get<0>(), y_f - _pos1.get<1>());
+    ggo::vec2f diff2(_pos2 - _pos1);
       
     float dot_prod = ggo::dot(diff1, diff2);
       

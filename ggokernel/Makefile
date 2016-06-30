@@ -27,7 +27,6 @@ HEADERS=$(wildcard src/*.h) \
         $(wildcard src/rle/*.h) \
         src/math/ggo_harmonic_curve.h \
         src/math/ggo_harmonic_surface.h \
-        src/math/ggo_set2.h \
         src/math/ggo_set3.h \
         src/math/ggo_distance2d.h \
         src/math/ggo_distance3d.h \

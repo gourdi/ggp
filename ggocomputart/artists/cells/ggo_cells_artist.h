@@ -14,8 +14,8 @@ private:
 
 	void	render_bitmap(uint8_t * buffer) override;
 
-	float	compute_potential(const std::vector<ggo::point2d_float> & centers, int x, int y) const;
-	bool	paint_point(uint8_t * buffer, int x, int y, uint8_t r, uint8_t g, uint8_t b, const std::vector<ggo::point2d_float> & centers) const;
+	float	compute_potential(const std::vector<ggo::pos2f> & centers, int x, int y) const;
+	bool	paint_point(uint8_t * buffer, int x, int y, uint8_t r, uint8_t g, uint8_t b, const std::vector<ggo::pos2f> & centers) const;
 
 private:
 
@@ -30,9 +30,9 @@ private:
 		
 	private:
 		
-		ggo::point2d_float	_centers[3];
-		float				        _inv_render_width;
-		float				        _inv_render_height;
+		ggo::pos2f	_centers[3];
+		float			  _inv_render_width;
+		float			  _inv_render_height;
 	};
 	
 	struct ggo_polynom

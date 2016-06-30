@@ -53,7 +53,7 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 			{
 				for (int x2 = 0; x2 < POINTS_IN_BLOCK; ++x2)
 				{
-					cur_seed_positions._points.push_back(ggo::point2d_float(cur_seed_positions._left + x2, cur_seed_positions._bottom + y2));
+					cur_seed_positions._points.push_back(ggo::pos2f(cur_seed_positions._left + x2, cur_seed_positions._bottom + y2));
 				}
 			}
 			
@@ -77,10 +77,10 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 	while (scale > 4)
 	{
 		// Create current shape from seed.
-		const std::vector<ggo::point2d_float> & points = seed_positions[ggo::rand_int(0, static_cast<int>(seed_positions.size()) - 1)]._points;
-		ggo::vector2d_float center = points[ggo::rand_int(0, static_cast<int>(points.size()) - 1)];
-		center.x() += ggo::rand_float(-0.5f, 0.5f);
-		center.y() += ggo::rand_float(-0.5f, 0.5f);
+		const std::vector<ggo::pos2f> & points = seed_positions[ggo::rand_int(0, static_cast<int>(seed_positions.size()) - 1)]._points;
+		ggo::pos2f center = points[ggo::rand_int(0, static_cast<int>(points.size()) - 1)];
+		center.get<0>() += ggo::rand_float(-0.5f, 0.5f);
+		center.get<1>() += ggo::rand_float(-0.5f, 0.5f);
 		
 		float angle = ggo::rand_float(0, angle_amplitude);
 
@@ -88,8 +88,8 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 		const ggo::polygon2d_float & seed = counter % 2 ? seed1 : seed2;
 		for (int i = 0; i < seed.get_points_count(); ++i)
 		{
-			ggo::point2d_float point = seed.get_point(i);
-			point.rotate(angle);
+			ggo::pos2f point = seed.get_point(i);
+			point = ggo::rotate(point, angle);
 			point *= scale;
 			point += center;
 
@@ -122,10 +122,10 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 					    (bounding_rect.bottom() < seed_positions[i1]._top) && 
 					    (seed_positions[i1]._bottom < bounding_rect.top()))
 					{
-						std::vector<ggo::point2d_float> & points = seed_positions[i1]._points;
+						std::vector<ggo::pos2f> & points = seed_positions[i1]._points;
 						for (int i2 = static_cast<int>(points.size()) - 1; i2 >= 0; --i2)
 						{
-							if (polygon->is_point_inside(points[i2].x(), points[i2].y()) == true)
+							if (polygon->is_point_inside(points[i2].get<0>(), points[i2].get<1>()) == true)
 							{
 								points.erase(points.begin() + i2);
 							}
@@ -217,7 +217,7 @@ bool ggo_mosaic_artist::polygon_intersection(const ggo::polygon2d_float & polygo
 		{
 			ggo::segment_float s2(polygon2.get_point(i2), polygon2.get_point((i2 + 1) % polygon2.get_points_count()));
 			
-			ggo::point2d_float intersection;
+			ggo::pos2f intersection;
 			if (s1.intersect_segment(s2, intersection) == true)
 			{
 				return true;
@@ -229,8 +229,8 @@ bool ggo_mosaic_artist::polygon_intersection(const ggo::polygon2d_float & polygo
 	bool all_points_inside = true;
 	for (int i = 0; i < polygon1.get_points_count(); ++i)
 	{
-		const ggo::point2d_float & p1 = polygon1.get_point(i);
-		if (polygon2.is_point_inside(p1.x(), p1.y()) == false)
+		const ggo::pos2f & p1 = polygon1.get_point(i);
+		if (polygon2.is_point_inside(p1.get<0>(), p1.get<1>()) == false)
 		{
 			all_points_inside = false;
 			break;
@@ -244,8 +244,8 @@ bool ggo_mosaic_artist::polygon_intersection(const ggo::polygon2d_float & polygo
 	all_points_inside = true;
 	for (int i = 0; i < polygon2.get_points_count(); ++i)
 	{
-		const ggo::point2d_float & p2 = polygon2.get_point(i);
-		if (polygon1.is_point_inside(p2.x(), p2.y()) == false)
+		const ggo::pos2f & p2 = polygon2.get_point(i);
+		if (polygon1.is_point_inside(p2.get<0>(), p2.get<1>()) == false)
 		{
 			all_points_inside = false;
 			break;

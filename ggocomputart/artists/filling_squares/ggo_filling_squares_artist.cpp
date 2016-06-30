@@ -11,8 +11,8 @@ void ggo_filling_squares_artist::build_squares(int render_width, int render_heig
 	
 	hue = ggo::rand_float();
 	
-	ggo::point2d_float center(static_cast<float>(render_width) / 2.f, static_cast<float>(render_height) / 2.f);
-	std::vector<ggo::point2d_float> centers;
+	ggo::pos2f center(static_cast<float>(render_width) / 2.f, static_cast<float>(render_height) / 2.f);
+	std::vector<ggo::pos2f> centers;
 	centers.push_back(center);
 	
 	for (int i = 0; i < COUNT; ++i)
@@ -23,12 +23,12 @@ void ggo_filling_squares_artist::build_squares(int render_width, int render_heig
 		int index = ggo::rand_int(0, static_cast<int>(centers.size()) - 1);
 		multi_square._pos = centers[index];
 
-		ggo::point2d_float new_center(centers[index]);
-		new_center.x() += ggo::rand_float(-range, range);
-		new_center.y() += ggo::rand_float(-range, range);
+		ggo::pos2f new_center(centers[index]);
+		new_center.get<0>() += ggo::rand_float(-range, range);
+		new_center.get<1>() += ggo::rand_float(-range, range);
 		
-		if (new_center.x() >= 0 && new_center.x() < render_width &&
-			  new_center.y() >= 0 && new_center.y() < render_height)
+		if (new_center.get<0>() >= 0 && new_center.get<0>() < render_width &&
+			  new_center.get<1>() >= 0 && new_center.get<1>() < render_height)
 		{
 			centers.push_back(new_center);
 

@@ -15,8 +15,8 @@ public:
 
   struct ggo_opacity_point
   {
-    ggo::point2d_float  _pos;
-    float               _opacity;
+    ggo::pos2f  _pos;
+    float       _opacity;
   };
 
 private:
@@ -49,7 +49,7 @@ private:
     ggo_random_angle_interpolator                 _angle_interpolator;
     ggo_random_angle_interpolator                 _subangle_interpolator;
     ggo_random_width_interpolator                 _width_interpolator;
-    ggo::point2d_float                            _prv_pos;
+    ggo::pos2f                                    _prv_pos;
     float                                         _prv_subangle;
     float                                         _prv_width;
     float                                         _speed;

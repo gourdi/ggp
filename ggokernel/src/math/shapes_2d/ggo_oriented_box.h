@@ -7,39 +7,39 @@
 
 namespace ggo
 {
-  template <typename T>
-  class oriented_box : public affine_shape2d_abc<T>, public samplable_shape2d_abc<T>
+  template <typename data_t>
+  class oriented_box : public affine_shape2d_abc<data_t>, public samplable_shape2d_abc<data_t>
   {
   public:
 
-    using affine_shape2d_abc<T>::rotate;
-    using affine_shape2d_abc<T>::move;
-    using samplable_shape2d_abc<T>::is_point_inside;
+    using affine_shape2d_abc<data_t>::rotate;
+    using affine_shape2d_abc<data_t>::move;
+    using samplable_shape2d_abc<data_t>::is_point_inside;
 
-                              oriented_box(ggo::set2<T> pos, ggo::set2<T> dir, T size1, T size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
+                                    oriented_box(ggo::pos2<data_t> pos, ggo::pos2<data_t> dir, data_t size1, data_t size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
 
-    const ggo::set2<T> &      dir() const { return _dir; }
-    ggo::set2<T>              dir2() const { return ggo::set2<T>(-_dir.y(), _dir.x()); }
+    const ggo::pos2<data_t> &       dir() const { return _dir; }
+    ggo::pos2<data_t>               dir2() const { return ggo::pos2<data_t>(-_dir.template get<1>(), _dir.template get<0>()); }
 
-    T                         size1() const { return _size1; }
-    T                         size2() const { return _size2; }
+    data_t                          size1() const { return _size1; }
+    data_t                          size2() const { return _size2; }
 
-    ggo::set2<T>              operator[](int i) const;
+    ggo::pos2<data_t>               operator[](int i) const;
 
-    std::vector<ggo::set2<T>> get_points() const;
+    std::vector<ggo::pos2<data_t>>  get_points() const;
 
     // Interfaces.
-    void                      move(T dx, T dy) override { _pos.x() += dx; _pos.y() += dy; }
-    void                      rotate(T angle, const ggo::set2<T> & center) override;
-    ggo::set2<T>              get_center() const override { return _pos; }
-    bool                      is_point_inside(T x, T y) const override;
+    void                            move(data_t dx, data_t dy) override { _pos.move(dx, dy); }
+    void                            rotate(data_t angle, const ggo::pos2<data_t> & center) override;
+    ggo::pos2<data_t>               get_center() const override { return _pos; }
+    bool                            is_point_inside(data_t x, data_t y) const override;
 
   private:
 
-    ggo::set2<T> _pos;
-    ggo::set2<T> _dir;
-    T            _size1;
-    T            _size2;
+    ggo::pos2<data_t> _pos;
+    ggo::pos2<data_t> _dir;
+    data_t            _size1;
+    data_t            _size2;
   };
 }
 
@@ -47,8 +47,8 @@ namespace ggo
 // I/O operators.
 namespace ggo
 {
-  template <typename T>
-  std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<T> & box)
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<data_t> & box)
   {
     auto points = box.get_points();
     os << "(" << points[0] << "; " << points[1] << "; " << points[2] << "; " << points[3] << ")";

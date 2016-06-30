@@ -10,7 +10,7 @@ int main(int argc, const char ** argv)
   std::ofstream ofs("best_candidate.txt");
   for (const auto & point : points)
   {
-    ofs << "    {" << point.x() << "f, " << point.y() << "f}," << std::endl;
+    ofs << "    {" << point.get<0>() << "f, " << point.get<1>() << "f}," << std::endl;
   }
 }
 

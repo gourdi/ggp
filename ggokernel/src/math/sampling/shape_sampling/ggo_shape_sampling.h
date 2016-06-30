@@ -7,7 +7,7 @@
 namespace ggo
 {
   template <typename T>
-  ggo::set2<T> disc_sampling(T random_variable1, T random_variable2)
+  ggo::pos2<T> disc_sampling(T random_variable1, T random_variable2)
   {
     GGO_ASSERT_BTW(random_variable1, 0, 1.001);
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
@@ -15,11 +15,11 @@ namespace ggo
     T r   = std::sqrt(random_variable1);
     T phi = 2 * PI<T>() * random_variable2;
    
-    return ggo::set2<T>(std::cos(phi) * r, std::sin(phi) * r);
+    return ggo::pos2<T>(std::cos(phi) * r, std::sin(phi) * r);
   }
   
   template <typename T>
-  ggo::set2<T> disc_uniform_sampling()
+  ggo::pos2<T> disc_uniform_sampling()
   {
     return disc_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1));
   }

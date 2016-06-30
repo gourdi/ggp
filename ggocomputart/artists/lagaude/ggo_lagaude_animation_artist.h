@@ -24,9 +24,9 @@ private:
 	{
 	public:
 		
-          ggo_particle(const ggo::point2d_float & pos, ggo_linear_path * path);
+          ggo_particle(const ggo::pos2f & pos, ggo_linear_path * path);
 		
-    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
+    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
 		
 	public:
 		
@@ -49,7 +49,7 @@ private:
 	{
 	public:
   
-					ggo_scale_animate_abc(const ggo::point2d_float & pos, ggo_path_abc * path, float scale) : ggo_path_animate_abc(pos, path), _scale(scale) {};
+					ggo_scale_animate_abc(const ggo::pos2f & pos, ggo_path_abc * path, float scale) : ggo_path_animate_abc(pos, path), _scale(scale) {};
 
 		float	get_scale() const { return _scale; };
 				
@@ -63,9 +63,9 @@ private:
 	{
 	public:
 		
-          ggo_seed(const ggo::point2d_float & pos, ggo_path_abc * path, float scale, float hue);
+          ggo_seed(const ggo::pos2f & pos, ggo_path_abc * path, float scale, float hue);
                         
-    bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
+    bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
     
 	private:
 
@@ -81,9 +81,9 @@ private:
 	{
 	public:
 		
-          ggo_dust(const ggo::point2d_float & pos, ggo_path_abc * path, float scale) : ggo_scale_animate_abc(pos, path, scale) {};
+          ggo_dust(const ggo::pos2f & pos, ggo_path_abc * path, float scale) : ggo_scale_animate_abc(pos, path, scale) {};
 		
-    bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
+    bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
 		
 	public:
 
@@ -97,7 +97,7 @@ private:
 	{
 	public:
 
-		ggo::point2d_float	get_pos(int counter) override { return ggo::point2d_float(counter * _dx, _amplitude * std::sin(counter * _frequency)); };
+		ggo::pos2f	get_pos(int counter) override { return ggo::pos2f(counter * _dx, _amplitude * std::sin(counter * _frequency)); };
 		
 	public:
 
@@ -109,9 +109,9 @@ private:
 	//////////////////////////////////////////////////////////////
 	struct ggo_bkgd_disc
 	{
-		ggo::point2d_float	_pos;
-		ggo::vector2d_float	_vel;
-		float				        _radius;
+		ggo::pos2f	_pos;
+		ggo::vec2f	_vel;
+		float			  _radius;
 	};
 	
 private:

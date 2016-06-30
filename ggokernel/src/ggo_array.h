@@ -5,6 +5,32 @@
 
 namespace ggo
 {
+  // Multiply all the values of a buffer.
+  namespace array_helpers
+  {
+    template <typename data_t, int remaining>
+    struct multiply_ptr
+    {
+      static data_t multiply(const data_t * ptr)
+      {
+        static_assert(remaining >= 2, "error");
+        return multiply_ptr<data_t, remaining - 1>::multiply(ptr) * ptr[remaining - 1];
+      }
+    };
+
+    template <typename data_t>
+    struct multiply_ptr<data_t, 1>
+    {
+      static data_t multiply(const data_t * ptr)
+      {
+        return ptr[0];
+      }
+    };
+  }
+}
+
+namespace ggo
+{
   template <typename data_t, int n_dims>
   class array
   {
@@ -27,7 +53,7 @@ namespace ggo
     array(const array<data_t, n_dims> & rhs)
     {
       int count = rhs.get_count();
-      copy_array<n_dims>::copy(_dimensions, rhs._dimensions);
+      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
       _buffer = new data_t[count];
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
     }
@@ -35,7 +61,7 @@ namespace ggo
     // Move constructor.
     array(array<data_t, n_dims> && rhs)
     {
-      copy_array<n_dims>::copy(_dimensions, rhs._dimensions);
+      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
@@ -55,7 +81,7 @@ namespace ggo
     {
       delete _buffer;
 
-      copy_array<n_dims>::copy(_dimensions, rhs._dimensions);
+      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
@@ -74,7 +100,7 @@ namespace ggo
     // Returns the full number of elements inside the array.
     int get_count() const
     {
-      return multiply_ptr<n_dims, n_dims>::multiply(_dimensions);
+      return array_helpers::multiply_ptr<int, n_dims>::multiply(_dimensions);
     }
 
     // Resizes the current array. Current data is lost.
@@ -148,54 +174,10 @@ namespace ggo
     // Fill the array with a giben value.
     void fill(const data_t & v)
     {
-      std::fill(_buffer, _buffer + multiply_ptr<n_dims, n_dims>::multiply(_dimensions), v);
+      std::fill(_buffer, _buffer + array_helpers::multiply_ptr<int, n_dims>::multiply(_dimensions), v);
     }
 
   private:
-
-    // Copy an array into another one.
-    template <int remaining>
-    struct copy_array
-    {
-      template <typename data_t, int size>
-      static void copy(data_t(&dst)[size], const data_t(&src)[size])
-      {
-        static_assert(size > 0, "error");
-        dst[size - remaining] = src[size - remaining];
-        copy_array<remaining - 1>::copy(dst, src);
-      }
-    };
-
-    template <>
-    struct copy_array<0>
-    {
-      template <typename data_t, int size>
-      static void copy(data_t(&dst)[size], const data_t(&src)[size])
-      {
-      }
-    };
-
-    // Multiply all the values of a buffer.
-    template <int remaining, int count>
-    struct multiply_ptr
-    {
-      template <typename data_t>
-      static data_t multiply(const data_t * ptr)
-      {
-        static_assert(count >= 2, "error");
-        return ptr[count - remaining] * multiply_ptr<remaining - 1, count>::multiply(ptr);
-      }
-    };
-
-    template <int count>
-    struct multiply_ptr<1, count>
-    {
-      template <typename data_t>
-      static data_t multiply(const data_t * ptr)
-      {
-        return ptr[count - 1];
-      }
-    };
 
     // Set-up array data members. The trick is that the specialized version that handles the stop case
     // has 2 methods : one to just just the process once all dimensions parameters have been consuped, 
@@ -203,7 +185,7 @@ namespace ggo
     template <int dim_remaining, int dim_count>
     struct array_builder
     {
-      template <typename data_t, typename... args>
+      template <typename... args>
       static void process_args(int * dimensions, data_t ** buffer, int dim, args... a)
       {
         static_assert(dim_remaining <= dim_count, "error");
@@ -215,18 +197,18 @@ namespace ggo
     template <int dim_count>
     struct array_builder<0, dim_count>
     {
-      template <typename data_t, typename fill_t, typename... args>
+      template <typename fill_t, typename... args>
       static void process_args(int * dimensions, data_t ** buffer, const fill_t & fill_value)
       {
-        int count = multiply_ptr<dim_count, dim_count>::multiply(dimensions);
+        int count = array_helpers::multiply_ptr<int, dim_count>::multiply(dimensions);
         *buffer = new data_t[count];
         std::fill(*buffer, *buffer + count, fill_value);
       }
 
-      template <typename data_t, typename... args>
+      template <typename... args>
       static void process_args(int * dimensions, data_t ** buffer)
       {
-        int count = multiply_ptr<dim_count, dim_count>::multiply(dimensions);
+        int count = array_helpers::multiply_ptr<int, dim_count>::multiply(dimensions);
         *buffer = new data_t[count];
       }
     };
@@ -312,11 +294,11 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t, typename func_t>
-  void for_each(const ggo::array<data_t, 2> & a, func_t t)
+  void for_each(const ggo::array<data_t, 2> & a, func_t f)
   {
-    for (int y = 0; y < a.get_size<1>(); ++y)
+    for (int y = 0; y < a.template get_size<1>(); ++y)
     {
-      for (int x = 0; x < a.get_size<0>(); ++x)
+      for (int x = 0; x < a.template get_size<0>(); ++x)
       {
         f(x, y);
       }

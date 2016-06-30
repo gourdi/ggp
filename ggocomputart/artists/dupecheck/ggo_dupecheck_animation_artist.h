@@ -16,8 +16,8 @@ public:
 
 private:
 	
-	ggo::point2d_float	get_position(int frame_index);
-	ggo::color			    get_color(int frame_index);
+	ggo::pos2f	get_position(int frame_index);
+	ggo::color	get_color(int frame_index);
 	
 private:
 
@@ -30,17 +30,17 @@ private:
 		float		    _radius;
 		float		    _dradius;
 		
-                      ggo_dupecheck_animate_abc(ggo::point2d_float pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
-                bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos) override;
-        virtual	void  update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos) = 0;
+                      ggo_dupecheck_animate_abc(ggo::pos2f pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
+                bool	update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+        virtual	void  update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos) = 0;
 	};
 
 	class ggo_animate1 : public ggo_dupecheck_animate_abc
 	{
 	public:
 
-            ggo_animate1(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
-		void    update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos) override;
+            ggo_animate1(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
+		void    update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos) override;
 
 	private:
 
@@ -53,8 +53,8 @@ private:
 	{
 	public:
 
-          ggo_animate2(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
-		void	update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos) override;
+          ggo_animate2(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
+		void	update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos) override;
 
 	private:
 
@@ -65,8 +65,8 @@ private:
 	{
 	public:
 
-                ggo_animate3(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
-        void	update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos) override;
+          ggo_animate3(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size);
+     void	update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos) override;
 
 	private:
 
@@ -81,7 +81,7 @@ private:
 	
 	struct ggo_background_color
 	{
-		float 	_y;
+		float _y;
 		float	_val;
 		float	_radius;
 		float	_angle;
@@ -91,7 +91,7 @@ private:
 
 	std::vector<ggo_background_color>	_bkgd_colors;
 	ggo::color							          _colors[4];
-	ggo::point2d_float 					      _points[4];
+	ggo::pos2f 					              _points[4];
 	ggo_animator						          _animator;
 };  
 

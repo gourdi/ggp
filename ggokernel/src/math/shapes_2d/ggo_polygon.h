@@ -7,52 +7,54 @@
 
 namespace ggo
 {
-  template <typename T>
-  class polygon2d : public paintable_shape2d_abc<T>,
-                    public distancable_shape2d_abc<T>,
-                    public movable_shape2d_abc<T>,
-                    public rotatable_shape2d_abc<T>
+  template <typename data_t>
+  class polygon2d : public paintable_shape2d_abc<data_t>,
+                    public distancable_shape2d_abc<data_t>,
+                    public movable_shape2d_abc<data_t>,
+                    public rotatable_shape2d_abc<data_t>
   {
   public:
 
-                          polygon2d() {}
-                          polygon2d(int capacity) { _points.reserve(capacity); } 
-                          polygon2d(const polygon2d & polygon) = default;      
+    using samplable_shape2d_abc<data_t>::is_point_inside;
+
+                              polygon2d() {}
+                              polygon2d(int capacity) { _points.reserve(capacity); } 
+                              polygon2d(const polygon2d & polygon) = default;      
         
-    void				          add_point(T x, T y) { add_point(ggo::set2<T>(x, y)); }
-    void				          add_point(const ggo::set2<T> & point) { _points.push_back(point); }
+    void				              add_point(data_t x, data_t y) { add_point(ggo::pos2<data_t>(x, y)); }
+    void				              add_point(const ggo::pos2<data_t> & point) { _points.push_back(point); }
 
     template<typename First, typename... Rest>
-    void                  add_points(const First & point, Rest... rest) { add_point(point); add_points(rest...); }
-    void                  add_points(const ggo::set2<T> & point) { _points.push_back(point); }       
+    void                      add_points(const First & point, Rest... rest) { add_point(point); add_points(rest...); }
+    void                      add_points(const ggo::pos2<data_t> & point) { _points.push_back(point); }       
          
-    int					          get_points_count() const { return static_cast<int>(_points.size()); }
-    ggo::set2<T> &		    get_point(int i) { return _points[i]; }
-    const ggo::set2<T> &  get_point(int i) const { return _points[i]; }
+    int					              get_points_count() const { return static_cast<int>(_points.size()); }
+    ggo::pos2<data_t> &		    get_point(int i) { return _points[i]; }
+    const ggo::pos2<data_t> & get_point(int i) const { return _points[i]; }
           
-    void				          clear() { _points.clear(); };
+    void				              clear() { _points.clear(); };
           
-    T					            dist_to_segment(const segment<T> & segment) const;
-    T					            dist_to_segment(const ggo::set2<T> & p1, const ggo::set2<T> & p2) const;
-    T					            dist_to_segment(T x_from, T y_from, T x_to, T y_to) const;
-    T					            dist_to_point(const ggo::set2<T> p) const { return dist_to_point(p.x(), p.y()); };
+    data_t					          dist_to_segment(const segment<data_t> & segment) const;
+    data_t					          dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
+    data_t					          dist_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
+    data_t					          dist_to_point(const ggo::pos2<data_t> p) const { return dist_to_point(p.x(), p.y()); };
           
     // Interfaces.        
-    void	                move(T dx, T dy) override;
-    void	                rotate(T angle, const ggo::set2<T> & center) override;
-    T                     dist_to_point(T x, T y) const override;
-    bool	                is_point_inside(T x, T y) const override;
-    rect_data<T>          get_bounding_rect() const override;
-    rect_intersection     get_rect_intersection(const rect_data<T> & rect_data) const override;
+    void	                    move(data_t dx, data_t dy) override;
+    void	                    rotate(data_t angle, const ggo::pos2<data_t> & center) override;
+    data_t                    dist_to_point(data_t x, data_t y) const override;
+    bool	                    is_point_inside(data_t x, data_t y) const override;
+    rect_data<data_t>         get_bounding_rect() const override;
+    rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 
   public:
 
-    static  void	create_oriented_box(const ggo::set2<T> & center, const ggo::set2<T> & direction, T size1, T size2, polygon2d<T> & polygon);
-    static  void  create_axis_aligned_box(T left, T right, T top, T bottom, polygon2d<T> & polygon);
+    static  void	create_oriented_box(const ggo::pos2<data_t> & center, const ggo::pos2<data_t> & direction, data_t size1, data_t size2, polygon2d<data_t> & polygon);
+    static  void  create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom, polygon2d<data_t> & polygon);
 
   private:
 
-    std::vector<ggo::set2<T>>	_points;
+    std::vector<ggo::pos2<data_t>>	_points;
   };
 }
 

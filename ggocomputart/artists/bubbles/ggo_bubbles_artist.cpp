@@ -49,14 +49,14 @@ void ggo_bubbles_artist::render_bitmap(uint8_t * buffer)
     bubble.set_center(ggo::rand_float(-0.1f, 1.1f) * get_render_width(), -0.1f * get_render_height());
 
     // Move the bubble up.
-    while (bubble.get_center().y() < get_render_height() + bubble.get_radius())
+    while (bubble.get_center().get<1>() < get_render_height() + bubble.get_radius())
     {
-      bubble.center().x() += dx + amplitude * std::sin(wavelength * bubble.center().y());
-      bubble.center().y() += dy;
+      bubble.center().get<0>() += dx + amplitude * std::sin(wavelength * bubble.center().get<1>());
+      bubble.center().get<1>() += dy;
       
-      int dr = ggo::to<int>((curve_r.evaluate(bubble.center().x() / get_render_width()) - 0.5) * 10);
-      int dg = ggo::to<int>((curve_g.evaluate(bubble.center().x() / get_render_width()) - 0.5) * 10);
-      int db = ggo::to<int>((curve_b.evaluate(bubble.center().x() / get_render_width()) - 0.5) * 10);
+      int dr = ggo::to<int>((curve_r.evaluate(bubble.center().get<0>() / get_render_width()) - 0.5) * 10);
+      int dg = ggo::to<int>((curve_g.evaluate(bubble.center().get<0>() / get_render_width()) - 0.5) * 10);
+      int db = ggo::to<int>((curve_b.evaluate(bubble.center().get<0>() / get_render_width()) - 0.5) * 10);
       
       // Custom painting of the bubble. Not optimized, but I don't care.
       for (int y = -static_cast<int>(bubble.radius()); y <= static_cast<int>(bubble.radius()); ++y )
@@ -66,8 +66,8 @@ void ggo_bubbles_artist::render_bitmap(uint8_t * buffer)
           float hypot = static_cast<float>(x * x + y * y);
           if (hypot < bubble.radius() * bubble.radius())
           {
-            int render_x = ggo::to<int>(bubble.center().x()) + x;
-            int render_y = ggo::to<int>(bubble.center().y()) + y;
+            int render_x = ggo::to<int>(bubble.center().get<0>()) + x;
+            int render_y = ggo::to<int>(bubble.center().get<1>()) + y;
   
             if (render_x >= 0 && render_x < get_render_width() &&
                 render_y >= 0 && render_y < get_render_height())

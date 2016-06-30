@@ -28,6 +28,7 @@
     <ClCompile Include="test\ggo_kdtree_nonreg.cpp" />
     <ClCompile Include="test\ggo_layer_nonreg.cpp" />
     <ClCompile Include="test\ggo_low_discrepancy_sequences_nonreg.cpp" />
+    <ClCompile Include="test\ggo_morphology_nonreg.cpp" />
     <ClCompile Include="test\ggo_paint_nonreg.cpp" />
     <ClCompile Include="test\ggo_rle_image_nonreg.cpp" />
     <ClCompile Include="test\ggo_shape_sampling_nonreg.cpp" />

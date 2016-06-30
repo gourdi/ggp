@@ -39,9 +39,9 @@ void ggo_worms_artist::render_bitmap(uint8_t * buffer)
       int pos_x = ggo::rand_int(0, get_render_width());
       int pos_y = ggo::rand_int(0, get_render_height());
         
-			ggo::point2d_float pt;
-			pt.x() = pos_x + ggo::rand_float(0, 0.1f * get_render_min_size());
-			pt.y() = pos_y + ggo::rand_float(0, 0.1f * get_render_min_size());
+			ggo::pos2f pt;
+			pt.get<0>() = pos_x + ggo::rand_float(0, 0.1f * get_render_min_size());
+			pt.get<1>() = pos_y + ggo::rand_float(0, 0.1f * get_render_min_size());
 			spline.add_control_point(pt);
 		}
 		
@@ -53,8 +53,8 @@ void ggo_worms_artist::render_bitmap(uint8_t * buffer)
 
 		for (int i = 1; i < points.size(); ++i)
 		{
-			const ggo::point2d_float & p1 = points[i - 1];
-			const ggo::point2d_float & p2 = points[i];
+			const ggo::pos2f & p1 = points[i - 1];
+			const ggo::pos2f & p2 = points[i];
 
 			float inside_width = 0.003f * get_render_min_size();
       float border_width = 0.005f * get_render_min_size();

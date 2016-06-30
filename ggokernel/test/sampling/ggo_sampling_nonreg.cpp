@@ -76,14 +76,14 @@ GGO_TEST(sampling, rect)
     auto samples = grid_sampling(rect, 1.f);
 
     GGO_CHECK(samples.size() == 8);
-    GGO_CHECK(find_point(samples, ggo::point2d_float(2, 1)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(2, 2)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(2, 3)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(2, 4)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3, 1)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3, 2)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3, 3)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3, 4)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(2.f, 1.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(2.f, 2.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(2.f, 3.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(2.f, 4.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.f, 1.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.f, 2.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.f, 3.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.f, 4.f)));
   }
 
   {
@@ -92,10 +92,10 @@ GGO_TEST(sampling, rect)
     auto samples = adaptive_grid_sampling(rect, 3);
 
     GGO_CHECK(samples.size() == 4);
-    GGO_CHECK(find_point(samples, ggo::point2d_float(1.5, 1)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3.5, 1)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(1.5, 3)));
-    GGO_CHECK(find_point(samples, ggo::point2d_float(3.5, 3)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(1.5f, 1.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.5f, 1.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(1.5f, 3.f)));
+    GGO_CHECK(find_point(samples, ggo::pos2f(3.5f, 3.f)));
   }
 }
 
@@ -107,8 +107,8 @@ GGO_TEST(sampling, halton)
   
   for (int i = 0; i < count_rect; ++i)
   {
-    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].x()) <= 0.5f);
-    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].y()) <= 0.5f);
+    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].get<0>()) <= 0.5f);
+    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].get<1>()) <= 0.5f);
   }
   
   int count_disc = sizeof(ggo::halton_disc_2d_table_2_3) / sizeof(ggo::halton_disc_2d_table_2_3[0]);
@@ -116,8 +116,8 @@ GGO_TEST(sampling, halton)
   
   for (int i = 0; i < count_disc; ++i)
   {
-    float x = ggo::halton_disc_2d_table_2_3[i].x();
-    float y = ggo::halton_disc_2d_table_2_3[i].y();
+    float x = ggo::halton_disc_2d_table_2_3[i].get<0>();
+    float y = ggo::halton_disc_2d_table_2_3[i].get<1>();
     float dist = ggo::distance(x, y);
     GGO_CHECK(dist <= 0.5f);
   }

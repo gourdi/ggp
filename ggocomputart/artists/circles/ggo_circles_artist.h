@@ -17,7 +17,7 @@ public:
   
   std::vector<std::vector<ggo_colored_disc>>  generate_discs() const;
   
-  static  void  paint_disc(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos, float radius, const ggo::color & color);
+  static  void  paint_disc(uint8_t * buffer, int width, int height, const ggo::pos2f & pos, float radius, const ggo::color & color);
   static  void  paint_disc(uint8_t * buffer, int width, int height, const ggo_colored_disc & colored_disc);
 };
 

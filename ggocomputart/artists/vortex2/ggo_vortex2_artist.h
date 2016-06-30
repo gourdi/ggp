@@ -10,10 +10,10 @@ public:
 	
 	struct ggo_vortex
 	{
-		ggo::point2d_float	_pos;
-		float				        _angle;
-		float				        _speed;
-		float				        _power;
+		ggo::pos2f  _pos;
+		float				_angle;
+		float				_speed;
+		float				_power;
 	};
 	
 	struct ggo_vortex2_params

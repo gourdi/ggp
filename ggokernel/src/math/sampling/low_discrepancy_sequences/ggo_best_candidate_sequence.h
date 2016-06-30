@@ -2,18 +2,18 @@
 #define __GGO_BEST_CANDIDATE_SEQUENCE__
 
 #include <vector>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 
 namespace ggo
 {
-  std::vector<ggo::point2d_float> best_candidate_sequence_2d(int count);
+  std::vector<ggo::pos2f> best_candidate_sequence_2d(int count);
 }
 
 #define GGO_BEST_CANDITATE_TABLE_SIZE 1000
 
 namespace ggo
 {
-  const point2d_float best_candidate_table[] = {
+  const pos2f best_candidate_table[] = {
     { 0.0754634f, 0.645212f },
     { 0.739848f, 0.162f },
     { 0.220326f, 0.128471f },

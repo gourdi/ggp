@@ -19,10 +19,10 @@ private:
 
 	struct ggo_particle
 	{
-    ggo::point2d_float	                _cur_pos;
-    ggo::point2d_float	                _prv_pos;
-    ggo::point2d_float	                _relaxed_pos;
-    ggo::vector2d_float	                _speed;
+    ggo::pos2f	                        _cur_pos;
+    ggo::pos2f	                        _prv_pos;
+    ggo::pos2f	                        _relaxed_pos;
+    ggo::vec2f	                        _speed;
     float                               _pressure;
     float                               _near_pressure;
     int                                 _grid_x;
@@ -41,12 +41,12 @@ private:
     
     struct ggo_particle_emitter
     {
-      float               _x;
-      float               _y_inf;
-      float               _y_sup;
-      ggo::vector2d_float _speed;
-      int                 _counter;
-      float               _temperature;
+      float      _x;
+      float      _y_inf;
+      float      _y_sup;
+      ggo::vec2f _speed;
+      int        _counter;
+      float      _temperature;
       
       void  create_particles(std::vector<ggo_particle> & particles);
     };
@@ -84,24 +84,24 @@ private:
     constexpr static float NEAR_NORM = 30 / (2 * ggo::PI<float>() * INFLUENCE_RADIUS * INFLUENCE_RADIUS);
     constexpr static float VIEW_HEIGHT = 20;
 
-    std::vector<ggo_particle>                       _particles;
-    ggo::array<std::vector<const ggo_particle *>, 2> _grid;
-    ggo_particle_emitter                            _emitter1;
-    ggo_particle_emitter                            _emitter2;
-    float                                           _rest_density;
-    float                                           _stiffness;
-    float                                           _near_stiffness;
-    float                                           _surface_tension;
-    float                                           _linear_viscocity;
-    float                                           _quadratic_viscocity;
-    float                                           _particle_mass;
-    float                                           _gravity;
-    float                                           _hue1;
-    float                                           _hue2;
-    float                                           _sat1;
-    float                                           _sat2;
-    float                                           _val1;
-    float                                           _val2;
+    std::vector<ggo_particle>                         _particles;
+    ggo::array<std::vector<const ggo_particle *>, 2>  _grid;
+    ggo_particle_emitter                              _emitter1;
+    ggo_particle_emitter                              _emitter2;
+    float                                             _rest_density;
+    float                                             _stiffness;
+    float                                             _near_stiffness;
+    float                                             _surface_tension;
+    float                                             _linear_viscocity;
+    float                                             _quadratic_viscocity;
+    float                                             _particle_mass;
+    float                                             _gravity;
+    float                                             _hue1;
+    float                                             _hue2;
+    float                                             _sat1;
+    float                                             _sat2;
+    float                                             _val1;
+    float                                             _val2;
 };
 
 #endif

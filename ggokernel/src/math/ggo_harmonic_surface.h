@@ -8,14 +8,14 @@ namespace ggo
   {
   public:
     
-    void  push_harmonic(const ggo::set2<T> & dir, T wavelength, T amplitude, T phase);
+    void  push_harmonic(const ggo::vec2<T> & dir, T wavelength, T amplitude, T phase);
     T     evaluate(T x, T y) const;
     
   private:
   
     struct wave
     {
-      ggo::set2<T>  _wave_vector;
+      ggo::vec2<T>  _wave_vector;
       T             _phase;
       T             _amplitude;
     };
@@ -29,7 +29,7 @@ namespace ggo
 namespace ggo
 {
   template <typename T>
-  void harmonic_surface<T>::push_harmonic(const ggo::set2<T> & dir, T wavelength, T amplitude, T phase)
+  void harmonic_surface<T>::push_harmonic(const ggo::vec2<T> & dir, T wavelength, T amplitude, T phase)
   {
     wave new_wave;
     new_wave._wave_vector = dir;
@@ -46,7 +46,7 @@ namespace ggo
     
     for (const auto & wave : _waves)
     {
-      result += wave._amplitude * std::cos(2 * ggo::PI<float>() * ggo::dot(wave._wave_vector, ggo::set2<T>(x, y)) + wave._phase);
+      result += wave._amplitude * std::cos(2 * ggo::PI<float>() * ggo::dot(wave._wave_vector, ggo::vec2<T>(x, y)) + wave._phase);
     }
     
     return result;

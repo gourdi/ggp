@@ -148,9 +148,10 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename T>
-  ggo::set2<T> operator*(const square_matrix2d<T> & m, ggo::set2<T> v) 
+  ggo::vec2<T> operator*(const square_matrix2d<T> & m, const ggo::vec2<T> & v) 
   {
-    return ggo::set2<T>(m(0, 0)*v.x() + m(0, 1)*v.y(), m(1, 0)*v.x() + m(1, 1)*v.y());
+    return ggo::vec2<T>(m(0, 0) * v.template get<0>() + m(0, 1) * v.template get<1>(),
+                        m(1, 0) * v.template get<0>() + m(1, 1) * v.template get<1>());
   }
 
   /////////////////////////////////////////////////////////////////////

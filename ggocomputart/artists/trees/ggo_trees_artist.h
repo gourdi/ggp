@@ -35,18 +35,18 @@ private:
 
   struct ggo_leaf
   {
-    ggo_leaf() : _dead(false) {};
+    ggo_leaf() : _dead(false) {}
     
-   	ggo::point2d_float	get_top_point() const { return 0.5f * (_top_points[0] + _top_points[1]); }
-	 	ggo::point2d_float	get_bottom_point() const { return 0.5f * (_bottom_points[0] + _bottom_points[1]); }
-	 	float				        get_top_width() const { return ggo::distance(_top_points[0], _top_points[1]); }
-	 	float				        get_height() const { return ggo::distance(get_top_point(), get_bottom_point()); }
-	 	ggo::vector2d_float	get_diff() const { return get_top_point() - get_bottom_point(); }
-	 	float				        get_angle() const { ggo::vector2d_float diff(get_diff()); return std::atan2(diff.y(), diff.x()); }
+   	ggo::pos2f	get_top_point() const { return 0.5f * (_top_points[0] + _top_points[1]); }
+	 	ggo::pos2f	get_bottom_point() const { return 0.5f * (_bottom_points[0] + _bottom_points[1]); }
+	 	float				get_top_width() const { return ggo::distance(_top_points[0], _top_points[1]); }
+	 	float				get_height() const { return ggo::distance(get_top_point(), get_bottom_point()); }
+	 	ggo::vec2f	get_diff() const { return get_top_point() - get_bottom_point(); }
+	 	float				get_angle() const { ggo::vec2f diff(get_diff()); return std::atan2(diff.get<1>(), diff.get<0>()); }
     
-    ggo::point2d_float  _bottom_points[2];
-    ggo::point2d_float  _top_points[2];
-    bool				        _dead;
+    ggo::pos2f  _bottom_points[2];
+    ggo::pos2f  _top_points[2];
+    bool				_dead;
   };
     
 private:

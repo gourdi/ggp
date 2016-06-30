@@ -87,28 +87,28 @@ ggo_cells_artist::ggo_cell::ggo_cell(float left, float right, float top, float b
 	_inv_render_width	= 1.f / render_width;
 	_inv_render_height	= 1.f / render_height;
 	
-	_centers[0] = ggo::point2d_float(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
-	_centers[1] = ggo::point2d_float(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
-	_centers[2] = ggo::point2d_float(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
+	_centers[0] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
+	_centers[1] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
+	_centers[2] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
 }
 
 //////////////////////////////////////////////////////////////
 ggo::rect_data<float> ggo_cells_artist::ggo_cell::get_seed_rect() const
 {
-	float left	  = _centers[0].x();
-	float right	  = _centers[0].x();
-	float top		  = _centers[0].y();
-	float bottom	= _centers[0].y();
+	float left	  = _centers[0].get<0>();
+	float right	  = _centers[0].get<0>();
+	float top		  = _centers[0].get<1>();
+	float bottom	= _centers[0].get<1>();
 	
-	left	  = std::min(_centers[1].x(), left);
-	right	  = std::max(_centers[1].x(), right);
-	top		  = std::max(_centers[1].y(), top);
-	bottom	= std::min(_centers[1].y(), bottom);
+	left	  = std::min(_centers[1].get<0>(), left);
+	right	  = std::max(_centers[1].get<0>(), right);
+	top		  = std::max(_centers[1].get<1>(), top);
+	bottom	= std::min(_centers[1].get<1>(), bottom);
 
-	left	  = std::min(_centers[2].x(), left);
-	right	  = std::max(_centers[2].x(), right);
-	top		  = std::max(_centers[2].y(), top);
-	bottom	= std::min(_centers[2].y(), bottom);
+	left	  = std::min(_centers[2].get<0>(), left);
+	right	  = std::max(_centers[2].get<0>(), right);
+	top		  = std::max(_centers[2].get<1>(), top);
+	bottom	= std::min(_centers[2].get<1>(), bottom);
 	
 	left	  /= _inv_render_width;
 	right	  /= _inv_render_width;
@@ -125,9 +125,9 @@ bool ggo_cells_artist::ggo_cell::is_point_inside(float x, float y) const
 	float x_map = x * _inv_render_width;
 	float y_map = y * _inv_render_height;
 
-	potential += 100 / (1 + 100 * ggo::distance(_centers[0], ggo::point2d_float(x_map, y_map)));
-	potential += 100 / (1 + 100 * ggo::distance(_centers[1], ggo::point2d_float(x_map, y_map)));
-	potential += 100 / (1 + 100 * ggo::distance(_centers[2], ggo::point2d_float(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[0], ggo::pos2f(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[1], ggo::pos2f(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[2], ggo::pos2f(x_map, y_map)));
 
 	return potential > 110 && potential < 120;
 }

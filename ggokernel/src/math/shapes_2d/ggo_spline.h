@@ -12,28 +12,28 @@
 
 namespace ggo
 {
-  template <typename T>
-  class spline : public movable_shape2d_abc<T>,
-                 public rotatable_shape2d_abc<T>
+  template <typename data_t>
+  class spline : public movable_shape2d_abc<data_t>,
+                 public rotatable_shape2d_abc<data_t>
   {
   public:
 
-                              spline() {}
+                                    spline() {}
       
-    void	                	  add_control_point(const ggo::set2<T> & point);
-    void	                	  clear_control_points();
+    void	                	        add_control_point(const ggo::pos2<data_t> & point);
+    void	                	        clear_control_points();
     
-    std::vector<ggo::set2<T>>	evaluate(int steps) const;
+    std::vector<ggo::pos2<data_t>>	evaluate(int steps) const;
 
-    void	                	  move(T dx, T dy) override;
-    void	                	  rotate(T angle, const ggo::set2<T> & center) override;
-
-  private:
-
-    static	ggo::set2<T>      eval(const ggo::set2<T> & pp, const ggo::set2<T> & pc, const ggo::set2<T> & pn, const ggo::set2<T> & pnn, T t);
+    void	                	        move(data_t dx, data_t dy) override;
+    void	                	        rotate(data_t angle, const ggo::pos2<data_t> & center) override;
 
   private:
 
-    std::vector<ggo::set2<T>>	_control_points;
+    static	ggo::pos2<data_t>      eval(const ggo::pos2<data_t> & pp, const ggo::pos2<data_t> & pc, const ggo::pos2<data_t> & pn, const ggo::pos2<data_t> & pnn, data_t t);
+
+  private:
+
+    std::vector<ggo::pos2<data_t>>	_control_points;
   };
 }

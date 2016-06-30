@@ -57,9 +57,9 @@ void ggo_mondrian_artist::render_bitmap(uint8_t * buffer)
 	
 	for (int i = 0; i < 200000; ++i)
 	{
-		float				        angle		  = ggo::rand_float(-0.2f, 0.2f);
-		ggo::point2d_float  center		= get_random_point();
-		ggo::vector2d_float	direction	= ggo::vector2d_float(std::cos(angle), std::sin(angle));
+		float				angle		  = ggo::rand_float(-0.2f, 0.2f);
+		ggo::pos2f  center		= get_random_point();
+		ggo::vec2f	direction	= ggo::vec2f(std::cos(angle), std::sin(angle));
 	
 		auto box = std::make_shared<ggo::polygon2d_float>();
 		ggo::polygon2d_float::create_oriented_box(center, direction, size1, size2, *box);
@@ -68,7 +68,7 @@ void ggo_mondrian_artist::render_bitmap(uint8_t * buffer)
 		ggo::color color = base_color;
 		for (const auto & area : areas)
 		{
-			if (area._rect.is_point_inside(center.x(), center.y()) == true)
+			if (area._rect.is_point_inside(center) == true)
 			{
 				color = area._color;
 			}

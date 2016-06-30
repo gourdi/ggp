@@ -2,13 +2,6 @@
 #include <ggo_collisions.h>
 
 //////////////////////////////////////////////////////////////////
-//GGO_TEST(collisions, ortho_dot)
-//{
-//  GGO_CHECK_FABS(ggo::ortho_dot({ 1.f, 2.f }, { 3.f, 4.f }), 2.f);
-//  GGO_CHECK_FABS(ggo::ortho_dot({ 2.f, 1.f }, { 5.f, 4.f }), -3.f);
-//}
-
-//////////////////////////////////////////////////////////////////
 GGO_TEST(collisions, half_plane_vs_oriented_box)
 {
   ggo::half_plane_float half_plane({ 0.0f, 1.0f }, 2.f);

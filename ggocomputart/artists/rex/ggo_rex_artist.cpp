@@ -13,16 +13,16 @@ namespace
   const int GGO_EDGES_VERTICES_COUNT = 15;
   const int GGO_TRIANGLES_COUNT 		 = GGO_EDGES_VERTICES_COUNT * GGO_EDGES_VERTICES_COUNT;
   
-  using ggo_edge = ggo::link<const ggo::point2d_float *>;
+  using ggo_edge = ggo::link<const ggo::pos2f *>;
 }
 
 //////////////////////////////////////////////////////////////
-static float area_of_triangle(const ggo::vector2d_float & v1, const ggo::vector2d_float & v2, const ggo::vector2d_float & v3)
+static float area_of_triangle(const ggo::vec2f & v1, const ggo::vec2f & v2, const ggo::vec2f & v3)
 {
-	ggo::vector2d_float u = v1 - v2;
-	ggo::vector2d_float v = v1 - v3;
+	ggo::vec2f u = v1 - v2;
+	ggo::vec2f v = v1 - v3;
 	
-	return 0.5f * std::abs(u.x() * v.y() - u.y() * v.x());
+	return 0.5f * std::abs(u.get<0>() * v.get<1>() - u.get<1>() * v.get<0>());
 }
 
 //////////////////////////////////////////////////////////////
@@ -48,23 +48,23 @@ void ggo_rex_artist::init()
 {
 	clear();
 
-	std::vector<ggo::point2d_float> vertices;
+	std::vector<ggo::pos2f> vertices;
 	
 	std::cout << "Creating points" << std::endl;
 
-	vertices.push_back(ggo::point2d_float(0.5, 0.5));
+	vertices.push_back(ggo::pos2f(0.5f, 0.5f));
 	
 	for (int i = 0; i < GGO_EDGES_VERTICES_COUNT; ++i)
 	{
-		vertices.push_back(ggo::point2d_float(float(i + 1) / GGO_EDGES_VERTICES_COUNT, 0));
-		vertices.push_back(ggo::point2d_float(1, float(i + 1) / GGO_EDGES_VERTICES_COUNT));
-		vertices.push_back(ggo::point2d_float(float(GGO_EDGES_VERTICES_COUNT - i - 1) / GGO_EDGES_VERTICES_COUNT, 1));
-		vertices.push_back(ggo::point2d_float(0, float(GGO_EDGES_VERTICES_COUNT - i - 1) / GGO_EDGES_VERTICES_COUNT));
+		vertices.push_back(ggo::pos2f(float(i + 1) / GGO_EDGES_VERTICES_COUNT, 0.f));
+		vertices.push_back(ggo::pos2f(1.f, float(i + 1) / GGO_EDGES_VERTICES_COUNT));
+		vertices.push_back(ggo::pos2f(float(GGO_EDGES_VERTICES_COUNT - i - 1) / GGO_EDGES_VERTICES_COUNT, 1.f));
+		vertices.push_back(ggo::pos2f(0.f, float(GGO_EDGES_VERTICES_COUNT - i - 1) / GGO_EDGES_VERTICES_COUNT));
 	}
 
 	for (int i = 0; i < GGO_TRIANGLES_COUNT; ++i)
 	{
-		vertices.push_back(ggo::point2d_float(ggo::rand_float(), ggo::rand_float()));
+		vertices.push_back(ggo::pos2f(ggo::rand_float(), ggo::rand_float()));
 	}
 	
 	// Perform the Delaunay triangulation.
@@ -75,7 +75,7 @@ void ggo_rex_artist::init()
 	// Assign a colour to each vertex.
 	float hue = ggo::rand_float();
 	
-	std::map<const ggo::point2d_float *, ggo::color> color_map;
+	std::map<const ggo::pos2f *, ggo::color> color_map;
 	for (const auto & v : vertices)
 	{
 		color_map[&v] = ggo::color::from_hsv(hue, 1, ggo::rand_float());
@@ -111,18 +111,18 @@ void ggo_rex_artist::init()
 			_edges.push_back(ggo::segment_float(*edge._v1, *edge._v2));
 		}
 		
-		GGO_ASSERT_BTW(triangle._v1->x(), -0.0001f, 1.0001f);
-		GGO_ASSERT_BTW(triangle._v1->y(), -0.0001f, 1.0001f);
-		GGO_ASSERT_BTW(triangle._v2->x(), -0.0001f, 1.0001f);
-		GGO_ASSERT_BTW(triangle._v2->y(), -0.0001f, 1.0001f);
-		GGO_ASSERT_BTW(triangle._v3->x(), -0.0001f, 1.0001f);
-		GGO_ASSERT_BTW(triangle._v3->y(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v1->get<0>(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v1->get<1>(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v2->get<0>(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v2->get<1>(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v3->get<0>(), -0.0001f, 1.0001f);
+		GGO_ASSERT_BTW(triangle._v3->get<1>(), -0.0001f, 1.0001f);
 		
 		// Save the triangles.
 		ggo_color_triangle color_triangle;
-		const ggo::point2d_float * v1 = triangle._v1;
-		const ggo::point2d_float * v2 = triangle._v2;
-		const ggo::point2d_float * v3 = triangle._v3;
+		const ggo::pos2f * v1 = triangle._v1;
+		const ggo::pos2f * v2 = triangle._v2;
+		const ggo::pos2f * v3 = triangle._v3;
 
 		color_triangle._v1 = *v1;
 		color_triangle._v2 = *v2;
@@ -176,7 +176,7 @@ void ggo_rex_artist::init()
 	{
 		ggo_opened_disc_data disc;
 		
-		disc._center = ggo::point2d_float(0.5, 0.5);
+		disc._center = ggo::pos2f(0.5f, 0.5f);
 		disc._radius = (outter_radius + inner_radius) / 2;
 		disc._width = outter_radius - inner_radius;
 		
@@ -210,14 +210,14 @@ void ggo_rex_artist::render_color_triangles(uint8_t * buffer) const
 {
 	for (const auto & color_triangle : _color_triangles)
 	{
-		ggo::point2d_float v1 = map_fit(color_triangle._v1, 0, 1);
-		ggo::point2d_float v2 = map_fit(color_triangle._v2, 0, 1);
-		ggo::point2d_float v3 = map_fit(color_triangle._v3, 0, 1);
+		ggo::pos2f v1 = map_fit(color_triangle._v1, 0, 1);
+		ggo::pos2f v2 = map_fit(color_triangle._v2, 0, 1);
+		ggo::pos2f v3 = map_fit(color_triangle._v3, 0, 1);
 		
-		int x_min = int(std::min(v1.x(), std::min(v2.x(), v3.x())));
-		int x_max = int(std::max(v1.x(), std::max(v2.x(), v3.x()))) + 1;
-		int y_min = int(std::min(v1.y(), std::min(v2.y(), v3.y())));
-		int y_max = int(std::max(v1.y(), std::max(v2.y(), v3.y()))) + 1;
+		int x_min = int(std::min(v1.get<0>(), std::min(v2.get<0>(), v3.get<0>())));
+		int x_max = int(std::max(v1.get<0>(), std::max(v2.get<0>(), v3.get<0>()))) + 1;
+		int y_min = int(std::min(v1.get<1>(), std::min(v2.get<1>(), v3.get<1>())));
+		int y_max = int(std::max(v1.get<1>(), std::max(v2.get<1>(), v3.get<1>()))) + 1;
 		
 		x_min = ggo::clamp(x_min, 0, get_render_width());
 		x_max = ggo::clamp(x_max, 0, get_render_width());
@@ -233,9 +233,9 @@ void ggo_rex_artist::render_color_triangles(uint8_t * buffer) const
 		{
 			for (int x = x_min; x < x_max; ++x)
 			{
-				ggo::point2d_float pt(static_cast<float>(x), static_cast<float>(y));
+				ggo::pos2f pt(static_cast<float>(x), static_cast<float>(y));
 			
-				if (mapped_triangle.is_point_inside(pt.x(), pt.y()) == true)
+				if (mapped_triangle.is_point_inside(pt.get<0>(), pt.get<1>()) == true)
 				{
 					float w1 = area_of_triangle(pt, v2, v3);
 					float w2 = area_of_triangle(pt, v1, v3);
@@ -262,23 +262,23 @@ void ggo_rex_artist::render_patterns(uint8_t * buffer) const
 {
 	for (const auto & pattern_triangle : _pattern_triangles)
 	{
-		ggo::point2d_float v1 = map_fit(pattern_triangle._v1, 0, 1);
-		ggo::point2d_float v2 = map_fit(pattern_triangle._v2, 0, 1);
-		ggo::point2d_float v3 = map_fit(pattern_triangle._v3, 0, 1);
+		ggo::pos2f v1 = map_fit(pattern_triangle._v1, 0, 1);
+		ggo::pos2f v2 = map_fit(pattern_triangle._v2, 0, 1);
+		ggo::pos2f v3 = map_fit(pattern_triangle._v3, 0, 1);
 
-		float min_x = std::min(v1.x(), std::min(v2.x(), v3.x()));
-		float min_y = std::min(v1.y(), std::min(v2.y(), v3.y()));
-		float max_x = std::max(v1.x(), std::max(v2.x(), v3.x()));
-		float max_y = std::max(v1.y(), std::max(v2.y(), v3.y()));
+		float min_x = std::min(v1.get<0>(), std::min(v2.get<0>(), v3.get<0>()));
+		float min_y = std::min(v1.get<1>(), std::min(v2.get<1>(), v3.get<1>()));
+		float max_x = std::max(v1.get<0>(), std::max(v2.get<0>(), v3.get<0>()));
+		float max_y = std::max(v1.get<1>(), std::max(v2.get<1>(), v3.get<1>()));
 		int size_x = int(max_x) - int(min_x) + 1;
 		int size_y = int(max_y) - int(min_y) + 1;
 
-		v1.x() -= int(min_x);
-		v1.y() -= int(min_y);
-		v2.x() -= int(min_x);
-		v2.y() -= int(min_y);
-		v3.x() -= int(min_x);
-		v3.y() -= int(min_y);
+		v1.get<0>() -= int(min_x);
+		v1.get<1>() -= int(min_y);
+		v2.get<0>() -= int(min_x);
+		v2.get<1>() -= int(min_y);
+		v3.get<0>() -= int(min_x);
+		v3.get<1>() -= int(min_y);
 
 		// Paint the mask.
 		ggo::gray_image_buffer_uint8 mask_image(size_x, size_y);
@@ -349,9 +349,9 @@ void ggo_rex_artist::render_clipped_discs(uint8_t * buffer) const
   
 	for (const auto & disc_clip_triangle : _discs_clip_triangles)
 	{
-		ggo::point2d_float v1 = map_fit(disc_clip_triangle._v1, 0, 1);
-		ggo::point2d_float v2 = map_fit(disc_clip_triangle._v2, 0, 1);
-		ggo::point2d_float v3 = map_fit(disc_clip_triangle._v3, 0, 1);
+		ggo::pos2f v1 = map_fit(disc_clip_triangle._v1, 0, 1);
+		ggo::pos2f v2 = map_fit(disc_clip_triangle._v2, 0, 1);
+		ggo::pos2f v3 = map_fit(disc_clip_triangle._v3, 0, 1);
 
 		auto mapped_triangle = std::make_shared<ggo::polygon2d_float>();
 		mapped_triangle->add_point(v1);
@@ -367,7 +367,7 @@ void ggo_rex_artist::render_clipped_discs(uint8_t * buffer) const
   
 	for (const auto & opened_disc : _opened_discs)
 	{	
-    ggo::point2d_float center = map_fit(opened_disc._center, 0, 1);
+    ggo::pos2f center = map_fit(opened_disc._center, 0, 1);
     float radius = map_fit(opened_disc._radius, 0, 1);
     float width = map_fit(opened_disc._width, 0, 1);
 
@@ -405,8 +405,8 @@ void ggo_rex_artist::render_edges(uint8_t * buffer) const
 	
 	for (const auto & edge : _edges)
 	{
-		ggo::point2d_float v1 = map_fit(edge.p1(), 0, 1);
-		ggo::point2d_float v2 = map_fit(edge.p2(), 0, 1);
+		ggo::pos2f v1 = map_fit(edge.p1(), 0, 1);
+		ggo::pos2f v2 = map_fit(edge.p2(), 0, 1);
 		
     auto segment = std::make_shared<ggo::extended_segment_float>(v1, v2, 0.001f * get_render_min_size());
     

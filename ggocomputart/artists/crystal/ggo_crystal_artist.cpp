@@ -31,23 +31,23 @@ void ggo_crystal_artist::render_bitmap(uint8_t * buffer, const ggo_params & para
 //////////////////////////////////////////////////////////////
 void ggo_crystal_artist::process_transform(const ggo_params & params)
 {
-	ggo::point2d_float pt;
+	ggo::pos2f pt;
 	
-	pt.x() = ggo::rand_float(-1, 1);
-	pt.y() = ggo::rand_float(-1, 1);
+	pt.get<0>() = ggo::rand_float(-1, 1);
+	pt.get<1>() = ggo::rand_float(-1, 1);
 
 	for (int points_count = 0; points_count < 4; ++points_count)
 	{
 		// Apply transform.
 		int i = ggo::rand_int(0, GGO_TRANSFORMS_COUNT);
 	
-		pt.x() = params._coefs[i][0]*pt.x() + params._coefs[i][1]*pt.y() + params._coefs[i][2];
-		pt.y() = params._coefs[i][3]*pt.x() + params._coefs[i][4]*pt.y() + params._coefs[i][5];
+		pt.get<0>() = params._coefs[i][0]*pt.get<0>() + params._coefs[i][1]*pt.get<1>() + params._coefs[i][2];
+		pt.get<1>() = params._coefs[i][3]*pt.get<0>() + params._coefs[i][4]*pt.get<1>() + params._coefs[i][5];
 
 		// Render point.
-		ggo::point2d_float render_pt = map_fit(pt, -5, 5);
-		int x = ggo::to<int>(render_pt.x());
-		int y = ggo::to<int>(render_pt.y());
+		ggo::pos2f render_pt = map_fit(pt, -5, 5);
+		int x = ggo::to<int>(render_pt.get<0>());
+		int y = ggo::to<int>(render_pt.get<1>());
 
 		if ((x >= 0) && (x < get_render_width()) &&
 			  (y >= 0) && (y < get_render_height()))

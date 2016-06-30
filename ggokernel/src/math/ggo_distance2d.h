@@ -1,7 +1,7 @@
 #ifndef __GGO_DISTANCE2D__
 #define __GGO_DISTANCE2D__
 
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 #include <array>
 
 namespace ggo
@@ -39,20 +39,6 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  T hypot(const ggo::set2<T> & pos1, const ggo::set2<T> & pos2)
-  {
-    return hypot(pos1.x(), pos1.y(), pos2.x(), pos2.y());
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename T>
-  T distance(const ggo::set2<T> & pos1, const ggo::set2<T> & pos2)
-  {
-    return distance(pos1.x(), pos1.y(), pos2.x(), pos2.y());
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename T>
   T hypot(const std::array<T, 2> & pos1, const std::array<T, 2> & pos2)
   {
     return hypot(pos1[0], pos1[1], pos2[0], pos2[1]);
@@ -63,6 +49,20 @@ namespace ggo
   T distance(const std::array<T, 2> & pos1, const std::array<T, 2> & pos2)
   {
     return distance(pos1[0], pos1[1], pos2[0], pos2[1]);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  T hypot(const ggo::pos2<T> & p1, const ggo::pos2<T> & p2)
+  {
+    return hypot(p1.template get<0>(), p1.template get<1>(), p2.template get<0>(), p2.template get<1>());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
+  T distance(const ggo::pos2<T> & p1, const ggo::pos2<T> & p2)
+  {
+    return distance(p1.template get<0>(), p1.template get<1>(), p2.template get<0>(), p2.template get<1>());
   }
 }
 

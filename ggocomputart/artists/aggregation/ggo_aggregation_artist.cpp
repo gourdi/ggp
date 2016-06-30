@@ -220,11 +220,11 @@ namespace ggo
       
       for (const auto & point : rotated_points)
       {
-        ggo::point2d_float pt = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
+        ggo::pos2f pt = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
         
         // Move the shadow a little bit.
-        pt.x() += 0.15f * min_size;
-        pt.y() += 0.10f * min_size;
+        pt.get<0>() += 0.15f * min_size;
+        pt.get<1>() += 0.10f * min_size;
 
         ggo::paint(image_buffer,
                    std::make_shared<ggo::disc_float>(pt, 0.0015f * min_size),
@@ -240,7 +240,7 @@ namespace ggo
       // Render points.
       for (const auto & point : rotated_points)
       {
-        ggo::point2d_float render_point = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
+        ggo::pos2f render_point = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
 
         float gray = ggo::map(point.z(), z_inf, z_sup, 0.1f, 1.0f);
         float blur = 0.75f + 0.005f * min_size * std::abs(point.z() - 0.75f * z_sup);

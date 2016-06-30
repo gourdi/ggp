@@ -17,8 +17,8 @@ GGO_TEST(paint, multi_paint1)
   const int WIDTH = 100;
   const int HEIGHT = 100;
     
-  auto disc1 = std::make_shared<ggo::disc_float>(ggo::point2d_float(40.f, 50.f), 30.f);
-  auto disc2 = std::make_shared<ggo::disc_float>(ggo::point2d_float(60.f, 50.f), 30.f);
+  auto disc1 = std::make_shared<ggo::disc_float>(ggo::pos2f(40.f, 50.f), 30.f);
+  auto disc2 = std::make_shared<ggo::disc_float>(ggo::pos2f(60.f, 50.f), 30.f);
   auto multi_shape = std::make_shared<ggo::multi_shape_float>();
   multi_shape->add_shapes(disc1, disc2);
 
@@ -84,7 +84,7 @@ GGO_TEST(paint, multi_paint4)
   const int WIDTH = 60;
   const int HEIGHT = 60;
     
-  auto segment = std::make_shared<ggo::extended_segment_float>(ggo::point2d_float(10, 10), ggo::point2d_float(50, 15), 0.48f);
+  auto segment = std::make_shared<ggo::extended_segment_float>(ggo::pos2f(10.f, 10.f), ggo::pos2f(50.f, 15.f), 0.48f);
 
   ggo::array_uint8 buffer(3 * WIDTH * HEIGHT, 255);
   ggo::paint(buffer.data(), WIDTH, HEIGHT, segment, ggo::color::RED, 1, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_8X8());
@@ -101,8 +101,8 @@ GGO_TEST(paint, multi_paint5)
   auto color_brush = std::make_shared<ggo::rgb_gradient_brush>();
   color_brush->_value1 = ggo::color::RED;
   color_brush->_value2 = ggo::color::GREEN;
-  color_brush->_pos1 = ggo::point2d_float(30, 30);
-  color_brush->_pos2 = ggo::point2d_float(50, 50);
+  color_brush->_pos1 = ggo::pos2f(30.f, 30.f);
+  color_brush->_pos2 = ggo::pos2f(50.f, 50.f);
   
   auto opacity_brush = std::make_shared<ggo::opacity_solid_brush>(1.f);
 
@@ -166,9 +166,9 @@ public:
       {
         float angle = i * 2 * ggo::PI<float>() / _steps;
         float dist = j * _radius / _steps;
-        ggo::point2d_float pos = ggo::point2d_float::from_polar(angle, dist);
-        float x_f = x + pos.x();
-        float y_f = y + pos.y();
+        ggo::pos2f pos = ggo::from_polar(angle, dist);
+        float x_f = x + pos.get<0>();
+        float y_f = y + pos.get<1>();
         
         fct(x_f, y_f);
       }

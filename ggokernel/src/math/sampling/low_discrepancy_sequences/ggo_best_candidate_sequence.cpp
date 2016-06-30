@@ -5,32 +5,32 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  std::vector<ggo::point2d_float> best_candidate_sequence_2d(int count)
+  std::vector<ggo::pos2f> best_candidate_sequence_2d(int count)
   {
-    std::vector<ggo::point2d_float> result;
+    std::vector<ggo::pos2f> result;
 
     while (result.size() < static_cast<size_t>(count))
     {
       float hypot = 0;
-      ggo::point2d_float point;
+      ggo::pos2f point;
       
       for (int i = 0; i < 64; ++i)
       {
-        ggo::point2d_float point_cur(ggo::rand_float(), ggo::rand_float());
+        ggo::pos2f point_cur(ggo::rand_float(), ggo::rand_float());
         
         float hypot_cur = std::numeric_limits<float>::max();
         
         for (const auto & p : result)
         {
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() + 1, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() + 0, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() - 1, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() + 1, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() + 0, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() - 1, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() + 1, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() + 0, point_cur.x(), point_cur.y()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() - 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
         }
         
         if (hypot_cur > hypot)

@@ -71,7 +71,7 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 		{
 			ggo_particle & particle = particles[i];
 			
-			float k = 1 + particle._pos.x() * particle._pos.x() + particle._pos.y() * particle._pos.y();
+			float k = 1 + particle._pos.get<0>() * particle._pos.get<0>() + particle._pos.get<1>() * particle._pos.get<1>();
 			if (std::abs(k) < 0.00001)
 			{
 				particles.erase(particles.begin() + i);
@@ -80,9 +80,9 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 				
 			float t = u1 - u2 / k;
 		
-			ggo::point2d_float next_pt;
-			next_pt.x() = 1 + u0 * (particle._pos.x() * cos(t) - particle._pos.y() * sin(t));
-			next_pt.y() =     u0 * (particle._pos.x() * sin(t) - particle._pos.y() * cos(t));
+			ggo::pos2f next_pt;
+			next_pt.get<0>() = 1 + u0 * (particle._pos.get<0>() * cos(t) - particle._pos.get<1>() * sin(t));
+			next_pt.get<1>() =     u0 * (particle._pos.get<0>() * sin(t) - particle._pos.get<1>() * cos(t));
 
 			float speed = ggo::distance(particle._pos, next_pt);
 			particle._radius = speed;
@@ -94,7 +94,7 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 			}
 			
 			// Paint the point.
-			ggo::point2d_float point = map_fill(particle._pos, -_range, _range);
+			ggo::pos2f point = map_fill(particle._pos, -_range, _range);
 				
 			float radius = 0.0025f * particle._radius * get_render_max_size();
 			radius = std::max(1.5f, radius);
@@ -102,8 +102,8 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
       ggo::paint(image_buffer, std::make_shared<ggo::disc_float>(point, radius), particle._color,0.15f);
 				
 			// Move points slowly.
-			particle._pos.x() += 0.005f * (next_pt.x() - particle._pos.x());
-			particle._pos.y() += 0.005f * (next_pt.y() - particle._pos.y());
+			particle._pos.get<0>() += 0.005f * (next_pt.get<0>() - particle._pos.get<0>());
+			particle._pos.get<1>() += 0.005f * (next_pt.get<1>() - particle._pos.get<1>());
 		}
 	}
 
@@ -118,20 +118,20 @@ ggo_ikeda_artist::ggo_particle ggo_ikeda_artist::create_seed() const
 	switch (ggo::rand_int(0, 3))
 	{
 		case 0:
-			particle._pos.x() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
-			particle._pos.y() = 1.5f * _range;
+			particle._pos.get<0>() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
+			particle._pos.get<1>() = 1.5f * _range;
 			break;
 		case 1:
-			particle._pos.x() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
-			particle._pos.y() = -1.5f * _range;
+			particle._pos.get<0>() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
+			particle._pos.get<1>() = -1.5f * _range;
 			break;
 		case 2:
-			particle._pos.x() = 1.5f * _range;
-			particle._pos.y() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
+			particle._pos.get<0>() = 1.5f * _range;
+			particle._pos.get<1>() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
 			break;
 		case 3:
-			particle._pos.x() = -1.5f * _range;
-			particle._pos.y() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
+			particle._pos.get<0>() = -1.5f * _range;
+			particle._pos.get<1>() = ggo::rand_float(-1.5f * _range, 1.5f * _range);
 			break;
 	}
 

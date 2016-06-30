@@ -21,13 +21,13 @@ bool ggo_filling_squares_animation_artist::ggo_animated_square::update(uint8_t *
 
 	// Apply rotation.
 	float angle = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, _angle, 0);
-	square->rotate(angle, ggo::point2d_float(0, 0));
+	square->rotate(angle, ggo::pos2f(0.f, 0.f));
 
 	// Apply translation.
 	float translation = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, 1, 0);
-	float dx = 10 * (_pos.x() - width / 2);
-	float dy = 10 * (_pos.y() - height / 2);	
-	square->move(_pos.x() + translation * dx, _pos.y() + translation * dy);
+	float dx = 10 * (_pos.get<0>() - width / 2);
+	float dy = 10 * (_pos.get<1>() - height / 2);	
+	square->move(_pos.get<0>() + translation * dx, _pos.get<1>() + translation * dy);
 
 	// Painting.
   float opacity = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, 0, 1);

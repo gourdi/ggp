@@ -19,8 +19,8 @@ namespace ggo
       
   private:
 
-    std::vector<ggo::vector2d_float>  _samples;
-    float                             _radius;
+    std::vector<ggo::pos2f> _samples;
+    float                   _radius;
   };
 }
 

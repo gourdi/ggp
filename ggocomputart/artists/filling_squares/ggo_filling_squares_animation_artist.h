@@ -22,7 +22,7 @@ private:
     
 		bool    update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter) override;
 
-		ggo::point2d_float 								              _pos;
+		ggo::pos2f  						                        _pos;
 		float											                      _angle;
 		ggo_filling_squares_artist::ggo_colored_square 	_colored_square;
         

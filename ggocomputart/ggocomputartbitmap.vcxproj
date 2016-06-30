@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ggo_computart_bitmaps.cpp" />
+    <ClCompile Include="ggo_computart_bitmap.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B6C277EB-685E-4940-9322-ED09B2CCC466}</ProjectGuid>

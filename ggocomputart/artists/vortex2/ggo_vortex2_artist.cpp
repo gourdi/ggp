@@ -18,26 +18,26 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
-		ggo::point2d_float particle;
+		ggo::pos2f particle;
 
-		particle.x() = ggo::rand_float(-0.1f * render_width, 1.1f * render_width);
-		particle.y() = ggo::rand_float(-0.1f * render_height, 1.1f * render_height);
+		particle.get<0>() = ggo::rand_float(-0.1f * render_width, 1.1f * render_width);
+		particle.get<1>() = ggo::rand_float(-0.1f * render_height, 1.1f * render_height);
 
 		// The particle color.
 		ggo::color color;
-		if ((particle.x() <= params._split_horz) && (particle.y() <= params._split_vert))
+		if ((particle.get<0>() <= params._split_horz) && (particle.get<1>() <= params._split_vert))
 		{
 			color = params._color1;
 		}
-		if ((particle.x() >= params._split_horz) && (particle.y() <= params._split_vert))
+		if ((particle.get<0>() >= params._split_horz) && (particle.get<1>() <= params._split_vert))
 		{
 			color = params._color2;
 		}
-		if ((particle.x() <= params._split_horz) && (particle.y() >= params._split_vert))
+		if ((particle.get<0>() <= params._split_horz) && (particle.get<1>() >= params._split_vert))
 		{
 			color = params._color3;
 		}
-		if ((particle.x() >= params._split_horz) && (particle.y() >= params._split_vert))
+		if ((particle.get<0>() >= params._split_horz) && (particle.get<1>() >= params._split_vert))
 		{
 			color = params._color4;
 		}
@@ -46,29 +46,29 @@ void ggo_vortex2_artist::render(uint8_t * buffer, int render_width, int render_h
 		for (int i = 0; i < MOVES_COUNT; ++i)
 		{
 			// Apply the vortices.
-			ggo::vector2d_float move(0, 0);
+			ggo::vec2f move(0.f, 0.f);
 			for (const auto & vortex : params._vortices)
 			{
-				float dx	= particle.x() - vortex._pos.x();
-				float dy	= particle.y() - vortex._pos.y();
+				float dx	= particle.get<0>() - vortex._pos.get<0>();
+				float dy	= particle.get<1>() - vortex._pos.get<1>();
 				float angle	= std::atan2(dy, dx);
 				float dist	= std::sqrt(dx * dx + dy * dy) / max_size;
 				float force	= vortex._speed * std::pow(1 / (1 + dist), vortex._power);
 
-				move.x() += force * std::cos(angle + vortex._angle);
-				move.y() += force * std::sin(angle + vortex._angle);
+				move.get<0>() += force * std::cos(angle + vortex._angle);
+				move.get<1>() += force * std::sin(angle + vortex._angle);
 			}
 			particle += move;
 
-			if (particle.x() < 0) { particle.x() += render_width; }
-			else if (particle.x() > render_width) { particle.x() -= render_width; }
+			if (particle.get<0>() < 0) { particle.get<0>() += render_width; }
+			else if (particle.get<0>() > render_width) { particle.get<0>() -= render_width; }
 
-			if (particle.y() < 0) { particle.y() += render_height; }
-			else if (particle.y() > render_height) { particle.y() -= render_height; }
+			if (particle.get<1>() < 0) { particle.get<1>() += render_height; }
+			else if (particle.get<1>() > render_height) { particle.get<1>() -= render_height; }
 
 			// Render the particle.
-			int render_x = ggo::to<int>(particle.x());
-			int render_y = ggo::to<int>(particle.y());
+			int render_x = ggo::to<int>(particle.get<0>());
+			int render_y = ggo::to<int>(particle.get<1>());
 
 			if ((render_x >= 0) && (render_x < render_width) &&
 				  (render_y >= 0) && (render_y < render_height))

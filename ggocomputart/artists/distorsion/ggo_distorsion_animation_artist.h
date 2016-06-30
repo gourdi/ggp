@@ -24,21 +24,21 @@ private:
   
   struct ggo_animated_transform
   {
-    ggo::point2d_float  _center_start;
-    ggo::point2d_float  _center_end;
-    ggo::vector2d_float _disp;
-    float               _variance;
+    ggo::pos2f  _center_start;
+    ggo::pos2f  _center_end;
+    ggo::vec2f  _disp;
+    float       _variance;
   };
   
   struct ggo_transform
   {
-    ggo_transform(const ggo::point2d_float & center, const ggo::vector2d_float & disp, float variance)
+    ggo_transform(const ggo::pos2f & center, const ggo::pos2f & disp, float variance)
     :
     _center(center), _disp(disp), _variance(variance) {}
     
-    ggo::point2d_float  _center;
-    ggo::vector2d_float _disp;
-    float               _variance;
+    ggo::pos2f  _center;
+    ggo::vec2f  _disp;
+    float       _variance;
   };
   
   float _hue;

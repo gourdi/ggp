@@ -39,7 +39,7 @@ void ggo_alpha_anim_artist::add_new_item()
 {
 	float margin = 0.1f * get_render_min_size();
 
-	ggo::point2d_float center = get_random_point(margin);
+	ggo::pos2f center = get_random_point(margin);
 
 	// Try to create an item far away from the other already created items.
 	if (_items.empty() == false)
@@ -47,7 +47,7 @@ void ggo_alpha_anim_artist::add_new_item()
 		float dist = 0;
 		for (int i = 0; i < 5; ++i)
 		{
-			ggo::point2d_float center_cur = get_random_point(margin);
+			ggo::pos2f center_cur = get_random_point(margin);
 			float dist_cur = ggo::distance(_items.front().get_center(), center_cur);
 			for (int i = 1; i < _items.size(); ++i)
 			{
@@ -192,7 +192,7 @@ void ggo_alpha_anim_artist::ggo_oscillo::draw(uint8_t * buffer, int width, int h
     float x2 = i * width / float(GGO_OSCILLO_SIZE);
 		float y2 = _y + 0.025f * spat(i) * min_size;
 
-    multi_shape->add_shape(std::make_shared<ggo::extended_segment_float>(ggo::point2d_float(x1, y1), ggo::point2d_float(x2, y2), 0.001f * min_size));
+    multi_shape->add_shape(std::make_shared<ggo::extended_segment_float>(ggo::pos2f(x1, y1), ggo::pos2f(x2, y2), 0.001f * min_size));
 	}
     
   ggo::paint(buffer, width, height, multi_shape, ggo::color::BLACK, _opacity);
@@ -202,7 +202,7 @@ void ggo_alpha_anim_artist::ggo_oscillo::draw(uint8_t * buffer, int width, int h
 // ggo_item
 
 //////////////////////////////////////////////////////////////
-ggo_alpha_anim_artist::ggo_item::ggo_item(const ggo::point2d_float & center, float inner_radius, float outter_radius, float hue, float sat, float val)
+ggo_alpha_anim_artist::ggo_item::ggo_item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val)
 :
 _center(center)
 {
@@ -237,7 +237,7 @@ void ggo_alpha_anim_artist::ggo_item::draw(uint8_t * buffer, int width, int heig
 // ggo_line
 
 //////////////////////////////////////////////////////////////
-ggo_alpha_anim_artist::ggo_line::ggo_line(const ggo::point2d_float & center, float angle, float inner_radius, float outter_radius, const ggo::color & color)
+ggo_alpha_anim_artist::ggo_line::ggo_line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color & color)
 {
 	_center = center;
 	_angle = angle;
@@ -269,22 +269,22 @@ bool ggo_alpha_anim_artist::ggo_line::update(int width, int height)
 	float outter_radius = _outter_radius * (1 + 10 * start_factor);
 	float angle = _angle + _angle_offset * start_factor;
 
-	ggo::vector2d_float offset1 = ggo::vector2d_float::from_polar(angle, inner_radius);
-	ggo::vector2d_float offset2 = ggo::vector2d_float::from_polar(angle, outter_radius);
+	ggo::vec2f offset1 = ggo::from_polar(angle, inner_radius);
+	ggo::vec2f offset2 = ggo::from_polar(angle, outter_radius);
 	
 	const int END_COUNTER = 100;
 	if (_counter >= END_COUNTER)
 	{
-		ggo::vector2d_float line_center = 0.5f * (offset1 + offset2);
+		ggo::vec2f line_center = 0.5f * (offset1 + offset2);
 		
 		float end_factor = std::pow(0.1f * (_counter - END_COUNTER), 2.5f);
 		float length = ggo::distance(offset1, offset2);
-		float angle = atan2(line_center.y(), line_center.x());
+		float angle = atan2(line_center.get<1>(), line_center.get<0>());
 		
 		angle = _angle + end_factor;
 		line_center *= (1 + end_factor);
-		offset1 = line_center + ggo::vector2d_float::from_polar(angle, length / 2);
-		offset2 = line_center - ggo::vector2d_float::from_polar(angle, length / 2);
+		offset1 = line_center + ggo::from_polar(angle, length / 2);
+		offset2 = line_center - ggo::from_polar(angle, length / 2);
 		
 		_opacity -= 0.1f * end_factor;
 		if (_opacity <= 0)

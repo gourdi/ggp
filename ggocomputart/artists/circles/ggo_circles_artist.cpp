@@ -25,7 +25,7 @@ std::vector<std::vector<ggo_circles_artist::ggo_colored_disc>> ggo_circles_artis
 
     float radius = ggo::rand_float(0.2f, 0.8f) * get_render_max_size();
     
-    ggo::point2d_float center(ggo::rand_float(0.f, static_cast<float>(get_render_width())), ggo::rand_float(0.f, static_cast<float>(get_render_height())));
+    ggo::pos2f center(ggo::rand_float(0.f, static_cast<float>(get_render_width())), ggo::rand_float(0.f, static_cast<float>(get_render_height())));
 
     float circle_radius_delta = ggo::rand_float(0.002f, 0.003f) * get_render_max_size();
     int circles_count = ggo::rand_int(25, 30);
@@ -37,12 +37,12 @@ std::vector<std::vector<ggo_circles_artist::ggo_colored_disc>> ggo_circles_artis
       ggo_colored_disc colored_disc;
       
       // Set up the circle.
-      colored_disc._disc.center().x() = center.x() + radius * std::cos(angle);
-      colored_disc._disc.center().y() = center.y() + radius * std::sin(angle);
+      colored_disc._disc.center().get<0>() = center.get<0>() + radius * std::cos(angle);
+      colored_disc._disc.center().get<1>() = center.get<1>() + radius * std::sin(angle);
       colored_disc._disc.radius() = (circles_count - j) * circle_radius_delta;
       
       // Set the current circle's colour.
-      float mapped_y = colored_disc._disc.center().y() / get_render_height();
+      float mapped_y = colored_disc._disc.center().get<1>() / get_render_height();
       if (j % 2)
       {
         colored_disc._color.r() = start_color1.r() * mapped_y + start_color2.r() * (1 - mapped_y);
@@ -68,7 +68,7 @@ std::vector<std::vector<ggo_circles_artist::ggo_colored_disc>> ggo_circles_artis
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_circles_artist::paint_disc(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos, float radius, const ggo::color & color)
+void ggo_circles_artist::paint_disc(uint8_t * buffer, int width, int height, const ggo::pos2f & pos, float radius, const ggo::color & color)
 {
   ggo::paint(buffer, width, height, 
              std::make_shared<ggo::disc_float>(pos, radius + 0.002f * std::min(width, height)),

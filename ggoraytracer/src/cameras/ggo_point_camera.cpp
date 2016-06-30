@@ -169,8 +169,8 @@ namespace ggo
   std::vector<ggo::ray3d_float> multi_sampling_point_camera::get_rays(int x, int y, int samples_count) const
   {
     // Sample disc (radius=0.5) and rectangle (side=1).
-    std::vector<ggo::point2d_float> eye_samples2d(ggo::halton_disc_2d_table_2_3, ggo::halton_disc_2d_table_2_3 + samples_count);
-    std::vector<ggo::point2d_float> focus_samples2d(ggo::halton_rect_2d_table_2_3, ggo::halton_rect_2d_table_2_3 + samples_count);
+    std::vector<ggo::pos2f> eye_samples2d(ggo::halton_disc_2d_table_2_3, ggo::halton_disc_2d_table_2_3 + samples_count);
+    std::vector<ggo::pos2f> focus_samples2d(ggo::halton_rect_2d_table_2_3, ggo::halton_rect_2d_table_2_3 + samples_count);
 
     float x_f = x + _offset_x;
     float y_f = y + _offset_y;
@@ -181,13 +181,13 @@ namespace ggo
     {
       // Focus point.
       ggo::point3d_float focus_point(_center_focus_point);
-      focus_point += ((x_f + focus_samples2d[i].x()) * _opti) * _basis.x();
-      focus_point += ((y_f + focus_samples2d[i].y()) * _opti) * _basis.y();
+      focus_point += ((x_f + focus_samples2d[i].get<0>()) * _opti) * _basis.x();
+      focus_point += ((y_f + focus_samples2d[i].get<1>()) * _opti) * _basis.y();
 
       // Eye point.
       ggo::point3d_float eye_point(_basis.pos());
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].x()) * _basis.x();
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].y()) * _basis.y();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<0>()) * _basis.x();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<1>()) * _basis.y();
 
       rays.emplace_back(eye_point, focus_point - eye_point);
     }

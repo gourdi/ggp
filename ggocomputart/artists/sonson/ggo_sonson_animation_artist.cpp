@@ -13,7 +13,7 @@ namespace
   //////////////////////////////////////////////////////////////
   void paint_arc(ggo::gray_image_abc & opacity_mask,
                  ggo::rgb_image_abc & color_mask,
-                 const ggo::point2d_float & center, float radius1, float radius2, float angle1, float angle2,
+                 const ggo::pos2f & center, float radius1, float radius2, float angle1, float angle2,
                  const ggo::color & color)
   {
     GGO_ASSERT_EQ(opacity_mask.get_width(), color_mask.get_width());
@@ -26,10 +26,10 @@ namespace
     GGO_ASSERT_LT(radius_inf, radius_sup);
     GGO_ASSERT_LT(angle_inf, angle_sup);
 
-    ggo::pixel_rect pixel_rect(ggo::rect_float::from_left_right_bottom_top(center.x() - radius_sup,
-                                                                           center.x() + radius_sup,
-                                                                           center.y() - radius_sup,
-                                                                           center.y() + radius_sup));
+    ggo::pixel_rect pixel_rect(ggo::rect_float::from_left_right_bottom_top(center.get<0>() - radius_sup,
+                                                                           center.get<0>() + radius_sup,
+                                                                           center.get<1>() - radius_sup,
+                                                                           center.get<1>() + radius_sup));
 
     if (pixel_rect.crop(opacity_mask.get_width(), opacity_mask.get_height()) == false)
     {
@@ -38,8 +38,8 @@ namespace
 
     auto paint_pixel = [&](int x, int y)
     {
-      float dy = ggo::to<float>(y - center.y());
-      float dx = ggo::to<float>(x - center.x());
+      float dy = ggo::to<float>(y - center.get<1>());
+      float dx = ggo::to<float>(x - center.get<0>());
 
       float angle = std::atan2(dy, dx);
       if (angle < angle_inf || angle > angle_sup)
@@ -62,7 +62,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   void paint_rect(ggo::gray_image_abc & opacity_mask,
-                  ggo::rgb_image_abc & color_mask, const ggo::point2d_float & p1, const ggo::point2d_float & p2,
+                  ggo::rgb_image_abc & color_mask, const ggo::pos2f & p1, const ggo::pos2f & p2,
                   const ggo::color & color)
   {
     GGO_ASSERT_EQ(opacity_mask.get_width(), color_mask.get_width());
@@ -118,23 +118,23 @@ ggo_sonson_animation_artist::ggo_line * ggo_sonson_animation_artist::ggo_line::c
   {
   case 1: // Left
     line->_pos = { -0.5f, scale_factor * ggo::to<float>(ggo::rand_int(0, height)) - 0.5f };
-    line->_velocity = { velocity, 0 };
-    line->_strip_dir = { 0, -1 };
+    line->_velocity = { velocity, 0.f };
+    line->_strip_dir = { 0.f, -1.f };
     break;
   case 2: // Right
     line->_pos = { scale_factor * ggo::to<float>(width) - 0.5f, scale_factor * ggo::to<float>(ggo::rand_int(0, height)) - 0.5f };
-    line->_velocity = { -velocity, 0 };
-    line->_strip_dir = { 0, 1 };
+    line->_velocity = { -velocity, 0.f };
+    line->_strip_dir = { 0.f, 1.f };
     break;
   case 3: // Bottom
     line->_pos = { scale_factor * ggo::to<float>(ggo::rand_int(0, width)) - 0.5f, -0.5f };
-    line->_velocity = { 0, velocity };
-    line->_strip_dir = { 1, 0 };
+    line->_velocity = { 0.f, velocity };
+    line->_strip_dir = { 1.f, 0.f };
     break;
   case 4: // Top
     line->_pos = { scale_factor * ggo::to<float>(ggo::rand_int(0, width)) - 0.5f, scale_factor * ggo::to<float>(height) - 0.5f };
-    line->_velocity = { 0, -velocity };
-    line->_strip_dir = { -1, 0 };
+    line->_velocity = { 0.f, -velocity };
+    line->_strip_dir = { -1.f, 0.f };
     break;
   }
 
@@ -180,8 +180,8 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
 {
   --_step;
 
-  _pos.x() += _velocity.x();
-  _pos.y() += _velocity.y();
+  _pos.get<0>() += _velocity.get<0>();
+  _pos.get<1>() += _velocity.get<1>();
 
   // Set up the arc.
   if (_step == 0)
@@ -196,7 +196,7 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
     }
 
     // Compute arc steps number to match velocity.
-    float velocity = std::max(std::abs(_velocity.x()), std::abs(_velocity.y()));
+    float velocity = std::max(std::abs(_velocity.get<0>()), std::abs(_velocity.get<1>()));
     float mid_radius = _radius + 0.5f * strips_size(_strips);
     _step_end = -ggo::to<int>(mid_radius * 0.5f * ggo::PI<float>() / velocity);
   }
@@ -205,11 +205,11 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
   if (_step == _step_end)
   {
     _step = ggo::rand_int(5, 30);
-    _pos = _center + ggo::vector2d_float::from_polar(_angle_end, _radius + (_clock_wise ? strips_size(_strips) : 0.f));
+    _pos = _center + ggo::from_polar(_angle_end, _radius + (_clock_wise ? strips_size(_strips) : 0.f));
 
-    float velocity = std::max(std::abs(_velocity.x()), std::abs(_velocity.y()));
+    float velocity = std::max(std::abs(_velocity.get<0>()), std::abs(_velocity.get<1>()));
 
-    ggo::vector2d_float new_velocity = (_clock_wise ? 1.f : -1.f) * _strip_dir * velocity;
+    ggo::vec2f new_velocity = (_clock_wise ? 1.f : -1.f) * _strip_dir * velocity;
 
     _strip_dir = (_clock_wise ? -1.f : 1.f) * _velocity.get_normalized();
     _velocity = new_velocity;
@@ -235,13 +235,13 @@ void ggo_sonson_animation_artist::ggo_line::render_masks()
 {
   if (_step > 0) // Positive step => line is moving forward.
   {
-    ggo::point2d_float p1 = _pos;
+    ggo::pos2f p1 = _pos;
 
     for (const auto & strip : _strips)
     {
       float strip_size = ggo::to<float>(strip.first);
 
-      ggo::point2d_float p2 = p1;
+      ggo::pos2f p2 = p1;
       p2 += strip_size * _strip_dir + _velocity;
 
       paint_rect(_opacity_mask, _color_mask, p1, p2, strip.second);
@@ -290,13 +290,13 @@ void ggo_sonson_animation_artist::ggo_line::setup_cw()
   _center = _pos + outter_radius * _strip_dir;
   _clock_wise = true;
 
-  ggo::point2d_float pos_end = _center + _velocity.get_normalized() * outter_radius;
+  ggo::pos2f pos_end = _center + _velocity.get_normalized() * outter_radius;
 
-  ggo::vector2d_float diff_start = _pos - _center;
-  ggo::vector2d_float diff_end = _velocity.get_normalized() * _radius;
+  ggo::vec2f diff_start = _pos - _center;
+  ggo::vec2f diff_end = _velocity.get_normalized() * _radius;
 
-  _angle_start = std::atan2(diff_start.y(), diff_start.x());
-  _angle_end = std::atan2(diff_end.y(), diff_end.x());
+  _angle_start = std::atan2(diff_start.get<1>(), diff_start.get<0>());
+  _angle_end = std::atan2(diff_end.get<1>(), diff_end.get<0>());
 
   resolve_pi(_angle_start, _angle_end);
 }
@@ -308,13 +308,13 @@ void ggo_sonson_animation_artist::ggo_line::setup_ccw()
   _center = _pos - _radius * _strip_dir;
   _clock_wise = false;
 
-  ggo::point2d_float pos_end = _center + _velocity.get_normalized() * _radius;
+  ggo::pos2f pos_end = _center + _velocity.get_normalized() * _radius;
 
-  ggo::vector2d_float diff_start = _pos - _center;
-  ggo::vector2d_float diff_end = _velocity.get_normalized() * _radius;
+  ggo::vec2f diff_start = _pos - _center;
+  ggo::vec2f diff_end = _velocity.get_normalized() * _radius;
 
-  _angle_start = std::atan2(diff_start.y(), diff_start.x());
-  _angle_end = std::atan2(diff_end.y(), diff_end.x());
+  _angle_start = std::atan2(diff_start.get<1>(), diff_start.get<0>());
+  _angle_end = std::atan2(diff_end.get<1>(), diff_end.get<0>());
 
   resolve_pi(_angle_start, _angle_end);
 }
@@ -331,11 +331,11 @@ void ggo_sonson_animation_artist::ggo_line::update_sparks()
     {
       float weight = ggo::rand_float();
       ggo::segment_float segment = get_segment();
-      ggo::point2d_float p1 = weight * segment.p1() + (1.f - weight) * segment.p2();
+      ggo::pos2f p1 = weight * segment.p1() + (1.f - weight) * segment.p2();
 
       float angle = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
       float length = 0.01f * render_min_size;
-      ggo::vector2d_float vel = ggo::vector2d_float::from_polar(angle, length);
+      ggo::vec2f vel = ggo::from_polar(angle, length);
 
       _sparks.push_back(ggo::segment_float(p1, p1 + vel));
     }
@@ -344,14 +344,14 @@ void ggo_sonson_animation_artist::ggo_line::update_sparks()
   // Move sparks.
   for (auto & spark : _sparks)
   {
-    ggo::point2d_float vel = spark.p2() - spark.p1();
-    vel.y() -= 0.0025f * render_min_size;
+    ggo::pos2f vel = spark.p2() - spark.p1();
+    vel.get<1>() -= 0.0025f * render_min_size;
     spark.p1() = spark.p2();
     spark.p2() += vel;
   }
 
   // Remove dead sparks.
-  ggo::remove_if(_sparks, [](const ggo::segment_float & spark) { return spark.p1().y() < 0.f; });
+  ggo::remove_if(_sparks, [](const ggo::segment_float & spark) { return spark.p1().get<1>() < 0.f; });
 }
 
 //////////////////////////////////////////////////////////////
@@ -378,7 +378,7 @@ std::pair<float, ggo::color> ggo_sonson_animation_artist::ggo_line::get_pixel(in
 //////////////////////////////////////////////////////////////
 ggo::segment_float ggo_sonson_animation_artist::ggo_line::get_segment() const
 {
-  ggo::point2d_float p1, p2;
+  ggo::pos2f p1, p2;
 
   if (_step >= 0)
   {
@@ -389,8 +389,8 @@ ggo::segment_float ggo_sonson_animation_artist::ggo_line::get_segment() const
   {
     float angle = ggo::map(static_cast<float>(-_step), 0.f, static_cast<float>(-_step_end), _angle_start, _angle_end);
 
-    p1 = _center + ggo::vector2d_float::from_polar(angle, _radius);
-    p2 = _center + ggo::vector2d_float::from_polar(angle, _radius + strips_size(_strips));
+    p1 = _center + ggo::from_polar(angle, _radius);
+    p2 = _center + ggo::from_polar(angle, _radius + strips_size(_strips));
   }
 
   p1 /= ggo::to<float>(_scale_factor);

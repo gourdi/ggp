@@ -112,7 +112,7 @@ namespace ggo
   template <int stride_in = 1, int stride_out = 1>
   void gaussian_blur_2d_loop(const uint8_t * in, uint8_t * out, int width, int height, float stddev, float filter_threshold)
   {
-    ggo::array<float> tmp(width * height);
+    ggo::array<float, 1> tmp(width * height);
 
     // Setup the filter.
     auto filter = build_gaussian_filter<float>(stddev, filter_threshold);

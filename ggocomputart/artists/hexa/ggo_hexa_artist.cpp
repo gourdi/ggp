@@ -69,7 +69,7 @@ public:
     _fields.push_back(perlin_field);
 
     // The gaussians.
-    std::vector<ggo::point2d_float> centers;
+    std::vector<ggo::pos2f> centers;
     float ratio = ggo::rand_float(5, 10);
     float sum = 0;
     do
@@ -175,8 +175,8 @@ public:
                       ggo::point3d_float(x + std::cos(angle2), y + std::sin(angle2), z_sup),
                       ggo::point3d_float(x, y, z_sup), scene_builder, material_top);
                       
-    /*  create_rectangle(ggo::point2d_float(x + std::cos(angle1), y + std::sin(angle1)),
-                       ggo::point2d_float(x + std::cos(angle2), y + std::sin(angle2)),
+    /*  create_rectangle(ggo::pos2f(x + std::cos(angle1), y + std::sin(angle1)),
+                       ggo::pos2f(x + std::cos(angle2), y + std::sin(angle2)),
                        z_inf, z_sup, scene, material_side);*/
 
       create_triangle(ggo::point3d_float(x + std::cos(angle1), y + std::sin(angle1), z_sup),
@@ -225,14 +225,14 @@ private:
     _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), v1.y(), v2.y(), v3.y());
   }
   
-  void create_rectangle(const ggo::point2d_float & p1,
-                        const ggo::point2d_float & p2,
+  void create_rectangle(const ggo::pos2f & p1,
+                        const ggo::pos2f & p2,
                         float z_inf, float z_sup,
                         ggo::scene_builder & scene_builder,
                         std::shared_ptr<const ggo::material_abc> material)
   {
-    ggo::point3d_float center(0.5f * (p1.x() + p2.x()), 0.5f * (p1.y() + p2.y()), 0.5f * (z_inf + z_sup));
-    ggo::vector3d_float v1(0.5f * (p2.x() - p1.x()), 0.5f * (p2.y() - p1.y()), 0);
+    ggo::point3d_float center(0.5f * (p1.get<0>() + p2.get<0>()), 0.5f * (p1.get<1>() + p2.get<1>()), 0.5f * (z_inf + z_sup));
+    ggo::vector3d_float v1(0.5f * (p2.get<0>() - p1.get<0>()), 0.5f * (p2.get<1>() - p1.get<1>()), 0);
     ggo::vector3d_float v2(0, 0, 0.5f * (z_sup - z_inf));
     
     auto rectangle = std::make_shared<ggo::parallelogram3d<float>>(center, v1, v2);
@@ -241,10 +241,10 @@ private:
     _objects.push_back(object);
     
     // Update the bounding box too.
-    _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), p1.x(), p2.x());
-    _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), p1.x(), p2.x());
-    _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), p1.y(), p2.y());
-    _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), p1.y(), p2.y());
+    _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), p1.get<0>(), p2.get<0>());
+    _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), p1.get<0>(), p2.get<0>());
+    _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), p1.get<1>(), p2.get<1>());
+    _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), p1.get<1>(), p2.get<1>());
   }
 
 private:

@@ -7,38 +7,38 @@
 
 namespace ggo
 {
-  template <typename T>
-  class extended_segment: public paintable_shape2d_abc<T>,
-                          public distancable_shape2d_abc<T>,
-                          public movable_shape2d_abc<T>,
-                          public rotatable_shape2d_abc<T>
+  template <typename data_t>
+  class extended_segment: public paintable_shape2d_abc<data_t>,
+                          public distancable_shape2d_abc<data_t>,
+                          public movable_shape2d_abc<data_t>,
+                          public rotatable_shape2d_abc<data_t>
   {
   public:
 
-                          extended_segment(const ggo::set2<T> & p1, const ggo::set2<T> & p2, T width);
+                              extended_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width);
           
-    float                 width() const { return _width; }
-    float &               width() { return _width; }
+    float                     width() const { return _width; }
+    float &                   width() { return _width; }
           
-    const ggo::set2<T> &  p1() const { return _p1; }
-    ggo::set2<T> &        p1() { return _p1; }
+    const ggo::pos2<data_t> & p1() const { return _p1; }
+    ggo::pos2<data_t> &       p1() { return _p1; }
           
-    const ggo::set2<T> &  p2() const { return _p2; }
-    ggo::set2<T> &        p2() { return _p2; }
+    const ggo::pos2<data_t> & p2() const { return _p2; }
+    ggo::pos2<data_t> &       p2() { return _p2; }
           
     // Interfaces.        
-    void				          move(T dx, T dy) override { _p1.move(dx, dy); _p2.move(dx, dy); }
-    void				          rotate(T angle, const ggo::set2<T> & center) override { _p1.rotate(angle, center); _p2.rotate(angle, center); }
-    T                     dist_to_point(T x, T y) const override;
-    bool	                is_point_inside(T x, T y) const override;
-    rect_data<T>          get_bounding_rect() const override;
-    rect_intersection     get_rect_intersection(const rect_data<T> & rect_data) const override;
+    void				              move(data_t dx, data_t dy) override { _p1.move(dx, dy); _p2.move(dx, dy); }
+    void				              rotate(data_t angle, const ggo::pos2<data_t> & center) override { _p1 = ggo::rotate(_p1,center, angle); _p2 = ggo::rotate(_p2, center, angle); }
+    data_t                    dist_to_point(data_t x, data_t y) const override;
+    bool	                    is_point_inside(data_t x, data_t y) const override;
+    rect_data<data_t>         get_bounding_rect() const override;
+    rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 
   private:
 
-    ggo::set2<T>  _p1;
-    ggo::set2<T>  _p2;
-    T             _width;
+    ggo::pos2<data_t>  _p1;
+    ggo::pos2<data_t>  _p2;
+    data_t             _width;
   };
 }
 

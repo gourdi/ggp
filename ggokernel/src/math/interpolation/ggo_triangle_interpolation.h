@@ -5,20 +5,20 @@
 
 namespace ggo
 {
-  template <typename REAL_T, typename VALUE_T, bool clip = true>
-  bool triangular_interpolation(const ggo::set2<REAL_T> & p0, const VALUE_T & v0,
-                                const ggo::set2<REAL_T> & p1, const VALUE_T & v1,
-                                const ggo::set2<REAL_T> & p2, const VALUE_T & v2,
-                                const ggo::set2<REAL_T> & p, VALUE_T & output)
+  template <typename real_t, typename value_t, bool clip = true>
+  bool triangular_interpolation(const ggo::pos2<real_t> & p0, const value_t & v0,
+                                const ggo::pos2<real_t> & p1, const value_t & v1,
+                                const ggo::pos2<real_t> & p2, const value_t & v2,
+                                const ggo::pos2<real_t> & p, value_t & output)
   {
-    ggo::set2<REAL_T> d(p - p0);
-    ggo::set2<REAL_T> d1(p1 - p0);
-    ggo::set2<REAL_T> d2(p2 - p0);
+    ggo::pos2<real_t> d(p - p0);
+    ggo::pos2<real_t> d1(p1 - p0);
+    ggo::pos2<real_t> d2(p2 - p0);
     
-    REAL_T m[2][2] = {{d1.x(), d2.x()},
-                      {d1.y(), d2.y()}};
-    REAL_T c[2] = {d.x(), d.y()};
-    REAL_T s[2] = {0, 0};
+    real_t m[2][2] = {{d1.template get<0>(), d2.template get<0>()},
+                      {d1.template get<1>(), d2.template get<1>()}};
+    real_t c[2] = {d.template get<0>(), d.template get<1>()};
+    real_t s[2] = {0, 0};
     
     if (ggo::linsolve2d(m, c, s) == false)
     {

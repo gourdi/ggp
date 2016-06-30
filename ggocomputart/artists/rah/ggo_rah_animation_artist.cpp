@@ -35,11 +35,11 @@ void ggo_rah_animation_artist::ggo_fog::paint(uint8_t * buffer, int width, int h
   
   for (int y = 0; y < height; ++y)
   {
-    float dy2 = ggo::square(y - _position.y());
+    float dy2 = ggo::square(y - _position.get<1>());
     
     for (int x = 0; x < width; ++x)
     {
-      float dx2 = ggo::square(x - _position.x());
+      float dx2 = ggo::square(x - _position.get<0>());
       float value = 1 - std::exp(-(dx2 + dy2) / sigma);
       
       buffer[0] = ggo::to<int>(alpha * value * 255 + (1 - alpha) * buffer[0]);
@@ -68,8 +68,8 @@ ggo_rah_animation_artist::ggo_particle::ggo_particle(int render_width, int rende
   _angle = ggo::rand_float(0,  2 *ggo::PI<float>());
   _dist = ggo::map<float>(std::sqrt(ggo::rand_float()), 0, 1, NEAR, FAR);
   float total_radius = disc_radius(min_size) + blur_radius(min_size, focus_dist);
-  _pos.x() = -total_radius;
-  _pos.y() = ggo::rand_float(0, static_cast<float>(render_height));
+  _pos.get<0>() = -total_radius;
+  _pos.get<1>() = ggo::rand_float(0, static_cast<float>(render_height));
   _color = ggo::color::from_hsv(ggo::rand_float(), 1, 1);
 }
 
@@ -88,8 +88,8 @@ float ggo_rah_animation_artist::ggo_particle::disc_radius(int min_size) const
 //////////////////////////////////////////////////////////////
 void ggo_rah_animation_artist::ggo_particle::update(int min_size)
 {
-  _pos.x() += 0.025f * min_size / _dist;
-  _pos.y() += _vertical_offset_interpolator.update(1) * min_size / _dist;
+  _pos.get<0>() += 0.025f * min_size / _dist;
+  _pos.get<1>() += _vertical_offset_interpolator.update(1) * min_size / _dist;
   _angle += 0.1f;
 }
 
@@ -115,10 +115,10 @@ bool ggo_rah_animation_artist::ggo_particle::is_alive(int width, int height, flo
   int min_size = std::min(width, height);
 
   float delta = disc_radius(min_size) + blur_radius(min_size, focus_dist);
-  int left    = ggo::to<int>(_pos.x() - delta);
-  int right   = ggo::to<int>(_pos.x() + delta);
-  int bottom  = ggo::to<int>(_pos.y() - delta);
-  int top     = ggo::to<int>(_pos.y() + delta);
+  int left    = ggo::to<int>(_pos.get<0>() - delta);
+  int right   = ggo::to<int>(_pos.get<0>() + delta);
+  int bottom  = ggo::to<int>(_pos.get<1>() - delta);
+  int top     = ggo::to<int>(_pos.get<1>() + delta);
   ggo::pixel_rect pixel_rect = ggo::pixel_rect::from_left_right_bottom_top(left, right, bottom, top);
   
   return pixel_rect.left() < width;
@@ -150,7 +150,7 @@ void ggo_rah_animation_artist::ggo_particle1::update(int min_size)
   {
     float radius = _radius_interpolators(i).update(1) * disc_radius(min_size);
     float angle = _angle + i * 2 * ggo::PI<float>() / _radius_interpolators.get_count();
-    _polygon->get_point(i) = _pos + ggo::point2d_float::from_polar(angle, radius);
+    _polygon->get_point(i) = _pos + ggo::from_polar(angle, radius);
   }
 }
 
@@ -191,8 +191,8 @@ void ggo_rah_animation_artist::ggo_particle2::fill_multi_shapes(ggo::multi_shape
   for(int i = 0; i < _point_count; ++i)
   {
     float angle = _angle + i * 2 * ggo::PI<float>() / _point_count;
-    ggo::point2d_float p1 = ggo::point2d_float::from_polar(angle, radius / 2);
-    ggo::point2d_float p2 = ggo::point2d_float::from_polar(angle, radius - border_size - segment_size);
+    ggo::pos2f p1 = ggo::from_polar(angle, radius / 2);
+    ggo::pos2f p2 = ggo::from_polar(angle, radius - border_size - segment_size);
     
     p1 += _pos;
     p2 += _pos;
@@ -245,11 +245,11 @@ void ggo_rah_animation_artist::ggo_particle3::fill_multi_shapes(ggo::multi_shape
     x2 = ggo::map<float>(x2, -1, 1, -radius + (border_size + segment_size) / 2, radius - (border_size + segment_size) / 2);
     y2 = ggo::map<float>(y2, -1, 1, -radius + (border_size + segment_size) / 2, radius - (border_size + segment_size) / 2);
   
-    ggo::point2d_float p1(x1, y1);
-    ggo::point2d_float p2(x2, y2);
+    ggo::pos2f p1(x1, y1);
+    ggo::pos2f p2(x2, y2);
     
-    p1.rotate(_angle);
-    p2.rotate(_angle);
+    p1 = ggo::rotate(p1, _angle);
+    p2 = ggo::rotate(p2, _angle);
     
     p1 += _pos;
     p2 += _pos;
@@ -298,7 +298,7 @@ void ggo_rah_animation_artist::ggo_particle4::fill_multi_shapes(ggo::multi_shape
   {
     float delta = radius + segment_size / 2;
     float angle = _angle + i * ggo::PI<float>() / 4;
-    ggo::vector2d_float offset(delta * std::cos(angle), delta * std::sin(angle));
+    ggo::vec2f offset(delta * std::cos(angle), delta * std::sin(angle));
   
     auto disc = std::make_shared<ggo::disc_float>();
     disc->center() = _pos + offset;

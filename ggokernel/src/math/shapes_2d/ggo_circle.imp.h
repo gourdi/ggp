@@ -1,37 +1,37 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool circle<T>::is_point_inside(T x, T y) const
+  template <typename data_t>
+  bool circle<data_t>::is_point_inside(data_t x, data_t y) const
   {
-    T dx 	= _center.x() - x;
-    T dy 	= _center.y() - y;
-    T hypot	= dx * dx + dy * dy;
+    data_t dx 	= _center.template get<0>() - x;
+    data_t dy 	= _center.template get<1>() - y;
+    data_t hypot	= dx * dx + dy * dy;
 
     return hypot <= _radius * _radius;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::vector<ggo::set2<T> > circle<T>::intersect_segment(const ggo::set2<T> & p1, const ggo::set2<T> & p2) const
+  template <typename data_t>
+  std::vector<ggo::pos2<data_t>> circle<data_t>::intersect_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
     return intersect_line(p1, p2, true);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::vector<ggo::set2<T> > circle<T>::intersect_line(const ggo::set2<T> & p1, const ggo::set2<T> & p2, bool between_points_only) const
+  template <typename data_t>
+  std::vector<ggo::pos2<data_t>> circle<data_t>::intersect_line(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, bool between_points_only) const
   {
-    ggo::set2<T> dir = p2 - p1;
-    T dx = p1.x() - _center.x();
-    T dy = p1.y() - _center.y();
+    ggo::pos2<data_t> dir = p2 - p1;
+    data_t dx = p1.template get<0>() - _center.template get<0>();
+    data_t dy = p1.template get<1>() - _center.template get<1>();
     
-    T sol1, sol2;
-    T deg2 = dir.x() * dir.x() + dir.y() * dir.y();
-    T deg1 = 2 * (dir.x() * dx + dir.y() * dy);
-    T deg0 = dx * dx + dy * dy - _radius * _radius;
+    data_t sol1, sol2;
+    data_t deg2 = dir.template get<0>() * dir.template get<0>() + dir.template get<1>() * dir.template get<1>();
+    data_t deg1 = 2 * (dir.template get<0>() * dx + dir.template get<1>() * dy);
+    data_t deg0 = dx * dx + dy * dy - _radius * _radius;
 
-    std::vector<ggo::set2<T> > result;
+    std::vector<ggo::pos2<data_t>> result;
     
     if (ggo::quadratic_solve(deg2, deg1, deg0, sol1, sol2) == true)
     {
@@ -50,8 +50,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool circle<T>::intersect_segment(T x_from, T y_from, T x_to, T y_to) const
+  template <typename data_t>
+  bool circle<data_t>::intersect_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
   {
     bool p1_inside = is_point_inside(x_from, y_from);
     bool p2_inside = is_point_inside(x_to, y_to);
@@ -74,7 +74,7 @@ namespace ggo
     GGO_ASSERT(p1_inside == false);
     GGO_ASSERT(p2_inside == false);
     
-    T hypot = ggo::segment<T>(x_from, y_from, x_to, y_to).hypot_to_point(_center);
+    data_t hypot = ggo::segment<data_t>(x_from, y_from, x_to, y_to).hypot_to_point(_center);
     return hypot < _radius * _radius;
   }
 }

@@ -28,15 +28,15 @@ void ggo_distorsion_animation_artist::init_sub()
 
   for (auto & transform : _transforms)
   {
-    transform._center_start.x() = ggo::rand_float(-0.25, 1.25) * get_render_width();
-    transform._center_start.y() = ggo::rand_float(-0.25, 1.25) * get_render_height();
-    transform._center_end.x() = ggo::rand_float(-0.25, 1.25) * get_render_width();
-    transform._center_end.y() = ggo::rand_float(-0.25, 1.25) * get_render_height();
+    transform._center_start.get<0>() = ggo::rand_float(-0.25, 1.25) * get_render_width();
+    transform._center_start.get<1>() = ggo::rand_float(-0.25, 1.25) * get_render_height();
+    transform._center_end.get<0>() = ggo::rand_float(-0.25, 1.25) * get_render_width();
+    transform._center_end.get<1>() = ggo::rand_float(-0.25, 1.25) * get_render_height();
     transform._variance = 0.05f * ggo::square(get_render_min_size());
     
     float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
     float length = 0.5f * get_render_min_size();
-    transform._disp = ggo::vector2d_float::from_polar(angle, length);
+    transform._disp = ggo::from_polar(angle, length);
   }
 
   _stripes.clear();
@@ -73,7 +73,7 @@ bool ggo_distorsion_animation_artist::render_next_frame_sub(uint8_t * buffer, in
   { 
     transforms.emplace_back(
       ggo::ease_inout(frame_index, FRAMES_COUNT, transform._center_start, transform._center_end), 
-      ggo::ease_inout(frame_index, FRAMES_COUNT, ggo::vector2d_float(0, 0), transform._disp),
+      ggo::ease_inout(frame_index, FRAMES_COUNT, ggo::vec2f(0.f, 0.f), transform._disp),
       transform._variance);
   }
 
@@ -136,12 +136,12 @@ float ggo_distorsion_animation_artist::transform(float x, float y, const std::ve
   
   for (const auto & transform : transforms)
   {
-    float dx = x - transform._center.x();
-    float dy = y - transform._center.y();
+    float dx = x - transform._center.get<0>();
+    float dy = y - transform._center.get<1>();
     
     float influence = std::exp(-(dx * dx + dy * dy) / transform._variance);
       
-    result += influence * transform._disp.x();
+    result += influence * transform._disp.get<0>();
   }
     
   return result;

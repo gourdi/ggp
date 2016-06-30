@@ -76,10 +76,10 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
   float x = ggo::rand_float(-0.2f * get_render_width(), 1.2f * get_render_width());
   
   ggo_leaf leaf;
-  leaf._bottom_points[0] = ggo::point2d_float(x - dx, y);
-  leaf._bottom_points[1] = ggo::point2d_float(x + dx, y);
-  leaf._top_points[0] = ggo::point2d_float(x - dx, y + height);
-  leaf._top_points[1] = ggo::point2d_float(x + dx, y + height);
+  leaf._bottom_points[0] = ggo::pos2f(x - dx, y);
+  leaf._bottom_points[1] = ggo::pos2f(x + dx, y);
+  leaf._top_points[0] = ggo::pos2f(x - dx, y + height);
+  leaf._top_points[1] = ggo::pos2f(x + dx, y + height);
   
   ggo::tree<ggo_leaf> tree(leaf);
   
@@ -136,10 +136,10 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
       	float leaf_height = leaf.get_height() * scale_height;
         float leaf_width = leaf.get_top_width() * scale_width;
         
-        ggo::vector2d_float vert_disp = ggo::point2d_float::from_polar(leaf_angle, leaf_height);
-        ggo::vector2d_float delta(vert_disp);
+        ggo::vec2f vert_disp = ggo::from_polar(leaf_angle, leaf_height);
+        ggo::vec2f delta(vert_disp);
         delta.set_length(0.5f * leaf_width);
-        delta.rotate(ggo::PI<float>() / 2);
+        delta = ggo::rotate(delta, ggo::PI<float>() / 2);
         
         new_leaf._bottom_points[0] = leaf._top_points[0];
         new_leaf._bottom_points[1] = leaf._top_points[1];
@@ -148,7 +148,7 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
         
         if (std::fabs(offset - 1) < 0.01)
         {
-          ggo::vector2d_float dy = leaf.get_top_point() - leaf.get_bottom_point();
+          ggo::vec2f dy = leaf.get_top_point() - leaf.get_bottom_point();
           
           dy *= (1 - offset);
               
@@ -185,8 +185,8 @@ void ggo_trees_artist::render_tree(uint8_t * buffer, const std::vector<ggo::poly
   {
     for (int i = 0; i < polygon.get_points_count(); ++i)
     {
-      const ggo::point2d_float & p1 = polygon.get_point(i);
-      const ggo::point2d_float & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
+      const ggo::pos2f & p1 = polygon.get_point(i);
+      const ggo::pos2f & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
       paint_borders->add_shape(std::make_shared<ggo::extended_segment<float>>(p1, p2, 0.002f * get_render_min_size()));
     }
     

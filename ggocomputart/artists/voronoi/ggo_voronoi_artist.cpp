@@ -32,7 +32,7 @@ namespace
   struct ggo_voronoi_node
   {
     const ggo::tree<ggo_voronoi_node> * _parent_node;
-    ggo::point2d_float                  _position;
+    ggo::pos2f                  _position;
     ggo::color                          _color;
   };
 }
@@ -55,7 +55,7 @@ namespace
       float hypot = std::numeric_limits<float>::max();
       for (auto & subtree : cur_tree->subtrees())
       {
-        float hypot_cur = ggo::hypot(subtree.data()._position, ggo::point2d_float(x, y));
+        float hypot_cur = ggo::hypot(subtree.data()._position, ggo::pos2f(x, y));
         if (hypot_cur < hypot)
         {
           hypot = hypot_cur;
@@ -173,20 +173,20 @@ namespace
     {
       ggo_voronoi_node node;
       node._parent_node = &voronoi_tree;
-      node._position.x() = ggo::rand_float(0.f, ggo::to<float>(width));
-      node._position.y() = ggo::rand_float(0.f, ggo::to<float>(height));
+      node._position.get<0>() = ggo::rand_float(0.f, ggo::to<float>(width));
+      node._position.get<1>() = ggo::rand_float(0.f, ggo::to<float>(height));
       node._color = ggo::color::BLACK;
 
       voronoi_tree.create_leaf(node);
     }
 
     // Second layer. Leaves must be created after creating new points.
-    std::map<ggo::tree<ggo_voronoi_node> *, std::vector<ggo::point2d_float>> subpoints;
+    std::map<ggo::tree<ggo_voronoi_node> *, std::vector<ggo::pos2f>> subpoints;
     for (int i = 0; i < 1024; ++i)
     {
-      ggo::point2d_float point(ggo::rand_float(0.f, ggo::to<float>(width)), ggo::rand_float(0.f, ggo::to<float>(height)));
+      ggo::pos2f point(ggo::rand_float(0.f, ggo::to<float>(width)), ggo::rand_float(0.f, ggo::to<float>(height)));
 
-      auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.x(), point.y());
+      auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.get<0>(), point.get<1>());
 
       subpoints[voronoi_leaf].push_back(point);
     }

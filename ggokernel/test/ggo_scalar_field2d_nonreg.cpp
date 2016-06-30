@@ -10,7 +10,7 @@ GGO_TEST(scalar_field2d, shape_field2d)
   ggo::shape_field2d<ggo::disc> field;
   
   field._shape.radius() = 2;
-  field._shape.center() = ggo::point2d_float(1, 1);
+  field._shape.center() = ggo::pos2f(1.f, 1.f);
   
   GGO_CHECK_FABS(field.evaluate(1, 0), 1);
   GGO_CHECK_FABS(field.evaluate(3, -3), 0);

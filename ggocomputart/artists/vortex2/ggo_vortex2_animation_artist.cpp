@@ -31,10 +31,10 @@ void ggo_vortex2_animation_artist::init_sub()
 		vortex._power = ggo::rand_float(6, 8);
 		
 		ggo_vortex_path vortex_path;
-		vortex_path._start_pos.x() = ggo::rand_float() * get_render_width();
-		vortex_path._start_pos.y() = ggo::rand_float() * get_render_height();
-		vortex_path._end_pos.x() = ggo::rand_float() * get_render_width();
-		vortex_path._end_pos.y() = ggo::rand_float() * get_render_height();
+		vortex_path._start_pos.get<0>() = ggo::rand_float() * get_render_width();
+		vortex_path._start_pos.get<1>() = ggo::rand_float() * get_render_height();
+		vortex_path._end_pos.get<0>() = ggo::rand_float() * get_render_width();
+		vortex_path._end_pos.get<1>() = ggo::rand_float() * get_render_height();
 		
 		_vortices_paths[&vortex] = vortex_path;
 	}
@@ -54,8 +54,8 @@ bool ggo_vortex2_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	float interp = ggo::ease_inout(frame_index, FRAMES_COUNT);
 	for (auto & vortex : _params._vortices)
 	{
-		const ggo::point2d_float & start_pos = _vortices_paths[&vortex]._start_pos;
-		const ggo::point2d_float & end_pos = _vortices_paths[&vortex]._end_pos;
+		const ggo::pos2f & start_pos = _vortices_paths[&vortex]._start_pos;
+		const ggo::pos2f & end_pos = _vortices_paths[&vortex]._end_pos;
 		
     vortex._pos = ggo::linear_interpolation(0.f, start_pos, 1.f, end_pos, interp);
 	}

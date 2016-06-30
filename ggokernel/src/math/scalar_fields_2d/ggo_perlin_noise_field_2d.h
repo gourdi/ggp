@@ -25,16 +25,16 @@ namespace ggo
     {
     public:
     
-                  octave(data_t scale, data_t amplitude, data_t angle, int noise_size);
+                octave(data_t scale, data_t amplitude, data_t angle, int noise_size);
       
-        data_t evaluate(data_t x, data_t y) const;
+        data_t  evaluate(data_t x, data_t y) const;
       
-        data_t get(int x, int y) const;
+        data_t  get(int x, int y) const;
 
     private:
       
-      data_t         _scale;
-      data_t         _angle;
+      data_t            _scale;
+      data_t            _angle;
       int               _noise_size;
       ggo::array_float  _noise;
     };
@@ -82,7 +82,7 @@ namespace ggo
     x = ggo::pos_mod(x, _noise_size);
     y = ggo::pos_mod(y, _noise_size);
     
-    return _noise[y * _noise_size + x];
+    return _noise(y * _noise_size + x);
   }
 
   template <typename data_t>

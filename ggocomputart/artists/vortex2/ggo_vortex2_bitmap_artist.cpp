@@ -24,8 +24,8 @@ void ggo_vortex2_bitmap_artist::render_bitmap(uint8_t * buffer)
 
 	for (auto & vortex : params._vortices)
 	{
-		vortex._pos.x() = ggo::rand_float() * get_render_width();
-		vortex._pos.y() = ggo::rand_float() * get_render_height();
+		vortex._pos.get<0>() = ggo::rand_float() * get_render_width();
+		vortex._pos.get<1>() = ggo::rand_float() * get_render_height();
 		vortex._angle = ggo::rand_float(ggo::PI<float>() / 2, ggo::PI<float>() / 2 + 0.5f);
 		vortex._speed = ggo::rand_float(0.004f, 0.008f) * get_render_max_size();
 		vortex._power = ggo::rand_float(6.f, 8.f);

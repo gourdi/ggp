@@ -20,8 +20,8 @@ private:
 	
 	struct ggo_vortex_path
 	{
-		ggo::point2d_float	_start_pos;
-		ggo::point2d_float	_end_pos;
+		ggo::pos2f	_start_pos;
+		ggo::pos2f	_end_pos;
 	};
 	
 	std::map<ggo_vortex2_artist::ggo_vortex *, ggo_vortex_path>	_vortices_paths;

@@ -41,13 +41,13 @@ GGO_TEST(shapes2d, segment)
   
   segment = ggo::segment_float(3, 1, 6, 4);
 
-  ggo::point2d_float intersect;
+  ggo::pos2f intersect;
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(3, 2, 4, 3)) == false);
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(0, -1, 2, -1)) == false);
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(7, 3, 6, 7)) == false);
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(3, 2, 5, 2), intersect) == true);
-  GGO_CHECK_FABS(intersect.x(), 4);
-  GGO_CHECK_FABS(intersect.y(), 2);
+  GGO_CHECK_FABS(intersect.get<0>(), 4);
+  GGO_CHECK_FABS(intersect.get<1>(), 2);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ GGO_TEST(shapes2d, triangle_polygon)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shapes2d, triangle)
 {
-  ggo::triangle2d_float triangle({2, 1}, {7, 2}, {3, 8});
+  ggo::triangle2d_float triangle({2.f, 1.f }, {7.f, 2.f }, {3.f, 8.f });
   
   ggo::rect_float bounding_rect(triangle.get_bounding_rect());
   GGO_CHECK_FABS(bounding_rect.left(), 2);
@@ -150,18 +150,18 @@ GGO_TEST(shapes2d, polygon)
 {
   {
     ggo::polygon2d_float polygon;
-    ggo::point2d_float p1(1, 2);
-    ggo::point2d_float p2(3, 4);
-    ggo::point2d_float p3(5, 6);
+    ggo::pos2f p1(1.f, 2.f);
+    ggo::pos2f p2(3.f, 4.f);
+    ggo::pos2f p3(5.f, 6.f);
     polygon.add_points(p1, p2, p3);
 
     GGO_CHECK(polygon.get_points_count() == 3); 
-    GGO_CHECK_FABS(polygon.get_point(0).x(), 1);
-    GGO_CHECK_FABS(polygon.get_point(0).y(), 2);
-    GGO_CHECK_FABS(polygon.get_point(1).x(), 3);
-    GGO_CHECK_FABS(polygon.get_point(1).y(), 4);
-    GGO_CHECK_FABS(polygon.get_point(2).x(), 5);
-    GGO_CHECK_FABS(polygon.get_point(2).y(), 6);
+    GGO_CHECK_FABS(polygon.get_point(0).get<0>(), 1);
+    GGO_CHECK_FABS(polygon.get_point(0).get<1>(), 2);
+    GGO_CHECK_FABS(polygon.get_point(1).get<0>(), 3);
+    GGO_CHECK_FABS(polygon.get_point(1).get<1>(), 4);
+    GGO_CHECK_FABS(polygon.get_point(2).get<0>(), 5);
+    GGO_CHECK_FABS(polygon.get_point(2).get<1>(), 6);
   }
 
   {
@@ -232,51 +232,51 @@ GGO_TEST(shapes2d, polygon)
 GGO_TEST(shapes2d, circle)
 {
   {
-    ggo::circle_float circle(ggo::point2d_float(3, 2), 1);
+    ggo::circle_float circle(ggo::pos2f(3.f, 2.f), 1);
 
     {
-      auto points = circle.intersect_line(ggo::point2d_float(0, 0), ggo::point2d_float(1, 1), false);
+      auto points = circle.intersect_line(ggo::pos2f(0.f, 0.f), ggo::pos2f(1.f, 1.f), false);
       GGO_CHECK(points.size() == 2);
-      GGO_CHECK(find_point(points, ggo::point2d_float(2, 2)) == true);
-      GGO_CHECK(find_point(points, ggo::point2d_float(3, 3)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(2.f, 2.f)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(3.f, 3.f)) == true);
     }
 
     {
-      auto points = circle.intersect_segment(ggo::point2d_float(0, 0), ggo::point2d_float(2.5, 2.5));
+      auto points = circle.intersect_segment(ggo::pos2f(0.f, 0.f), ggo::pos2f(2.5f, 2.5f));
       GGO_CHECK(points.size() == 1);
-      GGO_CHECK(find_point(points, ggo::point2d_float(2, 2)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(2.f, 2.f)) == true);
     }
 
     {
-      auto points = circle.intersect_segment(ggo::point2d_float(4, 4), ggo::point2d_float(2.5, 2.5));
+      auto points = circle.intersect_segment(ggo::pos2f(4.f, 4.f), ggo::pos2f(2.5f, 2.5f));
       GGO_CHECK(points.size() == 1);
-      GGO_CHECK(find_point(points, ggo::point2d_float(3, 3)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(3.f, 3.f)) == true);
     }
 
     {
-      auto points = circle.intersect_segment(ggo::point2d_float(0, 0), ggo::point2d_float(1, 1));
+      auto points = circle.intersect_segment(ggo::pos2f(0.f, 0.f), ggo::pos2f(1.f, 1.f));
       GGO_CHECK(points.empty() == true);
     }
 
     {
-      auto points = circle.intersect_segment(ggo::point2d_float(0, 0), ggo::point2d_float(10, 10));
+      auto points = circle.intersect_segment(ggo::pos2f(0.f, 0.f), ggo::pos2f(10.f, 10.f));
       GGO_CHECK(points.size() == 2);
-      GGO_CHECK(find_point(points, ggo::point2d_float(2, 2)) == true);
-      GGO_CHECK(find_point(points, ggo::point2d_float(3, 3)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(2.f, 2.f)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(3.f, 3.f)) == true);
     }
   }
 
   {
-    ggo::circle_float circle(ggo::point2d_float(3, 1), 1);
+    ggo::circle_float circle(ggo::pos2f(3.f, 1.f), 1);
 
     {
-      auto points = circle.intersect_line(ggo::point2d_float(0, 0), ggo::point2d_float(2, 1), false);
+      auto points = circle.intersect_line(ggo::pos2f(0.f, 0.f), ggo::pos2f(2.f, 1.f), false);
       GGO_CHECK(points.size() == 2);
-      GGO_CHECK(find_point(points, ggo::point2d_float(2, 1)) == true);
+      GGO_CHECK(find_point(points, ggo::pos2f(2.f, 1.f)) == true);
     }
 
     {
-      auto points = circle.intersect_segment(ggo::point2d_float(0, 0), ggo::point2d_float(1, 0.5)); 
+      auto points = circle.intersect_segment(ggo::pos2f(0.f, 0.f), ggo::pos2f(1.f, 0.5f));
       GGO_CHECK(points.empty() == true);
     }
   }
@@ -285,7 +285,7 @@ GGO_TEST(shapes2d, circle)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shapes2d, disc)
 {
-  ggo::disc_float disc(ggo::point2d_float(2, 12), 10);
+  ggo::disc_float disc(ggo::pos2f(2.f, 12.f), 10.f);
 
   // Bounding rectangle.
   ggo::rect_float rect = disc.get_bounding_rect();
@@ -312,9 +312,9 @@ GGO_TEST(shapes2d, disc)
   GGO_CHECK_FABS(disc.dist_to_point(2, 0), 2);
   GGO_CHECK_FABS(disc.dist_to_point(2, 24), 2);
   GGO_CHECK_FABS(disc.dist_to_point(2, 24), 2);
-  GGO_CHECK_FABS(disc.dist_to_point(22, 36), ggo::distance(disc.center(), ggo::point2d_float(22, 36)) - disc.radius());
-  GGO_CHECK_FABS(disc.dist_to_point(-10, 100), ggo::distance(disc.center(), ggo::point2d_float(-10, 100)) - disc.radius());
-  GGO_CHECK_FABS(disc.dist_to_point(0, -50), ggo::distance(disc.center(), ggo::point2d_float(0, -50)) - disc.radius());
+  GGO_CHECK_FABS(disc.dist_to_point(22, 36), ggo::distance(disc.center(), ggo::pos2f(22.f, 36.f)) - disc.radius());
+  GGO_CHECK_FABS(disc.dist_to_point(-10, 100), ggo::distance(disc.center(), ggo::pos2f(-10.f, 100.f)) - disc.radius());
+  GGO_CHECK_FABS(disc.dist_to_point(0, -50), ggo::distance(disc.center(), ggo::pos2f(0.f, -50.f)) - disc.radius());
 
   // Rectangle intersection.
   GGO_CHECK_RECT_INTERSECTION(disc, 0, 1, 11, 12, ggo::rect_intersection::RECT_IN_SHAPE);
@@ -356,8 +356,8 @@ GGO_TEST(shapes2d, rect_data)
     auto rect = ggo::rect_data_union(ggo::rect_data<float>{ {1.f, -1.f}, 2.f, 3.f },
                                      ggo::rect_data<float>{ {2.f, 1.f}, 2.f, 2.f });
 
-    GGO_CHECK_FABS(rect._pos.x(), 1);
-    GGO_CHECK_FABS(rect._pos.y(), -1);
+    GGO_CHECK_FABS(rect._pos.get<0>(), 1);
+    GGO_CHECK_FABS(rect._pos.get<1>(), -1);
     GGO_CHECK_FABS(rect._width, 3);
     GGO_CHECK_FABS(rect._height, 4);
   }
@@ -386,14 +386,14 @@ GGO_TEST(shapes2d, rect_data)
     ggo::rect_data<float> rect_data2{ { 2.f, 1.f }, 3.f, 2.f };
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data1, rect_data2, result) == true);
-    GGO_CHECK_FABS(result._pos.x(), 2);
-    GGO_CHECK_FABS(result._pos.y(), 1);
+    GGO_CHECK_FABS(result._pos.get<0>(), 2);
+    GGO_CHECK_FABS(result._pos.get<1>(), 1);
     GGO_CHECK_FABS(result._width, 1);
     GGO_CHECK_FABS(result._height, 2);
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data2, rect_data1, result) == true);
-    GGO_CHECK_FABS(result._pos.x(), 2);
-    GGO_CHECK_FABS(result._pos.y(), 1);
+    GGO_CHECK_FABS(result._pos.get<0>(), 2);
+    GGO_CHECK_FABS(result._pos.get<1>(), 1);
     GGO_CHECK_FABS(result._width, 1);
     GGO_CHECK_FABS(result._height, 2);
   }
@@ -404,14 +404,14 @@ GGO_TEST(shapes2d, rect_data)
     ggo::rect_data<float> rect_data2{ { 3.f, 1.f }, 2.f, 2.f };
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data1, rect_data2, result) == true);
-    GGO_CHECK_FABS(result._pos.x(), 3);
-    GGO_CHECK_FABS(result._pos.y(), 2);
+    GGO_CHECK_FABS(result._pos.get<0>(), 3);
+    GGO_CHECK_FABS(result._pos.get<1>(), 2);
     GGO_CHECK_FABS(result._width, 2);
     GGO_CHECK_FABS(result._height, 1);
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data2, rect_data1, result) == true);
-    GGO_CHECK_FABS(result._pos.x(), 3);
-    GGO_CHECK_FABS(result._pos.y(), 2);
+    GGO_CHECK_FABS(result._pos.get<0>(), 3);
+    GGO_CHECK_FABS(result._pos.get<1>(), 2);
     GGO_CHECK_FABS(result._width, 2);
     GGO_CHECK_FABS(result._height, 1);
   }
@@ -422,14 +422,14 @@ GGO_TEST(shapes2d, rectangle)
 {
   // Construction
   {
-    ggo::rect_float rect(ggo::rect_data<float>{ {1, 2}, 3.f, 4.f });
+    ggo::rect_float rect(ggo::rect_data<float>{ {1.f, 2.f}, 3.f, 4.f });
     GGO_CHECK_FABS(rect.left(), 1);
     GGO_CHECK_FABS(rect.bottom(), 2);
     GGO_CHECK_FABS(rect.width(), 3);
     GGO_CHECK_FABS(rect.height(), 4);
   }
   
-  ggo::rect_float rect(ggo::rect_data<float>{ {3, 1}, 3, 2 });
+  ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
   // Point inside.
   GGO_CHECK(rect.is_point_inside(4, 2) == true);
@@ -486,7 +486,7 @@ GGO_TEST(shapes2d, rectangle)
 GGO_TEST(shapes2d, extended_segment)
 {
   {
-    ggo::extended_segment_float extended_segment(ggo::point2d_float(2, 1), ggo::point2d_float(6, 2), 1);
+    ggo::extended_segment_float extended_segment(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
 
     // Bounding rectangle.
     ggo::rect_float rect = extended_segment.get_bounding_rect();
@@ -515,7 +515,7 @@ GGO_TEST(shapes2d, extended_segment)
   }
 
   {
-    ggo::extended_segment_float extended_segment(ggo::point2d_float(6, 5), ggo::point2d_float(3, 2), std::sqrt(2.f));
+    ggo::extended_segment_float extended_segment(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
 
     // Bounding rectangle.
     ggo::rect_float rect = extended_segment.get_bounding_rect();

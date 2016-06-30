@@ -151,7 +151,7 @@ namespace ggo
     // Inch over the ray while maintaining an active intersection infos list.
     GGO_ASSERT(intersections.front()._entry == true);
 
-    std::vector<intersection_info>::const_iterator intersection_it = intersections.begin();
+    typename std::vector<intersection_info>::const_iterator intersection_it = intersections.begin();
     dist = 0;
 
     std::vector<const intersection_info*> active_list;

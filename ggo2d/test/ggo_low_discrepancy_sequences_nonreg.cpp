@@ -10,7 +10,7 @@
 namespace
 {
   /////////////////////////////////////////////////////////////////////
-  void save_points(const std::vector<ggo::point2d_float> & points, int points_count, const std::string & filename)
+  void save_points(const std::vector<ggo::pos2f> & points, int points_count, const std::string & filename)
   {
     const int SIZE = 400;
     
@@ -19,7 +19,7 @@ namespace
 
     for (int i = 0; i < points_count; ++i)
     {
-      ggo::paint(image, std::make_shared<ggo::disc_float>(SIZE * points[i].x(), SIZE * (1 - points[i].y()), 2.f), ggo::color::WHITE);
+      ggo::paint(image, std::make_shared<ggo::disc_float>(SIZE * points[i].get<0>(), SIZE * (1 - points[i].get<1>()), 2.f), ggo::color::WHITE);
     }
     
     ggo::save_bmp(filename, image.data(), image.get_width(), image.get_height());

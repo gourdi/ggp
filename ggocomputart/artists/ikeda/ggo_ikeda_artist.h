@@ -17,9 +17,9 @@ private:
 
 	struct ggo_particle
 	{
-		ggo::point2d_float	_pos;
-		ggo::color		      _color;
-		float				        _radius;
+		ggo::pos2f  _pos;
+		ggo::color	_color;
+		float				_radius;
 	};
 
 private:

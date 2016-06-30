@@ -2,18 +2,18 @@
 #define __GGO_HALTON__
 
 #include <vector>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 
 namespace ggo
 {
   std::vector<std::pair<int, int>>  halton_1d(int base, int count);
   
-  std::vector<ggo::point2d_float>   halton_2d(int base1, int base2, int count);
+  std::vector<ggo::pos2f>   halton_2d(int base1, int base2, int count);
 }
 
 namespace ggo
 {
-  const point2d_float halton_rect_2d_table_2_3[] = {
+  const pos2f halton_rect_2d_table_2_3[] = {
     {1.f/2.f - 0.5f,  1.f/3.f - 0.5f},
     {1.f/4.f - 0.5f,  2.f/3.f - 0.5f},
     {3.f/4.f - 0.5f,  1.f/9.f - 0.5f},
@@ -1016,7 +1016,7 @@ namespace ggo
     {95.f/1024.f - 0.5f,  760.f/2187.f - 0.5f},
   };
   
-  const point2d_float halton_disc_2d_table_2_3[] = {
+  const pos2f halton_disc_2d_table_2_3[] = {
     {1.f/2.f - 0.5f,  1.f/3.f - 0.5f},
     {1.f/4.f - 0.5f,  2.f/3.f - 0.5f},
     {3.f/4.f - 0.5f,  1.f/9.f - 0.5f},

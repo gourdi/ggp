@@ -12,7 +12,7 @@ GGO_TEST(space_partitionning, compare)
     const int WIDTH = 40;
     const int HEIGHT = 40;
       
-    auto disc = std::make_shared<ggo::disc_float>(ggo::point2d_float(20.f, 20.f), 10.f);
+    auto disc = std::make_shared<ggo::disc_float>(ggo::pos2f(20.f, 20.f), 10.f);
     const std::vector<ggo::rgb_layer> layers{ {disc, ggo::color::RED, 1.f} };
 
     ggo::rgb_image_buffer_uint8 image1(WIDTH, HEIGHT, ggo::color::BLACK);

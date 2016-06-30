@@ -1,6 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_array.h>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 #include <ggo_set3.h>
 #include <ggo_shape_sampling.h>
 #include <ggo_poisson_sampling.h>
@@ -18,8 +18,8 @@ GGO_TEST(shape_sampling, disc_uniform_sampling)
   {
     auto sample = ggo::disc_uniform_sampling<float>();
     
-    int x = ggo::to<int>(0.4 * SIZE * sample.x() + SIZE / 2);
-    int y = ggo::to<int>(0.4 * SIZE * sample.y() + SIZE / 2);
+    int x = ggo::to<int>(0.4 * SIZE * sample.get<0>() + SIZE / 2);
+    int y = ggo::to<int>(0.4 * SIZE * sample.get<1>() + SIZE / 2);
     
     uint8_t * ptr = buffer.data() + 3 * (y * SIZE + x);
     ptr[0] = 0xFF;
@@ -34,15 +34,15 @@ GGO_TEST(shape_sampling, disc_uniform_sampling)
 GGO_TEST(shape_sampling, disc_poisson_sampling)
 {
   const int SIZE = 500;
-  const ggo::point2d_float CENTER(SIZE / 2, SIZE / 2);
+  const ggo::pos2f CENTER(float(SIZE) / 2, float(SIZE) / 2);
   
-  auto samples = ggo::poisson_sampling<ggo::point2d_float, float>(
+  auto samples = ggo::poisson_sampling<ggo::pos2f, float>(
     [&]()
     {
       auto sample = ggo::disc_uniform_sampling<float>();
       return CENTER + sample * float(SIZE) * 0.4f;
     },
-    [](const ggo::point2d_float & p1, const ggo::point2d_float & p2)
+    [](const ggo::pos2f & p1, const ggo::pos2f & p2)
     {
       return ggo::distance(p1, p2);
     },

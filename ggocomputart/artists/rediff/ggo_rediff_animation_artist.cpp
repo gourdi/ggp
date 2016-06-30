@@ -32,7 +32,7 @@ void ggo_rediff_animation_artist::init_sub()
 
   for_each_pixel([&](int x, int y)
   {
-    float dist = ggo::distance(get_center(), ggo::point2d_float(ggo::to<float>(x), ggo::to<float>(y))) / get_render_min_size();
+    float dist = ggo::distance(get_center(), ggo::pos2f(ggo::to<float>(x), ggo::to<float>(y))) / get_render_min_size();
 
     _feed_map(x, y) = ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2);
     _kill_map(x, y) = ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2);

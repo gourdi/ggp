@@ -54,8 +54,8 @@ void ggo_bozons_animation_artist::init_sub()
 
 	for (ggo_particle & particle : particles)
 	{
-		particle._pos.x() = 0.5;
-		particle._pos.y() = 0.5;
+		particle._pos.get<0>() = 0.5;
+		particle._pos.get<1>() = 0.5;
 
 		particle._color	= ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
 		
@@ -84,7 +84,7 @@ void ggo_bozons_animation_artist::init_sub()
 			ggo_particle & particle = particles[i];
 
 			// Move particle.
-			particle._pos += ggo::point2d_float::from_polar(particle._angle, particle._speed);
+			particle._pos += ggo::from_polar(particle._angle, particle._speed);
 	
 			// Update particle.
 			--particle._dangle_counter;

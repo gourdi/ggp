@@ -26,27 +26,27 @@ private:
 
 	struct ggo_color_triangle
 	{
-		ggo::point2d_float  _v1, _v2, _v3;
-		ggo::color			    _color1, _color2, _color3;
+		ggo::pos2f  _v1, _v2, _v3;
+		ggo::color	_color1, _color2, _color3;
 	};
 	
 	struct ggo_pattern_triangle
 	{
-		ggo::point2d_float	_v1, _v2, _v3;
-		float				        _delta;
-		float				        _radius;
+		ggo::pos2f	_v1, _v2, _v3;
+		float				_delta;
+		float				_radius;
 	};
 	
 	struct ggo_disc_clip_triangle
 	{
-		ggo::point2d_float	_v1, _v2, _v3;	
+		ggo::pos2f	_v1, _v2, _v3;	
 	};
 
   struct ggo_opened_disc_data
   {
-    ggo::point2d_float  _center;
-    float               _radius;
-    float               _width;
+    ggo::pos2f  _center;
+    float       _radius;
+    float       _width;
   };
 
 	std::vector<ggo::segment_float>		    _edges;

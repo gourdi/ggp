@@ -264,13 +264,13 @@ GGO_TEST(shapes3d, basis)
   {
     ggo::basis3d_float basis;
 
-    ggo::point2d_float proj1 = basis.project({ 0.f, 0.f, -2.f }, 0.5f, 200, 100);
-    GGO_CHECK_FABS(proj1.x(), 100.f);
-    GGO_CHECK_FABS(proj1.y(), 50.f);
+    ggo::pos2f proj1 = basis.project({ 0.f, 0.f, -2.f }, 0.5f, 200, 100);
+    GGO_CHECK_FABS(proj1.get<0>(), 100.f);
+    GGO_CHECK_FABS(proj1.get<1>(), 50.f);
 
-    ggo::point2d_float proj2 = basis.project({ 2.f, 2.f, -2.f }, 1.0f, 200, 100);
-    GGO_CHECK_FABS(proj2.x(), 150.f);
-    GGO_CHECK_FABS(proj2.y(), 100.f);
+    ggo::pos2f proj2 = basis.project({ 2.f, 2.f, -2.f }, 1.0f, 200, 100);
+    GGO_CHECK_FABS(proj2.get<0>(), 150.f);
+    GGO_CHECK_FABS(proj2.get<1>(), 100.f);
   }
 }
 

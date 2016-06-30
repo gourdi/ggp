@@ -37,7 +37,7 @@ void ggo_newton_artist::init_sub()
 {
 	_hue = ggo::rand_float();
 	
-	_shadow_offset = ggo::vector2d_float(ggo::rand_float(-0.01f, 0.01f) * get_render_min_size(), ggo::rand_float(0.02f, 0.05f) * get_render_min_size());
+	_shadow_offset = ggo::vec2f(ggo::rand_float(-0.01f, 0.01f) * get_render_min_size(), ggo::rand_float(0.02f, 0.05f) * get_render_min_size());
 	
 	_newtons.clear();
 	
@@ -45,7 +45,7 @@ void ggo_newton_artist::init_sub()
 	{
 		ggo_newton newton;
 		
-		ggo::point2d_float pos(ggo::rand_float() * get_render_width(), ggo::rand_float() * get_render_height());
+		ggo::pos2f pos(ggo::rand_float() * get_render_width(), ggo::rand_float() * get_render_height());
 		newton._cur_pos = newton._prv_pos = pos;
 		newton._weight = ggo::rand_float(1, 2);
 		newton._timer = 0;
@@ -144,14 +144,14 @@ bool ggo_newton_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index
 //////////////////////////////////////////////////////////////
 void ggo_newton_artist::newton_update()
 {
-	ggo::vector2d_float gravity(0, 0.001f * get_render_min_size());
+	ggo::vec2f gravity(0.f, 0.001f * get_render_min_size());
 	
 	// Computes forces.
 	for (int i = 0; i < _newtons.size(); ++i)
 	{
 		ggo_newton & newton = _newtons[i];
 		
-		newton._forces = ggo::vector2d_float(0, 0);//gravity;
+		newton._forces = ggo::vec2f(0.f, 0.f);//gravity;
 		
 		if (newton._timer > 0)
 		{
@@ -178,7 +178,7 @@ void ggo_newton_artist::newton_update()
 			// Compute string force.
 			if (it_diff != _newtons.end())
 			{
-				ggo::vector2d_float diff = it_diff->_cur_pos - newton._cur_pos;
+				ggo::vec2f diff = it_diff->_cur_pos - newton._cur_pos;
 				float length = diff.get_length();
 				diff /= length; // Normalize.
 				
@@ -192,10 +192,10 @@ void ggo_newton_artist::newton_update()
 	{
 		ggo_newton & newton = *it;
 		
-		ggo::point2d_float nxt_pos = newton._weight * newton._forces + 2.f * newton._cur_pos - newton._prv_pos;
+		ggo::pos2f nxt_pos = newton._weight * newton._forces + 2.f * newton._cur_pos - newton._prv_pos;
 		
 		// Add friction.
-		ggo::vector2d_float diff(nxt_pos - newton._cur_pos);
+		ggo::vec2f diff(nxt_pos - newton._cur_pos);
 		diff *= 0.95f;
 		nxt_pos = newton._cur_pos + diff;
 
@@ -215,16 +215,16 @@ void ggo_newton_artist::newton_update()
 			newton._cur_pos.x() = 2 * get_render_width() - newton._cur_pos.x();
 		}
 		
-		if (newton._cur_pos.y() < 0)
+		if (newton._cur_pos.get<1>() < 0)
 		{
-			newton._prv_pos.y() = -newton._prv_pos.y();
-			newton._cur_pos.y() = -newton._cur_pos.y();
+			newton._prv_pos.get<1>() = -newton._prv_pos.get<1>();
+			newton._cur_pos.get<1>() = -newton._cur_pos.get<1>();
 		}
 		
-		if (newton._cur_pos.y() > get_render_height())
+		if (newton._cur_pos.get<1>() > get_render_height())
 		{
-			newton._prv_pos.y() = 2 * get_render_height() - newton._prv_pos.y();
-			newton._cur_pos.y() = 2 * get_render_height() - newton._cur_pos.y();
+			newton._prv_pos.get<1>() = 2 * get_render_height() - newton._prv_pos.get<1>();
+			newton._cur_pos.get<1>() = 2 * get_render_height() - newton._cur_pos.get<1>();
 		}*/
 	}
 }
@@ -238,8 +238,8 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 
 	for (const auto & string : _strings)
 	{
-		const ggo::point2d_float & p1 = _newtons[string._index1]._cur_pos + _shadow_offset;
-		const ggo::point2d_float & p2 = _newtons[string._index2]._cur_pos + _shadow_offset;
+		const ggo::pos2f & p1 = _newtons[string._index1]._cur_pos + _shadow_offset;
+		const ggo::pos2f & p2 = _newtons[string._index2]._cur_pos + _shadow_offset;
 		
 		auto line = std::make_shared<ggo::polygon2d_float>();
 		ggo::polygon2d_float::create_oriented_box((p1 + p2) / 2.f, p2 - p1, ggo::distance(p1, p2) / 2.f, 0.005f * get_render_min_size(), *line);
@@ -273,8 +273,8 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 	// Paint shapes.
 	for (const auto & string : _strings)
 	{
-		const ggo::point2d_float & p1 = _newtons[string._index1]._cur_pos;
-		const ggo::point2d_float & p2 = _newtons[string._index2]._cur_pos;
+		const ggo::pos2f & p1 = _newtons[string._index1]._cur_pos;
+		const ggo::pos2f & p2 = _newtons[string._index2]._cur_pos;
 		
 		auto line = std::make_shared<ggo::polygon2d_float>();
 		ggo::polygon2d_float::create_oriented_box((p1 + p2) / 2.f, p2 - p1, ggo::distance(p1, p2) / 2, 0.005f * get_render_min_size(), *line);
@@ -302,7 +302,7 @@ void ggo_newton_artist::newton_paint(uint8_t * buffer) const
 		disc->radius() = 0.02f * get_render_min_size();
 		ggo::paint(buffer, get_render_width(), get_render_height(), disc, ggo::color::from_hsv(_hue, sat, val));
 		
-		disc->center().y() -= 0.0125f * get_render_min_size();
+		disc->center().get<1>() -= 0.0125f * get_render_min_size();
 		disc->radius() = 0.002f * get_render_min_size();
 		ggo::paint(buffer, get_render_width(), get_render_height(), disc, ggo::color::WHITE, 0.75f);
 	}

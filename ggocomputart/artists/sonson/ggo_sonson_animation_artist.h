@@ -49,13 +49,13 @@ private:
 
   private:
 
-    ggo::point2d_float _pos;
-    ggo::vector2d_float _strip_dir;
-    ggo::vector2d_float _velocity;
+    ggo::pos2f _pos;
+    ggo::vec2f _strip_dir;
+    ggo::vec2f _velocity;
 
     // Arc.
     float _radius;
-    ggo::point2d_float _center;
+    ggo::pos2f _center;
     float _angle_start;
     float _angle_end;
     bool _clock_wise;

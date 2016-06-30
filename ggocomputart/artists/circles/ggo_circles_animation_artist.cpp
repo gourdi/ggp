@@ -7,7 +7,7 @@
 bool ggo_circles_animation_artist::ggo_circle_animate::bkgd_rendering_allowed;
 
 //////////////////////////////////////////////////////////////
-bool ggo_circles_animation_artist::ggo_circle_animate::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos)
+bool ggo_circles_animation_artist::ggo_circle_animate::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {    
   float radius = _radius * (1 - std::cos(_bounding_factor * counter) * std::exp(-_attenuation_factor * counter));
   float out_radius = radius + 0.002f * std::min(width, height);

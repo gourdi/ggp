@@ -1,13 +1,13 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T disc<T>::dist_to_point(T x, T y) const
+  template <typename data_t>
+  data_t disc<data_t>::dist_to_point(data_t x, data_t y) const
   {
-    T dx	        = _center.x() - x;
-    T dy	        = _center.y() - y;
-    T hypot	      = dx * dx + dy * dy;
-    T sqrd_radius = _radius * _radius;
+    data_t dx	        = _center.template get<0>() - x;
+    data_t dy	        = _center.template get<1>() - y;
+    data_t hypot	      = dx * dx + dy * dy;
+    data_t sqrd_radius = _radius * _radius;
 
     if (hypot > sqrd_radius)
     {
@@ -20,45 +20,45 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect_data<T> disc<T>::get_bounding_rect() const
+  template <typename data_t>
+  rect_data<data_t> disc<data_t>::get_bounding_rect() const
   {
-    T diameter = 2 * _radius;
+    data_t diameter = 2 * _radius;
 
-    return { { _center.x() - _radius, _center.y() - _radius }, diameter, diameter };
+    return { { _center.template get<0>() - _radius, _center.template get<1>() - _radius }, diameter, diameter };
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool disc<T>::is_point_inside(T x, T y) const
+  template <typename data_t>
+  bool disc<data_t>::is_point_inside(data_t x, data_t y) const
   {
-    T dx 	  = _center.x() - x;
-    T dy 	  = _center.y() - y;
-    T hypot	= dx * dx + dy * dy;
+    data_t dx 	  = _center.template get<0>() - x;
+    data_t dy 	  = _center.template get<1>() - y;
+    data_t hypot	= dx * dx + dy * dy;
 
     return hypot <= _radius * _radius;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect_intersection disc<T>::get_rect_intersection(const rect_data<T> & rect_data) const
+  template <typename data_t>
+  rect_intersection disc<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    T left    = rect_data._pos.x();
-    T bottom  = rect_data._pos.y();
-    T right   = left + rect_data._width;
-    T top     = bottom + rect_data._height;
+    data_t left    = rect_data._pos.template get<0>();
+    data_t bottom  = rect_data._pos.template get<1>();
+    data_t right   = left + rect_data._width;
+    data_t top     = bottom + rect_data._height;
 
     // Rectangle in circle?
-    ggo::set2<T> p1(left,  bottom);
-    ggo::set2<T> p2(left,  top);
-    ggo::set2<T> p3(right, bottom);
-    ggo::set2<T> p4(right, top);
+    ggo::pos2<data_t> p1(left,  bottom);
+    ggo::pos2<data_t> p2(left,  top);
+    ggo::pos2<data_t> p3(right, bottom);
+    ggo::pos2<data_t> p4(right, top);
 
-    T hypot = _radius * _radius;
-    T hypot1 = ggo::hypot(_center, p1);
-    T hypot2 = ggo::hypot(_center, p2);
-    T hypot3 = ggo::hypot(_center, p3);
-    T hypot4 = ggo::hypot(_center, p4);
+    data_t hypot = _radius * _radius;
+    data_t hypot1 = ggo::hypot(_center, p1);
+    data_t hypot2 = ggo::hypot(_center, p2);
+    data_t hypot3 = ggo::hypot(_center, p3);
+    data_t hypot4 = ggo::hypot(_center, p4);
 
     if (hypot1 < hypot && hypot2 < hypot && hypot3 < hypot && hypot4 < hypot)
     {
@@ -66,10 +66,10 @@ namespace ggo
     }
 
     // Circle in rectangle?
-    if (_center.x() - left   > _radius &&
-        _center.y() - bottom > _radius &&
-        right - _center.x()  > _radius &&
-        top - _center.y()    > _radius)
+    if (_center.template get<0>() - left   > _radius &&
+        _center.template get<1>() - bottom > _radius &&
+        right - _center.template get<0>()  > _radius &&
+        top - _center.template get<1>()    > _radius)
     {
       return rect_intersection::SHAPE_IN_RECT;
     }
@@ -87,9 +87,9 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool disc<T>::segment_intersect_border(T x_from, T y_from, T x_to, T y_to) const
+  template <typename data_t>
+  bool disc<data_t>::segment_intersect_border(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
   {
-    return ggo::circle<T>(_center, _radius).intersect_segment(x_from, y_from, x_to, y_to);
+    return ggo::circle<data_t>(_center, _radius).intersect_segment(x_from, y_from, x_to, y_to);
   }
 }

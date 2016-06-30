@@ -26,11 +26,11 @@ private:
 	
 	struct ggo_newton
 	{
-		ggo::point2d_float 	_cur_pos;
-		ggo::point2d_float  _prv_pos;
-		float				        _weight;
-		ggo::vector2d_float	_forces;
-		int					        _timer;
+		ggo::pos2f 	_cur_pos;
+		ggo::pos2f  _prv_pos;
+		float				_weight;
+		ggo::vec2f	_forces;
+		int					_timer;
 	};
 	
 	struct ggo_string
@@ -44,7 +44,7 @@ private:
 	std::vector<ggo_newton>	_newtons;
 	std::vector<ggo_string>	_strings;
 	std::vector<float>		  _max_velocities;
-	ggo::vector2d_float		  _shadow_offset;
+	ggo::vec2f		          _shadow_offset;
 };
 
 #endif

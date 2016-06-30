@@ -1,16 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
-#include <ggo_set2.h>
 #include <array>
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(base, set2)
-{
-  ggo::point2d_int p1(1, -2);
-  ggo::point2d_int p2 = -p1;
-  GGO_CHECK(p2.x() == -1);
-  GGO_CHECK(p2.y() == 2);
-}
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, loop_index)

@@ -28,8 +28,8 @@ _color(color)
   _counter = ggo::rand_int(100, 200);
   _speed = ggo::rand_float(0.002f, 0.004f) * get_render_min_size();
 
-  _prv_pos.x() = ggo::rand_float(0.2f, 0.8f) * render_width;
-  _prv_pos.y() = ggo::rand_float(0.2f, 0.8f) * render_height;
+  _prv_pos.get<0>() = ggo::rand_float(0.2f, 0.8f) * render_width;
+  _prv_pos.get<1>() = ggo::rand_float(0.2f, 0.8f) * render_height;
   _prv_subangle = _subangle_interpolator.update(0.005f);
   _prv_width = _width_interpolator.update(0.05f) * get_render_min_size();
 }
@@ -71,12 +71,12 @@ void ggo_amorosi_animation_artist::ggo_curve::update()
       float prv_padding = 0.5f * _prv_width;
         
       float angle = _angle_interpolator.update(0.05f);
-      ggo::vector2d_float speed = ggo::vector2d_float::from_polar(angle, _speed);
-      ggo::point2d_float pos = _prv_pos + speed;
+      ggo::vec2f speed = ggo::from_polar(angle, _speed);
+      ggo::pos2f pos = _prv_pos + speed;
       
       float subangle = _subangle_interpolator.update(0.005f);
-      ggo::vector2d_float lateral = ggo::vector2d_float::from_polar(subangle, 1);
-      ggo::vector2d_float prv_lateral = ggo::vector2d_float::from_polar(_prv_subangle, 1);
+      ggo::vec2f lateral = ggo::from_polar(subangle, 1.f);
+      ggo::vec2f prv_lateral = ggo::from_polar(_prv_subangle, 1.f);
 
       float offset = 0.5f * (_lines_count * width + (_lines_count - 1) * padding);
       float prv_offset = 0.5f * (_lines_count * _prv_width + (_lines_count - 1) * prv_padding);
@@ -86,10 +86,10 @@ void ggo_amorosi_animation_artist::ggo_curve::update()
 
       for (int line = 0; line < _lines_count; ++line)
       {
-        ggo::point2d_float p1 = _prv_pos + prv_offset * prv_lateral;
-        ggo::point2d_float p2 = _prv_pos + (prv_offset + _prv_width) * prv_lateral;
-        ggo::point2d_float p3 = pos + (offset + width) * lateral;
-        ggo::point2d_float p4 = pos + offset * lateral;
+        ggo::pos2f p1 = _prv_pos + prv_offset * prv_lateral;
+        ggo::pos2f p2 = _prv_pos + (prv_offset + _prv_width) * prv_lateral;
+        ggo::pos2f p3 = pos + (offset + width) * lateral;
+        ggo::pos2f p4 = pos + offset * lateral;
         
         std::array<ggo_opacity_point, 3> triangle1;
         triangle1[0] = {p3, opacity_sup};

@@ -38,25 +38,25 @@ void ggo_dupecheck_animation_artist::init_sub()
 		_bkgd_colors.push_back(bkgd_color);
 	}
 
-	_points[0].x() = ggo::rand_float() * get_render_width();
-	_points[0].y() = ggo::rand_float() * get_render_height();
-	_points[1].x() = ggo::rand_float() * get_render_width();
-	_points[1].y() = ggo::rand_float() * get_render_height();
-	_points[2].x() = ggo::rand_float() * get_render_width();
-	_points[2].y() = ggo::rand_float() * get_render_height();
-	_points[3].x() = ggo::rand_float() * get_render_width();
-	_points[3].y() = ggo::rand_float() * get_render_height();
+	_points[0].get<0>() = ggo::rand_float() * get_render_width();
+	_points[0].get<1>() = ggo::rand_float() * get_render_height();
+	_points[1].get<0>() = ggo::rand_float() * get_render_width();
+	_points[1].get<1>() = ggo::rand_float() * get_render_height();
+	_points[2].get<0>() = ggo::rand_float() * get_render_width();
+	_points[2].get<1>() = ggo::rand_float() * get_render_height();
+	_points[3].get<0>() = ggo::rand_float() * get_render_width();
+	_points[3].get<1>() = ggo::rand_float() * get_render_height();
 }
 
 //////////////////////////////////////////////////////////////
-ggo::point2d_float ggo_dupecheck_animation_artist::get_position(int frame_index)
+ggo::pos2f ggo_dupecheck_animation_artist::get_position(int frame_index)
 {
 	const float SCALE = 0.015f;
 	
 	// Compute current position.
 	float t = std::fmod(SCALE * frame_index, 1.f);
 	
-	ggo::point2d_float p;
+	ggo::pos2f p;
 	p  = t*t*t*(-1.f*_points[0] +  3.f*_points[1] + -3.f*_points[2] + _points[3]);
 	p +=   t*t*( 3.f*_points[0] + -6.f*_points[1] +  3.f*_points[2]);
 	p +=     t*(-3.f*_points[0]                   +  3.f*_points[2]);
@@ -70,8 +70,8 @@ ggo::point2d_float ggo_dupecheck_animation_artist::get_position(int frame_index)
 		_points[0] = _points[1];
 		_points[1] = _points[2];
 		_points[2] = _points[3];
-		_points[3].x() = ggo::rand_float() * get_render_width();
-		_points[3].y() = ggo::rand_float() * get_render_height();
+		_points[3].get<0>() = ggo::rand_float() * get_render_width();
+		_points[3].get<1>() = ggo::rand_float() * get_render_height();
 	}
 	
 	return p;
@@ -150,7 +150,7 @@ bool ggo_dupecheck_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 	}
 
 	// Create new anim item.
-	ggo::point2d_float pos = get_position(frame_index);
+	ggo::pos2f pos = get_position(frame_index);
 	ggo::color color = get_color(frame_index);
 	if ((frame_index < COUNTER_MAX) && ((frame_index % 4) == 0))
 	{		
@@ -195,7 +195,7 @@ bool ggo_dupecheck_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 }
 
 //////////////////////////////////////////////////////////////
-ggo_dupecheck_animation_artist::ggo_dupecheck_animate_abc::ggo_dupecheck_animate_abc(ggo::point2d_float pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
+ggo_dupecheck_animation_artist::ggo_dupecheck_animate_abc::ggo_dupecheck_animate_abc(ggo::pos2f pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
 :
 ggo_path_animate_abc(pos, path)
 {
@@ -206,7 +206,7 @@ ggo_path_animate_abc(pos, path)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_dupecheck_animation_artist::ggo_dupecheck_animate_abc::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::point2d_float & pos)
+bool ggo_dupecheck_animation_artist::ggo_dupecheck_animate_abc::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {
 	if (counter > 30) 
 	{
@@ -226,7 +226,7 @@ bool ggo_dupecheck_animation_artist::ggo_dupecheck_animate_abc::update(uint8_t *
 }
 
 //////////////////////////////////////////////////////////////
-ggo_dupecheck_animation_artist::ggo_animate1::ggo_animate1(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
+ggo_dupecheck_animation_artist::ggo_animate1::ggo_animate1(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
 :
 ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -237,7 +237,7 @@ ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_dupecheck_animation_artist::ggo_animate1::update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos)
+void ggo_dupecheck_animation_artist::ggo_animate1::update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
@@ -259,7 +259,7 @@ void ggo_dupecheck_animation_artist::ggo_animate1::update(uint8_t * buffer, int 
 }
 
 //////////////////////////////////////////////////////////////
-ggo_dupecheck_animation_artist::ggo_animate2::ggo_animate2(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
+ggo_dupecheck_animation_artist::ggo_animate2::ggo_animate2(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
 :
 ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -267,7 +267,7 @@ ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_dupecheck_animation_artist::ggo_animate2::update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos)
+void ggo_dupecheck_animation_artist::ggo_animate2::update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
@@ -289,8 +289,8 @@ void ggo_dupecheck_animation_artist::ggo_animate2::update(uint8_t * buffer, int 
         float radius1 = _radius + harmonic_curve.evaluate(angle1);
         float radius2 = _radius + harmonic_curve.evaluate(angle2);
         
-        ggo::point2d_float p1 = pos + ggo::point2d_float::from_polar(angle1, radius1);
-        ggo::point2d_float p2 = pos + ggo::point2d_float::from_polar(angle2, radius2);
+        ggo::pos2f p1 = pos + ggo::from_polar(angle1, radius1);
+        ggo::pos2f p2 = pos + ggo::from_polar(angle2, radius2);
       
         auto segment = std::make_shared<ggo::extended_segment_float>(p1, p2, _width);
 			
@@ -302,7 +302,7 @@ void ggo_dupecheck_animation_artist::ggo_animate2::update(uint8_t * buffer, int 
 }
 
 //////////////////////////////////////////////////////////////
-ggo_dupecheck_animation_artist::ggo_animate3::ggo_animate3(const ggo::point2d_float & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
+ggo_dupecheck_animation_artist::ggo_animate3::ggo_animate3(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color & color, int render_min_size)
 :
 ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -316,21 +316,21 @@ ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_dupecheck_animation_artist::ggo_animate3::update(uint8_t * buffer, int width, int height, const ggo::point2d_float & pos)
+void ggo_dupecheck_animation_artist::ggo_animate3::update(uint8_t * buffer, int width, int height, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
 		for (int i = 0; i < _shapes_count; ++i)
 		{
 			float angle_shape = _angle + i * 2 * ggo::PI<float>() / _shapes_count;
-			ggo::point2d_float shape_pos = pos + ggo::point2d_float::from_polar(angle_shape, _radius);
+			ggo::pos2f shape_pos = pos + ggo::from_polar(angle_shape, _radius);
 
 			auto shape = std::make_shared<ggo::polygon2d_float>();
 
 			for (int j = 0; j < _vertices_count; ++j)
 			{
 				float angle_vertex = _angle_shape + j * 2 * ggo::PI<float>() / _vertices_count;
-				ggo::point2d_float vertex = shape_pos + ggo::point2d_float::from_polar(angle_vertex, _shape_size);
+				ggo::pos2f vertex = shape_pos + ggo::from_polar(angle_vertex, _shape_size);
 
 				shape->add_point(vertex);
 			}

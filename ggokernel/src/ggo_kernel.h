@@ -365,6 +365,20 @@ namespace ggo
     return static_cast<uint8_t>((sum_to<uint32_t>(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a)));
   }
 
+  // Add.
+  template <typename data_t>
+  void add(data_t * ptr, data_t v)
+  {
+    ptr[0] += v;
+  }
+
+  template <typename data_t, typename... args>
+  void add(data_t * ptr, data_t v, args... a)
+  {
+    ptr[0] += v;
+    add(ptr + 1, a...);
+  }
+
   // Copy a buffer.
   template <typename data_t, int count>
   struct copy_t

@@ -23,12 +23,12 @@ private:
 
 	struct ggo_particle
 	{
-		ggo::point2d_float _prv_pos;
-		ggo::point2d_float _cur_pos;
+		ggo::pos2f _prv_pos;
+		ggo::pos2f _cur_pos;
 	};
 
 	std::vector<ggo_particle>	_particles;
-	ggo::point2d_float			  _attractor;
+	ggo::pos2f        			  _attractor;
 	int							          _timer_max;
 	ggo::color			          _parts_color;
 	int							          _attractor_counter;

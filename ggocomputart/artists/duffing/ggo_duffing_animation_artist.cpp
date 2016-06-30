@@ -16,22 +16,22 @@ ggo_animation_artist_abc(render_width, render_height)
 }
 
 //////////////////////////////////////////////////////////////
-ggo::point2d_float ggo_duffing_animation_artist::apply_duffing(float t, float dt, float angle_offset, ggo::point2d_float & point) const
+ggo::pos2f ggo_duffing_animation_artist::apply_duffing(float t, float dt, float angle_offset, ggo::pos2f & point) const
 {
 	const float A = 0.25f;
 	const float B = 0.3f;
-	float	x		    = point.x();
-	float	y		    = point.y();
+	float	x		    = point.get<0>();
+	float	y		    = point.get<1>();
 	float	dx		  = y;
 	float	dy		  = x - x * x * x - A * y + B * std::cos(t);
 
-	point.x() = x + dx * dt;
-	point.y() = y + dy * dt;
+	point.get<0>() = x + dx * dt;
+	point.get<1>() = y + dy * dt;
 	
-	float angle = atan2(point.y(), point.x()) + angle_offset;
+	float angle = atan2(point.get<1>(), point.get<0>()) + angle_offset;
 	float dist = point.get_length();
 	
-	ggo::point2d_float render_pt(dist * std::cos(angle), dist * std::sin(angle));
+	ggo::pos2f render_pt(dist * std::cos(angle), dist * std::sin(angle));
 	render_pt = map_fit(render_pt, -1.7f, 1.7f);
 	
 	return render_pt;
@@ -43,7 +43,7 @@ void ggo_duffing_animation_artist::init_sub()
 	// Compute points.
 	float 				      t = 0;
 	float 				      dt = 0.002f;
-	ggo::point2d_float	point(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
+	ggo::pos2f	point(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
 	float				        angle_offset = ggo::rand_float(0, 2 * ggo::PI<float>());
 
 	_points.clear();
@@ -51,7 +51,7 @@ void ggo_duffing_animation_artist::init_sub()
 
 	for (int i = 0; i < GGO_ITERATIONS_COUNT; ++i)
 	{
-		ggo::point2d_float render_pt = apply_duffing(t, dt, angle_offset, point);
+		ggo::pos2f render_pt = apply_duffing(t, dt, angle_offset, point);
 		
 		_points.push_back(render_pt);
 		
@@ -134,9 +134,9 @@ bool ggo_duffing_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 			float opacity = 0.02f * (i - first_point) / GGO_VISIBLE_POINTS_COUNT_POINTS;
 			
 			// Offset the shadow.
-			ggo::point2d_float render_pt = _points[i];
-			render_pt.x() += 0.05f * get_render_min_size();
-			render_pt.y() += 0.05f * get_render_min_size();
+			ggo::pos2f render_pt = _points[i];
+			render_pt.get<0>() += 0.05f * get_render_min_size();
+			render_pt.get<1>() += 0.05f * get_render_min_size();
 
       auto disc = std::make_shared<const ggo::disc_float>(render_pt, radius);
       

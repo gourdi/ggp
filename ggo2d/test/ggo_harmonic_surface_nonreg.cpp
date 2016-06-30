@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 #include <ggo_harmonic_surface.h>
 #include <ggo_rgb_image_buffer.h>
 #include <ggo_bmp.h>
@@ -10,7 +10,7 @@ GGO_TEST(harmonic_surface, test1)
   const int SIZE = 200;
   
   ggo::harmonic_surface<float> harmonic_surface;
-  harmonic_surface.push_harmonic({1, 1}, SIZE / 2, 1, 0);
+  harmonic_surface.push_harmonic({1.f, 1.f}, SIZE / 2, 1, 0);
 
   ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
   for (int y = 0; y < SIZE; ++y)
@@ -39,7 +39,7 @@ GGO_TEST(harmonic_surface, test2)
     float amplitude = 1.f / static_cast<float>(i + 1);
     float phase = 0;
 
-    harmonic_surface.push_harmonic(ggo::vector2d_float::from_polar(angle, length), wavelength, amplitude, 0);
+    harmonic_surface.push_harmonic(ggo::from_polar(angle, length), wavelength, amplitude, 0);
   }
 
   ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);

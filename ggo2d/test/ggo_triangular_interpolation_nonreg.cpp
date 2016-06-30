@@ -1,6 +1,6 @@
 #include <memory>
 #include <ggo_nonreg.h>
-#include <ggo_set2.h>
+#include <ggo_vec.h>
 #include <ggo_shapes2d.h>
 #include <ggo_triangle_interpolation.h>
 #include <ggo_triangle_interpolation_brush.h>
@@ -17,10 +17,10 @@ GGO_TEST(triangular_interpolation, function)
 
   image.for_each_pixel([&](int x, int y)
   {
-    const ggo::point2d_float p(static_cast<float>(x), static_cast<float>(y));
-    const ggo::point2d_float p0(50, 50);
-    const ggo::point2d_float p1(150, 50);
-    const ggo::point2d_float p2(50, 150);
+    const ggo::pos2f p(static_cast<float>(x), static_cast<float>(y));
+    const ggo::pos2f p0(50.f, 50.f);
+    const ggo::pos2f p1(150.f, 50.f);
+    const ggo::pos2f p2(50.f, 150.f);
     
     ggo::color pixel_color(0);
     ggo::triangular_interpolation(p0, ggo::color::RED, p1, ggo::color::GREEN, p2, ggo::color::BLUE, p, pixel_color);
@@ -36,9 +36,9 @@ GGO_TEST(triangular_interpolation, brush)
   const int IMAGE_SIZE = 200;
   ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
   
-  const ggo::point2d_float p0(50, 50);
-  const ggo::point2d_float p1(150, 50);
-  const ggo::point2d_float p2(50, 150);
+  const ggo::pos2f p0(50.f, 50.f);
+  const ggo::pos2f p1(150.f, 50.f);
+  const ggo::pos2f p2(50.f, 150.f);
   
   auto triangle = std::make_shared<ggo::polygon2d_float>();
   triangle->add_points(p0, p1, p2);
@@ -58,9 +58,9 @@ GGO_TEST(triangular_interpolation, opacity)
   
   fill_checker(image, ggo::color::WHITE, ggo::color::BLACK, 20);
   
-  const ggo::point2d_float p0(50, 50);
-  const ggo::point2d_float p1(150, 50);
-  const ggo::point2d_float p2(50, 150);
+  const ggo::pos2f p0(50.f, 50.f);
+  const ggo::pos2f p1(150.f, 50.f);
+  const ggo::pos2f p2(50.f, 150.f);
   
   auto triangle = std::make_shared<ggo::polygon2d_float>();
   triangle->add_points(p0, p1, p2);

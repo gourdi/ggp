@@ -24,8 +24,8 @@ void ggo_flies_artist::init_sub()
 	{
 		ggo_fly fly;
 
-		fly._cur_pos.x() = ggo::rand_float(margin, get_render_width() - margin);
-		fly._cur_pos.y() = ggo::rand_float(margin, get_render_height() - margin);
+		fly._cur_pos.get<0>() = ggo::rand_float(margin, get_render_width() - margin);
+		fly._cur_pos.get<1>() = ggo::rand_float(margin, get_render_height() - margin);
 		fly._current_angle = ggo::rand_float(0, 2 * ggo::PI<float>());
 		fly._target_angle = fly._current_angle;
 		fly._velocity = ggo::rand_float(0.01f, 0.02f) * get_render_min_size();
@@ -74,7 +74,7 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	// Collision detection.
 	for (auto & fly : _flies)
 	{
-		ggo::vector2d_float velocity = ggo::vector2d_float::from_polar(fly._current_angle, fly._velocity);
+		ggo::vec2f velocity = ggo::from_polar(fly._current_angle, fly._velocity);
 		
 		if (fly._current_angle > fly._target_angle + 0.001)
 		{
@@ -87,27 +87,27 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 		else
 		{
 			// Check borders.
-			if ((fly._cur_pos.x() < margin) && (velocity.x() < 0))
+			if ((fly._cur_pos.get<0>() < margin) && (velocity.get<0>() < 0))
 			{
-				velocity.x() *= -1.f;
+				velocity.get<0>() *= -1.f;
 				fly._timer = 1;
 			}
 			
-			if ((fly._cur_pos.x() > get_render_width() - margin) && (velocity.x() > 0))
+			if ((fly._cur_pos.get<0>() > get_render_width() - margin) && (velocity.get<0>() > 0))
 			{
-				velocity.x() *= -1.f;
+				velocity.get<0>() *= -1.f;
 				fly._timer = 1;
 			}
 			
-			if ((fly._cur_pos.y() < margin) && (velocity.y() < 0))
+			if ((fly._cur_pos.get<1>() < margin) && (velocity.get<1>() < 0))
 			{
-				velocity.y() *= -1.f;
+				velocity.get<1>() *= -1.f;
 				fly._timer = 1;
 			}
 			
-			if ((fly._cur_pos.y() > get_render_height() - margin) && (velocity.y() > 0))
+			if ((fly._cur_pos.get<1>() > get_render_height() - margin) && (velocity.get<1>() > 0))
 			{
-				velocity.y() *= -1.f;
+				velocity.get<1>() *= -1.f;
 				fly._timer = 1;
 			}
 
@@ -121,7 +121,7 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 					continue;
 				}
 				
-				ggo::vector2d_float diff = fly2._cur_pos - fly._cur_pos;
+				ggo::vec2f diff = fly2._cur_pos - fly._cur_pos;
 				float dist = diff.get_length();
 				
 				// The other fly is too far.
@@ -145,8 +145,8 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 			
 			if (closest_fly != nullptr)
 			{
-				ggo::vector2d_float ortho(velocity.y(), -velocity.x());
-				ggo::vector2d_float diff = closest_fly->_cur_pos - fly._cur_pos;
+				ggo::vec2f ortho(velocity.get<1>(), -velocity.get<0>());
+				ggo::vec2f diff = closest_fly->_cur_pos - fly._cur_pos;
 
 				if (ggo::dot(ortho, diff) > 0)
 				{
@@ -159,18 +159,18 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 			}
 
 			// Update target angle.
-			float angle = velocity.get_angle();
+			float angle = ggo::get_angle(velocity);
 			float min_diff = std::abs(fly._current_angle - angle);
 			fly._target_angle = angle;
 			
-			angle = velocity.get_angle() + 2 * ggo::PI<float>();
+			angle = ggo::get_angle(velocity) + 2 * ggo::PI<float>();
 			if (std::abs(fly._current_angle - angle) < min_diff)
 			{
 				min_diff = std::abs(fly._current_angle - angle);
 				fly._target_angle = angle;
 			}
 			
-			angle = velocity.get_angle() - 2 * ggo::PI<float>();
+			angle = ggo::get_angle(velocity) - 2 * ggo::PI<float>();
 			if (std::abs(fly._current_angle - angle) < min_diff)
 			{
 				min_diff = std::abs(fly._current_angle - angle);
@@ -186,9 +186,9 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	
 	for (const auto & fly : _flies)
 	{
-		ggo::vector2d_float v1 = ggo::vector2d_float::from_polar(fly._current_angle, shadow_scale);
-		ggo::vector2d_float v2 = ggo::vector2d_float::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, shadow_scale);
-		ggo::vector2d_float v3 = ggo::vector2d_float::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, shadow_scale);
+		ggo::vec2f v1 = ggo::from_polar(fly._current_angle, shadow_scale);
+		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, shadow_scale);
+		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, shadow_scale);
 
 		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
 		triangle->add_point(fly._cur_pos + v1);
@@ -216,9 +216,9 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	
 	for (const auto & fly : _flies)
 	{
-		ggo::vector2d_float v1 = ggo::vector2d_float::from_polar(fly._current_angle, flies_scale);
-		ggo::vector2d_float v2 = ggo::vector2d_float::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, flies_scale);
-		ggo::vector2d_float v3 = ggo::vector2d_float::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, flies_scale);
+		ggo::vec2f v1 = ggo::from_polar(fly._current_angle, flies_scale);
+		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, flies_scale);
+		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, flies_scale);
 
 		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
 		triangle->add_point(fly._cur_pos + v1);
@@ -243,7 +243,7 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	// Move flies.
 	for (auto & fly : _flies)
 	{
-		ggo::vector2d_float velocity = ggo::vector2d_float::from_polar(fly._current_angle, fly._velocity);
+		ggo::vec2f velocity = ggo::from_polar(fly._current_angle, fly._velocity);
 
 		fly._cur_pos += velocity;
 

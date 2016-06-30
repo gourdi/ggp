@@ -9,9 +9,9 @@ namespace ggo
   template <typename T>
   struct triangle_interpolation_brush : public brush_abc<T>
   {
-    triangle_interpolation_brush(const ggo::point2d_float & p1, const T & value1,
-                                 const ggo::point2d_float & p2, const T & value2,
-                                 const ggo::point2d_float & p3, const T & value3)
+    triangle_interpolation_brush(const ggo::pos2f & p1, const T & value1,
+                                 const ggo::pos2f & p2, const T & value2,
+                                 const ggo::pos2f & p3, const T & value3)
                                  :
                                  _p1(p1), _value1(value1),
                                  _p2(p2), _value2(value2),
@@ -20,13 +20,13 @@ namespace ggo
     T get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const override
     {
       T value(0);
-      ggo::triangular_interpolation(_p1, _value1, _p2, _value2, _p3, _value3, ggo::point2d_float(x, y), value);
+      ggo::triangular_interpolation(_p1, _value1, _p2, _value2, _p3, _value3, ggo::pos2f(x, y), value);
       return value;
     }
       
-    ggo::point2d_float _p1;
-    ggo::point2d_float _p2; 
-    ggo::point2d_float _p3;
+    ggo::pos2f _p1;
+    ggo::pos2f _p2; 
+    ggo::pos2f _p3;
     T _value1;
     T _value2;
     T _value3;

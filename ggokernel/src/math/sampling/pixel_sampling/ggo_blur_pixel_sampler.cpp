@@ -30,8 +30,8 @@ namespace ggo
   {
     for (const auto & sample : _samples)
     {
-      float x_f = x + sample.x();
-      float y_f = y + sample.y();
+      float x_f = x + sample.get<0>();
+      float y_f = y + sample.get<1>();
       fct(x_f, y_f);
     }
   }

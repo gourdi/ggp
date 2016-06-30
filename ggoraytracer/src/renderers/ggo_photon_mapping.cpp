@@ -21,8 +21,8 @@ namespace ggo
       for (int i = 0; i < target_samples.size(); ++i)
       {
         // Build a ray from the light to the object.
-        float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].x();
-        float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].y();
+        float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<0>();
+        float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<1>();
 
         ggo::point3d_float target_sample = target_samples[i];
         ggo::point3d_float light_sample = light->sample_point(target_sample, random_variable1, random_variable2);

@@ -1,40 +1,40 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void spline<T>::add_control_point(const ggo::set2<T> & point)
+  template <typename data_t>
+  void spline<data_t>::add_control_point(const ggo::pos2<data_t> & point)
   {
     _control_points.push_back(point);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void spline<T>::clear_control_points()
+  template <typename data_t>
+  void spline<data_t>::clear_control_points()
   {
     _control_points.clear();
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::set2<T> spline<T>::eval(const ggo::set2<T> & pp, const ggo::set2<T> & pc, const ggo::set2<T> & pn, const ggo::set2<T> & pnn, T t)
+  template <typename data_t>
+  ggo::pos2<data_t> spline<data_t>::eval(const ggo::pos2<data_t> & pp, const ggo::pos2<data_t> & pc, const ggo::pos2<data_t> & pn, const ggo::pos2<data_t> & pnn, data_t t)
   {
-    ggo::set2<T>	p;
+    ggo::pos2<data_t>	p;
     
-    p  = t*t*t*(T(-1)*pp + T( 3)*pc + T(-3)*pn + pnn);
-    p +=   t*t*(T( 3)*pp + T(-6)*pc + T( 3)*pn);
-    p +=     t*(T(-3)*pp            + T( 3)*pn);
-    p +=              pp + T( 4)*pc +       pn;
+    p  = t*t*t*(data_t(-1)*pp + data_t( 3)*pc + data_t(-3)*pn + pnn);
+    p +=   t*t*(data_t( 3)*pp + data_t(-6)*pc + data_t( 3)*pn);
+    p +=     t*(data_t(-3)*pp                 + data_t( 3)*pn);
+    p +=                   pp + data_t( 4)*pc +            pn;
     
-    p /= T(6);
+    p /= data_t(6);
     
     return p;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  std::vector<ggo::set2<T>> spline<T>::evaluate(int steps) const
+  template <typename data_t>
+  std::vector<ggo::pos2<data_t>> spline<data_t>::evaluate(int steps) const
   {
-    std::vector<ggo::set2<T>> result;
+    std::vector<ggo::pos2<data_t>> result;
     
     if (_control_points.size() >= 4)
     {
@@ -43,8 +43,8 @@ namespace ggo
       {
         for (int i = 0; i < steps; ++i)
         {
-          T t = T(i) / steps;
-          ggo::set2<T> p = eval( *(it-1), *it, *(it+1), *(it+2), t );
+          data_t t = data_t(i) / steps;
+          ggo::pos2<data_t> p = eval( *(it-1), *it, *(it+1), *(it+2), t );
           
           result.push_back(p);
         }
@@ -59,23 +59,22 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void spline<T>::move(T dx, T dy)
+  template <typename data_t>
+  void spline<data_t>::move(data_t dx, data_t dy)
   {
     for (auto & point : _control_points)
     {
-      point.x() += dx;
-      point.y() += dy;
+      point.move(dx, dy);
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void spline<T>::rotate(T angle, const ggo::set2<T> & center)
+  template <typename data_t>
+  void spline<data_t>::rotate(data_t angle, const ggo::pos2<data_t> & center)
   {
     for (auto & point : _control_points)
     {
-      point.rotate(angle, center);
+      point = ggo::rotate(point, center, angle);
     }
   }
 }

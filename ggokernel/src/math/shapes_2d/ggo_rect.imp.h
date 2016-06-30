@@ -1,8 +1,8 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T>::rect(const rect<T> & rect)
+  template <typename data_t>
+  rect<data_t>::rect(const rect<data_t> & rect)
   :
   _rect_data(rect._rect_data)
   {
@@ -10,13 +10,13 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T>::rect(const set2<T> & p1, const set2<T> & p2)
+  template <typename data_t>
+  rect<data_t>::rect(const pos2<data_t> & p1, const pos2<data_t> & p2)
   {
-    T left    = std::min(p1.x(), p2.x());
-    T right   = std::max(p1.x(), p2.x());
-    T bottom  = std::min(p1.y(), p2.y());
-    T top     = std::max(p1.y(), p2.y());
+    data_t left    = std::min(p1.template get<0>(), p2.template get<0>());
+    data_t right   = std::max(p1.template get<0>(), p2.template get<0>());
+    data_t bottom  = std::min(p1.template get<1>(), p2.template get<1>());
+    data_t top     = std::max(p1.template get<1>(), p2.template get<1>());
 
     _rect_data._pos = { left, bottom };
     _rect_data._width = right - left;
@@ -24,8 +24,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T>::rect(T left, T bottom, T width, T height)
+  template <typename data_t>
+  rect<data_t>::rect(data_t left, data_t bottom, data_t width, data_t height)
   {
     _rect_data._pos = { left, bottom };
     _rect_data._width = width;
@@ -33,8 +33,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T>::rect(const rect_data<T> & rect_data)
+  template <typename data_t>
+  rect<data_t>::rect(const rect_data<data_t> & rect_data)
   :
   _rect_data(rect_data)
   {
@@ -42,15 +42,15 @@ namespace ggo
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  bool rect<T>::is_point_inside(T x, T y) const
+  template <typename data_t>
+  bool rect<data_t>::is_point_inside(data_t x, data_t y) const
   {
     return (x >= left() && x <= right() && y >= bottom() && y <= top());
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T> rect<T>::from_left_right_bottom_top(T left, T right, T bottom, T top)
+  template <typename data_t>
+  rect<data_t> rect<data_t>::from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top)
   {
     GGO_ASSERT(left <= right);
     GGO_ASSERT(bottom <= top);
@@ -59,8 +59,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect<T> rect<T>::from_union(const rect<T> & rect1, const rect<T> & rect2)
+  template <typename data_t>
+  rect<data_t> rect<data_t>::from_union(const rect<data_t> & rect1, const rect<data_t> & rect2)
   {
     return from_left_right_bottom_top(std::min(rect1.left(), rect2.left()),
                                       std::max(rect1.right(), rect2.right()),
@@ -69,35 +69,35 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  T rect<T>::dist_to_point(T x, T y) const
+  template <typename data_t>
+  data_t rect<data_t>::dist_to_point(data_t x, data_t y) const
   {
     if (is_point_inside(x, y) == true)
     {
       return 0;
     }
 
-    ggo::set2<T> p1(left(),  bottom());
-    ggo::set2<T> p2(left(),  top());
-    ggo::set2<T> p3(right(), top());
-    ggo::set2<T> p4(right(), bottom());
+    ggo::pos2<data_t> p1(left(),  bottom());
+    ggo::pos2<data_t> p2(left(),  top());
+    ggo::pos2<data_t> p3(right(), top());
+    ggo::pos2<data_t> p4(right(), bottom());
 
-    T d1 = ggo::segment<T>(p1, p2).dist_to_point(x, y);
-    T d2 = ggo::segment<T>(p2, p3).dist_to_point(x, y);
-    T d3 = ggo::segment<T>(p3, p4).dist_to_point(x, y);
-    T d4 = ggo::segment<T>(p4, p1).dist_to_point(x, y);
+    data_t d1 = ggo::segment<data_t>(p1, p2).dist_to_point(x, y);
+    data_t d2 = ggo::segment<data_t>(p2, p3).dist_to_point(x, y);
+    data_t d3 = ggo::segment<data_t>(p3, p4).dist_to_point(x, y);
+    data_t d4 = ggo::segment<data_t>(p4, p1).dist_to_point(x, y);
 
     return std::min(std::min(d1, d2), std::min(d3, d4));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  rect_intersection rect<T>::get_rect_intersection(const rect_data<T> & rect_data) const
+  template <typename data_t>
+  rect_intersection rect<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    T left    = rect_data._pos.x();
-    T bottom  = rect_data._pos.y();
-    T right   = left + rect_data._width;
-    T top     = bottom + rect_data._height;
+    data_t left    = rect_data._pos.template get<0>();
+    data_t bottom  = rect_data._pos.template get<1>();
+    data_t right   = left + rect_data._width;
+    data_t top     = bottom + rect_data._height;
 
     GGO_ASSERT(left <= right);
     GGO_ASSERT(bottom <= top);
@@ -125,21 +125,21 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void rect<T>::inflate(T extent)
+  template <typename data_t>
+  void rect<data_t>::inflate(data_t extent)
   {
-    _rect_data._pos.x() -= extent;
-    _rect_data._pos.y() -= extent;
+    _rect_data._pos.template get<0>() -= extent;
+    _rect_data._pos.template get<1>() -= extent;
     _rect_data._width += 2 * extent;
     _rect_data._height += 2 * extent;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  void rect<T>::inflate(T horz_extent, T vert_extent)
+  template <typename data_t>
+  void rect<data_t>::inflate(data_t horz_extent, data_t vert_extent)
   {
-    _rect_data._pos.x() -= horz_extent;
-    _rect_data._pos.y() -= vert_extent;
+    _rect_data._pos.template get<0>() -= horz_extent;
+    _rect_data._pos.template get<1>() -= vert_extent;
     _rect_data._width  += 2 * horz_extent;
     _rect_data._height += 2 * vert_extent;
   }
