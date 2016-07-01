@@ -179,7 +179,6 @@ namespace ggo
         std::fill(*buffer, *buffer + count, fill_value);
       }
 
-      //template <typename... args>
       static void process_args(int * dimensions, data_t ** buffer)
       {
         int count = ggo::multiply_all<dim_count>(dimensions);
