@@ -403,3 +403,11 @@ GGO_TEST(base, transform)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, multiply_all)
+{
+  std::array<int, 3> a{ 2, 3, 5 };
+  int v = ggo::multiply_all<3>(a.data());
+
+  GGO_CHECK_EQ(v, 30);
+}

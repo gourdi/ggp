@@ -5,32 +5,6 @@
 
 namespace ggo
 {
-  // Multiply all the values of a buffer.
-  namespace array_helpers
-  {
-    template <typename data_t, int remaining>
-    struct multiply_ptr
-    {
-      static data_t multiply(const data_t * ptr)
-      {
-        static_assert(remaining >= 2, "error");
-        return multiply_ptr<data_t, remaining - 1>::multiply(ptr) * ptr[remaining - 1];
-      }
-    };
-
-    template <typename data_t>
-    struct multiply_ptr<data_t, 1>
-    {
-      static data_t multiply(const data_t * ptr)
-      {
-        return ptr[0];
-      }
-    };
-  }
-}
-
-namespace ggo
-{
   template <typename data_t, int n_dims>
   class array
   {
@@ -100,7 +74,7 @@ namespace ggo
     // Returns the full number of elements inside the array.
     int get_count() const
     {
-      return array_helpers::multiply_ptr<int, n_dims>::multiply(_dimensions);
+      return ggo::multiply_all<n_dims>(_dimensions);
     }
 
     // Resizes the current array. Current data is lost.
@@ -174,7 +148,7 @@ namespace ggo
     // Fill the array with a giben value.
     void fill(const data_t & v)
     {
-      std::fill(_buffer, _buffer + array_helpers::multiply_ptr<int, n_dims>::multiply(_dimensions), v);
+      std::fill(_buffer, _buffer + ggo::multiply_all<n_dims>(_dimensions), v);
     }
 
   private:
@@ -197,18 +171,18 @@ namespace ggo
     template <int dim_count>
     struct array_builder<0, dim_count>
     {
-      template <typename fill_t, typename... args>
+      template <typename fill_t>
       static void process_args(int * dimensions, data_t ** buffer, const fill_t & fill_value)
       {
-        int count = array_helpers::multiply_ptr<int, dim_count>::multiply(dimensions);
+        int count = ggo::multiply_all<dim_count>(dimensions);
         *buffer = new data_t[count];
         std::fill(*buffer, *buffer + count, fill_value);
       }
 
-      template <typename... args>
+      //template <typename... args>
       static void process_args(int * dimensions, data_t ** buffer)
       {
-        int count = array_helpers::multiply_ptr<int, dim_count>::multiply(dimensions);
+        int count = ggo::multiply_all<dim_count>(dimensions);
         *buffer = new data_t[count];
       }
     };

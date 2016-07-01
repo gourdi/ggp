@@ -304,6 +304,38 @@ namespace ggo
     return ggo::max(v, ggo::max(args...));
   }
 
+  // Accumulate.
+  template <typename data_t, typename func, int remaining>
+  struct accumulate_t
+  {
+    static data_t accumulate(const data_t * ptr, func f)
+    {
+      return f(ggo::accumulate_t<data_t, func, remaining - 1>::accumulate(ptr, f), ptr[remaining - 1]);
+    }
+  };
+
+  template <typename data_t, typename func>
+  struct accumulate_t<data_t, func, 1>
+  {
+    static data_t accumulate(const data_t * ptr, func f)
+    {
+      return ptr[0];
+    }
+  };
+
+  template <int count, typename data_t, typename func>
+  data_t accumulate(const data_t * ptr, func f)
+  {
+    return ggo::accumulate_t<data_t, func, count>::accumulate(ptr, f);
+  }
+
+  template <int count, typename data_t>
+  data_t multiply_all(const data_t * ptr)
+  {
+    auto mul = [](data_t v1, data_t v2) { return v1 * v2; };
+    return ggo::accumulate<count>(ptr, mul);
+  }
+
   // Sum/average.
   template <typename data_t>
   data_t sum(data_t v)
@@ -405,29 +437,26 @@ namespace ggo
   }
 
   // Binary operations.
-  template <typename data_t, typename func, int count>
+  template <typename data_t, typename func, int index, int count>
   struct binary_operation_t
   {
     static void process(data_t * dst, const data_t * src1, const data_t * src2, func f)
     {
-      dst[0] = f(src1[0], src2[0]);
-      ggo::binary_operation_t<data_t, func, count - 1>::process(dst + 1, src1 + 1, src2 + 1, f);
+      dst[index] = f(src1[index], src2[index]);
+      ggo::binary_operation_t<data_t, func, index + 1, count>::process(dst, src1, src2, f);
     }
   };
 
-  template <typename data_t, typename func>
-  struct binary_operation_t<data_t, func, 1>
+  template <typename data_t, typename func, int count>
+  struct binary_operation_t<data_t, func, count, count>
   {
-    static void process(data_t * dst, const data_t * src1, const data_t * src2, func f)
-    {
-      dst[0] = f(src1[0], src2[0]);
-    }
+    static void process(data_t * dst, const data_t * src1, const data_t * src2, func f) { }
   };
 
   template <int count, typename data_t, typename func>
   void binary_operation(data_t * dst, const data_t * src1, const data_t * src2, func f)
   {
-    binary_operation_t<data_t, func, count>::process(dst, src1, src2, f);
+    binary_operation_t<data_t, func, 0, count>::process(dst, src1, src2, f);
   }
 
   // Copy a buffer.

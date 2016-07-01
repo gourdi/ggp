@@ -14,6 +14,7 @@ namespace ggo
   {
   public:
 
+    // Compile time accessors.
     template <int y, int x>
     data_t &  get()
     {
@@ -30,6 +31,7 @@ namespace ggo
       return _data[y * size_x + x];
     }
 
+    // Run time accessors.
     data_t &			  operator()(unsigned y, unsigned x) { return _data[y * size_x + x]; }
     const data_t &  operator()(unsigned y, unsigned x) const { return _data[y * size_x + x]; }
     

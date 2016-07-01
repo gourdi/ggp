@@ -143,19 +143,19 @@ GGO_TEST(matrix, diagonally_dominant)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, matrix2d)
+GGO_TEST(matrix, matrix_vector_multiplication)
 {
-  //ggo::square_matrix2d<int> m;
-  //ggo::vec2<int>            v;
-  //
-  //m(0, 0) = 5; m(0, 1) =  9;
-  //m(1, 0) = 2; m(1, 1) = -3;
-  //
-  //v.get<0>() =  2;
-  //v.get<1>() = -3;
-  //
-  //v = m * v;
-  //
-  //GGO_CHECK(v.get<0>() == -17);
-  //GGO_CHECK(v.get<1>() ==  13);
+  ggo::square_matrix<int, 2>  m;
+  ggo::vec2<int>              v;
+  
+  m(0, 0) = 5; m(0, 1) =  9;
+  m(1, 0) = 2; m(1, 1) = -3;
+  
+  v.get<0>() =  2;
+  v.get<1>() = -3;
+  
+  v = m * v;
+  
+  GGO_CHECK(v.get<0>() == -17);
+  GGO_CHECK(v.get<1>() ==  13);
 }
