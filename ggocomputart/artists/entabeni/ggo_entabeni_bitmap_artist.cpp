@@ -1,5 +1,6 @@
 #include "ggo_entabeni_bitmap_artist.h"
 #include <ggo_array.h>
+#include <ggo_curve.h>
 #include <ggo_shapes2d.h>
 #include <ggo_shapes3d.h>
 #include <ggo_rle_rgb8_image.h>
@@ -93,6 +94,25 @@ namespace
 
     return grid;
   }
+
+  //////////////////////////////////////////////////////////////
+  ggo::cubic_curve<float, ggo::color> create_color_map()
+  {
+    ggo::cubic_curve<float, ggo::color> color_map;
+
+    float hue_inf = ggo::rand_float();
+    float hue_sup = hue_inf + 0.2f;
+    float altitude = 0.f;
+    float sat = ggo::rand_float(0.f, 0.25f);
+    for (int i = 0; i < 10; ++i)
+    {
+      color_map.push_point(altitude, ggo::color::from_hsv(ggo::rand_float(hue_inf, hue_sup), sat, 1.f));
+      altitude += ggo::rand_float(0.25f, 0.5f);
+      sat += ggo::rand_float(0.25f, 0.5f);
+    }
+
+    return color_map;
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -108,15 +128,15 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
   auto grid = create_grid(true, false);
 
   ggo::basis3d_float basis;
-  basis.move(0.f, 0.f, 1.f);
+  basis.move(0.f, 0.f, 0.1f);
 
-  const float hue = ggo::rand_float();
-
+  const float dangle = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
+  
   auto project = [&](const ggo::point3d_float & v)
   {
     float radius = 1 + v.z();
-    float x_3d = radius * std::cos(v.x());
-    float y_3d = radius * std::sin(v.x());
+    float x_3d = radius * std::cos(dangle + v.x());
+    float y_3d = radius * std::sin(dangle + v.x());
     float z_3d = v.y();
 
     ggo::point3d_float pos3d(x_3d, y_3d, z_3d);
@@ -126,6 +146,7 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
   };
 
   std::vector<ggo::rgb_layer> layers;
+  auto color_map = create_color_map();
 
   auto paint_triangle = [&](const ggo::point3d_float & v1, const ggo::point3d_float & v2, const ggo::point3d_float & v3)
   {
@@ -137,15 +158,14 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
     ggo::vector3d_float diff = center - basis.pos();
 
     float dist = diff.get_length();
-    float altitude = std::sqrt(ggo::square(center.x()) + ggo::square(center.y()));
+    float altitude = ggo::hypot(center.x(), center.y());
 
-    float val = ggo::clamp(1.25f - 0.85f * altitude, 0.f, 1.f);
-    ggo::color triangle_color = ggo::color::from_hsv(0.25f, 1.f, val) / (1.f + 0.15f * dist);
+    ggo::color triangle_color = color_map.evaluate(altitude) / (0.7f + 0.1f * dist);
     auto triangle = std::make_shared<ggo::triangle2d_float>(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
     layers.emplace_back(triangle, triangle_color, 1.f);
 
     const float width = 0.001f * get_render_min_size() / (1.f + dist);
-    ggo::color edge_color = 0.95f * triangle_color;
+    ggo::color edge_color = 0.5f * triangle_color;
 
     auto create_edge_layer = [&](const ggo::pos2f & p1, const ggo::pos2f & p2)
     {
