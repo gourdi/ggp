@@ -105,19 +105,41 @@ GGO_TEST(matrix, multiplication)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(matrix, symmetric)
+{
+  {
+    ggo::square_matrix<int, 3> m;
+
+    m(0, 0) = -4; m(0, 1) = 2; m(0, 2) = 1;
+    m(1, 0) = 2; m(1, 1) = 6; m(1, 2) = -2;
+    m(2, 0) = 1; m(2, 1) = -2; m(2, 2) = 5;
+    GGO_CHECK(m.is_symmetric());
+  }
+
+  {
+    ggo::square_matrix<float, 3> m;
+
+    m(0, 0) = -4.f; m(0, 1) =  2.f; m(0, 2) =  1.f;
+    m(1, 0) =  2.f; m(1, 1) =  6.f; m(1, 2) = -2.f;
+    m(2, 0) =  1.f; m(2, 1) = -2.f; m(2, 2) =  5.f;
+    GGO_CHECK(m.is_symmetric([](float v1, float v2) { return std::abs(v1 - v2) < 0.001f; }));
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(matrix, diagonally_dominant)
 {
-  //ggo::square_matrix<3, int> m;
-  //
-  //m(0, 0) = -4; m(0, 1) =  2; m(0, 2) = 1;
-  //m(1, 0) =  1; m(1, 1) =  6; m(1, 2) = 2;
-  //m(2, 0) =  1; m(2, 1) = -2; m(2, 2) = 5;
-  //GGO_CHECK(m.is_diagonally_dominant());
-  //
-  //m(0, 0) = -2; m(0, 1) =  2; m(0, 2) = 1;
-  //m(1, 0) =  1; m(1, 1) =  3; m(1, 2) = 2;
-  //m(2, 0) =  1; m(2, 1) = -2; m(2, 2) = 0;
-  //GGO_CHECK(!m.is_diagonally_dominant());
+  ggo::square_matrix<int, 3> m;
+  
+  m(0, 0) = -4; m(0, 1) =  2; m(0, 2) = 1;
+  m(1, 0) =  1; m(1, 1) =  6; m(1, 2) = 2;
+  m(2, 0) =  1; m(2, 1) = -2; m(2, 2) = 5;
+  GGO_CHECK(m.is_diagonally_dominant());
+  
+  m(0, 0) = -2; m(0, 1) =  2; m(0, 2) = 1;
+  m(1, 0) =  1; m(1, 1) =  3; m(1, 2) = 2;
+  m(2, 0) =  1; m(2, 1) = -2; m(2, 2) = 0;
+  GGO_CHECK(!m.is_diagonally_dominant());
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -136,37 +158,4 @@ GGO_TEST(matrix, matrix2d)
   //
   //GGO_CHECK(v.get<0>() == -17);
   //GGO_CHECK(v.get<1>() ==  13);
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, symmetric)
-{
-  //{
-  //  auto compare_func = [](int v1, int v2) { return v1 == v2; };
-  //  
-  //  ggo::square_matrix<3, int> m;
-  //  m(0, 0) = 1; m(1, 0) = 2; m(2, 0) = 3;
-  //  m(0, 1) = 2; m(1, 1) = 7; m(2, 1) = 6;
-  //  m(0, 2) = 3; m(1, 2) = 6; m(2, 2) = 2;
-  //  
-  //  GGO_CHECK(m.is_symmetric(compare_func));
-  //  
-  //  m(0, 2) = 4;
-  //  GGO_CHECK(!m.is_symmetric(compare_func));
-  //}
-  //
-  //// Same with floats.
-  //{
-  //  auto compare_func = [](float v1, float v2) { return std::abs(v1 - v2) < 0.0001f; };
-  //  
-  //  ggo::square_matrix<3, float> m;
-  //  m(0, 0) = 1; m(1, 0) = 2; m(2, 0) = 3;
-  //  m(0, 1) = 2; m(1, 1) = 7; m(2, 1) = 6;
-  //  m(0, 2) = 3; m(1, 2) = 6; m(2, 2) = 2;
-  //  
-  //  GGO_CHECK(m.is_symmetric(compare_func));
-  //  
-  //  m(0, 2) = 3.1f;
-  //  GGO_CHECK(!m.is_symmetric(compare_func));
-  //}
 }

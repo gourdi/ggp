@@ -60,7 +60,7 @@ namespace ggo
     int index = y * _size + x;
     auto it = _values.find(index);
       
-    return it == _values.cend() ? T(0) : it->second;
+    return it == _values.end() ? T(0) : it->second;
   }
 
   /////////////////////////////////////////////////////////////////////

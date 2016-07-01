@@ -71,8 +71,6 @@ namespace ggo
   matrix<data_t, size_y, size_x> operator*(data_t k, const matrix<data_t, size_y, size_x> & m);
 }
 
-#if 0
-
 /////////////////////////////////////////////////////////////////////
 // Square matrix.
 namespace ggo
@@ -83,9 +81,15 @@ namespace ggo
   public:
 
     bool 	is_diagonally_dominant() const;
-    bool  is_symmetric(std::function<bool(T, T)> compare_func) const;
+
+    bool  is_symmetric() const;
+
+    template <typename compare_func>
+    bool  is_symmetric(compare_func compare) const;
   };
 }
+
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 // Square matrix 2D.

@@ -106,27 +106,37 @@ namespace ggo
   }
 }
 
-#if 0
-
 /////////////////////////////////////////////////////////////////////
 // Square matrix.
 
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <int size, typename T>
-  bool square_matrix<size, T>::is_diagonally_dominant() const
+  template <typename data_t, int size>
+  bool square_matrix<data_t, size>::is_diagonally_dominant() const
   {
-    return ggo::is_matrix_diagonally_dominant<square_matrix<size, T>, T>(*this, size);
+    return ggo::is_matrix_diagonally_dominant<data_t>(*this, size);
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <int size, typename T>
-  bool square_matrix<size, T>::is_symmetric(std::function<bool(T, T)> compare_func) const
+  template <typename data_t, int size>
+  bool square_matrix<data_t, size>::is_symmetric() const
   {
-   return ggo::is_matrix_symmetric<square_matrix<size, T>, T>(*this, size, compare_func);
+    auto compare = [](data_t v1, data_t v2) { return v1 == v2; };
+
+    return ggo::is_matrix_symmetric(*this, size, compare);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t, int size>
+  template <typename compare_func>
+  bool square_matrix<data_t, size>::is_symmetric(compare_func compare) const
+  {
+    return ggo::is_matrix_symmetric(*this, size, compare);
   }
 }
+
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 // Square matrix 2D.

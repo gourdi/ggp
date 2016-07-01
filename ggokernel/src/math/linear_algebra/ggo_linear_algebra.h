@@ -8,16 +8,16 @@
 // Square matrices
 namespace ggo
 {
-  template <typename MATRIX_TYPE, typename DATA_TYPE>
-  bool is_matrix_symmetric(const MATRIX_TYPE & m, int size, std::function<bool(DATA_TYPE, DATA_TYPE)> compare_func)
+  template <typename input, typename compare_func>
+  bool is_matrix_symmetric(const input & m, int size, compare_func compare)
   {
     for (int y = 0; y < size; ++y)
     {
       for (int x = y + 1; x < size; ++x)
       {
-        DATA_TYPE k1 = m(x, y);
-        DATA_TYPE k2 = m(y, x);
-        if (compare_func(k1, k2) == false)
+        auto v1 = m(x, y);
+        auto v2 = m(y, x);
+        if (compare(v1, v2) == false)
         {
           return false;
         }
@@ -27,33 +27,21 @@ namespace ggo
     return true;
   }
   
-  template <typename MATRIX_TYPE, typename DATA_TYPE>
-  bool is_matrix_diagonally_dominant(const MATRIX_TYPE & m, int size)
+  template <typename data_t, typename input>
+  bool is_matrix_diagonally_dominant(const input & m, int size)
   {
     for (int y = 0; y < size; ++y)
     {
-      DATA_TYPE v2 = 0;
+      data_t v2 = 0;
       for (int x = 0; x < size; ++x)
       {
         if (x != y)
         {
-          DATA_TYPE v3 = m(y, x);
-          if (v3 > 0)
-          {
-            v2 += v3;
-          }
-          else
-          {
-            v2 -= v3;
-          }
+          v2 += std::abs(m(y, x));
         }
       }
       
-      DATA_TYPE v1 = m(y, y);
-      if (v1 < DATA_TYPE(0)) 
-      {
-        v1 = -v1;
-      }
+      data_t v1 = std::abs(m(y, y));
       
       if (v2 > v1)
       {
@@ -66,3 +54,5 @@ namespace ggo
 }
 
 #endif
+
+
