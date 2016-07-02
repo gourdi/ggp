@@ -34,7 +34,7 @@ void ggo_chryzode_bitmap_artist::render_bitmap(uint8_t * buffer)
   float radius = ggo::rand_float(0.2f, 0.35f) * get_render_min_size();
   
   float hue_start = ggo::rand_float();
-  float hue_end = hue_start + ggo::rand_bool() ? -0.2f : 0.2f;
+  float hue_end = hue_start + (ggo::rand_bool() ? -0.2f : 0.2f);
     
   artist.render_chryzode(buffer, radius, params, hue_start, hue_end);
 }

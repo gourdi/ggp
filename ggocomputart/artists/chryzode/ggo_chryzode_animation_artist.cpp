@@ -27,7 +27,7 @@ void ggo_chryzode_animation_artist::init_sub()
   _radius_end = ggo::rand_float(0.2f, 0.35f) * get_render_min_size();
   
   _hue_start = ggo::rand_float();
-  _hue_end = _hue_start + ggo::rand_bool() ? -0.2f : 0.2f;
+  _hue_end = _hue_start + (ggo::rand_bool() ? -0.2f : 0.2f);
 }
 
 //////////////////////////////////////////////////////////////
