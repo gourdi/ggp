@@ -22,6 +22,9 @@
     <Filter Include="rle">
       <UniqueIdentifier>{373210a1-ba9f-41c0-819f-49cb421787ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="template">
+      <UniqueIdentifier>{66829f86-0c85-4f65-9d28-098a4148959c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
@@ -87,8 +90,12 @@
       <Filter>signal_proc</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_vec_nonreg.cpp" />
-    <ClCompile Include="test\ggo_template_variadic_nonreg.cpp" />
-    <ClCompile Include="test\ggo_template_pointer_nonreg.cpp" />
+    <ClCompile Include="test\template\ggo_template_pointer_nonreg.cpp">
+      <Filter>template</Filter>
+    </ClCompile>
+    <ClCompile Include="test\template\ggo_template_variadic_nonreg.cpp">
+      <Filter>template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

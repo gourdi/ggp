@@ -28,8 +28,6 @@
     <ClCompile Include="test\ggo_link_nonreg.cpp" />
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
     <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
-    <ClCompile Include="test\ggo_template_pointer_nonreg.cpp" />
-    <ClCompile Include="test\ggo_template_variadic_nonreg.cpp" />
     <ClCompile Include="test\ggo_vec_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation2d_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp" />
@@ -47,6 +45,8 @@
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp" />
+    <ClCompile Include="test\template\ggo_template_pointer_nonreg.cpp" />
+    <ClCompile Include="test\template\ggo_template_variadic_nonreg.cpp" />
     <ClCompile Include="test\trees\ggo_kdtree_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
