@@ -159,7 +159,6 @@
     <ClInclude Include="src\math\ggo_harmonic_curve.h" />
     <ClInclude Include="src\math\ggo_harmonic_surface.h" />
     <ClInclude Include="src\math\ggo_quadratic.h" />
-    <ClInclude Include="src\math\ggo_set3.h" />
     <ClInclude Include="src\math\interpolation\ggo_curve.h" />
     <ClInclude Include="src\math\interpolation\ggo_interpolation1d.h" />
     <ClInclude Include="src\math\interpolation\ggo_interpolation2d.h" />

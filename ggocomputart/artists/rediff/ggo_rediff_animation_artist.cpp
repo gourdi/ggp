@@ -1,5 +1,4 @@
 #include "ggo_rediff_animation_artist.h"
-#include <ggo_set3.h>
 #include <ggo_buffer_access.h>
 #include <ggo_gaussian_blur.h>
 #include <ggo_fill.h>
@@ -105,21 +104,21 @@ void ggo_rediff_animation_artist::render(ggo::rgb_image_abc & image) const
   val_map.push_point(x3, 0.0f);
   val_map.push_point(1.0f, 0.0f);
 
-  ggo::vector3d_float light_dir(0.f, -0.05f, -1.f);
+  ggo::vec3f light_dir(0.f, -0.05f, -1.f);
   light_dir.normalize();
 
   for_each_pixel([&](int x, int y)
   {
     // Compute the normal by computing 4 point around the current pixel.
-    ggo::point3d_float p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x - 1, y - 1)); // Bottom left
-    ggo::point3d_float p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x + 1, y + 1)); // Top right
-    ggo::vector3d_float v1(p_tr - p_bl);
+    ggo::pos3f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x - 1, y - 1)); // Bottom left
+    ggo::pos3f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x + 1, y + 1)); // Top right
+    ggo::vec3f v1(p_tr - p_bl);
 
-    ggo::point3d_float p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x - 1, y + 1)); // Top left.
-    ggo::point3d_float p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x + 1, y - 1)); // Bottom right.
-    ggo::vector3d_float v2(p_tl - p_br);
+    ggo::pos3f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x - 1, y + 1)); // Top left.
+    ggo::pos3f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x + 1, y - 1)); // Bottom right.
+    ggo::vec3f v2(p_tl - p_br);
 
-    ggo::vector3d_float normal = ggo::cross(v1, v2);
+    ggo::vec3f normal = ggo::cross(v1, v2);
     float dot = -ggo::dot(normal.get_normalized(), light_dir);
 
     // Apply lighting.

@@ -36,7 +36,7 @@ namespace ggo
     ggo::pos2f pixel_offset((x + _offset_x) * _ratio, (y + _offset_y) * _ratio);
 
     // Ray position.
-    ggo::point3d_float pos(_basis.pos());
+    ggo::pos3f pos(_basis.pos());
     pos += pixel_offset.get<0>() * _basis.x();
     pos += pixel_offset.get<1>() * _basis.y();
       
@@ -72,11 +72,11 @@ namespace ggo
     // Compute data that does not depend on sample index.
     ggo::pos2f pixel_offset((x + _offset_x) * _ratio, (y + _offset_y) * _ratio);
     
-    ggo::point3d_float focus(_basis.pos() - _depth_of_field * _basis.z());
+    ggo::pos3f focus(_basis.pos() - _depth_of_field * _basis.z());
     focus += pixel_offset.get<0>() * _basis.x();
     focus += pixel_offset.get<1>() * _basis.y();
     
-    ggo::point3d_float eye(_basis.pos());
+    ggo::pos3f eye(_basis.pos());
     eye += pixel_offset.get<0>() * _basis.x();
     eye += pixel_offset.get<1>() * _basis.y();
     
@@ -86,12 +86,12 @@ namespace ggo
     for (int i = 0; i < samples_count; ++i)
     {
       // Focus point.
-      ggo::point3d_float focus_point(focus);
+      ggo::pos3f focus_point(focus);
       focus_point += (_ratio * focus_samples2d[i].get<0>()) * _basis.x();
       focus_point += (_ratio * focus_samples2d[i].get<1>()) * _basis.y();
       
       // Eye point.
-      ggo::point3d_float eye_point(eye);
+      ggo::pos3f eye_point(eye);
       eye_point += (_depth_of_field_factor * eye_samples2d[i].get<0>()) * _basis.x();
       eye_point += (_depth_of_field_factor * eye_samples2d[i].get<1>()) * _basis.y();
 

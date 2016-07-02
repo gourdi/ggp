@@ -1,7 +1,7 @@
 #ifndef __GGO_LINEAR_ALGEBRA_3D__
 #define __GGO_LINEAR_ALGEBRA_3D__
 
-#include <ggo_set3.h>
+#include <ggo_vec.h>
 
 //////////////////////////////////////////////////////////////////
 // Determinant.
@@ -16,11 +16,11 @@ namespace ggo
   }
 
   template <typename T>
-  T determinant(const ggo::set3<T> & v1, const ggo::set3<T> & v2, const ggo::set3<T> & v3)
+  T determinant(const ggo::vec3<T> & v1, const ggo::vec3<T> & v2, const ggo::vec3<T> & v3)
   {
-    return ggo_determinant(v1.x(), v1.y(), v1.z(),
-                           v2.x(), v2.y(), v2.z(),
-                           v3.x(), v3.y(), v3.z());
+    return ggo_determinant(v1.template get<0>(), v1.template get<1>(), v1.template get<2>(),
+                           v2.template get<0>(), v2.template get<1>(), v2.template get<2>(),
+                           v3.template get<0>(), v3.template get<1>(), v3.template get<2>());
   }
 }
 
@@ -66,17 +66,17 @@ namespace ggo
   }
 
   template <typename T>
-  ggo::set3<T> apply_matrix3d(const T m[3][3], const ggo::set3<T> & in)
+  ggo::vec3<T> apply_matrix3d(const T m[3][3], const ggo::vec3<T> & in)
   {
     T in_aux[3], out_aux[3];
 
-    in_aux[0] = in.x();
-    in_aux[1] = in.y();
-    in_aux[2] = in.z();
+    in_aux[0] = in.template get<0>();
+    in_aux[1] = in.template get<1>();
+    in_aux[2] = in.template get<2>();
 
     apply_matrix3d(m, in_aux, out_aux);
 
-    return ggo::set3<T>(out_aux[0], out_aux[1], out_aux[2]);
+    return ggo::vec3<T>(out_aux[0], out_aux[1], out_aux[2]);
   }
 
   template <typename T>
@@ -102,12 +102,12 @@ namespace ggo
 namespace ggo
 {
   template <typename T>
-  void fill_rotation_matrix(const ggo::set3<T> & axis, T angle, T m[3][3])
+  void fill_rotation_matrix(const ggo::vec3<T> & axis, T angle, T m[3][3])
   {
     T l = axis.get_length();
-    T x = axis.x()/l;
-    T y = axis.y()/l;
-    T z = axis.z()/l;
+    T x = axis.template get<0>()/l;
+    T y = axis.template get<1>()/l;
+    T z = axis.template get<2>()/l;
 
     T c = std::cos(angle);
     T s = std::sin(angle);

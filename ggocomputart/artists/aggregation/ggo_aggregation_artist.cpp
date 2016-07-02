@@ -13,18 +13,18 @@ namespace
   
   struct ggo_space_partition
 	{
-		std::vector<ggo::point3d_float>	_points;
-		ggo::aabox3d_float              _aabb;
+		std::vector<ggo::pos3f> _points;
+		ggo::aabox3d_float      _aabb;
 	};
 
   //////////////////////////////////////////////////////////////
-  ggo::point3d_float create_new_point(float radius)
+  ggo::pos3f create_new_point(float radius)
   {
     return radius * ggo::sphere_uniform_sampling<float>();
   }
   
   //////////////////////////////////////////////////////////////
-  void add_point_to_space_partitions(const ggo::point3d_float & point, std::vector<ggo_space_partition> & space_partitions)
+  void add_point_to_space_partitions(const ggo::pos3f & point, std::vector<ggo_space_partition> & space_partitions)
   {
     for (auto & space_partition : space_partitions)
     {
@@ -36,20 +36,20 @@ namespace
   }
   
   //////////////////////////////////////////////////////////////
-  bool point_close_enough(const ggo::point3d_float & point, const std::vector<ggo_space_partition> & space_partitions, float displacement)
+  bool point_close_enough(const ggo::pos3f & point, const std::vector<ggo_space_partition> & space_partitions, float displacement)
   {
-    if (point.x() <= -PARTITION_SIZE - DISPLACEMENT || point.x() >= PARTITION_SIZE + DISPLACEMENT ||
-        point.y() <= -PARTITION_SIZE - DISPLACEMENT || point.y() >= PARTITION_SIZE + DISPLACEMENT ||
-        point.z() <= -PARTITION_SIZE - DISPLACEMENT || point.z() >= PARTITION_SIZE + DISPLACEMENT)
+    if (point.get<0>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<0>() >= PARTITION_SIZE + DISPLACEMENT ||
+        point.get<1>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<1>() >= PARTITION_SIZE + DISPLACEMENT ||
+        point.get<2>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<2>() >= PARTITION_SIZE + DISPLACEMENT)
     {
       return false;
     }
     
-    int index = ggo::to<int>(point.z()) + PARTITION_SIZE;
+    int index = ggo::to<int>(point.get<2>()) + PARTITION_SIZE;
     index *= 2 * PARTITION_SIZE + 1;
-    index += ggo::to<int>(point.y()) + PARTITION_SIZE;
+    index += ggo::to<int>(point.get<1>()) + PARTITION_SIZE;
     index *= 2 * PARTITION_SIZE + 1;
-    index += ggo::to<int>(point.x()) + PARTITION_SIZE;
+    index += ggo::to<int>(point.get<0>()) + PARTITION_SIZE;
 
     float squared_disp = displacement * displacement;
 
@@ -73,9 +73,9 @@ namespace ggo
   namespace aggregation_artist
   {
     //////////////////////////////////////////////////////////////
-    std::vector<ggo::point3d_float> compute_points(float attraction_factor,
-                                                   const ggo::vector3d_float rotation_vector,
-                                                   float rotation_factor)
+    std::vector<ggo::pos3f> compute_points(float attraction_factor,
+                                           const ggo::vec3f rotation_vector,
+                                           float rotation_factor)
     {
       std::cout << "attraction_factor: " << attraction_factor << std::endl;
       std::cout << "rotation_factor: " << rotation_factor << std::endl;
@@ -106,10 +106,10 @@ namespace ggo
       }
       
       // Create points.
-      std::vector<ggo::point3d_float> points { ggo::point3d_float(0, 0, 0) };
+      std::vector<ggo::pos3f> points { ggo::pos3f(0.f, 0.f, 0.f) };
       add_point_to_space_partitions(points[0], space_partitions);
       
-      ggo::vector3d_float unit_rotation_vector(rotation_vector);
+      ggo::vec3f unit_rotation_vector(rotation_vector);
       unit_rotation_vector.normalize();
 
       float radius = 0;
@@ -118,24 +118,24 @@ namespace ggo
       while (points.size() < POINS_COUNT)
       {
         float creation_radius = radius + margin;
-        ggo::point3d_float point = create_new_point(creation_radius);
+        ggo::pos3f point = create_new_point(creation_radius);
         
         while (true) 
         {
-          ggo::vector3d_float unit_vector(point);
+          ggo::vec3f unit_vector(point);
           unit_vector.normalize();
           
           // Move the point a bit.
-          ggo::vector3d_float random_disp = ggo::sphere_uniform_sampling<float>();
+          ggo::vec3f random_disp = ggo::sphere_uniform_sampling<float>();
           
           // Rotate the point.
-          ggo::vector3d_float rotation = ggo::cross(unit_rotation_vector, unit_vector);
+          ggo::vec3f rotation = ggo::cross(unit_rotation_vector, unit_vector);
 
           // Attract the point to the origin.
-          ggo::vector3d_float attraction = -unit_vector;
+          ggo::vec3f attraction = -unit_vector;
           
           // Add displacements.
-          ggo::vector3d_float disp = (1 - rotation_factor - attraction_factor) * random_disp;
+          ggo::vec3f disp = (1 - rotation_factor - attraction_factor) * random_disp;
           disp += rotation_factor * rotation;
           disp += attraction * attraction_factor;
           GGO_ASSERT(disp.get_hypot() <= 1);
@@ -166,16 +166,16 @@ namespace ggo
       // Map all the points' coordinates into [-1, 1].
       for (auto & point : points)
       {
-        point.x() = ggo::map(point.x(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
-        point.y() = ggo::map(point.y(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
-        point.z() = ggo::map(point.z(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
+        point.get<0>() = ggo::map(point.get<0>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
+        point.get<1>() = ggo::map(point.get<1>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
+        point.get<2>() = ggo::map(point.get<2>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
       }
     
       return points;
     }
     
     //////////////////////////////////////////////////////////////
-    void render(float background, const std::vector<ggo::point3d_float> & points, float angle, uint8_t * buffer, int width, int height)
+    void render(float background, const std::vector<ggo::pos3f> & points, float angle, uint8_t * buffer, int width, int height)
     {
       // Fill background.
       memset(buffer, ggo::to<int>(255 * background), 3 * width * height);
@@ -188,7 +188,7 @@ namespace ggo
       
       int min_size = std::min(width, height);
       
-      std::vector<ggo::point3d_float> rotated_points(points);
+      std::vector<ggo::pos3f> rotated_points(points);
       
       // Rotate points.
       if (angle != 0)
@@ -198,29 +198,29 @@ namespace ggo
         
         for (auto & point : rotated_points)
         {
-          float x = point.x() * cos_tmp - point.z() * sin_tmp;
-          float z = point.x() * sin_tmp + point.z() * cos_tmp;
+          float x = point.get<0>() * cos_tmp - point.get<2>() * sin_tmp;
+          float z = point.get<0>() * sin_tmp + point.get<2>() * cos_tmp;
           
-          point.x() = x;
-          point.z() = z;
+          point.get<0>() = x;
+          point.get<2>() = z;
         }
       }
       
       // Sort points.
-      std::sort(rotated_points.begin(), rotated_points.end(), [](const ggo::point3d_float & p1, const ggo::point3d_float & p2)
+      std::sort(rotated_points.begin(), rotated_points.end(), [](const ggo::pos3f & p1, const ggo::pos3f & p2)
       {
-        return p1.z() < p2.z();
+        return p1.get<2>() < p2.get<2>();
       });
       
-      float z_inf = rotated_points.front().z();
-      float z_sup = rotated_points.back().z();
+      float z_inf = rotated_points.front().get<2>();
+      float z_sup = rotated_points.back().get<2>();
 
       // Render shadow.
       ggo::gray_image_buffer_uint8 image_buffer(width, height, buffer);
       
       for (const auto & point : rotated_points)
       {
-        ggo::pos2f pt = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
+        ggo::pos2f pt = ggo_artist_abc::map_fit(ggo::pos2f(point.get<0>(), point.get<1>()), -1, 1, width, height);
         
         // Move the shadow a little bit.
         pt.get<0>() += 0.15f * min_size;
@@ -240,10 +240,10 @@ namespace ggo
       // Render points.
       for (const auto & point : rotated_points)
       {
-        ggo::pos2f render_point = ggo_artist_abc::map_fit(point.xy(), -1, 1, width, height);
+        ggo::pos2f render_point = ggo_artist_abc::map_fit(ggo::pos2f(point.get<0>(), point.get<1>()), -1, 1, width, height);
 
-        float gray = ggo::map(point.z(), z_inf, z_sup, 0.1f, 1.0f);
-        float blur = 0.75f + 0.005f * min_size * std::abs(point.z() - 0.75f * z_sup);
+        float gray = ggo::map(point.get<2>(), z_inf, z_sup, 0.1f, 1.0f);
+        float blur = 0.75f + 0.005f * min_size * std::abs(point.get<2>() - 0.75f * z_sup);
         
         ggo::paint(image_buffer,
                    std::make_shared<ggo::disc_float>(render_point, 0.0015f * min_size),

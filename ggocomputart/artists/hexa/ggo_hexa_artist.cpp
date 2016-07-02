@@ -171,21 +171,21 @@ public:
       float angle1 = i * ggo::PI<float>() / 3;
       float angle2 = (i + 1) * ggo::PI<float>() / 3;
 
-      create_triangle(ggo::point3d_float(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-                      ggo::point3d_float(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-                      ggo::point3d_float(x, y, z_sup), scene_builder, material_top);
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+                      ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
+                      ggo::pos3f(x, y, z_sup), scene_builder, material_top);
                       
     /*  create_rectangle(ggo::pos2f(x + std::cos(angle1), y + std::sin(angle1)),
                        ggo::pos2f(x + std::cos(angle2), y + std::sin(angle2)),
                        z_inf, z_sup, scene, material_side);*/
 
-      create_triangle(ggo::point3d_float(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-                      ggo::point3d_float(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-                      ggo::point3d_float(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+                      ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
+                      ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
 
-      create_triangle(ggo::point3d_float(x + std::cos(angle1), y + std::sin(angle1), z_inf),
-                      ggo::point3d_float(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-                      ggo::point3d_float(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_inf),
+                      ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+                      ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
     }
 
     _brute_force_raycaster.reset(new ggo::brute_force_raycaster(_objects));
@@ -209,7 +209,7 @@ public:
 
 private:
 
-  void create_triangle(const ggo::point3d_float & v1, const ggo::point3d_float & v2, const ggo::point3d_float & v3,
+  void create_triangle(const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3,
                        ggo::scene_builder & scene_builder,
                        std::shared_ptr<const ggo::material_abc> material)
   {
@@ -219,10 +219,10 @@ private:
     _objects.push_back(object);
     
     // Update the bounding box too.
-    _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), v1.x(), v2.x(), v3.x());
-    _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), v1.x(), v2.x(), v3.x());
-    _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), v1.y(), v2.y(), v3.y());
-    _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), v1.y(), v2.y(), v3.y());
+    _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), v1.get<0>(), v2.get<0>(), v3.get<0>());
+    _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), v1.get<0>(), v2.get<0>(), v3.get<0>());
+    _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), v1.get<1>(), v2.get<1>(), v3.get<1>());
+    _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), v1.get<1>(), v2.get<1>(), v3.get<1>());
   }
   
   void create_rectangle(const ggo::pos2f & p1,
@@ -231,9 +231,9 @@ private:
                         ggo::scene_builder & scene_builder,
                         std::shared_ptr<const ggo::material_abc> material)
   {
-    ggo::point3d_float center(0.5f * (p1.get<0>() + p2.get<0>()), 0.5f * (p1.get<1>() + p2.get<1>()), 0.5f * (z_inf + z_sup));
-    ggo::vector3d_float v1(0.5f * (p2.get<0>() - p1.get<0>()), 0.5f * (p2.get<1>() - p1.get<1>()), 0);
-    ggo::vector3d_float v2(0, 0, 0.5f * (z_sup - z_inf));
+    ggo::pos3f center(0.5f * (p1.get<0>() + p2.get<0>()), 0.5f * (p1.get<1>() + p2.get<1>()), 0.5f * (z_inf + z_sup));
+    ggo::vec3f v1(0.5f * (p2.get<0>() - p1.get<0>()), 0.5f * (p2.get<1>() - p1.get<1>()), 0.f);
+    ggo::vec3f v2(0.f, 0.f, 0.5f * (z_sup - z_inf));
     
     auto rectangle = std::make_shared<ggo::parallelogram3d<float>>(center, v1, v2);
     auto object = scene_builder.add_object(rectangle, material, true);
@@ -395,14 +395,14 @@ std::pair<ggo::color, ggo::color> ggo_hexa_artist::generate_colors()
 }
 
 //////////////////////////////////////////////////////////////
-std::vector<ggo::point3d_float> ggo_hexa_artist::generate_light_positions()
+std::vector<ggo::pos3f> ggo_hexa_artist::generate_light_positions()
 {
-  std::vector<ggo::point3d_float> pos;
+  std::vector<ggo::pos3f> pos;
   
   for (int i = 0; i < 3; ++i)
   {
     float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
-    pos.push_back( { 500 * std::cos(angle), 500 * std::sin(angle), 250 } );
+    pos.push_back( { 500 * std::cos(angle), 500 * std::sin(angle), 250.f } );
   }
   
   return pos;
@@ -443,7 +443,7 @@ std::vector<ggo_hexa_artist::hexa_info> ggo_hexa_artist::generate_hexa_infos()
 void ggo_hexa_artist::render(uint8_t * buffer, int width, int height,
                              const std::vector<hexa_info> & hexa_infos,
                              const ggo::color & color_top, const ggo::color & color_side,
-                             const std::vector<ggo::point3d_float> & lights_pos,
+                             const std::vector<ggo::pos3f> & lights_pos,
                              const ggo::color & fog_color,
                              ggo::renderer_abc & renderer)
 {

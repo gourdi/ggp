@@ -17,8 +17,8 @@ private:
 
 private:
 
-  float                           _background_gray;
-	std::vector<ggo::point3d_float> _points;
+  float                   _background_gray;
+	std::vector<ggo::pos3f> _points;
 };
 
 #endif

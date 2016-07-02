@@ -8,9 +8,9 @@ namespace ggo
   bool sphere3d<data_t>::intersect_line(const ggo::line3d<data_t> & line, data_t & dist_inf, data_t & dist_sup) const
   {
     // Build the quadratic and solve it.
-    const ggo::set3<data_t> & dir = line.dir();
-    const ggo::set3<data_t> & pos = line.pos();
-    const ggo::set3<data_t> diff(pos - _center);
+    const ggo::vec3<data_t> & dir = line.dir();
+    const ggo::pos3<data_t> & pos = line.pos();
+    const ggo::vec3<data_t> diff(pos - _center);
 
     // Hint 1: deg2 is dot(dir, dir) which is 1
     // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
@@ -98,16 +98,16 @@ namespace ggo
   template <typename data_t>
   bool sphere3d<data_t>::is_point_inside(data_t x, data_t y, data_t z) const
   {
-    ggo::set3<data_t> diff(x - _center.x(), y - _center.y(), z - _center.z());
+    ggo::vec3<data_t> diff(x - _center.template get<0>(), y - _center.template get<1>(), z - _center.template get<2>());
 
     return diff.get_hypot() <= ggo::square(_radius);
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool sphere3d<data_t>::is_point_inside(const ggo::set3<data_t> & p) const
+  bool sphere3d<data_t>::is_point_inside(const ggo::pos3<data_t> & p) const
   {
-    return is_point_inside(p.x(), p.y(), p.z());
+    return is_point_inside(p.template get<0>(), p.template get<1>(), p.template get<2>());
   }
 
   //////////////////////////////////////////////////////////////
@@ -130,12 +130,12 @@ namespace ggo
       return sphere1;
     }
       
-    ggo::set3<data_t> diff(sphere2.center() - sphere1.center());
+    ggo::vec3<data_t> diff(sphere2.center() - sphere1.center());
     diff /= diff.get_length(); // Normalize.
       
-    ggo::set3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
-    ggo::set3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
-    ggo::set3<data_t> diff2(p2 - p1);
+    ggo::pos3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
+    ggo::pos3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
+    ggo::vec3<data_t> diff2(p2 - p1);
       
     return sphere3d((p1 + p2) / data_t(2), diff2.get_length() / data_t(2));
   }

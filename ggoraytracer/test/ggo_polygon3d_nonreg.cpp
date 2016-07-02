@@ -21,8 +21,8 @@ void test_polygon3d()
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLACK));
 
   // Light.  
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(0, 0, 50));
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(50, 0, 0));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(0.f, 0.f, 50.f));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(50.f, 0.f, 0.f));
 
   // Objects.
   auto sphere = ggo::polygon3d_float::create_sphere(2, 16, 8);

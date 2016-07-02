@@ -27,10 +27,10 @@ GGO_TEST(test_scene, scene4)
   scene_builder.set_fog(std::make_shared<ggo::z_fog>(ggo::color::GREEN, 0.f, -1.f, 3.f));
 
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(-20, -20, 200));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(-20.f, -20.f, 200.f));
 
   // Objects.
-  auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 0.f), 1.f);
+  auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), 1.f);
   scene_builder.add_object(sphere, ggo::color::RED, false);
   
   auto aabox3d = std::make_shared<ggo::aabox3d_float>(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f);

@@ -12,7 +12,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color linear_fog::process_segment(const ggo::point3d_float & p1, const ggo::point3d_float & p2, const ggo::color & color) const
+  ggo::color linear_fog::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color & color) const
   {
     float dist = ggo::distance(p1, p2);
 

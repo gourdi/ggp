@@ -4,7 +4,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  cylinder3d<data_t>::cylinder3d(const ggo::set3<data_t> & pos, const ggo::set3<data_t> & dir, data_t radius)
+  cylinder3d<data_t>::cylinder3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t radius)
   :
   _pos(pos),
   _dir(dir.get_normalized()),
@@ -27,7 +27,7 @@ namespace ggo
     //  hypot(t * dot(ray_dir, cyl_dir) * dir_cyl_x - t * ray_dir_x + dot(diff, cyl_dir) * dir_cyl_x - diff_x) = r*r
     //  hypot(t * [dot(ray_dir, cyl_dir) * dir_cyl_x - ray_dir_x] + [dot(diff, cyl_dir) * dir_cyl_x - diff_x]) = r*r
 
-    ggo::set3<data_t> diff(line.pos() - _pos);
+    ggo::vec3<data_t> diff(line.pos() - _pos);
 
     // Original non-optimized code.
     //  data_t deg2 =
@@ -47,8 +47,8 @@ namespace ggo
     //    ggo::square(_radius);
 
     // Optimized code.
-    ggo::set3<data_t> a = ggo::dot(line.dir(), _dir) * _dir - line.dir();
-    ggo::set3<data_t> b = ggo::dot(diff, _dir) * _dir - diff;
+    ggo::vec3<data_t> a = ggo::dot(line.dir(), _dir) * _dir - line.dir();
+    ggo::vec3<data_t> b = ggo::dot(diff, _dir) * _dir - diff;
 
     data_t deg2 = a.get_hypot();
     data_t deg1 = 2 * ggo::dot(a, b);
@@ -95,8 +95,8 @@ namespace ggo
       dist = dist_sup;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::set3<data_t> diff = normal.pos() - _pos;
-      ggo::set3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
+      ggo::vec3<data_t> diff = normal.pos() - _pos;
+      ggo::pos3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
       normal.set_dir(proj - normal.pos());
     }
     else // The ray's origin is outside of the cylinder.
@@ -104,8 +104,8 @@ namespace ggo
       dist = dist_inf;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::set3<data_t> diff = normal.pos() - _pos;
-      ggo::set3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
+      ggo::vec3<data_t> diff = normal.pos() - _pos;
+      ggo::pos3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
       normal.set_dir(normal.pos() - proj);
     }
 

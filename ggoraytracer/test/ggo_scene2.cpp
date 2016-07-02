@@ -29,19 +29,19 @@ GGO_TEST(test_scene, scene2)
   scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color(0.5f), 100.F));
 
   // The light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::point3d_float(-20, -20, 200));
+  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(-20.f, -20.f, 200.f));
 
   // The objects.
-  auto sphere1 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(-2.f, 0.f, 0.f), 1.f);
+  auto sphere1 = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(-2.f, 0.f, 0.f), 1.f);
   scene_builder.add_object(sphere1, ggo::color::RED, false);
   
-  auto sphere2 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 0.f), 1.f);
+  auto sphere2 = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), 1.f);
   scene_builder.add_object(sphere2, ggo::color::WHITE, false);
   
-  auto sphere3 = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(2.f, 0.f, 0.f), 1.f);
+  auto sphere3 = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(2.f, 0.f, 0.f), 1.f);
   scene_builder.add_object(sphere3, ggo::color::BLACK, false);
 
-  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f);
+  auto plane = std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f);
   scene_builder.add_object(plane, ggo::color::WHITE, false);
   
   // Rendering.

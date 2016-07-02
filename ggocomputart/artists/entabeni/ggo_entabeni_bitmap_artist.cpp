@@ -132,14 +132,14 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
 
   const float dangle = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
   
-  auto project = [&](const ggo::point3d_float & v)
+  auto project = [&](const ggo::pos3f & v)
   {
-    float radius = 1 + v.z();
-    float x_3d = radius * std::cos(dangle + v.x());
-    float y_3d = radius * std::sin(dangle + v.x());
-    float z_3d = v.y();
+    float radius = 1 + v.get<2>();
+    float x_3d = radius * std::cos(dangle + v.get<0>());
+    float y_3d = radius * std::sin(dangle + v.get<0>());
+    float z_3d = v.get<1>();
 
-    ggo::point3d_float pos3d(x_3d, y_3d, z_3d);
+    ggo::pos3f pos3d(x_3d, y_3d, z_3d);
     ggo::pos2f proj = basis.project(pos3d, 0.25f, get_render_width(), get_render_height());
 
     return std::make_tuple(pos3d, proj);
@@ -148,17 +148,17 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
   std::vector<ggo::rgb_layer> layers;
   auto color_map = create_color_map();
 
-  auto paint_triangle = [&](const ggo::point3d_float & v1, const ggo::point3d_float & v2, const ggo::point3d_float & v3)
+  auto paint_triangle = [&](const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3)
   {
     auto p1 = project(v1);
     auto p2 = project(v2);
     auto p3 = project(v3);
 
-    ggo::point3d_float center = (std::get<0>(p1) + std::get<0>(p2) + std::get<0>(p3)) / 3.f;
-    ggo::vector3d_float diff = center - basis.pos();
+    ggo::pos3f center = (std::get<0>(p1) + std::get<0>(p2) + std::get<0>(p3)) / 3.f;
+    ggo::vec3f diff = center - basis.pos();
 
     float dist = diff.get_length();
-    float altitude = ggo::hypot(center.x(), center.y());
+    float altitude = ggo::hypot(center.get<0>(), center.get<1>());
 
     ggo::color triangle_color = color_map.evaluate(altitude) / (0.7f + 0.1f * dist);
     auto triangle = std::make_shared<ggo::triangle2d_float>(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
@@ -184,11 +184,11 @@ void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
   {
     for (int x = 0; x < grid.get_size<0>() - 1; ++x)
     {
-      ggo::point3d_float v1(delta * x, -delta * y, grid(x, y));
-      ggo::point3d_float v2(delta * x, -delta * (y + 1), grid(x, y + 1));
-      ggo::point3d_float v3(delta * (x + 1), -delta * y, grid(x + 1, y));
-      ggo::point3d_float v4(delta * (x + 1), -delta * (y + 1), grid(x + 1, y + 1));
-      ggo::point3d_float v5(delta * (x + 0.5f), -delta * (y + 0.5f), 0.25f * (grid(x, y) + grid(x, y + 1) + grid(x + 1, y) + grid(x + 1, y + 1)));
+      ggo::pos3f v1(delta * x, -delta * y, grid(x, y));
+      ggo::pos3f v2(delta * x, -delta * (y + 1), grid(x, y + 1));
+      ggo::pos3f v3(delta * (x + 1), -delta * y, grid(x + 1, y));
+      ggo::pos3f v4(delta * (x + 1), -delta * (y + 1), grid(x + 1, y + 1));
+      ggo::pos3f v5(delta * (x + 0.5f), -delta * (y + 0.5f), 0.25f * (grid(x, y) + grid(x, y + 1) + grid(x + 1, y) + grid(x + 1, y + 1)));
 
       paint_triangle(v5, v2, v4);
       paint_triangle(v5, v1, v2);

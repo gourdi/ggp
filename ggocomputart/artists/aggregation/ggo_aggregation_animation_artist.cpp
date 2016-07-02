@@ -21,7 +21,7 @@ void ggo_aggregation_animation_artist::init_sub()
   
   float attraction_factor = ggo::rand_float(0.04f, 0.08f);
   float rotation_factor = ggo::rand_float(0.1f, 0.2f);
-  ggo::vector3d_float rotation_vector(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
+  ggo::vec3f rotation_vector(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
   
   _points = ggo::aggregation_artist::compute_points(attraction_factor, rotation_vector, rotation_factor);
 }
@@ -35,7 +35,7 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
   }
 
   int count = ggo::to<int>(ggo::ease_inout(frame_index, FRAMES_COUNT, 0.f, static_cast<float>(_points.size())));
-  std::vector<ggo::point3d_float> points(_points.begin(), _points.begin() + count);
+  std::vector<ggo::pos3f> points(_points.begin(), _points.begin() + count);
   
   float angle = ggo::ease_inout(frame_index, FRAMES_COUNT, 0.f, 3.f * ggo::PI<float>());
   

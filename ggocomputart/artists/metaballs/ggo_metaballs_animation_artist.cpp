@@ -24,7 +24,7 @@ void ggo_metaballs_animation_artist::init_sub()
 	{
 		ggo_moving_center center;
 		
-		center._center = ggo::point3d_float(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
+		center._center = ggo::pos3f(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
 		center._radius = ggo::rand_float(0, GGO_BALL_SIZE);
 		center._start_angle1 = ggo::rand_float(0, 2 * ggo::PI<float>());
 		center._start_angle2 = ggo::rand_float(0, 2 * ggo::PI<float>());
@@ -35,7 +35,7 @@ void ggo_metaballs_animation_artist::init_sub()
 	}
 	
 	float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_params._light2 = ggo::point3d_float(1000 * std::cos(angle), 1000 * std::sin(angle), 1000);
+	_params._light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
 	_camera.basis().set_pos(0, 0, 25);
 	_camera.set_aperture(0.1f);
 }
@@ -45,7 +45,7 @@ bool ggo_metaballs_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 {
 	if (frame_index <= FRAMES_COUNT)
 	{
-		std::vector<ggo::point3d_float> centers;
+		std::vector<ggo::pos3f> centers;
 		
 		float t = ggo::ease_inout_to<float>(frame_index, FRAMES_COUNT);
 		
@@ -67,11 +67,11 @@ bool ggo_metaballs_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 			float y3 = y2;
 			float z3 = std::sin(angle2) * x2 + std::cos(angle2) * z2;
 			
-			x3 += it->_center.x();
-			y3 += it->_center.y();
-			z3 += it->_center.z();
+			x3 += it->_center.get<0>();
+			y3 += it->_center.get<1>();
+			z3 += it->_center.get<2>();
 			
-			_params._centers.push_back(ggo::point3d_float(x3, y3, z3));
+			_params._centers.push_back(ggo::pos3f(x3, y3, z3));
 		}
 
     ggo::antialiasing_renderer renderer(_camera);

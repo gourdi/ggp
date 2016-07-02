@@ -34,7 +34,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_point_light(const ggo::color & color, const ggo::point3d_float & pos)
+  std::shared_ptr<ggo::object3d> scene_builder::add_point_light(const ggo::color & color, const ggo::pos3f & pos)
   {
     auto light = ggo::create_point_light(color, pos);
 
@@ -44,7 +44,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_sphere_light(const ggo::color & color, float radius, const ggo::point3d_float & pos)
+  std::shared_ptr<ggo::object3d> scene_builder::add_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos)
   {
     auto light = ggo::create_sphere_light(color, radius, pos);
 

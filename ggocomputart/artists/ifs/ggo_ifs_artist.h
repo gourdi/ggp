@@ -3,7 +3,6 @@
 
 #include "ggo_artist_abc.h"
 #include <ggo_array.h>
-#include <ggo_set3.h>
 
 class ggo_ifs_artist : public ggo_artist_abc
 {
@@ -15,7 +14,7 @@ public:
 
 private:
 
-	void	update(ggo::point3d_float & point, const float transform[4]);
+	void	update(ggo::pos3f & point, const float transform[4]);
 			
 	void	paint_buffer(uint8_t * buffer, uint8_t color, const ggo::array_float & accumul_buffer) const;
 };

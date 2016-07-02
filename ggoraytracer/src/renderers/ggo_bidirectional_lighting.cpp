@@ -43,9 +43,9 @@ namespace ggo
       auto exclude_camera_object = hit_object.handle_self_intersection(camera_world_normal, false);
 
       // Create a ray from camera hit object to light hit object that will close the path.
-      ggo::vector3d_float diff(light_world_normal.pos() - camera_world_normal.pos());
+      ggo::vec3f diff(light_world_normal.pos() - camera_world_normal.pos());
       float length = diff.get_length();
-      ggo::vector3d_float dir(diff / length);
+      ggo::vec3f dir(diff / length);
       ggo::ray3d_float close_ray(camera_world_normal.pos(), dir, false);
 
       // Check visibility.

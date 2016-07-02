@@ -2,7 +2,7 @@
 #include <ggo_object3d.h>
 #include <ggo_renderer_abc.h>
 
-#define GGO_CUMBIA_CAMERA_DIST 5
+#define GGO_CUMBIA_CAMERA_DIST 5.f
 
 namespace
 {
@@ -193,10 +193,10 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo_cumbia_artist::init_common(ggo:
 
 	// The lights.
   float angle_offset = ggo::rand_float(0, 2 * ggo::PI<float>());
-  ggo::point3d_float light_pos1 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset),                            GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset),                            0.f };
-  ggo::point3d_float light_pos2 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset + 2 * ggo::PI<float>() / 3), GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset + 2 * ggo::PI<float>() / 3), 0.f };
-  ggo::point3d_float light_pos3 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset - 2 * ggo::PI<float>() / 3), GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset - 2 * ggo::PI<float>() / 3), 0.f };
-  ggo::point3d_float light_pos4 { 0, 0, GGO_CUMBIA_CAMERA_DIST };
+  ggo::pos3f light_pos1 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset),                            GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset),                            0.f };
+  ggo::pos3f light_pos2 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset + 2 * ggo::PI<float>() / 3), GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset + 2 * ggo::PI<float>() / 3), 0.f };
+  ggo::pos3f light_pos3 { GGO_CUMBIA_CAMERA_DIST * std::cos(angle_offset - 2 * ggo::PI<float>() / 3), GGO_CUMBIA_CAMERA_DIST * std::sin(angle_offset - 2 * ggo::PI<float>() / 3), 0.f };
+  ggo::pos3f light_pos4 { 0.f, 0.f, GGO_CUMBIA_CAMERA_DIST };
 
 	scene_builder.add_sphere_light(ggo::color::from_hsv(ggo::rand_float(), 1.f, 0.75f), 0.1f, light_pos1);
   scene_builder.add_sphere_light(ggo::color::from_hsv(ggo::rand_float(), 1.f, 0.75f), 0.1f, light_pos2);

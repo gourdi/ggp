@@ -2,7 +2,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t metaball<data_t>::influence_data::evaluate(const ggo::set3<data_t> & pos) const
+  data_t metaball<data_t>::influence_data::evaluate(const ggo::pos3<data_t> & pos) const
   {
     // f = potential * ((hypot / r^2)^2 - 2 * hypot / r^2 + 1)
     // f = potential * (hypot_norm^2 - 2 * hypot_norm + 1) if hypot_norm = hypot / r^2
@@ -114,7 +114,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t metaball<data_t>::compute_field_potential(const ggo::set3<data_t> & pos, 
+  data_t metaball<data_t>::compute_field_potential(const ggo::pos3<data_t> & pos, 
                                                    const std::vector<const intersection_info*> & active_list)
   {
     data_t v = 0;
@@ -233,15 +233,15 @@ namespace ggo
         data_t z_sup = 0;
         for (const auto * intersection : active_list)
         {
-          x_inf += intersection->_influence->evaluate({ normal.pos().x() - eps, normal.pos().y(), normal.pos().z() });
-          x_sup += intersection->_influence->evaluate({ normal.pos().x() + eps, normal.pos().y(), normal.pos().z() });
-          y_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() - eps, normal.pos().z() });
-          y_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() + eps, normal.pos().z() });
-          z_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() - eps });
-          z_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() + eps });
+          x_inf += intersection->_influence->evaluate({ normal.pos().template get<0>() - eps, normal.pos().template get<1>(), normal.pos().template get<2>() });
+          x_sup += intersection->_influence->evaluate({ normal.pos().template get<0>() + eps, normal.pos().template get<1>(), normal.pos().template get<2>() });
+          y_inf += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>() - eps, normal.pos().template get<2>() });
+          y_sup += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>() + eps, normal.pos().template get<2>() });
+          z_inf += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>() - eps });
+          z_sup += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>() + eps });
         }
         
-        normal.set_dir(ggo::set3<data_t>(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup));
+        normal.set_dir(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup);
 #endif
 
         return true;

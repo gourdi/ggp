@@ -18,7 +18,7 @@ namespace
 		
                 my_material(float sphere_size);
 		
-		ggo::color	get_color(const ggo::point3d_float & pos) const override;
+		ggo::color	get_color(const ggo::pos3f & pos) const override;
 		
 	private:
 		
@@ -42,9 +42,9 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color my_material::get_color(const ggo::point3d_float & pos) const
+  ggo::color my_material::get_color(const ggo::pos3f & pos) const
   {
-    float x = pos.x() + _amplitude * std::cos(_wavelength * pos.z());
+    float x = pos.get<0>() + _amplitude * std::cos(_wavelength * pos.get<2>());
     x = std::fmod(x, _range_large);
     if (x < 0)
     {
@@ -90,7 +90,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
   while (spheres.size() < 128)
 	{
 		float radius = ggo::rand_float(0.2f, 0.8f);
-		ggo::sphere3d_float sphere(ggo::point3d_float(ggo::rand_float(-4, 4), ggo::rand_float(-8, 8), radius), radius);
+		ggo::sphere3d_float sphere(ggo::pos3f(ggo::rand_float(-4, 4), ggo::rand_float(-8, 8), radius), radius);
 		
 		bool ok = true;
 		for (const auto & sphere_cur : spheres)
@@ -112,7 +112,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
   
 	for (const auto & sphere : spheres)
 	{
-    ggo::vector3d_float dir_to_center(sphere.center() - camera.basis().pos());
+    ggo::vec3f dir_to_center(sphere.center() - camera.basis().pos());
     dir_to_center.normalize();
     
     if ((lights_count < 3) &&

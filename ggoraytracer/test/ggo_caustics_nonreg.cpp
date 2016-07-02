@@ -27,11 +27,11 @@ GGO_TEST(caustics, test)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLUE));
 
   // Light.
-  auto light = scene_builder.add_sphere_light(ggo::color(0.9f), 1.f, ggo::point3d_float(0, 0, 20));
+  auto light = scene_builder.add_sphere_light(ggo::color(0.9f), 1.f, ggo::pos3f(0.f, 0.f, 20.f));
 
   // Objects.
-  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(0.f, 0.f, 1.f), -1.f), ggo::color::RED, true);
-  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0.f, 0.f, 1.f), 1.f), ggo::color::WHITE, true);
+  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f), ggo::color::RED, true);
+  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), 1.f), ggo::color::WHITE, true);
   sphere->set_transparent(true);
   sphere->set_density(1.1f);
   sphere->set_phong_factor(5.0f);
@@ -46,7 +46,7 @@ GGO_TEST(caustics, test)
   ggo::save_bmp("caustics_off.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
 
   // With indirect lighting.
-  std::vector<ggo::point3d_float> target_samples;
+  std::vector<ggo::pos3f> target_samples;
   for (int i = 0; i < GGO_PHOTONS_COUNT; ++i)
   {
     float x = ggo::rand_float(-1, 1);

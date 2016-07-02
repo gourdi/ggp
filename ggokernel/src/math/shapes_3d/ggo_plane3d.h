@@ -6,7 +6,7 @@ namespace ggo
   {
   public:
 
-                    plane3d(const ggo::set3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+                    plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
 
     bool            intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool            is_convex() const override { return true; }
@@ -14,7 +14,7 @@ namespace ggo
 
   private:
 
-    const ggo::set3<data_t> _normal;
+    const ggo::vec3<data_t> _normal;
     const data_t            _dist_to_origin;
   };
 }

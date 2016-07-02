@@ -91,6 +91,10 @@ namespace ggo
 
   template <typename data_t> using pos3 = vec<data_t, 3>;
   template <typename data_t> using vec3 = vec<data_t, 3>;
+  using pos3f = vec<float, 3>;
+  using vec3f = vec<float, 3>;
+  using pos3d = vec<double, 3>;
+  using vec3d = vec<double, 3>;
 }
 
 //////////////////////////////////////////////////////////////////

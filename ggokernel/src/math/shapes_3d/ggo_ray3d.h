@@ -8,17 +8,17 @@ namespace ggo
 
                           ray3d() {};
                           ray3d(T pos_x, T pos_y, T pos_z, T dir_x, T dir_y, T dir_z, bool normalize_dir = true);
-                          ray3d(const ggo::set3<T> & pos, const ggo::set3<T> & dir, bool normalize_dir = true);
+                          ray3d(const ggo::pos3<T> & pos, const ggo::vec3<T> & dir, bool normalize_dir = true);
 
-    const ggo::set3<T> &	pos() const { return _pos; }
-    ggo::set3<T> &		    pos() { return _pos; }
-    void				          set_pos(T x, T y, T z) { _pos = ggo::set3<T>(x, y, z); }
+    const ggo::pos3<T> &	pos() const { return _pos; }
+    ggo::pos3<T> &		    pos() { return _pos; }
+    void				          set_pos(T x, T y, T z) { _pos = ggo::pos3<T>(x, y, z); }
 
-    const ggo::set3<T> &	dir() const { return _dir; };
-    void				          set_dir(const ggo::set3<T> & dir) { _dir = dir; _dir.normalize(); }
-    void				          set_dir(T x, T y, T z) { _dir = ggo::set3<T>(x, y, z); _dir.normalize(); }
-    void				          set_normalized_dir(const ggo::set3<T> & dir) { _dir = dir; GGO_ASSERT(_dir.is_normalized(T(0.001))); }
-    void				          set_normalized_dir(T x, T y, T z) { _dir = ggo::set3<T>(x, y, z); GGO_ASSERT(_dir.is_normalized(T(0.001))); }
+    const ggo::vec3<T> &	dir() const { return _dir; };
+    void				          set_dir(const ggo::vec3<T> & dir) { _dir = dir; _dir.normalize(); }
+    void				          set_dir(T x, T y, T z) { _dir = ggo::vec3<T>(x, y, z); _dir.normalize(); }
+    void				          set_normalized_dir(const ggo::vec3<T> & dir) { _dir = dir; GGO_ASSERT(_dir.is_normalized(T(0.001))); }
+    void				          set_normalized_dir(T x, T y, T z) { _dir = ggo::vec3<T>(x, y, z); GGO_ASSERT(_dir.is_normalized(T(0.001))); }
 
     bool                  is_normalized(T epsilon = 0.0001) const { return _dir.is_normalized(epsilon); }
     
@@ -26,14 +26,14 @@ namespace ggo
     
   public:
     
-    static	const ray3d<T> &	O_X() { static const ray3d<T> ray(ggo::set3<T>(0, 0, 0), ggo::set3<T>(1, 0, 0)); return ray; };
-    static	const ray3d<T> &	O_Y() { static const ray3d<T> ray(ggo::set3<T>(0, 0, 0), ggo::set3<T>(0, 1, 0)); return ray; };
-    static	const ray3d<T> &	O_Z() { static const ray3d<T> ray(ggo::set3<T>(0, 0, 0), ggo::set3<T>(0, 0, 1)); return ray; };
+    static	const ray3d<T> &	O_X() { static const ray3d<T> ray(ggo::pos3<T>(0.f, 0.f, 0.f), ggo::vec3<T>(1.f, 0.f, 0.f)); return ray; };
+    static	const ray3d<T> &	O_Y() { static const ray3d<T> ray(ggo::pos3<T>(0.f, 0.f, 0.f), ggo::vec3<T>(0.f, 1.f, 0.f)); return ray; };
+    static	const ray3d<T> &	O_Z() { static const ray3d<T> ray(ggo::pos3<T>(0.f, 0.f, 0.f), ggo::vec3<T>(0.f, 0.f, 1.f)); return ray; };
 
   private:
 
-    ggo::set3<T>	_pos;
-    ggo::set3<T>	_dir;
+    ggo::pos3<T>	_pos;
+    ggo::vec3<T>	_dir;
   };
 }
 
@@ -77,7 +77,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  ray3d<T>::ray3d(const ggo::set3<T> & pos, const ggo::set3<T> & dir, bool normalize_dir)
+  ray3d<T>::ray3d(const ggo::pos3<T> & pos, const ggo::vec3<T> & dir, bool normalize_dir)
   :
   _pos(pos),
   _dir(dir)
@@ -96,7 +96,7 @@ namespace ggo
   template <typename T>
   void ray3d<T>::flip()
   {
-    _dir = _dir.operator-();
+    _dir.flip();
   }
 }
 

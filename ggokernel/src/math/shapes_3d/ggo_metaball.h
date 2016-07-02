@@ -22,7 +22,7 @@ namespace ggo
       std::shared_ptr<influence_shape3d_abc<data_t>>  _shape;
       data_t                                          _potential;
 
-      data_t  evaluate(const ggo::set3<data_t> & pos) const;
+      data_t  evaluate(const ggo::pos3<data_t> & pos) const;
     };
 
     struct intersection_info
@@ -39,7 +39,7 @@ namespace ggo
                                                                std::vector<const intersection_info*> & active_list,
                                                                typename std::vector<intersection_info>::const_iterator & intersection_it);
 
-    static  data_t                          compute_field_potential(const ggo::set3<data_t> & pos,
+    static  data_t                          compute_field_potential(const ggo::pos3<data_t> & pos,
                                                                     const std::vector<const intersection_info*> & active_list);
 
     std::vector<influence_data> _influences;

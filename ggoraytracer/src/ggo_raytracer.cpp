@@ -37,8 +37,8 @@ namespace
       }
 
       // Check light position.
-      ggo::point3d_float light_pos = sample_light_func(*light, world_normal.pos());
-      ggo::vector3d_float dir_to_light(light_pos - world_normal.pos());
+      ggo::pos3f light_pos = sample_light_func(*light, world_normal.pos());
+      ggo::vec3f dir_to_light(light_pos - world_normal.pos());
       if (ggo::dot(world_normal.dir(), dir_to_light) < 0)
       {
         continue;
@@ -200,7 +200,7 @@ namespace ggo
     const ggo::raycaster_abc * raycaster = raytrace_params._raycaster ? raytrace_params._raycaster : &brute_force_racaster;
 
     auto sample_light_func = [](const ggo::object3d & light,
-                                const ggo::point3d_float & target_pos)
+                                const ggo::pos3f & target_pos)
     {
       return light.basis().pos();
     };
@@ -236,7 +236,7 @@ namespace ggo
     const ggo::raycaster_abc * raycaster = raytrace_params._raycaster ? raytrace_params._raycaster : &brute_force_racaster;
 
     auto sample_light_func = [&](const ggo::object3d & light,
-                                 const ggo::point3d_float & target_pos)
+                                 const ggo::pos3f & target_pos)
     {
       return light.sample_point(target_pos, random_variable1, random_variable2);
     };
@@ -265,7 +265,7 @@ namespace ggo
                                      const ggo::object3d & hit_object,
                                      const ggo::raycaster_abc & raycaster)
     {
-      ggo::vector3d_float ambient_dir = ggo::hemisphere_sampling(world_normal.dir(), random_variable1, random_variable2);
+      ggo::vec3f ambient_dir = ggo::hemisphere_sampling(world_normal.dir(), random_variable1, random_variable2);
       ggo::ray3d_float ambient_ray(world_normal.pos(), ambient_dir, false);
 
       // If the new ray hit point is very close to current hit point, the fog does not add light,
@@ -304,11 +304,11 @@ namespace ggo
     }
 
     // Transmission: the ray passes thgough.
-    ggo::vector3d_float parallel_dir = ray.dir() - cos_input * world_normal.dir();
+    ggo::vec3f parallel_dir = ray.dir() - cos_input * world_normal.dir();
     parallel_dir.set_length(sin_output);
 
     float cos_output = std::sqrt(1 - ggo::square(sin_output));
-    ggo::vector3d_float orthogonal_dir = -world_normal.dir();
+    ggo::vec3f orthogonal_dir = -world_normal.dir();
     orthogonal_dir.set_length(cos_output);
 
     ray.set_dir(parallel_dir + orthogonal_dir);
@@ -340,9 +340,9 @@ namespace ggo
                                         const ggo::ray3d_float & world_normal,
                                         const ggo::ray3d_float & ray_to_light)
   {
-    GGO_ASSERT_BTW(world_normal.pos().x() - ray_to_light.pos().x(), -0.01, 0.01);
-    GGO_ASSERT_BTW(world_normal.pos().y() - ray_to_light.pos().y(), -0.01, 0.01);
-    GGO_ASSERT_BTW(world_normal.pos().z() - ray_to_light.pos().z(), -0.01, 0.01);
+    GGO_ASSERT_BTW(world_normal.pos().get<0>() - ray_to_light.pos().get<0>(), -0.01, 0.01);
+    GGO_ASSERT_BTW(world_normal.pos().get<1>() - ray_to_light.pos().get<1>(), -0.01, 0.01);
+    GGO_ASSERT_BTW(world_normal.pos().get<2>() - ray_to_light.pos().get<2>(), -0.01, 0.01);
     GGO_ASSERT_GE(ggo::dot(world_normal.dir(), ray_to_light.dir()), -0.01);
 
     return ggo::dot(world_normal.dir(), ray_to_light.dir()) * object_color * light_color;
@@ -361,10 +361,10 @@ namespace ggo
       return ggo::color::BLACK;
     }
 
-    ggo::vector3d_float reflection_dir(2 * ggo::dot(world_normal.dir(), ray_to_light.dir()) * world_normal.dir() - ray_to_light.dir());
+    ggo::vec3f reflection_dir(2 * ggo::dot(world_normal.dir(), ray_to_light.dir()) * world_normal.dir() - ray_to_light.dir());
     GGO_ASSERT(reflection_dir.is_normalized(0.0001f));
 
-    ggo::vector3d_float viewer_dir(ray.pos() - world_normal.pos());
+    ggo::vec3f viewer_dir(ray.pos() - world_normal.pos());
     viewer_dir.normalize();
 
     float phong = ggo::dot(reflection_dir, viewer_dir);

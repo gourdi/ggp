@@ -28,7 +28,7 @@ private:
   ggo::color                              _color_side;
   float                                   _camera_rotation_start;
   float                                   _camera_rotation_end;
-  std::vector<ggo::point3d_float>         _lights_pos;
+  std::vector<ggo::pos3f>                 _lights_pos;
   ggo::color                              _fog_color;
   std::vector<ggo_hexa_artist::hexa_info> _hexa_infos;
 };

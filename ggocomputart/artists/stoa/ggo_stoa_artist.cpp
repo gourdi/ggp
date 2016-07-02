@@ -10,14 +10,14 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
-  bool compare_point(const ggo::point3d_float & p1, const ggo::point3d_float & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  bool compare_point(const ggo::pos3f & p1, const ggo::pos3f & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
   {
-    return cmp_x(p1.x(), p2.x()) && cmp_y(p1.y(), p2.y()) && cmp_z(p1.z(), p2.z());
+    return cmp_x(p1.get<0>(), p2.get<0>()) && cmp_y(p1.get<1>(), p2.get<1>()) && cmp_z(p1.get<2>(), p2.get<2>());
   }
 
   //////////////////////////////////////////////////////////////
   template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
-  bool compare_face(const ggo::face3d<float, true> & f, const ggo::point3d_float & p, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  bool compare_face(const ggo::face3d<float, true> & f, const ggo::pos3f & p, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
   {
     return compare_point(f.v1()._pos, p, cmp_x, cmp_y, cmp_z) ||
            compare_point(f.v2()._pos, p, cmp_x, cmp_y, cmp_z) ||
@@ -35,7 +35,7 @@ namespace
 
       float angle1 = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
       float angle2 = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
-      ggo::vector3d_float axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
+      ggo::vec3f axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
       ggo::fill_rotation_matrix(axis, ggo::rand_float(0, 2 * ggo::PI<float>()), _rotation);
 
       for (auto & value : _noise3d)
@@ -66,12 +66,12 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename DensityFunc>
-  ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::point3d_float & p)
+  ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::pos3f & p)
   {
     const float epsilon = 0.01f;
-    float dx = density(p.x() + epsilon, p.y(), p.z()) - density(p.x() - epsilon, p.y(), p.z());
-    float dy = density(p.x(), p.y() + epsilon, p.z()) - density(p.x(), p.y() - epsilon, p.z());
-    float dz = density(p.x(), p.y(), p.z() + epsilon) - density(p.x(), p.y(), p.z() - epsilon);
+    float dx = density(p.get<0>() + epsilon, p.get<1>(), p.get<2>()) - density(p.get<0>() - epsilon, p.get<1>(), p.get<2>());
+    float dy = density(p.get<0>(), p.get<1>() + epsilon, p.get<2>()) - density(p.get<0>(), p.get<1>() - epsilon, p.get<2>());
+    float dz = density(p.get<0>(), p.get<1>(), p.get<2>() + epsilon) - density(p.get<0>(), p.get<1>(), p.get<2>() - epsilon);
 
     return ggo::vertex<float>(p, { dx, dy, dz });
   }
@@ -85,7 +85,7 @@ _octree({ get_bounding_box(face_objects), face_objects })
 {
   auto recursion = [](ggo::tree<ggo_node> & tree)
   {
-    ggo::point3d_float center = tree.data()._bounding_box.get_center();
+    ggo::pos3f center = tree.data()._bounding_box.get_center();
 
     std::array<ggo_node, 8> nodes;
 
@@ -271,7 +271,7 @@ ggo_stoa_artist::ggo_stoa_artist(int steps)
   };
 
   const float range = 3.2f;
-  auto cells = ggo::marching_cubes(density_func, ggo::point3d_float(-range, -range, -range), steps, 2 * range / steps);
+  auto cells = ggo::marching_cubes(density_func, ggo::pos3f(-range, -range, -range), steps, 2 * range / steps);
 
   std::vector<ggo_face_object> face_objects;
 
@@ -297,7 +297,7 @@ ggo_stoa_artist::ggo_stoa_artist(int steps)
 
 //////////////////////////////////////////////////////////////
 void ggo_stoa_artist::render(uint8_t * buffer, int width, int height, float hue,
-                             const ggo::point3d_float& light_pos1, const ggo::point3d_float& light_pos2,
+                             const ggo::pos3f& light_pos1, const ggo::pos3f& light_pos2,
                              ggo::renderer_abc& renderer) const
 {
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::from_hsv(hue, 1.f, 1.f)));

@@ -17,7 +17,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color solid_color_material::get_color(const ggo::point3d_float & pos) const
+  ggo::color solid_color_material::get_color(const ggo::pos3f & pos) const
   {
     return _color;
   }

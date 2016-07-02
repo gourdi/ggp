@@ -12,7 +12,7 @@ namespace ggo
                 solid_color_material();
                 solid_color_material(const ggo::color & color);
     
-    ggo::color	get_color(const ggo::point3d_float & pos) const override;
+    ggo::color	get_color(const ggo::pos3f & pos) const override;
     
     void		    set_color(const ggo::color & color);
     

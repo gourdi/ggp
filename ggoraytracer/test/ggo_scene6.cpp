@@ -26,12 +26,12 @@ GGO_TEST(test_scene, scene6)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::RED));
   
   // Light.
-  scene_builder.add_sphere_light(ggo::color::WHITE, 10.f, ggo::point3d_float(-20.f, -20.f, 200.f));
+  scene_builder.add_sphere_light(ggo::color::WHITE, 10.f, ggo::pos3f(-20.f, -20.f, 200.f));
 
   // Objects.
   for (int i = -2; i < 5; ++i)
   {
-    auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(static_cast<float>(i), 2.f * static_cast<float>(i), 0.f), 0.5f);
+    auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(static_cast<float>(i), 2.f * static_cast<float>(i), 0.f), 0.5f);
     scene_builder.add_object(sphere, ggo::color::YELLOW, false);
   }
 

@@ -2,7 +2,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename T>
-  parallelogram3d<T>::parallelogram3d(const ggo::set3<T> & pos, const ggo::set3<T> & v1, const ggo::set3<T> & v2)
+  parallelogram3d<T>::parallelogram3d(const ggo::pos3<T> & pos, const ggo::vec3<T> & v1, const ggo::vec3<T> & v2)
   :
   _pos(pos), _v1(v1), _v2(v2), _normal(ggo::cross(v1, v2))
   {
@@ -13,12 +13,12 @@ namespace ggo
   template <typename T>
   bool parallelogram3d<T>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
   {
-    const T m[3][3] = {{ray.dir().x(), -_v1.x(), -_v2.x()},
-                       {ray.dir().y(), -_v1.y(), -_v2.y()},
-                       {ray.dir().z(), -_v1.z(), -_v2.z()}};
-    const T c[3] = {_pos.x() - ray.pos().x(),
-                    _pos.y() - ray.pos().y(),
-                    _pos.z() - ray.pos().z()};         
+    const T m[3][3] = {{ray.dir().template get<0>(), -_v1.template get<0>(), -_v2.template get<0>()},
+                       {ray.dir().template get<1>(), -_v1.template get<1>(), -_v2.template get<1>()},
+                       {ray.dir().template get<2>(), -_v1.template get<2>(), -_v2.template get<2>()}};
+    const T c[3] = {_pos.template get<0>() - ray.pos().template get<0>(),
+                    _pos.template get<1>() - ray.pos().template get<1>(),
+                    _pos.template get<2>() - ray.pos().template get<2>()};         
     T s[3];
     
     if (ggo::linsolve3d(m, c, s) == false)

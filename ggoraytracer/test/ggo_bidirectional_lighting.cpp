@@ -27,15 +27,15 @@ GGO_TEST(bidirectional_lighting, test)
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLUE));
   
   // Light.
-  scene_builder.add_sphere_light(ggo::color(0.9f), 0.2f, ggo::point3d_float(0, 0.75f, 0));
+  scene_builder.add_sphere_light(ggo::color(0.9f), 0.2f, ggo::pos3f(0.f, 0.75f, 0.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float( 1.f, 0.f, 0.f), -1.f), ggo::color::RED, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float(-1.f, 0.f, 0.f), -1.f), ggo::color::GREEN, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float( 0.f, 0.f, 1.f), -1.f), ggo::color::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float( 0.f, 1.f, 0.f), -1.f), ggo::color::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vector3d_float( 0.f, -1.f, 0.f), -1.f), ggo::color::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::point3d_float(0, -0.6f, 0), 0.4f), ggo::color::WHITE, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::color::RED, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::color::GREEN, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::color::WHITE, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::color::WHITE, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::color::WHITE, true);
+  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::color::WHITE, true);
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, GGO_DIRECT_LIGHTING_SAMPLES_COUNT);

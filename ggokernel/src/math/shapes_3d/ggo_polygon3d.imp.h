@@ -20,9 +20,9 @@ namespace ggo
     // Parse all the faces.
     for (const auto & face : _faces)
     {
-      const ggo::set3<T> &      v1 = _vertices[face._v1]._pos;
-      const ggo::set3<T> &      v2 = _vertices[face._v2]._pos;
-      const ggo::set3<T> &      v3 = _vertices[face._v3]._pos;
+      const ggo::pos3<T> &      v1 = _vertices[face._v1]._pos;
+      const ggo::pos3<T> &      v2 = _vertices[face._v2]._pos;
+      const ggo::pos3<T> &      v3 = _vertices[face._v3]._pos;
       ggo::triangle3d<T, false> triangle(v1, v2, v3);
 
       T dist_cur = 0;
@@ -42,14 +42,14 @@ namespace ggo
     }
     
     // Interpolate the normal smoothly.
-    const ggo::set3<T> & v1 = _vertices[hit_face->_v1]._pos;
-    const ggo::set3<T> & v2 = _vertices[hit_face->_v2]._pos;
-    const ggo::set3<T> & v3 = _vertices[hit_face->_v3]._pos;
+    const ggo::pos3<T> & v1 = _vertices[hit_face->_v1]._pos;
+    const ggo::pos3<T> & v2 = _vertices[hit_face->_v2]._pos;
+    const ggo::pos3<T> & v3 = _vertices[hit_face->_v3]._pos;
     
-    const T m[3][3] = {{v1.x(), v2.x(), v3.x()}, 
-                       {v1.y(), v2.y(), v3.y()}, 
-                       {v1.z(), v2.z(), v3.z()}};
-    const T c[3] = {normal.pos().x(), normal.pos().y(), normal.pos().z()};
+    const T m[3][3] = {{v1.template get<0>(), v2.template get<0>(), v3.template get<0>()}, 
+                       {v1.template get<1>(), v2.template get<1>(), v3.template get<1>()}, 
+                       {v1.template get<2>(), v2.template get<2>(), v3.template get<2>()}};
+    const T c[3] = {normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>()};
     T s[3] = {0, 0, 0};
     
     if (linsolve3d(m, c, s) == false)
@@ -76,7 +76,7 @@ namespace ggo
     // The vertices.
     std::vector<ggo::vertex<T>> vertices;
     
-    vertices.emplace_back(ggo::set3<T>(0, 0, radius), ggo::set3<T>(0, 0, 1)); // North pole.
+    vertices.emplace_back(ggo::pos3<T>(T(0), T(0), radius), ggo::vec3<T>(T(0), T(0), T(1))); // North pole.
 
     for (int phi_step = 1; phi_step < vert_steps - 1; ++phi_step)
     {
@@ -91,12 +91,12 @@ namespace ggo
         T y = sin_phi * std::sin(theta);
         T z = cos_phi;
         
-        ggo::set3<T> p(x, y, z);
+        ggo::vec3<T> p(x, y, z);
         vertices.emplace_back(radius * p, p);
       }
     }
     
-    vertices.emplace_back(ggo::set3<T>(0, 0, -radius), ggo::set3<T>(0, 0, -1)); // South pole.
+    vertices.emplace_back(ggo::pos3<T>(T(0), T(0), -radius), ggo::vec3<T>(T(0), T(0), T(-1))); // South pole.
 
     // The faces.
     std::vector<ggo::polygon3d<T>::face> faces;

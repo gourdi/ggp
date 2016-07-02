@@ -14,33 +14,33 @@ namespace ggo
   public:
 
                               sphere3d() : _center(0, 0, 0), _radius(1) {};
-                              sphere3d(const ggo::set3<data_t> & center, data_t radius) : _center(center), _radius(radius) {};
+                              sphere3d(const ggo::pos3<data_t> & center, data_t radius) : _center(center), _radius(radius) {};
 
     bool                      intersect_ray_fast(const ggo::ray3d<data_t> & ray) const;
     bool                      intersect_line(const ggo::line3d<data_t> & line, data_t & dist_inf, data_t & dist_sup) const;
 
     std::vector<data_t>       intersect_ray(const ggo::ray3d<data_t> & ray) const override;
-    data_t                    hypot_to_center(const ggo::set3<data_t> & p) const override { return ggo::hypot(_center, p); }
+    data_t                    hypot_to_center(const ggo::pos3<data_t> & p) const override { return ggo::hypot(_center, p); }
     data_t                    get_influence_hypot() const override { return _radius * _radius; }
     
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }
     std::ostream &            operator<<(std::ostream & os) const override;
 
-    ggo::set3<data_t> &       center() { return _center; }
-    const ggo::set3<data_t> & center() const { return _center; }
+    ggo::pos3<data_t> &       center() { return _center; }
+    const ggo::pos3<data_t> & center() const { return _center; }
       
     data_t &                  radius() { return _radius; }
     const data_t &            radius() const { return _radius; }
     
     bool                      is_point_inside(data_t x, data_t y, data_t z) const;
-    bool                      is_point_inside(const ggo::set3<data_t> & p) const;
+    bool                      is_point_inside(const ggo::pos3<data_t> & p) const;
   
     static  sphere3d<data_t>  merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2);
 
   private:
 
-    ggo::set3<data_t> _center;
+    ggo::pos3<data_t> _center;
     data_t            _radius;
   };
 }

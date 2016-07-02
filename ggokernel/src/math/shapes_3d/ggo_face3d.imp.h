@@ -10,13 +10,13 @@ namespace ggo
     GGO_ASSERT_FLOAT_EQ(v2._normal.get_length(), 1.f);
     GGO_ASSERT_FLOAT_EQ(v3._normal.get_length(), 1.f);
 
-    _m00 = _v2._pos.x() - _v1._pos.x();
-    _m10 = _v2._pos.y() - _v1._pos.y();
-    _m20 = _v2._pos.z() - _v1._pos.z();
+    _m00 = _v2._pos.template get<0>() - _v1._pos.template get<0>();
+    _m10 = _v2._pos.template get<1>() - _v1._pos.template get<1>();
+    _m20 = _v2._pos.template get<2>() - _v1._pos.template get<2>();
 
-    _m01 = _v3._pos.x() - _v1._pos.x();
-    _m11 = _v3._pos.y() - _v1._pos.y();
-    _m21 = _v3._pos.z() - _v1._pos.z();
+    _m01 = _v3._pos.template get<0>() - _v1._pos.template get<0>();
+    _m11 = _v3._pos.template get<1>() - _v1._pos.template get<1>();
+    _m21 = _v3._pos.template get<2>() - _v1._pos.template get<2>();
 
     _m10m21subm11m20 = _m10 * _m21 - _m11 * _m20;
     _m20m01subm00m21 = _m20 * _m01 - _m00 * _m21;
@@ -35,9 +35,9 @@ namespace ggo
     // s0*(v2-v1)+s1*(v3-v1)-s2*ray_dir=ray_pos,
     // which is a 3 equations with 3 unknowns (s0, s1 and s2) linear system.
 
-    T m02 = -ray.dir().x();
-    T m12 = -ray.dir().y();
-    T m22 = -ray.dir().z();
+    T m02 = -ray.dir().template get<0>(); 
+    T m12 = -ray.dir().template get<1>();
+    T m22 = -ray.dir().template get<2>();
 
     T det = _m00m11subm10m01 * m22 + _m20m01subm00m21 * m12 + _m10m21subm11m20 * m02;
     if (det == 0)
@@ -45,9 +45,9 @@ namespace ggo
       return false;
     }
 
-    T c0 = ray.pos().x() - _v1._pos.x();
-    T c1 = ray.pos().y() - _v1._pos.y();
-    T c2 = ray.pos().z() - _v1._pos.z();
+    T c0 = ray.pos().template get<0>() - _v1._pos.template get<0>();
+    T c1 = ray.pos().template get<1>() - _v1._pos.template get<1>();
+    T c2 = ray.pos().template get<2>() - _v1._pos.template get<2>();
 
     T t1 = c1 *  m22 - c2 *  m12;
     T t2 = c1 * _m21 - c2 * _m11;

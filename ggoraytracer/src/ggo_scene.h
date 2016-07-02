@@ -43,8 +43,8 @@ namespace ggo
 
                     scene_builder(std::shared_ptr<const ggo::background3d_abc> background);
 
-    std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color & color, const ggo::point3d_float & pos);
-    std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color & color, float radius, const ggo::point3d_float & pos);
+    std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color & color, const ggo::pos3f & pos);
+    std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos);
 
     void                            add_object(std::shared_ptr<ggo::object3d> object, bool discard_basis);
     std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, bool discard_basis);

@@ -17,13 +17,13 @@ public:
 	{
     ggo_metaballs_params();
     
-		std::vector<ggo::point3d_float>	_centers;
-		float 							            _threshold;
-		float					                  _phong_factor;
-		float					                  _phong_shininess;
-		ggo::point3d_float				      _light1;
-		ggo::point3d_float				      _light2;
-    ggo::color                      _background_color;
+		std::vector<ggo::pos3f> _centers;
+		float 							    _threshold;
+		float					          _phong_factor;
+		float					          _phong_shininess;
+		ggo::pos3f				      _light1;
+		ggo::pos3f				      _light2;
+    ggo::color              _background_color;
 	};
 	
 public:

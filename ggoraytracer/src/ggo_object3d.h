@@ -16,7 +16,7 @@ namespace ggo
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color);
                                       object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material);
 
-    ggo::point3d_float                sample_point(const ggo::point3d_float & target_pos, float random_variable1, float random_variable2) const;
+    ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const;
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const;
 
     ggo::ray3d_float                  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const;
@@ -41,7 +41,7 @@ namespace ggo
 
     const ggo::material_abc *         material() const { return _material.get(); }
 
-    ggo::color                        get_color(const ggo::point3d_float & world_pos) const;
+    ggo::color                        get_color(const ggo::pos3f & world_pos) const;
 
     const ggo::color &                get_emissive_color() const { return _emissive_color; }
     void                              set_emissive_color(const ggo::color & color) { _emissive_color = color; }
@@ -77,8 +77,8 @@ namespace ggo
     std::shared_ptr<const ggo::material_abc>                  _material;
   };
 
-  std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color & color, const ggo::point3d_float & pos);
-  std::shared_ptr<ggo::object3d>  create_sphere_light(const ggo::color & color, float radius, const ggo::point3d_float & pos);
+  std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color & color, const ggo::pos3f & pos);
+  std::shared_ptr<ggo::object3d>  create_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos);
 }
 
 #endif

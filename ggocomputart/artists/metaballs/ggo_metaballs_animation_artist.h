@@ -15,12 +15,12 @@ private:
 	
 	struct ggo_moving_center
 	{
-		ggo::point3d_float  _center;
-		float				        _radius;
-		float				        _start_angle1;
-		float				        _start_angle2;
-		float				        _end_angle1;
-		float				        _end_angle2;
+		ggo::pos3f  _center;
+		float				_radius;
+		float				_start_angle1;
+		float				_start_angle2;
+		float				_end_angle1;
+		float				_end_angle2;
 	};
 	
 private:

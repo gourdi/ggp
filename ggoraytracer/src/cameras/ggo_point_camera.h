@@ -41,10 +41,10 @@ namespace ggo
     
   private:
 
-    float               _offset_x = 0;
-    float               _offset_y = 0;
-    float               _opti = 0;
-    ggo::point3d_float  _center_focus_point;
+    float       _offset_x = 0;
+    float       _offset_y = 0;
+    float       _opti = 0;
+    ggo::pos3f  _center_focus_point;
   };
 }
 
@@ -66,10 +66,10 @@ namespace ggo
 
   private:
 
-    float             _offset_x = 0;
-    float             _offset_y = 0;
-    float             _opti = 0;
-    ggo::point3d_float _center_focus_point;
+    float       _offset_x = 0;
+    float       _offset_y = 0;
+    float       _opti = 0;
+    ggo::pos3f  _center_focus_point;
   };
 }
 
@@ -99,10 +99,10 @@ namespace ggo
     float _depth_of_field = 1;
     float _depth_of_field_factor = 0;
     
-    float               _offset_x = 0;
-    float               _offset_y = 0;
-    float               _opti = 0;
-    ggo::point3d_float  _center_focus_point;
+    float       _offset_x = 0;
+    float       _offset_y = 0;
+    float       _opti = 0;
+    ggo::pos3f  _center_focus_point;
   };
 }
 

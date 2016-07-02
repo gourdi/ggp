@@ -18,7 +18,7 @@ namespace ggo
     std::vector<ggo::triangle3d_float>  _triangles;
   };
 
-  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::point3d_float inf, int steps, float step_size);
+  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::pos3f inf, int steps, float step_size);
 }
 
 #endif

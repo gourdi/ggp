@@ -16,7 +16,7 @@ void ggo_aggregation_bitmap_artist::render_bitmap(uint8_t * buffer)
   // Compute points.
   float attraction_factor = ggo::rand_float(0.005f, 0.02f);
   float rotation_factor = ggo::rand_float(0, 0.01f);
-  ggo::vector3d_float rotation_vector(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
+  ggo::vec3f rotation_vector(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
   
   auto points = ggo::aggregation_artist::compute_points(attraction_factor, rotation_vector, rotation_factor);
   

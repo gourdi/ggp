@@ -35,7 +35,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color object3d::get_color(const ggo::point3d_float & world_pos) const
+  ggo::color object3d::get_color(const ggo::pos3f & world_pos) const
   {
     if (!_material)
     {
@@ -95,12 +95,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::point3d_float object3d::sample_point(const ggo::point3d_float & target_pos, float random_variable1, float random_variable2) const
+  ggo::pos3f object3d::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
   {
     // If no shape, we return point at the basis position. Use full for point lights.
     if (!_shape)
     {
-      return _discard_basis ? ggo::point3d_float(0, 0, 0) : _basis.pos();
+      return _discard_basis ? ggo::pos3f(0.f, 0.f, 0.f) : _basis.pos();
     }
     else
     {
@@ -110,7 +110,7 @@ namespace ggo
       }
       else
       {
-        ggo::point3d_float point = _shape->sample_point(_basis.point_from_world_to_local(target_pos), random_variable1, random_variable2);
+        ggo::pos3f point = _shape->sample_point(_basis.point_from_world_to_local(target_pos), random_variable1, random_variable2);
 
         return _basis.point_from_local_to_world(point);
       }
@@ -138,7 +138,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::ray3d_float object3d::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal) const
   {
-    ggo::vector3d_float reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+    ggo::pos3f reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
     GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
     GGO_ASSERT(ggo::dot(reflected_dir, world_normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
@@ -148,7 +148,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::ray3d_float object3d::sample_reflection_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float random_variable1, float random_variable2) const
   {
-    ggo::vector3d_float reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
+    ggo::pos3f reflected_dir(ray.dir() - 2 * ggo::dot(world_normal.dir(), ray.dir()) * world_normal.dir());
 
     // Glossy materials.
     if (_roughness > 0)
@@ -210,7 +210,7 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> create_sphere_light(const ggo::color & color, float radius, const ggo::point3d_float & pos)
+  std::shared_ptr<ggo::object3d> create_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos)
   {
     auto shape = std::make_shared<ggo::centered_sphere3d<float>>(radius);
     auto object = std::make_shared<ggo::object3d>(shape);
@@ -222,7 +222,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> create_point_light(const ggo::color & color, const ggo::point3d_float & pos)
+  std::shared_ptr<ggo::object3d> create_point_light(const ggo::color & color, const ggo::pos3f & pos)
   {
     auto object = std::make_shared<ggo::object3d>();
 

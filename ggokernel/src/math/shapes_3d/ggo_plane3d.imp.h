@@ -38,13 +38,13 @@ namespace ggo
   template <typename data_t, int normal_x, int normal_y, int normal_z, int dist_to_origin>
   bool const_plane3d<data_t, normal_x, normal_y, normal_z, dist_to_origin>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
-    data_t den = normal_x * ray.dir().x() + normal_y * ray.dir().y() + normal_z * ray.dir().z();
+    data_t den = normal_x * ray.dir().template get<0>() + normal_y * ray.dir().template get<1>() + normal_z * ray.dir().template get<2>();
     if (den >= 0)
     {
       return false;
     }
 
-    data_t num = dist_to_origin - (normal_x * ray.pos().x() + normal_y * ray.pos().y() + normal_z * ray.pos().z());
+    data_t num = dist_to_origin - (normal_x * ray.pos().template get<0>() + normal_y * ray.pos().template get<1>() + normal_z * ray.pos().template get<2>());
     dist = num / den;
     if (dist <= 0)
     {

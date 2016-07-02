@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include <ggo_kernel.h>
-#include <ggo_set3.h>
+#include <ggo_vec.h>
 #include <ggo_distance3d.h>
 #include <ggo_ray3d.h>
 
@@ -13,10 +13,10 @@ namespace ggo
   template <typename data_t>
   struct vertex
   {
-    vertex(const ggo::set3<data_t> & pos, const ggo::set3<data_t> & normal) : _pos(pos), _normal(normal) { _normal.normalize(); }
+    vertex(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & normal) : _pos(pos), _normal(normal) { _normal.normalize(); }
 
-    ggo::set3<data_t> _pos;
-    ggo::set3<data_t> _normal;
+    ggo::pos3<data_t> _pos;
+    ggo::vec3<data_t> _normal;
   };
 }
 
@@ -31,7 +31,7 @@ namespace ggo
     virtual                    ~influence_shape3d_abc() {}
 
     virtual std::vector<data_t> intersect_ray(const ggo::ray3d<data_t> & ray) const = 0;
-    virtual data_t              hypot_to_center(const ggo::set3<data_t> & p) const = 0;
+    virtual data_t              hypot_to_center(const ggo::pos3<data_t> & p) const = 0;
     virtual data_t              get_influence_hypot() const = 0;
   };
 }
@@ -49,7 +49,7 @@ namespace ggo
     virtual bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const = 0;
     virtual bool                is_convex() const = 0;
 
-    virtual ggo::set3<data_t>   sample_point(const ggo::set3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::set3<data_t>(0, 0, 0); }
+    virtual ggo::pos3<data_t>   sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::pos3<data_t>(data_t(0), data_t(0), data_t(0)); }
     virtual ggo::ray3d<data_t>  sample_ray(data_t random_variable1, data_t random_variable2) const { return ggo::ray3d<data_t>(); }
 
     virtual std::ostream &      operator<<(std::ostream & os) const = 0;

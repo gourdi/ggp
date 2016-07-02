@@ -25,9 +25,6 @@
     <ClInclude Include="src\math\ggo_quadratic.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\ggo_set3.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\signal_proc\ggo_box_filter.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>

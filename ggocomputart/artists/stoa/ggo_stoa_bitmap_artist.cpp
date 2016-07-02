@@ -28,8 +28,8 @@ void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
   // Lights.
   float angle1 = ggo::rand_float(0, ggo::PI<float>());
   float angle2 = ggo::rand_float(0, ggo::PI<float>());
-  const ggo::point3d_float light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
-  const ggo::point3d_float light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
+  const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
+  const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
   // Rendering.
 #ifdef MONO_SAMPLING

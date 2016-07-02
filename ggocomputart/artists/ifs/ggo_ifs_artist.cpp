@@ -11,15 +11,15 @@ ggo_artist_abc(render_width, render_height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_ifs_artist::update(ggo::point3d_float & point, const float transform[4])
+void ggo_ifs_artist::update(ggo::pos3f & point, const float transform[4])
 {
-	float x_fp	= point.x();
-	float y_fp	= point.y();
-	float z_fp	= point.z();
+	float x_fp	= point.get<0>();
+	float y_fp	= point.get<1>();
+	float z_fp	= point.get<2>();
 	
-	point.x()	=      std::sin(transform[0]*y_fp) - z_fp*std::cos(transform[1]*x_fp);
-	point.y()	= z_fp*std::sin(transform[2]*x_fp) -      std::cos(transform[3]*y_fp);
-	point.z()	=      std::sin(x_fp);
+	point.get<0>()	=      std::sin(transform[0]*y_fp) - z_fp*std::cos(transform[1]*x_fp);
+	point.get<1>()	= z_fp*std::sin(transform[2]*x_fp) -      std::cos(transform[3]*y_fp);
+	point.get<2>()	=      std::sin(x_fp);
 }
 
 //////////////////////////////////////////////////////////////
@@ -39,10 +39,10 @@ void ggo_ifs_artist::render(uint8_t * buffer, float transform[4], float hue, flo
 	for (int counter= 0; counter < counter_max; ++counter)
 	{
 		// Get a starting point
-		ggo::point3d_float point;
-		point.x() = ggo::rand_float(-1, 1);
-		point.y() = ggo::rand_float(-1, 1);
-		point.z() = ggo::rand_float(-1, 1);
+		ggo::pos3f point;
+		point.get<0>() = ggo::rand_float(-1, 1);
+		point.get<1>() = ggo::rand_float(-1, 1);
+		point.get<2>() = ggo::rand_float(-1, 1);
 
 		// Don't render the first points
 		for (int i = 0; i < 5; ++i)
@@ -54,12 +54,12 @@ void ggo_ifs_artist::render(uint8_t * buffer, float transform[4], float hue, flo
 		{
 			update(point, transform);
 
-			float x = cos1 * point.x() - sin1 * point.y();
-			float y = sin1 * point.x() + cos1 * point.y();
-			point.x() = x;
-			point.y() = y;
+			float x = cos1 * point.get<0>() - sin1 * point.get<1>();
+			float y = sin1 * point.get<0>() + cos1 * point.get<1>();
+			point.get<0>() = x;
+			point.get<1>() = y;
 			
-			ggo::pos2f render_point(cos2 * point.x() - sin2 * point.z(), sin2 * point.x() + cos2 * point.z());
+			ggo::pos2f render_point(cos2 * point.get<0>() - sin2 * point.get<2>(), sin2 * point.get<0>() + cos2 * point.get<2>());
 			render_point = map_fit(render_point, -2, 2);
 
 			int x_i = ggo::to<int>(render_point.get<0>());

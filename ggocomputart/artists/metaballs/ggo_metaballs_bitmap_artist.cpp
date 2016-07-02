@@ -31,7 +31,7 @@ void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
 
 	while (params._centers.size() < 200)
 	{
-		ggo::point3d_float center(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
+		ggo::pos3f center(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
 		if (center.get_length() < GGO_BALL_SIZE)
 		{
 			params._centers.push_back(center);

@@ -14,8 +14,8 @@ ggo_metaballs_artist::ggo_metaballs_params::ggo_metaballs_params()
 	_threshold = ggo::rand_float(0.8f, 0.9f);
 	_phong_factor = ggo::rand_float(2, 4);
 	_phong_shininess = ggo::rand_float(10, 100);
-	_light1 = ggo::point3d_float(0, 0, 1000);
-	_light2 = ggo::point3d_float(1000 * std::cos(angle), 1000 * std::sin(angle), 1000);
+	_light1 = ggo::pos3f(0.f, 0.f, 1000.f);
+	_light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
 	_background_color = ggo::color(ggo::rand_float(0.2f, 0.8f));
 }
 

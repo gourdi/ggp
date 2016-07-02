@@ -6,7 +6,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   photon_mapping::photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d>> & lights,
-                                 const std::vector<ggo::point3d_float> & target_samples,
+                                 const std::vector<ggo::pos3f> & target_samples,
                                  const ggo::object3d & object,
                                  const ggo::raycaster_abc & raycaster)
   {
@@ -24,8 +24,8 @@ namespace ggo
         float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<0>();
         float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<1>();
 
-        ggo::point3d_float target_sample = target_samples[i];
-        ggo::point3d_float light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
+        ggo::pos3f target_sample = target_samples[i];
+        ggo::pos3f light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
 
         ggo::ray3d_float ray(light_sample, target_sample - light_sample);
 
@@ -79,8 +79,8 @@ namespace ggo
         if (hit_object != nullptr)
         {
           ggo::color photon_color = -ggo::dot(world_normal.dir(), ray.dir()) * (light->get_emissive_color() * hit_object->get_color(world_normal.pos()));
-          ggo::point3d_float photon_pos = ray.pos() + dist * ray.dir();
-          current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
+          ggo::pos3f photon_pos = ray.pos() + dist * ray.dir();
+          current_light_photons.push_back({ { photon_pos.get<0>(), photon_pos.get<1>(), photon_pos.get<2>() }, photon_color });
         }
       }
 
@@ -108,7 +108,7 @@ namespace ggo
 
     ggo::color output_color(ggo::color::BLACK);
 
-    auto photons = _tree->find_points({ world_normal.pos().x(), world_normal.pos().y(), world_normal.pos().z() }, radius);
+    auto photons = _tree->find_points({ world_normal.pos().get<0>(), world_normal.pos().get<1>(), world_normal.pos().get<2>() }, radius);
         
     for (const auto & photon : photons)
     {

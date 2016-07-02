@@ -12,21 +12,21 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color checker_3d_material::get_color(const ggo::point3d_float & pos) const
+  ggo::color checker_3d_material::get_color(const ggo::pos3f & pos) const
   {
-    int x = ggo::to<int>(pos.x() / _tile_size);
-    int y = ggo::to<int>(pos.y() / _tile_size);
-    int z = ggo::to<int>(pos.z() / _tile_size);
+    int x = ggo::to<int>(pos.get<0>() / _tile_size);
+    int y = ggo::to<int>(pos.get<1>() / _tile_size);
+    int z = ggo::to<int>(pos.get<2>() / _tile_size);
     int i = x + y + z;
 
     return i % 2 ? _color1 : _color2;
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color checker_xy_material::get_color(const ggo::point3d_float & pos) const
+  ggo::color checker_xy_material::get_color(const ggo::pos3f & pos) const
   {
-    int x = ggo::to<int>(pos.x() / _tile_size);
-    int y = ggo::to<int>(pos.y() / _tile_size);
+    int x = ggo::to<int>(pos.get<0>() / _tile_size);
+    int y = ggo::to<int>(pos.get<1>() / _tile_size);
     int i = x + y;
 
     return i % 2 ? _color1 : _color2;

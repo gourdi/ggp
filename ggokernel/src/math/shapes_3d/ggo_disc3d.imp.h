@@ -12,7 +12,7 @@ namespace ggo
     }
     
     // The ray's origin is behind the disc.
-    ggo::set3<data_t> diff(_ray.pos() - ray.pos());
+    ggo::vec3<data_t> diff(_ray.pos() - ray.pos());
     data_t num = ggo::dot(diff, _ray.dir());
     if (num >= 0)
     {

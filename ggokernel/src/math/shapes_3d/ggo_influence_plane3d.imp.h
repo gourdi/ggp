@@ -2,7 +2,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////  
   template <typename data_t>
-  influence_plane3d<data_t>::influence_plane3d(const ggo::vector3d<data_t> & normal, data_t dist_to_origin, data_t width)
+  influence_plane3d<data_t>::influence_plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin, data_t width)
   :
   _normal(normal.get_normalized()),
   _dist_to_origin(dist_to_origin),
@@ -12,7 +12,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////  
   template <typename data_t>
-  data_t influence_plane3d<data_t>::hypot_to_center(const ggo::point3d<data_t> & p) const
+  data_t influence_plane3d<data_t>::hypot_to_center(const ggo::pos3<data_t> & p) const
   {
     return ggo::square(ggo::dot(p, _normal) - _dist_to_origin);
   }

@@ -15,7 +15,7 @@ namespace ggo
 
                 // Caustic constructor.
                 photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d>> & lights,
-                               const std::vector<ggo::point3d_float> & target_samples,
+                               const std::vector<ggo::pos3f> & target_samples,
                                const ggo::object3d & object,
                                const ggo::raycaster_abc & raycaster);
 

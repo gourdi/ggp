@@ -1,7 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_array.h>
 #include <ggo_vec.h>
-#include <ggo_set3.h>
 #include <ggo_shape_sampling.h>
 #include <ggo_poisson_sampling.h>
 #include <ggo_paint.h>
@@ -70,8 +69,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.x();
-    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
+    float x_f = sample.get<0>();
+    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
     x_f = 0.2f * SIZE * x_f + SIZE / 4.f;
     y_f = 0.2f * SIZE * y_f + SIZE / 4.f;
@@ -84,8 +83,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.x();
-    float y_f = sample.y();
+    float x_f = sample.get<0>();
+    float y_f = sample.get<1>();
     
     int x_i = ggo::to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
     int y_i = ggo::to<int>(0.2 * SIZE * y_f + SIZE / 4);
@@ -100,8 +99,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.x();
-    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
+    float x_f = sample.get<0>();
+    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
     int x_i = ggo::to<int>(0.2 * SIZE * x_f + SIZE / 4);
     int y_i = ggo::to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
@@ -116,8 +115,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>(ggo::PI<float>() / 4);
     
-    float x_f = sample.x();
-    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
+    float x_f = sample.get<0>();
+    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
     int x_i = ggo::to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
     int y_i = ggo::to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
@@ -137,12 +136,12 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
   const int SIZE = 500;
   const float ANGLE = 1.2f;
   
-  auto samples = ggo::poisson_sampling<ggo::point3d_float, float>(
+  auto samples = ggo::poisson_sampling<ggo::pos3f, float>(
     []()
     {
         return ggo::hemisphere_uniform_sampling<float>();
     },
-    [](const ggo::point3d_float & p1, const ggo::point3d_float & p2)
+    [](const ggo::pos3f & p1, const ggo::pos3f & p2)
     {
         return ggo::distance(p1, p2);
     },
@@ -152,8 +151,8 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
   
   for (const auto & sample : samples)
   {
-    float x_f = sample.x();
-    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
+    float x_f = sample.get<0>();
+    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
     x_f = 0.4f * SIZE * x_f + SIZE / 2;
     y_f = 0.4f * SIZE * y_f + SIZE / 2;

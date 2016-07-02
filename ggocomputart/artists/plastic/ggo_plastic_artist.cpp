@@ -1,5 +1,4 @@
 #include "ggo_plastic_artist.h"
-#include <ggo_set3.h>
 
 //////////////////////////////////////////////////////////////
 ggo_plastic_artist::ggo_plastic_artist(int render_width, int render_height)
@@ -34,13 +33,13 @@ void ggo_plastic_artist::render(uint8_t * buffer, const std::vector<ggo_plastic_
 			// Render the slope.
 			float dx = x2 - x1;
 			float dy = y2 - y1;
-			ggo::vector3d_float v1(dx, dy, z22 - z11);
-			ggo::vector3d_float v2(dx, -dy, z21 - z12);
-			ggo::vector3d_float normal = ggo::cross(v1, v2);
+			ggo::vec3f v1(dx, dy, z22 - z11);
+			ggo::vec3f v2(dx, -dy, z21 - z12);
+			ggo::vec3f normal = ggo::cross(v1, v2);
 			normal.normalize();
 		
 			ggo::color pixel_color = color;
-			pixel_color *= altitude_factor + std::abs(normal.z()) / altitude_factor;
+			pixel_color *= altitude_factor + std::abs(normal.get<2>()) / altitude_factor;
 		
 			buffer[0] = pixel_color.r8();
 			buffer[1] = pixel_color.g8();

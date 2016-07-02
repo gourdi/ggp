@@ -48,8 +48,8 @@ bool ggo_stoa_animation_artist::render_next_frame_sub(uint8_t * buffer, int fram
   // Lights.
   float angle1 = ggo::ease_inout(frame_index, FRAMES_COUNT, _light1_angle_start, _light1_angle_end);
   float angle2 = ggo::ease_inout(frame_index, FRAMES_COUNT, _light2_angle_start, _light2_angle_end);
-  const ggo::point3d_float light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
-  const ggo::point3d_float light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
+  const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
+  const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
   // Rendering.
 #ifdef MONO_SAMPLING

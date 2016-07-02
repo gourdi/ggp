@@ -9,8 +9,8 @@ namespace ggo
   bool centered_sphere3d<T>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
   {
     // Build the quadratic and solve it.
-    const ggo::set3<T> & dir = ray.dir();
-    const ggo::set3<T> & diff = ray.pos();
+    const ggo::vec3<T> & dir = ray.dir();
+    const ggo::pos3<T> & diff = ray.pos();
     
     // Hint 1: deg2 is dot(dir, dir) which is 1
     // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
@@ -50,9 +50,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  ggo::set3<T> centered_sphere3d<T>::sample_point(const ggo::set3<T> & target_pos, T random_variable1, T random_variable2) const
+  ggo::pos3<T> centered_sphere3d<T>::sample_point(const ggo::pos3<T> & target_pos, T random_variable1, T random_variable2) const
   {
-    ggo::set3<T> dir(target_pos);
+    ggo::vec3<T> dir(target_pos);
     dir.normalize();
 
     return _radius * ggo::hemisphere_sampling(dir, random_variable1, random_variable2);
@@ -63,8 +63,8 @@ namespace ggo
   template <typename T>
   ggo::ray3d<T> centered_sphere3d<T>::sample_ray(T random_variable1, T random_variable2) const
   {
-    ggo::vector3d_float sphere_sample = ggo::sphere_sampling(random_variable1, random_variable2);
-    ggo::vector3d_float hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, random_variable1, random_variable2);
+    ggo::pos3<T> sphere_sample = ggo::sphere_sampling(random_variable1, random_variable2);
+    ggo::pos3<T> hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, random_variable1, random_variable2);
 
     return ggo::ray3d<T>(_radius * sphere_sample, hemisphere_sample, false);
   }

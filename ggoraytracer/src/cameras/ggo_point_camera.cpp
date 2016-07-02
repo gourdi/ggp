@@ -40,12 +40,12 @@ namespace ggo
     float y_f = y + _offset_y;
 
     // Focus point.
-    ggo::vector3d_float dx = _basis.x() * (x_f * _opti);
-    ggo::vector3d_float dy = _basis.y() * (y_f * _opti);
-    ggo::point3d_float focus_point(_center_focus_point + dx + dy);
+    ggo::vec3f dx = _basis.x() * (x_f * _opti);
+    ggo::vec3f dy = _basis.y() * (y_f * _opti);
+    ggo::pos3f focus_point(_center_focus_point + dx + dy);
 
     // Eye point.
-    const ggo::point3d_float & eye_point = _basis.pos();
+    const ggo::pos3f & eye_point = _basis.pos();
 
     return ggo::ray3d_float(eye_point, focus_point - eye_point);
   }
@@ -75,20 +75,20 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   std::array<ggo::ray3d_float, 4> antialiasing_point_camera::get_first_pass_rays(int x, int y) const
   {
-    ggo::vector3d_float x1 = _basis.x() * ((x + _offset_x - 3 / 8.f) * _opti);
-    ggo::vector3d_float x4 = _basis.x() * ((x + _offset_x + 3 / 8.f) * _opti);
-    ggo::vector3d_float y1 = _basis.y() * ((y + _offset_y - 3 / 8.f) * _opti);
-    ggo::vector3d_float y4 = _basis.y() * ((y + _offset_y + 3 / 8.f) * _opti);
+    ggo::vec3f x1 = _basis.x() * ((x + _offset_x - 3 / 8.f) * _opti);
+    ggo::vec3f x4 = _basis.x() * ((x + _offset_x + 3 / 8.f) * _opti);
+    ggo::vec3f y1 = _basis.y() * ((y + _offset_y - 3 / 8.f) * _opti);
+    ggo::vec3f y4 = _basis.y() * ((y + _offset_y + 3 / 8.f) * _opti);
 
     // Focus points.
-    ggo::point3d_float focus_point11(_center_focus_point + x1 + y1);
-    ggo::point3d_float focus_point41(_center_focus_point + x4 + y1);
+    ggo::pos3f focus_point11(_center_focus_point + x1 + y1);
+    ggo::pos3f focus_point41(_center_focus_point + x4 + y1);
     
-    ggo::point3d_float focus_point14(_center_focus_point + x1 + y4);
-    ggo::point3d_float focus_point44(_center_focus_point + x4 + y4);
+    ggo::pos3f focus_point14(_center_focus_point + x1 + y4);
+    ggo::pos3f focus_point44(_center_focus_point + x4 + y4);
 
     // Eye point.
-    const ggo::point3d_float & eye_point = _basis.pos();
+    const ggo::pos3f & eye_point = _basis.pos();
 
     return std::array<ggo::ray3d_float, 4> {ggo::ray3d_float(eye_point, focus_point11 - eye_point), 
                                            ggo::ray3d_float(eye_point, focus_point41 - eye_point),
@@ -99,35 +99,35 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   std::array<ggo::ray3d_float, 12> antialiasing_point_camera::get_second_pass_rays(int x, int y) const
   {
-    ggo::vector3d_float x1 = _basis.x() * ((x + _offset_x - 3 / 8.f) * _opti);
-    ggo::vector3d_float x2 = _basis.x() * ((x + _offset_x - 1 / 8.f) * _opti);
-    ggo::vector3d_float x3 = _basis.x() * ((x + _offset_x + 1 / 8.f) * _opti);
-    ggo::vector3d_float x4 = _basis.x() * ((x + _offset_x + 3 / 8.f) * _opti);
+    ggo::vec3f x1 = _basis.x() * ((x + _offset_x - 3 / 8.f) * _opti);
+    ggo::vec3f x2 = _basis.x() * ((x + _offset_x - 1 / 8.f) * _opti);
+    ggo::vec3f x3 = _basis.x() * ((x + _offset_x + 1 / 8.f) * _opti);
+    ggo::vec3f x4 = _basis.x() * ((x + _offset_x + 3 / 8.f) * _opti);
     
-    ggo::vector3d_float y1 = _basis.y() * ((y + _offset_y - 3 / 8.f) * _opti);
-    ggo::vector3d_float y2 = _basis.y() * ((y + _offset_y - 1 / 8.f) * _opti);
-    ggo::vector3d_float y3 = _basis.y() * ((y + _offset_y + 1 / 8.f) * _opti);
-    ggo::vector3d_float y4 = _basis.y() * ((y + _offset_y + 3 / 8.f) * _opti);
+    ggo::vec3f y1 = _basis.y() * ((y + _offset_y - 3 / 8.f) * _opti);
+    ggo::vec3f y2 = _basis.y() * ((y + _offset_y - 1 / 8.f) * _opti);
+    ggo::vec3f y3 = _basis.y() * ((y + _offset_y + 1 / 8.f) * _opti);
+    ggo::vec3f y4 = _basis.y() * ((y + _offset_y + 3 / 8.f) * _opti);
 
     // Focus points.
-    ggo::point3d_float focus_point21(_center_focus_point + x2 + y1);
-    ggo::point3d_float focus_point31(_center_focus_point + x3 + y1);
+    ggo::pos3f focus_point21(_center_focus_point + x2 + y1);
+    ggo::pos3f focus_point31(_center_focus_point + x3 + y1);
     
-    ggo::point3d_float focus_point12(_center_focus_point + x1 + y2);
-    ggo::point3d_float focus_point22(_center_focus_point + x2 + y2);
-    ggo::point3d_float focus_point32(_center_focus_point + x3 + y2);
-    ggo::point3d_float focus_point42(_center_focus_point + x4 + y2);
+    ggo::pos3f focus_point12(_center_focus_point + x1 + y2);
+    ggo::pos3f focus_point22(_center_focus_point + x2 + y2);
+    ggo::pos3f focus_point32(_center_focus_point + x3 + y2);
+    ggo::pos3f focus_point42(_center_focus_point + x4 + y2);
     
-    ggo::point3d_float focus_point13(_center_focus_point + x1 + y3);
-    ggo::point3d_float focus_point23(_center_focus_point + x2 + y3);
-    ggo::point3d_float focus_point33(_center_focus_point + x3 + y3);
-    ggo::point3d_float focus_point43(_center_focus_point + x4 + y3);
+    ggo::pos3f focus_point13(_center_focus_point + x1 + y3);
+    ggo::pos3f focus_point23(_center_focus_point + x2 + y3);
+    ggo::pos3f focus_point33(_center_focus_point + x3 + y3);
+    ggo::pos3f focus_point43(_center_focus_point + x4 + y3);
     
-    ggo::point3d_float focus_point24(_center_focus_point + x2 + y4);
-    ggo::point3d_float focus_point34(_center_focus_point + x3 + y4);
+    ggo::pos3f focus_point24(_center_focus_point + x2 + y4);
+    ggo::pos3f focus_point34(_center_focus_point + x3 + y4);
 
     // Eye point.
-    const ggo::point3d_float & eye_point = _basis.pos();
+    const ggo::pos3f & eye_point = _basis.pos();
 
     return std::array<ggo::ray3d_float, 12> {ggo::ray3d_float(eye_point, focus_point21 - eye_point), 
                                              ggo::ray3d_float(eye_point, focus_point31 - eye_point),
@@ -180,12 +180,12 @@ namespace ggo
     for (int i = 0; i < samples_count; ++i)
     {
       // Focus point.
-      ggo::point3d_float focus_point(_center_focus_point);
+      ggo::pos3f focus_point(_center_focus_point);
       focus_point += ((x_f + focus_samples2d[i].get<0>()) * _opti) * _basis.x();
       focus_point += ((y_f + focus_samples2d[i].get<1>()) * _opti) * _basis.y();
 
       // Eye point.
-      ggo::point3d_float eye_point(_basis.pos());
+      ggo::pos3f eye_point(_basis.pos());
       eye_point += (_depth_of_field_factor * eye_samples2d[i].get<0>()) * _basis.x();
       eye_point += (_depth_of_field_factor * eye_samples2d[i].get<1>()) * _basis.y();
 
