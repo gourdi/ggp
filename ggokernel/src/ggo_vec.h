@@ -16,10 +16,10 @@ namespace ggo
     vec() {}
 
     template <typename... args>
-    vec(args... a)
+    vec(const data_t & v, args... a)
     {
-      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
-      ggo::set(_coords, a...);
+      static_assert(sizeof...(a) + 1 == n_dims, "invalid number of arguments");
+      ggo::set(_coords, v, a...);
     }
 
     vec(const vec<data_t, n_dims> & rhs)

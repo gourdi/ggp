@@ -47,7 +47,7 @@ bool ggo_metaballs_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 	{
 		std::vector<ggo::point3d_float> centers;
 		
-		float t = ggo::ease_inout(frame_index, FRAMES_COUNT);
+		float t = ggo::ease_inout_to<float>(frame_index, FRAMES_COUNT);
 		
 		_params._centers.clear();
 		for (std::vector<ggo_moving_center>::iterator it = _centers.begin(); it != _centers.end(); ++it)

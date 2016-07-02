@@ -51,7 +51,7 @@ bool ggo_vortex2_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	}
 	
 	// Interpolate vortices position.
-	float interp = ggo::ease_inout(frame_index, FRAMES_COUNT);
+	float interp = ggo::ease_inout_to<float>(frame_index, FRAMES_COUNT);
 	for (auto & vortex : _params._vortices)
 	{
 		const ggo::pos2f & start_pos = _vortices_paths[&vortex]._start_pos;

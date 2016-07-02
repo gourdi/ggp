@@ -11,7 +11,7 @@ bool ggo_filling_squares_animation_artist::ggo_animated_square::update(uint8_t *
 
 	// Compute size.
 	float half_size = _colored_square._size / 2;
-	half_size = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, 5 * half_size, half_size);
+	half_size = ggo::ease_out(counter, FADE_IN_ANIM_DURATION, 5.f * half_size, half_size);
 
   auto square = std::make_shared<ggo::polygon2d_float>();
 	square->add_point(-half_size, -half_size);
@@ -20,17 +20,17 @@ bool ggo_filling_squares_animation_artist::ggo_animated_square::update(uint8_t *
 	square->add_point( half_size, -half_size);
 
 	// Apply rotation.
-	float angle = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, _angle, 0);
+	float angle = ggo::ease_out(counter, FADE_IN_ANIM_DURATION, _angle, 0.f);
 	square->rotate(angle, ggo::pos2f(0.f, 0.f));
 
 	// Apply translation.
-	float translation = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, 1, 0);
+	float translation = ggo::ease_out(counter, FADE_IN_ANIM_DURATION, 1.f, 0.f);
 	float dx = 10 * (_pos.get<0>() - width / 2);
 	float dy = 10 * (_pos.get<1>() - height / 2);	
 	square->move(_pos.get<0>() + translation * dx, _pos.get<1>() + translation * dy);
 
 	// Painting.
-  float opacity = ggo::ease_in(counter, FADE_IN_ANIM_DURATION, 0, 1);
+  float opacity = ggo::ease_out(counter, FADE_IN_ANIM_DURATION, 0.f, 1.f);
   if (counter >= FADE_IN_ANIM_DURATION && bkgd_rendering_allowed == true)
   {
     ggo::paint(output_buffer, width, height, square, _colored_square._color, opacity);

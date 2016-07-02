@@ -34,10 +34,10 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
     return false;
   }
 
-  int count = ggo::to<int>(ggo::ease_inout(frame_index, FRAMES_COUNT, 0, static_cast<float>(_points.size())));
+  int count = ggo::to<int>(ggo::ease_inout(frame_index, FRAMES_COUNT, 0.f, static_cast<float>(_points.size())));
   std::vector<ggo::point3d_float> points(_points.begin(), _points.begin() + count);
   
-  float angle = ggo::ease_inout(frame_index, FRAMES_COUNT, 0, 3 * ggo::PI<float>());
+  float angle = ggo::ease_inout(frame_index, FRAMES_COUNT, 0.f, 3.f * ggo::PI<float>());
   
   ggo::aggregation_artist::render(_background_gray, points, angle, buffer, get_render_width(), get_render_height());
 

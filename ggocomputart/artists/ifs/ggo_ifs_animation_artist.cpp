@@ -47,7 +47,7 @@ bool ggo_ifs_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame
   auto image = make_image_buffer(buffer);
 	ggo::fill_4_colors(image, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
-	float t =  ggo::ease_inout(frame_index, FRAMES_COUNT);
+	float t =  ggo::ease_inout_to<float>(frame_index, FRAMES_COUNT);
 	
 	float angle1 = ggo::map<float>(t, 0, 1, _angle1_start, _angle1_end);
 	float angle2 = ggo::map<float>(t, 0, 1, _angle2_start, _angle2_end);

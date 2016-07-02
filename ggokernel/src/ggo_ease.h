@@ -5,52 +5,53 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   // t in [0, 1], result in [0, 1]
-  inline float ease_in(float t)
+  template <typename data_t>
+  data_t ease_out(data_t t)
   {
-    return -t * t + 2 *t;
+    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    return -t * t + 2 * t;
   }
 
   //////////////////////////////////////////////////////////////
-  inline float ease_in(int index, int count)
+  template <typename data_t>
+  data_t ease_out_to(int index, int count)
   {
-    return ease_in(float(index) / float(count));
+    return ease_out(data_t(index) / data_t(count));
   }
 
   //////////////////////////////////////////////////////////////
-  inline float ease_in(int index, int count, float start, float end)
+  template <typename data_t, typename interpolation_t = float>
+  data_t ease_out(int index, int count, const data_t & start, const data_t & end)
   {
-    float t = ease_in(index, count);
+    interpolation_t t = ease_out_to<interpolation_t>(index, count);
     
     return start + t * (end - start);
   }
 
   //////////////////////////////////////////////////////////////
   // t in [0, 1], result in [0, 1]
-  inline float ease_inout(float t)
+  template <typename data_t>
+  data_t ease_inout(data_t t)
   {
-    return (1 - std::cos(t * PI<float>())) / 2;
+    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    data_t sq = t * t;
+    return -2 * t * sq + 3 * sq; // -2 * t^3 + 3 * t^2
   }
 
   //////////////////////////////////////////////////////////////
-  inline float ease_inout(int index, int count)
+  template <typename data_t>
+  data_t ease_inout_to(int index, int count)
   {
-    return ease_inout(float(index) / float(count));
+    return ease_inout(data_t(index) / data_t(count));
   }
 
   //////////////////////////////////////////////////////////////
-  inline float ease_inout(int index, int count, float start, float end)
+  template <typename data_t, typename interpolation_t = float>
+  data_t ease_inout(int index, int count, const data_t & start, const data_t & end)
   {
-    float t = ease_inout(index, count);
+    interpolation_t t = ease_inout_to<interpolation_t>(index, count);
     
     return start + t * (end - start);
-  }
-
-  //////////////////////////////////////////////////////////////
-  inline ggo::pos2f ease_inout(int index, int count, const ggo::pos2f & start, const ggo::pos2f & end)
-  {
-    float t = ease_inout(index, count);
-
-    return ggo::pos2f(start + t * (end - start));
   }
 }
 
