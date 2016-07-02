@@ -84,7 +84,6 @@ namespace ggo
   template <typename T>	T	      sign(T value)							            { return value > T(0) ? T(1) : T(-1); };
   template <typename T>	T	      pos_mod(T v, T m)						          { v = v % m; return v < 0 ? v + m : v; }
   template <typename T> T       cotan(T angle)                        { return 1 / std::tan(angle); }
-  inline 					      int		  get_2d_index(int x, int y, int width)	{ return y*width+x; };
   inline					      int		  pad(int value, int pad)				        { return (((value-1)/pad)+1)*pad; };
   inline					      bool	  is_even(int value)						        { return (value&1)==0; };
   inline					      bool	  is_odd(int value)						          { return (value&1)==1; };
