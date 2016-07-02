@@ -50,7 +50,6 @@
     <ClCompile Include="test\trees\ggo_kdtree_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="test\ggo_kernel_nonreg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -99,6 +99,5 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />
-    <ClInclude Include="src\ggo_color_stream.h" />
   </ItemGroup>
 </Project>

@@ -313,6 +313,7 @@
     <ClInclude Include="src\ggo_vec.h" />
     <ClInclude Include="src\ggo_template_variadic.h" />
     <ClInclude Include="src\ggo_template_pointer.h" />
+    <ClInclude Include="src\ggo_color_stream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
