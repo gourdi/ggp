@@ -87,6 +87,8 @@
       <Filter>signal_proc</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_vec_nonreg.cpp" />
+    <ClCompile Include="test\ggo_template_variadic_nonreg.cpp" />
+    <ClCompile Include="test\ggo_template_pointer_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

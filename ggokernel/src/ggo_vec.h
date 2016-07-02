@@ -125,7 +125,7 @@ namespace ggo
   ggo::vec<data_t, n_dims> operator+(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
   {
     ggo::vec<data_t, n_dims> r;
-    ggo::set<n_dims>(r.data(), v1.data(), v2.data(), [](data_t d1, data_t d2) { return d1 + d2; });
+    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
     return r;
   }
 
@@ -133,7 +133,7 @@ namespace ggo
   ggo::vec<data_t, n_dims> operator-(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
   {
     ggo::vec<data_t, n_dims> r;
-    ggo::set<n_dims>(r.data(), v1.data(), v2.data(), [](data_t d1, data_t d2) { return d1 - d2; });
+    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
     return r;
   }
 
@@ -141,7 +141,7 @@ namespace ggo
   ggo::vec<data_t, n_dims> operator*(data_t k, const ggo::vec<data_t, n_dims> & v)
   {
     ggo::vec<data_t, n_dims> r;
-    ggo::set<n_dims>(r.data(), v.data(),  [&](data_t d) { return k * d; });
+    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = k * src; });
     return r;
   }
 
@@ -149,7 +149,7 @@ namespace ggo
   ggo::vec<data_t, n_dims> operator*(const ggo::vec<data_t, n_dims> & v, data_t k)
   {
     ggo::vec<data_t, n_dims> r;
-    ggo::set<n_dims>(r.data(), v.data(), [&](data_t d) { return k * d; });
+    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = src * k; });
     return r;
   }
 
@@ -158,7 +158,7 @@ namespace ggo
   {
     GGO_ASSERT(k != 0);
     ggo::vec<data_t, n_dims> r;
-    ggo::set<n_dims>(r.data(), v.data(), [&](data_t d) { return d / k; });
+    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = src / k; });
     return r;
   }
 }
@@ -175,8 +175,8 @@ namespace ggo
 
     ggo::vec<data_t, 2> r;
 
-    r.set<0>(v.template get<0>() * cos_tmp - v.template get<1>() * sin_tmp);
-    r.set<1>(v.template get<0>() * sin_tmp + v.template get<1>() * cos_tmp);
+    r.template set<0>(v.template get<0>() * cos_tmp - v.template get<1>() * sin_tmp);
+    r.template set<1>(v.template get<0>() * sin_tmp + v.template get<1>() * cos_tmp);
 
     return r;
   }
@@ -288,39 +288,39 @@ namespace ggo
   vec<data_t, n_dims> vec<data_t, n_dims>::operator-() const
   {
     vec<data_t, n_dims> v;
-    ggo::set<n_dims>(v._coords, _coords, [](data_t d) { return -d; });
+    ggo::unary_operation<n_dims>(v._coords, _coords, [](data_t & dst, const data_t & src) { dst = -src; });
     return v;
   }
 
   template <typename data_t, int n_dims>
   void vec<data_t, n_dims>::operator+=(const vec<data_t, n_dims> & rhs)
   {
-    ggo::set<n_dims>(_coords, _coords, rhs._coords, [](data_t d1, data_t d2) { return d1 + d2; });
+    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst += src; });
   }
 
   template <typename data_t, int n_dims>
   void vec<data_t, n_dims>::operator-=(const vec<data_t, n_dims> & rhs)
   {
-    ggo::set<n_dims>(_coords, _coords, rhs._coords, [](data_t d1, data_t d2) { return d1 - d2; });
+    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst -= src; });
   }
 
   template <typename data_t, int n_dims>
   void vec<data_t, n_dims>::operator*=(data_t k)
   {
-    ggo::set<n_dims>(_coords, _coords, [&](data_t d) { return d * k; });
+    ggo::for_each<n_dims>(_coords, [&](data_t & d) { d *= k; });
   }
 
   template <typename data_t, int n_dims>
   void vec<data_t, n_dims>::operator/=(data_t k)
   {
     GGO_ASSERT(k != 0);
-    ggo::set<n_dims>(_coords, _coords, [&](data_t d) { return d / k; });
+    ggo::for_each<n_dims>(_coords, [&](data_t & d) { return d /= k; });
   }
 
   template <typename data_t, int n_dims>
   void vec<data_t, n_dims>::flip()
   {
-    ggo::transform<n_dims>(_coords, [](data_t d) { return -d; });
+    ggo::for_each<n_dims>(_coords, [](data_t & d) { d = -d; });
   }
 
   template <typename data_t, int n_dims>

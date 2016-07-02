@@ -148,6 +148,8 @@
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
     <ClInclude Include="src\ggo_memory.h" />
+    <ClInclude Include="src\ggo_template_pointer.h" />
+    <ClInclude Include="src\ggo_template_variadic.h" />
     <ClInclude Include="src\ggo_tree.h" />
     <ClInclude Include="src\ggo_vec.h" />
     <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />

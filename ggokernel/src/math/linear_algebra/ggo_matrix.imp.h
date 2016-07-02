@@ -38,7 +38,7 @@ namespace ggo
   {
     matrix<data_t, size_y, size_x> result;
 
-    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t v1, data_t v2) { return v1 + v2; });
+    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
 
     return result;
   }
@@ -49,7 +49,7 @@ namespace ggo
   {
     matrix<data_t, size_y, size_x> result;
 
-    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t v1, data_t v2) { return v1 - v2; });
+    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
 
     return result;
   }
