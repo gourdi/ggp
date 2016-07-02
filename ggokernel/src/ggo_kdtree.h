@@ -4,8 +4,7 @@
 #include <array>
 #include <vector>
 #include <memory>
-#include <ggo_distance2d.h>
-#include <ggo_distance3d.h>
+#include <ggo_distance.h>
 #include <ggo_kernel.h>
 
 namespace ggo

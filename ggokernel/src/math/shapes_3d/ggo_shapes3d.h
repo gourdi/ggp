@@ -4,7 +4,7 @@
 #include <sstream>
 #include <ggo_kernel.h>
 #include <ggo_vec.h>
-#include <ggo_distance3d.h>
+#include <ggo_distance.h>
 #include <ggo_ray3d.h>
 
 //////////////////////////////////////////////////////////////////

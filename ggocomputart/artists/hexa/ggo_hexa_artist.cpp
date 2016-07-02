@@ -1,6 +1,6 @@
 #include "ggo_hexa_artist.h"
 #include <ggo_array.h>
-#include <ggo_distance2d.h>
+#include <ggo_distance.h>
 #include <ggo_perlin_noise_field_2d.h>
 #include <ggo_gaussian_field_2d.h>
 #include <ggo_best_match.h>

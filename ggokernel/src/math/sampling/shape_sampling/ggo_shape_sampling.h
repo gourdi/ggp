@@ -1,7 +1,7 @@
 #ifndef __GGO_SHAPE_SAMPLING__
 #define __GGO_SHAPE_SAMPLING__
 
-#include <ggo_distance3d.h>
+#include <ggo_distance.h>
 #include <ggo_poisson_sampling.h>
 
 namespace ggo

@@ -154,8 +154,7 @@
     <ClInclude Include="src\ggo_tree.h" />
     <ClInclude Include="src\ggo_vec.h" />
     <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />
-    <ClInclude Include="src\math\ggo_distance2d.h" />
-    <ClInclude Include="src\math\ggo_distance3d.h" />
+    <ClInclude Include="src\math\ggo_distance.h" />
     <ClInclude Include="src\math\ggo_harmonic_curve.h" />
     <ClInclude Include="src\math\ggo_harmonic_surface.h" />
     <ClInclude Include="src\math\ggo_quadratic.h" />

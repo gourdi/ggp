@@ -1,6 +1,6 @@
 #include "ggo_best_candidate_sequence.h"
 #include <ggo_kernel.h>
-#include <ggo_distance2d.h>
+#include <ggo_distance.h>
 
 namespace ggo
 {

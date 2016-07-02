@@ -5,7 +5,7 @@
 #include <ggo_kernel.h>
 #include <ggo_quadratic.h>
 #include <ggo_vec.h>
-#include <ggo_distance2d.h>
+#include <ggo_distance.h>
 #include <ggo_linear_algebra2d.h>
 
 //////////////////////////////////////////////////////////////////
