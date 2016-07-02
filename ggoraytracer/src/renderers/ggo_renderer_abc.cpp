@@ -5,15 +5,19 @@
 #include "ggo_indirect_lighting_abc.h"
 #include <ggo_helpers.h>
 #include <ggo_array.h>
+#ifndef GGO_CYGWIN
 #include <thread>
 #include <mutex>
+#endif
 #include <stdlib.h>
 
 namespace
 {
   int			    global_x;
   int			    global_y;
+#ifndef GGO_CYGWIN
   std::mutex	mutex;
+#endif
   
   //////////////////////////////////////////////////////////////
   void print_line_number(int line)
@@ -25,6 +29,7 @@ namespace
 
 namespace ggo
 {
+#ifndef GGO_CYGWIN
   //////////////////////////////////////////////////////////////
   void renderer_abc::render_thread_func(const ggo::renderer_abc * renderer,
                                         uint8_t * buffer,
@@ -71,6 +76,7 @@ namespace ggo
       *ptr++ = color.b8();
     }
   }
+#endif
 
   //////////////////////////////////////////////////////////////
   void renderer_abc::render(uint8_t * buffer, int width, int height,
@@ -133,6 +139,9 @@ namespace ggo
     }
     else
     {
+#ifdef GGO_CYGWIN
+      std::cerr << "Multi-threading not supported on cygwin" << std::endl;
+#else
       global_x = 0;
       global_y = 0;
       
@@ -147,6 +156,7 @@ namespace ggo
       {
         thread.join();
       }
+#endif
     }
 
     std::cout << std::endl;
