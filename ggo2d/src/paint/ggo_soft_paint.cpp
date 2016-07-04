@@ -48,7 +48,8 @@ namespace
   void process_block(ggo::image_abc<color_type> & image,
                      const std::vector<ggo::layer<color_type>> & layers,
                      const ggo::pixel_rect & pixel_rect,
-                     const ggo::pixel_sampler_abc & sampler)
+                     const ggo::pixel_sampler_abc & sampler,
+                     bool bypass_shape_sampling)
   {
     pixel_rect.for_each_pixel([&](int x, int y)
     {
@@ -99,11 +100,7 @@ namespace
     // The current block is inside all shapes. Process block without checking if pixel samples are inside a shape.
     if (block_inside_all_shapes == true)
     {
-      pixel_rect.for_each_pixel([&](int x, int y)
-      {
-        image.set(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler, true));
-      });
-      return;
+      process_block(image, block_layers, pixel_rect, sampler, true);
     }
 
     // If the block matches a single pixel, paint the pixel.
@@ -160,23 +157,29 @@ namespace
       ggo::pixel_rect block_pixel_rect = ggo::pixel_rect::from_left_right_bottom_top(x, x_end, y, y_end);
       ggo::rect_float block_rect_float = block_pixel_rect.get_rect_float();
 
+      bool block_inside_all_shapes = true;
+
       std::vector<ggo::layer<color_type>> current_block_layers;
       for (const auto & layer : layers)
       {
-        switch (layer._shape->get_rect_intersection(block_rect_float))
+        ggo::rect_intersection intersection = layer._shape->get_rect_intersection(block_rect_float);
+
+        switch (intersection)
         {
+        case ggo::rect_intersection::DISJOINTS:
+          break;
         case ggo::rect_intersection::RECT_IN_SHAPE:
-        case ggo::rect_intersection::SHAPE_IN_RECT:
-        case ggo::rect_intersection::PARTIAL_OVERLAP:
           current_block_layers.push_back(layer);
           break;
-        case ggo::rect_intersection::DISJOINTS:
+        default:
+          block_inside_all_shapes = false;
+          current_block_layers.push_back(layer);
           break;
         }
       }
 
       // Paint.
-      process_block(image, current_block_layers, block_pixel_rect, sampler);
+      process_block(image, current_block_layers, block_pixel_rect, sampler, block_inside_all_shapes);
 
       // Move to the next block.
       if (x_end < pixel_rect.right())
@@ -248,7 +251,7 @@ namespace
         paint_recursive(image, layers, pixel_rect, sampler);
         break;
       case ggo::space_partitionning::none:
-        process_block(image, layers, pixel_rect, sampler);
+        process_block(image, layers, pixel_rect, sampler, false);
         break;
       case ggo::space_partitionning::block8x8:
         paint_block8x8(image, layers, pixel_rect, sampler);
@@ -257,7 +260,7 @@ namespace
     }
     else
     {
-      process_block(image, layers, pixel_rect, sampler);
+      process_block(image, layers, pixel_rect, sampler, false);
     }
   }
 }
