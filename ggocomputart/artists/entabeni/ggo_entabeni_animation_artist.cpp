@@ -26,13 +26,6 @@ bool ggo_entabeni_animation_artist::render_next_frame_sub(uint8_t * buffer, int 
     return false;
   }
 
-  memset(buffer, 0, 3 * get_render_width() * get_render_height());
-
-  if ((frame_index % 10) != 0)
-  {
-    return true;
-  }
-
   // Update displacement.
   float angle = _angle.update(1);
   float z = _z;

@@ -167,6 +167,7 @@ void ggo_entabeni::render_bitmap(ggo::rgb_image_abc & image,
     }
   }
 
+  image.fill(ggo::color::BLACK);
   ggo::paint(image, layers, ggo::pixel_sampler_8X8());
 }
 
