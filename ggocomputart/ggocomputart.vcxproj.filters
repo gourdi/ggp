@@ -402,6 +402,12 @@
     <ClCompile Include="artists\entabeni\ggo_entabeni_bitmap_artist.cpp">
       <Filter>artists\entabeni</Filter>
     </ClCompile>
+    <ClCompile Include="artists\entabeni\ggo_entabeni.cpp">
+      <Filter>artists\entabeni</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\entabeni\ggo_entabeni_animation_artist.cpp">
+      <Filter>artists\entabeni</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\ggo_animate_abc.h">
@@ -663,6 +669,12 @@
       <Filter>artists\rediff</Filter>
     </ClInclude>
     <ClInclude Include="artists\entabeni\ggo_entabeni_bitmap_artist.h">
+      <Filter>artists\entabeni</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\entabeni\ggo_entabeni.h">
+      <Filter>artists\entabeni</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\entabeni\ggo_entabeni_animation_artist.h">
       <Filter>artists\entabeni</Filter>
     </ClInclude>
   </ItemGroup>

@@ -63,7 +63,7 @@ private:
   ggo::array_uint8 _bkgd_buffer;
 };
 
-// The artist uses a background buffer which can be changed by the artist.
+// The artist uses a background buffer which is initialized and then be changed by the artist.
 class ggo_dynamic_background_animation_artist_abc : public ggo_animation_artist_abc
 {
 public:

@@ -51,6 +51,8 @@
     <ClCompile Include="artists\duffing\ggo_duffing_bitmap_artist.cpp" />
     <ClCompile Include="artists\dupecheck\ggo_dupecheck_animation_artist.cpp" />
     <ClCompile Include="artists\dupecheck\ggo_dupecheck_bitmap_artist.cpp" />
+    <ClCompile Include="artists\entabeni\ggo_entabeni.cpp" />
+    <ClCompile Include="artists\entabeni\ggo_entabeni_animation_artist.cpp" />
     <ClCompile Include="artists\entabeni\ggo_entabeni_bitmap_artist.cpp" />
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_animation_artist.cpp" />
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_artist.cpp" />
@@ -139,6 +141,8 @@
     <ClInclude Include="artists\duffing\ggo_duffing_bitmap_artist.h" />
     <ClInclude Include="artists\dupecheck\ggo_dupecheck_animation_artist.h" />
     <ClInclude Include="artists\dupecheck\ggo_dupecheck_bitmap_artist.h" />
+    <ClInclude Include="artists\entabeni\ggo_entabeni.h" />
+    <ClInclude Include="artists\entabeni\ggo_entabeni_animation_artist.h" />
     <ClInclude Include="artists\entabeni\ggo_entabeni_bitmap_artist.h" />
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_animation_artist.h" />
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_artist.h" />
