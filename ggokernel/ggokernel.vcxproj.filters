@@ -73,9 +73,6 @@
     <ClInclude Include="src\math\linear_algebra\ggo_sparse_matrix.h">
       <Filter>math\linear_algebra</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\marching_cubes\ggo_marching_cubes.h">
-      <Filter>math\marching_cubes</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.h">
       <Filter>math\sampling\low_discrepancy_sequences</Filter>
     </ClInclude>
@@ -308,6 +305,12 @@
     <ClInclude Include="src\math\ggo_distance.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\marching_algorithms\ggo_marching_cubes.h">
+      <Filter>math\marching_algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\marching_algorithms\ggo_marching_squares.h">
+      <Filter>math\marching_algorithms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -328,9 +331,6 @@
     </ClCompile>
     <ClCompile Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.cpp">
       <Filter>math\delaunay_triangulation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\math\marching_cubes\ggo_marching_cubes.cpp">
-      <Filter>math\marching_cubes</Filter>
     </ClCompile>
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp">
       <Filter>math\sampling\low_discrepancy_sequences</Filter>
@@ -354,6 +354,12 @@
       <Filter>nonreg</Filter>
     </ClCompile>
     <ClCompile Include="src\ggo_color_stream.cpp" />
+    <ClCompile Include="src\math\marching_algorithms\ggo_marching_cubes.cpp">
+      <Filter>math\marching_algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\marching_algorithms\ggo_marching_squares.cpp">
+      <Filter>math\marching_algorithms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="math">
@@ -373,9 +379,6 @@
     </Filter>
     <Filter Include="math\linear_algebra">
       <UniqueIdentifier>{329ec35f-a87e-410c-86e5-f997b9fccd4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math\marching_cubes">
-      <UniqueIdentifier>{a95367df-6a81-4683-b9a5-71d83cbb63fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="math\sampling">
       <UniqueIdentifier>{e67109c4-19ef-4af8-945c-44f32bca4ef5}</UniqueIdentifier>
@@ -403,6 +406,9 @@
     </Filter>
     <Filter Include="rle">
       <UniqueIdentifier>{6218313e-2364-4ec5-8bff-56b0618901cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\marching_algorithms">
+      <UniqueIdentifier>{a95367df-6a81-4683-b9a5-71d83cbb63fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

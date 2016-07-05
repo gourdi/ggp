@@ -169,7 +169,8 @@
     <ClInclude Include="src\math\linear_algebra\ggo_matrix.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_matrix.imp.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_sparse_matrix.h" />
-    <ClInclude Include="src\math\marching_cubes\ggo_marching_cubes.h" />
+    <ClInclude Include="src\math\marching_algorithms\ggo_marching_cubes.h" />
+    <ClInclude Include="src\math\marching_algorithms\ggo_marching_squares.h" />
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.h" />
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.h" />
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_poisson_sampling.h" />
@@ -255,7 +256,8 @@
     <ClCompile Include="src\ggo_color_stream.cpp" />
     <ClCompile Include="src\ggo_kernel.cpp" />
     <ClCompile Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.cpp" />
-    <ClCompile Include="src\math\marching_cubes\ggo_marching_cubes.cpp" />
+    <ClCompile Include="src\math\marching_algorithms\ggo_marching_cubes.cpp" />
+    <ClCompile Include="src\math\marching_algorithms\ggo_marching_squares.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp" />
     <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp" />
