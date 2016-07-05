@@ -145,6 +145,9 @@
     <Filter Include="artists\entabeni">
       <UniqueIdentifier>{8f2ea431-e566-4b38-b832-6371c0547465}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\cabrel">
+      <UniqueIdentifier>{6f9b13fc-cffb-46e2-8cd5-44c7309c78be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -407,6 +410,9 @@
     </ClCompile>
     <ClCompile Include="artists\entabeni\ggo_entabeni_animation_artist.cpp">
       <Filter>artists\entabeni</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\cabrel\ggo_cabrel_bitmap_artist.cpp">
+      <Filter>artists\cabrel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -676,6 +682,12 @@
     </ClInclude>
     <ClInclude Include="artists\entabeni\ggo_entabeni_animation_artist.h">
       <Filter>artists\entabeni</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\cabrel\ggo_cabrel_bitmap_artist.h">
+      <Filter>artists\cabrel</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\cabrel\ggo_cabrel_curve.h">
+      <Filter>artists\cabrel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

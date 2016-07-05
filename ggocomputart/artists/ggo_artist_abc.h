@@ -14,7 +14,7 @@ class ggo_artist_abc
 {
 public:
 	
-	virtual		                         ~ggo_artist_abc() {};
+	virtual		                         ~ggo_artist_abc() {}
 
           int		                      get_render_width() const  { return _render_width; }
           int		                      get_render_height() const { return _render_height; }

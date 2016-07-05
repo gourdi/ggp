@@ -8,7 +8,7 @@ CFLAGS+=-Isrc \
         -Isrc/math/delaunay_interpolation \
         -Isrc/math/interpolation \
         -Isrc/math/linear_algebra \
-        -Isrc/math/marching_cubes \
+        -Isrc/math/marching_algorithms \
         -Isrc/math/sampling \
         -Isrc/math/sampling/pixel_sampling \
         -Isrc/math/sampling/low_discrepancy_sequences \
@@ -42,7 +42,6 @@ HEADERS=$(wildcard src/*.h) \
         src/math/sampling/pixel_sampling/ggo_blur_pixel_sampler.h \
         src/math/sampling/pixel_sampling/ggo_shape_sampling_coef.h \
         src/math/delaunay_triangulation/ggo_delaunay_triangulation.h \
-        src/math/marching_cubes/ggo_marching_cubes.h \
         src/math/linear_algebra/ggo_matrix.h src/math/linear_algebra/ggo_matrix.imp.h \
         src/math/linear_algebra/ggo_linear_algebra.h \
         src/math/linear_algebra/ggo_linear_algebra2d.h \
@@ -51,7 +50,8 @@ HEADERS=$(wildcard src/*.h) \
         $(wildcard src/math/signal_proc/*.h) \
         $(wildcard src/math/shapes_2d/*.h) \
         $(wildcard src/math/shapes_3d/*.h) \
-        $(wildcard src/math/scalar_fields_2d/*.h)
+        $(wildcard src/math/scalar_fields_2d/*.h) \
+        $(wildcard src/math/marching_algorithms/*.h)
 LIB=$(LIBDIR)/libggokernel.a
 
 SRC=$(call rwildcard, src/, *.cpp)

@@ -27,6 +27,7 @@ namespace ggo
             int     get_width() const { return _width; }
             int     get_height() const { return _height; }
             int     get_min_size() const { return std::min(_width, _height); }
+            int     get_max_size() const { return std::max(_width, _height); }
            
             void    fill(const color_t & color);
 
