@@ -411,7 +411,7 @@
     <ClCompile Include="artists\entabeni\ggo_entabeni_animation_artist.cpp">
       <Filter>artists\entabeni</Filter>
     </ClCompile>
-    <ClCompile Include="artists\cabrel\ggo_cabrel_bitmap_artist.cpp">
+    <ClCompile Include="artists\cabrel\ggo_cabrel_animation_artist.cpp">
       <Filter>artists\cabrel</Filter>
     </ClCompile>
   </ItemGroup>
@@ -683,10 +683,10 @@
     <ClInclude Include="artists\entabeni\ggo_entabeni_animation_artist.h">
       <Filter>artists\entabeni</Filter>
     </ClInclude>
-    <ClInclude Include="artists\cabrel\ggo_cabrel_bitmap_artist.h">
+    <ClInclude Include="artists\cabrel\ggo_cabrel_curve.h">
       <Filter>artists\cabrel</Filter>
     </ClInclude>
-    <ClInclude Include="artists\cabrel\ggo_cabrel_curve.h">
+    <ClInclude Include="artists\cabrel\ggo_cabrel_animation_artist.h">
       <Filter>artists\cabrel</Filter>
     </ClInclude>
   </ItemGroup>

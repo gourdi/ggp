@@ -4,13 +4,23 @@
 #include <ggo_kernel.h>
 #include <ggo_random_interpolator_abc.h>
 #include <ggo_marching_squares.h>
+#include <ggo_paint.h>
 
 class ggo_cabrel_coef_interpolator : public ggo::random_interpolator_abc<float, float>
 {
-  void get_random_data(float & coef, float & dt) override
+  void get_random_data(float & value, float & dt) override
   {
-    coef = ggo::rand_float(-1.f, 1.f);
+    value = ggo::rand_float(-1.f, 1.f);
     dt = ggo::rand_float(20.f, 50.f);
+  }
+};
+
+class ggo_cabrel_colorf_interpolator : public ggo::random_interpolator_abc<ggo::color, float>
+{
+  void get_random_data(ggo::color & value, float & dt) override
+  {
+    value = ggo::color::get_random();
+    dt = ggo::rand_float(5.f, 10.f);
   }
 };
 
@@ -27,6 +37,9 @@ public:
     {
       _coefs[i] = _coefs_interpolators[i].update(1);
     }
+
+    // Interpolate color.
+    _color = _color_interpolator.update(1);
   }
 
   void paint(ggo::rgb_image_abc & image) const
@@ -61,14 +74,12 @@ public:
     const float width = 0.002f * image.get_min_size();
     std::vector<ggo::rgb_layer> layers;
 
-    ggo::color c(ggo::color::get_random());
-
     for (const auto & cell : cells)
     {
       for (const auto & segment : cell._segments)
       {
         auto extended_segment = std::make_shared<ggo::extended_segment_float>(offset + scale * segment.p1(), offset + scale * segment.p2(), width);
-        layers.emplace_back(extended_segment, c);
+        layers.emplace_back(extended_segment, _color);
       }
     }
 
@@ -77,8 +88,10 @@ public:
 
 private:
 
-  std::array<float, (deg_max + 1) * (deg_max + 2) / 2>                        _coefs;
   std::array<ggo_cabrel_coef_interpolator, (deg_max + 1) * (deg_max + 2) / 2> _coefs_interpolators;
+  std::array<float, (deg_max + 1) * (deg_max + 2) / 2>                        _coefs;
+  ggo_cabrel_colorf_interpolator                                              _color_interpolator;
+  ggo::color                                                                  _color;
 };
 
 #endif

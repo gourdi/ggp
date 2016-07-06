@@ -37,7 +37,7 @@
 #include "artists/stoa/ggo_stoa_bitmap_artist.h"
 #include "artists/rediff/ggo_rediff_animation_artist.h"
 #include "artists/entabeni/ggo_entabeni_bitmap_artist.h"
-#include "artists/cabrel/ggo_cabrel_bitmap_artist.h"
+#include "artists/cabrel/ggo_cabrel_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS WRAPPER
@@ -200,8 +200,7 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
     return new ggo_stoa_bitmap_artist(render_width, render_height);
   case GGO_BITMAP_ARTIST_ENTABENI:
     return new ggo_entabeni_bitmap_artist(render_width, render_height);
-  case GGO_BITMAP_ARTIST_CABREL:
-    return new ggo_cabrel_bitmap_artist(render_width, render_height);
+
     // Animation artists.
 	case GGO_BITMAP_ARTIST_SMOKE:
 		return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_SMOKE, render_width, render_height, 400);
@@ -219,6 +218,9 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_SONSON, render_width, render_height, 200, true);
   case GGO_BITMAP_ARTIST_REDIFF:
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_REDIFF, render_width, render_height, 350, true);
+  case GGO_BITMAP_ARTIST_CABREL:
+    return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_CABREL, render_width, render_height);
+
 	default:
 		GGO_FAIL();
 		return nullptr;
