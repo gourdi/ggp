@@ -29,7 +29,7 @@ bool ggo_entabeni_animation_artist::render_next_frame_sub(uint8_t * buffer, int 
   // Update displacement.
   float angle = _angle.update(1);
   float z = _z;
-  _z -= 0.1f;
+  _z -= 0.25f;
 
   // Interpolate grid.
   ggo::array<float, 2> grid(_grid_start.get_size<0>(), _grid_start.get_size<1>());

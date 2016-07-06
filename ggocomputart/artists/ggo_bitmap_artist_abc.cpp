@@ -201,7 +201,7 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
   case GGO_BITMAP_ARTIST_ENTABENI:
     return new ggo_entabeni_bitmap_artist(render_width, render_height);
 
-    // Animation artists.
+  // Animation artists.
 	case GGO_BITMAP_ARTIST_SMOKE:
 		return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_SMOKE, render_width, render_height, 400);
 	case GGO_BITMAP_ARTIST_IKEDA:
