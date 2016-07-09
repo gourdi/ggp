@@ -41,7 +41,7 @@ namespace ggo
   {
   public:
 
-                    scene_builder(std::shared_ptr<const ggo::background3d_abc> background);
+                                    scene_builder(std::shared_ptr<const ggo::background3d_abc> background);
 
     std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color & color, const ggo::pos3f & pos);
     std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos);

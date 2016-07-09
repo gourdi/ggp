@@ -7,11 +7,11 @@ namespace ggo
                std::shared_ptr<const ggo::background3d_abc> background,
                const ggo::color & ambient_color,
                std::shared_ptr<const ggo::fog_abc> fog)
-    :
-    _objects(objects),
-    _background(background),
-    _ambient_color(ambient_color),
-    _fog(fog)
+  :
+  _objects(objects),
+  _background(background),
+  _ambient_color(ambient_color),
+  _fog(fog)
   {
     for (const auto & object : objects)
     {
