@@ -96,6 +96,9 @@
     <ClCompile Include="test\template\ggo_template_variadic_nonreg.cpp">
       <Filter>template</Filter>
     </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_gauss_seidel_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

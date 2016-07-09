@@ -163,6 +163,7 @@
     <ClInclude Include="src\math\interpolation\ggo_interpolation2d.h" />
     <ClInclude Include="src\math\interpolation\ggo_interpolation3d.h" />
     <ClInclude Include="src\math\interpolation\ggo_triangle_interpolation.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_gauss_seidel.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra2d.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra3d.h" />

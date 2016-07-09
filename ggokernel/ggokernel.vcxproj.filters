@@ -311,6 +311,9 @@
     <ClInclude Include="src\math\marching_algorithms\ggo_marching_squares.h">
       <Filter>math\marching_algorithms</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_gauss_seidel.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
