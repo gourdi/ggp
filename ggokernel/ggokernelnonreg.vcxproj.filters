@@ -99,6 +99,9 @@
     <ClCompile Include="test\linear_algebra\ggo_gauss_seidel_nonreg.cpp">
       <Filter>linear_algebra</Filter>
     </ClCompile>
+    <ClCompile Include="test\linear_algebra\ggo_vector_space_nonreg.cpp">
+      <Filter>linear_algebra</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

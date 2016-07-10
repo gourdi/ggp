@@ -1,5 +1,7 @@
-#ifndef __GGO_GAUSS_SEIDEL__
-#define __GGO_GAUSS_SEIDEL__
+#ifndef __GGO_CONJUGATE_GRADIENT__
+#define __GGO_CONJUGATE_GRADIENT__
+
+#if 0
 
 #include <ggo_matrix.h>
 #include <ggo_vec.h>
@@ -10,25 +12,27 @@
 namespace ggo
 {
   template <typename data_t, typename matrix, typename read_b, typename read_s, typename write_s>
-  void gauss_seidel(int size, matrix a, read_b b, read_s rs, write_s ws, int iterations)
+  void conjugate_gradient(int size, matrix a, read_b b, read_s rs, write_s ws, int iterations)
   {
-    // todo precompute digonal inverses
+    ggo::array<float, 1> residual(size);
+
+    r = b - A*x;
+    p = r;
+    data_t residual_hypot_old = ggo::dot(r, r);
 
     for (int i = 0; i < iterations; ++i)
-    {
-      for (int y = 0; y < size; ++y)
-      {
-        data_t sigma = 0;
-        for (int x = 0; x < size; ++x)
-        {
-          if (y != x)
-          {
-            sigma += a(y, x) * rs(x);
-          }
-        }
-        ws(y, (b(y) - sigma) / a(y, y));
-      }
-    }
+      Ap = A*p;
+    alpha = rsold / (p'*Ap);
+      x = x + alpha*p;
+    r = r - alpha*Ap;
+    rsnew = r'*r;
+      if sqrt(rsnew)<1e-10
+        break;
+    end
+      p = r + (rsnew / rsold)*p;
+    rsold = rsnew;
+    end
+
   }
 }
 
@@ -37,7 +41,7 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t, int size>
-  void gauss_seidel(const data_t(&a)[size][size], const data_t(&b)[size], data_t(&s)[size], int iterations)
+  void conjugate_gradient(const data_t(&a)[size][size], const data_t(&b)[size], data_t(&s)[size], int iterations)
   {
     auto lambda_a = [&](int x, int y) { return a[x][y]; };
     auto lambda_b = [&](int i) { return b[i]; };
@@ -48,7 +52,7 @@ namespace ggo
   }
 
   template <typename data_t, int size>
-  void gauss_seidel(const ggo::matrix<data_t, size, size> & a, const ggo::vec<data_t, size> & b, ggo::vec<data_t, size> & s, int iterations)
+  void conjugate_gradient(const ggo::matrix<data_t, size, size> & a, const ggo::vec<data_t, size> & b, ggo::vec<data_t, size> & s, int iterations)
   {
     auto lambda_a = [&](int x, int y) { return a(x, y); };
     auto lambda_b = [&](int i) { return b.data()[i]; };
@@ -59,7 +63,7 @@ namespace ggo
   }
 
   template <typename data_t>
-  void gauss_seidel(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 1> & b, ggo::array<data_t, 1> & s, int iterations)
+  void conjugate_gradient(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 1> & b, ggo::array<data_t, 1> & s, int iterations)
   {
     if (a.get_size<0>() != a.get_size<1>())
     {
@@ -82,5 +86,7 @@ namespace ggo
     return gauss_seidel<data_t>(a.get_size<0>(), lambda_a, lambda_b, read_s, write_s, iterations);
   }
 }
+
+#endif
 
 #endif

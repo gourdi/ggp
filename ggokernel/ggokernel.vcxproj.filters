@@ -314,6 +314,12 @@
     <ClInclude Include="src\math\linear_algebra\ggo_gauss_seidel.h">
       <Filter>math\linear_algebra</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_conjugate_gradient.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_vector_space.h">
+      <Filter>math\linear_algebra</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

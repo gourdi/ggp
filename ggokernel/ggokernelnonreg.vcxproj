@@ -34,6 +34,7 @@
     <ClCompile Include="test\linear_algebra\ggo_gauss_seidel_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_linear_algebra2d_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_linear_algebra3d_nonreg.cpp" />
+    <ClCompile Include="test\linear_algebra\ggo_vector_space_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_matrix_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_sparse_matrix_nonreg.cpp" />
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />

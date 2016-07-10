@@ -164,12 +164,14 @@
     <ClInclude Include="src\math\interpolation\ggo_interpolation3d.h" />
     <ClInclude Include="src\math\interpolation\ggo_triangle_interpolation.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_gauss_seidel.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_conjugate_gradient.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra2d.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_linear_algebra3d.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_matrix.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_matrix.imp.h" />
     <ClInclude Include="src\math\linear_algebra\ggo_sparse_matrix.h" />
+    <ClInclude Include="src\math\linear_algebra\ggo_vector_space.h" />
     <ClInclude Include="src\math\marching_algorithms\ggo_marching_cubes.h" />
     <ClInclude Include="src\math\marching_algorithms\ggo_marching_squares.h" />
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.h" />

@@ -2,7 +2,8 @@
 #define __GGO_LINEAR_ALGEBRA__
 
 #include <math.h>
-#include <functional>
+#include <ggo_kernel.h>
+#include <ggo_array.h>
 
 /////////////////////////////////////////////////////////////////////
 // Square matrices
