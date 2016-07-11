@@ -31,10 +31,10 @@
     <ClCompile Include="test\ggo_vec_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation2d_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp" />
-    <ClCompile Include="test\linear_algebra\ggo_gauss_seidel_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_linear_algebra2d_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_linear_algebra3d_nonreg.cpp" />
-    <ClCompile Include="test\linear_algebra\ggo_vector_space_nonreg.cpp" />
+    <ClCompile Include="test\linear_algebra\ggo_array_arithmetics_nonreg.cpp" />
+    <ClCompile Include="test\linear_algebra\ggo_linear_system_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_matrix_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_sparse_matrix_nonreg.cpp" />
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />

@@ -1,8 +1,9 @@
 #include <ggo_nonreg.h>
 #include <ggo_gauss_seidel.h>
+#include <ggo_conjugate_gradient.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(gauss_seidel, solve2x2)
+GGO_TEST(linear_system, gauss_seidel_2x2)
 {
   // C array
   {
@@ -51,4 +52,25 @@ GGO_TEST(gauss_seidel, solve2x2)
     GGO_CHECK_FABS(s(0), 0.8122f);
     GGO_CHECK_FABS(s(1), -0.6650f);
   }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(linear_system, conjugate_gradient_2x2)
+{
+  ggo::array<float, 2> a(2, 2);
+  a(0, 0) = 4.f;
+  a(0, 1) = 1.f;
+  a(1, 0) = 1.f;
+  a(1, 1) = 3.f;
+  ggo::array<float, 2> b(2, 1);
+  b(0, 0) = 1.f;
+  b(1, 0) = 2.f;
+  ggo::array<float, 2> s(2, 1);
+  s(0, 0) = 2.f;
+  s(1, 0) = 1.f;
+
+  ggo::conjugate_gradient(a, b, s, 2);
+
+  GGO_CHECK_FABS(s(0, 0), 1.f / 11.f);
+  GGO_CHECK_FABS(s(1, 0), 7.f / 11.f);
 }

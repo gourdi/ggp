@@ -16,9 +16,6 @@
     <ClInclude Include="src\math\ggo_harmonic_surface.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\ggo_quadratic.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\signal_proc\ggo_box_filter.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>
@@ -317,7 +314,10 @@
     <ClInclude Include="src\math\linear_algebra\ggo_conjugate_gradient.h">
       <Filter>math\linear_algebra</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\linear_algebra\ggo_vector_space.h">
+    <ClInclude Include="src\math\ggo_quadratic.h">
+      <Filter>nonreg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\linear_algebra\ggo_array_arithmetics.h">
       <Filter>math\linear_algebra</Filter>
     </ClInclude>
   </ItemGroup>

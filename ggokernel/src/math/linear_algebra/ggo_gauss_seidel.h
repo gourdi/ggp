@@ -10,7 +10,7 @@
 namespace ggo
 {
   template <typename data_t, typename matrix, typename read_b, typename read_s, typename write_s>
-  void gauss_seidel(int size, matrix a, read_b b, read_s rs, write_s ws, int iterations)
+  void gauss_seidel(const int size, matrix a, read_b b, read_s rs, write_s ws, const int iterations)
   {
     // todo precompute digonal inverses
 

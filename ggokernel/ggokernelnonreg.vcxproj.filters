@@ -96,10 +96,10 @@
     <ClCompile Include="test\template\ggo_template_variadic_nonreg.cpp">
       <Filter>template</Filter>
     </ClCompile>
-    <ClCompile Include="test\linear_algebra\ggo_gauss_seidel_nonreg.cpp">
+    <ClCompile Include="test\linear_algebra\ggo_array_arithmetics_nonreg.cpp">
       <Filter>linear_algebra</Filter>
     </ClCompile>
-    <ClCompile Include="test\linear_algebra\ggo_vector_space_nonreg.cpp">
+    <ClCompile Include="test\linear_algebra\ggo_linear_system_nonreg.cpp">
       <Filter>linear_algebra</Filter>
     </ClCompile>
   </ItemGroup>
