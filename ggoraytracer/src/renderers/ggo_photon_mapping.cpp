@@ -10,7 +10,7 @@ namespace ggo
                                  const ggo::object3d & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-    using color_point = ggo::kdtree<3, ggo::color>::data_point;
+    using color_point = ggo::kdtree<ggo::color, 3>::data_point;
 
     std::vector<color_point> photons;
 
@@ -93,7 +93,7 @@ namespace ggo
       }
     }
 
-    _tree.reset(new ggo::kdtree<3, ggo::color>(photons));
+    _tree.reset(new ggo::kdtree<ggo::color, 3>(photons));
   }
 
   //////////////////////////////////////////////////////////////

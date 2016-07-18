@@ -28,7 +28,7 @@ namespace ggo
 
   private:
 
-    std::unique_ptr<ggo::kdtree<3, ggo::color>>  _tree;
+    std::unique_ptr<ggo::kdtree<ggo::color, 3>>  _tree;
   };
 }
 

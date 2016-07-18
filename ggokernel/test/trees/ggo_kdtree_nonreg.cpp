@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(trees, kdtree)
 {
-  using tree_type = ggo::kdtree<2, void *>;
+  using tree_type = ggo::kdtree<void *, 2>;
   std::vector<tree_type::data_point> points{
     { {  2.f, -1.f }, nullptr },
     { {  1.f,  1.f }, nullptr },

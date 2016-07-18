@@ -1,39 +1,39 @@
 #ifndef __GGO_KDTREE__
 #define __GGO_KDTREE__
 
-#include <array>
 #include <vector>
 #include <memory>
+#include <ggo_vec.h>
 #include <ggo_distance.h>
 #include <ggo_kernel.h>
 
 namespace ggo
 {
-  template <int dim, typename data_type>
+  template <typename data_t, int n_dim>
   class kdtree
   {
   public:
 
     struct data_point
     {
-      std::array<float, dim>  _pos;
-      data_type               _data;
+      ggo::vec<float, n_dim>  _pos;
+      data_t                  _data;
     };
 
                             kdtree(const std::vector<data_point> & points);
 
-    std::vector<data_point> find_points(const std::array<float, dim> & p, float radius) const;
+    std::vector<data_point> find_points(const ggo::vec<float, n_dim> & p, float radius) const;
 
   private:
 
-    void                    find_points_aux(const std::array<float, dim> & p, float radius, float hypot, std::vector<data_point> & result) const;
+    void                    find_points_aux(const ggo::vec<float, n_dim> & p, float radius, float hypot, std::vector<data_point> & result) const;
 
   private:
 
     data_point                              _data_point;
     int                                     _split_axis;
-    std::unique_ptr<kdtree<dim, data_type>> _inf_child;
-    std::unique_ptr<kdtree<dim, data_type>> _sup_child;
+    std::unique_ptr<kdtree<data_t, n_dim>>  _inf_child;
+    std::unique_ptr<kdtree<data_t, n_dim>>  _sup_child;
   };
 }
 
@@ -42,8 +42,8 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <int dim, typename data_type>
-  kdtree<dim, data_type>::kdtree(const std::vector<data_point> & points)
+  template <typename data_t, int n_dim>
+  kdtree<data_t, n_dim>::kdtree(const std::vector<data_point> & points)
   {
     _split_axis = -1;
 
@@ -53,13 +53,13 @@ namespace ggo
     }
 
     float size_max = 0.f;
-    for (int cur_dim = 0; cur_dim < dim; ++cur_dim)
+    for (int cur_dim = 0; cur_dim < n_dim; ++cur_dim)
     {
-      auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos[cur_dim] < p2._pos[cur_dim]; };
+      auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos.get(cur_dim) < p2._pos.get(cur_dim); };
 
       auto range = std::minmax_element(points.begin(), points.end(), sort_func);
 
-      float size_cur = range.second->_pos[cur_dim] - range.first->_pos[cur_dim];
+      float size_cur = range.second->_pos.get(cur_dim) - range.first->_pos.get(cur_dim);
       GGO_ASSERT_GE(size_cur, 0.f);
 
       if (size_cur >= size_max)
@@ -68,11 +68,11 @@ namespace ggo
         _split_axis = cur_dim;
       }
     }
-    GGO_ASSERT(_split_axis >= 0 && _split_axis < dim);
+    GGO_ASSERT(_split_axis >= 0 && _split_axis < n_dim);
 
     std::vector<data_point> sorted_points(points);
 
-    auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos[_split_axis] < p2._pos[_split_axis]; };
+    auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos.get(_split_axis) < p2._pos.get(_split_axis); };
 
     std::sort(sorted_points.begin(), sorted_points.end(), sort_func);
 
@@ -85,18 +85,18 @@ namespace ggo
 
     if (inf_points.empty() == false)
     {
-      _inf_child.reset(new kdtree<dim, data_type>(inf_points));
+      _inf_child.reset(new kdtree<data_t, n_dim>(inf_points));
     }
 
     if (sup_points.empty() == false)
     {
-      _sup_child.reset(new kdtree<dim, data_type>(sup_points));
+      _sup_child.reset(new kdtree<data_t, n_dim>(sup_points));
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int dim, typename data_type>
-  std::vector<typename ggo::kdtree<dim, data_type>::data_point> kdtree<dim, data_type>::find_points(const std::array<float, dim> & p, float radius) const
+  template <typename data_t, int n_dim>
+  std::vector<typename ggo::kdtree<data_t, n_dim>::data_point> kdtree<data_t, n_dim>::find_points(const ggo::vec<float, n_dim> & p, float radius) const
   {
     std::vector<data_point> result;
 
@@ -111,8 +111,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <int dim, typename data_type>
-  void kdtree<dim, data_type>::find_points_aux(const std::array<float, dim> & p, float radius, float hypot, std::vector<data_point> & result) const
+  template <typename data_t, int n_dim>
+  void kdtree<data_t, n_dim>::find_points_aux(const ggo::vec<float, n_dim> & p, float radius, float hypot, std::vector<data_point> & result) const
   {
     // First check current point.
     if (ggo::hypot(_data_point._pos, p) < hypot)
@@ -121,11 +121,11 @@ namespace ggo
     }
 
     // Process children only if needed.
-    if (_inf_child && p[_split_axis] - radius <= _data_point._pos[_split_axis])
+    if (_inf_child && p.get(_split_axis) - radius <= _data_point._pos.get(_split_axis))
     {
       _inf_child->find_points_aux(p, radius, hypot, result);
     }
-    if (_sup_child && p[_split_axis] + radius >= _data_point._pos[_split_axis])
+    if (_sup_child && p.get(_split_axis) + radius >= _data_point._pos.get(_split_axis))
     {
       _sup_child->find_points_aux(p, radius, hypot, result);
     }
