@@ -186,20 +186,11 @@ namespace ggo
   }
 }
 
-#if 0
-
 /////////////////////////////////////////////////////////////////////
 // Square matrix 2D.
 
 namespace ggo
 {
-  /////////////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::vec2<T> operator*(const square_matrix2d<T> & m, const ggo::vec2<T> & v) 
-  {
-    return ggo::vec2<T>(m(0, 0) * v.template get<0>() + m(0, 1) * v.template get<1>(),
-                        m(1, 0) * v.template get<0>() + m(1, 1) * v.template get<1>());
-  }
 
   /////////////////////////////////////////////////////////////////////
   template <typename T>
@@ -218,6 +209,3 @@ namespace ggo
     this->operator()(1, 1) =  cos(angle);
   }
 }
-
-#endif
-

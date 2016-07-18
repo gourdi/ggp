@@ -6,7 +6,10 @@
 #include <ggo_vec.h>
 
 //////////////////////////////////////////////////////////////
-// Matrices.
+// Matrices. Dimensions are known at compile - time.
+
+//////////////////////////////////////////////////////////////
+// General matrices.
 namespace ggo
 {
   template <typename data_t, int size_y, int size_x>
@@ -91,8 +94,6 @@ namespace ggo
   };
 }
 
-#if 0
-
 /////////////////////////////////////////////////////////////////////
 // Square matrix 2D.
 namespace ggo
@@ -105,13 +106,8 @@ namespace ggo
     data_t  det() const;
     
     void    set_rotation(float angle);
-  };	
-
-  template <typename T>
-  ggo::vec2<T> operator*(const square_matrix2d<T> & m, const ggo::vec2<T> & v);
+  };
 }
-
-#endif
 
 #include <ggo_matrix.imp.h>
 

@@ -159,3 +159,18 @@ GGO_TEST(matrix, matrix_vector_multiplication)
   GGO_CHECK(v.get<0>() == -17);
   GGO_CHECK(v.get<1>() ==  13);
 }
+
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(matrix, matrix_rotation)
+{
+  ggo::square_matrix2d<float> m;
+  ggo::vec2<float>            v{ 1.f, 0.f };
+
+  m.set_rotation(0.5f * ggo::PI<float>());
+
+  v = m * v;
+
+  GGO_CHECK_FABS(v.get<0>(), 0.f);
+  GGO_CHECK_FABS(v.get<1>(), 1.f);
+}
