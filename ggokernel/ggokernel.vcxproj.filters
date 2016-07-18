@@ -314,11 +314,11 @@
     <ClInclude Include="src\math\linear_algebra\ggo_conjugate_gradient.h">
       <Filter>math\linear_algebra</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\ggo_quadratic.h">
-      <Filter>nonreg</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\linear_algebra\ggo_array_arithmetics.h">
       <Filter>math\linear_algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\ggo_quadratic.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

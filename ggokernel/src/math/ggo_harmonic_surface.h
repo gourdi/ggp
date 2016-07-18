@@ -3,21 +3,21 @@
 
 namespace ggo
 {
-  template <typename T>
+  template <typename data_t>
   class harmonic_surface
   {
   public:
     
-    void  push_harmonic(const ggo::vec2<T> & dir, T wavelength, T amplitude, T phase);
-    T     evaluate(T x, T y) const;
+    void    push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase);
+    data_t  evaluate(data_t x, data_t y) const;
     
   private:
   
     struct wave
     {
-      ggo::vec2<T>  _wave_vector;
-      T             _phase;
-      T             _amplitude;
+      ggo::vec2<data_t>  _wave_vector;
+      data_t             _phase;
+      data_t             _amplitude;
     };
     
     std::vector<wave> _waves;
@@ -28,8 +28,8 @@ namespace ggo
 // Implementation.
 namespace ggo
 {
-  template <typename T>
-  void harmonic_surface<T>::push_harmonic(const ggo::vec2<T> & dir, T wavelength, T amplitude, T phase)
+  template <typename data_t>
+  void harmonic_surface<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
   {
     wave new_wave;
     new_wave._wave_vector = dir;
@@ -39,14 +39,14 @@ namespace ggo
     _waves.push_back(new_wave);
   }
   
-  template <typename T>
-  T harmonic_surface<T>:: evaluate(T x, T y) const
+  template <typename data_t>
+  data_t harmonic_surface<data_t>::evaluate(data_t x, data_t y) const
   {
-    T result = 0;
+    data_t result = 0;
     
     for (const auto & wave : _waves)
     {
-      result += wave._amplitude * std::cos(2 * ggo::PI<float>() * ggo::dot(wave._wave_vector, ggo::vec2<T>(x, y)) + wave._phase);
+      result += wave._amplitude * std::cos(2 * ggo::PI<data_t>() * ggo::dot(wave._wave_vector, ggo::vec2<data_t>(x, y)) + wave._phase);
     }
     
     return result;

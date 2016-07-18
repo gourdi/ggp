@@ -10,25 +10,25 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>
+  template <typename data_t>
   class link
   {
   public:
 
-          link(T v1, T v2) { _v1 = v1; _v2 = v2; };
+          link(data_t v1, data_t v2) { _v1 = v1; _v2 = v2; };
 
     bool	operator==(const link & rhs) const;
     bool	operator!=(const link & rhs) const;
 
   public:
 
-    T _v1;
-    T _v2;
+    data_t _v1;
+    data_t _v2;
   };
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool link<T>::operator==(const link<T> & rhs) const
+  template <typename data_t>
+  bool link<data_t>::operator==(const link<data_t> & rhs) const
   {
     if (this->_v1 == rhs._v1 && this->_v2 == rhs._v2) { return true; }
     if (this->_v1 == rhs._v2 && this->_v2 == rhs._v1) { return true; }
@@ -36,8 +36,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool link<T>::operator!=(const link<T> & rhs) const
+  template <typename data_t>
+  bool link<data_t>::operator!=(const link<data_t> & rhs) const
   {
     return !(operator==(rhs));
   }
