@@ -1,265 +1,169 @@
 #include "ggo_aggregation_artist.h"
-#include <ggo_shapes3d.h>
-#include <ggo_shape_sampling.h>
-#include <ggo_paint.h>
 #include <ggo_gaussian_blur.h>
-#include <cstring>
-
-namespace 
-{
-  const int PARTITION_SIZE = 10;
-  const int POINS_COUNT = 500000;
-  const float DISPLACEMENT = 0.007f;
-  
-  struct ggo_space_partition
-	{
-		std::vector<ggo::pos3f> _points;
-		ggo::aabox3d_float      _aabb;
-	};
-
-  //////////////////////////////////////////////////////////////
-  ggo::pos3f create_new_point(float radius)
-  {
-    return radius * ggo::sphere_uniform_sampling<float>();
-  }
-  
-  //////////////////////////////////////////////////////////////
-  void add_point_to_space_partitions(const ggo::pos3f & point, std::vector<ggo_space_partition> & space_partitions)
-  {
-    for (auto & space_partition : space_partitions)
-    {
-      if (space_partition._aabb.is_point_inside(point) == true)
-      {
-        space_partition._points.push_back(point);
-      }
-    }
-  }
-  
-  //////////////////////////////////////////////////////////////
-  bool point_close_enough(const ggo::pos3f & point, const std::vector<ggo_space_partition> & space_partitions, float displacement)
-  {
-    if (point.get<0>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<0>() >= PARTITION_SIZE + DISPLACEMENT ||
-        point.get<1>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<1>() >= PARTITION_SIZE + DISPLACEMENT ||
-        point.get<2>() <= -PARTITION_SIZE - DISPLACEMENT || point.get<2>() >= PARTITION_SIZE + DISPLACEMENT)
-    {
-      return false;
-    }
-    
-    int index = ggo::to<int>(point.get<2>()) + PARTITION_SIZE;
-    index *= 2 * PARTITION_SIZE + 1;
-    index += ggo::to<int>(point.get<1>()) + PARTITION_SIZE;
-    index *= 2 * PARTITION_SIZE + 1;
-    index += ggo::to<int>(point.get<0>()) + PARTITION_SIZE;
-
-    float squared_disp = displacement * displacement;
-
-    const auto & space_partition = space_partitions[index];
-
-    for (const auto & point2 : space_partition._points)
-    {
-      float hypot = ggo::hypot(point, point2);
-      if (hypot <= squared_disp)
-      {
-        return true;
-      }
-    }
-    
-    return false;
-  }
-}
+#include <ggo_paint.h>
+#include <ggo_fill.h>
 
 namespace ggo
 {
-  namespace aggregation_artist
+  //////////////////////////////////////////////////////////////
+  aggregation_artist::aggregation_artist(int width, int height)
+  :
+  ggo_artist_abc(width, height)
   {
-    //////////////////////////////////////////////////////////////
-    std::vector<ggo::pos3f> compute_points(float attraction_factor,
-                                           const ggo::vec3f rotation_vector,
-                                           float rotation_factor)
+    _threshold_dist = 0.002f * std::min(width, height);
+    _threshold_hypot = _threshold_dist * _threshold_dist;
+
+    float hue = ggo::rand_float();
+    _background_color = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.25f), ggo::rand_float(0.25f, 0.75f));
+
+    // Create grid.
+    const float cell_size = 0.1f * std::min(width, height);
+    int grid_size_x = ggo::to<int>(width / cell_size);
+    int grid_size_y = ggo::to<int>(height / cell_size);
+
+    _grid.resize(grid_size_x, grid_size_y);
+
+    for_each(_grid, [&](int x, int y)
     {
-      std::cout << "attraction_factor: " << attraction_factor << std::endl;
-      std::cout << "rotation_factor: " << rotation_factor << std::endl;
-      
-      const float displacement = DISPLACEMENT * PARTITION_SIZE;
-      
-      std::vector<ggo_space_partition>  space_partitions;
-    
-      // Initialize space partitioning.
-      for (int z = -PARTITION_SIZE; z <= PARTITION_SIZE; ++z)
-      {
-        for (int y = -PARTITION_SIZE; y <= PARTITION_SIZE; ++y)
-        {
-          for (int x = -PARTITION_SIZE; x <= PARTITION_SIZE; ++x)
-          {
-            ggo_space_partition space_partition;
-    
-            space_partition._aabb.x_min() = x - 0.5f - displacement;
-            space_partition._aabb.x_max() = x + 0.5f + displacement;
-            space_partition._aabb.y_min() = y - 0.5f - displacement;
-            space_partition._aabb.y_max() = y + 0.5f + displacement;
-            space_partition._aabb.z_min() = z - 0.5f - displacement;
-            space_partition._aabb.z_max() = z + 0.5f + displacement;
-                
-            space_partitions.push_back(space_partition);
-          }
-        }
-      }
-      
-      // Create points.
-      std::vector<ggo::pos3f> points { ggo::pos3f(0.f, 0.f, 0.f) };
-      add_point_to_space_partitions(points[0], space_partitions);
-      
-      ggo::vec3f unit_rotation_vector(rotation_vector);
-      unit_rotation_vector.normalize();
+      float left    = x * cell_size - _threshold_dist;
+      float right   = (x + 1) * cell_size + _threshold_dist;
+      float bottom  = y * cell_size - _threshold_dist;
+      float top     = (y + 1) * cell_size + _threshold_dist;
+      _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
+    });
 
-      float radius = 0;
-      const float margin = 10 * displacement;
-      
-      while (points.size() < POINS_COUNT)
-      {
-        float creation_radius = radius + margin;
-        ggo::pos3f point = create_new_point(creation_radius);
-        
-        while (true) 
-        {
-          ggo::vec3f unit_vector(point);
-          unit_vector.normalize();
-          
-          // Move the point a bit.
-          ggo::vec3f random_disp = ggo::sphere_uniform_sampling<float>();
-          
-          // Rotate the point.
-          ggo::vec3f rotation = ggo::cross(unit_rotation_vector, unit_vector);
-
-          // Attract the point to the origin.
-          ggo::vec3f attraction = -unit_vector;
-          
-          // Add displacements.
-          ggo::vec3f disp = (1 - rotation_factor - attraction_factor) * random_disp;
-          disp += rotation_factor * rotation;
-          disp += attraction * attraction_factor;
-          GGO_ASSERT(disp.get_hypot() <= 1);
-          
-          disp *= displacement;
-          GGO_ASSERT(disp.get_length() <= displacement);
-
-          point += disp;
-          
-          // If the point gets away, start from beginning.
-          if (point.get_hypot() > ggo::square(creation_radius))
-          {
-            break;
-          }
-          
-          // If the point is close enough to another one, store it and process another point.
-          if (point_close_enough(point, space_partitions, displacement) == true)
-          {
-            points.push_back(point);
-            add_point_to_space_partitions(point, space_partitions);
-            
-            radius = std::max(radius, point.get_length());
-            break;
-          }
-        }
-      }
-      
-      // Map all the points' coordinates into [-1, 1].
-      for (auto & point : points)
-      {
-        point.get<0>() = ggo::map(point.get<0>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
-        point.get<1>() = ggo::map(point.get<1>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
-        point.get<2>() = ggo::map(point.get<2>(), static_cast<float>(-PARTITION_SIZE), static_cast<float>(PARTITION_SIZE), -1.f, 1.f);
-      }
-    
-      return points;
+    // Create seeds.
+    for (int i = 0; i < 5; ++i)
+    {
+      register_point(get_random_point(), hue, ggo::rand_float(0.5f, 1.0f), ggo::rand_float(0.5f, 1.0f));
     }
-    
-    //////////////////////////////////////////////////////////////
-    void render(float background, const std::vector<ggo::pos3f> & points, float angle, uint8_t * buffer, int width, int height)
+  }
+
+  //////////////////////////////////////////////////////////////
+  void aggregation_artist::register_point(const ggo::pos2f & pos, float hue, float sat, float val)
+  {
+    std::vector<ggo::pos2f> loop_pos{
+      pos,
+      { pos.get<0>() - get_render_width(), pos.get<1>() }, { pos.get<0>() + get_render_width(), pos.get<1>() },
+      { pos.get<0>(), pos.get<1>() - get_render_height() },{ pos.get<0>(), pos.get<1>() + get_render_height() },
+    };
+
+    for (auto & cell : _grid)
     {
-      // Fill background.
-      memset(buffer, ggo::to<int>(255 * background), 3 * width * height);
-      
-      // At least 2 points otherwise bad things will happen.
-      if (points.size() <= 1)
+      for (const auto & p : loop_pos)
       {
-        return;
-      }
-      
-      int min_size = std::min(width, height);
-      
-      std::vector<ggo::pos3f> rotated_points(points);
-      
-      // Rotate points.
-      if (angle != 0)
-      {
-        float cos_tmp = std::cos(angle);
-        float sin_tmp = std::sin(angle);
-        
-        for (auto & point : rotated_points)
+        if (cell._rect.is_point_inside(p) == true)
         {
-          float x = point.get<0>() * cos_tmp - point.get<2>() * sin_tmp;
-          float z = point.get<0>() * sin_tmp + point.get<2>() * cos_tmp;
-          
-          point.get<0>() = x;
-          point.get<2>() = z;
+          cell._points.push_back({ p, hue, sat, val, 0 });
         }
       }
-      
-      // Sort points.
-      std::sort(rotated_points.begin(), rotated_points.end(), [](const ggo::pos3f & p1, const ggo::pos3f & p2)
-      {
-        return p1.get<2>() < p2.get<2>();
-      });
-      
-      float z_inf = rotated_points.front().get<2>();
-      float z_sup = rotated_points.back().get<2>();
+    }
+  }
 
-      // Render shadow.
-      ggo::gray_image_buffer_uint8 image_buffer(width, height, buffer);
-      
-      for (const auto & point : rotated_points)
-      {
-        ggo::pos2f pt = ggo_artist_abc::map_fit(ggo::pos2f(point.get<0>(), point.get<1>()), -1, 1, width, height);
-        
-        // Move the shadow a little bit.
-        pt.get<0>() += 0.15f * min_size;
-        pt.get<1>() += 0.10f * min_size;
+  //////////////////////////////////////////////////////////////
+  void aggregation_artist::update()
+  {
+    ggo::pos2f p = get_random_point();
+    int count = 0;
 
-        ggo::paint(image_buffer,
-                   std::make_shared<ggo::disc_float>(pt, 0.0015f * min_size),
-                   0, 0.5f);
-      }
-      
-      // Gaussian blur.
-      float variance = ggo::square(0.1f * min_size);
-      
-      //fetch_data fetch_data{ ggo::to<uint8_t>(255 * background) };
-      //ggo::gaussian_blur_2d<uint8_t, float, float, uint8_t, fetch_data>(buffer, buffer, width, height, variance);
-      
-      // Render points.
-      for (const auto & point : rotated_points)
+    while (true)
+    {
+      // Parse each cell.
+      for (auto & cell : _grid)
       {
-        ggo::pos2f render_point = ggo_artist_abc::map_fit(ggo::pos2f(point.get<0>(), point.get<1>()), -1, 1, width, height);
+        // Check if the point is inside the cell.
+        if (cell._rect.is_point_inside(p) == true)
+        {
+          // If so, check if the point is close to another point of the cell.
+          for (const auto & point : cell._points)
+          {
+            if (ggo::hypot(p, point._pos) < _threshold_hypot)
+            {
+              if (count <= 5)
+              {
+                // We want a point to wander a little bit before being stuck.
+                p = get_random_point();
+                count = 0;
+              }
+              else
+              {
+                // If so, store the point. We must process all the cells
+                // and not stop processing here because cells overlap.
+                register_point(p, point._hue, point._sat, point._val);
+                return;
+              }
+            }
+          }
+        }
+      }
 
-        float gray = ggo::map(point.get<2>(), z_inf, z_sup, 0.1f, 1.0f);
-        float blur = 0.75f + 0.005f * min_size * std::abs(point.get<2>() - 0.75f * z_sup);
-        
-        ggo::paint(image_buffer,
-                   std::make_shared<ggo::disc_float>(render_point, 0.0015f * min_size),
-                   gray, 1, std::make_shared<ggo::gray_alpha_blender>(), ggo::blur_pixel_sampler(blur, 24));
-      }
-      
-      // Convert from gray to rgb.
-      const uint8_t * src = buffer + height * width - 1;
-      uint8_t * dst = buffer + 3 * (height * width - 1);
-      
-      for (int i = 0; i < width * height; ++i)
+      // Move the point.
+      ggo::vec2f disp = ggo::from_polar(ggo::rand_float(0.f, 2.f * ggo::PI<float>()), _threshold_dist);
+      p.move(disp.get<0>(), disp.get<1>());
+      p.set<0>(ggo::pos_fmod(p.get<0>(), static_cast<float>(get_render_width())));
+      p.set<1>(ggo::pos_fmod(p.get<1>(), static_cast<float>(get_render_height())));
+
+      ++count;
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  void aggregation_artist::update(int points_count)
+  {
+    for (auto & cell : _grid)
+    {
+      for (auto & point : cell._points)
       {
-        dst[0] = dst[1] = dst[2] = src[0];
-        --src;
-        dst -= 3;
+        point._counter += 1;
       }
+    }
+
+    for (int i = 0; i < points_count; ++i)
+    {
+      update();
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  void aggregation_artist::render(uint8_t * buffer) const
+  {
+    auto image = make_image_buffer(buffer);
+
+    ggo::fill_solid(image, _background_color);
+
+    {
+      std::vector<ggo::rgb_layer> layers;
+
+      for (const auto & cell : _grid)
+      {
+        for (const auto & point : cell._points)
+        {
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.0043f * get_render_min_size()), ggo::color::BLACK);
+        }
+      }
+
+      ggo::paint(image, layers);
+    }
+
+    float stddev = 0.001f * get_render_min_size();
+    ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, buffer + 0, get_render_width(), get_render_height(), stddev, 0.01f);
+    ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, buffer + 1, get_render_width(), get_render_height(), stddev, 0.01f);
+    ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, buffer + 2, get_render_width(), get_render_height(), stddev, 0.01f);
+
+    {
+      std::vector<ggo::rgb_layer> layers;
+
+      for (const auto & cell : _grid)
+      {
+        for (const auto & point : cell._points)
+        {
+          float sat = point._sat - 0.0015f * point._counter;
+          ggo::color c = ggo::color::from_hsv(point._hue, sat, point._val);
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.002f * get_render_min_size()), c);
+        }
+      }
+
+      ggo::paint(image, layers);
     }
   }
 }

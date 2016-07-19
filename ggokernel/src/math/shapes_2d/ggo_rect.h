@@ -17,6 +17,7 @@ namespace ggo
     using ggo::samplable_shape2d_abc<data_t>::is_point_inside;
     using ggo::distancable_shape2d_abc<data_t>::dist_to_point;
 
+                      rect();
                       rect(const rect<data_t> & rect);
                       rect(const pos2<data_t> & p1, const pos2<data_t> & p2);
                       rect(data_t left, data_t bottom, data_t width, data_t height);

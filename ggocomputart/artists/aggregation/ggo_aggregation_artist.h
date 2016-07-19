@@ -2,22 +2,46 @@
 #define __GGO_AGGREGATION_ARTIST__
 
 #include <ggo_artist_abc.h>
+#include <ggo_array.h>
 
 namespace ggo
 {
-  namespace aggregation_artist
+  class aggregation_artist : public ggo_artist_abc
   {
-    std::vector<ggo::pos3f> compute_points(float attraction_factor,
-                                           const ggo::vec3f rotation_vector,
-                                           float rotation_factor);
-    
-    void                            render(float background,
-                                           const std::vector<ggo::pos3f> & points,
-                                           float angle,
-                                           uint8_t * buffer,
-                                           int width,
-                                           int height);
-  }
-};
+  public:
+
+          aggregation_artist(int width, int height);
+
+    void  update(int points_count);
+    void  render(uint8_t * buffer) const;
+
+  private:
+
+    void  register_point(const ggo::pos2f & pos, float hue, float sat, float val);
+    void  update();
+
+  private:
+
+    struct point
+    {
+      ggo::pos2f  _pos;
+      float       _hue;
+      float       _sat;
+      float       _val;
+      int         _counter;
+    };
+
+    struct cell
+    {
+      std::vector<point>  _points;
+      ggo::rect_float     _rect;
+    };
+
+    ggo::color          _background_color;
+    ggo::array<cell, 2> _grid;
+    float               _threshold_hypot;
+    float               _threshold_dist;
+  };
+}
 
 #endif
