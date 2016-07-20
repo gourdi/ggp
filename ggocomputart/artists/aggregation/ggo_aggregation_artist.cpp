@@ -10,7 +10,7 @@ namespace ggo
   :
   ggo_artist_abc(width, height)
   {
-    _threshold_dist = 0.002f * std::min(width, height);
+    _threshold_dist = 0.0015f * std::min(width, height);
     _threshold_hypot = _threshold_dist * _threshold_dist;
 
     float hue = ggo::rand_float();
@@ -35,7 +35,7 @@ namespace ggo
     // Create seeds.
     for (int i = 0; i < 5; ++i)
     {
-      register_point(get_random_point(), hue, ggo::rand_float(0.5f, 1.0f), ggo::rand_float(0.5f, 1.0f));
+      register_point(get_random_point(), hue, ggo::rand_float(0.5f, 1.0f), ggo::rand_float(0.9f, 1.0f));
     }
   }
 
@@ -138,7 +138,7 @@ namespace ggo
       {
         for (const auto & point : cell._points)
         {
-          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.0043f * get_render_min_size()), ggo::color::BLACK);
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.003f * get_render_min_size()), ggo::color::BLACK);
         }
       }
 
@@ -157,9 +157,10 @@ namespace ggo
       {
         for (const auto & point : cell._points)
         {
+          float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
           float sat = point._sat - 0.0015f * point._counter;
-          ggo::color c = ggo::color::from_hsv(point._hue, sat, point._val);
-          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.002f * get_render_min_size()), c);
+          ggo::color c = ggo::color::from_hsv(hue, sat, point._val);
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.0015f * get_render_min_size()), c);
         }
       }
 

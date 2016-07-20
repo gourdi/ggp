@@ -26,7 +26,7 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
     return false;
   }
 
-  _artist->update(400);
+  _artist->update(750);
   _artist->render(buffer);
 
 	return true;
