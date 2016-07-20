@@ -10,7 +10,7 @@ namespace ggo
   :
   ggo_artist_abc(width, height)
   {
-    _threshold_dist = 0.0015f * std::min(width, height);
+    _threshold_dist = 0.001f * std::min(width, height);
     _threshold_hypot = _threshold_dist * _threshold_dist;
 
     float hue = ggo::rand_float();
@@ -138,7 +138,7 @@ namespace ggo
       {
         for (const auto & point : cell._points)
         {
-          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.003f * get_render_min_size()), ggo::color::BLACK);
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 2.f * _threshold_dist * get_render_min_size()), ggo::color::BLACK);
         }
       }
 
@@ -160,11 +160,20 @@ namespace ggo
           float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
           float sat = point._sat - 0.0015f * point._counter;
           ggo::color c = ggo::color::from_hsv(hue, sat, point._val);
-          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, 0.0015f * get_render_min_size()), c);
+          layers.emplace_back(std::make_shared<ggo::disc_float>(point._pos, _threshold_dist * get_render_min_size()), c);
         }
       }
 
       ggo::paint(image, layers);
     }
+  }
+
+  //////////////////////////////////////////////////////////////
+  int aggregation_artist::get_final_points_count() const
+  {
+    const float width = ggo::to<float>(get_render_width());
+    const float height = ggo::to<float>(get_render_height());
+    float ratio = std::max(width / height, height / width);
+    return ggo::to<int>(125000 / ratio);
   }
 }

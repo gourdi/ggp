@@ -1,10 +1,5 @@
 #include "ggo_aggregation_animation_artist.h"
 
-namespace
-{
-  const int frames_count = 300;
-}
-
 ////////////////////////////////////////////////////////
 ggo_aggregation_animation_artist::ggo_aggregation_animation_artist(int render_width, int render_height)
 :
@@ -21,12 +16,16 @@ void ggo_aggregation_animation_artist::init_sub()
 //////////////////////////////////////////////////////////////
 bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 {
+  const int frames_count = 300;
+
   if (frame_index >= frames_count)
   {
     return false;
   }
 
-  _artist->update(750);
+  int points_count = _artist->get_final_points_count() / frames_count;
+
+  _artist->update(points_count);
   _artist->render(buffer);
 
 	return true;

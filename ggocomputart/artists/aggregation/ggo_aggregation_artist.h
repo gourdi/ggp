@@ -15,6 +15,8 @@ namespace ggo
     void  update(int points_count);
     void  render(uint8_t * buffer) const;
 
+    int   get_final_points_count() const;
+
   private:
 
     void  register_point(const ggo::pos2f & pos, float hue, float sat, float val);

@@ -13,6 +13,6 @@ void ggo_aggregation_bitmap_artist::render_bitmap(uint8_t * buffer)
 {
   ggo::aggregation_artist artist(get_render_width(), get_render_height());
 
-  artist.update(300 * 750);
+  artist.update(artist.get_final_points_count());
   artist.render(buffer);
 }
