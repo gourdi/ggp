@@ -20,7 +20,7 @@ void ggo_neon_artist::init_sub()
 	_radius_prv			  = ggo::rand_float();
 	_radius_cur			  = _radius_prv;
 	_radius_attractor	= ggo::rand_float();
-	_angle				    = ggo::rand_float(0, 2 * ggo::PI<float>());
+	_angle				    = ggo::rand_float(0, 2 * ggo::pi<float>());
 	_hue_point			  = ggo::rand_float();
 }
 

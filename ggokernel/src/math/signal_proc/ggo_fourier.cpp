@@ -13,7 +13,7 @@ void fdft(const std::complex<T> * input, std::complex<T> * output, int size)
 
 		for (int n = 0; n < size; ++n)
 		{
-			T angle = -2 * ggo::PI<T>() * k * n / size;
+			T angle = -2 * ggo::pi<T>() * k * n / size;
 			output[k] += input[n] * std::complex<T>(std::cos(angle), std::sin(angle));
 		}
 
@@ -33,7 +33,7 @@ void idft(const std::complex<T> * input, std::complex<T> * output, int size)
 
 		for (int n = 0; n < size; ++n)
 		{
-			T angle = 2 *ggo::PI<T>() * k * n / size;
+			T angle = 2 *ggo::pi<T>() * k * n / size;
 			output[k] += input[n] * std::complex<T>(std::cos(angle), std::sin(angle));
 		}
 

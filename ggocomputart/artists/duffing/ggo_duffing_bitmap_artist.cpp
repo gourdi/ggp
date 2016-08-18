@@ -27,7 +27,7 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
   const float dt = 0.002f;
   
 	ggo::pos2f	point(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
-	float angle_offset = ggo::rand_float(0, 2 * ggo::PI<float>());
+	float angle_offset = ggo::rand_float(0, 2 * ggo::pi<float>());
   float t = 0;
 	
 	for (int i = 0; i < GGO_ITERATIONS_COUNT; ++i)

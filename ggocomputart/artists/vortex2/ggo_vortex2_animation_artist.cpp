@@ -26,7 +26,7 @@ void ggo_vortex2_animation_artist::init_sub()
   _params._vortices.resize(GGO_VORTEX2_VORTICES_COUNT);
 	for (auto & vortex : _params._vortices)
 	{
-		vortex._angle = ggo::rand_float(ggo::PI<float>() / 2, ggo::PI<float>() / 2 + 0.5f);
+		vortex._angle = ggo::rand_float(ggo::pi<float>() / 2, ggo::pi<float>() / 2 + 0.5f);
 		vortex._speed = ggo::rand_float(0.004f, 0.008f) * get_render_max_size();
 		vortex._power = ggo::rand_float(6, 8);
 		

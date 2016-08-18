@@ -7,7 +7,7 @@
 #define GGO_DRADIUS_COUNTER_MIN 40
 #define GGO_DRADIUS_COUNTER_MAX 80
 
-#define GGO_DANGLE_AMP (ggo::PI<float>() / 100.f)
+#define GGO_DANGLE_AMP (ggo::pi<float>() / 100.f)
 #define GGO_DANGLE_COUNTER_MIN 200
 #define GGO_DANGLE_COUNTER_MAX 400
 
@@ -59,7 +59,7 @@ void ggo_bozons_animation_artist::init_sub()
 
 		particle._color	= ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
 		
-		particle._angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		particle._angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		particle._dangle = ggo::rand_float(-GGO_DANGLE_AMP, GGO_DANGLE_AMP);
 		particle._dangle_counter = ggo::rand_int(GGO_DANGLE_COUNTER_MIN, GGO_DANGLE_COUNTER_MAX);
 		

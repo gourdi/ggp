@@ -31,7 +31,7 @@ void ggo_dupecheck_animation_artist::init_sub()
 		bkgd_color._val = ggo::rand_float(0.1f, 0.15f);
 		bkgd_color._radius = ggo::rand_float(0.1f, 0.5f);
 		bkgd_color._y = ggo::rand_float();
-		bkgd_color._angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		bkgd_color._angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		bkgd_color._dangle = ggo::rand_float(0.01f, 0.02f);
 		bkgd_color._var = ggo::rand_float(60, 90);
 
@@ -161,10 +161,10 @@ bool ggo_dupecheck_animation_artist::render_next_frame_sub(uint8_t * buffer, int
 		case 0:
 			break;
 		case 1:
-		 	path = new ggo_linear_path(ggo::rand_float(0.001f, 0.01f) * get_render_min_size(), ggo::rand_float(0, 2 * ggo::PI<float>()));
+		 	path = new ggo_linear_path(ggo::rand_float(0.001f, 0.01f) * get_render_min_size(), ggo::rand_float(0, 2 * ggo::pi<float>()));
 			break;
 		case 2:
-		 	path = new ggo_spiral_path(ggo::rand_float(-ggo::PI<float>() / 32, ggo::PI<float>() / 32), ggo::rand_float(0.001f, 0.01f) * get_render_min_size());
+		 	path = new ggo_spiral_path(ggo::rand_float(-ggo::pi<float>() / 32, ggo::pi<float>() / 32), ggo::rand_float(0.001f, 0.01f) * get_render_min_size());
 			break;
 		}
 		
@@ -275,17 +275,17 @@ void ggo_dupecheck_animation_artist::ggo_animate2::update(uint8_t * buffer, int 
 
 		ggo::harmonic_curve<float> harmonic_curve;
 	
-		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::PI<float>()));
-		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::PI<float>()));
-		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::PI<float>()));
-		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::PI<float>()));
+		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::pi<float>()));
+		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::pi<float>()));
+		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::pi<float>()));
+		harmonic_curve.set_harmonic(ggo::rand_int(8, 16), ggo::rand_float(0.05f, 0.1f) * _radius, ggo::rand_float(0, 2 * ggo::pi<float>()));
 
     auto multi_shape = std::make_shared<ggo::multi_shape_float>();
 
 		for (int i = 0; i <= SAMPLES; ++i)
       {
-        float angle1 = i * 2 * ggo::PI<float>() / SAMPLES;
-        float angle2 = (i + 1) * 2 * ggo::PI<float>() / SAMPLES;
+        float angle1 = i * 2 * ggo::pi<float>() / SAMPLES;
+        float angle2 = (i + 1) * 2 * ggo::pi<float>() / SAMPLES;
         float radius1 = _radius + harmonic_curve.evaluate(angle1);
         float radius2 = _radius + harmonic_curve.evaluate(angle2);
         
@@ -308,10 +308,10 @@ ggo_dupecheck_animate_abc(pos, path, color, render_min_size)
 {
 	_shapes_count = ggo::rand_int(5, 20);
 	_vertices_count = ggo::rand_int(3, 6);
-	_angle = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_dangle = ggo::rand_float(-ggo::PI<float>() / 16, ggo::PI<float>() / 16);
-	_angle_shape = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_dangle_shape = ggo::rand_float(-ggo::PI<float>() / 16, ggo::PI<float>() / 16);
+	_angle = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_dangle = ggo::rand_float(-ggo::pi<float>() / 16, ggo::pi<float>() / 16);
+	_angle_shape = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_dangle_shape = ggo::rand_float(-ggo::pi<float>() / 16, ggo::pi<float>() / 16);
 	_shape_size = ggo::rand_float(0.003f, 0.03f) * render_min_size;
 }
 
@@ -322,14 +322,14 @@ void ggo_dupecheck_animation_artist::ggo_animate3::update(uint8_t * buffer, int 
 	{
 		for (int i = 0; i < _shapes_count; ++i)
 		{
-			float angle_shape = _angle + i * 2 * ggo::PI<float>() / _shapes_count;
+			float angle_shape = _angle + i * 2 * ggo::pi<float>() / _shapes_count;
 			ggo::pos2f shape_pos = pos + ggo::from_polar(angle_shape, _radius);
 
 			auto shape = std::make_shared<ggo::polygon2d_float>();
 
 			for (int j = 0; j < _vertices_count; ++j)
 			{
-				float angle_vertex = _angle_shape + j * 2 * ggo::PI<float>() / _vertices_count;
+				float angle_vertex = _angle_shape + j * 2 * ggo::pi<float>() / _vertices_count;
 				ggo::pos2f vertex = shape_pos + ggo::from_polar(angle_vertex, _shape_size);
 
 				shape->add_point(vertex);

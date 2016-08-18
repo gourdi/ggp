@@ -65,7 +65,7 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 			for (int j = 0; j < GGO_HORZ_COUNT; ++j) 
 			{
 				int   k = j < GGO_HORZ_COUNT/2 ? j : GGO_HORZ_COUNT-j-1;
-				float t = 2 * ggo::PI<float>() * j / GGO_HORZ_COUNT;
+				float t = 2 * ggo::pi<float>() * j / GGO_HORZ_COUNT;
 				float x = center.get<0>() + s * cos(t);
 				float y = center.get<1>() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
 

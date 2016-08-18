@@ -698,7 +698,7 @@ GGO_TEST(shapes2d, oriented_box)
   GGO_CHECK(box.is_point_inside(5.5f, 2.f) == false);
 
   // Rotation.
-  box.rotate(ggo::PI<float>() / 4.f, { 1.f, 1.f });
+  box.rotate(ggo::pi<float>() / 4.f, { 1.f, 1.f });
   auto points2 = box.get_points();
   GGO_CHECK(find_point(points2, 1.0f, 1.0f));
   GGO_CHECK(find_point(points2, 1.0f - std::sqrt(2.f), 1.0f + std::sqrt(2.f)));

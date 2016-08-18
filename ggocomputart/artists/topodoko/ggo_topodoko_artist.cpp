@@ -53,10 +53,10 @@ void ggo_topodoko_artist::render_bitmap(uint8_t * buffer)
 					square_center.get<1>() += (y - 0.5f * SUB_BLOCKS + 0.5f) * SQUARE_DIST + (SQUARE_DIST - SQUARE_SIZE) * ggo::rand_float(-1, 1);
 					
 					float dangle = ggo::rand_float(-0.1f, 0.1f);
-					color_square._square.add_point(square_center + ggo::from_polar(    ggo::PI<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::SQRT2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(3 * ggo::PI<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::SQRT2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(5 * ggo::PI<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::SQRT2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(7 * ggo::PI<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::SQRT2<float>()));
+					color_square._square.add_point(square_center + ggo::from_polar(    ggo::pi<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::sqrt2<float>()));
+					color_square._square.add_point(square_center + ggo::from_polar(3 * ggo::pi<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::sqrt2<float>()));
+					color_square._square.add_point(square_center + ggo::from_polar(5 * ggo::pi<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::sqrt2<float>()));
+					color_square._square.add_point(square_center + ggo::from_polar(7 * ggo::pi<float>() / 4 + dangle, 0.5f * SQUARE_SIZE * ggo::sqrt2<float>()));
 
 					if (ggo::rand_int(0, 8) == 0)
 					{

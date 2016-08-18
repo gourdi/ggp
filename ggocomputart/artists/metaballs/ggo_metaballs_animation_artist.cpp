@@ -26,15 +26,15 @@ void ggo_metaballs_animation_artist::init_sub()
 		
 		center._center = ggo::pos3f(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
 		center._radius = ggo::rand_float(0, GGO_BALL_SIZE);
-		center._start_angle1 = ggo::rand_float(0, 2 * ggo::PI<float>());
-		center._start_angle2 = ggo::rand_float(0, 2 * ggo::PI<float>());
-		center._end_angle1 = ggo::rand_float(0, 2 * ggo::PI<float>());
-		center._end_angle2 = ggo::rand_float(0, 2 * ggo::PI<float>());
+		center._start_angle1 = ggo::rand_float(0, 2 * ggo::pi<float>());
+		center._start_angle2 = ggo::rand_float(0, 2 * ggo::pi<float>());
+		center._end_angle1 = ggo::rand_float(0, 2 * ggo::pi<float>());
+		center._end_angle2 = ggo::rand_float(0, 2 * ggo::pi<float>());
 		
 		_centers.push_back(center);
 	}
 	
-	float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+	float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 	_params._light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
 	_camera.basis().set_pos(0, 0, 25);
 	_camera.set_aperture(0.1f);

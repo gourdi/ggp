@@ -228,7 +228,7 @@ GGO_TEST(shapes3d, basis)
     GGO_CHECK_FABS(p2.get<1>(), 0);
     GGO_CHECK_FABS(p2.get<2>(), -1);    
 
-    basis.rotate_z(ggo::PI<float>() / 4);
+    basis.rotate_z(ggo::pi<float>() / 4);
     GGO_CHECK_FABS(basis.x().get<0>(), 1 / std::sqrt(2));
     GGO_CHECK_FABS(basis.x().get<1>(), 1 / std::sqrt(2));
     GGO_CHECK_FABS(basis.x().get<2>(), 0);
@@ -781,7 +781,7 @@ GGO_TEST(shapes3d, line3d)
     const ggo::pos3f orig1(-1.f, 2.f, 0.f);
     const ggo::pos3f orig2(4.f, -1.f, 1.f);
     const ggo::vec3f dir1(1.f, 0.f, 0.f);
-    const ggo::vec3f dir2(-ggo::INV_SQRT2<float>(), ggo::INV_SQRT2<float>(), 0.f);
+    const ggo::vec3f dir2(-ggo::inv_sqrt2<float>(), ggo::inv_sqrt2<float>(), 0.f);
 
     ggo::pos3f p1, p2;
     GGO_CHECK(ggo::find_closest_lines_points(ggo::line3d<float>(orig1, dir1), ggo::line3d<float>(orig2, dir2), p1, p2) == true);
@@ -859,8 +859,8 @@ GGO_TEST(shapes3d, influence_plane3d)
 
   intersections = plane.intersect_ray({ { -2.f, 1.f, 0.f }, { 1.f, 1.f, 0.f } });
   GGO_CHECK(intersections.size() == 2);
-  GGO_CHECK_FABS(intersections[0], ggo::SQRT2<float>());
-  GGO_CHECK_FABS(intersections[1], 3 * ggo::SQRT2<float>());
+  GGO_CHECK_FABS(intersections[0], ggo::sqrt2<float>());
+  GGO_CHECK_FABS(intersections[1], 3 * ggo::sqrt2<float>());
 
   GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 2.5f, 3.14f }), 0.25f);
   GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 3.0f, 3.14f }), 0.0f);

@@ -19,7 +19,7 @@ void ggo_lagaude_animation_artist::init_sub()
 		ggo_bkgd_disc bkgd_disc;
 		bkgd_disc._pos.get<0>() = ggo::rand_float(-1, 3);
 		bkgd_disc._pos.get<1>() = ggo::rand_float(-1, 3);
-		bkgd_disc._vel = ggo::from_polar(ggo::rand_float(0, 2 * ggo::PI<float>()), 0.001f);
+		bkgd_disc._vel = ggo::from_polar(ggo::rand_float(0, 2 * ggo::pi<float>()), 0.001f);
 		bkgd_disc._radius = 0.75;
 		
 		_bkgd_discs.push_back(bkgd_disc);
@@ -76,7 +76,7 @@ bool ggo_lagaude_animation_artist::render_next_frame_sub(uint8_t * buffer, int f
 	{
 		float scale = ggo::rand_float(0.5, 1);
 		ggo::pos2f pos(ggo::rand_float(), ggo::rand_float());
-		ggo_path_abc * path = new ggo_linear_path(scale * ggo::rand_float(0.002f, 0.005f), ggo::rand_float(0, 2 * ggo::PI<float>()));
+		ggo_path_abc * path = new ggo_linear_path(scale * ggo::rand_float(0.002f, 0.005f), ggo::rand_float(0, 2 * ggo::pi<float>()));
 		
 		insert_scale_animator(new ggo_seed(pos, path, scale, _hue));
 	}
@@ -124,7 +124,7 @@ void ggo_lagaude_animation_artist::insert_scale_animator(ggo_scale_animate_abc *
 //////////////////////////////////////////////////////////////
 void ggo_lagaude_animation_artist::ggo_angle_generator::get_random_data(float & data, float & dt)
 {
-	data = ggo::rand_float(-ggo::PI<float>() / 4, ggo::PI<float>() / 4);
+	data = ggo::rand_float(-ggo::pi<float>() / 4, ggo::pi<float>() / 4);
 	dt = ggo::rand_float(3, 15);
 }
 
@@ -153,7 +153,7 @@ bool ggo_lagaude_animation_artist::ggo_seed::update(uint8_t * output_buffer, uin
 	{
 		for (int i = 0; i < _angle_generators.get_count(); ++i)
 		{
-			float angle = _angle_generators(i).update(1) + 2 * ggo::PI<float>() * i / _angle_generators.get_count();
+			float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.get_count();
 
 			ggo_particle * particle = new ggo_particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo_linear_path(0.02f * _scale, angle));
 			particle->_angle = angle;
@@ -183,8 +183,8 @@ ggo_path_animate_abc(pos, path)
 bool ggo_lagaude_animation_artist::ggo_particle::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos)
 {
 	ggo::pos2f p1 = map_fit(ggo::from_polar(_angle, _radius), 0, 1, width, height);
-	ggo::pos2f p2 = map_fit(ggo::from_polar(_angle + 2 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
-	ggo::pos2f p3 = map_fit(ggo::from_polar(_angle + 4 * ggo::PI<float>() / 3, _radius), 0, 1, width, height);
+	ggo::pos2f p2 = map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0, 1, width, height);
+	ggo::pos2f p3 = map_fit(ggo::from_polar(_angle + 4 * ggo::pi<float>() / 3, _radius), 0, 1, width, height);
     
   ggo::vec2f disp(pos.get<0>() * width, pos.get<1>() * height);
   p1 += disp;

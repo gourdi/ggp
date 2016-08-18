@@ -139,7 +139,7 @@ std::vector<ggo::polygon2d_float> ggo_trees_artist::create_tree(const std::vecto
         ggo::vec2f vert_disp = ggo::from_polar(leaf_angle, leaf_height);
         ggo::vec2f delta(vert_disp);
         delta.set_length(0.5f * leaf_width);
-        delta = ggo::rotate(delta, ggo::PI<float>() / 2);
+        delta = ggo::rotate(delta, ggo::pi<float>() / 2);
         
         new_leaf._bottom_points[0] = leaf._top_points[0];
         new_leaf._bottom_points[1] = leaf._top_points[1];

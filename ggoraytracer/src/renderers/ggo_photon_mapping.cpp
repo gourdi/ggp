@@ -117,7 +117,7 @@ namespace ggo
 
     // Normalization: divide by sphere surface.
     //output_color /= 4 * ggo::PI<float>() * ggo::square(radius);
-    output_color /= ggo::PI<float>() * ggo::square(radius);
+    output_color /= ggo::pi<float>() * ggo::square(radius);
 
     return output_color;
   }

@@ -65,7 +65,7 @@ ggo_rah_animation_artist::ggo_particle::ggo_particle(int render_width, int rende
 {
   int min_size = std::min(render_width, render_height);
 
-  _angle = ggo::rand_float(0,  2 *ggo::PI<float>());
+  _angle = ggo::rand_float(0,  2 *ggo::pi<float>());
   _dist = ggo::map<float>(std::sqrt(ggo::rand_float()), 0, 1, NEAR, FAR);
   float total_radius = disc_radius(min_size) + blur_radius(min_size, focus_dist);
   _pos.get<0>() = -total_radius;
@@ -149,7 +149,7 @@ void ggo_rah_animation_artist::ggo_particle1::update(int min_size)
   for (int i = 0; i < _radius_interpolators.get_count(); ++i)
   {
     float radius = _radius_interpolators(i).update(1) * disc_radius(min_size);
-    float angle = _angle + i * 2 * ggo::PI<float>() / _radius_interpolators.get_count();
+    float angle = _angle + i * 2 * ggo::pi<float>() / _radius_interpolators.get_count();
     _polygon->get_point(i) = _pos + ggo::from_polar(angle, radius);
   }
 }
@@ -190,7 +190,7 @@ void ggo_rah_animation_artist::ggo_particle2::fill_multi_shapes(ggo::multi_shape
 
   for(int i = 0; i < _point_count; ++i)
   {
-    float angle = _angle + i * 2 * ggo::PI<float>() / _point_count;
+    float angle = _angle + i * 2 * ggo::pi<float>() / _point_count;
     ggo::pos2f p1 = ggo::from_polar(angle, radius / 2);
     ggo::pos2f p2 = ggo::from_polar(angle, radius - border_size - segment_size);
     
@@ -232,8 +232,8 @@ void ggo_rah_animation_artist::ggo_particle3::fill_multi_shapes(ggo::multi_shape
   
   for (int i = 0; i < 32; ++i)
   {
-    float angle1 = + i * ggo::PI<float>() / 16;
-    float angle2 = + (i + 1) * ggo::PI<float>() / 16;
+    float angle1 = + i * ggo::pi<float>() / 16;
+    float angle2 = + (i + 1) * ggo::pi<float>() / 16;
     
     float x1 = std::cos(angle1) * _width;
     float y1 = std::sin(angle1) * _height;
@@ -297,7 +297,7 @@ void ggo_rah_animation_artist::ggo_particle4::fill_multi_shapes(ggo::multi_shape
   for (int i = 0; i < 8; ++i)
   {
     float delta = radius + segment_size / 2;
-    float angle = _angle + i * ggo::PI<float>() / 4;
+    float angle = _angle + i * ggo::pi<float>() / 4;
     ggo::vec2f offset(delta * std::cos(angle), delta * std::sin(angle));
   
     auto disc = std::make_shared<ggo::disc_float>();

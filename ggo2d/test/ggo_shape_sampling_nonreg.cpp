@@ -113,7 +113,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   
   for (int i = 0; i < (1<<18); ++i)
   {
-    auto sample = ggo::hemisphere_uniform_sampling<float>(ggo::PI<float>() / 4);
+    auto sample = ggo::hemisphere_uniform_sampling<float>(ggo::pi<float>() / 4);
     
     float x_f = sample.get<0>();
     float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);

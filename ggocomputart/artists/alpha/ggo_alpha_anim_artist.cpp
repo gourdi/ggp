@@ -212,7 +212,7 @@ _center(center)
 	{
 		ggo::color color = ggo::color::from_hsv(hue, sat + ggo::rand_float(-0.2f, 0.2f), val + ggo::rand_float(-0.2f, 0.2f));
 
-		_lines.push_back(ggo_line(center, 2 * ggo::PI<float>() * i / LINES_COUNT, inner_radius, outter_radius, color));
+		_lines.push_back(ggo_line(center, 2 * ggo::pi<float>() * i / LINES_COUNT, inner_radius, outter_radius, color));
 	}
 }
 
@@ -244,7 +244,7 @@ ggo_alpha_anim_artist::ggo_line::ggo_line(const ggo::pos2f & center, float angle
 	_inner_radius = inner_radius;
 	_outter_radius = outter_radius;
 	_color = color;
-	_angle_offset = ggo::rand_float(-2 * ggo::PI<float>(), 2 * ggo::PI<float>());
+	_angle_offset = ggo::rand_float(-2 * ggo::pi<float>(), 2 * ggo::pi<float>());
 	_counter = ggo::rand_int(-30, 0);
 }
 

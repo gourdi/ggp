@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////
 ggo_metaballs_artist::ggo_metaballs_params::ggo_metaballs_params()
 {
-	float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+	float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 	
 	_threshold = ggo::rand_float(0.8f, 0.9f);
 	_phong_factor = ggo::rand_float(2, 4);

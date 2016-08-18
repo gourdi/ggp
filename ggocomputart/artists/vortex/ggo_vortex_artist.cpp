@@ -39,7 +39,7 @@ void ggo_vortex_artist::render_bitmap(uint8_t * buffer)
 
 		for (int i = 0; i < GGO_POINTS_COUNT; ++i)
 		{
-			float angle	= 2 * ggo::PI<float>() * i / GGO_POINTS_COUNT;
+			float angle	= 2 * ggo::pi<float>() * i / GGO_POINTS_COUNT;
 			float x 	= pos_x + a * std::pow(std::abs(std::cos(angle)), m) * ggo::sign(std::cos(angle));
 			float y 	= pos_y + b * std::pow(std::abs(std::sin(angle)), n) * ggo::sign(std::sin(angle));
 			eclipse.add_point(x, y);
@@ -55,8 +55,8 @@ void ggo_vortex_artist::render_bitmap(uint8_t * buffer)
 				float angle	= std::atan2(y, x);
 				float dist	= std::sqrt(x * x + y * y);
 
-				eclipse.get_point(i).get<0>() = x + vortex_speed * std::pow(dist, 0.5f) * std::cos(angle + ggo::PI<float>() / 2 + vortex_angle);
-				eclipse.get_point(i).get<1>() = y + vortex_speed * std::pow(dist, 0.5f) * std::sin(angle + ggo::PI<float>() / 2 + vortex_angle);
+				eclipse.get_point(i).get<0>() = x + vortex_speed * std::pow(dist, 0.5f) * std::cos(angle + ggo::pi<float>() / 2 + vortex_angle);
+				eclipse.get_point(i).get<1>() = y + vortex_speed * std::pow(dist, 0.5f) * std::sin(angle + ggo::pi<float>() / 2 + vortex_angle);
 			}
 
 			// Switch to render coordinates.

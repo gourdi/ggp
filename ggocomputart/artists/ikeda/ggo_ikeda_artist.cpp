@@ -61,9 +61,9 @@ bool ggo_ikeda_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
 	
 	std::vector<ggo_particle> particles = _seeds;
 	
-	float u0 = _u0.evaluate(frame_index * ggo::PI<float>() / GGO_IKEDA_FRAMES_COUNT);
-	float u1 = _u1.evaluate(frame_index * ggo::PI<float>() / GGO_IKEDA_FRAMES_COUNT);
-	float u2 = _u2.evaluate(frame_index * ggo::PI<float>() / GGO_IKEDA_FRAMES_COUNT);
+	float u0 = _u0.evaluate(frame_index * ggo::pi<float>() / GGO_IKEDA_FRAMES_COUNT);
+	float u1 = _u1.evaluate(frame_index * ggo::pi<float>() / GGO_IKEDA_FRAMES_COUNT);
+	float u2 = _u2.evaluate(frame_index * ggo::pi<float>() / GGO_IKEDA_FRAMES_COUNT);
 	
 	while (particles.empty() == false)
 	{

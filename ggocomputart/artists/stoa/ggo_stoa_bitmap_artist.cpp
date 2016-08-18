@@ -26,8 +26,8 @@ void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
   camera.set_aperture(0.1f);
 
   // Lights.
-  float angle1 = ggo::rand_float(0, ggo::PI<float>());
-  float angle2 = ggo::rand_float(0, ggo::PI<float>());
+  float angle1 = ggo::rand_float(0, ggo::pi<float>());
+  float angle2 = ggo::rand_float(0, ggo::pi<float>());
   const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
   const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 

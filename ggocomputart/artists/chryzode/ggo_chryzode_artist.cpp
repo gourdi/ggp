@@ -26,12 +26,12 @@ void ggo_chryzode_artist::render_chryzode(uint8_t * buffer, float radius, const 
     {
       float result = (value + params._offset1) * params._multiplier1 + (value + params._offset2) * params._multiplier2;
       
-      float angle1 = value * 2 * ggo::PI<float>() / modulo;
-      float angle2 = result * 2 * ggo::PI<float>() / modulo;
+      float angle1 = value * 2 * ggo::pi<float>() / modulo;
+      float angle2 = result * 2 * ggo::pi<float>() / modulo;
 
       // Reorient the figure.
-      angle1 += ggo::PI<float>() / 2;
-      angle2 += ggo::PI<float>() / 2;
+      angle1 += ggo::pi<float>() / 2;
+      angle2 += ggo::pi<float>() / 2;
       
       ggo::pos2f p1 = get_center() + ggo::from_polar(angle1, radius);
       ggo::pos2f p2 = get_center() + ggo::from_polar(angle2, radius);

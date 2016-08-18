@@ -20,7 +20,7 @@ void ggo_plastic_animation_artist::init_sub()
 		params._center_x = ggo::rand_float(-1.5f, 1.5f);
 		params._center_y = ggo::rand_float(-1.5f, 1.5f);
 		params._radius = ggo::rand_float(0.1f, 0.5f);
-		params._angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		params._angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		params._dangle = ggo::rand_float(0.02f, 0.08f);
 		params._den = ggo::rand_float(0.5f, 2.f);
 		params._mult = ggo::rand_float(0.5f, 2.f);

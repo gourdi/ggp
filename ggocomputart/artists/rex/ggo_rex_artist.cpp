@@ -149,7 +149,7 @@ void ggo_rex_artist::init()
 			pattern_triangle._v3 = *v3;
 			
 			pattern_triangle._delta = ggo::rand_float(0.004f, 0.008f);
-			pattern_triangle._radius = ggo::rand_float(0.2f, ggo::SQRT2<float>() / 2) * pattern_triangle._delta;
+			pattern_triangle._radius = ggo::rand_float(0.2f, ggo::sqrt2<float>() / 2) * pattern_triangle._delta;
 			
 			_pattern_triangles.push_back(pattern_triangle);
 		}
@@ -170,7 +170,7 @@ void ggo_rex_artist::init()
 	}
 	
 	// Create circles.
-	float outter_radius = ggo::SQRT2<float>();
+	float outter_radius = ggo::sqrt2<float>();
 	float inner_radius = outter_radius - ggo::rand_float(0.004f, 0.008f);
 	while (inner_radius > 0)
 	{

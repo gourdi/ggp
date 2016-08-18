@@ -16,7 +16,7 @@ namespace
 
       for (int n = 0; n < size; ++n) 
       {
-        dst[k] += src[n] * std::cos(ggo::PI<T>() * (n + T(0.5)) * (k + T(0.5)) / size);
+        dst[k] += src[n] * std::cos(ggo::pi<T>() * (n + T(0.5)) * (k + T(0.5)) / size);
       }
 
       dst[k] *= norm;

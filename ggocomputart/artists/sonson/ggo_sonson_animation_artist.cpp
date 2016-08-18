@@ -77,14 +77,14 @@ namespace
   //////////////////////////////////////////////////////////////
   void resolve_pi(float & angle1, float & angle2)
   {
-    if (std::abs(std::abs(angle1) - ggo::PI<float>()) < 0.01f)
+    if (std::abs(std::abs(angle1) - ggo::pi<float>()) < 0.01f)
     {
-      angle1 = angle2 > 0 ? ggo::PI<float>() : -ggo::PI<float>();
+      angle1 = angle2 > 0 ? ggo::pi<float>() : -ggo::pi<float>();
     }
 
-    if (std::abs(std::abs(angle2) - ggo::PI<float>()) < 0.01f)
+    if (std::abs(std::abs(angle2) - ggo::pi<float>()) < 0.01f)
     {
-      angle2 = angle1 > 0 ? ggo::PI<float>() : -ggo::PI<float>();
+      angle2 = angle1 > 0 ? ggo::pi<float>() : -ggo::pi<float>();
     }
   }
 
@@ -198,7 +198,7 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
     // Compute arc steps number to match velocity.
     float velocity = std::max(std::abs(_velocity.get<0>()), std::abs(_velocity.get<1>()));
     float mid_radius = _radius + 0.5f * strips_size(_strips);
-    _step_end = -ggo::to<int>(mid_radius * 0.5f * ggo::PI<float>() / velocity);
+    _step_end = -ggo::to<int>(mid_radius * 0.5f * ggo::pi<float>() / velocity);
   }
 
   // Set up the straight line.
@@ -333,7 +333,7 @@ void ggo_sonson_animation_artist::ggo_line::update_sparks()
       ggo::segment_float segment = get_segment();
       ggo::pos2f p1 = weight * segment.p1() + (1.f - weight) * segment.p2();
 
-      float angle = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
+      float angle = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
       float length = 0.01f * render_min_size;
       ggo::vec2f vel = ggo::from_polar(angle, length);
 

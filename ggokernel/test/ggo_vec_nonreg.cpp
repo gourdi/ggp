@@ -201,14 +201,14 @@ GGO_TEST(vec, dump)
 GGO_TEST(vec, rotation)
 {
   {
-    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(1.f, 0.f), ggo::PI<float>() / 2);
+    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(1.f, 0.f), ggo::pi<float>() / 2);
     GGO_CHECK_FABS(0.f, v.get<0>());
     GGO_CHECK_FABS(1.f, v.get<1>());
   }
 
   {
     const ggo::vec<float, 2> center(3.f, 1.f);
-    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(4.f, 1.f), center, ggo::PI<float>() / 2);
+    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(4.f, 1.f), center, ggo::pi<float>() / 2);
     GGO_CHECK_FABS(3.f, v.get<0>());
     GGO_CHECK_FABS(2.f, v.get<1>());
   }

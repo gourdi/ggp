@@ -130,9 +130,9 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
 
       object->set_phong_factor(ggo::rand_float(3, 5));
       object->set_phong_shininess(ggo::rand_float(250, 500));
-      object->basis().rotate_x(ggo::rand_float(0, 2 * ggo::PI<float>()));
-      object->basis().rotate_y(ggo::rand_float(0, 2 * ggo::PI<float>()));
-      object->basis().rotate_z(ggo::rand_float(0, 2 * ggo::PI<float>()));
+      object->basis().rotate_x(ggo::rand_float(0, 2 * ggo::pi<float>()));
+      object->basis().rotate_y(ggo::rand_float(0, 2 * ggo::pi<float>()));
+      object->basis().rotate_z(ggo::rand_float(0, 2 * ggo::pi<float>()));
       object->basis().pos() = sphere.center();
     }
 	}

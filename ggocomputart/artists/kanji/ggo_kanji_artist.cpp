@@ -29,7 +29,7 @@ void ggo_kanji_artist::init()
 	
 	for (int i = 0; i < 400; ++i)
 	{
-		float a = ggo::rand_float(0, 2 * ggo::PI<float>());
+		float a = ggo::rand_float(0, 2 * ggo::pi<float>());
 		float l = ggo::rand_float(0, 0.02f);
 		
 		ggo_particle particle;
@@ -91,7 +91,7 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 		for (ggo_particle & particle : _particles)
 		{
 			particle._prv_pos = particle._cur_pos;
-			float a = ggo::rand_float(0, 2 * ggo::PI<float>());
+			float a = ggo::rand_float(0, 2 * ggo::pi<float>());
 			float l = ggo::rand_float(0.8f, 1 / 0.8f) * 0.00002f;
 			particle._cur_pos	= particle._prv_pos + ggo::vec2f(l * cos(a), l * sin(a));
 		}

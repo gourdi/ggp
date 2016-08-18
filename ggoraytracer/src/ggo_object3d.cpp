@@ -153,7 +153,7 @@ namespace ggo
     // Glossy materials.
     if (_roughness > 0)
     {
-      reflected_dir = ggo::hemisphere_sampling(reflected_dir, random_variable1, random_variable2, _roughness * ggo::PI<float>() / 2);
+      reflected_dir = ggo::hemisphere_sampling(reflected_dir, random_variable1, random_variable2, _roughness * ggo::pi<float>() / 2);
 
       // Handle the case when the reflected ray goes inside the hit object.
       float dot = ggo::dot(world_normal.dir(), reflected_dir);

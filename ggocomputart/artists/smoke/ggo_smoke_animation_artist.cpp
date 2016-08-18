@@ -90,19 +90,19 @@ void ggo_smoke_animation_artist::init_sub()
 			// Top.
 			source._circle.center().get<0>() = center_x;
 			source._circle.center().get<1>() = center_y + 0.25 * get_render_min_size();
-			source._angle = -ggo::PI<float>() / 2;
+			source._angle = -ggo::pi<float>() / 2;
 			break;
 		case 1:
 			// Right.
 			source._circle.center().get<0>() = center_x + 0.25 * get_render_min_size();
 			source._circle.center().get<1>() = center_y;
-			source._angle = ggo::PI<float>();
+			source._angle = ggo::pi<float>();
 			break;
 		case 2:
 			// Bottom.
 			source._circle.center().get<0>() = center_x;
 			source._circle.center().get<1>() = center_y - 0.25 * get_render_min_size();
-			source._angle = ggo::PI<float>() / 2;
+			source._angle = ggo::pi<float>() / 2;
 			break;
 		case 3:
 			// Left.
@@ -116,8 +116,8 @@ void ggo_smoke_animation_artist::init_sub()
 		source._speed = ggo::rand_float(0.007f * get_render_min_size(), 0.009f * get_render_min_size());
 		source._timer1 = ggo::rand_int(50, 100);
 		source._timer2 = ggo::rand_int(50, 150);
-		source._angle_amplitude = ggo::rand_float(ggo::PI<float>() / 4, ggo::PI<float>());
-		source._angle_offset = ggo::rand_float(0, 2 * ggo::PI<float>());
+		source._angle_amplitude = ggo::rand_float(ggo::pi<float>() / 4, ggo::pi<float>());
+		source._angle_offset = ggo::rand_float(0, 2 * ggo::pi<float>());
 		source._wave_length = ggo::rand_float(0.05f, 0.2f);
 		source._density = 0;
 	}

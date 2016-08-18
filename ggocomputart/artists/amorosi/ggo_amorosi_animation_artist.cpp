@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////
 void ggo_amorosi_animation_artist::ggo_random_angle_interpolator::get_random_data(float & data, float & dt)
 {
-  data = ggo::rand_float(0, 2 * ggo::PI<float>());
+  data = ggo::rand_float(0, 2 * ggo::pi<float>());
   dt = ggo::rand_float(1, 2);
 }
 

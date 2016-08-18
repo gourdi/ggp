@@ -14,7 +14,7 @@ _artist(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo_julia_animation_artist::init_sub()
 {
-	_angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+	_angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 	_radius = ggo::rand_float(0.254f, 0.256f);
 }
 
@@ -26,7 +26,7 @@ bool ggo_julia_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 		return false;
 	}
 
-	float angle = ggo::ease_inout(frame_index, GGO_JULIA_FRAMES_COUNT, _angle, _angle + ggo::PI<float>() / 8);
+	float angle = ggo::ease_inout(frame_index, GGO_JULIA_FRAMES_COUNT, _angle, _angle + ggo::pi<float>() / 8);
 
 	float x = -1 + _radius * std::cos(angle);
 	float y = _radius * std::sin(angle);

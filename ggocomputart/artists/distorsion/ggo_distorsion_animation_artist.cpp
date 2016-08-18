@@ -34,7 +34,7 @@ void ggo_distorsion_animation_artist::init_sub()
     transform._center_end.get<1>() = ggo::rand_float(-0.25, 1.25) * get_render_height();
     transform._variance = 0.05f * ggo::square(get_render_min_size());
     
-    float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+    float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
     float length = 0.5f * get_render_min_size();
     transform._disp = ggo::from_polar(angle, length);
   }

@@ -25,7 +25,7 @@ bool ggo_cumbia_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
   
 	_artist.render_bitmap(buffer, get_render_width(), get_render_height(), renderer);
 	
-	_camera.basis().rotate(ggo::ray3d_float::O_Z(), 2 * ggo::PI<float>() / FRAMES_COUNT);
+	_camera.basis().rotate(ggo::ray3d_float::O_Z(), 2 * ggo::pi<float>() / FRAMES_COUNT);
 	
 	return frame_index < FRAMES_COUNT;
 }

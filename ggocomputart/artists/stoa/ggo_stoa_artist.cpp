@@ -33,10 +33,10 @@ namespace
       _offset_y = ggo::rand_float(0, 16);
       _offset_z = ggo::rand_float(0, 16);
 
-      float angle1 = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
-      float angle2 = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
+      float angle1 = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
+      float angle2 = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
       ggo::vec3f axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
-      ggo::fill_rotation_matrix(axis, ggo::rand_float(0, 2 * ggo::PI<float>()), _rotation);
+      ggo::fill_rotation_matrix(axis, ggo::rand_float(0, 2 * ggo::pi<float>()), _rotation);
 
       for (auto & value : _noise3d)
       {

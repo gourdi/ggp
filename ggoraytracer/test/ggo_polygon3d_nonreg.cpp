@@ -14,7 +14,7 @@ void test_polygon3d()
   // The camera.
   ggo::mono_sampling_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
   camera.basis().set_pos(0, 0, 50);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::PI<float>() / 2);
+  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 2);
   camera.set_aperture(0.1f);
   
   // The scene.

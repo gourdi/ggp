@@ -26,7 +26,7 @@ void ggo_flies_artist::init_sub()
 
 		fly._cur_pos.get<0>() = ggo::rand_float(margin, get_render_width() - margin);
 		fly._cur_pos.get<1>() = ggo::rand_float(margin, get_render_height() - margin);
-		fly._current_angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		fly._current_angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		fly._target_angle = fly._current_angle;
 		fly._velocity = ggo::rand_float(0.01f, 0.02f) * get_render_min_size();
 		fly._hue = std::fmod(_hue + ggo::rand_float(0, 0.15f), 1.f);
@@ -163,14 +163,14 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 			float min_diff = std::abs(fly._current_angle - angle);
 			fly._target_angle = angle;
 			
-			angle = ggo::get_angle(velocity) + 2 * ggo::PI<float>();
+			angle = ggo::get_angle(velocity) + 2 * ggo::pi<float>();
 			if (std::abs(fly._current_angle - angle) < min_diff)
 			{
 				min_diff = std::abs(fly._current_angle - angle);
 				fly._target_angle = angle;
 			}
 			
-			angle = ggo::get_angle(velocity) - 2 * ggo::PI<float>();
+			angle = ggo::get_angle(velocity) - 2 * ggo::pi<float>();
 			if (std::abs(fly._current_angle - angle) < min_diff)
 			{
 				min_diff = std::abs(fly._current_angle - angle);
@@ -187,8 +187,8 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	for (const auto & fly : _flies)
 	{
 		ggo::vec2f v1 = ggo::from_polar(fly._current_angle, shadow_scale);
-		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, shadow_scale);
-		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, shadow_scale);
+		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::pi<float>() / 3, shadow_scale);
+		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::pi<float>() / 3, shadow_scale);
 
 		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
 		triangle->add_point(fly._cur_pos + v1);
@@ -217,8 +217,8 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 	for (const auto & fly : _flies)
 	{
 		ggo::vec2f v1 = ggo::from_polar(fly._current_angle, flies_scale);
-		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::PI<float>() / 3, flies_scale);
-		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::PI<float>() / 3, flies_scale);
+		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::pi<float>() / 3, flies_scale);
+		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::pi<float>() / 3, flies_scale);
 
 		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
 		triangle->add_point(fly._cur_pos + v1);

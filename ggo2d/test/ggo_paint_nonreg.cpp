@@ -164,7 +164,7 @@ public:
     {
       for (int j = 0; j < _steps; ++j)
       {
-        float angle = i * 2 * ggo::PI<float>() / _steps;
+        float angle = i * 2 * ggo::pi<float>() / _steps;
         float dist = j * _radius / _steps;
         ggo::pos2f pos = ggo::from_polar(angle, dist);
         float x_f = x + pos.get<0>();

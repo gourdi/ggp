@@ -28,10 +28,10 @@ void ggo_ifs_animation_artist::init_sub()
 	_transform_end[2] = _transform_start[2] + ggo::rand_float(-0.3f, 0.3f);
 	_transform_end[3] = _transform_start[3] + ggo::rand_float(-0.3f, 0.3f);
 	
-	_angle1_start = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_angle1_end = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_angle2_start = ggo::rand_float(0, 2 * ggo::PI<float>());
-	_angle2_end = ggo::rand_float(0, 2 * ggo::PI<float>());
+	_angle1_start = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_angle1_end = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_angle2_start = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_angle2_end = ggo::rand_float(0, 2 * ggo::pi<float>());
 	
 	_hue = ggo::rand_float();
 	

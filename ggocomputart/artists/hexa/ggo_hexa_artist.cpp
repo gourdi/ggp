@@ -60,7 +60,7 @@ public:
     float amplitude = 5;
     for (int i = 0; i < 10; ++i)
     {
-      perlin_field->add_octave(scale, amplitude, ggo::rand_float(0, ggo::PI<float>()));
+      perlin_field->add_octave(scale, amplitude, ggo::rand_float(0, ggo::pi<float>()));
 
       scale *= 0.9f;
       amplitude *= 0.9f;      
@@ -168,8 +168,8 @@ public:
     
     for (int i = 0; i < 6; ++i)
     {
-      float angle1 = i * ggo::PI<float>() / 3;
-      float angle2 = (i + 1) * ggo::PI<float>() / 3;
+      float angle1 = i * ggo::pi<float>() / 3;
+      float angle2 = (i + 1) * ggo::pi<float>() / 3;
 
       create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
                       ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
@@ -401,7 +401,7 @@ std::vector<ggo::pos3f> ggo_hexa_artist::generate_light_positions()
   
   for (int i = 0; i < 3; ++i)
   {
-    float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+    float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
     pos.push_back( { 500 * std::cos(angle), 500 * std::sin(angle), 250.f } );
   }
   

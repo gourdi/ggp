@@ -141,7 +141,7 @@ namespace
     GGO_ASSERT(angle1 >= 0);
     GGO_ASSERT(angle2 >= 0);
 
-    return angle1 + angle2 < ggo::PI<T>() + epsilon;
+    return angle1 + angle2 < ggo::pi<T>() + epsilon;
   }
 
   //////////////////////////////////////////////////////////////

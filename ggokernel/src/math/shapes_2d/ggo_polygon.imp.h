@@ -125,13 +125,13 @@ namespace ggo
     {
       data_t angle2 = atan2(point.template get<1>() - y, point.template get<0>() - x);
       data_t dangle = angle2 - angle1;
-      if (dangle >  PI<data_t>()) { dangle -= 2 * PI<data_t>(); }
-      if (dangle < -PI<data_t>()) { dangle += 2 * PI<data_t>(); }
+      if (dangle >  pi<data_t>()) { dangle -= 2 * pi<data_t>(); }
+      if (dangle < -pi<data_t>()) { dangle += 2 * pi<data_t>(); }
       angle += dangle;
       angle1 = angle2;
     }
 
-    return std::abs(angle) > PI<data_t>();
+    return std::abs(angle) > pi<data_t>();
   }
 
   //////////////////////////////////////////////////////////////

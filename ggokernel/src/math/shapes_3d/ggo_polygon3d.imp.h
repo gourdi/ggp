@@ -80,13 +80,13 @@ namespace ggo
 
     for (int phi_step = 1; phi_step < vert_steps - 1; ++phi_step)
     {
-      T phi = PI<T>() * phi_step / (vert_steps - 1);
+      T phi = pi<T>() * phi_step / (vert_steps - 1);
       T cos_phi = std::cos(phi);
       T sin_phi = std::sin(phi);
       
       for (int theta_step = 0; theta_step < horz_steps; ++theta_step)
       {
-        T theta = 2 * PI<T>() * theta_step / horz_steps;
+        T theta = 2 * pi<T>() * theta_step / horz_steps;
         T x = sin_phi * std::cos(theta);
         T y = sin_phi * std::sin(theta);
         T z = cos_phi;

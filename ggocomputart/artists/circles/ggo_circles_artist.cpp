@@ -20,7 +20,7 @@ std::vector<std::vector<ggo_circles_artist::ggo_colored_disc>> ggo_circles_artis
   
   for (int i = 0; i < 300; ++i)
   {
-    float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+    float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
     float angle_inc = ggo::rand_float(0.02f, 0.03f) * (ggo::rand_bool() ? -1 : 1);
 
     float radius = ggo::rand_float(0.2f, 0.8f) * get_render_max_size();

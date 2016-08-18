@@ -60,13 +60,13 @@ void ggo_toutouyoutou_anim_artist::init_sub()
   _emitter1._x = 0;
   _emitter1._y_inf = ggo::rand_float(0.3f, 0.7f);
   _emitter1._y_sup = _emitter1._y_inf + 0.12f;
-  _emitter1._speed = ggo::from_polar(ggo::rand_float(0, ggo::PI<float>() / 4), ggo::rand_float(5, 15));
+  _emitter1._speed = ggo::from_polar(ggo::rand_float(0, ggo::pi<float>() / 4), ggo::rand_float(5, 15));
   _emitter1._temperature = 0;
   
   _emitter2._x = get_view_width();
   _emitter2._y_inf = ggo::rand_float(0.3f, 0.7f);
   _emitter2._y_sup = _emitter2._y_inf + 0.12f;
-  _emitter2._speed = ggo::from_polar(ggo::rand_float(3 * ggo::PI<float>() / 4, ggo::PI<float>()), ggo::rand_float(5, 15));
+  _emitter2._speed = ggo::from_polar(ggo::rand_float(3 * ggo::pi<float>() / 4, ggo::pi<float>()), ggo::rand_float(5, 15));
   _emitter2._temperature = 1;
   
   if (ggo::rand_bool())
@@ -386,7 +386,7 @@ void ggo_toutouyoutou_anim_artist::paint_flow(uint8_t * buffer) const
         
         // Compute opacity.
         /*float potential = get_potiental(render_x, render_y);
-        float potential_mapped =  0.5f + std::atan((potential - POTENTIAL_THRESHOLD) / 10) / GGO_PI; // Between 0.5 and 1
+        float potential_mapped =  0.5f + std::atan((potential - POTENTIAL_THRESHOLD) / 10) / GGO_pi; // Between 0.5 and 1
         float opacity = count * potential_mapped / 16.f;
         
         // Compute color.
@@ -426,7 +426,7 @@ void ggo_toutouyoutou_anim_artist::paint_flow(uint8_t * buffer) const
       {
         // Compute opacity.
         float potential = get_potiental(static_cast<float>(render_x), static_cast<float>(render_y));
-        float potential_mapped =  0.5f + std::atan((potential - POTENTIAL_THRESHOLD) / 10) / ggo::PI<float>(); // Between 0.5 and 1
+        float potential_mapped =  0.5f + std::atan((potential - POTENTIAL_THRESHOLD) / 10) / ggo::pi<float>(); // Between 0.5 and 1
         float opacity = ptr_sample[0] * potential_mapped / 16.f;
         
         // Compute color.

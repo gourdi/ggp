@@ -6,7 +6,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // t in [0, 1], result in [0, 1]
   template <typename data_t>
-  data_t ease_out(data_t t)
+  data_t ease_in(data_t t)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
     return -t * t + 2 * t;
@@ -14,16 +14,16 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t ease_out_to(int index, int count)
+  data_t ease_in_to(int index, int count)
   {
-    return ease_out(data_t(index) / data_t(count));
+    return ease_in(data_t(index) / data_t(count));
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename interpolation_t = float>
-  data_t ease_out(int index, int count, const data_t & start, const data_t & end)
+  data_t ease_in(int index, int count, const data_t & start, const data_t & end)
   {
-    interpolation_t t = ease_out_to<interpolation_t>(index, count);
+    interpolation_t t = ease_in_to<interpolation_t>(index, count);
     
     return start + t * (end - start);
   }

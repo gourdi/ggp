@@ -33,7 +33,7 @@ GGO_TEST(harmonic_surface, test2)
   ggo::harmonic_surface<float> harmonic_surface;
   for (int i = 0; i < 4; ++i)
   {
-    float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+    float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
     float length = 1;
     float wavelength = static_cast<float>(SIZE >> (i + 1));
     float amplitude = 1.f / static_cast<float>(i + 1);

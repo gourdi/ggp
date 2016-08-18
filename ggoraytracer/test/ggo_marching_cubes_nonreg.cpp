@@ -17,8 +17,8 @@ GGO_TEST(marching_cubes, test)
   // The camera.
   ggo::antialiasing_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
   camera.basis().set_pos(0, 0, 15);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::PI<float>() / 4);
-  camera.basis().rotate(ggo::ray3d_float::O_Z(), -ggo::PI<float>() / 4);
+  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 4);
+  camera.basis().rotate(ggo::ray3d_float::O_Z(), -ggo::pi<float>() / 4);
   camera.set_aperture(0.1f);
   
   // The scene.

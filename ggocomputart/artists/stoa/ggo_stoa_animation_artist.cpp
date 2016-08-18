@@ -17,10 +17,10 @@ void ggo_stoa_animation_artist::init_sub()
 
   _hue = ggo::rand_float();
 
-  _light1_angle_start = ggo::rand_float(0, ggo::PI<float>());
-  _light1_angle_end   = ggo::rand_float(0, ggo::PI<float>());
-  _light2_angle_start = ggo::rand_float(0, ggo::PI<float>());
-  _light2_angle_end   = ggo::rand_float(0, ggo::PI<float>());
+  _light1_angle_start = ggo::rand_float(0, ggo::pi<float>());
+  _light1_angle_end   = ggo::rand_float(0, ggo::pi<float>());
+  _light2_angle_start = ggo::rand_float(0, ggo::pi<float>());
+  _light2_angle_end   = ggo::rand_float(0, ggo::pi<float>());
 }
 
 //////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ bool ggo_stoa_animation_artist::render_next_frame_sub(uint8_t * buffer, int fram
   camera.basis().set_pos(0, 0, 40);
   camera.set_aperture(0.1f);
 
-  float range = ggo::PI<float>() / 6.f;
+  float range = ggo::pi<float>() / 6.f;
   camera.basis().rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(frame_index, FRAMES_COUNT, -range, range));
 
   // Lights.

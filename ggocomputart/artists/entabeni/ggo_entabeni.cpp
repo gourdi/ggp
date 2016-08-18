@@ -148,7 +148,7 @@ void ggo_entabeni::render_bitmap(ggo::rgb_image_abc & image,
     layers.emplace_back(triangle, triangle_color, 1.f);
   };
 
-  const float delta = 2 * ggo::PI<float>() / (grid.get_size<0>() - 1);
+  const float delta = 2 * ggo::pi<float>() / (grid.get_size<0>() - 1);
 
   for (int y = grid.get_size<1>() - 2; y >= 0; --y) // Paint from the furthest.
   {

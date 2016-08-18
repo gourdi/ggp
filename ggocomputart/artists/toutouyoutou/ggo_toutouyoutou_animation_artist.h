@@ -80,8 +80,8 @@ private:
     constexpr static float DELTA_TIME_POW2 = DELTA_TIME * DELTA_TIME;
     constexpr static float PARTICLE_RADIUS = 0.05f;
     constexpr static float INFLUENCE_RADIUS = 6 * PARTICLE_RADIUS;
-    constexpr static float NORM = 20 / (2 * ggo::PI<float>() * INFLUENCE_RADIUS * INFLUENCE_RADIUS);
-    constexpr static float NEAR_NORM = 30 / (2 * ggo::PI<float>() * INFLUENCE_RADIUS * INFLUENCE_RADIUS);
+    constexpr static float NORM = 20 / (2 * ggo::pi<float>() * INFLUENCE_RADIUS * INFLUENCE_RADIUS);
+    constexpr static float NEAR_NORM = 30 / (2 * ggo::pi<float>() * INFLUENCE_RADIUS * INFLUENCE_RADIUS);
     constexpr static float VIEW_HEIGHT = 20;
 
     std::vector<ggo_particle>                         _particles;

@@ -40,7 +40,7 @@ std::complex<float> ggo_julia_artist::pickup_seed()
 	if (ggo::rand_bool())
 	{	
 		// Pick the seek near the main cardioid of the Mandelbrot set.
-		float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		float radius = (1 - cos(angle)) / 2 + ggo::rand_float(0, 0.01f);
 	
 		return std::complex<float>(0.25f + radius * std::cos(angle), radius * std::sin(angle));
@@ -48,7 +48,7 @@ std::complex<float> ggo_julia_artist::pickup_seed()
 	else
 	{
 		// Pick the seek near the circle on the left of the main cardioid.
-		float angle = ggo::rand_float(0, 2 * ggo::PI<float>());
+		float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
 		float radius = 0.25f + ggo::rand_float(0, 0.01f);
 
 		return std::complex<float>(-1 + radius * std::cos(angle), radius * std::sin(angle));	

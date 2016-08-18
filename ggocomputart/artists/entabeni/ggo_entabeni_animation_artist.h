@@ -22,7 +22,7 @@ private:
   {
     void get_random_data(float & data, float & dt) override
     {
-      data = ggo::rand_float(0.f, 2.f * ggo::PI<float>());
+      data = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
       dt = ggo::rand_float(50, 100);
     }
   };

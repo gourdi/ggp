@@ -46,7 +46,7 @@ namespace ggo
     
     for (const auto & wave : _waves)
     {
-      result += wave._amplitude * std::cos(2 * ggo::PI<data_t>() * ggo::dot(wave._wave_vector, ggo::vec2<data_t>(x, y)) + wave._phase);
+      result += wave._amplitude * std::cos(2 * ggo::pi<data_t>() * ggo::dot(wave._wave_vector, ggo::vec2<data_t>(x, y)) + wave._phase);
     }
     
     return result;

@@ -167,7 +167,7 @@ GGO_TEST(matrix, matrix_rotation)
   ggo::square_matrix2d<float> m;
   ggo::vec2<float>            v{ 1.f, 0.f };
 
-  m.set_rotation(0.5f * ggo::PI<float>());
+  m.set_rotation(0.5f * ggo::pi<float>());
 
   v = m * v;
 

@@ -44,7 +44,7 @@ void ggo_duffing_animation_artist::init_sub()
 	float 				      t = 0;
 	float 				      dt = 0.002f;
 	ggo::pos2f	point(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
-	float				        angle_offset = ggo::rand_float(0, 2 * ggo::PI<float>());
+	float				        angle_offset = ggo::rand_float(0, 2 * ggo::pi<float>());
 
 	_points.clear();
 	_points.reserve(GGO_ITERATIONS_COUNT);
@@ -55,7 +55,7 @@ void ggo_duffing_animation_artist::init_sub()
 		
 		_points.push_back(render_pt);
 		
-		angle_offset = std::fmod(angle_offset + 0.00005f, 2 * ggo::PI<float>());
+		angle_offset = std::fmod(angle_offset + 0.00005f, 2 * ggo::pi<float>());
 		t += dt;
 	}
 	

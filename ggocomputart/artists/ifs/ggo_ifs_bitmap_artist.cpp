@@ -28,5 +28,5 @@ void ggo_ifs_bitmap_artist::render_bitmap(uint8_t * buffer)
                      ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float(0, 0.25)),
                      ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float(0.5, 0.75)));
 
-	_artist.render(buffer, transform, hue, ggo::rand_float(0, 2 * ggo::PI<float>()), ggo::rand_float(0, 2 * ggo::PI<float>()));
+	_artist.render(buffer, transform, hue, ggo::rand_float(0, 2 * ggo::pi<float>()), ggo::rand_float(0, 2 * ggo::pi<float>()));
 }

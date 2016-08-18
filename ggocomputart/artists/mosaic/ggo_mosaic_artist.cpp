@@ -21,7 +21,7 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 	for (int i = 0; i < points_count; ++i)
 	{
 		float radius  = ggo::rand_float(0.3f, 1);
-		float angle   = i * 2 * ggo::PI<float>() / points_count + ggo::rand_float(-0.5f / points_count, 0.5f / points_count);
+		float angle   = i * 2 * ggo::pi<float>() / points_count + ggo::rand_float(-0.5f / points_count, 0.5f / points_count);
 
 		seed1.add_point(radius * std::cos(angle), radius * std::sin(angle));
 	}
@@ -30,7 +30,7 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 	for (int i = 0; i < points_count; ++i)
 	{
 		float radius = ggo::rand_float(0.3f, 1);
-		float angle = i * 2 * ggo::PI<float>() / points_count + ggo::rand_float(-0.5f / points_count, 0.5f / points_count);
+		float angle = i * 2 * ggo::pi<float>() / points_count + ggo::rand_float(-0.5f / points_count, 0.5f / points_count);
 
 		seed2.add_point(radius * std::cos(angle), radius * std::sin(angle));
 	}
@@ -68,7 +68,7 @@ void ggo_mosaic_artist::render_bitmap(uint8_t * buffer)
 	float hue_offset2 = ggo::rand_float();
 	float saturation1 = ggo::rand_float(0.75, 1);
 	float saturation2 = ggo::rand_float(0.75, 1);
-	float angle_amplitude = ggo::rand_float(0, 2 * ggo::PI<float>());
+	float angle_amplitude = ggo::rand_float(0, 2 * ggo::pi<float>());
 	
 	int failures_count = 0;
 	float scale = ggo::rand_float(0.1f * get_render_min_size(), 0.2f * get_render_min_size());

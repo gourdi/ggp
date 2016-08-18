@@ -4,26 +4,26 @@
 
 namespace
 {
-  template <typename T> T D4_0() { return static_cast<T>( 0.6830127 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D4_1() { return static_cast<T>( 1.1830127 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D4_2() { return static_cast<T>( 0.3169873 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D4_3() { return static_cast<T>(-0.1830127 * ggo::INV_SQRT2<T>()); }
+  template <typename T> T D4_0() { return static_cast<T>( 0.6830127 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D4_1() { return static_cast<T>( 1.1830127 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D4_2() { return static_cast<T>( 0.3169873 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D4_3() { return static_cast<T>(-0.1830127 * ggo::inv_sqrt2<T>()); }
 
-  template <typename T> T D6_0() { return static_cast<T>( 0.47046721 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D6_1() { return static_cast<T>( 1.14111692 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D6_2() { return static_cast<T>( 0.650365   * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D6_3() { return static_cast<T>(-0.19093442 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D6_4() { return static_cast<T>(-0.12083221 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D6_5() { return static_cast<T>( 0.0498175  * ggo::INV_SQRT2<T>()); }
+  template <typename T> T D6_0() { return static_cast<T>( 0.47046721 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D6_1() { return static_cast<T>( 1.14111692 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D6_2() { return static_cast<T>( 0.650365   * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D6_3() { return static_cast<T>(-0.19093442 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D6_4() { return static_cast<T>(-0.12083221 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D6_5() { return static_cast<T>( 0.0498175  * ggo::inv_sqrt2<T>()); }
 
-  template <typename T> T D8_0() { return static_cast<T>( 0.32580343 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_1() { return static_cast<T>( 1.01094572 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_2() { return static_cast<T>( 0.8922014  * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_3() { return static_cast<T>(-0.03957503 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_4() { return static_cast<T>(-0.26450717 * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_5() { return static_cast<T>( 0.0436163  * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_6() { return static_cast<T>( 0.0465036  * ggo::INV_SQRT2<T>()); }
-  template <typename T> T D8_7() { return static_cast<T>(-0.01498699 * ggo::INV_SQRT2<T>()); }
+  template <typename T> T D8_0() { return static_cast<T>( 0.32580343 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_1() { return static_cast<T>( 1.01094572 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_2() { return static_cast<T>( 0.8922014  * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_3() { return static_cast<T>(-0.03957503 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_4() { return static_cast<T>(-0.26450717 * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_5() { return static_cast<T>( 0.0436163  * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_6() { return static_cast<T>( 0.0465036  * ggo::inv_sqrt2<T>()); }
+  template <typename T> T D8_7() { return static_cast<T>(-0.01498699 * ggo::inv_sqrt2<T>()); }
   
   //////////////////////////////////////////////////////////////
   template <typename T>
@@ -31,8 +31,8 @@ namespace
   {
     for (int k = 0; k < size / 2; ++k) 
     {
-      low[k]  = (input[2 * k] + input[2 * k + 1]) * T(ggo::INV_SQRT2<T>());
-      high[k] = (input[2 * k] - input[2 * k + 1]) * T(ggo::INV_SQRT2<T>());
+      low[k]  = (input[2 * k] + input[2 * k + 1]) * T(ggo::inv_sqrt2<T>());
+      high[k] = (input[2 * k] - input[2 * k + 1]) * T(ggo::inv_sqrt2<T>());
     }
   }
 
@@ -42,8 +42,8 @@ namespace
   {
     for (int k = 0; k < size / 2; ++k) 
     {
-      output[2 * k]     = (low[k] + high[k]) * T(ggo::INV_SQRT2<T>());
-      output[2 * k + 1] = (low[k] - high[k]) * T(ggo::INV_SQRT2<T>());
+      output[2 * k]     = (low[k] + high[k]) * T(ggo::inv_sqrt2<T>());
+      output[2 * k + 1] = (low[k] - high[k]) * T(ggo::inv_sqrt2<T>());
     }
   }
 

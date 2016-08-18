@@ -13,7 +13,7 @@ namespace ggo
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
     T r   = std::sqrt(random_variable1);
-    T phi = 2 * PI<T>() * random_variable2;
+    T phi = 2 * pi<T>() * random_variable2;
    
     return ggo::pos2<T>(std::cos(phi) * r, std::sin(phi) * r);
   }
@@ -30,7 +30,7 @@ namespace ggo
     GGO_ASSERT_BTW(random_variable1, 0, 1.001);
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
-    T theta = random_variable1 * 2 * PI<T>();
+    T theta = random_variable1 * 2 * pi<T>();
     T phi   = std::acos(2 * random_variable2 - 1);
     
     return ggo::pos3<T>(std::cos(theta) * std::sin(phi), std::sin(theta) * std::sin(phi), std::cos(phi));
@@ -44,21 +44,21 @@ namespace ggo
 
   // The main direction is the Z one (ie. [0, 0, 1]).
   template <typename T>
-  ggo::pos3<T> hemisphere_sampling(T random_variable1, T random_variable2, T theta_max = PI<T>() / 2)
+  ggo::pos3<T> hemisphere_sampling(T random_variable1, T random_variable2, T theta_max = pi<T>() / 2)
   {
     GGO_ASSERT_BTW(random_variable1, 0, 1.001);
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
     T z_min = std::cos(theta_max);
     T z     = ggo::map<T, T>(random_variable1, 0, 1, z_min, 1);
-    T phi   = random_variable2 * 2 * PI<T>();
+    T phi   = random_variable2 * 2 * pi<T>();
     T r     = std::sqrt(1 - z * z);
 
     return ggo::pos3<T>(std::cos(phi) * r, std::sin(phi) * r, z);
   }
   
   template <typename T>
-  ggo::pos3<T> hemisphere_sampling(const ggo::vec3<T> & main_dir, T random_variable1, T random_variable2, T theta_max = PI<T>() / 2)
+  ggo::pos3<T> hemisphere_sampling(const ggo::vec3<T> & main_dir, T random_variable1, T random_variable2, T theta_max = pi<T>() / 2)
   {
     auto sample = hemisphere_sampling(random_variable1, random_variable2, theta_max);
     
@@ -72,7 +72,7 @@ namespace ggo
   }
   
   template <typename T>
-  ggo::pos3<T> hemisphere_uniform_sampling(T theta_max = PI<T>() / 2)
+  ggo::pos3<T> hemisphere_uniform_sampling(T theta_max = pi<T>() / 2)
   {
     return hemisphere_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1), theta_max);
   }
