@@ -28,7 +28,6 @@
 #include "artists/bozons/ggo_bozons_animation_artist.h"
 #include "artists/rex/ggo_rex_artist.h"
 #include "artists/circles/ggo_circles_bitmap_artist.h"
-#include "artists/aggregation/ggo_aggregation_bitmap_artist.h"
 #include "artists/bubbles/ggo_bubbles_artist.h"
 #include "artists/distorsion/ggo_distorsion_bitmap_artist.h"
 #include "artists/toutouyoutou/ggo_toutouyoutou_bitmap_artist.h"
@@ -178,8 +177,6 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
 		return new ggo_dupecheck_bitmap_artist(render_width, render_height);
   case GGO_BITMAP_ARTIST_CIRCLES:
     return new ggo_circles_bitmap_artist(render_width, render_height);
-  case GGO_BITMAP_ARTIST_AGGREGATION:
-    return new ggo_aggregation_bitmap_artist(render_width, render_height);
 	case GGO_BITMAP_ARTIST_TOPODOKO:
     return new ggo_topodoko_artist(render_width, render_height);
 	case GGO_BITMAP_ARTIST_REX:
@@ -220,6 +217,8 @@ ggo_bitmap_artist_abc * ggo_bitmap_artist_abc::create(ggo_bitmap_artist_id artis
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_REDIFF, render_width, render_height, 350, true);
   case GGO_BITMAP_ARTIST_CABREL:
     return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_CABREL, render_width, render_height);
+  case GGO_BITMAP_ARTIST_AGGREGATION:
+    return new ggo_bitmap_artist_animation_wrapper(GGO_ANIMATION_ARTIST_AGGREGATION, render_width, render_height, 300, true);
 
 	default:
 		GGO_FAIL();

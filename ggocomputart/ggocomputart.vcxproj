@@ -25,7 +25,6 @@
     <ClCompile Include="animation\paths\ggo_spiral_path.cpp" />
     <ClCompile Include="artists\aggregation\ggo_aggregation_animation_artist.cpp" />
     <ClCompile Include="artists\aggregation\ggo_aggregation_artist.cpp" />
-    <ClCompile Include="artists\aggregation\ggo_aggregation_bitmap_artist.cpp" />
     <ClCompile Include="artists\alpha\ggo_alpha_anim_artist.cpp" />
     <ClCompile Include="artists\alpha\ggo_alpha_bitmap_artist.cpp" />
     <ClCompile Include="artists\amorosi\ggo_amorosi_animation_artist.cpp" />
@@ -116,7 +115,6 @@
     <ClInclude Include="animation\paths\ggo_spiral_path.h" />
     <ClInclude Include="artists\aggregation\ggo_aggregation_animation_artist.h" />
     <ClInclude Include="artists\aggregation\ggo_aggregation_artist.h" />
-    <ClInclude Include="artists\aggregation\ggo_aggregation_bitmap_artist.h" />
     <ClInclude Include="artists\alpha\ggo_alpha_anim_artist.h" />
     <ClInclude Include="artists\alpha\ggo_alpha_bitmap_artist.h" />
     <ClInclude Include="artists\amorosi\ggo_amorosi_animation_artist.h" />

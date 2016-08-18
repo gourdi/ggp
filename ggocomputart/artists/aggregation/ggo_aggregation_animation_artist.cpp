@@ -26,7 +26,11 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
   int points_count = _artist->get_final_points_count() / frames_count;
 
   _artist->update(points_count);
-  _artist->render(buffer);
+
+  if (buffer != nullptr)
+  {
+    _artist->render(buffer);
+  }
 
 	return true;
 }

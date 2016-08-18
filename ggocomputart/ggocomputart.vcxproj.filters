@@ -168,9 +168,6 @@
     <ClCompile Include="artists\aggregation\ggo_aggregation_artist.cpp">
       <Filter>artists\aggregation</Filter>
     </ClCompile>
-    <ClCompile Include="artists\aggregation\ggo_aggregation_bitmap_artist.cpp">
-      <Filter>artists\aggregation</Filter>
-    </ClCompile>
     <ClCompile Include="artists\alpha\ggo_alpha_anim_artist.cpp">
       <Filter>artists\alpha</Filter>
     </ClCompile>
@@ -435,9 +432,6 @@
       <Filter>artists\aggregation</Filter>
     </ClInclude>
     <ClInclude Include="artists\aggregation\ggo_aggregation_artist.h">
-      <Filter>artists\aggregation</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\aggregation\ggo_aggregation_bitmap_artist.h">
       <Filter>artists\aggregation</Filter>
     </ClInclude>
     <ClInclude Include="artists\alpha\ggo_alpha_anim_artist.h">
