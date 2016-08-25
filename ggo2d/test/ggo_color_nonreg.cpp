@@ -3,6 +3,16 @@
 #include <ggo_color.h>
 
 ////////////////////////////////////////////////////////////////////
+GGO_TEST(color, to)
+{
+  ggo::color c = ggo::to<ggo::color>(0.25f);
+
+  GGO_CHECK_FABS(c.r(), 0.25f);
+  GGO_CHECK_FABS(c.g(), 0.25f);
+  GGO_CHECK_FABS(c.b(), 0.25f);
+}
+
+////////////////////////////////////////////////////////////////////
 GGO_TEST(color, operators)
 {
   ggo::color c1(0.25f, 0.5f, 0.75f);

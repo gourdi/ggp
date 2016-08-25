@@ -18,7 +18,7 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
 {
   const int frames_count = 300;
 
-  if (frame_index >= frames_count)
+  if (frame_index > frames_count)
   {
     return false;
   }

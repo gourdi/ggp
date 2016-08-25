@@ -83,6 +83,12 @@ namespace ggo
 
 namespace ggo
 {
+  template <>
+  inline ggo::color to<ggo::color, float>(float v) { return ggo::color(v); }
+}
+
+namespace ggo
+{
   inline std::ostream & operator<<(std::ostream & os, const ggo::color & c)
   {
     os << c.r() << ' ' << c.g() << ' ' << c.b();
