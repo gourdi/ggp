@@ -115,23 +115,23 @@ namespace ggo
     // Rectangle in shape?
     if (left > this->left() && right < this->right() && bottom > this->bottom() && top < this->top())
     {
-      return rect_intersection::RECT_IN_SHAPE;
+      return rect_intersection::rect_in_shape;
     }
 
     // Shape in rectangle?
     if (this->left() > left && this->right() < right && this->bottom() > bottom && this->top() < top)
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
 
     // Disjoint?
     if (right < this->left() || left > this->right() || top < this->bottom() || bottom > this->top())
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
 
     // One case left: partial overlap.
-    return rect_intersection::PARTIAL_OVERLAP;
+    return rect_intersection::partial_overlap;
   }
 
   /////////////////////////////////////////////////////////////////////

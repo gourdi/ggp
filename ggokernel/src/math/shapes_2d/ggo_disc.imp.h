@@ -62,7 +62,7 @@ namespace ggo
 
     if (hypot1 < hypot && hypot2 < hypot && hypot3 < hypot && hypot4 < hypot)
     {
-      return rect_intersection::RECT_IN_SHAPE;
+      return rect_intersection::rect_in_shape;
     }
 
     // Circle in rectangle?
@@ -71,7 +71,7 @@ namespace ggo
         right - _center.template get<0>()  > _radius &&
         top - _center.template get<1>()    > _radius)
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
 
     // Partial overlap?
@@ -80,10 +80,10 @@ namespace ggo
         segment_intersect_border(left, bottom, right, bottom) == true ||
         segment_intersect_border(left, top, right, top) == true)
     {
-      return rect_intersection::PARTIAL_OVERLAP;
+      return rect_intersection::partial_overlap;
     }
 
-    return rect_intersection::DISJOINTS;
+    return rect_intersection::disjoints;
   }
 
   /////////////////////////////////////////////////////////////////////

@@ -69,7 +69,7 @@ namespace ggo
         (_v2.template get<0>() >= left && _v2.template get<0>() <= right && _v2.template get<1>() >= bottom && _v2.template get<1>() <= top) &&
         (_v3.template get<0>() >= left && _v3.template get<0>() <= right && _v3.template get<1>() >= bottom && _v3.template get<1>() <= top))
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
     
     if (is_point_inside(left, top) && 
@@ -77,7 +77,7 @@ namespace ggo
         is_point_inside(right, bottom) &&
         is_point_inside(left, bottom))
     {
-      return rect_intersection::RECT_IN_SHAPE;
+      return rect_intersection::rect_in_shape;
     }
     
     if (right  < ggo::min(_v1.template get<0>(), _v2.template get<0>(), _v3.template get<0>()) ||
@@ -85,7 +85,7 @@ namespace ggo
         top    < ggo::min(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>()) ||
         bottom > ggo::max(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>()))
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
     
     segment<T> s12(_v1, _v2);
@@ -94,7 +94,7 @@ namespace ggo
         s12.same_side(_v3.template get<0>(), _v3.template get<1>(), right, bottom) == false &&
         s12.same_side(_v3.template get<0>(), _v3.template get<1>(), left,  bottom) == false)
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
     
     segment<T> s23(_v2, _v3);
@@ -103,7 +103,7 @@ namespace ggo
         s23.same_side(_v1.template get<0>(), _v1.template get<1>(), right, bottom) == false &&
         s23.same_side(_v1.template get<0>(), _v1.template get<1>(), left,  bottom) == false)
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
     
         segment<T> s13(_v1, _v3);
@@ -112,10 +112,10 @@ namespace ggo
         s13.same_side(_v2.template get<0>(), _v2.template get<1>(), right, bottom) == false &&
         s13.same_side(_v2.template get<0>(), _v2.template get<1>(), left,  bottom) == false)
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
     
-    return rect_intersection::PARTIAL_OVERLAP;
+    return rect_intersection::partial_overlap;
   }
 }
 

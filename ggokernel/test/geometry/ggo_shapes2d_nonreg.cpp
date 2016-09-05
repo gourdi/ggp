@@ -88,31 +88,31 @@ GGO_TEST(shapes2d, triangle_polygon)
   GGO_CHECK_FABS(triangle.dist_to_segment(0.8f, 1.2f, 1.2f, 0.8f), std::sqrt(2.f) / 2);
 
   // Rectangle intersection.
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::RECT_IN_SHAPE);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -1.f, 2, -1.f, 2, ggo::rect_intersection::SHAPE_IN_RECT);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.5f, 0.6f, 0, 3, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, 0.1f, 3, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, -1.f, 3, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -1.f, 2, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -2, -1.f, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1.f, 0, 1.f, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1.f, 0.5, 10, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1, -1, 0.5, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0, 1, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.2f, 0.3f, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 0.3f, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 0.2f, 3, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 3, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 3, 2, 3, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, 0, 3, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -1, 3, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 2, 1, 2, ggo::rect_intersection::DISJOINTS);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::rect_in_shape);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -1.f, 2, -1.f, 2, ggo::rect_intersection::shape_in_rect);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.5f, 0.6f, 0, 3, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, 0.1f, 3, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, -1.f, 3, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -1.f, 2, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -2, -1.f, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1.f, 0, 1.f, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1.f, 0.5, 10, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -2, -1, -1, 0.5, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0, 1, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.2f, 0.3f, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 0.3f, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 0.2f, 3, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 3, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 3, 2, 3, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, 0, 3, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -1, 3, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 2, 1, 2, ggo::rect_intersection::disjoints);
 
   // Triangle intersection.
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }) == ggo::triangle_intersection::triangle2_in_triangle1);
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }, { { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }) == ggo::triangle_intersection::triangle1_in_triangle2);
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 6.f, 3.f },{ 7.f, 3.f },{ 6.f, 4.f } }) == ggo::triangle_intersection::disjoints);
-
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 4.f, 2.f },{ 5.f, 4.f },{ 4.f, 4.f } }) == ggo::triangle_intersection::partial_overlap);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -135,20 +135,20 @@ GGO_TEST(shapes2d, triangle)
   GGO_CHECK(triangle.is_point_inside(6, 1.5) == false);
   
   // Rectangle intersection.
-  GGO_CHECK_RECT_INTERSECTION(triangle, 3, 4, 2, 5, ggo::rect_intersection::RECT_IN_SHAPE);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, -1, 9, ggo::rect_intersection::SHAPE_IN_RECT);
-  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 1, 1, 9, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, -1, 0, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 8, 9, 1, 9, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, 9, 10, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 6, 8, 1, 1.5, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 5, 8, 6, 8, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 1.5f, 6, 8, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 4, 7, 8, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 4, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 6, 8, 1, 5, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 4, 5, 5, 8, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, 4, 5, ggo::rect_intersection::PARTIAL_OVERLAP);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 3, 4, 2, 5, ggo::rect_intersection::rect_in_shape);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, -1, 9, ggo::rect_intersection::shape_in_rect);
+  GGO_CHECK_RECT_INTERSECTION(triangle, -1, 1, 1, 9, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, -1, 0, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 8, 9, 1, 9, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, 9, 10, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 6, 8, 1, 1.5, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 5, 8, 6, 8, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 1.5f, 6, 8, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 4, 7, 8, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 2, 4, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 6, 8, 1, 5, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 4, 5, 5, 8, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, 4, 5, ggo::rect_intersection::partial_overlap);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -211,26 +211,26 @@ GGO_TEST(shapes2d, polygon)
     GGO_CHECK_FABS(polygon.dist_to_segment(6, 0, 7, 0), 1);
 
     // Rectangle intersection.
-    GGO_CHECK_RECT_INTERSECTION(polygon, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 3, 4, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 3.5f, 4, 4.5, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 6, -1, 6, ggo::rect_intersection::SHAPE_IN_RECT);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 4, 1, 2, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 6, 10, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 6, 8, -2, 10, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 1, 4, 6, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 6, 4, 6, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 4, 6, -1, 1, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 0.5f, 2, 0.5f, 1, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 2, 3, -1, 7, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 1, 3, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 2, 7, 3, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, -1, 0.1, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 6, 7, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, -10, -8, 3, 4, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 4, 6, 2, 3, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 8, 1.5f, 2, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(polygon, 6, 8, -1, 1, ggo::rect_intersection::DISJOINTS);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 3, 4, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 3.5f, 4, 4.5, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 6, -1, 6, ggo::rect_intersection::shape_in_rect);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 4, 1, 2, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 6, 10, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 6, 8, -2, 10, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 1, 4, 6, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 6, 4, 6, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 4, 6, -1, 1, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 0.5f, 2, 0.5f, 1, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 2, 3, -1, 7, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, -1, 1, 3, 4, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 2, 7, 3, 4, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, -1, 0.1, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 6, 7, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, -10, -8, 3, 4, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 4, 6, 2, 3, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 3, 8, 1.5f, 2, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(polygon, 6, 8, -1, 1, ggo::rect_intersection::disjoints);
   }
 }
 
@@ -323,36 +323,36 @@ GGO_TEST(shapes2d, disc)
   GGO_CHECK_FABS(disc.dist_to_point(0, -50), ggo::distance(disc.center(), ggo::pos2f(0.f, -50.f)) - disc.radius());
 
   // Rectangle intersection.
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 1, 11, 12, ggo::rect_intersection::RECT_IN_SHAPE);
-  GGO_CHECK_RECT_INTERSECTION(disc, -20, 20, 0, 40, ggo::rect_intersection::SHAPE_IN_RECT);
-  GGO_CHECK_RECT_INTERSECTION(disc, -20, -18, 0, 40, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 13, 14, 0, 40, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 20, 23, 24, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 13, 14, 0, 20, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 10, 11, 3, 4, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 10, 11, 20, 21, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -7, -6, 20, 21, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -7, -6, 3, 4, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, -6, 0, 20, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 10, 4, 12, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 10, 18, 20, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -6, -4, 18, 20, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -6, -4, 4, 12, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -6, 10, 4, 20, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, 2, 12, 4, 20, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 2, 0, 40, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, 20, 10, 24, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, 20, 0, 10, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 20, 10, 12, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -20, 0, 10, 12, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, 10, -2, 0, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 14, 16, 0, 12, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 0, 4, 23, 24, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -20, -10, 0, 12, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 10, 12, 0, 4, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, 10, 12, 21, 22, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, -6, 21, 22, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(disc, -10, -8, -4, -2, ggo::rect_intersection::DISJOINTS);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 1, 11, 12, ggo::rect_intersection::rect_in_shape);
+  GGO_CHECK_RECT_INTERSECTION(disc, -20, 20, 0, 40, ggo::rect_intersection::shape_in_rect);
+  GGO_CHECK_RECT_INTERSECTION(disc, -20, -18, 0, 40, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 13, 14, 0, 40, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 20, 23, 24, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 13, 14, 0, 20, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 10, 11, 3, 4, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 10, 11, 20, 21, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -7, -6, 20, 21, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -7, -6, 3, 4, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, -6, 0, 20, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 10, 4, 12, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 10, 18, 20, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -6, -4, 18, 20, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -6, -4, 4, 12, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -6, 10, 4, 20, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, 2, 12, 4, 20, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 2, 0, 40, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, 20, 10, 24, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, 20, 0, 10, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 20, 10, 12, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -20, 0, 10, 12, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, 10, -2, 0, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 14, 16, 0, 12, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 0, 4, 23, 24, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -20, -10, 0, 12, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 10, 12, 0, 4, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, 10, 12, 21, 22, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, -6, 21, 22, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(disc, -10, -8, -4, -2, ggo::rect_intersection::disjoints);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -460,32 +460,32 @@ GGO_TEST(shapes2d, rectangle)
   GGO_CHECK_FABS(rect.dist_to_point(2, 0), std::sqrt(2));
 
   // Rectangle intersection.
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 1.5, 2.5, ggo::rect_intersection::RECT_IN_SHAPE);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 0, 4, ggo::rect_intersection::SHAPE_IN_RECT);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 0, 10, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 2, 10, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 0, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 0, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 1.5, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 1.5, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 1.5, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 2, 4, ggo::rect_intersection::PARTIAL_OVERLAP);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, 0, 10, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, 6, 10, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, -2, -1, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 4, 5, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, -1, 0, ggo::rect_intersection::DISJOINTS);
-  GGO_CHECK_RECT_INTERSECTION(rect, 7, 10, 1, 3, ggo::rect_intersection::DISJOINTS);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 1.5, 2.5, ggo::rect_intersection::rect_in_shape);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 0, 4, ggo::rect_intersection::shape_in_rect);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 0, 10, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 2, 10, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 4, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 0, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 0, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 4, 7, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 0, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 1.5, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 1.5, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 1.5, 2, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 5, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 5, 10, 2, 4, ggo::rect_intersection::partial_overlap);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, 0, 10, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, 6, 10, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 1, -2, -1, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 4, 5, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, -1, 0, ggo::rect_intersection::disjoints);
+  GGO_CHECK_RECT_INTERSECTION(rect, 7, 10, 1, 3, ggo::rect_intersection::disjoints);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -548,20 +548,20 @@ GGO_TEST(shapes2d, extended_segment)
     GGO_CHECK_FABS(extended_segment.dist_to_point(8, 5), 2 - std::sqrt(2));
 
     // Rectangle intersection.
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 3, 4, 2, 3, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 0, 10, ggo::rect_intersection::SHAPE_IN_RECT);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 3, 0, 2, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 3, 6, 0, 7, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 7, 8, 5, 6, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 1, 10, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 7, 0, 10, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 5.1f, 5.2f, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 5.5f, 6, 5.5f, 6.5f, ggo::rect_intersection::PARTIAL_OVERLAP);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 2, 4, 5, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 1, 0, 1, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 6, 8, 0, 2, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 8, 9, 0, 10, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(extended_segment, 4, 10, 7, 8, ggo::rect_intersection::DISJOINTS);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 3, 4, 2, 3, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 0, 10, ggo::rect_intersection::shape_in_rect);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 3, 0, 2, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 3, 6, 0, 7, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 7, 8, 5, 6, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 1, 10, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 7, 0, 10, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 10, 5.1f, 5.2f, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 5.5f, 6, 5.5f, 6.5f, ggo::rect_intersection::partial_overlap);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 2, 4, 5, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 0, 1, 0, 1, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 6, 8, 0, 2, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 8, 9, 0, 10, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(extended_segment, 4, 10, 7, 8, ggo::rect_intersection::disjoints);
   }
 }
 
@@ -587,10 +587,10 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK(multi_shape.is_point_inside(5, 0) == false);
 
     // Rectangle intersection.
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 2, 5, 6, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 2, 1, 3, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 6, 2, 4, ggo::rect_intersection::RECT_IN_SHAPE);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::SHAPE_IN_RECT);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 2, 5, 6, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 2, 1, 3, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 6, 2, 4, ggo::rect_intersection::rect_in_shape);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::shape_in_rect);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 5, 2, 3, ggo::rect_intersection::UNKNOWN);
   }
 
@@ -615,11 +615,11 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK(multi_shape.is_point_inside(4, 2) == true);
 
     // Rectangle intersection.
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 2, 0, 1, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 8, 4, 8, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 3, 2, 3, ggo::rect_intersection::RECT_IN_SHAPE);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 2, 0, 1, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 8, 4, 8, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 3, 2, 3, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 4, 2, 4, ggo::rect_intersection::UNKNOWN);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::SHAPE_IN_RECT);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::shape_in_rect);
   }
 
   // Difference.
@@ -646,11 +646,11 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK(multi_shape.is_point_inside(8, 4) == false);
 
     // Rectangle intersection.
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 1, 0, 1, ggo::rect_intersection::DISJOINTS);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 10, 0, 10, ggo::rect_intersection::SHAPE_IN_RECT);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 3, 4, 2, 3, ggo::rect_intersection::RECT_IN_SHAPE);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 1, 0, 1, ggo::rect_intersection::disjoints);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 10, 0, 10, ggo::rect_intersection::shape_in_rect);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 3, 4, 2, 3, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 3, 5, ggo::rect_intersection::UNKNOWN);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 5, 6, ggo::rect_intersection::DISJOINTS);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 5, 6, ggo::rect_intersection::disjoints);
   }
 }
 

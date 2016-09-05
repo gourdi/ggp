@@ -48,7 +48,7 @@ namespace ggo
         is_point_inside(left,  top)    == true &&
         is_point_inside(right, top)    == true)
     {
-      return rect_intersection::RECT_IN_SHAPE;
+      return rect_intersection::rect_in_shape;
     }
 
     data_t squared_width = _width * _width;
@@ -61,7 +61,7 @@ namespace ggo
         s.hypot_to_segment(s3) > squared_width &&
         s.hypot_to_segment(s4) > squared_width)
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
 
     // Disjoints?
@@ -70,10 +70,10 @@ namespace ggo
         s.hypot_to_segment(s3) > squared_width &&
         s.hypot_to_segment(s4) > squared_width)
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
 
-    return rect_intersection::PARTIAL_OVERLAP;
+    return rect_intersection::partial_overlap;
   }
 
   //////////////////////////////////////////////////////////////

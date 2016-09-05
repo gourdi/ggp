@@ -162,7 +162,7 @@ namespace ggo
       return get_rect_intersection_difference(rect_data);
     default:
       GGO_FAIL();
-      return rect_intersection::UNKNOWN;
+      return rect_intersection::unknown;
     }
   }
 
@@ -177,12 +177,12 @@ namespace ggo
     {
       switch (shape->get_rect_intersection(rect_data))
       {
-      case rect_intersection::RECT_IN_SHAPE:
-        return rect_intersection::RECT_IN_SHAPE;
-      case rect_intersection::SHAPE_IN_RECT:
+      case rect_intersection::rect_in_shape:
+        return rect_intersection::rect_in_shape;
+      case rect_intersection::shape_in_rect:
         disjoint_all = false;
         break;
-      case rect_intersection::DISJOINTS:
+      case rect_intersection::disjoints:
         shape_in_rect_all = false;
         break;
       default:
@@ -194,15 +194,15 @@ namespace ggo
 
     if (disjoint_all == true)
     {
-      return rect_intersection::DISJOINTS;
+      return rect_intersection::disjoints;
     }
     else if (shape_in_rect_all == true)
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
     else
     {
-      return rect_intersection::UNKNOWN;
+      return rect_intersection::unknown;
     }
   }
 
@@ -217,14 +217,14 @@ namespace ggo
     {
       switch (shape->get_rect_intersection(rect_data))
       {
-      case rect_intersection::RECT_IN_SHAPE:
+      case rect_intersection::rect_in_shape:
         shape_in_rect_all = false;
         break;
-      case rect_intersection::SHAPE_IN_RECT:
+      case rect_intersection::shape_in_rect:
         rect_in_shape_all = false;
         break;
-      case rect_intersection::DISJOINTS:
-        return rect_intersection::DISJOINTS;
+      case rect_intersection::disjoints:
+        return rect_intersection::disjoints;
       default:
         rect_in_shape_all = false;
         shape_in_rect_all = false;
@@ -234,15 +234,15 @@ namespace ggo
 
     if (rect_in_shape_all == true)
     {
-      return rect_intersection::RECT_IN_SHAPE;
+      return rect_intersection::rect_in_shape;
     }
     else if (shape_in_rect_all == true)
     {
-      return rect_intersection::SHAPE_IN_RECT;
+      return rect_intersection::shape_in_rect;
     }
     else
     {
-      return rect_intersection::UNKNOWN;
+      return rect_intersection::unknown;
     }
   }
 
@@ -256,18 +256,18 @@ namespace ggo
     // Process the first shape.
     switch (shape->get_rect_intersection(rect_data))
     {
-    case rect_intersection::DISJOINTS:
-      return rect_intersection::DISJOINTS;
-    case rect_intersection::SHAPE_IN_RECT:
-      return rect_intersection::SHAPE_IN_RECT;
-    case rect_intersection::RECT_IN_SHAPE:
+    case rect_intersection::disjoints:
+      return rect_intersection::disjoints;
+    case rect_intersection::shape_in_rect:
+      return rect_intersection::shape_in_rect;
+    case rect_intersection::rect_in_shape:
     {
       bool disjoints_all = true;
       auto it2 = it;
       for (; it2 != _shapes.end(); ++it2)
       {
         shape = *it2;
-        if (shape->get_rect_intersection(rect_data) != rect_intersection::DISJOINTS)
+        if (shape->get_rect_intersection(rect_data) != rect_intersection::disjoints)
         {
           disjoints_all = false;
           break;
@@ -275,7 +275,7 @@ namespace ggo
       }
       if (disjoints_all == true)
       {
-        return rect_intersection::RECT_IN_SHAPE;
+        return rect_intersection::rect_in_shape;
       }
     }
     default:
@@ -285,12 +285,12 @@ namespace ggo
     // 'it' references now the 2nd item (and not the first one).
     for (; it != _shapes.end(); ++it)
     {
-      if (shape->get_rect_intersection(rect_data) == rect_intersection::RECT_IN_SHAPE)
+      if (shape->get_rect_intersection(rect_data) == rect_intersection::rect_in_shape)
       {
-        return rect_intersection::DISJOINTS;
+        return rect_intersection::disjoints;
       }
     }
 
-    return rect_intersection::UNKNOWN;
+    return rect_intersection::unknown;
   }
 }

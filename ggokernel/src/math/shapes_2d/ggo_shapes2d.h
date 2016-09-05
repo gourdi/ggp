@@ -14,10 +14,10 @@ namespace ggo
 {
   enum class rect_intersection
   {
-    RECT_IN_SHAPE,
-    SHAPE_IN_RECT,
-    PARTIAL_OVERLAP,
-    DISJOINTS,
+    rect_in_shape,
+    shape_in_rect,
+    partial_overlap,
+    disjoints,
     UNKNOWN
   };
 

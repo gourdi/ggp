@@ -205,13 +205,13 @@ namespace ggo
       if (segment.intersect_horizontal_segment(left, right, bottom) == true ||
           segment.intersect_horizontal_segment(left, right, top   ) == true)
       {
-        return ggo::rect_intersection::PARTIAL_OVERLAP;
+        return ggo::rect_intersection::partial_overlap;
       }
 
       if (segment.intersect_vertical_segment(left,  bottom, top) == true ||
           segment.intersect_vertical_segment(right, bottom, top) == true)
       {
-        return ggo::rect_intersection::PARTIAL_OVERLAP;
+        return ggo::rect_intersection::partial_overlap;
       }
     }
 
@@ -228,7 +228,7 @@ namespace ggo
     
     if (rect.is_point_inside(_points[0]) == true)
     {
-      return ggo::rect_intersection::SHAPE_IN_RECT;
+      return ggo::rect_intersection::shape_in_rect;
     }
 
     // Check if the rect in inside the polygon. Since there is no border
@@ -236,10 +236,10 @@ namespace ggo
     // is inside the polygon.
     if (is_point_inside(left, bottom) == true)
     {
-      return ggo::rect_intersection::RECT_IN_SHAPE;
+      return ggo::rect_intersection::rect_in_shape;
     }
 
-    return ggo::rect_intersection::DISJOINTS;
+    return ggo::rect_intersection::disjoints;
   }
 
   //////////////////////////////////////////////////////////////
