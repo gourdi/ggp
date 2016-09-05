@@ -15,13 +15,17 @@ namespace ggo
 
     using samplable_shape2d_abc<data_t>::is_point_inside;
   
-                      triangle2d(ggo::pos2<data_t> v1, ggo::pos2<data_t> v2, ggo::pos2<data_t> v3) : _v1(v1), _v2(v2), _v3(v3) {}
+                              triangle2d(ggo::pos2<data_t> v1, ggo::pos2<data_t> v2, ggo::pos2<data_t> v3) : _v1(v1), _v2(v2), _v3(v3) {}
 
     // Interfaces.
-    void	            move(data_t dx, data_t dy) override;
-    bool	            is_point_inside(data_t x, data_t y) const override;
-    rect_data<data_t> get_bounding_rect() const override;
-    rect_intersection get_rect_intersection(const rect_data<data_t> & rect_data) const override;
+    void	                    move(data_t dx, data_t dy) override;
+    bool	                    is_point_inside(data_t x, data_t y) const override;
+    rect_data<data_t>         get_bounding_rect() const override;
+    rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
+
+    const ggo::pos2<data_t> & v1() const { return _v1; }
+    const ggo::pos2<data_t> & v2() const { return _v2; }
+    const ggo::pos2<data_t> & v3() const { return _v3; }
 
   private:
 
@@ -37,3 +41,16 @@ namespace ggo
   using triangle2d_double = triangle2d<double>;
 }
 
+namespace ggo
+{
+  enum class triangle_intersection
+  {
+    triangle1_in_triangle2,
+    triangle2_in_triangle1,
+    partial_overlap,
+    disjoints,
+  };
+
+  template <typename data_t>
+  triangle_intersection get_triangle_intersection(const triangle2d<data_t> & triangle1, const triangle2d<data_t> & triangle2);
+}

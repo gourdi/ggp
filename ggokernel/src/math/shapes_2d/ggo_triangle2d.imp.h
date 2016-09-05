@@ -118,3 +118,49 @@ namespace ggo
     return rect_intersection::PARTIAL_OVERLAP;
   }
 }
+
+namespace ggo
+{
+  template <typename data_t>
+  triangle_intersection get_triangle_intersection(const triangle2d<data_t> & triangle1, const triangle2d<data_t> & triangle2)
+  {
+    if (triangle2.is_point_inside(triangle1.v1()) == true &&
+        triangle2.is_point_inside(triangle1.v2()) == true &&
+        triangle2.is_point_inside(triangle1.v3()) == true)
+    {
+      return triangle_intersection::triangle1_in_triangle2;
+    }
+
+    if (triangle1.is_point_inside(triangle2.v1()) == true &&
+        triangle1.is_point_inside(triangle2.v2()) == true &&
+        triangle1.is_point_inside(triangle2.v3()) == true)
+    {
+      return triangle_intersection::triangle2_in_triangle1;
+    }
+
+    auto check_disjoint = [](
+      const ggo::pos2<data_t> & v1,
+      const ggo::pos2<data_t> & v2,
+      const ggo::pos2<data_t> & v3,
+      const triangle2d<data_t> & triangle)
+    {
+      ggo::vec2<data_t> diff = v2 - v1;
+      data_t ortho_dot = ggo::ortho_dot(diff, v3);
+      return ((ortho_dot * ggo::ortho_dot(diff, triangle.v1() - v1) < 0) &&
+              (ortho_dot * ggo::ortho_dot(diff, triangle.v2() - v1) < 0) &&
+              (ortho_dot * ggo::ortho_dot(diff, triangle.v3() - v1) < 0));
+    };
+
+    if ((check_disjoint(triangle1.v1(), triangle1.v2(), triangle1.v3(), triangle2) == true) ||
+        (check_disjoint(triangle1.v2(), triangle1.v3(), triangle1.v1(), triangle2) == true) ||
+        (check_disjoint(triangle1.v3(), triangle1.v1(), triangle1.v2(), triangle2) == true) ||
+        (check_disjoint(triangle2.v1(), triangle2.v2(), triangle2.v3(), triangle1) == true) ||
+        (check_disjoint(triangle2.v2(), triangle2.v3(), triangle2.v1(), triangle1) == true) ||
+        (check_disjoint(triangle2.v3(), triangle2.v1(), triangle2.v2(), triangle1) == true))
+    {
+      return triangle_intersection::disjoints;
+    }
+
+    return triangle_intersection::partial_overlap;
+  }
+}
