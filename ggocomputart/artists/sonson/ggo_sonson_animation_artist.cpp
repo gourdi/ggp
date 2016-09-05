@@ -223,7 +223,7 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
     int width = _opacity_mask.get_width() / _scale_factor;
     int height = _opacity_mask.get_height() / _scale_factor;
 
-    if (glow_segment.get_rect_intersection(ggo::rect_float::from_left_right_bottom_top(-0.5f, width - 0.5f, -0.5f, height - 0.5f)) == ggo::rect_intersection::DISJOINTS)
+    if (glow_segment.get_rect_intersection(ggo::rect_float::from_left_right_bottom_top(-0.5f, width - 0.5f, -0.5f, height - 0.5f)) == ggo::rect_intersection::disjoints)
     {
       _strips.clear();
     }

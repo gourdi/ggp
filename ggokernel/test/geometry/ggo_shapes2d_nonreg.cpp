@@ -591,7 +591,7 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 2, 1, 3, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 6, 2, 4, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::shape_in_rect);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 5, 2, 3, ggo::rect_intersection::UNKNOWN);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 5, 2, 3, ggo::rect_intersection::unknown);
   }
 
   // Intersection.
@@ -618,7 +618,7 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 2, 0, 1, ggo::rect_intersection::disjoints);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 8, 4, 8, ggo::rect_intersection::disjoints);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 3, 2, 3, ggo::rect_intersection::rect_in_shape);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 4, 2, 4, ggo::rect_intersection::UNKNOWN);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 2, 4, 2, 4, ggo::rect_intersection::unknown);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, -2, 8, -3, 8, ggo::rect_intersection::shape_in_rect);
   }
 
@@ -649,7 +649,7 @@ GGO_TEST(shapes2d, multi_shape)
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 0, 1, 0, 1, ggo::rect_intersection::disjoints);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 1, 10, 0, 10, ggo::rect_intersection::shape_in_rect);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 3, 4, 2, 3, ggo::rect_intersection::rect_in_shape);
-    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 3, 5, ggo::rect_intersection::UNKNOWN);
+    GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 3, 5, ggo::rect_intersection::unknown);
     GGO_CHECK_RECT_INTERSECTION(multi_shape, 4, 5, 5, 6, ggo::rect_intersection::disjoints);
   }
 }

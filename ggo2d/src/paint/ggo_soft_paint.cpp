@@ -79,9 +79,9 @@ namespace
 
       switch (intersection)
       {
-      case ggo::rect_intersection::DISJOINTS:
+      case ggo::rect_intersection::disjoints:
         break;
-      case ggo::rect_intersection::RECT_IN_SHAPE:
+      case ggo::rect_intersection::rect_in_shape:
         block_layers.push_back(layer);
         break;
       default:
@@ -166,9 +166,9 @@ namespace
 
         switch (intersection)
         {
-        case ggo::rect_intersection::DISJOINTS:
+        case ggo::rect_intersection::disjoints:
           break;
-        case ggo::rect_intersection::RECT_IN_SHAPE:
+        case ggo::rect_intersection::rect_in_shape:
           current_block_layers.push_back(layer);
           break;
         default:

@@ -18,7 +18,7 @@ namespace ggo
     shape_in_rect,
     partial_overlap,
     disjoints,
-    UNKNOWN
+    unknown
   };
 
   template <typename T>
