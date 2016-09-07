@@ -107,12 +107,6 @@ GGO_TEST(shapes2d, triangle_polygon)
   GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, 0, 3, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(triangle, 2, 3, -1, 3, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(triangle, 1, 2, 1, 2, ggo::rect_intersection::disjoints);
-
-  // Triangle intersection.
-  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }) == ggo::triangle_intersection::triangle2_in_triangle1);
-  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }, { { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }) == ggo::triangle_intersection::triangle1_in_triangle2);
-  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 6.f, 3.f },{ 7.f, 3.f },{ 6.f, 4.f } }) == ggo::triangle_intersection::disjoints);
-  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 4.f, 2.f },{ 5.f, 4.f },{ 4.f, 4.f } }) == ggo::triangle_intersection::partial_overlap);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -149,6 +143,23 @@ GGO_TEST(shapes2d, triangle)
   GGO_CHECK_RECT_INTERSECTION(triangle, 6, 8, 1, 5, ggo::rect_intersection::partial_overlap);
   GGO_CHECK_RECT_INTERSECTION(triangle, 4, 5, 5, 8, ggo::rect_intersection::partial_overlap);
   GGO_CHECK_RECT_INTERSECTION(triangle, 1, 9, 4, 5, ggo::rect_intersection::partial_overlap);
+
+  // Triangle intersection.
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }) == ggo::triangle_intersection::triangle2_in_triangle1);
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }, { { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }) == ggo::triangle_intersection::triangle1_in_triangle2);
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 6.f, 3.f },{ 7.f, 3.f },{ 6.f, 4.f } }) == ggo::triangle_intersection::disjoints);
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 4.f, 2.f },{ 5.f, 4.f },{ 4.f, 4.f } }) == ggo::triangle_intersection::partial_overlap);
+
+  // Triangle area.
+  auto check_area = [&](float x1, float y1, float x2, float y2, float x3, float y3, float expected_area)
+  {
+    ggo::triangle2d_float triangle({ x1, y1 }, { x2, y2 }, { x3, y3 });
+    GGO_CHECK_FABS(triangle.area(), expected_area);
+  };
+  check_area(2.0f, 2.0f, 4.0f, 2.0f, 5.0f, 3.0f, 1.0f);
+  check_area(4.0f, 2.0f, 2.0f, 2.0f, 5.0f, 3.0f, 1.0f);
+  check_area(4.0f, 2.0f, 5.0f, 3.0f, 2.0f, 2.0f, 1.0f);
+  check_area(2.0f, 1.0f, 5.0f, 2.0f, 3.0f, 6.0f, 7.0f);
 }
 
 /////////////////////////////////////////////////////////////////////

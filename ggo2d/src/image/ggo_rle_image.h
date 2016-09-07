@@ -17,6 +17,10 @@ namespace ggo
     void                      set(int x, int y, const color_t & value) override;
     color_t                   get(int x, int y) const override;
 
+    // No copy.
+                              rle_image(const rle_image<color_t> & rhs) = delete;
+    void                      operator=(const rle_image<color_t> & rhs) = delete;
+
   private:
 
     ggo::array<color_t, 1> &  get_cache_line(int y) const;

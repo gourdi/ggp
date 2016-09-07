@@ -23,6 +23,8 @@ namespace ggo
     rect_data<data_t>         get_bounding_rect() const override;
     rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 
+    data_t                    area() const;
+
     const ggo::pos2<data_t> & v1() const { return _v1; }
     const ggo::pos2<data_t> & v2() const { return _v2; }
     const ggo::pos2<data_t> & v3() const { return _v3; }
