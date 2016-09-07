@@ -31,7 +31,7 @@
     <ClCompile Include="artists\bozons\ggo_bozons_animation_artist.cpp" />
     <ClCompile Include="artists\bubbles\ggo_bubbles_artist.cpp" />
     <ClCompile Include="artists\buddhabrot\ggo_buddhabrot_artist.cpp" />
-    <ClCompile Include="artists\cabrel\ggo_cabrel_animation_artist.cpp" />
+    <ClCompile Include="artists\cabrel\ggo_cabrel_bitmap_artist.cpp" />
     <ClCompile Include="artists\cells\ggo_cells_artist.cpp" />
     <ClCompile Include="artists\chryzode\ggo_chryzode_animation_artist.cpp" />
     <ClCompile Include="artists\chryzode\ggo_chryzode_artist.cpp" />
@@ -121,8 +121,7 @@
     <ClInclude Include="artists\bozons\ggo_bozons_animation_artist.h" />
     <ClInclude Include="artists\bubbles\ggo_bubbles_artist.h" />
     <ClInclude Include="artists\buddhabrot\ggo_buddhabrot_artist.h" />
-    <ClInclude Include="artists\cabrel\ggo_cabrel_animation_artist.h" />
-    <ClInclude Include="artists\cabrel\ggo_cabrel_curve.h" />
+    <ClInclude Include="artists\cabrel\ggo_cabrel_bitmap_artist.h" />
     <ClInclude Include="artists\cells\ggo_cells_artist.h" />
     <ClInclude Include="artists\chryzode\ggo_chryzode_animation_artist.h" />
     <ClInclude Include="artists\chryzode\ggo_chryzode_artist.h" />

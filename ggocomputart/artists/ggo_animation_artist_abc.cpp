@@ -29,7 +29,6 @@
 #include "artists/sonson/ggo_sonson_animation_artist.h"
 #include "artists/rediff/ggo_rediff_animation_artist.h"
 #include "artists/entabeni/ggo_entabeni_animation_artist.h"
-#include "artists/cabrel/ggo_cabrel_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS
@@ -138,9 +137,6 @@ ggo_animation_artist_abc * ggo_animation_artist_abc::create(ggo_animation_artist
     break;
   case GGO_ANIMATION_ARTIST_ENTABENI:
     artist = new ggo_entabeni_animation_artist(render_width, render_height);
-    break;
-  case GGO_ANIMATION_ARTIST_CABREL:
-    artist = new ggo_cabrel_animation_artist(render_width, render_height);
     break;
 	default:
 		GGO_FAIL();
