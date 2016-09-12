@@ -4,15 +4,14 @@
 namespace
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
+  template <typename color_type, bool bypass_shape_sampling>
   color_type get_color_at_pixel(const std::vector<ggo::layer<color_type>> & layers,
                                 const ggo::image_abc<color_type> & image,
                                 int x,
                                 int y,
                                 int width,
                                 int height,
-                                const ggo::pixel_sampler_abc & sampler,
-                                bool bypass_shape_sampling = false)
+                                const ggo::pixel_sampler_abc & sampler)
   {
     color_type pixel_color(0);
     color_type bkgd_color(image.get(x, y));
@@ -40,20 +39,24 @@ namespace
       pixel_color += sample_color;
     });
 
+    if (x == 11 && y == 15)
+    {
+      int t = 0;
+    }
+
     return pixel_color / static_cast<float>(sampler.get_samples_count());
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename color_type>
+  template <typename color_type, bool bypass_shape_sampling>
   void process_block(ggo::image_abc<color_type> & image,
                      const std::vector<ggo::layer<color_type>> & layers,
                      const ggo::pixel_rect & pixel_rect,
-                     const ggo::pixel_sampler_abc & sampler,
-                     bool bypass_shape_sampling)
+                     const ggo::pixel_sampler_abc & sampler)
   {
     pixel_rect.for_each_pixel([&](int x, int y)
     {
-      image.set(x, y, get_color_at_pixel(layers, image, x, y, image.get_width(), image.get_height(), sampler));
+      image.set(x, y, get_color_at_pixel<color_type, bypass_shape_sampling>(layers, image, x, y, image.get_width(), image.get_height(), sampler));
     });
   }
 
@@ -100,20 +103,19 @@ namespace
     // The current block is inside all shapes. Process block without checking if pixel samples are inside a shape.
     if (block_inside_all_shapes == true)
     {
-      process_block(image, block_layers, pixel_rect, sampler, true);
+      process_block<color_type, true>(image, block_layers, pixel_rect, sampler);
     }
-
     // If the block matches a single pixel, paint the pixel.
-    if (pixel_rect.is_one_pixel() == true)
+    else if (pixel_rect.is_one_pixel() == true)
     {
       int x = pixel_rect.left();
       int y = pixel_rect.bottom();
 
-      image.set(x, y, get_color_at_pixel(block_layers, image, x, y, image.get_width(), image.get_height(), sampler));
+      image.set(x, y, get_color_at_pixel<color_type, false>(block_layers, image, x, y, image.get_width(), image.get_height(), sampler));
     }
+    // Recursion.
     else
     {
-      // Recursion.
       ggo::pixel_rect pixel_rect1 = pixel_rect;
       ggo::pixel_rect pixel_rect2 = pixel_rect;
 
@@ -179,7 +181,14 @@ namespace
       }
 
       // Paint.
-      process_block(image, current_block_layers, block_pixel_rect, sampler, block_inside_all_shapes);
+      if (block_inside_all_shapes == true)
+      {
+        process_block<color_type, true>(image, current_block_layers, block_pixel_rect, sampler);
+      }
+      else
+      {
+        process_block<color_type, false>(image, current_block_layers, block_pixel_rect, sampler);
+      }
 
       // Move to the next block.
       if (x_end < pixel_rect.right())
@@ -251,7 +260,7 @@ namespace
         paint_recursive(image, layers, pixel_rect, sampler);
         break;
       case ggo::space_partitionning::none:
-        process_block(image, layers, pixel_rect, sampler, false);
+        process_block<color_type, false>(image, layers, pixel_rect, sampler);
         break;
       case ggo::space_partitionning::block8x8:
         paint_block8x8(image, layers, pixel_rect, sampler);
@@ -260,7 +269,7 @@ namespace
     }
     else
     {
-      process_block(image, layers, pixel_rect, sampler, false);
+      process_block<color_type, false>(image, layers, pixel_rect, sampler);
     }
   }
 }
