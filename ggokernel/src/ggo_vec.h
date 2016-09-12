@@ -228,6 +228,13 @@ namespace ggo
   {
     return std::atan2(v.template get<1>(), v.template get<0>());
   }
+
+  template <typename data_t>
+  data_t get_angle(const ggo::vec<data_t, 2> & v1, const ggo::vec<data_t, 2> & v2)
+  {
+    GGO_ASSERT(v1.get_hypot() > 0 && v2.get_hypot() > 0);
+    return std::abs(std::acos(ggo::dot(v1, v2) / (v1.get_length() * v2.get_length())));
+  }
 }
 
 /////////////////////////////////////////////////////////////////////

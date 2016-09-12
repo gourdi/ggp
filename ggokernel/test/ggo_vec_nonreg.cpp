@@ -277,3 +277,11 @@ GGO_TEST(vec, basis)
   }
 }
 
+//////////////////////////////////////////////////////////////////
+GGO_TEST(vec, angle)
+{
+  GGO_CHECK_FABS(ggo::get_angle(ggo::vec2f(2.f, 0.f), ggo::vec2f(0.f, 2.f)), ggo::pi<float>()/ 2.f);
+  GGO_CHECK_FABS(ggo::get_angle(ggo::vec2f(2.f, 0.f), ggo::vec2f(0.f, -2.f)), ggo::pi<float>() / 2.f);
+  GGO_CHECK_FABS(ggo::get_angle(ggo::vec2f(-2.f, 0.f), ggo::vec2f(0.f, -2.f)), ggo::pi<float>() / 2.f);
+}
+

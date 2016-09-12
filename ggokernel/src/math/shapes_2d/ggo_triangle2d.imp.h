@@ -147,16 +147,16 @@ namespace ggo
     }
 
     auto check_disjoint = [](
-      const ggo::pos2<data_t> & v1,
-      const ggo::pos2<data_t> & v2,
-      const ggo::pos2<data_t> & v3,
+      const ggo::pos2<data_t> & edge_v1,
+      const ggo::pos2<data_t> & edge_v2,
+      const ggo::pos2<data_t> & v,
       const triangle2d<data_t> & triangle)
     {
-      ggo::vec2<data_t> diff = v2 - v1;
-      data_t ortho_dot = ggo::ortho_dot(diff, v3);
-      return ((ortho_dot * ggo::ortho_dot(diff, triangle.v1() - v1) < 0) &&
-              (ortho_dot * ggo::ortho_dot(diff, triangle.v2() - v1) < 0) &&
-              (ortho_dot * ggo::ortho_dot(diff, triangle.v3() - v1) < 0));
+      ggo::vec2<data_t> diff = edge_v2 - edge_v1;
+      data_t ortho_dot = ggo::ortho_dot(diff, v - edge_v1);
+      return ((ortho_dot * ggo::ortho_dot(diff, triangle.v1() - edge_v1) <= 0) &&
+              (ortho_dot * ggo::ortho_dot(diff, triangle.v2() - edge_v1) <= 0) &&
+              (ortho_dot * ggo::ortho_dot(diff, triangle.v3() - edge_v1) <= 0));
     };
 
     if ((check_disjoint(triangle1.v1(), triangle1.v2(), triangle1.v3(), triangle2) == true) ||

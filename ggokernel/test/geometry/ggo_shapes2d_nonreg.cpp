@@ -149,6 +149,9 @@ GGO_TEST(shapes2d, triangle)
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 2.f, 2.f },{ 3.f, 3.f },{ 2.f, 3.f } }, { { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }) == ggo::triangle_intersection::triangle1_in_triangle2);
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 6.f, 3.f },{ 7.f, 3.f },{ 6.f, 4.f } }) == ggo::triangle_intersection::disjoints);
   GGO_CHECK(ggo::get_triangle_intersection<float>({ { 1.f, 1.f },{ 7.f, 1.f },{ 1.f, 5.f } }, { { 4.f, 2.f },{ 5.f, 4.f },{ 4.f, 4.f } }) == ggo::triangle_intersection::partial_overlap);
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 2.f, 1.f },{ 5.f, 3.f },{ 2.f, 5.f } }, { { 4.f, 5.f },{ 5.f, 6.f },{ 4.f, 7.f } }) == ggo::triangle_intersection::disjoints);
+  GGO_CHECK(ggo::get_triangle_intersection<float>({ { 145.f, 145.f },{ 176.f, 70.f },{ 245.f, 126.f } }, { { 175.f, 93.f },{ 245.f, 126.f },{ 253.f, 51.f } }) == ggo::triangle_intersection::partial_overlap);
+
 
   // Triangle area.
   auto check_area = [&](float x1, float y1, float x2, float y2, float x3, float y3, float expected_area)
