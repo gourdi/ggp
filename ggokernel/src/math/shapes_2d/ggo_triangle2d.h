@@ -29,6 +29,10 @@ namespace ggo
     const ggo::pos2<data_t> & v2() const { return _v2; }
     const ggo::pos2<data_t> & v3() const { return _v3; }
 
+    data_t                    angle1() const;
+    data_t                    angle2() const;
+    data_t                    angle3() const;
+
   private:
 
     ggo::pos2<data_t> _v1;

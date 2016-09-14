@@ -500,6 +500,21 @@ GGO_TEST(shapes2d, rectangle)
   GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 4, 5, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, -1, 0, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(rect, 7, 10, 1, 3, ggo::rect_intersection::disjoints);
+
+  // Extend.
+  auto check_extend = [&](const ggo::rect_float & rect, const ggo::pos2f & p, const ggo::rect_float & expected_rect)
+  {
+    ggo::rect_float extended_rect(rect);
+    extended_rect.extend(p);
+
+    GGO_CHECK_FABS(extended_rect.left(),   expected_rect.left());
+    GGO_CHECK_FABS(extended_rect.bottom(), expected_rect.bottom());
+    GGO_CHECK_FABS(extended_rect.width(),  expected_rect.width());
+    GGO_CHECK_FABS(extended_rect.height(), expected_rect.height());
+  };
+  check_extend(rect, { 4.f, 2.f }, rect);
+  check_extend(rect, { 1.f, 4.f }, ggo::rect_float::from_left_right_bottom_top(1.f, 6.f, 1.f, 4.f));
+  check_extend(rect, { 7.f, -1.f }, ggo::rect_float::from_left_right_bottom_top(3.f, 7.f, -1.f, 3.f));
 }
 
 /////////////////////////////////////////////////////////////////////

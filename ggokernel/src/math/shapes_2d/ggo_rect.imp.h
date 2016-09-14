@@ -153,4 +153,24 @@ namespace ggo
     _rect_data._width  += 2 * horz_extent;
     _rect_data._height += 2 * vert_extent;
   }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void rect<data_t>::extend(const ggo::pos2f & p)
+  {
+    data_t left   = _rect_data._pos.get<0>();
+    data_t bottom = _rect_data._pos.get<1>();
+    data_t right  = left   + _rect_data._width;
+    data_t top    = bottom + _rect_data._height;
+
+    left    = std::min(left,   p.get<0>());
+    bottom  = std::min(bottom, p.get<1>());
+    right   = std::max(right,  p.get<0>());
+    top     = std::max(top,    p.get<1>());
+
+    _rect_data._pos.set<0>(left);
+    _rect_data._pos.set<1>(bottom);
+    _rect_data._width = right - left;
+    _rect_data._height = top - bottom;
+  }
 }

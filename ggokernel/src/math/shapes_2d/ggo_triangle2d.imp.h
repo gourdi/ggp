@@ -125,6 +125,27 @@ namespace ggo
     return std::abs((_v2.get<0>() - _v1.get<0>()) * (_v3.get<1>() - _v1.get<1>()) -
                     (_v3.get<0>() - _v1.get<0>()) * (_v2.get<1>() - _v1.get<1>())) / 2;
   }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t triangle2d<data_t>::angle1() const
+  {
+    return ggo::get_angle(_v2 - _v1, _v3 - _v1);
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t triangle2d<data_t>::angle2() const
+  {
+    return ggo::get_angle(_v1 - _v2, _v3 - _v2);
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t triangle2d<data_t>::angle3() const
+  {
+    return ggo::get_angle(_v1 - _v3, _v2 - _v3);
+  }
 }
 
 namespace ggo

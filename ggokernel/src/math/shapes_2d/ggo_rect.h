@@ -43,6 +43,7 @@ namespace ggo
                 
     void              inflate(data_t extent);
     void              inflate(data_t horz_extent, data_t vert_extent);
+    void              extend(const ggo::pos2f & p);
   
     // Interfaces.  
     void				      move(data_t dx, data_t dy) override { _rect_data._pos.move(dx, dy); }
