@@ -39,10 +39,11 @@ namespace ggo
     data_t            right() const { return _rect_data._pos.template get<0>() + _rect_data._width; }
     data_t            top() const { return _rect_data._pos.template get<1>() + _rect_data._height; }
 
-    ggo::pos2<data_t> center() const { return ggo::pos2<data_t>(_rect_data._pos.template get<0>() + _rect_data._pos._width / 2, _rect_data._pos.template get<1>() + _rect_data._pos._height / 2); }
+    ggo::pos2<data_t> center() const { return ggo::pos2<data_t>(_rect_data._pos.template get<0>() + _rect_data._width / 2, _rect_data._pos.template get<1>() + _rect_data._height / 2); }
                 
     void              inflate(data_t extent);
     void              inflate(data_t horz_extent, data_t vert_extent);
+
     void              extend(const ggo::pos2f & p);
   
     // Interfaces.  
