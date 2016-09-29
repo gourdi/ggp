@@ -95,6 +95,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggocomputartanim", "ggocomp
 		{F78D77E4-B028-41AD-A808-C2E0E062A68D} = {F78D77E4-B028-41AD-A808-C2E0E062A68D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggogame", "ggogame\ggogame.vcxproj", "{D304025F-BC5E-497D-B219-0878F97A6B69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -199,6 +201,14 @@ Global
 		{378F8D62-33B6-4D45-BF11-8276F30F7F1B}.Release|x64.Build.0 = Release|x64
 		{378F8D62-33B6-4D45-BF11-8276F30F7F1B}.Release|x86.ActiveCfg = Release|Win32
 		{378F8D62-33B6-4D45-BF11-8276F30F7F1B}.Release|x86.Build.0 = Release|Win32
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Debug|x64.ActiveCfg = Debug|x64
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Debug|x64.Build.0 = Debug|x64
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Debug|x86.ActiveCfg = Debug|Win32
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Debug|x86.Build.0 = Debug|Win32
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x64.ActiveCfg = Release|x64
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x64.Build.0 = Release|x64
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x86.ActiveCfg = Release|Win32
+		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
