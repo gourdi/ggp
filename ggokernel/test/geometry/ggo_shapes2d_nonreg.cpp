@@ -48,6 +48,11 @@ GGO_TEST(shapes2d, segment)
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(3, 2, 5, 2), intersect) == true);
   GGO_CHECK_FABS(intersect.get<0>(), 4);
   GGO_CHECK_FABS(intersect.get<1>(), 2);
+
+  segment = ggo::segment_float({ 2.f, 1.f }, { 4.f, 3.f });
+  GGO_CHECK_FABS(segment.dist_to_point(1.f, 1.f), 1.f);
+  GGO_CHECK_FABS(segment.dist_to_point(4.f, 5.f), 2.f);
+  GGO_CHECK_FABS(segment.hypot_to_point(1.f, 4.f), 8.f);
 }
 
 /////////////////////////////////////////////////////////////////////
