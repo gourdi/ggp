@@ -11,8 +11,8 @@ const int screen_width = 640;
 const int screen_height = 480;
 const float attenuation = 0.999f;
 
-ggo::point2d_float origin_pixel_pos{ 0.5f * screen_width, 0.5f * screen_height };
-float              meters_per_pixel = 0.001f;
+ggo::pos2f origin_pixel_pos{ 0.5f * screen_width, 0.5f * screen_height };
+float      meters_per_pixel = 0.001f;
 
 std::vector<std::vector<ggo::oriented_box_body>> history;
 
@@ -24,11 +24,11 @@ void render_physics(const std::vector<ggo::oriented_box_body> & bodies, const st
 
   SDL_CALL(SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF));
 
-  auto map_point = [&](const ggo::point2d_float & p) {
-    ggo::point2d_float mapped_point = origin_pixel_pos + p / meters_per_pixel;
+  auto map_point = [&](const ggo::pos2f & p) {
+    ggo::pos2f mapped_point = origin_pixel_pos + p / meters_per_pixel;
     SDL_Point sdl_point;
-    sdl_point.x = ggo::to<int>(mapped_point.x());
-    sdl_point.y = screen_height - ggo::to<int>(mapped_point.y());
+    sdl_point.x = ggo::to<int>(mapped_point.get<0>());
+    sdl_point.y = screen_height - ggo::to<int>(mapped_point.get<1>());
     return sdl_point;
   };
 
@@ -51,7 +51,7 @@ void render_physics(const std::vector<ggo::oriented_box_body> & bodies, const st
   for (const auto & half_plane : half_planes)
   {
     std::vector<SDL_Point> mapped_points;
-    ggo::vector2d_float ortho_normal(-half_plane.normal().y(), half_plane.normal().x());
+    ggo::vec2f ortho_normal(-half_plane.normal().get<1>(), half_plane.normal().get<0>());
     mapped_points.push_back(map_point(half_plane.normal() * half_plane.dist_to_origin() + 1000.f * ortho_normal));
     mapped_points.push_back(map_point(half_plane.normal() * half_plane.dist_to_origin() - 1000.f * ortho_normal));
 

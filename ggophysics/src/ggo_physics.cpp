@@ -53,11 +53,11 @@ namespace ggo
         // Collisions with half-planes.
         for (const auto & half_plane : half_planes)
         {
-          ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
+          ggo::pos2f pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
           if (test_collision(half_plane, it_body->_box, pos, normal) == true)
           {
             // Handle bouncing: update velocities by computing impulse.
-            ggo::vector2d_float diff = it_body->_box.get_center() - pos;
+            ggo::vec2f diff = it_body->_box.get_center() - pos;
             float impulse = compute_impulse(*it_body, pos, normal);
 
             it_body->apply_impulse(impulse, pos, normal);
@@ -72,7 +72,7 @@ namespace ggo
         {
           GGO_ASSERT(it_body != it_body2);
 
-          ggo::point2d_float pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
+          ggo::pos2f pos{ 0.f, 0.f }, normal{ 0.f, 0.f };
           if (test_collision(it_body->_box, it_body2->_box, pos, normal) == true)
           {
             // Handle bouncing: update velocities by computing impulse.

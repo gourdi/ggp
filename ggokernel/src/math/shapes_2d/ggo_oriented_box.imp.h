@@ -16,7 +16,7 @@ namespace ggo
       return _pos - _size1 * _dir + _size2 * dir2();
     default:
       GGO_FAIL();
-      return ggo::pos2<data_t>(0, 0);
+      return ggo::pos2<data_t>(0.f, 0.f);
     }
   }
 

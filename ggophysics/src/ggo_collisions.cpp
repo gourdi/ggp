@@ -6,10 +6,10 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////////
   bool test_collision(const ggo::half_plane<float> & half_plane, const ggo::oriented_box<float> & box,
-                      ggo::point2d_float & pos, ggo::vector2d_float & normal)
+                      ggo::pos2f & pos, ggo::vec2f & normal)
   {
     // Check if points of the current box are inside the half-plane.
-    std::vector<ggo::point2d_float> inside_points;
+    std::vector<ggo::pos2f> inside_points;
     for (int i = 0; i < 4; ++i)
     {
       float dist = ggo::dot(half_plane.normal(), box[i]) - half_plane.dist_to_origin();
@@ -40,14 +40,14 @@ namespace ggo
 
   namespace
   {
-    void find_collision_info(const ggo::oriented_box_float & box, const std::vector<ggo::point2d_float> & inside_points, ggo::point2d_float & pos, ggo::vector2d_float & normal)
+    void find_collision_info(const ggo::oriented_box_float & box, const std::vector<ggo::pos2f> & inside_points, ggo::pos2f & pos, ggo::vec2f & normal)
     {
       std::vector<std::pair<float, float>> dots;
       for (const auto & point : inside_points)
       {
         GGO_ASSERT(box.is_point_inside(point) == true);
 
-        ggo::vector2d_float diff(point - box.get_center());
+        ggo::vec2f diff(point - box.get_center());
         dots.push_back(std::make_pair(ggo::dot(box.dir(), diff), ggo::dot(box.dir2(), diff)));
       }
 
@@ -98,10 +98,10 @@ namespace ggo
   // you just need to check for points inside one or another box to detect collision.
   // This is a simplification, since in the general case, this test is not enough.
   bool test_collision(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2,
-                      ggo::point2d_float & pos, ggo::vector2d_float & normal)
+                      ggo::pos2f & pos, ggo::vec2f & normal)
   {
-    std::vector<ggo::point2d_float> inside_box1;
-    std::vector<ggo::point2d_float> inside_box2;
+    std::vector<ggo::pos2f> inside_box1;
+    std::vector<ggo::pos2f> inside_box2;
 
     for (const auto & point : box2.get_points())
     {

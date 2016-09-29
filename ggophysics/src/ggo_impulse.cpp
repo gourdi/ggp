@@ -5,10 +5,10 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////////
   float compute_impulse(const ggo::oriented_box_body & body,
-                        const ggo::vector2d_float & pos,
-                        const ggo::vector2d_float & normal)
+                        const ggo::vec2f & pos,
+                        const ggo::vec2f & normal)
   {
-    ggo::vector2d_float diff = body._box.get_center() - pos;
+    ggo::vec2f diff = body._box.get_center() - pos;
     float ortho_dot = ggo::ortho_dot(diff, normal);
 
     float num = -(1 + body._restitution) * (ggo::dot(body._linear_velocity, normal) + body._angular_velocity * ortho_dot);
@@ -20,11 +20,11 @@ namespace ggo
   //////////////////////////////////////////////////////////////////
   float compute_impulse(const ggo::oriented_box_body & body1,
                         const ggo::oriented_box_body & body2,
-                        const ggo::vector2d_float & pos,
-                        const ggo::vector2d_float & normal)
+                        const ggo::vec2f & pos,
+                        const ggo::vec2f & normal)
   {
-    ggo::vector2d_float diff1 = body1._box.get_center() - pos;
-    ggo::vector2d_float diff2 = body2._box.get_center() - pos;
+    ggo::vec2f diff1 = body1._box.get_center() - pos;
+    ggo::vec2f diff2 = body2._box.get_center() - pos;
     float ortho_dot1 = ggo::ortho_dot(diff1, normal);
     float ortho_dot2 = ggo::ortho_dot(diff2, normal);
 

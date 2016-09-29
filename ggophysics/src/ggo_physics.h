@@ -12,9 +12,9 @@ namespace ggo
 
     float moment_of_intertia() const { return _mass * (ggo::square(_box.size1()) + ggo::square(_box.size2())) / 3.f; }
 
-    void apply_impulse(float impulse, const ggo::point2d_float & pos, const ggo::vector2d_float & normal)
+    void apply_impulse(float impulse, const ggo::pos2f & pos, const ggo::vec2f & normal)
     {
-      const ggo::vector2d_float diff = _box.get_center() - pos;
+      const ggo::vec2f diff = _box.get_center() - pos;
 
       _linear_velocity += impulse * normal / _mass;
       _angular_velocity += impulse * ggo::ortho_dot(diff, normal) / moment_of_intertia();
@@ -23,7 +23,7 @@ namespace ggo
     float                   _mass = 1.f; // 1 kg.
     float                   _restitution = 0.9f;
     ggo::oriented_box_float _box;
-    ggo::vector2d_float     _linear_velocity = { 0.f, 0.f };
+    ggo::vec2f              _linear_velocity = { 0.f, 0.f };
     float                   _angular_velocity = 0.f;
   };
 
