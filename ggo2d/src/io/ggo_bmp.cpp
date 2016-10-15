@@ -9,20 +9,20 @@ namespace
   //////////////////////////////////////////////////////////////
   // Write pixels (note that pixels are stored BGR from bottom to top.
   template <ggo::pixel_buffer_format pbf>
-  void write_pixels(std::ofstream & ofs, const void * rgb, int width, int height, int line_step)
+  void write_pixels(std::ofstream & ofs, const void * buffer, int width, int height, int line_step)
   {
     for (int y = 0; y < height; ++y)
     {
-      const uint8_t * ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<pbf>(rgb, y, height, line_step));
+      const void * ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_step);
 
       for (int x = 0; x < width; ++x)
       {
         auto c = ggo::get_pixel<pbf>(ptr);
-        ggo::color_8u c_rgb = ggo::color_conv<ggo::pixel_buffer_format_info<pbf>::color_t>::to_rgb(c);
-        ofs.write(reinterpret_cast<char*>(&c_rgb._b), 1);
-        ofs.write(reinterpret_cast<char*>(&c_rgb._g), 1);
-        ofs.write(reinterpret_cast<char*>(&c_rgb._r), 1);
-        ptr += ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
+        ggo::color_8u rgb = ggo::to_rgb(c);
+        ofs.write(reinterpret_cast<char*>(&rgb._b), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb._g), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb._r), 1);
+        ptr = ggo::ptr_offset(ptr, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size);
       }
     }
   }
@@ -31,7 +31,7 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool save_bmp(const std::string & filename, const void * rgb, pixel_buffer_format pbf, int width, int height, int line_step)
+  bool save_bmp(const std::string & filename, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_step)
   {
     uint8_t			  header[40];
     std::ofstream ofs(filename.c_str(), std::ios_base::out | std::ios_base::binary);
@@ -77,13 +77,13 @@ namespace ggo
     switch (pbf)
     {
     case ggo::y_8u_yu:
-      write_pixels<ggo::y_8u_yu>(ofs, rgb, width, height, line_step);
+      write_pixels<ggo::y_8u_yu>(ofs, buffer, width, height, line_step);
       break;
     case ggo::rgb_8u_yu:
-      write_pixels<ggo::rgb_8u_yu>(ofs, rgb, width, height, line_step);
+      write_pixels<ggo::rgb_8u_yu>(ofs, buffer, width, height, line_step);
       break;
     case ggo::bgra_8u_yd:
-      write_pixels<ggo::bgra_8u_yd>(ofs, rgb, width, height, line_step);
+      write_pixels<ggo::bgra_8u_yd>(ofs, buffer, width, height, line_step);
       break;
     }
 

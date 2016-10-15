@@ -7,7 +7,7 @@
 
 namespace ggo
 {
-  bool save_bmp(const std::string & filename, const void * rgb, pixel_buffer_format pbf, int width, int height, int line_step);
+  bool save_bmp(const std::string & filename, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_step);
 }
 
 #endif

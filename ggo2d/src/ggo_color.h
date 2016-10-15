@@ -272,58 +272,15 @@ namespace ggo
 // Color conversion
 namespace ggo
 {
-  template <typename color_t>
-  struct color_conv {};
-
-  template <>
-  struct color_conv<ggo::color_8u>
+  inline ggo::color_8u to_rgb(const uint8_t & c)
   {
-    using color_t_16u = ggo::color_16u;
-    using color_t_y = uint8_t;
-    using color_t_rgb = ggo::color_8u;
+    return ggo::color_8u(c, c, c);
+  }
 
-    static ggo::color_8u to_rgb(const ggo::color_8u & c)
-    {
-      return c;
-    }
-
-    static color_16u to_16u(const ggo::color_8u & c)
-    {
-      return ggo::color_16u(c._r, c._g, c._b);
-    }
-
-    static color_8u to_8u(const ggo::color_16u & c)
-    {
-      return ggo::color_8u(
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._r)),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._g)),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._b)));
-    }
-  };
-
-  template <>
-  struct color_conv<uint8_t>
+  inline ggo::color_8u to_rgb(const ggo::color_8u & c)
   {
-    using color_t_16u = uint16_t;
-    using color_t_y = uint8_t;
-    using color_t_rgb = ggo::color_8u;
-
-    static ggo::color_8u to_rgb(const uint8_t & c)
-    {
-      return ggo::color_8u(c, c, c);
-    }
-
-    static uint16_t to_16u(const uint8_t & c)
-    {
-      return static_cast<uint16_t>(c);
-    }
-
-    static uint8_t to_8u(const uint16_t & c)
-    {
-      return static_cast<uint8_t>(ggo::fixed_point_div<8>(c));
-    }
-  };
-
+    return c;
+  }
 }
 
 // Color accumulator.

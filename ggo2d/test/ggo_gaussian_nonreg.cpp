@@ -1,9 +1,12 @@
 #define GGO_GAUSSIAN_DEBUG 1
 
 #include <ggo_nonreg.h>
+#include <ggo_chronometer.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_bmp.h>
+
+//#define GGO_BENCH 1
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian, rgb)
@@ -27,7 +30,16 @@ GGO_TEST(gaussian, rgb)
     buffer.data(), width, height, line_step,
     ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
 
-  ggo::gaussian_blur2d_8u<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+
+#ifdef GGO_BENCH
+  ggo::chronometer chronometer;
+  for (int i = 0; i < 1000; ++i)
+  {
+    ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  }
+  std::cout << chronometer.get_display_time(true) << std::endl;
+#endif
 
   ggo::save_bmp("gaussian_rgb.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, line_step);
 }
@@ -54,7 +66,16 @@ GGO_TEST(gaussian, y)
     buffer.data(), width, height, line_step,
     ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
 
-  ggo::gaussian_blur2d_8u<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+
+#ifdef GGO_BENCH
+  ggo::chronometer chronometer;
+  for (int i = 0; i < 1000; ++i)
+  {
+    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  }
+  std::cout << chronometer.get_display_time(true) << std::endl;
+#endif
 
   ggo::save_bmp("gaussian_y.bmp", buffer.data(), ggo::y_8u_yu, width, height, line_step);
 }

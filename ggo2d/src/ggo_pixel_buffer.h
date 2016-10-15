@@ -118,7 +118,10 @@ namespace ggo
   }
 
   // Set pixel to pointer.
-  template <pixel_buffer_format pbf, typename color_t> void set_pixel(void * ptr, const color_t & c) { static_assert(false, "missing specialization"); }
+  template <pixel_buffer_format pbf, typename color_t> void set_pixel(void * ptr, const color_t & c)
+  {
+    static_assert(false, "missing specialization");
+  }
 
   template <> inline void set_pixel<y_8u_yu, uint8_t>(void * ptr, const uint8_t & c)
   {
@@ -165,7 +168,10 @@ namespace ggo
 
   // Get pixel from pointer.
   template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  color_t get_pixel(const void * ptr) { static_assert(false, "missing specialization"); }
+  color_t get_pixel(const void * ptr)
+  {
+    static_assert(false, "missing specialization");
+  }
   
   template<> inline uint8_t get_pixel<y_8u_yu, uint8_t>(const void * ptr)
   {
