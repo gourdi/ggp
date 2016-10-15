@@ -12,9 +12,10 @@ namespace ggo
     
                 chronometer();
     
-    double 		  get_elapsed_time() const;
-    void		    get_elapsed_time(int & hours, int & minutes, int & seconds) const;
-    std::string	get_display_time() const;
+    double 		  get_elapsed_seconds() const;
+    double 		  get_elapsed_milli_seconds() const;
+    void		    get_elapsed_time(int & hours, int & minutes, int & seconds, int & milli_seconds) const;
+    std::string	get_display_time(bool display_ms = false) const;
     
   private:
     

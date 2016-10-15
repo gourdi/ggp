@@ -105,10 +105,7 @@ namespace ggo
         continue;
       }
 
-      {
-        ggo::color_stream cs(ggo::console_color::YELLOW); // Must be scoped.
-        cs << "Test case: " << it_map.first << std::endl;
-      }
+      std::cout << ggo::yellow_color << "Test case: " << it_map.first << ggo::default_color << std::endl;
 
       for (auto unit_test : it_map.second)
       {
@@ -128,19 +125,16 @@ namespace ggo
 
     if (bypassed_count > 0)
     {
-      ggo::color_stream cs(ggo::console_color::YELLOW);
-      std::cout << std::endl << std::endl << "*** BYPASSED " << bypassed_count << " TEST(S) ***" << std::endl;
+      std::cout << ggo::yellow_color << std::endl << std::endl << "*** BYPASSED " << bypassed_count << " TEST(S) ***" << ggo::default_color << std::endl;
     }
 
     if (failed_count == 0)
     {
-      ggo::color_stream cs(ggo::console_color::GREEN);
-      cs << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << std::endl << std::endl;
+      std::cout << ggo::green_color << std::endl << std::endl << "*** NON-REGRESSION SUCCESSFUL: " << unit_test_count << " TEST(S) PASSED ***" << ggo::default_color << std::endl << std::endl;
     }
     else
     {
-      ggo::color_stream cs(ggo::console_color::RED);
-      cs << std::endl << std::endl << "*** NON-REGRESSION FAILED: " << failed_count << " TEST(S) FAILED ***" << std::endl << std::endl;
+      std::cout << ggo::red_color << std::endl << std::endl << "*** NON-REGRESSION FAILED: " << failed_count << " TEST(S) FAILED ***" << ggo::default_color << std::endl << std::endl;
     }
   }
 }

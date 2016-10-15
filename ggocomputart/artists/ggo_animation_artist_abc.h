@@ -4,6 +4,7 @@
 #include <ggo_artist_abc.h>
 #include <ggo_artist_ids.h>
 #include <ggo_array.h>
+#include <ggo_image_abc.h>
 
 class ggo_animation_artist_abc: public ggo_artist_abc
 {
@@ -11,7 +12,7 @@ public:
 
 	static	ggo_animation_artist_abc *	create(ggo_animation_artist_id artist_id, int render_width, int render_height);
 
-          bool						            render_next_frame(uint8_t * buffer);
+          bool						            render_next_frame(void * buffer, int line_step, bool y_down);
           void						            init();
                   
           int							            get_frame_index() const { return _counter; };
@@ -22,7 +23,7 @@ protected:
 
 	virtual	void						            init_sub() = 0;
             
-	virtual	bool						            render_next_frame_sub(uint8_t * buffer, int frame_index) = 0;
+	virtual	bool						            render_next_frame_sub(void * buffer, int line_step, bool y_down, int frame_index) = 0;
 	
 private:
 	
@@ -38,7 +39,7 @@ public:
 
 private:
 
-          bool	render_next_frame_sub(uint8_t * buffer, int frame_index) override;
+          bool	render_next_frame_sub(ggo::rgb_image_abc & image, int frame_index) override;
   
   virtual	void	init_output_buffer(uint8_t * buffer) = 0;
   virtual	bool	render_next_frame_acc(uint8_t * buffer, int frame_index) = 0;

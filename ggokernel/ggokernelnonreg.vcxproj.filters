@@ -45,9 +45,6 @@
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp">
       <Filter>sampling</Filter>
     </ClCompile>
-    <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp">
-      <Filter>signal_proc</Filter>
-    </ClCompile>
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp">
       <Filter>signal_proc</Filter>
     </ClCompile>

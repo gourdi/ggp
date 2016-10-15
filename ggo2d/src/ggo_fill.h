@@ -3,65 +3,156 @@
 
 #include <stdint.h>
 #include <ggo_curve.h>
+#include <ggo_perlin_noise_field_2d.h>
+#include <ggo_gaussian_field_2d.h>
 #include <ggo_color.h>
-#include <ggo_brush_abc.h>
-#include <ggo_pixel_sampler_abc.h>
-#include <ggo_image_abc.h>
+#include <ggo_2d.h>
 
-// Uncomment to enable 'ggo_fill_brush' functions.
-// Disabled for now since it makes clang crash.
-#define GGO_FILL_BRUSH 1
-
+// Checker.
 namespace ggo
 {
-  void	fill_solid(ggo::gray_image_abc & image, float gray);
-  void	fill_solid(ggo::rgb_image_abc & image, const ggo::color & color);
-  void	fill_solid_rgb(uint8_t * buffer, int count, const ggo::color & color);
-  void	fill_solid_rgb(float * buffer, int count, const ggo::color & color);
+  template <typename color_t, typename set_pixel_func>
+  void fill_checker(int width, int height, const color_t & c1, const color_t & c2, int tile_size, set_pixel_func set_pixel);
+}
 
-  void	fill_checker(ggo::gray_image_abc & image, float gray1, float gray2, int tile_size);
-  void	fill_checker(ggo::rgb_image_abc & image, const ggo::color & color1, const ggo::color & color2, int tile_size);
+// Curve.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_color_curve(int width, int height, const ggo::curve_abc<real_t, color_t> & curve, set_pixel_func set_pixel);
+}
 
-  void	fill_color_curve(ggo::gray_image_abc & image, const ggo::curve_abc<float, float> & color_curve);
-  void	fill_color_curve(ggo::rgb_image_abc & image, const ggo::curve_abc<float, ggo::color> & color_curve);
+// Gaussian.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_gaussian(int width, int height, real_t var, const color_t & c1, const color_t & c2, set_pixel_func set_pixel);
+}
 
-  void	fill_gaussian(ggo::gray_image_abc & image,
-                      float var,
-                      float gray1,
-                      float gray2);
-  void	fill_gaussian(ggo::rgb_image_abc & image,
-                      float var,
-                      const ggo::color & color1,
-                      const ggo::color & color2);
-                      
-  void	fill_4_colors(ggo::gray_image_abc & image,
-                      float gray1,
-                      float gray2,
-                      float gray3,
-                      float gray4);
-  void	fill_4_colors(ggo::rgb_image_abc & image,
-                      const ggo::color & color1,
-                      const ggo::color & color2,
-                      const ggo::color & color3,
-                      const ggo::color & color4);
+// 4 colors.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4, set_pixel_func set_pixel);
+}
 
-  #ifdef GGO_FILL_BRUSH
-  void  fill_brush(ggo::gray_image_abc & image,
-                   const ggo::gray_brush_abc & brush,
-                   const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4());                            
-  void  fill_brush(ggo::rgb_image_abc & image,
-                   const ggo::rgb_brush_abc & brush,
-                   const ggo::pixel_sampler_abc & sampler = ggo::pixel_sampler_4X4());
-  #endif
+// Perlin
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_perlin(int width, int height, real_t size, const color_t & c1, const color_t & c2, set_pixel_func set_pixel);
+}
 
-  void	fill_perlin(ggo::gray_image_abc & image,
-                    float size,
-                    float gray1,
-                    float gray2);
-  void	fill_perlin(ggo::rgb_image_abc & image,
-                    float size,
-                    const ggo::color & color1,
-                    const ggo::color & color2);
+//////////////////////////////////////////////////////////////
+// Implementation.
+
+// Field.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_scalar_field2d(
+    int width, int height,
+    const ggo::scalar_field_2d_abc<real_t> & scalar_field2d,
+    const color_t & c1, const color_t & c2,
+    set_pixel_func set_pixel)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      for (int x = 0; x < width; ++x)
+      {
+        real_t val = scalar_field2d.evaluate(static_cast<real_t>(x), static_cast<real_t>(y));
+
+        set_pixel(x, y, val * c1 + (1 - val) * c2);
+      }
+    }
+  }
+}
+
+// Checker implementation.
+namespace ggo
+{
+  template <typename color_t, typename set_pixel_func>
+  void fill_checker(int width, int height, const color_t & c1, const color_t & c2, int tile_size, set_pixel_func set_pixel)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      for (int x = 0; x < width; ++x)
+      {
+        int index_x = x / tile_size;
+        int index_y = y / tile_size;
+
+        set_pixelt(x, y, ((index_x + index_y) % 2) ? c1 : c2);
+      }
+    }
+  }
+}
+
+// Curve implementation.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_color_curve(int width, int height, const ggo::curve_abc<real_t, color_t> & curve, set_pixel_func set_pixel)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      color_t c = curve.evaluate(y / real_t(height));
+
+      for (int x = 0; x < width; ++x)
+      {
+        set_pixel(x, y, c);
+      }
+    }
+  }
+}
+
+// Gaussian implementation.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_gaussian(int width, int height, real_t var, const color_t & c1, const color_t & c2, set_pixel_func set_pixel)
+  {
+    ggo::gaussian_field2d<real_t> gaussian_field2d;
+
+    gaussian_field2d._x = real_t(0.5) * image.get_width();
+    gaussian_field2d._y = real_t(0.5) * image.get_height();
+    gaussian_field2d._var = var;
+    gaussian_field2d._amp = 1;
+
+    fill_scalar_field2d<color_t>(image, gaussian_field2d, c1, c2, set_pixel);
+  }
+}
+
+// 4 colors implementation.
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4, set_pixel_func set_pixel)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      color_t color5 = (static_cast<real_t>(y) * c1 + static_cast<real_t>(height - y) * c2) / static_cast<real_t>(height);
+      color_t color6 = (static_cast<real_t>(y) * c3 + static_cast<real_t>(height - y) * c4) / static_cast<real_t>(height);
+
+      for (int x = 0; x < width; ++x)
+      {
+        set_pixel(x, y, (static_cast<real_t>(x) * color5 + static_cast<real_t>(width - x) * color6) / static_cast<real_t>(width));
+      }
+    }
+  }
+}
+
+// Perlin implementation
+namespace ggo
+{
+  template <typename color_t, typename real_t, typename set_pixel_func>
+  void fill_perlin(int width, int height, real_t size, const color_t & c1, const color_t & c2, set_pixel_func set_pixel)
+  {
+    ggo::perlin_noise_field2d<real_t> perlin_field2d;
+
+    perlin_field2d.add_octave(size, 1);
+
+    fill_scalar_field2d<color_t>(image, perlin_field2d, c1, c2, set_pixel);
+  }
 }
 
 #endif

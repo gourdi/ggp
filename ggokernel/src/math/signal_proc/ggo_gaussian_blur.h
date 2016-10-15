@@ -1,3 +1,4 @@
+
 #ifndef __GGO_GAUSSIAN_BLUR__
 #define __GGO_GAUSSIAN_BLUR__
 
@@ -11,153 +12,46 @@
 // Definitions.
 namespace ggo
 {
-  // Gaussian filter coefs.
-  template <typename filter_t>
-  std::vector<filter_t> build_gaussian_filter(filter_t stddev, filter_t filter_threshold);
+  // Gaussian kernel coefs.
+  template <typename kernel_t>
+  std::vector<kernel_t> build_gaussian_kernel(kernel_t stddev, kernel_t kernel_threshold);
 
-  // 1D.
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_1d(const getter & in,
-                        setter & out,
-                        int size,
-                        filter_t stddev,
-                        filter_t filter_threshold = filter_t(0.001));
-
-  // 2D horizontal.
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_2d_horz(const getter & in,
-                             setter & out,
-                             int width, int height,
-                             filter_t stddev,
-                             filter_t filter_threshold = filter_t(0.001));
-
-  // 2D vertical.
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_2d_vert(const getter & in,
-                             setter & out,
-                             int width, int height,
-                             filter_t stddev,
-                             filter_t filter_threshold = filter_t(0.001));
-}
-
-/////////////////////////////////////////////////////////////////////
-// Some usefull specializations.
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  // Mirroring generic gaussian 2D.
-  template <typename data_t, typename filter_t, int stride_in = 1, int stride_out = 1>
-  void gaussian_blur_2d_mirror(const data_t * in, data_t * out, int width, int height, float stddev, filter_t filter_threshold)
-  {
-    ggo::array<data_t, 1> tmp(width * height);
-
-    // Setup the filter.
-    auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
-
-    // Horizontal filtering.
-    auto in_horz = [&](int x, int y) { return ggo::get2d_mirror_ref<const data_t, stride_in>(in, x, y, width, height); };
-    auto out_horz = [&](int x, int y, const data_t & v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
-
-    // Vertical filtering.
-    auto in_vert = [&](int x, int y) { return ggo::get2d_mirror_ref(tmp.data(), x, y, width, height); };
-    auto out_vert = [&](int x, int y, const data_t & v) { ggo::set2d<data_t, stride_out>(out, x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  // Looping generic gaussian 2D.
-  template <typename data_t, typename filter_t, int stride_in = 1, int stride_out = 1>
-  void gaussian_blur_2d_loop(const data_t * in, data_t * out, int width, int height, float stddev, filter_t filter_threshold)
-  {
-    ggo::array<data_t, 1> tmp(width * height);
-
-    // Setup the filter.
-    auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
-
-    // Horizontal filtering.
-    auto in_horz = [&](int x, int y) { return ggo::get2d_loop_ref<const data_t, stride_in>(in, x, y, width, height); };
-    auto out_horz = [&](int x, int y, const data_t & v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
-
-    // Vertical filtering.
-    auto in_vert = [&](int x, int y) { return ggo::get2d_loop_ref(tmp.data(), x, y, width, height); };
-    auto out_vert = [&](int x, int y, const data_t & v) { ggo::set2d<data_t, stride_out>(out, x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  // Mirroring uint8_t specialization.
-  template <int stride_in = 1, int stride_out = 1>
-  void gaussian_blur_2d_mirror(const uint8_t * in, uint8_t * out, int width, int height, float stddev, float filter_threshold)
-  {
-    ggo::array<float, 1> tmp(width * height);
-
-    // Setup the filter.
-    auto filter = build_gaussian_filter<float>(stddev, filter_threshold);
-
-    // Horizontal filtering.
-    auto in_horz = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<const uint8_t, stride_in>(in, x, y, width, height)); };
-    auto out_horz = [&](int x, int y, float v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
-
-    // Vertical filtering.
-    auto in_vert = [&](int x, int y) { return ggo::get2d_mirror(tmp.data(), x, y, width, height); };
-    auto out_vert = [&](int x, int y, float v) { ggo::set2d<uint8_t, stride_out>(out, x, y, width, height, ggo::to<uint8_t>(v)); };
-    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  // Looping uint8_t specialization.
-  template <int stride_in = 1, int stride_out = 1>
-  void gaussian_blur_2d_loop(const uint8_t * in, uint8_t * out, int width, int height, float stddev, float filter_threshold)
-  {
-    ggo::array<float, 1> tmp(width * height);
-
-    // Setup the filter.
-    auto filter = build_gaussian_filter<float>(stddev, filter_threshold);
-
-    // Horizontal filtering.
-    auto in_horz = [&](int x, int y) { return ggo::to<float>(ggo::get2d_loop<const uint8_t, stride_in>(in, x, y, width, height)); };
-    auto out_horz = [&](int x, int y, float v) { ggo::set2d(tmp.data(), x, y, width, height, v); };
-    ggo::apply_symetric_filter_2d_horz(in_horz, out_horz, width, height, &filter[0], static_cast<int>(filter.size()));
-
-    // Vertical filtering.
-    auto in_vert = [&](int x, int y) { return ggo::get2d_loop(tmp.data(), x, y, width, height); };
-    auto out_vert = [&](int x, int y, float v) { ggo::set2d<uint8_t, stride_out>(out, x, y, width, height, ggo::to<uint8_t>(v)); };
-    ggo::apply_symetric_filter_2d_vert(in_vert, out_vert, width, height, &filter[0], static_cast<int>(filter.size()));
-  }
+  template <typename kernel_t, typename real_t>
+  std::vector<kernel_t> build_fixed_point_gaussian_kernel(real_t stddev, real_t kernel_threshold, int bit_shift);
 }
 
 /////////////////////////////////////////////////////////////////////
 // Implementation.
 namespace ggo
 {
-  template <typename filter_t>
-  std::vector<filter_t> build_gaussian_filter(filter_t stddev, filter_t filter_threshold)
+  /////////////////////////////////////////////////////////////////////
+  template <typename kernel_t>
+  std::vector<kernel_t> build_gaussian_kernel(kernel_t stddev, kernel_t kernel_threshold)
   {
-    std::vector<filter_t> filter;
+    static_assert(std::is_floating_point<kernel_t>::value, "expecting floating point type");
 
-    // Fill filter and compute norm at the same time.
-    filter.push_back(1);
-    filter_t i = 1;
-    filter_t norm = 1;
-    filter_t variance2 = 2 * stddev * stddev;
+    std::vector<kernel_t> kernel;
+
+    // Fill kernel and compute norm at the same time.
+    kernel.push_back(1);
+    kernel_t i = 1;
+    kernel_t norm = 1;
+    kernel_t variance2 = 2 * stddev * stddev;
     while (true)
     {
-      filter_t coef = std::exp(-i * i / variance2);
-      if (coef < filter_threshold)
+      kernel_t coef = std::exp(-i * i / variance2);
+      if (coef < kernel_threshold)
       {
         break;
       }
-      filter.push_back(coef);
+      kernel.push_back(coef);
       norm += 2 * coef;
 
       ++i;
     }
 
     // Normalize.
-    for (auto & coef : filter)
+    for (auto & coef : kernel)
     {
       coef /= norm;
 #ifdef GGO_GAUSSIAN_DEBUG		
@@ -168,54 +62,57 @@ namespace ggo
     std::cout << std::endl;
 #endif
 
-    return filter;
+    return kernel;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_1d(const getter & in,
-                        setter & out,
-                        int size,
-                        filter_t stddev,
-                        filter_t filter_threshold)
+  template <typename kernel_t, typename real_t>
+  std::vector<kernel_t> build_fixed_point_gaussian_kernel(real_t stddev, real_t kernel_threshold, int bit_shift)
   {
-    // Setup the filter.
-    auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
+    static_assert(std::is_integral<kernel_t>::value, "expecting integral type");
+    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
 
-    // Apply the filter.
-    apply_symetric_filter_1d(in, out, size, &filter[0], static_cast<int>(filter.size()));
-  }
+    auto kernel_real = build_gaussian_kernel(stddev, kernel_threshold);
 
-  /////////////////////////////////////////////////////////////////////
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_2d_horz(const getter & in,
-                             setter & out,
-                             int width, int height,
-                             filter_t stddev,
-                             filter_t filter_threshold)
+    std::vector<kernel_t> kernel;
+    real_t adjust = 1;
+
+    while (true)
     {
-      // Setup the filter.
-      auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
+      kernel.clear();
+      for (const auto & coef_real : kernel_real)
+      {
+        kernel_t coef = ggo::to<kernel_t>((1 << bit_shift) * adjust * coef_real);
+        if (coef == 0)
+        {
+          break;
+        }
+        kernel.push_back(coef);
+#ifdef GGO_GAUSSIAN_DEBUG		
+        std::cout << kernel.back() << ", ";
+#endif
+      }
+#ifdef GGO_GAUSSIAN_DEBUG		
+      std::cout << std::endl;
+#endif  
 
-      // Horizontal filtering.
-      apply_symetric_filter_2d_horz(in, out, width, height, &filter[0], static_cast<int>(filter.size()));
+      // Make sure the sum of integer coef is exactly 1<<bit_shift.
+      kernel_t norm = std::accumulate(kernel.begin(), kernel.end(), kernel_t(0));
+      norm = std::accumulate(kernel.begin() + 1, kernel.end(), norm);
+      if (norm <= kernel_t(1 << bit_shift))
+      {
+        if (norm < kernel_t(1 << bit_shift))
+        {
+          kernel[0] += kernel_t(1 << bit_shift) - norm;
+        }
+        break;
+      }
+
+      adjust -= real_t(0.001);
     }
 
-  /////////////////////////////////////////////////////////////////////
-  template <typename getter, typename setter, typename filter_t>
-  void gaussian_blur_2d_vert(const getter & in,
-                             setter & out,
-                             int width, int height,
-                             filter_t stddev,
-                             filter_t filter_threshold)
-  {
-    // Setup the filter.
-    auto filter = build_gaussian_filter<filter_t>(stddev, filter_threshold);
-
-    // Horizontal filtering.
-    apply_symetric_filter_2d_vert(in, out, width, height, &filter[0], static_cast<int>(filter.size()));
+    return kernel;
   }
 }
 
 #endif
-

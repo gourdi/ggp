@@ -4,7 +4,7 @@
 #include <ggo_shapes2d.h>
 #include <ggo_triangle_interpolation.h>
 #include <ggo_triangle_interpolation_brush.h>
-#include <ggo_rgb_image_buffer.h>
+#include <ggo_image_buffer_abc.h>
 #include <ggo_paint.h>
 #include <ggo_fill.h>
 #include <ggo_bmp.h>
@@ -13,7 +13,8 @@
 GGO_TEST(triangular_interpolation, function)
 {
   const int IMAGE_SIZE = 200;
-  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
+  ggo::image_buffer_rgb_8u_yu image(IMAGE_SIZE, IMAGE_SIZE, 3 * IMAGE_SIZE);
+  image, ggo::color::BLACK);
 
   image.for_each_pixel([&](int x, int y)
   {

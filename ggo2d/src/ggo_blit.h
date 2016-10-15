@@ -1,6 +1,8 @@
 #ifndef __GGO_LAYER__
 #define __GGO_LAYER__
 
+#if 0
+
 #include <ggo_image_abc.h>
 #include <ggo_brush_abc.h>
 #include <ggo_pixel_sampler_abc.h>
@@ -58,3 +60,4 @@ namespace ggo
 
 #endif
 
+#endif

@@ -17,6 +17,7 @@
 
 //////////////////////////////////////////////////////////////
 // Debug.
+
 #ifdef GGO_DEBUG
 #ifdef GGO_WIN
   void GGO_ASSERT(bool b);
@@ -25,6 +26,7 @@
   #define	GGO_ASSERT(zzz) assert(zzz)
 #endif
   #define	GGO_TRACE(...) printf(__VA_ARGS__)
+  #define	GGO_ASSERT_PTR(ptr) if (!ptr) { std::cerr << std::endl << #ptr << " is null" << std::endl; GGO_FAIL(); }
   #define	GGO_ASSERT_EQ(v1, v2) if ((v1) != (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] != " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
   #define	GGO_ASSERT_NE(v1, v2) if ((v1) == (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] == " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
   #define	GGO_ASSERT_LT(v1, v2) if ((v1) >= (v2)) { std::cerr << std::endl << #v1 << " [=" << (v1) << "] >= " << #v2 << " [=" << (v2) << "] !" << std::endl; GGO_FAIL(); }
@@ -37,6 +39,7 @@
 #else
   #define	GGO_TRACE(...)
 	#define	GGO_ASSERT(zzz)
+  #define	GGO_ASSERT_PTR(ptr)
   #define	GGO_ASSERT_EQ(v1, v2)
   #define	GGO_ASSERT_NE(v1, v2)
   #define	GGO_ASSERT_LT(v1, v2)
@@ -58,15 +61,27 @@ namespace ggo
     return generator;
   };
 
-  template <typename T> T rand_int(T inf, T sup)		  { return std::uniform_int_distribution<T>(inf, sup)(get_random_generator()); }
-  template <typename T> T rand_real(T inf, T sup)		  { return std::uniform_real_distribution<T>(inf, sup)(get_random_generator()); }
-  
-  inline  int		  rand_int(int inf, int sup)				  { return rand_int<int>(inf, sup); }
-  inline  float	  rand_float()							          { return rand_real<float>(0, 1); }
-  inline  float	  rand_float(float inf, float sup)		{ return rand_real<float>(inf, sup); }
-  inline  double	rand_double()							          { return rand_real<double>(0, 1); }
-  inline  double	rand_double(double inf, double sup)	{ return rand_real<double>(inf, sup); }
-  inline  bool	  rand_bool()								          { return (rand_int(0, 1) % 2) != 0; }
+  template <typename data_t>
+  data_t rand(data_t inf, data_t sup, typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
+  {
+    return std::uniform_real_distribution<data_t>(inf, sup)(get_random_generator());
+  }
+
+  template <typename data_t>
+  data_t rand(data_t inf, data_t sup, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
+  {
+    return std::uniform_int_distribution<data_t>(inf, sup)(get_random_generator());
+  }
+
+  template <typename data_t>
+  data_t rand()
+  {
+    return rand<data_t>(
+      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::min() : 0,
+      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::max() : 0);
+  }
+
+  inline bool rand_bool() { return (rand<int>(0, 1) % 2) != 0; }
 }
 
 //////////////////////////////////////////////////////////////
@@ -79,34 +94,57 @@ namespace ggo
     return inf_to + (v - inf_from ) * (sup_to - inf_to ) / (sup_from - inf_from);
   }
 
+  template <typename data_t> 
+  data_t pow(data_t base, data_t exponent)
+  {
+    static_assert(std::is_integral<data_t>::value, "expecting integral type");
+    GGO_ASSERT(exponent >= 0);
+
+    if (exponent == 0)
+    {
+      return 1;
+    }
+
+    data_t res = base;
+    for (int i = 1; i < exponent; ++i)
+    {
+      res *= base;
+    }
+    return res;
+  }
+
+  template <typename data_t>
+  data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
+  {
+    v = std::fmod(v, m);
+    return v < 0 ? v + m : v;
+  }
+
+  template <typename data_t>
+  data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
+  {
+    v = v % m;
+    return v < 0 ? v + m : v;
+  }
+
+  template <int bit_shift, typename data_t>
+  data_t fixed_point_div(data_t v)
+  {
+    static_assert(bit_shift > 1, "invalid bit shift");
+    static_assert(std::is_integral<data_t>::value && std::is_unsigned<data_t>::value, "expected unsigned integral type");
+
+    return (v + (1 << (bit_shift - 1))) >> bit_shift;
+  }
+
   template <typename T>	T	      clamp(T v, T inf, T sup)				      { return v > sup ? sup : (v < inf ? inf : v); };
-  template <typename T>	T	      square(T value)							          { return value*value; };
+  template <typename T>	T	      square(T value)							          { return value * value; };
   template <typename T>	T	      sign(T value)							            { return value > T(0) ? T(1) : T(-1); };
-  template <typename T>	T	      pos_mod(T v, T m)						          { v = v % m; return v < 0 ? v + m : v; }
   template <typename T> T       cotan(T angle)                        { return 1 / std::tan(angle); }
   inline					      int		  pad(int value, int pad)				        { return (((value-1)/pad)+1)*pad; };
   inline					      bool	  is_even(int value)						        { return (value&1)==0; };
   inline					      bool	  is_odd(int value)						          { return (value&1)==1; };
   inline					      int		  round_div(int value, int div)	        { return (value+div/2)/div; };
-  inline					      double  pos_fmod(double v, double m)	        { v = std::fmod(v, m); return v < 0 ? v + m : v; } 
-  inline					      float	  pos_fmod(float v, float m)		        { v = std::fmod(v, m); return v < 0 ? v + m : v; } 
   inline					      int		  log2(int v)								            { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
-
-  inline int gcd(int v1, int v2)
-  {
-    int inf = std::min(v1, v2);
-    
-    int res = 1;
-    for (int i = 2; i <= inf; ++i)
-    {
-      if (((v1 % i) == 0) && ((v2 % i) == 0))
-      {
-        res = i;
-      }
-    }
-    
-    return res;
-  }
 }
 
 //////////////////////////////////////////////////////////////

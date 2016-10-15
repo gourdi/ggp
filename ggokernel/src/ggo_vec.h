@@ -30,13 +30,13 @@ namespace ggo
     const vec<data_t, n_dims> &	operator=(const vec<data_t, n_dims> & rhs) { ggo::copy<n_dims, data_t>(_coords, rhs._coords); return *this; }
 
     // Run-time access.
-    data_t &  get(int index) { return _coords[index]; }
+    data_t & get(int index) { return _coords[index]; }
 
     const data_t & get(int index) const { return _coords[index]; }
 
     // Compile-time access.
     template <int index>
-    data_t &  get() { static_assert(index >= 0 && index < n_dims, "invalid index"); return _coords[index]; }
+    data_t & get() { static_assert(index >= 0 && index < n_dims, "invalid index"); return _coords[index]; }
 
     template <int index>
     const data_t & get() const { static_assert(index >= 0 && index < n_dims, "invalid index"); return _coords[index]; }

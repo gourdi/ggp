@@ -3,10 +3,11 @@
 
 #include <string>
 #include <stdint.h>
+#include <ggo_pixel_buffer.h>
 
 namespace ggo
 {
-  bool save_bmp(const std::string & filename, const uint8_t * rgb, int width, int height);
+  bool save_bmp(const std::string & filename, const void * rgb, pixel_buffer_format pbf, int width, int height, int line_step);
 }
 
 #endif

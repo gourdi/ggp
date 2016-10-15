@@ -40,7 +40,6 @@
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_pixel_sampling_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp" />
-    <ClCompile Include="test\signal_proc\ggo_box_filter_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_downscaling_nonreg.cpp" />
@@ -134,7 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <PreprocessorDefinitions>GGO_DEBUG;_SCL_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GGO_DEBUG;GGO_WIN;_SCL_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

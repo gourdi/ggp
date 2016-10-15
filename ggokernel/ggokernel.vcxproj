@@ -140,6 +140,7 @@
     <ClInclude Include="src\ggo_buffer_access.h" />
     <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
+    <ClInclude Include="src\ggo_log.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_best_match.h" />
@@ -241,7 +242,6 @@
     <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h" />
-    <ClInclude Include="src\math\signal_proc\ggo_box_filter.h" />
     <ClInclude Include="src\math\signal_proc\ggo_convolution.h" />
     <ClInclude Include="src\math\signal_proc\ggo_dct.h" />
     <ClInclude Include="src\math\signal_proc\ggo_downscaling.h" />
@@ -266,7 +266,6 @@
     <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp" />
     <ClCompile Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.cpp" />
     <ClCompile Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_box_filter.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_dct.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />

@@ -6,9 +6,9 @@
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(layer, test)
 {
-  const int IMAGE_WIDTH = 200;
-  const int IMAGE_HEIGHT = 150;
-  ggo::rgb_image_buffer_uint8 image(IMAGE_WIDTH, IMAGE_HEIGHT);
+  const int width = 200;
+  const int height = 150;
+  ggo::image_buffer_rgb_8u_yu image(width, height);
   
   image.fill(ggo::color(0.2f, 0.1f, 0.1f));
   
@@ -32,5 +32,5 @@ GGO_TEST(layer, test)
 
   ggo::flatten_sprite(image, sprite_opacity, sprite_image, 10, 15, ggo::rgb_alpha_blender());
   
-  ggo::save_bmp("test_sprite_image.bmp", image.data(), IMAGE_WIDTH, IMAGE_HEIGHT);
+  ggo::save_bmp("test_sprite_image.bmp", image.data(), width, height);
 }

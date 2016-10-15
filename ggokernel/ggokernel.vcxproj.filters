@@ -320,6 +320,7 @@
     <ClInclude Include="src\math\ggo_quadratic.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

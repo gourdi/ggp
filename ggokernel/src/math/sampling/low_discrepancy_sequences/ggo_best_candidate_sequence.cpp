@@ -16,7 +16,7 @@ namespace ggo
       
       for (int i = 0; i < 64; ++i)
       {
-        ggo::pos2f point_cur(ggo::rand_float(), ggo::rand_float());
+        ggo::pos2f point_cur(ggo::rand<float>(), ggo::rand<float>());
         
         float hypot_cur = std::numeric_limits<float>::max();
         

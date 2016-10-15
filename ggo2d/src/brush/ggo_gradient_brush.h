@@ -7,13 +7,13 @@
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename color_type, bool global_coordinates = false>
-  struct gradient_brush : public brush_abc<color_type>
+  template <typename color_t, typename real_t, bool global_coordinates = false>
+  struct gradient_brush : public brush_abc<color_t, real_t>
   {
-    color_type get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const override;
+    color_t get(real_t x, real_t y, const ggo::paintable_shape2d_abc<real_t> & shape, int width, int height) const override;
       
-    color_type  _value1;
-    color_type  _value2;
+    color_t     _value1;
+    color_t     _value2;
     ggo::pos2f  _pos1;
     ggo::pos2f  _pos2;
   };
@@ -22,26 +22,18 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using rgb_gradient_brush = gradient_brush<ggo::color>;
-  using gray_gradient_brush = gradient_brush<float>;
-  using opacity_gradient_brush = gradient_brush<float>;
-}
-
-//////////////////////////////////////////////////////////////
-namespace ggo
-{
-  template <typename color_type, bool global_coordinates>
-  color_type gradient_brush<color_type, global_coordinates>::get(float x, float y, const ggo::paintable_shape2d_abc<float> & shape, int width, int height) const
+  template <typename color_t, typename real_t, bool global_coordinates>
+  color_t gradient_brush<color_t, real_t, global_coordinates>::get(real_t x, real_t y, const ggo::paintable_shape2d_abc<real_t> & shape, int width, int height) const
   {
-    ggo::rect_float bounding_rect(shape.get_bounding_rect());
+    ggo::rect<real_t> bounding_rect(shape.get_bounding_rect());
     
-    float x_f = global_coordinates ? x : x - bounding_rect.left();
-    float y_f = global_coordinates ? y : y - bounding_rect.bottom();
+    real_t x_f = global_coordinates ? x : x - bounding_rect.left();
+    real_t y_f = global_coordinates ? y : y - bounding_rect.bottom();
 
-    ggo::vec2f diff1(x_f - _pos1.get<0>(), y_f - _pos1.get<1>());
-    ggo::vec2f diff2(_pos2 - _pos1);
+    ggo::vec2<real_t> diff1(x_f - _pos1.get<0>(), y_f - _pos1.get<1>());
+    ggo::vec2<real_t> diff2(_pos2 - _pos1);
       
-    float dot_prod = ggo::dot(diff1, diff2);
+    real_t dot_prod = ggo::dot(diff1, diff2);
       
     if (dot_prod <= 0)
     {
@@ -49,15 +41,15 @@ namespace ggo
     }
     else
     {
-      float hypot = diff2.get_hypot();
+      real_t hypot = diff2.get_hypot();
       if (dot_prod >= hypot)
       {
         return _value2;
       }
       else
       {
-        float v2 = ggo::ease_inout(dot_prod / hypot);
-        float v1 = 1 - v2;
+        real_t v2 = ggo::ease_inout(dot_prod / hypot);
+        real_t v1 = 1 - v2;
         return v1 * _value1 + v2 * _value2;
       }
     }

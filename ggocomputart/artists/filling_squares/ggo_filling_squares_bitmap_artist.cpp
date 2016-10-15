@@ -19,7 +19,7 @@ void ggo_filling_squares_bitmap_artist::render_bitmap(uint8_t * buffer)
 
 	ggo_filling_squares_artist::build_squares(get_render_width(), get_render_height(), hue, multi_squares);
 	
-	ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float()));
+	ggo::fill_solid_rgb_8u(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float()).color_8u());
 
 	for (const auto & multi_square : multi_squares)
 	{

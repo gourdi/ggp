@@ -165,14 +165,6 @@ namespace ggo
     
     using samplable_shape2d_abc<T>::is_point_inside;
   };
-
-  template <typename T>
-  class seed_paintable_shape2d_abc : public ggo::samplable_shape2d_abc<T>
-  {
-  public:
-
-    virtual	rect_data<T> get_seed_rect() const = 0;
-  };
 }
 
 #include <ggo_rect.h>

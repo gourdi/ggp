@@ -5,44 +5,35 @@
 
 namespace ggo
 {
-  template <typename T>
+  template <typename color_t, typename real_t>
   struct blender_abc
   {
-    virtual T blend(const T & bkdg_color, float opacity, const T & paint_color) const = 0;
+    virtual color_t blend(const color_t & bkdg_color, real_t intensity, const color_t & paint_color) const = 0;
   };
-
-  using gray_blender_abc = blender_abc<float>;
-  using rgb_blender_abc = blender_abc<ggo::color>;
 }
 
 namespace ggo
 {
-  template <typename T>
-  struct alpha_blender : public blender_abc<T>
+  template <typename color_t, typename real_t>
+  struct alpha_blender : public blender_abc<color_t, real_t>
   {
-    T blend(const T & bkdg_color, float opacity, const T & paint_color) const override
+    color_t blend(const color_t & bkdg_color, real_t intensity, const color_t & paint_color) const override
     {
-      return opacity * paint_color + (1 - opacity) * bkdg_color;
+      return intensity * paint_color + (1 - intensity) * bkdg_color;
     }
   };
-
-  using gray_alpha_blender = alpha_blender<float>;
-  using rgb_alpha_blender = alpha_blender<ggo::color>;
 }
 
 namespace ggo
 {
-  template <typename T>
-  struct additive_blender : public blender_abc<T>
+  template <typename color_t, typename real_t>
+  struct additive_blender : public blender_abc<color_t, real_t>
   {
-    T blend(const T & bkdg_color, float opacity, const T & paint_color) const override
+    color_t blend(const color_t & bkdg_color, real_t intensity, const color_t & paint_color) const override
     {
-       return opacity * paint_color + bkdg_color;
+       return intensity * paint_color + bkdg_color;
     }
   };
-
-  using gray_additive_blender = additive_blender<float>;
-  using rgb_additive_blender = additive_blender<ggo::color>;
 }
 
 #endif

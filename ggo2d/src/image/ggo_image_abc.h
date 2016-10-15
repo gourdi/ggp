@@ -34,7 +34,7 @@ namespace ggo
             template <typename color_t2>
             void    from(const image_abc<color_t2> & other);
 
-            void    set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender = ggo::alpha_blender<color_t>());
+//            void    set(int x, int y, color_t color, float opacity, const ggo::blender_abc<color_t> & blender = ggo::alpha_blender<color_t>());
            
             void    for_each_pixel(const std::function<void(int x, int y)> & func);
             void    for_each_pixel(const std::function<void(int x, int y)> & func) const;
@@ -46,9 +46,6 @@ namespace ggo
     int  _width = 0;
     int  _height = 0;
   };
-
-  using gray_image_abc = image_abc<float>;
-  using rgb_image_abc  = image_abc<ggo::color>;
 }
 
 namespace ggo

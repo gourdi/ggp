@@ -1,4 +1,6 @@
-#include "ggo_layer.h"
+#if 0
+
+#include "ggo_blit.h"
 #include <ggo_color.h>
 
 namespace 
@@ -175,3 +177,4 @@ namespace ggo
   }
 }
 
+#endif

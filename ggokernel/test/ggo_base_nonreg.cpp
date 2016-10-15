@@ -226,3 +226,14 @@ GGO_TEST(base, remove_first_if)
     GGO_CHECK_EQ(3, v[2]);
   }
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, pow)
+{
+  GGO_CHECK_EQ(ggo::pow(4, 0), 1);
+  GGO_CHECK_EQ(ggo::pow(4, 1), 4);
+  GGO_CHECK_EQ(ggo::pow(4, 2), 16);
+  GGO_CHECK_EQ(ggo::pow(-4, 1), -4);
+  GGO_CHECK_EQ(ggo::pow(-4, 2), 16);
+}
+

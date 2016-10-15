@@ -1,27 +1,61 @@
 #define GGO_GAUSSIAN_DEBUG 1
 
 #include <ggo_nonreg.h>
-#include <ggo_gaussian_blur.h>
-#include <ggo_rgb_image_buffer.h>
-#include <ggo_paint.h>
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_bmp.h>
 
-namespace
+////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian, rgb)
 {
-  ////////////////////////////////////////////////////////////////////
-  GGO_TEST(gaussian, rgb)
-  {
-    const int WIDTH = 800;
-    const int HEIGHT = 600;
+  const int width = 800;
+  const int height = 600;
+  const int line_step = 3 * width;
 
-    ggo::rgb_image_buffer_uint8 image(WIDTH, HEIGHT, ggo::color::BLUE);
+  std::vector<uint8_t> buffer(line_step * height);
 
-    ggo::paint(image, std::make_shared<ggo::disc_float>(0.5f * WIDTH, 0.5f * HEIGHT, 0.25f * std::min(WIDTH, HEIGHT)), ggo::color::WHITE);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, ggo::color_8u::BLUE);
 
-    ggo::gaussian_blur_2d_mirror<3, 3>(image.data() + 0, image.data() + 0, WIDTH, HEIGHT, 5, 0.001f);
-    ggo::gaussian_blur_2d_mirror<3, 3>(image.data() + 1, image.data() + 1, WIDTH, HEIGHT, 5, 0.001f);
-    ggo::gaussian_blur_2d_mirror<3, 3>(image.data() + 2, image.data() + 2, WIDTH, HEIGHT, 5, 0.001f);
+  auto brush = [](int x, int y) { return ggo::color_8u(0xff, 0x00, 0xff); };
+  auto blend = [](ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
-    ggo::save_bmp("gaussian.bmp", image.data(), WIDTH, HEIGHT);
-  }
+  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
+
+  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+
+  ggo::gaussian_blur2d_8u<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+
+  ggo::save_bmp("gaussian_rgb.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, line_step);
 }
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian, y)
+{
+  const int width = 800;
+  const int height = 600;
+  const int line_step = width;
+
+  std::vector<uint8_t> buffer(line_step * height);
+
+  ggo::fill_solid<ggo::y_8u_yu, uint8_t>(buffer.data(), width, height, line_step, 0x00);
+
+  auto brush = [](int x, int y) { return 0xff; };
+  auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
+
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+
+  ggo::gaussian_blur2d_8u<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+
+  ggo::save_bmp("gaussian_y.bmp", buffer.data(), ggo::y_8u_yu, width, height, line_step);
+}
+

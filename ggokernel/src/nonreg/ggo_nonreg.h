@@ -3,7 +3,7 @@
 
 #include <ggo_unit_test.h>
 #include <ggo_unit_test_manager.h>
-#include <ggo_color_stream.h>
+#include <ggo_log.h>
 #include <cmath>
 
 #define GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) ggo_##test_case_name##_##unit_test_name##_unit_test
@@ -19,20 +19,20 @@
 
 #define GGO_CHECK(cond) {if (!((cond))) { \
                           ++_failed_count; \
-                          ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << "\n"; \
+                          std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << "\n"; \
                         } }
 
 #define GGO_CHECK_EQ(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
                               if (eval1 != eval2) { \
                                 ++_failed_count; \
-                                ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ": " << #v1 \
+                                std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << ": " << #v1 \
                                 << " [=" << eval1 << "] != " << #v2 << " [=" << eval2 << "]" << std::endl;\
                               } }
 
 #define GGO_CHECK_FABS(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
                                 if (std::fabs(eval1 - eval2) > 0.0001) { \
                                   ++_failed_count; \
-                                  ggo::color_stream cs(ggo::console_color::RED); cs << "** TEST FAILED ** (" << __FILE__ << ':' << __LINE__ << ") " << \
+                                  std::cout << ggo::red_color << "** TEST FAILED ** (" << __FILE__ << ':' << __LINE__ << ggo::default_color << ") " << \
                                   eval1 << " != " << eval2 << std::endl; \
                                 } }
 

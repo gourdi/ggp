@@ -27,7 +27,7 @@ void ggo_neon_artist::init_sub()
 //////////////////////////////////////////////////////////////
 void ggo_neon_artist::init_output_buffer(uint8_t * buffer)
 {
-  ggo::fill_solid_rgb(buffer, get_render_width()*get_render_height(), ggo::color::BLACK);
+  ggo::fill_solid_rgb_8u(buffer, get_render_width(), get_render_height(), ggo::color::BLACK);
 }
 
 //////////////////////////////////////////////////////////////

@@ -1,16 +1,40 @@
 #include "ggo_bmp.h"
 #include <ggo_kernel.h>
 #include <ggo_memory.h>
-#include <ggo_array.h>
+#include <ggo_color.h>
 #include <fstream>
+
+namespace
+{
+  //////////////////////////////////////////////////////////////
+  // Write pixels (note that pixels are stored BGR from bottom to top.
+  template <ggo::pixel_buffer_format pbf>
+  void write_pixels(std::ofstream & ofs, const void * rgb, int width, int height, int line_step)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      const uint8_t * ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<pbf>(rgb, y, height, line_step));
+
+      for (int x = 0; x < width; ++x)
+      {
+        auto c = ggo::get_pixel<pbf>(ptr);
+        ggo::color_8u c_rgb = ggo::color_conv<ggo::pixel_buffer_format_info<pbf>::color_t>::to_rgb(c);
+        ofs.write(reinterpret_cast<char*>(&c_rgb._b), 1);
+        ofs.write(reinterpret_cast<char*>(&c_rgb._g), 1);
+        ofs.write(reinterpret_cast<char*>(&c_rgb._r), 1);
+        ptr += ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
+      }
+    }
+  }
+}
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool save_bmp(const std::string & filename, const uint8_t * rgb, int width, int height)
+  bool save_bmp(const std::string & filename, const void * rgb, pixel_buffer_format pbf, int width, int height, int line_step)
   {
     uint8_t			  header[40];
-    std::ofstream stream(filename.c_str(), std::ios_base::out | std::ios_base::binary);
+    std::ofstream ofs(filename.c_str(), std::ios_base::out | std::ios_base::binary);
 
     int line_size	= ggo::pad(3 * width, 4);
     int filesize	= 14 + 40 + 3 * line_size * height;
@@ -28,7 +52,7 @@ namespace ggo
 
     header[10]	= 14+40; // Offset.
 
-    stream.write(reinterpret_cast<char*>(header), 14);
+    ofs.write(reinterpret_cast<char*>(header), 14);
 
     // Info header.
     ggo::mem_zero(header, sizeof(header));
@@ -48,20 +72,22 @@ namespace ggo
     header[12] = 1;		// Planes.
     header[14] = 24;	// Bpp.
 
-    stream.write(reinterpret_cast<char*>(header), 40);
+    ofs.write(reinterpret_cast<char*>(header), 40);
 
-    // Write pixels (note that pixels are stored BGR from bottom to top.
-    for (int y = 0; y < height; ++y)
+    switch (pbf)
     {
-      for (int x = 0; x < width; ++x)
-      {
-        stream.write(reinterpret_cast<const char*>(rgb + 2), 1);
-        stream.write(reinterpret_cast<const char*>(rgb + 1), 1);
-        stream.write(reinterpret_cast<const char*>(rgb + 0), 1);
-        rgb += 3;
-      }
+    case ggo::y_8u_yu:
+      write_pixels<ggo::y_8u_yu>(ofs, rgb, width, height, line_step);
+      break;
+    case ggo::rgb_8u_yu:
+      write_pixels<ggo::rgb_8u_yu>(ofs, rgb, width, height, line_step);
+      break;
+    case ggo::bgra_8u_yd:
+      write_pixels<ggo::bgra_8u_yd>(ofs, rgb, width, height, line_step);
+      break;
     }
-    if (!stream)
+
+    if (!ofs)
     {
       return false;
     }

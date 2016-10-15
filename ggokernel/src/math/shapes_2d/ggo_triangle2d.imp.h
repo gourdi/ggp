@@ -21,8 +21,9 @@ namespace ggo
     ggo::vec2<data_t> d2(_v2 - _v1);
     ggo::vec2<data_t> d3(_v3 - _v1);
     
-    data_t m[2][2] = {{d2.template get<0>(), d3.template get<0>()},
-                 {d2.template get<1>(), d3.template get<1>()}};
+    data_t m[2][2] = {
+      {d2.template get<0>(), d3.template get<0>()},
+      {d2.template get<1>(), d3.template get<1>()}};
     data_t c[2] = {d.template get<0>(), d.template get<1>()};
     data_t s[2] = {0, 0};
     
@@ -122,8 +123,8 @@ namespace ggo
   template <typename data_t>
   data_t triangle2d<data_t>::area() const
   {
-    return std::abs((_v2.get<0>() - _v1.get<0>()) * (_v3.get<1>() - _v1.get<1>()) -
-                    (_v3.get<0>() - _v1.get<0>()) * (_v2.get<1>() - _v1.get<1>())) / 2;
+    return std::abs((_v2.template get<0>() - _v1.template get<0>()) * (_v3.template get<1>() - _v1.template get<1>()) -
+                    (_v3.template get<0>() - _v1.template get<0>()) * (_v2.template get<1>() - _v1.template get<1>())) / 2;
   }
 
   //////////////////////////////////////////////////////////////////
