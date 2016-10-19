@@ -328,7 +328,7 @@ GGO_TEST(paint, color_triangle)
   triangles.emplace_back(triangle1, ggo::color_32f::GREEN, ggo::color_32f::RED, ggo::color_32f::YELLOW, opaque_blender_rgb8u());
 
   ggo::triangle2d_float triangle2(triangles[0]._triangle.v1(), { 50.f, 90.f }, triangles[0]._triangle.v3());
-  triangles.emplace_back(triangle2, triangles[0]._color1, ggo::color_32f::BLUE, triangles[0]._color3, opaque_blender_rgb8u());
+  triangles.emplace_back(triangle2, ggo::color_32f::GREEN, ggo::color_32f::BLUE, ggo::color_32f::YELLOW, opaque_blender_rgb8u());
 
   std::array<uint8_t, 3 * width * height> buffer;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::color_8u::GRAY);

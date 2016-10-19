@@ -21,7 +21,7 @@ namespace ggo
                                                                   _color1(color1),
                                                                   _color2(color2),
                                                                   _color3(color3),
-                                                                  _blender(blender) {}
+                                                                  _blender(blender) { }
 
     rect_data<real_type>  get_bounding_rect() const { return _triangle.get_bounding_rect(); }
     rect_intersection	    get_rect_intersection(const rect_data<real_type> & rect_data) const { return _triangle.get_rect_intersection(rect_data); }
