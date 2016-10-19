@@ -1,8 +1,6 @@
 #ifndef __GGO_HARD_PAINT__
 #define __GGO_HARD_PAINT__
 
-#include <ggo_2d.h>
-
 // Hard line.
 namespace ggo
 {

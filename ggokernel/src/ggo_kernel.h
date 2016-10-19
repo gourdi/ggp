@@ -136,6 +136,26 @@ namespace ggo
     return (v + (1 << (bit_shift - 1))) >> bit_shift;
   }
 
+  template <typename data_t>
+  data_t round_div(data_t value, data_t div)
+  { 
+    static_assert(std::is_integral<data_t>::value, "expecting integral type");
+
+    if (std::is_unsigned<data_t>::value == true)
+    {
+      return (value + div / 2) / div;
+    }
+    else
+    {
+      if (div < 0)
+      {
+        value *= -1;
+        div *= -1;
+      }
+      return value < 0 ? (value - div / 2) / div : (value + div / 2) / div;
+    }
+  };
+
   template <typename T>	T	      clamp(T v, T inf, T sup)				      { return v > sup ? sup : (v < inf ? inf : v); };
   template <typename T>	T	      square(T value)							          { return value * value; };
   template <typename T>	T	      sign(T value)							            { return value > T(0) ? T(1) : T(-1); };
@@ -143,7 +163,6 @@ namespace ggo
   inline					      int		  pad(int value, int pad)				        { return (((value-1)/pad)+1)*pad; };
   inline					      bool	  is_even(int value)						        { return (value&1)==0; };
   inline					      bool	  is_odd(int value)						          { return (value&1)==1; };
-  inline					      int		  round_div(int value, int div)	        { return (value+div/2)/div; };
   inline					      int		  log2(int v)								            { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
 }
 
@@ -153,30 +172,30 @@ namespace ggo
 {
   namespace hidden
   {
-    template <typename T_OUT, typename T_IN>
-    T_OUT clamp_and_round(T_IN v)
+    template <typename out_t, typename in_t>
+    out_t clamp_and_round(in_t v)
     {
-      T_IN clamped = clamp(v, static_cast<T_IN>(std::numeric_limits<T_OUT>::min()), static_cast<T_IN>(std::numeric_limits<T_OUT>::max()));
-      return static_cast<T_OUT>(clamped < 0 ? clamped - T_IN(0.5) : clamped + T_IN(0.5));
+      in_t clamped = clamp(v, static_cast<in_t>(std::numeric_limits<out_t>::min()), static_cast<in_t>(std::numeric_limits<out_t>::max()));
+      return static_cast<out_t>(clamped < 0 ? clamped - in_t(0.5) : clamped + in_t(0.5));
     }
     
-    template <typename T_OUT, typename T_IN>
-    T_OUT clamp_min_max(T_IN v)
+    template <typename out_t, typename in_t>
+    out_t clamp_min_max(in_t v)
     {
-      T_IN clamped = clamp(v, static_cast<T_IN>(std::numeric_limits<T_OUT>::min()), static_cast<T_IN>(std::numeric_limits<T_OUT>::max()));
-      return static_cast<T_OUT>(clamped);
+      in_t clamped = clamp(v, static_cast<in_t>(std::numeric_limits<out_t>::min()), static_cast<in_t>(std::numeric_limits<out_t>::max()));
+      return static_cast<out_t>(clamped);
     }
     
-    template <typename T_OUT, typename T_IN>
-    T_OUT clamp_max(T_IN v)
+    template <typename out_t, typename in_t>
+    out_t clamp_max(in_t v)
     {
       GGO_ASSERT(v >= 0);
-      T_IN clamped = std::min(v, static_cast<T_IN>(std::numeric_limits<T_OUT>::max()));
-      return static_cast<T_OUT>(clamped);
+      in_t clamped = std::min(v, static_cast<in_t>(std::numeric_limits<out_t>::max()));
+      return static_cast<out_t>(clamped);
     }
   }
 
-  template <typename T_OUT, typename T_IN>  T_OUT to(T_IN v) { return static_cast<T_OUT>(v); }
+  template <typename out_t, typename in_t>  out_t to(in_t v) { return static_cast<out_t>(v); }
 
   // From float
   template <> inline int8_t    to(float v) { return hidden::clamp_and_round<int8_t, float>(v); }

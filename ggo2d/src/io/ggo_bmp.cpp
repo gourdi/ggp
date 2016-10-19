@@ -18,7 +18,7 @@ namespace
       for (int x = 0; x < width; ++x)
       {
         auto c = ggo::get_pixel<pbf>(ptr);
-        ggo::color_8u rgb = ggo::to_rgb(c);
+        ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
         ofs.write(reinterpret_cast<char*>(&rgb._b), 1);
         ofs.write(reinterpret_cast<char*>(&rgb._g), 1);
         ofs.write(reinterpret_cast<char*>(&rgb._r), 1);

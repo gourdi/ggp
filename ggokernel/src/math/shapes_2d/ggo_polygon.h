@@ -15,6 +15,7 @@ namespace ggo
   {
   public:
 
+    using type = data_t;
     using samplable_shape2d_abc<data_t>::is_point_inside;
 
                               polygon2d() {}

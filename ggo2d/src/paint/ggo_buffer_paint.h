@@ -28,8 +28,12 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t,
-    typename color_t = typename pixel_buffer_format_info<pbf>::color_t, typename real_t = typename shape_t::type>
+    typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend);
+
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t,
+    typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
+  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const color_t & color);
 }
 
 //////////////////////////////////////////////////////////////
@@ -64,10 +68,10 @@ namespace ggo
   }
 }
 
-// Shapes.
+// Shape.
 namespace ggo
 {
-  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t, typename color_t, typename real_t>
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t, typename color_t>
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend)
   {
     const int scale_factor = 8;
@@ -96,7 +100,7 @@ namespace ggo
           const color_t bkgd_color = get_pixel<pbf>(ptr);
           const color_t brush_color = brush(x, y);
           const color_t pixel_color = blend(bkgd_color, brush_color);
-          ggo::set_pixel<pbf>(ptr, blend(bkgd_color, pixel_color));
+          ggo::set_pixel<pbf>(ptr, pixel_color);
           ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
         }
       }
@@ -107,6 +111,16 @@ namespace ggo
       scale_factor, first_scale,
       brush, blend,
       get_pixel_lambda, set_pixel_lambda, paint_block_lambda);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename color_t>
+  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const color_t & c)
+  {
+    auto brush = [&c](int x, int y) { return c; };
+    auto blend = [](const color_t & bkgd_color, const color_t & brush_color) { return brush_color; };
+
+    paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend);
   }
 }
 

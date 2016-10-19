@@ -14,6 +14,18 @@ namespace ggo
 
 namespace ggo
 {
+  template <typename color_t>
+  struct opaque_blender
+  {
+    color_t blend(const color_t & bkdg_color, const color_t & paint_color) const
+    {
+      return paint_color;
+    }
+  };
+}
+
+namespace ggo
+{
   template <typename color_t, typename real_t>
   struct alpha_blender : public blender_abc<color_t, real_t>
   {

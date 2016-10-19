@@ -15,6 +15,8 @@ namespace ggo
   {
   public:
 
+    using type = data_t;
+
                               extended_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width);
           
     float                     width() const { return _width; }

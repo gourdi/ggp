@@ -237,3 +237,47 @@ GGO_TEST(base, pow)
   GGO_CHECK_EQ(ggo::pow(-4, 2), 16);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, round_div)
+{
+  GGO_CHECK_EQ(ggo::round_div(-9, 4), -2);
+  GGO_CHECK_EQ(ggo::round_div(-8, 4), -2);
+  GGO_CHECK_EQ(ggo::round_div(-7, 4), -2);
+  GGO_CHECK_EQ(ggo::round_div(-6, 4), -2);
+  GGO_CHECK_EQ(ggo::round_div(-5, 4), -1);
+  GGO_CHECK_EQ(ggo::round_div(-4, 4), -1);
+  GGO_CHECK_EQ(ggo::round_div(-3, 4), -1);
+  GGO_CHECK_EQ(ggo::round_div(-2, 4), -1);
+  GGO_CHECK_EQ(ggo::round_div(-1, 4), 0);
+  GGO_CHECK_EQ(ggo::round_div(0, 4), 0);
+  GGO_CHECK_EQ(ggo::round_div(1, 4), 0);
+  GGO_CHECK_EQ(ggo::round_div(2, 4), 1);
+  GGO_CHECK_EQ(ggo::round_div(3, 4), 1);
+  GGO_CHECK_EQ(ggo::round_div(4, 4), 1);
+  GGO_CHECK_EQ(ggo::round_div(5, 4), 1);
+  GGO_CHECK_EQ(ggo::round_div(6, 4), 2);
+  GGO_CHECK_EQ(ggo::round_div(7, 4), 2);
+  GGO_CHECK_EQ(ggo::round_div(9, 4), 2);
+  GGO_CHECK_EQ(ggo::round_div(9, 4), 2);
+
+  GGO_CHECK_EQ(ggo::round_div(-9, -4), 2);
+  GGO_CHECK_EQ(ggo::round_div(-8, -4), 2);
+  GGO_CHECK_EQ(ggo::round_div(-7, -4), 2);
+  GGO_CHECK_EQ(ggo::round_div(-6, -4), 2);
+  GGO_CHECK_EQ(ggo::round_div(-5, -4), 1);
+  GGO_CHECK_EQ(ggo::round_div(-4, -4), 1);
+  GGO_CHECK_EQ(ggo::round_div(-3, -4), 1);
+  GGO_CHECK_EQ(ggo::round_div(-2, -4), 1);
+  GGO_CHECK_EQ(ggo::round_div(-1, -4), 0);
+  GGO_CHECK_EQ(ggo::round_div(0, -4), 0);
+  GGO_CHECK_EQ(ggo::round_div(1, -4), 0);
+  GGO_CHECK_EQ(ggo::round_div(2, -4), -1);
+  GGO_CHECK_EQ(ggo::round_div(3, -4), -1);
+  GGO_CHECK_EQ(ggo::round_div(4, -4), -1);
+  GGO_CHECK_EQ(ggo::round_div(5, -4), -1);
+  GGO_CHECK_EQ(ggo::round_div(6, -4), -2);
+  GGO_CHECK_EQ(ggo::round_div(7, -4), -2);
+  GGO_CHECK_EQ(ggo::round_div(9, -4), -2);
+  GGO_CHECK_EQ(ggo::round_div(9, -4), -2);
+}
+

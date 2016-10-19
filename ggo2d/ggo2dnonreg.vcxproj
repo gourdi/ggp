@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test\ggo_buffer_paint_nonreg.cpp" />
+    <ClCompile Include="test\ggo_paint_nonreg.cpp" />
     <ClCompile Include="test\ggo_2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_buffer_pixel_nonreg.cpp" />
     <ClCompile Include="test\ggo_gaussian_nonreg.cpp" />
+    <ClCompile Include="test\ggo_multi_shape_paint_nonreg.cpp" />
     <ClCompile Include="test\ggo_sampling_nonreg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

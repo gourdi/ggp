@@ -11,6 +11,8 @@ namespace ggo
                                 const ggo::pos2<real_t> & p2, const value_t & v2,
                                 const ggo::pos2<real_t> & p, value_t & output)
   {
+    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+
     ggo::pos2<real_t> d(p - p0);
     ggo::pos2<real_t> d1(p1 - p0);
     ggo::pos2<real_t> d2(p2 - p0);

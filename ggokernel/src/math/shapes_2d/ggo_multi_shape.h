@@ -21,6 +21,8 @@ namespace ggo
   {
   public:
 
+    using type = T;
+
                       multi_shape() {}
           
     void              add_shape(std::shared_ptr<paintable_shape2d_abc<T>> shape) { _shapes.push_back(shape); }  

@@ -15,6 +15,7 @@ namespace ggo
 
     using samplable_shape2d_abc<data_t>::is_point_inside;
   
+                              triangle2d() {}
                               triangle2d(ggo::pos2<data_t> v1, ggo::pos2<data_t> v2, ggo::pos2<data_t> v3) : _v1(v1), _v2(v2), _v3(v3) {}
 
     // Interfaces.

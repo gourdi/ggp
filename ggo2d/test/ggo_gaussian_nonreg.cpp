@@ -1,4 +1,4 @@
-#define GGO_GAUSSIAN_DEBUG 1
+//#define GGO_GAUSSIAN_DEBUG 1
 
 #include <ggo_nonreg.h>
 #include <ggo_chronometer.h>

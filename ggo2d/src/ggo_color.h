@@ -23,6 +23,7 @@ namespace ggo
   public:
 
               color() = default;
+              color(data_t v) { _r = v; _g = v; _b = v; }
               color(data_t r, data_t g, data_t b) { _r = r; _g = g; _b = b; }
               color(const color<data_t> & c) { _r = c._r; _g = c._g; _b = c._b; }
 
@@ -270,16 +271,36 @@ namespace ggo
 }
 
 // Color conversion
+// Warning: don't use ggo::to<> because uint8_t <=> float conversion won't work 
+// since float is normalized betwen 0 and 1.
 namespace ggo
 {
-  inline ggo::color_8u to_rgb(const uint8_t & c)
+  template <typename color_out_t, typename color_in_t>
+  color_out_t convert_color_to(const color_in_t & c)
+  {
+    static_assert(false, "missing specialization");
+  }
+
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
+  {
+    return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
+  }
+
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
+  {
+    return c;
+  }
+
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint8_t>(const uint8_t & c)
   {
     return ggo::color_8u(c, c, c);
   }
 
-  inline ggo::color_8u to_rgb(const ggo::color_8u & c)
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
   {
-    return c;
+    uint8_t gray = static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
+
+    return ggo::color_8u(gray, gray, gray);
   }
 }
 

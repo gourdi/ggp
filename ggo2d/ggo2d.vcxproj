@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\blender\ggo_blender_abc.h" />
     <ClInclude Include="src\blur\ggo_gaussian_blur2d.h" />
-    <ClInclude Include="src\brush\ggo_brush_abc.h" />
-    <ClInclude Include="src\brush\ggo_gradient_brush.h" />
-    <ClInclude Include="src\brush\ggo_triangle_interpolation_brush.h" />
     <ClInclude Include="src\ggo_pixel_buffer.h" />
     <ClInclude Include="src\ggo_color.h" />
     <ClInclude Include="src\ggo_fill.h" />
@@ -33,11 +29,15 @@
     <ClInclude Include="src\image\ggo_image_buffer_abc.h" />
     <ClInclude Include="src\image\ggo_rle_image.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
+    <ClInclude Include="src\paint\ggo_blender_abc.h" />
+    <ClInclude Include="src\paint\ggo_brush_abc.h" />
     <ClInclude Include="src\paint\ggo_buffer_paint.h" />
+    <ClInclude Include="src\paint\ggo_gradient_brush.h" />
     <ClInclude Include="src\paint\ggo_hard_paint.h" />
-    <ClInclude Include="src\paint\ggo_layer.h" />
+    <ClInclude Include="src\paint\ggo_multi_shape_paint.h" />
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_multi_scale_paint.h" />
+    <ClInclude Include="src\paint\ggo_color_triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_blit.cpp" />

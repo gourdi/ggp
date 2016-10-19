@@ -14,6 +14,7 @@ namespace ggo
   {
   public:
 
+    using type = data_t;
     using ggo::samplable_shape2d_abc<data_t>::is_point_inside;
     using ggo::distancable_shape2d_abc<data_t>::dist_to_point;
 
