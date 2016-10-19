@@ -242,8 +242,8 @@ GGO_TEST(paint, polygons_rectangles)
 
   // Paint rectangles.
   std::array<ggo::solid_color_shape<ggo::rect_float, ggo::color_8u>, 2> rectangles;
-  rectangles[0] = { ggo::color_8u::WHITE, ggo::rect_float::from_left_right_bottom_top(10, 50, 10, 90) };
-  rectangles[1] = { ggo::color_8u::WHITE, ggo::rect_float::from_left_right_bottom_top(50, 90, 10, 90) };
+  rectangles[0] = { ggo::rect_float::from_left_right_bottom_top(10, 50, 10, 90), ggo::color_8u::WHITE };
+  rectangles[1] = { ggo::rect_float::from_left_right_bottom_top(50, 90, 10, 90), ggo::color_8u::WHITE };
 
   std::array<uint8_t, 3 * width * height * 3> buffer_rectangles;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::color_8u::BLUE);
@@ -322,20 +322,13 @@ GGO_TEST(paint, color_triangle)
   using opaque_blender_rgb8u = ggo::opaque_blender<ggo::color_8u>;
   using color_triangle_rgb8u = ggo::color_triangle<opaque_blender_rgb8u, ggo::color_8u, ggo::color_32f, float>;
 
-  std::array<color_triangle_rgb8u, 2> triangles;
-  triangles[0]._triangle.v1() = ggo::pos2f(10.f, 10.f);
-  triangles[0]._triangle.v2() = ggo::pos2f(110.f, 10.f);
-  triangles[0]._triangle.v3() = ggo::pos2f(110.f, 90.f);
-  triangles[0]._color1 = ggo::color_32f::RED;
-  triangles[0]._color2 = ggo::color_32f::GREEN;
-  triangles[0]._color3 = ggo::color_32f::YELLOW;
+  std::vector<color_triangle_rgb8u> triangles;
 
-  triangles[1]._triangle.v1() = triangles[0]._triangle.v1();
-  triangles[1]._triangle.v2() = ggo::pos2f(50.f, 90.f); 
-  triangles[1]._triangle.v3() = triangles[0]._triangle.v3();
-  triangles[1]._color1 = triangles[0]._color1; 
-  triangles[1]._color2 = ggo::color_32f::BLUE;
-  triangles[1]._color3 = triangles[0]._color3;
+  ggo::triangle2d_float triangle1({ 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f });
+  triangles.emplace_back(triangle1, ggo::color_32f::GREEN, ggo::color_32f::RED, ggo::color_32f::YELLOW, opaque_blender_rgb8u());
+
+  ggo::triangle2d_float triangle2(triangles[0]._triangle.v1(), { 50.f, 90.f }, triangles[0]._triangle.v3());
+  triangles.emplace_back(triangle2, triangles[0]._color1, ggo::color_32f::BLUE, triangles[0]._color3, opaque_blender_rgb8u());
 
   std::array<uint8_t, 3 * width * height> buffer;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::color_8u::GRAY);

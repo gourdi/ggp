@@ -6,7 +6,6 @@
 #include <ggo_perlin_noise_field_2d.h>
 #include <ggo_gaussian_field_2d.h>
 #include <ggo_color.h>
-#include <ggo_2d.h>
 
 // Checker.
 namespace ggo

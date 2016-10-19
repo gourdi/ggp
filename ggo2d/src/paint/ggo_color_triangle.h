@@ -11,6 +11,18 @@ namespace ggo
   {
     using real_t = real_type;
 
+                        color_triangle() = default;
+                        color_triangle(const ggo::triangle2d<real_t> & triangle,
+                                       const color_real_t & color1,
+                                       const color_real_t & color2,
+                                       const color_real_t & color3,
+                                       const blender_t & blender) :
+                                                                  _triangle(triangle),
+                                                                  _color1(color1),
+                                                                  _color2(color2),
+                                                                  _color3(color3),
+                                                                  _blender(blender) {}
+
     rect_data<real_type>  get_bounding_rect() const { return _triangle.get_bounding_rect(); }
     rect_intersection	    get_rect_intersection(const rect_data<real_type> & rect_data) const { return _triangle.get_rect_intersection(rect_data); }
     bool                  is_point_inside(real_type x_f, real_type y_f) const { return _triangle.is_point_inside(x_f, y_f); }

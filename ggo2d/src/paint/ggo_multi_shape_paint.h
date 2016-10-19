@@ -4,7 +4,10 @@
 #include <ggo_shapes2d.h>
 #include <ggo_brush_abc.h>
 #include <ggo_blender_abc.h>
+#include <ggo_multi_scale_paint.h>
+#include <ggo_sampling_paint.h>
 #include <ggo_pixel_buffer.h>
+#include <ggo_pixel_rect.h>
 
 namespace ggo
 {
@@ -66,10 +69,13 @@ namespace ggo
   template <typename shape_t, typename color_t, typename real_type = shape_t::type>
   struct solid_color_shape
   {
-    color_t _color;
     shape_t _shape;
+    color_t _color;
 
     using real_t = real_type;
+
+                          solid_color_shape() = default;
+                          solid_color_shape(const shape_t & shape, const color_t & color) : _shape(shape), _color(color) {}
     
     rect_data<real_type>  get_bounding_rect() const { return _shape.get_bounding_rect(); }
     rect_intersection	    get_rect_intersection(const rect_data<real_type> & rect_data) const { return _shape.get_rect_intersection(rect_data); }

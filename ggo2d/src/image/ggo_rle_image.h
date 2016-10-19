@@ -8,14 +8,14 @@
 namespace ggo
 {
   template <typename color_t>
-  class rle_image : public image_abc<color_t>
+  class rle_image
   {
   public:
 
                               rle_image(int width, int height, const color_t & fill_value = color_t(0), int cache_size = 8);
 
-    void                      set(int x, int y, const color_t & value) override;
-    color_t                   get(int x, int y) const override;
+    void                      set(int x, int y, const color_t & value);
+    color_t                   get(int x, int y) const;
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;

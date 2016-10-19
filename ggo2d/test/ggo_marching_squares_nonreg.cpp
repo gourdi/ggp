@@ -1,10 +1,11 @@
 #include <ggo_nonreg.h>
 #include <ggo_marching_squares.h>
-#include <ggo_paint.h>
-#include <ggo_rgb_image_buffer.h>
+#include <ggo_color.h>
+#include <ggo_multi_shape_paint.h>
 #include <ggo_bmp.h>
 
-GGO_TEST(marching_squares, test1)
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(marching_squares, circle)
 {
   auto func = [](float x, float y)
   {
@@ -15,18 +16,19 @@ GGO_TEST(marching_squares, test1)
   const int size = 400;
   const ggo::pos2f offset(0.5f * size, 0.5f * size);
 
-  std::vector<ggo::rgb_layer> layers;
+  using color_segment = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>;
+  std::vector<color_segment> segments;
   for (const auto & cell : cells)
   {
     for (const auto & segment : cell._segments)
     {
-      auto extended_segment = std::make_shared<ggo::extended_segment_float>(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
-      layers.emplace_back(extended_segment, ggo::color::BLUE);
+      ggo::extended_segment_float segment(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
+      segments.emplace_back(segment, ggo::color_8u::WHITE);
     }
   }
 
-  ggo::rgb_image_buffer_uint8 image(size, size, ggo::color::WHITE);
-  ggo::paint(image, layers);
+  std::vector<uint8_t> buffer(3 * size * size, 0);
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, segments.begin(), segments.end());
 
-  ggo::save_bmp("marching_squares.bmp", image.data(), size, size);
+  ggo::save_bmp("marching_squares.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
 }
