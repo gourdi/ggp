@@ -40,7 +40,6 @@
     <ClInclude Include="src\paint\ggo_color_triangle.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ggo_blit.cpp" />
     <ClCompile Include="src\io\ggo_bmp.cpp" />
     <ClCompile Include="src\paint\ggo_sampling_paint.h" />
   </ItemGroup>

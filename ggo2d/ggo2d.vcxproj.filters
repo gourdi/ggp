@@ -67,7 +67,6 @@
     <ClCompile Include="src\io\ggo_bmp.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="src\ggo_blit.cpp" />
     <ClCompile Include="src\paint\ggo_sampling_paint.h">
       <Filter>paint</Filter>
     </ClCompile>
