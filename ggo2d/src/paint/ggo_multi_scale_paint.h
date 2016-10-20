@@ -152,7 +152,8 @@ namespace ggo
     set_pixel_t set_pixel,
     paint_block_t paint_block)
   {
-    using item_t = std::iterator_traits<iterator_t>::value_type;
+    using item_pointer_t = std::iterator_traits<iterator_t>::value_type;
+    using item_t = std::remove_pointer<item_pointer_t>::type;
     using real_t = item_t::real_t;
 
     GGO_ASSERT(current_scale >= 0);
@@ -162,21 +163,23 @@ namespace ggo
 
     bool block_inside_all_shapes = true;
 
-    std::vector<item_t> current_block_layers;
+    std::vector<item_pointer_t> current_block_layers;
     for (auto it = begin_it; it != end_it; ++it)
     {
-      ggo::rect_intersection intersection = it->get_rect_intersection(block_rect_float);
+      const item_t * item = *it;
+
+      ggo::rect_intersection intersection = item->get_rect_intersection(block_rect_float);
 
       switch (intersection)
       {
       case ggo::rect_intersection::disjoints:
         break;
       case ggo::rect_intersection::rect_in_shape:
-        current_block_layers.push_back(*it);
+        current_block_layers.push_back(item);
         break;
       default:
         block_inside_all_shapes = false;
-        current_block_layers.push_back(*it);
+        current_block_layers.push_back(item);
         break;
       }
     }
@@ -205,9 +208,10 @@ namespace ggo
 
           for (auto it = current_block_layers.begin(); it != current_block_layers.end(); ++it)
           {
-            if (it->is_point_inside(x_f, y_f) == true)
+            const item_t * item = *it;
+            if (item->is_point_inside(x_f, y_f) == true)
             {
-              sample_color = it->blend(sample_color, it->brush(block_rect.left(), block_rect.bottom()));
+              sample_color = item->blend(sample_color, item->brush(block_rect.left(), block_rect.bottom()));
             }
           }
 
@@ -277,11 +281,18 @@ namespace ggo
     }
 
     // Process blocks.
+    std::vector<const item_t *> items;
+    for (auto it = begin_it; it != end_it; ++it)
+    {
+      const auto & item = *it;
+      items.push_back(&item);
+    }
+
     auto process_block = [&](const ggo::pixel_rect & block_rect)
     {
       paint_block_multi_t<smp>(block_rect,
         scale_factor, first_scale,
-        begin_it, end_it,
+        items.begin(), items.end(),
         get_pixel, set_pixel, paint_block);
     };
 

@@ -111,8 +111,8 @@ namespace ggo
 
     // Lambda that paints a block of pixels without shape sampling.
     auto paint_block_lambda = [&](const ggo::pixel_rect & block_rect, 
-      std::vector<item_t>::const_iterator begin_it,
-      std::vector<item_t>::const_iterator end_it)
+      std::vector<const item_t *>::const_iterator begin_it,
+      std::vector<const item_t *>::const_iterator end_it)
     {
       for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
       {
@@ -123,7 +123,8 @@ namespace ggo
 
           for (auto it = begin_it; it != end_it; ++it)
           {
-            pixel_color = it->blend(pixel_color, it->brush(x, y));
+            const item_t * item = *it;
+            pixel_color = item->blend(pixel_color, item->brush(x, y));
           }
 
           ggo::set_pixel<pbf>(ptr, pixel_color);
