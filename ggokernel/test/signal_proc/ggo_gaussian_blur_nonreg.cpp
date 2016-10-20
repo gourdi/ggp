@@ -177,7 +177,7 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
   {
     auto left   = [&](int x, int y) { return 0.f; };
     auto right  = [&](int x, int y) { return 0.f; };
-    ggo::apply_symetric_kernel_2d_horz(in.data(), sizeof(float), 5 * sizeof(float), read,
+    ggo::apply_symetric_kernel_2d_horz<ggo::y_up>(in.data(), sizeof(float), 5 * sizeof(float), read,
       tmp.data(), sizeof(float), 5 * sizeof(float), write,
       left, right, 5, 5, kernel.data(), kernel.size());
   }
@@ -237,7 +237,7 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
       GGO_CHECK(y >= 0 && y < 5);
       return static_cast<uint16_t>(0);
     };
-    ggo::apply_symetric_kernel_2d_horz(in.data(), 1, 5, read,
+    ggo::apply_symetric_kernel_2d_horz<ggo::y_up>(in.data(), 1, 5, read,
       tmp.data(), 1, 5, write, 
       left, right, 5, 5, kernel.data(), kernel.size());
   }

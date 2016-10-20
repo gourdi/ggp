@@ -62,8 +62,7 @@ namespace ggo
   {
     using helper = gaussian_blur2d_helper<pixel_buffer_format_info<pbf>::color_t>;
 
-    const int tmp_line_step = pixel_buffer_format_info<pbf>::samples_count * width;
-    std::vector<uint8_t> tmp(tmp_line_step * height);
+    std::vector<uint8_t> tmp(line_step * height);
 
     auto kernel = helper::build_kernel(stddev);
 
@@ -83,9 +82,9 @@ namespace ggo
         return read(ggo::get_pixel_ptr<pbf>(buffer, width - 1, y, height, line_step));
       };
 
-      ggo::apply_symetric_kernel_2d_horz(
+      ggo::apply_symetric_kernel_2d_horz<ggo::pixel_buffer_format_info<pbf>::y_dir>(
         buffer, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, line_step, read,
-        tmp.data(), ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, tmp_line_step, write,
+        tmp.data(), ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, line_step, write,
         left, right, width, height,
         kernel.data(), kernel.size());
     }
@@ -100,7 +99,7 @@ namespace ggo
       };
 
       ggo::apply_symetric_kernel_2d_vert<ggo::pixel_buffer_format_info<pbf>::y_dir>(
-        tmp.data(), ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, tmp_line_step, read,
+        tmp.data(), ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, line_step, read,
         buffer, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size, line_step, write,
         bottom, top, width, height,
         kernel.data(), kernel.size());

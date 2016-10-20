@@ -128,7 +128,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   // Apply 2D symetric kernel horizontally, buffer version.
-  template <typename kernel_t, typename read_t, typename write_t, typename left_t, typename right_t, typename count_t>
+  template <y_direction y_dir, typename kernel_t, typename read_t, typename write_t, typename left_t, typename right_t, typename count_t>
   void apply_symetric_kernel_2d_horz(const void * input_buffer, const int input_item_step, const int input_line_step, read_t read,
     void * output_buffer, const int output_item_step, const int output_line_step, write_t write,
     left_t left, right_t right, int width, int height,
@@ -136,8 +136,9 @@ namespace ggo
   {
     for (int y = 0; y < height; ++y)
     {
-      auto left_1d   = [&](int x) { GGO_ASSERT(x < 0);  return left(x, y); };
-      auto right_1d  = [&](int x) { GGO_ASSERT(x >= width); return right(x, y); };
+      int mapped_y   = y_dir == y_down ? height - y - 1 : y;
+      auto left_1d   = [&](int x) { GGO_ASSERT(x < 0);  return left(x, mapped_y); };
+      auto right_1d  = [&](int x) { GGO_ASSERT(x >= width); return right(x, mapped_y); };
 
       apply_symetric_kernel_1d(input_buffer, input_item_step, read, output_buffer, output_item_step, write,
         left_1d, right_1d, width, kernel, kernel_size);

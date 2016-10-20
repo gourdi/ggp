@@ -111,7 +111,7 @@ GGO_TEST(convolution2d, float_zero_horz)
   auto read  = [&](const void * ptr) { return *static_cast<const float*>(ptr); };
   auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float*>(ptr); *ptr_32f = v; };
 
-  ggo::apply_symetric_kernel_2d_horz(in, sizeof(float), 7 * sizeof(float), read,
+  ggo::apply_symetric_kernel_2d_horz<ggo::y_down>(in, sizeof(float), 7 * sizeof(float), read,
     out, sizeof(float), 7 * sizeof(float), write,
     left, right, 7, 2,  kernel, 2);
 
