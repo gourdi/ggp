@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ggo_buffer_access.h" />
+    <ClInclude Include="src\ggo_buffer_iterator.h" />
     <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\ggo_log.h" />

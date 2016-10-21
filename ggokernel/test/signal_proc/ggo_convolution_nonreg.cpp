@@ -1,6 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_convolution.h>
 #include <ggo_buffer_access.h>
+#include <ggo_buffer_iterator.h>
 #include <array>
 
 /////////////////////////////////////////////////////////////////////
@@ -10,12 +11,13 @@ GGO_TEST(convolution1d, float_mirror)
   const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
   float out[7] = { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
 
-  auto left = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
-  auto center = [&](int x) { return in[x]; };
-  auto right = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
-  auto output = [&](int x, float v) { ggo::set1d(out, x, 7, v); };
+  ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>> input_it(in);
+  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> output_it(out);
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel, 2);
+  auto left  = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
+  auto right = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel, 2);
 
   GGO_CHECK_FABS(out[0], 0.f);
   GGO_CHECK_FABS(out[1], 1.f / 3.f);
@@ -27,41 +29,21 @@ GGO_TEST(convolution1d, float_mirror)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(convolution1d, float_zero_buffer_api)
-{
-  const float in[7] = { 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 1.f };
-  const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
-  float out[7] = { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
-
-  auto left  = [&](int x) { return 0.f; };
-  auto right = [&](int x) { return 0.f; };
-  auto read  = [&](const void * ptr) { return *static_cast<const float*>(ptr); };
-  auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float*>(ptr); *ptr_32f = v; };
-
-  ggo::apply_symetric_kernel_1d(in, sizeof(float), read, out, sizeof(float), write, left, right, 7, kernel, 2);
-
-  GGO_CHECK_FABS(out[0], 0.f);
-  GGO_CHECK_FABS(out[1], 1.f / 3.f);
-  GGO_CHECK_FABS(out[2], 1.f / 3.f);
-  GGO_CHECK_FABS(out[3], 1.f / 3.f);
-  GGO_CHECK_FABS(out[4], 0.f);
-  GGO_CHECK_FABS(out[5], 1.f / 3.f);
-  GGO_CHECK_FABS(out[6], 1.f / 3.f);
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(convolution1d, uint8_zero_borders_fixed_point)
 {
   const uint8_t in[7] = { 0, 0, 255, 0, 0, 0, 255 };
   const uint16_t kernel[2] = { 128, 64 };
   uint8_t out[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
-  auto left   = [&](int x) { return static_cast<uint16_t>(0); };
-  auto center = [&](int x) { return static_cast<uint16_t>(in[x]); };
-  auto right  = [&](int x) { return static_cast<uint16_t>(0); };
-  auto output = [&](int x, uint16_t v) { out[x] = (v + 128) >> 8; };
+  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel, 2);
+  ggo::const_buffer_iterator<1, accessor> input_it(in);
+  ggo::buffer_iterator<1, accessor> output_it(out);
+
+  auto left   = [&](int x) { return static_cast<uint16_t>(0); };
+  auto right  = [&](int x) { return static_cast<uint16_t>(0); };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel, 2);
 
   GGO_CHECK(out[0] == 0);
   GGO_CHECK(out[1] == 64);
@@ -79,12 +61,15 @@ GGO_TEST(convolution1d, uint8_fixed_value_borders)
   const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
   uint8_t out[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
-  auto left   = [&](int x) { return 255.f; };
-  auto center = [&](int x) { return ggo::to<float>(in[x]); };
-  auto right  = [&](int x) { return 255.f; };
-  auto output = [&](int x, float v) { ggo::set1d(out, x, 7, ggo::to<uint8_t>(v)); };
+  using accessor = ggo::cast_data_accessor<uint8_t, float>;
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel, 2);
+  ggo::const_buffer_iterator<1, accessor> input_it(in);
+  ggo::buffer_iterator<1, accessor> output_it(out);
+
+  auto left   = [&](int x) { return 255.f; };
+  auto right  = [&](int x) { return 255.f; };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel, 2);
 
   GGO_CHECK(out[0] == 85);
   GGO_CHECK(out[1] == 85);
@@ -96,7 +81,7 @@ GGO_TEST(convolution1d, uint8_fixed_value_borders)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(convolution2d, float_zero_horz)
+GGO_TEST(convolution2d, float_horz)
 {
   const float in[14] = {
     1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
@@ -106,14 +91,13 @@ GGO_TEST(convolution2d, float_zero_horz)
     0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
     0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
 
-  auto left =  [&](int x, int y) { GGO_CHECK(y >= 0 && y < 2); return 0.f; };
-  auto right = [&](int x, int y)  { GGO_CHECK(y >= 0 && y < 2); return 0.f; };
-  auto read  = [&](const void * ptr) { return *static_cast<const float*>(ptr); };
-  auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float*>(ptr); *ptr_32f = v; };
+  auto left  = [&](int x, int y) { GGO_CHECK(x < 0);  GGO_CHECK(y >= 0 && y < 2); return 0.f; };
+  auto right = [&](int x, int y) { GGO_CHECK(x >= 7); GGO_CHECK(y >= 0 && y < 2); return 0.f; };
 
-  ggo::apply_symetric_kernel_2d_horz<ggo::y_down>(in, sizeof(float), 7 * sizeof(float), read,
-    out, sizeof(float), 7 * sizeof(float), write,
-    left, right, 7, 2,  kernel, 2);
+  auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>>(in + 7 * y); };
+  auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>>(out + 7 * y); };
+
+  ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 7, 2,  kernel, 2);
 
   GGO_CHECK_FABS(out[0], 1.f / 3.f);
   GGO_CHECK_FABS(out[1], 1.f / 3.f);
@@ -133,7 +117,7 @@ GGO_TEST(convolution2d, float_zero_horz)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(convolution2d, float_mirror_vert)
+GGO_TEST(convolution2d, float_vert)
 {
   const float in[9] = {
     0.f, 0.f, 1.f,
@@ -147,12 +131,13 @@ GGO_TEST(convolution2d, float_mirror_vert)
 
   auto bottom = [&](int x, int y) { return ggo::get2d_mirror<float, ggo::y_down>(in, x, y, 3, 3); };
   auto top    = [&](int x, int y) { return ggo::get2d_mirror<float, ggo::y_down>(in, x, y, 3, 3); };
-  auto read   = [&](const void * ptr) { return *static_cast<const float*>(ptr); };
-  auto write  = [&](void * ptr, float v) { float * ptr_32f = static_cast<float*>(ptr); *ptr_32f = v; };
 
-  ggo::apply_symetric_kernel_2d_vert<ggo::y_down>(in, sizeof(float), 3 * sizeof(float), read,
-    out, sizeof(float), 3 * sizeof(float), write,
-    bottom, top, 3, 3, kernel, 2);
+  const int offset = -3 * static_cast<int>(sizeof(float));
+
+  auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, ggo::data_accessor<float>>(in + 6 + x, offset); };
+  auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, ggo::data_accessor<float>>(out + 6 + x, offset); };
+
+  ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 3, 3, kernel, 2);
 
   GGO_CHECK_FABS(out[0], 0.f);
   GGO_CHECK_FABS(out[3], 0.f);
@@ -166,3 +151,4 @@ GGO_TEST(convolution2d, float_mirror_vert)
   GGO_CHECK_FABS(out[5], 1.f / 3.f);
   GGO_CHECK_FABS(out[8], 0.f);
 }
+

@@ -23,6 +23,7 @@
     <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
     <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
+    <ClCompile Include="test\ggo_buffer_iterator_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />
     <ClCompile Include="test\ggo_kernel_nonreg.cpp" />
     <ClCompile Include="test\ggo_link_nonreg.cpp" />

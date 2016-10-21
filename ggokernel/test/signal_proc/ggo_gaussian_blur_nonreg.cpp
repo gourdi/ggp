@@ -2,6 +2,7 @@
 
 #include <ggo_nonreg.h>
 #include <ggo_gaussian_blur.h>
+#include <ggo_buffer_iterator.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, kernel_floating_point)
@@ -66,12 +67,13 @@ GGO_TEST(gaussian_blur, 1d_32f_zero)
   auto kernel = ggo::build_gaussian_kernel<float>(0.8f, 0.01f);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto left   = [&](int x) { return 0.f; };
-  auto center = [&](int x) { return in[x]; };
-  auto right  = [&](int x) { return 0.f; };
-  auto output = [&](int x, float v) { out[x] = v; };
+  ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>> input_it(in);
+  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> output_it(out);
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel.data(), kernel.size());
+  auto left   = [&](int x) { return 0.f; };
+  auto right  = [&](int x) { return 0.f; };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel.data(), kernel.size());
 
   GGO_CHECK_FABS(out[0], 0.f);
   GGO_CHECK_FABS(out[1], 0.0219296496f);
@@ -91,12 +93,15 @@ GGO_TEST(gaussian_blur, 1d_8u_32f_zero)
   auto kernel = ggo::build_gaussian_kernel<float>(0.8f, 0.01f);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto left   = [&](int x) { return 0.f; };
-  auto center = [&](int x) { return ggo::to<float>(in[x]); };
-  auto right  = [&](int x) { return 0.f; };
-  auto output = [&](int x, float v) { out[x] = ggo::to<uint8_t>(v); };
+  using accessor = ggo::cast_data_accessor<uint8_t, float>;
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel.data(), kernel.size());
+  ggo::const_buffer_iterator<1, accessor> input_it(in);
+  ggo::buffer_iterator<1, accessor> output_it(out);
+
+  auto left   = [&](int x) { return 0.f; };
+  auto right  = [&](int x) { return 0.f; };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel.data(), kernel.size());
 
   GGO_CHECK_EQ(out[0], 0);
   GGO_CHECK_EQ(out[1], 6);
@@ -116,12 +121,15 @@ GGO_TEST(gaussian_blur, 1d_fixed_point_8u_16u_zero)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto left   = [&](int x) { return static_cast<uint16_t>(0); };
-  auto center = [&](int x) { return static_cast<uint16_t>(in[x]); };
-  auto right  = [&](int x) { return static_cast<uint16_t>(0); };
-  auto output = [&](int x, uint16_t v) { out[x] = (v + (1 << 7)) >> 8; };
+  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 7, kernel.data(), kernel.size());
+  ggo::const_buffer_iterator<1, accessor> input_it(in);
+  ggo::buffer_iterator<1, accessor> output_it(out);
+
+  auto left   = [&](int x) { return static_cast<uint16_t>(0); };
+  auto right  = [&](int x) { return static_cast<uint16_t>(0); };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel.data(), kernel.size());
 
   GGO_CHECK_EQ(out[0], 0);
   GGO_CHECK_EQ(out[1], 6);
@@ -141,12 +149,15 @@ GGO_TEST(gaussian_blur, 1d_fixed_point_8u_16u_mirror)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto left   = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
-  auto center = [&](int x) { return static_cast<uint16_t>(in[x]); };
-  auto right  = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
-  auto output = [&](int x, uint16_t v) { out[x] = (v + (1 << 7)) >> 8; };
+  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
 
-  ggo::apply_symetric_kernel_1d(left, center, right, output, 9, kernel.data(), kernel.size());
+  ggo::const_buffer_iterator<1, accessor> input_it(in);
+  ggo::buffer_iterator<1, accessor> output_it(out);
+
+  auto left   = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
+  auto right  = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
+
+  ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 9, kernel.data(), kernel.size());
 
   GGO_CHECK_EQ(out[0], 64);
   GGO_CHECK_EQ(out[1], 128);
@@ -173,22 +184,28 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
   auto read = [&](const void * ptr) { return *static_cast<const float *>(ptr); };
   auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float *>(ptr); *ptr_32f = v; };
 
+  using accessor = ggo::data_accessor<float>;
+
   // Horizontal pass.
   {
+    auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<sizeof(float), accessor>(in.data() + 5 * y); };
+    auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<sizeof(float), accessor>(tmp.data() + 5 * y); };
+
     auto left   = [&](int x, int y) { return 0.f; };
     auto right  = [&](int x, int y) { return 0.f; };
-    ggo::apply_symetric_kernel_2d_horz<ggo::y_up>(in.data(), sizeof(float), 5 * sizeof(float), read,
-      tmp.data(), sizeof(float), 5 * sizeof(float), write,
-      left, right, 5, 5, kernel.data(), kernel.size());
+
+    ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 5, 5, kernel.data(), kernel.size());
   }
 
   // Vertical pass.
   {
+    auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, accessor>(tmp.data() + x, 5 * sizeof(float)); };
+    auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, accessor>(out.data() + x, 5 * sizeof(float)); };
+
     auto bottom = [&](int x, int y) { return 0.f; };
     auto top    = [&](int x, int y) { return 0.f; };
-    ggo::apply_symetric_kernel_2d_vert<ggo::y_up>(tmp.data(), sizeof(float), 5 * sizeof(float), read,
-      out.data(), sizeof(float), 5 * sizeof(float), write,
-      bottom, top, 5, 5, kernel.data(), kernel.size());
+
+    ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 5, 5, kernel.data(), kernel.size());
   }
 
   const std::vector<float> ref{
@@ -216,17 +233,13 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto read = [&](const void * ptr) {
-    uint8_t v = *static_cast<const uint8_t *>(ptr);
-    return static_cast<uint16_t>(v);
-  };
-  auto write = [&](void * ptr, uint16_t v) { 
-    uint8_t * ptr_8u = static_cast<uint8_t *>(ptr); 
-    *ptr_8u = static_cast<uint8_t>(ggo::fixed_point_div<8>(v));
-  };
+  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
 
   // Horizontal pass.
   {
+    auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<1, accessor>(in.data() + 5 * y); };
+    auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<1, accessor>(tmp.data() + 5 * y); };
+
     auto left = [&](int x, int y) {
       GGO_CHECK(x < 0); 
       GGO_CHECK(y >= 0 && y < 5);
@@ -237,13 +250,14 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
       GGO_CHECK(y >= 0 && y < 5);
       return static_cast<uint16_t>(0);
     };
-    ggo::apply_symetric_kernel_2d_horz<ggo::y_up>(in.data(), 1, 5, read,
-      tmp.data(), 1, 5, write, 
-      left, right, 5, 5, kernel.data(), kernel.size());
+    ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 5, 5, kernel.data(), kernel.size());
   }
 
   // Vertical pass.
   {
+    auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, accessor>(tmp.data() + x, 5); };
+    auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, accessor>(out.data() + x, 5); };
+
     auto bottom = [&](int x, int y) {
       GGO_CHECK(x >= 0 && x < 5); 
       GGO_CHECK(y < 0);
@@ -254,9 +268,7 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
       GGO_CHECK(y >= 5);
       return static_cast<uint16_t>(0);
     };
-    ggo::apply_symetric_kernel_2d_vert<ggo::y_up>(tmp.data(), 1, 5, read,
-      out.data(), 1, 5, write,
-      bottom, top, 5, 5, kernel.data(), kernel.size());
+    ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 5, 5, kernel.data(), kernel.size());
   }
 
   const std::vector<uint8_t> ref{
@@ -272,3 +284,4 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
     GGO_CHECK_EQ(static_cast<int>(out[i]), static_cast<int>(ref[i]));
   }
 }
+
