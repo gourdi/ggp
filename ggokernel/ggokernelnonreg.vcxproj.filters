@@ -100,6 +100,7 @@
       <Filter>linear_algebra</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_buffer_iterator_nonreg.cpp" />
+    <ClCompile Include="test\ggo_circular_buffer_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

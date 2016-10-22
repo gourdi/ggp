@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="src\ggo_buffer_access.h" />
     <ClInclude Include="src\ggo_buffer_iterator.h" />
+    <ClInclude Include="src\ggo_circular_buffer.h" />
     <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\ggo_log.h" />
@@ -147,7 +148,6 @@
     <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_helpers.h" />
-    <ClInclude Include="src\ggo_io.h" />
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
     <ClInclude Include="src\ggo_memory.h" />
