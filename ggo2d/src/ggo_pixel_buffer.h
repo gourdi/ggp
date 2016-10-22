@@ -41,6 +41,11 @@ namespace ggo
 
     using color_t = uint8_t;
     using sample_t = uint8_t;
+
+    // Accessor interface.
+    using type = uint8_t;
+    static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
+    static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
   };
 
   template <>
@@ -54,6 +59,11 @@ namespace ggo
 
     using color_t = float;
     using sample_t = float;
+
+    // Accessor interface.
+    using type = float;
+    static float read(const void * ptr) { return *static_cast<const float *>(ptr); }
+    static void write(void * ptr, float c) { *static_cast<float *>(ptr) = c; }
   };
 
   template <>
@@ -65,6 +75,23 @@ namespace ggo
 
     using color_t = ggo::color_8u;
     using sample_t = uint8_t;
+
+    // Accessor interface.
+    using type = ggo::color_8u;
+
+    static ggo::color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
+    }
+
+    static void write(void * ptr, const ggo::color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c._r;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._b;
+    }
   };
 
   template <>
@@ -78,6 +105,23 @@ namespace ggo
 
     using color_t = ggo::color_32f;
     using sample_t = float;
+
+    // Accessor interface.
+    using type = ggo::color_32f;
+
+    static ggo::color_32f read(const void * ptr)
+    {
+      const float * ptr_32f = static_cast<const float *>(ptr);
+      return ggo::color_32f(ptr_32f[0], ptr_32f[1], ptr_32f[2]);
+    }
+
+    static void write(void * ptr, const ggo::color_32f & c)
+    {
+      float * ptr_32f = static_cast<float *>(ptr);
+      ptr_32f[0] = c._r;
+      ptr_32f[1] = c._g;
+      ptr_32f[2] = c._b;
+    }
   };
 
   template <>
@@ -89,6 +133,24 @@ namespace ggo
     static const int sample_byte_size = 1;
 
     using color_t = ggo::color_8u;
+    using sample_t = uint8_t;
+
+    // Accessor interface.
+    using type = ggo::color_8u;
+
+    static ggo::color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+    }
+    
+    static void write(void * ptr, const ggo::color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c._b;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._r;
+    }
   };
 
   // Get line pointer.
@@ -118,45 +180,10 @@ namespace ggo
   }
 
   // Set pixel to pointer.
-  template <pixel_buffer_format pbf, typename color_t> void set_pixel(void * ptr, const color_t & c)
+  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
+  void set_pixel(void * ptr, const color_t & c)
   {
-    static_assert(false, "missing specialization");
-  }
-
-  template <> inline void set_pixel<y_8u_yu, uint8_t>(void * ptr, const uint8_t & c)
-  {
-    uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-    ptr_8u[0] = c;
-  }
-
-  template <> inline void set_pixel<y_32f_yu, float>(void * ptr, const float & c)
-  {
-    float * ptr_32f = static_cast<float *>(ptr);
-    ptr_32f[0] = c;
-  }
- 
-  template <> inline void set_pixel<rgb_8u_yu, ggo::color_8u>(void * ptr, const ggo::color_8u & c)
-  {
-    uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-    ptr_8u[0] = c._r;
-    ptr_8u[1] = c._g;
-    ptr_8u[2] = c._b;
-  }
-
-  template <> inline void set_pixel<rgb_32f_yu, ggo::color_32f>(void * ptr, const ggo::color_32f & c)
-  {
-    float * ptr_32f = static_cast<float *>(ptr);
-    ptr_32f[0] = c._r;
-    ptr_32f[1] = c._g;
-    ptr_32f[2] = c._b;
-  }
-
-  template <> inline void set_pixel<bgra_8u_yd, ggo::color_8u>(void * ptr, const ggo::color_8u & c)
-  {
-    uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-    ptr_8u[0] = c._b;
-    ptr_8u[1] = c._g;
-    ptr_8u[2] = c._r;
+    pixel_buffer_format_info<pbf>::write(ptr, c);
   }
 
   // Set pixel to pointer with coordinates.
@@ -170,37 +197,7 @@ namespace ggo
   template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
   color_t get_pixel(const void * ptr)
   {
-    static_assert(false, "missing specialization");
-  }
-  
-  template<> inline uint8_t get_pixel<y_8u_yu, uint8_t>(const void * ptr)
-  {
-    const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-    return ptr_8u[0];
-  }
-
-  template<> inline float get_pixel<y_32f_yu, float>(const void * ptr)
-  {
-    const float * ptr_32f = static_cast<const float *>(ptr);
-    return ptr_32f[0];
-  }
-
-  template<> inline ggo::color_8u get_pixel<rgb_8u_yu, ggo::color_8u>(const void * ptr)
-  {
-    const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-    return ggo::color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
-  }
-
-  template<> inline ggo::color_32f get_pixel<rgb_32f_yu, ggo::color_32f>(const void * ptr)
-  {
-    const float * ptr_32f = static_cast<const float *>(ptr);
-    return ggo::color_32f(ptr_32f[0], ptr_32f[1], ptr_32f[2]);
-  }
-  
-  template<> inline ggo::color_8u get_pixel<pixel_buffer_format::bgra_8u_yd, ggo::color_8u>(const void * ptr)
-  {
-    const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-    return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+    return pixel_buffer_format_info<pbf>::read(ptr);
   }
 
   // Get pixel from pointer and coordinates.
