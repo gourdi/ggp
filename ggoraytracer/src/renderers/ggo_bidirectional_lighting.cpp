@@ -14,18 +14,18 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color bidirectional_lighting::process(const ggo::ray3d_float & ray,
-                                             const ggo::ray3d_float & world_normal,
-                                             const ggo::object3d & hit_object,
-                                             const ggo::color & hit_color,
-                                             float random_variable1,
-                                             float random_variable2) const
+  ggo::color_32f bidirectional_lighting::process(const ggo::ray3d_float & ray,
+                                                 const ggo::ray3d_float & world_normal,
+                                                 const ggo::object3d & hit_object,
+                                                 const ggo::color_32f & hit_color,
+                                                 float random_variable1,
+                                                 float random_variable2) const
   {
-    ggo::color result(ggo::color::BLACK);
+    ggo::color_32f result(ggo::color_32f::BLACK);
 
     for (const auto & light : _scene.lights())
     {
-      ggo::color current_light_color(ggo::color::BLACK);
+      ggo::color_32f current_light_color(ggo::color_32f::BLACK);
 
       // Cast a ray from light.
       const auto & light_ray = light->sample_ray(random_variable1, random_variable2);
@@ -69,7 +69,7 @@ namespace ggo
       GGO_ASSERT_GE(intensity, -0.0001);
 
       // Compute path color.
-      ggo::color path_color(light->get_emissive_color());
+      ggo::color_32f path_color(light->get_emissive_color());
       path_color *= light_hit_object->get_color(light_local_normal.pos());
       path_color *= intensity;
 

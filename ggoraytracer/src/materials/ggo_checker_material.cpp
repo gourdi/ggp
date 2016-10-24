@@ -3,7 +3,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  checker_material_abc::checker_material_abc(const ggo::color & color1, const ggo::color & color2, float tile_size)
+  checker_material_abc::checker_material_abc(const ggo::color_32f & color1, const ggo::color_32f & color2, float tile_size)
   :
   _color1(color1),
   _color2(color2),
@@ -12,7 +12,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color checker_3d_material::get_color(const ggo::pos3f & pos) const
+  ggo::color_32f checker_3d_material::get_color(const ggo::pos3f & pos) const
   {
     int x = ggo::to<int>(pos.get<0>() / _tile_size);
     int y = ggo::to<int>(pos.get<1>() / _tile_size);
@@ -23,7 +23,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color checker_xy_material::get_color(const ggo::pos3f & pos) const
+  ggo::color_32f checker_xy_material::get_color(const ggo::pos3f & pos) const
   {
     int x = ggo::to<int>(pos.get<0>() / _tile_size);
     int y = ggo::to<int>(pos.get<1>() / _tile_size);

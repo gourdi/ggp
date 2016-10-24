@@ -10,23 +10,23 @@ namespace ggo
   {
   public:
     
-                  global_sampling_render_task(ggo::multi_sampling_camera_abc & camera) : _camera(camera) {}
+                      global_sampling_render_task(ggo::multi_sampling_camera_abc & camera) : _camera(camera) {}
 
-      ggo::color  render_pixel(int x, int y, const ggo::scene & scene, const ggo::raytrace_params & raytrace_params) const override;
+      ggo::color_32f  render_pixel(int x, int y, const ggo::scene & scene, const ggo::raytrace_params & raytrace_params) const override;
 
       int                                     _samples_count;
       const ggo::multi_sampling_camera_abc &  _camera;
   };
   
   //////////////////////////////////////////////////////////////
-  ggo::color global_sampling_render_task::render_pixel(int x, int y, const ggo::scene & scene, const ggo::raytrace_params & raytrace_params) const
+  ggo::color_32f global_sampling_render_task::render_pixel(int x, int y, const ggo::scene & scene, const ggo::raytrace_params & raytrace_params) const
   {
     // Get camera rays (which are already shuffled).
     auto camera_rays = _camera.get_rays(x, y, _samples_count);
     GGO_ASSERT(camera_rays.size() >= _samples_count);
 
     // Proceed.
-    ggo::color color(ggo::color::BLACK);
+    ggo::color_32f color(ggo::color_32f::BLACK);
     
     for (int sample = 0; sample < _samples_count; ++sample)
     {

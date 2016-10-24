@@ -13,22 +13,22 @@ namespace ggo
   {
   public:
 
-                // Caustic constructor.
-                photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d>> & lights,
-                               const std::vector<ggo::pos3f> & target_samples,
-                               const ggo::object3d & object,
-                               const ggo::raycaster_abc & raycaster);
+                    // Caustic constructor.
+                    photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d>> & lights,
+                                   const std::vector<ggo::pos3f> & target_samples,
+                                   const ggo::object3d & object,
+                                   const ggo::raycaster_abc & raycaster);
 
-    ggo::color  process(const ggo::ray3d_float & ray,
-                        const ggo::ray3d_float & world_normal,
-                        const ggo::object3d & hit_object,
-                        const ggo::color & hit_color,
-                        float random_variable1,
-                        float random_variable2) const override;
+    ggo::color_32f  process(const ggo::ray3d_float & ray,
+                            const ggo::ray3d_float & world_normal,
+                            const ggo::object3d & hit_object,
+                            const ggo::color_32f & hit_color,
+                            float random_variable1,
+                            float random_variable2) const override;
 
   private:
 
-    std::unique_ptr<ggo::kdtree<ggo::color, 3>>  _tree;
+    std::unique_ptr<ggo::kdtree<ggo::color_32f, 3>>  _tree;
   };
 }
 

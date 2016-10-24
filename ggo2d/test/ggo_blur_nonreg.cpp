@@ -196,6 +196,8 @@ GGO_TEST(blur, mean_box_y_8u_yu)
     buffer.data(), width, height, line_step,
     ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
 
+  ggo::mean_box_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 9);
+
 #ifdef GGO_BENCH
   ggo::chronometer chronometer;
   for (int i = 0; i < 1000; ++i)

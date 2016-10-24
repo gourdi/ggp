@@ -5,25 +5,25 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   solid_color_material::solid_color_material()
   :
-  _color(ggo::color::BLACK)
+  _color(ggo::color_32f::BLACK)
   {
   }
 
   //////////////////////////////////////////////////////////////
-  solid_color_material::solid_color_material(const ggo::color & color)
+  solid_color_material::solid_color_material(const ggo::color_32f & color)
   :
   _color(color)
   {
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color solid_color_material::get_color(const ggo::pos3f & pos) const
+  ggo::color_32f solid_color_material::get_color(const ggo::pos3f & pos) const
   {
     return _color;
   }
 
   //////////////////////////////////////////////////////////////
-  void solid_color_material::set_color(const ggo::color & color)
+  void solid_color_material::set_color(const ggo::color_32f & color)
   {
     _color = color;
   }

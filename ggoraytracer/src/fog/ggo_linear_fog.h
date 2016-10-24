@@ -9,15 +9,15 @@ namespace ggo
   {
   public:
 
-                  linear_fog(const ggo::color & color, float far);
+                      linear_fog(const ggo::color_32f & color, float far);
 
-      ggo::color  process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color & color) const override;
-      ggo::color  process_background_ray(const ggo::ray3d_float & ray, const ggo::color & color) const override;
+      ggo::color_32f  process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const override;
+      ggo::color_32f  process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const override;
       
   private:
 
-      ggo::color  _color;
-      float       _far;
+      ggo::color_32f  _color;
+      float           _far;
   };
 }
 

@@ -9,16 +9,16 @@ namespace ggo
   {
   public:
     
-                solid_color_material();
-                solid_color_material(const ggo::color & color);
+                    solid_color_material();
+                    solid_color_material(const ggo::color_32f & color);
     
-    ggo::color	get_color(const ggo::pos3f & pos) const override;
+    ggo::color_32f  get_color(const ggo::pos3f & pos) const override;
     
-    void		    set_color(const ggo::color & color);
+    void		        set_color(const ggo::color_32f & color);
     
   private:
     
-    ggo::color	_color;
+    ggo::color_32f	_color;
   };
 }
 

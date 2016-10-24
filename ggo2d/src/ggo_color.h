@@ -28,11 +28,11 @@ namespace ggo
               color(const color<data_t> & c) { _r = c._r; _g = c._g; _b = c._b; }
 
     void		  operator+=(const color<data_t> & c) { _r += c._r; _g += c._g; _b += c._b; }
-    void		  operator-=(const color & c) { _r -= c._r; _g -= c._g; _b -= c._b; }
-/*    void		  operator*=(const color & c) { _r *= c._r; _g *= c._g; _b *= c._b; }
-    void		  operator*=(float v) { _r *= v; _g *= v; _b *= v; }
-    void		  operator/=(float v) { _r /= v; _g /= v; _b /= v; }
-*/
+    void		  operator-=(const color<data_t> & c) { _r -= c._r; _g -= c._g; _b -= c._b; }
+    void		  operator*=(const color<data_t> & c) { _r *= c._r; _g *= c._g; _b *= c._b; }
+    void		  operator*=(data_t v) { _r *= v; _g *= v; _b *= v; }
+    void		  operator/=(data_t v) { _r /= v; _g /= v; _b /= v; }
+
 
 /*
     uint8_t 	r8() const { return ggo::to<uint8_t>(0xFF*_r); }
@@ -83,12 +83,6 @@ namespace ggo
   };
 }
 
-//namespace ggo
-//{
-//  template <>
-//  inline ggo::color to<ggo::color, float>(float v) { return ggo::color(v); }
-//}
-
 namespace ggo
 {
   using color_8u = color<uint8_t>;
@@ -112,11 +106,12 @@ namespace ggo
     is >> c._r >> c._g >> c._b;
     return is;
   }
-  /*
-  inline ggo::color operator-(const ggo::color & c)
+  
+  template <typename data_t>
+  ggo::color<data_t> operator-(const ggo::color<data_t> & c)
   {
-  return ggo::color(-c._r, -c._g, -c._b);
-  }*/
+  return ggo::color<data_t>(-c._r, -c._g, -c._b);
+  }
 
   template <typename data_t>
   ggo::color<data_t> operator+(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
@@ -124,16 +119,17 @@ namespace ggo
   return ggo::color<data_t>(c1._r + c2._r, c1._g + c2._g, c1._b + c2._b);
   }
 
-  /*
-  inline ggo::color operator-(const ggo::color & c1, const ggo::color & c2)
+  template <typename data_t>
+  ggo::color<data_t> operator-(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
   {
-  return ggo::color(c1._r - c2._r, c1._g - c2._g, c1._b - c2._b);
+  return ggo::color<data_t>(c1._r - c2._r, c1._g - c2._g, c1._b - c2._b);
   }
 
-  inline ggo::color operator*(const ggo::color & c1, const ggo::color & c2)
+  template <typename data_t>
+  ggo::color<data_t> operator*(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
   {
-  return ggo::color(c1._r * c2._r, c1._g * c2._g, c1._b * c2._b);
-  }*/
+  return ggo::color<data_t>(c1._r * c2._r, c1._g * c2._g, c1._b * c2._b);
+  }
 
   template <typename data_t>
   ggo::color<data_t> operator*(const ggo::color<data_t> & c, data_t k)
@@ -147,15 +143,12 @@ namespace ggo
   return ggo::color<data_t>(k * c._r, k * c._g, k * c._b);
   }
 
-  /*inline ggo::color operator/(const ggo::color & c, float k)
+  template <typename data_t>
+  ggo::color<data_t> operator/(const ggo::color<data_t> & c, data_t k)
   {
-  return ggo::color(c._r / k, c._g / k, c._b / k);
-  }*/
+    return ggo::color<data_t>(c._r / k, c._g / k, c._b / k);
+  }
 }
-
-
-
-
 
 /////////////////////////////////////////////////////////////////////
 // Static variables.

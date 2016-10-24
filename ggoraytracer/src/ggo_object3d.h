@@ -13,7 +13,7 @@ namespace ggo
 
                                 object3d();
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape);
-                                object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color);
+                                object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color);
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material);
 
     ggo::pos3f                  sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const;
@@ -41,13 +41,13 @@ namespace ggo
 
     const ggo::material_abc *   material() const { return _material.get(); }
 
-    ggo::color                  get_color(const ggo::pos3f & world_pos) const;
+    ggo::color_32f              get_color(const ggo::pos3f & world_pos) const;
 
-    const ggo::color &          get_emissive_color() const { return _emissive_color; }
-    void                        set_emissive_color(const ggo::color & color) { _emissive_color = color; }
+    const ggo::color_32f &      get_emissive_color() const { return _emissive_color; }
+    void                        set_emissive_color(const ggo::color_32f & color) { _emissive_color = color; }
 
-    const ggo::color &          get_transmission_color() const { return _transmission_color; }
-    void                        set_transmission_color(const ggo::color & color) { _transmission_color = color; }
+    const ggo::color_32f &      get_transmission_color() const { return _transmission_color; }
+    void                        set_transmission_color(const ggo::color_32f & color) { _transmission_color = color; }
 
     bool	                      intersect_ray(const ggo::ray3d_float & ray, float & dist, ggo::ray3d_float & local_normal, ggo::ray3d_float & world_normal) const;
 
@@ -71,14 +71,14 @@ namespace ggo
     float                                                     _roughness = 0;
     float                                                     _phong_factor = 0;
     float                                                     _phong_shininess = 0;
-    ggo::color                                                _transmission_color = ggo::color::WHITE;
-    ggo::color                                                _emissive_color = ggo::color::BLACK;
+    ggo::color_32f                                            _transmission_color = ggo::color_32f::WHITE;
+    ggo::color_32f                                            _emissive_color = ggo::color_32f::BLACK;
     std::shared_ptr<const ggo::raytracable_shape3d_abc_float> _shape;
     std::shared_ptr<const ggo::material_abc>                  _material;
   };
 
-  std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color & color, const ggo::pos3f & pos);
-  std::shared_ptr<ggo::object3d>  create_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos);
+  std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
+  std::shared_ptr<ggo::object3d>  create_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & pos);
 }
 
 #endif

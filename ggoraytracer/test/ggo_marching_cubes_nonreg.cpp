@@ -11,21 +11,21 @@
 
 GGO_TEST(marching_cubes, test)
 {
-  const int GGO_SIZE_X = 512;
-  const int GGO_SIZE_Y = 512;
+  const int width = 512;
+  const int height = 512;
   
   // The camera.
-  ggo::antialiasing_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::antialiasing_point_camera camera(width, height);
   camera.basis().set_pos(0, 0, 15);
   camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 4);
   camera.basis().rotate(ggo::ray3d_float::O_Z(), -ggo::pi<float>() / 4);
   camera.set_aperture(0.1f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLUE));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLUE));
   
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, camera.basis().pos());
+  scene_builder.add_point_light(ggo::color_32f::WHITE, camera.basis().pos());
   
   // Objects.
   auto cells = ggo::marching_cubes([](float x, float y, float z) { return x * x + y * y + z * z - 1; }, ggo::pos3f(-2.f, -2.f, -2.f), 10, 0.4f);
@@ -38,13 +38,13 @@ GGO_TEST(marching_cubes, test)
                                                                  ggo::vertex<float>(triangle.v2(), triangle.v2()),
                                                                  ggo::vertex<float>(triangle.v3(), triangle.v3()));
 
-      scene_builder.add_object(face_ptr, ggo::color::WHITE, true);
+      scene_builder.add_object(face_ptr, ggo::color_32f::WHITE, true);
     }
   }
   
   // Rendering.
   ggo::antialiasing_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
-  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("marching_cubes.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::array_uint8 buffer(3 * width * height);
+  renderer.render(buffer.data(), width, height, scene_builder);
+  ggo::save_bmp("marching_cubes.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

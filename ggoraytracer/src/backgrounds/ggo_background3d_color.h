@@ -9,16 +9,16 @@ namespace ggo
   {
   public:
 
-                        background3d_color(const ggo::color & color = ggo::color::BLACK) : _color(color) {}
+                            background3d_color(const ggo::color_32f & color = ggo::color_32f::BLACK) : _color(color) {}
                         
-    virtual	ggo::color  get_color(const ggo::ray3d_float & ray) const { return _color; }
+    virtual	ggo::color_32f  get_color(const ggo::ray3d_float & ray) const { return _color; }
     
-    ggo::color &			  color() { return _color; }
-    const ggo::color &	color() const { return _color; }
+    ggo::color_32f &			  color() { return _color; }
+    const ggo::color_32f &	color() const { return _color; }
     
   private:
 
-    ggo::color	_color;
+    ggo::color_32f	_color;
   };
 }
 

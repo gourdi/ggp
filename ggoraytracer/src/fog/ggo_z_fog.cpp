@@ -4,7 +4,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  z_fog::z_fog(const ggo::color & color, float z1, float z2, float far)
+  z_fog::z_fog(const ggo::color_32f & color, float z1, float z2, float far)
   :
   _color(color),
   _z_inf(std::min(z1, z2)),
@@ -14,7 +14,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color z_fog::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color & color) const
+  ggo::color_32f z_fog::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
   {
     if (p1.get<2>() >= _z_sup && p2.get<2>() >= _z_sup)
     {
@@ -89,7 +89,7 @@ namespace ggo
   }
       
   //////////////////////////////////////////////////////////////
-  ggo::color z_fog::process_background_ray(const ggo::ray3d_float & ray, const ggo::color & color) const
+  ggo::color_32f z_fog::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
   {
     if (std::abs(ray.dir().get<2>()) < 0.001)
     {
@@ -138,7 +138,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color z_fog::map_color(const ggo::color & color, const ggo::pos3f & p1, const ggo::pos3f & p2) const
+  ggo::color_32f z_fog::map_color(const ggo::color_32f & color, const ggo::pos3f & p1, const ggo::pos3f & p2) const
   {
     float dist = ggo::distance(p1, p2);
 

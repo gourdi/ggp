@@ -5,7 +5,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   scene::scene(const std::vector<std::shared_ptr<const ggo::object3d>> & objects,
                std::shared_ptr<const ggo::background3d_abc> background,
-               const ggo::color & ambient_color,
+               const ggo::color_32f & ambient_color,
                std::shared_ptr<const ggo::fog_abc> fog)
   :
   _objects(objects),
@@ -34,7 +34,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_point_light(const ggo::color & color, const ggo::pos3f & pos)
+  std::shared_ptr<ggo::object3d> scene_builder::add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos)
   {
     auto light = ggo::create_point_light(color, pos);
 
@@ -44,7 +44,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos)
+  std::shared_ptr<ggo::object3d> scene_builder::add_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & pos)
   {
     auto light = ggo::create_sphere_light(color, radius, pos);
 
@@ -62,7 +62,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> scene_builder::add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, bool discard_basis)
+  std::shared_ptr<ggo::object3d> scene_builder::add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color, bool discard_basis)
   {
     auto object = std::make_shared<ggo::object3d>(shape, color);
 

@@ -12,10 +12,10 @@ namespace
   //////////////////////////////////////////////////////////////
   struct filtered_light
   {
-    filtered_light(const ggo::ray3d_float &ray_to_light, const ggo::color & color) : _ray_to_light(ray_to_light), _color(color) {}
+    filtered_light(const ggo::ray3d_float &ray_to_light, const ggo::color_32f & color) : _ray_to_light(ray_to_light), _color(color) {}
 
     ggo::ray3d_float  _ray_to_light;
-    ggo::color        _color;
+    ggo::color_32f    _color;
   };
 
   //////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ namespace
       }
 
       // Get light color.
-      ggo::color light_color = light->get_emissive_color();
+      ggo::color_32f light_color = light->get_emissive_color();
       if (scene.fog() != nullptr)
       {
         light_color = scene.fog()->process_segment(light_pos, world_normal.pos(), light_color);
@@ -72,19 +72,19 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename SampleLightFunc, typename SampleReflectedRayFunc, typename IndirectLightingFunc>
-  ggo::color process_aux(const ggo::ray3d_float & ray,
-                         const ggo::scene & scene,
-                         const ggo::raycaster_abc & raycaster,
-                         const ggo::indirect_lighting_abc * indirect_lighting,
-                         int depth,
-                         const ggo::object3d * previous_hit_object,
-                         const SampleLightFunc & sample_light_func,
-                         const SampleReflectedRayFunc & sample_reflected_ray_func,
-                         const IndirectLightingFunc & indirect_lighting_func)
+  ggo::color_32f process_aux(const ggo::ray3d_float & ray,
+                             const ggo::scene & scene,
+                             const ggo::raycaster_abc & raycaster,
+                             const ggo::indirect_lighting_abc * indirect_lighting,
+                             int depth,
+                             const ggo::object3d * previous_hit_object,
+                             const SampleLightFunc & sample_light_func,
+                             const SampleReflectedRayFunc & sample_reflected_ray_func,
+                             const IndirectLightingFunc & indirect_lighting_func)
   {
     if (depth < 0)
     {
-      return ggo::color::BLACK;
+      return ggo::color_32f::BLACK;
     }
 
     // Handle self-intersection.
@@ -101,7 +101,7 @@ namespace
     const ggo::object3d * hit_object = raycaster.hit_test(safe_ray, dist, local_normal, world_normal, exclude_object);
     if (hit_object == nullptr)
     {
-      ggo::color color = scene.background().get_color(safe_ray);
+      ggo::color_32f color = scene.background().get_color(safe_ray);
 
       if (scene.fog())
       {
@@ -115,8 +115,8 @@ namespace
 
     // Let's go.
     float reflection_factor = hit_object->get_reflection_factor();
-    ggo::color hit_color(hit_object->get_color(local_normal.pos()));
-    ggo::color output_color(ggo::color::BLACK);
+    ggo::color_32f hit_color(hit_object->get_color(local_normal.pos()));
+    ggo::color_32f output_color(ggo::color_32f::BLACK);
 
     auto filtered_lights = filter_lights(scene, raycaster, world_normal, hit_object, sample_light_func);
 
@@ -152,7 +152,7 @@ namespace
     {
       ggo::ray3d_float reflection_ray = sample_reflected_ray_func(*hit_object, safe_ray, world_normal);
 
-      ggo::color reflection_color = process_aux(reflection_ray, scene, raycaster, indirect_lighting, depth - 1, hit_object, sample_light_func, sample_reflected_ray_func, indirect_lighting_func);
+      ggo::color_32f reflection_color = process_aux(reflection_ray, scene, raycaster, indirect_lighting, depth - 1, hit_object, sample_light_func, sample_reflected_ray_func, indirect_lighting_func);
 
       output_color = (1 - reflection_factor) * output_color + reflection_factor * reflection_color;
     }
@@ -191,9 +191,9 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::color raytracer::process(const ggo::ray3d_float & ray,
-                                const ggo::scene & scene,
-                                const ggo::raytrace_params & raytrace_params)
+  ggo::color_32f raytracer::process(const ggo::ray3d_float & ray,
+                                    const ggo::scene & scene,
+                                    const ggo::raytrace_params & raytrace_params)
   {
     ggo::brute_force_raycaster brute_force_racaster(scene.objects());
 
@@ -214,22 +214,22 @@ namespace ggo
 
     auto indirect_lighting_func = [](const ggo::indirect_lighting_abc & indirect_lighting,
                                      const ggo::object3d & hit_object,
-                                     const ggo::color & hit_color,
+                                     const ggo::color_32f & hit_color,
                                      const ggo::ray3d_float & ray,
                                      const ggo::ray3d_float & world_normal)
     {
-      return ggo::color::BLACK;
+      return ggo::color_32f::BLACK;
     };
 
     return process_aux(ray, scene, *raycaster, raytrace_params._indirect_lighting, raytrace_params._depth, nullptr, sample_light_func, sample_reflected_ray_func, indirect_lighting_func);
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color raytracer::process(const ggo::ray3d_float & ray,
-                                const ggo::scene & scene,
-                                const ggo::raytrace_params & raytrace_params,
-                                float random_variable1,
-                                float random_variable2)
+  ggo::color_32f raytracer::process(const ggo::ray3d_float & ray,
+                                    const ggo::scene & scene,
+                                    const ggo::raytrace_params & raytrace_params,
+                                    float random_variable1,
+                                    float random_variable2)
   {
     ggo::brute_force_raycaster brute_force_racaster(scene.objects());
 
@@ -250,7 +250,7 @@ namespace ggo
 
     auto indirect_lighting_func = [&](const ggo::indirect_lighting_abc & indirect_lighting,
                                       const ggo::object3d & hit_object,
-                                      const ggo::color & hit_color,
+                                      const ggo::color_32f & hit_color,
                                       const ggo::ray3d_float & ray,
                                       const ggo::ray3d_float & world_normal)
     {
@@ -276,11 +276,11 @@ namespace ggo
       float dist = 0;
       if (raycaster.hit_test(ambient_ray, dist, ambient_local_normal, ambient_world_normal, exclude_object) != nullptr)
       {
-        return scene.fog()->process_segment(ambient_ray.pos(), ambient_world_normal.pos(), ggo::color::BLACK);
+        return scene.fog()->process_segment(ambient_ray.pos(), ambient_world_normal.pos(), ggo::color_32f::BLACK);
       }
       else
       {
-        return scene.fog()->process_background_ray(ambient_ray, ggo::color::BLACK);
+        return scene.fog()->process_background_ray(ambient_ray, ggo::color_32f::BLACK);
       }
     };
 
@@ -335,10 +335,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color raytracer::diffuse_shading(const ggo::color & object_color,
-                                        const ggo::color & light_color,
-                                        const ggo::ray3d_float & world_normal,
-                                        const ggo::ray3d_float & ray_to_light)
+  ggo::color_32f raytracer::diffuse_shading(const ggo::color_32f & object_color,
+                                            const ggo::color_32f & light_color,
+                                            const ggo::ray3d_float & world_normal,
+                                            const ggo::ray3d_float & ray_to_light)
   {
     GGO_ASSERT_BTW(world_normal.pos().get<0>() - ray_to_light.pos().get<0>(), -0.01, 0.01);
     GGO_ASSERT_BTW(world_normal.pos().get<1>() - ray_to_light.pos().get<1>(), -0.01, 0.01);
@@ -349,16 +349,16 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color raytracer::specular_shading(float phong_factor,
-                                         float phong_shininess,
-                                         const ggo::color & light_color,
-                                         const ggo::ray3d_float & ray,
-                                         const ggo::ray3d_float & world_normal,
-                                         const ggo::ray3d_float & ray_to_light)
+  ggo::color_32f raytracer::specular_shading(float phong_factor,
+                                             float phong_shininess,
+                                             const ggo::color_32f & light_color,
+                                             const ggo::ray3d_float & ray,
+                                             const ggo::ray3d_float & world_normal,
+                                             const ggo::ray3d_float & ray_to_light)
   {
     if (phong_factor <= 0)
     {
-      return ggo::color::BLACK;
+      return ggo::color_32f::BLACK;
     }
 
     ggo::vec3f reflection_dir(2 * ggo::dot(world_normal.dir(), ray_to_light.dir()) * world_normal.dir() - ray_to_light.dir());
@@ -370,7 +370,7 @@ namespace ggo
     float phong = ggo::dot(reflection_dir, viewer_dir);
     if (phong <= 0)
     {
-      return ggo::color::BLACK;
+      return ggo::color_32f::BLACK;
     }
 
     float specular = phong_factor * std::pow(phong, phong_shininess);

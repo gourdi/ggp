@@ -12,9 +12,9 @@ namespace ggo
   {
   public:
 
-    virtual ggo::color render_pixel(int x, int y,
-                                    const ggo::scene & scene,
-                                    const ggo::raytrace_params & raytrace_params) const = 0;
+    virtual ggo::color_32f render_pixel(int x, int y,
+                                        const ggo::scene & scene,
+                                        const ggo::raytrace_params & raytrace_params) const = 0;
   };
 }
 

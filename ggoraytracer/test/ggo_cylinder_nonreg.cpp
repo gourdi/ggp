@@ -9,56 +9,56 @@
 
 GGO_TEST(cylinder, ray_outside)
 {
-  const int GGO_SIZE_X = 480;
-  const int GGO_SIZE_Y = 480;
+  const int width = 480;
+  const int height = 480;
 
   // The camera.
-  ggo::mono_sampling_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::mono_sampling_point_camera camera(width, height);
   camera.basis().set_pos(0.0f, 0.f, 50.f);
   camera.set_aperture(0.1f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::RED));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::RED));
 
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(-100.f, -100.f, 200.f));
+  scene_builder.add_point_light(ggo::color_32f::WHITE, ggo::pos3f(-100.f, -100.f, 200.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 5.f), ggo::vec3f(1.f, 0.f, 0.f), 0.5f), ggo::color::WHITE, false);
-  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(0.f, 0.f, 1.f), 0.f), ggo::color::YELLOW, false);
+  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 5.f), ggo::vec3f(1.f, 0.f, 0.f), 0.5f), ggo::color_32f::WHITE, false);
+  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(0.f, 0.f, 1.f), 0.f), ggo::color_32f::YELLOW, false);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
-  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("cylinder_outside.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::array_uint8 buffer(3 * width * height);
+  renderer.render(buffer.data(), width, height, scene_builder);
+  ggo::save_bmp("cylinder_outside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
 GGO_TEST(cylinder, ray_inside)
 {
-  const int GGO_SIZE_X = 480;
-  const int GGO_SIZE_Y = 480;
+  const int width = 480;
+  const int height = 480;
 
   // The camera.
-  ggo::mono_sampling_point_camera camera(GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::mono_sampling_point_camera camera(width, height);
   camera.basis().set_pos(0.0f, 0.f, 50.f);
   camera.set_aperture(0.1f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::RED));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::RED));
 
   // Light.
-  scene_builder.add_point_light(ggo::color::WHITE, ggo::pos3f(0.f, 0.f, 20.f));
+  scene_builder.add_point_light(ggo::color_32f::WHITE, ggo::pos3f(0.f, 0.f, 20.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), ggo::vec3f(0.f, 0.f, 1.f), 2.f), ggo::color::WHITE, false);
-  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(10.f, 0.f, 1.f), 0.f), ggo::color::YELLOW, false);
+  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), ggo::vec3f(0.f, 0.f, 1.f), 2.f), ggo::color_32f::WHITE, false);
+  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(10.f, 0.f, 1.f), 0.f), ggo::color_32f::YELLOW, false);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * GGO_SIZE_X * GGO_SIZE_Y);
-  renderer.render(buffer.data(), GGO_SIZE_X, GGO_SIZE_Y, scene_builder);
-  ggo::save_bmp("cylinder_inside.bmp", buffer.data(), GGO_SIZE_X, GGO_SIZE_Y);
+  ggo::array_uint8 buffer(3 * width * height);
+  renderer.render(buffer.data(), width, height, scene_builder);
+  ggo::save_bmp("cylinder_inside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
 

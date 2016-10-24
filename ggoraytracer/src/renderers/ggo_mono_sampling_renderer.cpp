@@ -7,11 +7,11 @@ namespace
   {
   public:
   
-                mono_sampling_render_task(const ggo::mono_sampling_camera_abc &  camera) : _camera(camera) {}
+                    mono_sampling_render_task(const ggo::mono_sampling_camera_abc &  camera) : _camera(camera) {}
     
-    ggo::color  render_pixel(int x, int y,
-                             const ggo::scene & scene,
-                             const ggo::raytrace_params & raytrace_params) const override
+    ggo::color_32f  render_pixel(int x, int y,
+                                 const ggo::scene & scene,
+                                 const ggo::raytrace_params & raytrace_params) const override
     {
       return ggo::raytracer::process(_camera.get_ray(x, y), scene, raytrace_params);
     }

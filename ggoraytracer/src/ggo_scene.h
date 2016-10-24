@@ -15,7 +15,7 @@ namespace ggo
     scene() = default;
     scene(const std::vector<std::shared_ptr<const ggo::object3d>> & objects,
           std::shared_ptr<const ggo::background3d_abc> background,
-          const ggo::color & ambient_color,
+          const ggo::color_32f & ambient_color,
           std::shared_ptr<const ggo::fog_abc> fog);
 
     const std::vector<std::shared_ptr<const ggo::object3d>> & objects() const { return _objects; }
@@ -23,14 +23,14 @@ namespace ggo
 
     const ggo::fog_abc *          fog() const { return _fog.get(); }
     const ggo::background3d_abc & background() const { return *_background; }
-    const ggo::color &            ambient_color() const { return _ambient_color; }
+    const ggo::color_32f &            ambient_color() const { return _ambient_color; }
 
   private:
 
     std::vector<std::shared_ptr<const ggo::object3d>>	_objects;
     std::vector<std::shared_ptr<const ggo::object3d>> _lights;
     std::shared_ptr<const ggo::background3d_abc>      _background;
-    ggo::color                                        _ambient_color;
+    ggo::color_32f                                    _ambient_color;
     std::shared_ptr<const ggo::fog_abc>               _fog;
   };
 }
@@ -43,15 +43,15 @@ namespace ggo
 
                                     scene_builder(std::shared_ptr<const ggo::background3d_abc> background);
 
-    std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color & color, const ggo::pos3f & pos);
-    std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos);
+    std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
+    std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & pos);
 
     void                            add_object(std::shared_ptr<ggo::object3d> object, bool discard_basis);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color, bool discard_basis);
+    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color, bool discard_basis);
     std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, bool discard_basis);
 
     void                            set_fog(std::shared_ptr<const ggo::fog_abc> fog) { _fog = fog; }
-    void                            set_ambient_color(const ggo::color & ambient_color) { _ambient_color = ambient_color; }
+    void                            set_ambient_color(const ggo::color_32f & ambient_color) { _ambient_color = ambient_color; }
 
     scene                           build_scene() const { return ggo::scene(_objects, _background, _ambient_color, _fog); }
 
@@ -59,7 +59,7 @@ namespace ggo
 
     std::vector<std::shared_ptr<const ggo::object3d>> _objects;
     std::shared_ptr<const ggo::background3d_abc>      _background;
-    ggo::color                                        _ambient_color = ggo::color::BLACK;
+    ggo::color_32f                                    _ambient_color = ggo::color_32f::BLACK;
     std::shared_ptr<const ggo::fog_abc>               _fog;
   };
 }

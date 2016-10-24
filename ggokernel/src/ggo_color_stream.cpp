@@ -1,4 +1,5 @@
 #include "ggo_color_stream.h"
+
 #ifdef GGO_WIN
 
 #include <Windows.h>

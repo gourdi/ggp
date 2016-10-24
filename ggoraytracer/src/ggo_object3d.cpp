@@ -19,7 +19,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color & color)
+  object3d::object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color)
     :
     _shape(shape),
     _material(std::make_shared<ggo::solid_color_material>(color))
@@ -35,11 +35,11 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color object3d::get_color(const ggo::pos3f & world_pos) const
+  ggo::color_32f object3d::get_color(const ggo::pos3f & world_pos) const
   {
     if (!_material)
     {
-      return ggo::color::BLACK;
+      return ggo::color_32f::BLACK;
     }
 
     if (_discard_basis == true)
@@ -210,7 +210,7 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> create_sphere_light(const ggo::color & color, float radius, const ggo::pos3f & pos)
+  std::shared_ptr<ggo::object3d> create_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & pos)
   {
     auto shape = std::make_shared<ggo::centered_sphere3d<float>>(radius);
     auto object = std::make_shared<ggo::object3d>(shape);
@@ -222,7 +222,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::shared_ptr<ggo::object3d> create_point_light(const ggo::color & color, const ggo::pos3f & pos)
+  std::shared_ptr<ggo::object3d> create_point_light(const ggo::color_32f & color, const ggo::pos3f & pos)
   {
     auto object = std::make_shared<ggo::object3d>();
 

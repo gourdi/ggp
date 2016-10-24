@@ -15,15 +15,15 @@ namespace ggo
   {
   public:
 
-    static ggo::color process(const ggo::ray3d_float & ray,
-                              const ggo::scene & scene,
-                              const ggo::raytrace_params & raytrace_params);
+    static ggo::color_32f process(const ggo::ray3d_float & ray,
+                                  const ggo::scene & scene,
+                                  const ggo::raytrace_params & raytrace_params);
 
-    static ggo::color process(const ggo::ray3d_float & ray,
-                              const ggo::scene & scene,
-                              const ggo::raytrace_params & raytrace_params,
-                              float random_variable1,
-                              float random_variable2);
+    static ggo::color_32f process(const ggo::ray3d_float & ray,
+                                  const ggo::scene & scene,
+                                  const ggo::raytrace_params & raytrace_params,
+                                  float random_variable1,
+                                  float random_variable2);
 
     //////////////////////////////////////////////////////////////
     // Transmission/reflection.
@@ -35,17 +35,17 @@ namespace ggo
 
     //////////////////////////////////////////////////////////////
     // Shadings.
-    static ggo::color diffuse_shading(const ggo::color & object_color,
-                                      const ggo::color & light_color,
-                                      const ggo::ray3d_float & world_normal,
-                                      const ggo::ray3d_float & ray_to_light);
+    static ggo::color_32f diffuse_shading(const ggo::color_32f & object_color,
+                                          const ggo::color_32f & light_color,
+                                          const ggo::ray3d_float & world_normal,
+                                          const ggo::ray3d_float & ray_to_light);
 
-    static ggo::color specular_shading(float phong_factor,
-                                       float phong_shininess,
-                                       const ggo::color & light_color,
-                                       const ggo::ray3d_float & ray,
-                                       const ggo::ray3d_float & world_normal,
-                                       const ggo::ray3d_float & ray_to_light);
+    static ggo::color_32f specular_shading(float phong_factor,
+                                           float phong_shininess,
+                                           const ggo::color_32f & light_color,
+                                           const ggo::ray3d_float & ray,
+                                           const ggo::ray3d_float & world_normal,
+                                           const ggo::ray3d_float & ray_to_light);
   };
 }
 
