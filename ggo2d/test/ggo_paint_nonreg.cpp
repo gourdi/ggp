@@ -234,7 +234,7 @@ GGO_TEST(paint, polygons_rectangles)
   polygons[1]._shape.add_point(50, 90);
   polygons[1]._shape.add_point(90, 90);
 
-  std::array<uint8_t, 3 * width * height * 3> buffer_polygons;
+  std::array<uint8_t, 3 * width * height> buffer_polygons;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_polygons.data(), width, height, line_step, ggo::color_8u::BLUE);
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_polygons.data(), width, height, line_step, polygons.cbegin(), polygons.cend());
 
@@ -245,7 +245,7 @@ GGO_TEST(paint, polygons_rectangles)
   rectangles[0] = { ggo::rect_float::from_left_right_bottom_top(10, 50, 10, 90), ggo::color_8u::WHITE };
   rectangles[1] = { ggo::rect_float::from_left_right_bottom_top(50, 90, 10, 90), ggo::color_8u::WHITE };
 
-  std::array<uint8_t, 3 * width * height * 3> buffer_rectangles;
+  std::array<uint8_t, 3 * width * height> buffer_rectangles;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::color_8u::BLUE);
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rectangles.data(), width, height, line_step, rectangles.cbegin(), rectangles.cend());
 
