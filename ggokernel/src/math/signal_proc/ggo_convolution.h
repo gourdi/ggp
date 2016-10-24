@@ -72,7 +72,7 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  // Apply 2D symetric kernel horizontally, buffer version.
+  // Apply 2D symetric kernel horizontally.
   template <typename input_line_iterator_t, typename output_line_iterator_t,
     typename left_t, typename right_t,
     typename kernel_t, typename kernel_size_t>
@@ -93,7 +93,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  // Apply 2D symetric kernel horizontally, buffer version.
+  // Apply 2D symetric kernel vertically.
   template <typename input_column_iterator_t, typename output_column_iterator_t,
     typename bottom_t, typename top_t,
     typename kernel_t, typename kernel_size_t>

@@ -28,8 +28,8 @@ namespace ggo
               color(const color<data_t> & c) { _r = c._r; _g = c._g; _b = c._b; }
 
     void		  operator+=(const color<data_t> & c) { _r += c._r; _g += c._g; _b += c._b; }
-/*    void		  operator-=(const color & c) { _r -= c._r; _g -= c._g; _b -= c._b; }
-    void		  operator*=(const color & c) { _r *= c._r; _g *= c._g; _b *= c._b; }
+    void		  operator-=(const color & c) { _r -= c._r; _g -= c._g; _b -= c._b; }
+/*    void		  operator*=(const color & c) { _r *= c._r; _g *= c._g; _b *= c._b; }
     void		  operator*=(float v) { _r *= v; _g *= v; _b *= v; }
     void		  operator/=(float v) { _r /= v; _g /= v; _b /= v; }
 */

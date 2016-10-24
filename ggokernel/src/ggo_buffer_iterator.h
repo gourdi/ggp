@@ -63,6 +63,8 @@ namespace ggo
   {
   public:
 
+    using type = typename accessor_t::type;
+
     buffer_iterator(void * ptr) :
       _ptr(ptr) {
     }
@@ -106,6 +108,8 @@ namespace ggo
   class const_buffer_iterator
   {
   public:
+
+    using type = typename accessor_t::type;
 
     const_buffer_iterator(const void * ptr) :
       _ptr(ptr) {

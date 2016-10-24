@@ -62,6 +62,9 @@
     <ClInclude Include="src\paint\ggo_color_triangle.h">
       <Filter>paint</Filter>
     </ClInclude>
+    <ClInclude Include="src\blur\ggo_mean_box_blur2d.h">
+      <Filter>blur</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\io\ggo_bmp.cpp">

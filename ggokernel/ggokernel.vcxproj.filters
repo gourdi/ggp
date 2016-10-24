@@ -318,6 +318,10 @@
     </ClInclude>
     <ClInclude Include="src\ggo_log.h" />
     <ClInclude Include="src\ggo_buffer_iterator.h" />
+    <ClInclude Include="src\math\signal_proc\ggo_mean_box_filter.h">
+      <Filter>math\signal_proc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ggo_circular_buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

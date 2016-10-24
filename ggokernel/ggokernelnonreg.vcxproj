@@ -48,6 +48,7 @@
     <ClCompile Include="test\signal_proc\ggo_dwt_nonreg.cpp" />
     <ClCompile Include="test\ggo_array_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp" />
+    <ClCompile Include="test\signal_proc\ggo_mean_box_filter_nonreg.cpp" />
     <ClCompile Include="test\template\ggo_template_pointer_nonreg.cpp" />
     <ClCompile Include="test\template\ggo_template_variadic_nonreg.cpp" />
     <ClCompile Include="test\trees\ggo_kdtree_nonreg.cpp" />
