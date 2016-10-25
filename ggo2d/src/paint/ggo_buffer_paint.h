@@ -6,13 +6,6 @@
 #include <ggo_sampling_paint.h>
 #include <ggo_multi_scale_paint.h>
 
-// Fill with solid color.
-namespace ggo
-{
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void fill_solid(void * buffer, int width, int height, int line_step, const color_t & c);
-}
-
 // Hard rectangles.
 namespace ggo
 {
@@ -39,17 +32,6 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 // Implementation.
 
-// Fill with solid color.
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf, typename color_t>
-  void fill_solid(void * buffer, int width, int height, int line_step, const color_t & c)
-  {
-    process_buffer<pbf>(buffer, width, height, line_step, [&](void * ptr) { set_pixel<pbf, color_t>(ptr, c); });
-  }
-}
-
 // Hard rectangles.
 namespace ggo
 {
@@ -64,7 +46,7 @@ namespace ggo
   template <pixel_buffer_format pbf, typename color_t>
   void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const color_t & c)
   {
-    process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { set_pixel<pbf, color_t>(ptr, c); });
+    process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { set_pixel<pbf>(ptr, c); });
   }
 }
 

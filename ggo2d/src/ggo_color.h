@@ -70,16 +70,16 @@ namespace ggo
 
   public:
 
-    static const color WHITE;
-    static const color GRAY;
-    static const color BLACK;
-    static const color RED;
-    static const color GREEN;
-    static const color BLUE;
-    static const color CYAN;
-    static const color MAGENTA;
-    static const color YELLOW;
-    static const color ORANGE;
+    static const color white;
+    static const color gray;
+    static const color black;
+    static const color red;
+    static const color green;
+    static const color blue;
+    static const color cyan;
+    static const color magenta;
+    static const color yellow;
+    static const color orange;
   };
 }
 
@@ -154,113 +154,16 @@ namespace ggo
 // Static variables.
 namespace ggo
 {
-  template <typename data_t> const color<data_t> color<data_t>::WHITE(color<data_t>::max(), color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::GRAY(color<data_t>::max() / 2, color<data_t>::max() / 2, color<data_t>::max() / 2);
-  template <typename data_t> const color<data_t> color<data_t>::BLACK(0, 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::RED(color<data_t>::max(), 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::GREEN(0, color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::BLUE(0, 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::CYAN(0, color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::MAGENTA(color<data_t>::max(), 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::YELLOW(color<data_t>::max(), color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::ORANGE(color<data_t>::max(), color<data_t>::max() / 2, 0);
-}
-
-/////////////////////////////////////////////////////////////////////
-// Implementation
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  color<data_t> color<data_t>::from_hsv(float hue, float saturation, float value)
-  {
-    float r, g, b;
-    ggo::hsv2rgb(hue, saturation, value, r, g, b);
-
-    if (std::is_integral<data_t>::value)
-    {
-      return color(r, g, b);
-    }
-    else
-    {
-      return color(
-        ggo::to<data_t>(r * std::numeric_limits<data_t>::max()),
-        ggo::to<data_t>(g * std::numeric_limits<data_t>::max()),
-        ggo::to<data_t>(b * std::numeric_limits<data_t>::max()));
-    }
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  color<data_t> color<data_t>::get_random()
-  {
-    return color(
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()));
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-// Implementation.
-namespace ggo
-{
-  template <typename data_t>
-  void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b)
-  {
-    static_assert(std::is_floating_point<data_t>::value, "expected floating point type");
-
-    h = std::fmod(h, data_t(1));
-    if (h < 0)
-    {
-      h += 1;
-    }
-    s = ggo::clamp<data_t>(s, 0, 1);
-    v = ggo::clamp<data_t>(v, 0, 1);
-
-    int		  h_i = ggo::clamp(int(h * 6), 0, 5);
-    data_t	f = h * 6 - std::floor(h * 6);
-    data_t	p = v * (1 - s);
-    data_t	q = v * (1 - f * s);
-    data_t	t = v * (1 - (1 - f) * s);
-
-    switch (h_i)
-    {
-    case 0:
-      r = v;
-      g = t;
-      b = p;
-      break;
-    case 1:
-      r = q;
-      g = v;
-      b = p;
-      break;
-    case 2:
-      r = p;
-      g = v;
-      b = t;
-      break;
-    case 3:
-      r = p;
-      g = q;
-      b = v;
-      break;
-    case 4:
-      r = t;
-      g = p;
-      b = v;
-      break;
-    case 5:
-      r = v;
-      g = p;
-      b = q;
-      break;
-    default:
-      GGO_FAIL();
-      break;
-    }
-  }
+  template <typename data_t> const color<data_t> color<data_t>::white(color<data_t>::max(), color<data_t>::max(), color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::gray(color<data_t>::max() / 2, color<data_t>::max() / 2, color<data_t>::max() / 2);
+  template <typename data_t> const color<data_t> color<data_t>::black(0, 0, 0);
+  template <typename data_t> const color<data_t> color<data_t>::red(color<data_t>::max(), 0, 0);
+  template <typename data_t> const color<data_t> color<data_t>::green(0, color<data_t>::max(), 0);
+  template <typename data_t> const color<data_t> color<data_t>::blue(0, 0, color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::cyan(0, color<data_t>::max(), color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::magenta(color<data_t>::max(), 0, color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::yellow(color<data_t>::max(), color<data_t>::max(), 0);
+  template <typename data_t> const color<data_t> color<data_t>::orange(color<data_t>::max(), color<data_t>::max() / 2, 0);
 }
 
 // Color conversion
@@ -334,6 +237,95 @@ namespace ggo
     void add(const color_32f & c) { r += c._r; g += c._g; b += c._b; }
     template <int count> color_32f div() const { return color_32f(r / count, g / count, b / count); }
   };
+}
+
+
+/////////////////////////////////////////////////////////////////////
+// Implementation
+namespace ggo
+{
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  color<data_t> color<data_t>::from_hsv(float hue, float saturation, float value)
+  {
+    float r, g, b;
+    ggo::hsv2rgb(hue, saturation, value, r, g, b);
+    color_32f c(r, g, b);
+
+    return convert_color_to<color<data_t>>(c);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  color<data_t> color<data_t>::get_random()
+  {
+    return color(
+      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
+      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
+      ggo::rand<data_t>(0, ggo::color<data_t>::max()));
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// Implementation.
+namespace ggo
+{
+  template <typename data_t>
+  void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b)
+  {
+    static_assert(std::is_floating_point<data_t>::value, "expected floating point type");
+
+    h = std::fmod(h, data_t(1));
+    if (h < 0)
+    {
+      h += 1;
+    }
+    s = ggo::clamp<data_t>(s, 0, 1);
+    v = ggo::clamp<data_t>(v, 0, 1);
+
+    int		  h_i = ggo::clamp(int(h * 6), 0, 5);
+    data_t	f = h * 6 - std::floor(h * 6);
+    data_t	p = v * (1 - s);
+    data_t	q = v * (1 - f * s);
+    data_t	t = v * (1 - (1 - f) * s);
+
+    switch (h_i)
+    {
+    case 0:
+      r = v;
+      g = t;
+      b = p;
+      break;
+    case 1:
+      r = q;
+      g = v;
+      b = p;
+      break;
+    case 2:
+      r = p;
+      g = v;
+      b = t;
+      break;
+    case 3:
+      r = p;
+      g = q;
+      b = v;
+      break;
+    case 4:
+      r = t;
+      g = p;
+      b = v;
+      break;
+    case 5:
+      r = v;
+      g = p;
+      b = q;
+      break;
+    default:
+      GGO_FAIL();
+      break;
+    }
+  }
 }
 
 #endif

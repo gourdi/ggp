@@ -21,9 +21,10 @@
   <ItemGroup>
     <ClInclude Include="src\blur\ggo_mean_box_blur2d.h" />
     <ClInclude Include="src\blur\ggo_gaussian_blur2d.h" />
+    <ClInclude Include="src\fill\ggo_buffer_fill.h" />
+    <ClInclude Include="src\fill\ggo_fill.h" />
     <ClInclude Include="src\ggo_pixel_buffer.h" />
     <ClInclude Include="src\ggo_color.h" />
-    <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_blit.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
     <ClInclude Include="src\image\ggo_image_abc.h" />

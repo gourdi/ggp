@@ -180,31 +180,31 @@ namespace ggo
   }
 
   // Set pixel to pointer.
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void set_pixel(void * ptr, const color_t & c)
+  template <pixel_buffer_format pbf>
+  void set_pixel(void * ptr, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
     pixel_buffer_format_info<pbf>::write(ptr, c);
   }
 
   // Set pixel to pointer with coordinates.
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void set_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const color_t & c)
+  template <pixel_buffer_format pbf>
+  void set_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    set_pixel<pbf, color_t>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step), c);
+    set_pixel<pbf>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step), c);
   }
 
   // Get pixel from pointer.
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  color_t get_pixel(const void * ptr)
+  template <pixel_buffer_format pbf>
+  typename pixel_buffer_format_info<pbf>::color_t get_pixel(const void * ptr)
   {
     return pixel_buffer_format_info<pbf>::read(ptr);
   }
 
   // Get pixel from pointer and coordinates.
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  color_t get_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
+  template <pixel_buffer_format pbf>
+  typename pixel_buffer_format_info<pbf>::color_t get_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    return get_pixel<pbf, color_t>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step));
+    return get_pixel<pbf>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step));
   }
 
   // Block processing.

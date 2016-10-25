@@ -13,6 +13,9 @@
     <Filter Include="blur">
       <UniqueIdentifier>{1bb4cc4b-37a8-4fba-be97-fb4e32c2a183}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fill">
+      <UniqueIdentifier>{a72e2f86-8c3e-432d-9140-569970dd4ef3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\io\ggo_bmp.h">
@@ -24,7 +27,6 @@
     <ClInclude Include="src\paint\ggo_hard_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
-    <ClInclude Include="src\ggo_fill.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
     <ClInclude Include="src\image\ggo_image_abc.h">
       <Filter>image</Filter>
@@ -64,6 +66,12 @@
     </ClInclude>
     <ClInclude Include="src\blur\ggo_mean_box_blur2d.h">
       <Filter>blur</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fill\ggo_fill.h">
+      <Filter>fill</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fill\ggo_buffer_fill.h">
+      <Filter>fill</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
