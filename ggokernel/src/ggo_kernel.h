@@ -78,7 +78,7 @@ namespace ggo
   {
     return rand<data_t>(
       std::is_integral<data_t>::value ? std::numeric_limits<data_t>::min() : 0,
-      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::max() : 0);
+      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::max() : 1);
   }
 
   inline bool rand_bool() { return (rand<int>(0, 1) % 2) != 0; }
