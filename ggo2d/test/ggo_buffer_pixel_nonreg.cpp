@@ -15,11 +15,11 @@ GGO_TEST(buffer_pixel, y_8u_yu)
   const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 27);
 
-  auto c = ggo::get_pixel<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10);
+  auto c = ggo::read_pixel<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10);
   GGO_CHECK_EQ(c, 27);
 
-  ggo::set_pixel<ggo::y_8u_yu>(buffer.data(), 6, 0, 2, 10, { 30 });
-  ggo::set_pixel<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10, { 40 });
+  ggo::write_pixel<ggo::y_8u_yu>(buffer.data(), 6, 0, 2, 10, { 30 });
+  ggo::write_pixel<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10, { 40 });
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 30, 17, 18, 19,
@@ -41,11 +41,11 @@ GGO_TEST(buffer_pixel, y_32f_yu)
   const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*pixel_ptr, 27.f);
 
-  auto c = ggo::get_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float));
+  auto c = ggo::read_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float));
   GGO_CHECK_FABS(c, 27.f);
 
-  ggo::set_pixel<ggo::y_32f_yu>(buffer.data(), 6, 0, 2, 10 * sizeof(float), { 30 });
-  ggo::set_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float), { 40 });
+  ggo::write_pixel<ggo::y_32f_yu>(buffer.data(), 6, 0, 2, 10 * sizeof(float), { 30 });
+  ggo::write_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float), { 40 });
 
   const std::vector<float> expected{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 30.f, 17.f, 18.f, 19.f,
@@ -67,13 +67,13 @@ GGO_TEST(buffer_pixel, rgb_8u_yu)
   const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 26);
 
-  auto c = ggo::get_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10);
+  auto c = ggo::read_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10);
   GGO_CHECK_EQ(26, c._r);
   GGO_CHECK_EQ(27, c._g);
   GGO_CHECK_EQ(28, c._b);
 
-  ggo::set_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 0, 2, 10, { 30, 31, 32 });
-  ggo::set_pixel<ggo::rgb_8u_yu>(buffer.data(), 1, 1, 2, 10, { 40, 41, 42 });
+  ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 0, 2, 10, { 30, 31, 32 });
+  ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), 1, 1, 2, 10, { 40, 41, 42 });
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 30, 31, 32, 19,
@@ -95,13 +95,13 @@ GGO_TEST(buffer_pixel, rgb_32f_yu)
   const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*pixel_ptr, 26.f);
 
-  auto c = ggo::get_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float));
+  auto c = ggo::read_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float));
   GGO_CHECK_FABS(c._r, 26.f);
   GGO_CHECK_FABS(c._g, 27.f);
   GGO_CHECK_FABS(c._b, 28.f);
 
-  ggo::set_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 0, 2, 10 * sizeof(float), { 30.f, 31.f, 32.f });
-  ggo::set_pixel<ggo::rgb_32f_yu>(buffer.data(), 1, 1, 2, 10 * sizeof(float), { 40.f, 41.f, 42.f });
+  ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 0, 2, 10 * sizeof(float), { 30.f, 31.f, 32.f });
+  ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 1, 1, 2, 10 * sizeof(float), { 40.f, 41.f, 42.f });
 
   const std::vector<float> expected{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 30.f, 31.f, 32.f, 19.f,
@@ -123,13 +123,13 @@ GGO_TEST(buffer_pixel, bgra_8u_yu)
   const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 14);
 
-  auto c = ggo::get_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10);
+  auto c = ggo::read_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10);
   GGO_CHECK_EQ(16, c._r);
   GGO_CHECK_EQ(15, c._g);
   GGO_CHECK_EQ(14, c._b);
 
-  ggo::set_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 0, 2, 10, { 30, 31, 32 });
-  ggo::set_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10, { 40, 41, 42 });
+  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 0, 2, 10, { 30, 31, 32 });
+  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10, { 40, 41, 42 });
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 42, 41, 40, 17, 18, 19,

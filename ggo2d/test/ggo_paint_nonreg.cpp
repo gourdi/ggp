@@ -206,8 +206,8 @@ GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
   {
     for (int x = 0; x < width; ++x)
     {
-      auto c_rgb_8u_yu = ggo::get_pixel<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, 3 * width);
-      auto c_bgra_8u_yd = ggo::get_pixel<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, 4 * width);
+      auto c_rgb_8u_yu = ggo::read_pixel<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, 3 * width);
+      auto c_bgra_8u_yd = ggo::read_pixel<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, 4 * width);
       GGO_CHECK_EQ(c_rgb_8u_yu, c_bgra_8u_yd);
     }
   }

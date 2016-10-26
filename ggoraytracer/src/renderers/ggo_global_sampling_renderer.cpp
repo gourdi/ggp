@@ -26,7 +26,7 @@ namespace ggo
     GGO_ASSERT(camera_rays.size() >= _samples_count);
 
     // Proceed.
-    ggo::color_32f color(ggo::color_32f::BLACK);
+    ggo::color_32f color(ggo::color_32f::black);
     
     for (int sample = 0; sample < _samples_count; ++sample)
     {

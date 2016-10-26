@@ -52,10 +52,10 @@ namespace ggo
 
       for (int x = 0; x < input_width; ++x)
       {
-        auto color_in = ggo::get_pixel<pbf_in>(input_line_ptr);
+        auto color_in = ggo::read_pixel<pbf_in>(input_line_ptr);
         auto color_out = ggo::convert_color_to<ggo::pixel_buffer_format_info<pbf_out>::color_t>(color_in);
 
-        ggo::set_pixel<pbf_out>(output_line_ptr, color_out);
+        ggo::write_pixel<pbf_out>(output_line_ptr, color_out);
 
         input_line_ptr = ggo::ptr_offset(input_line_ptr, ggo::pixel_buffer_format_info<pbf_in>::pixel_byte_size);
         output_line_ptr = ggo::ptr_offset(output_line_ptr, ggo::pixel_buffer_format_info<pbf_out>::pixel_byte_size);

@@ -21,11 +21,11 @@ namespace ggo
                                                  float random_variable1,
                                                  float random_variable2) const
   {
-    ggo::color_32f result(ggo::color_32f::BLACK);
+    ggo::color_32f result(ggo::color_32f::black);
 
     for (const auto & light : _scene.lights())
     {
-      ggo::color_32f current_light_color(ggo::color_32f::BLACK);
+      ggo::color_32f current_light_color(ggo::color_32f::black);
 
       // Cast a ray from light.
       const auto & light_ray = light->sample_ray(random_variable1, random_variable2);

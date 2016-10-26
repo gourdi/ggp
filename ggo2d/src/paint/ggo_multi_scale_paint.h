@@ -11,22 +11,22 @@ namespace ggo
 {
   // Paint a single shape.
   template <sampling smp, typename shape_t, typename brush_t, typename blend_t,
-    typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+    typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
   void paint_multi_scale(int width, int height,
     const shape_t & shape,
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
-    get_pixel_t get_pixel,
-    set_pixel_t set_pixel,
+    read_pixel_t read_pixel,
+    write_pixel_t write_pixel,
     paint_block_t paint_block);
 
   // Paint multiple shapes.
-  template <sampling smp, typename iterator_t, typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+  template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
     void paint_multi_scale(int width, int height,
       iterator_t begin_it, iterator_t end_it,
       int scale_factor, int first_scale,
-      get_pixel_t get_pixel,
-      set_pixel_t set_pixel,
+      read_pixel_t read_pixel,
+      write_pixel_t write_pixel,
       paint_block_t paint_block);
 }
 
@@ -36,13 +36,13 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <sampling smp, typename shape_t, typename brush_t, typename blend_t,
-    typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+    typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
   void paint_block_single_t(const ggo::pixel_rect & block_rect,
     const int scale_factor, const int current_scale,
     const shape_t & shape,
     brush_t brush, blend_t blend,
-    get_pixel_t get_pixel,
-    set_pixel_t set_pixel,
+    read_pixel_t read_pixel,
+    write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
     GGO_ASSERT(current_scale >= 0);
@@ -67,7 +67,7 @@ namespace ggo
       // The current block is only a pixel => stop the recursion and sample the pixel.
       if (block_rect.is_one_pixel() == true)
       {
-        const auto bkgd_color = get_pixel(block_rect.left(), block_rect.bottom());
+        const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
         const auto brush_color = brush(block_rect.left(), block_rect.bottom());
 
         ggo::accumulator<std::remove_const<decltype(bkgd_color)>::type> acc;
@@ -77,7 +77,7 @@ namespace ggo
         });
 
         const auto pixel_color = acc.div<ggo::sampler<smp>::samples_count>();
-        set_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
+        write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
       }
       else
       {
@@ -88,7 +88,7 @@ namespace ggo
             scale_factor, current_scale - 1,
             shape,
             brush, blend, 
-            get_pixel, set_pixel, paint_block);
+            read_pixel, write_pixel, paint_block);
         };
 
         const int subblock_size = ggo::pow(scale_factor, current_scale - 1);
@@ -100,13 +100,13 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <sampling smp, typename shape_t, typename brush_t, typename blend_t,
-    typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+    typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
   void paint_multi_scale(int width, int height,
     const shape_t & shape,
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
-    get_pixel_t get_pixel,
-    set_pixel_t set_pixel,
+    read_pixel_t read_pixel,
+    write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
     using real_t = shape_t::type;
@@ -130,7 +130,7 @@ namespace ggo
         scale_factor, first_scale,
         shape,
         brush, blend,
-        get_pixel, set_pixel, paint_block);
+        read_pixel, write_pixel, paint_block);
     };
 
     int block_size = ggo::pow(scale_factor, first_scale);
@@ -144,12 +144,12 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <sampling smp, typename iterator_t,
-    typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+    typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
     void paint_block_multi_t(const ggo::pixel_rect & block_rect,
     int scale_factor, int current_scale,
     iterator_t begin_it, iterator_t end_it,
-    get_pixel_t get_pixel,
-    set_pixel_t set_pixel,
+    read_pixel_t read_pixel,
+    write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
     using item_pointer_t = std::iterator_traits<iterator_t>::value_type;
@@ -199,7 +199,7 @@ namespace ggo
       }
       else
       {
-        auto bkgd_color = get_pixel(block_rect.left(), block_rect.bottom());
+        auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
 
         ggo::accumulator<decltype(bkgd_color)> acc;
         ggo::sampler<smp>::sample_pixel<real_t>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
@@ -219,7 +219,7 @@ namespace ggo
         });
 
         const auto pixel_color = acc.div<ggo::sampler<smp>::samples_count>();
-        set_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
+        write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
       }
     }
     else
@@ -237,7 +237,7 @@ namespace ggo
           paint_block_multi_t<smp>(block_rect,
             scale_factor, current_scale - 1,
             current_block_layers.begin(), current_block_layers.end(),
-            get_pixel, set_pixel, paint_block);
+            read_pixel, write_pixel, paint_block);
         };
         
         int subblock_size = ggo::pow(scale_factor, current_scale - 1);
@@ -247,12 +247,12 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename iterator_t, typename get_pixel_t, typename set_pixel_t, typename paint_block_t>
+  template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
   void paint_multi_scale(int width, int height,
     iterator_t begin_it, iterator_t end_it,
     int scale_factor, int first_scale,
-    get_pixel_t get_pixel,
-    set_pixel_t set_pixel,
+    read_pixel_t read_pixel,
+    write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
     using item_t = std::iterator_traits<iterator_t>::value_type;
@@ -293,7 +293,7 @@ namespace ggo
       paint_block_multi_t<smp>(block_rect,
         scale_factor, first_scale,
         items.begin(), items.end(),
-        get_pixel, set_pixel, paint_block);
+        read_pixel, write_pixel, paint_block);
     };
 
     int block_size = ggo::pow(scale_factor, first_scale);

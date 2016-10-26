@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="test\ggo_color_nonreg.cpp" />
     <ClCompile Include="test\ggo_marching_squares_nonreg.cpp" />
     <ClCompile Include="test\ggo_paint_nonreg.cpp" />
     <ClCompile Include="test\ggo_2d_nonreg.cpp" />

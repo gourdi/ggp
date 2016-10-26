@@ -22,10 +22,10 @@ GGO_TEST(marching_cubes, test)
   camera.set_aperture(0.1f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLUE));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
   
   // Light.
-  scene_builder.add_point_light(ggo::color_32f::WHITE, camera.basis().pos());
+  scene_builder.add_point_light(ggo::color_32f::white, camera.basis().pos());
   
   // Objects.
   auto cells = ggo::marching_cubes([](float x, float y, float z) { return x * x + y * y + z * z - 1; }, ggo::pos3f(-2.f, -2.f, -2.f), 10, 0.4f);
@@ -38,7 +38,7 @@ GGO_TEST(marching_cubes, test)
                                                                  ggo::vertex<float>(triangle.v2(), triangle.v2()),
                                                                  ggo::vertex<float>(triangle.v3(), triangle.v3()));
 
-      scene_builder.add_object(face_ptr, ggo::color_32f::WHITE, true);
+      scene_builder.add_object(face_ptr, ggo::color_32f::white, true);
     }
   }
   

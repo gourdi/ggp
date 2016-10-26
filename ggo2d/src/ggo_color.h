@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <ggo_kernel.h>
-#include <iostream>
 
 namespace ggo
 {
@@ -14,6 +13,10 @@ namespace ggo
   template <typename data_t>
   class color
   {
+  public:
+
+    using sample_t = data_t;
+
   public:
 
     data_t	_r = 0;
@@ -65,7 +68,8 @@ namespace ggo
 
     static data_t   max() { return std::is_floating_point<data_t>() ? 1 : std::numeric_limits<data_t>::max(); }
 
-    static  color	  from_hsv(float hue, float saturation, float value);
+    template <typename real_t>
+    static  color	  from_hsv(real_t hue, real_t saturation, real_t value);
     static  color	  get_random();
 
   public:
@@ -148,6 +152,20 @@ namespace ggo
   {
     return ggo::color<data_t>(c._r / k, c._g / k, c._b / k);
   }
+
+  template <int bit_shift, typename data_t>
+  ggo::color<data_t> fixed_point_div(const ggo::color<data_t> & c)
+  {
+    using sample_t = typename ggo::color<data_t>::sample_t;
+
+    static_assert(bit_shift > 1, "invalid bit shift");
+    static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
+
+    return ggo::color<data_t>(
+      ggo::fixed_point_div<bit_shift>(c._r),
+      ggo::fixed_point_div<bit_shift>(c._g),
+      ggo::fixed_point_div<bit_shift>(c._b));
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -166,6 +184,7 @@ namespace ggo
   template <typename data_t> const color<data_t> color<data_t>::orange(color<data_t>::max(), color<data_t>::max() / 2, 0);
 }
 
+/////////////////////////////////////////////////////////////////////
 // Color conversion
 // Warning: don't use ggo::to<> because uint8_t <=> float conversion won't work 
 // since float is normalized betwen 0 and 1.
@@ -177,21 +196,25 @@ namespace ggo
     static_assert(false, "missing specialization");
   }
 
+  // rgb 8u => rgb 32f
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
   {
     return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
   }
 
+  // rgb 8u <=> rgb 32u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
   {
     return c;
   }
 
+  // y 8u => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint8_t>(const uint8_t & c)
   {
     return ggo::color_8u(c, c, c);
   }
 
+  // y 32f => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
   {
     uint8_t gray = static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
@@ -200,6 +223,55 @@ namespace ggo
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+// Color traits
+namespace ggo
+{
+  template <typename color_t>
+  struct color_traits {};
+
+  template <>
+  struct color_traits<uint8_t>
+  {
+    using float_point_t = ggo::color_32f;
+  };
+
+  template <>
+  struct color_traits<float>
+  {
+    using float_point_t = float;
+  };
+
+  template <>
+  struct color_traits<ggo::color_8u>
+  {
+    using float_point_t = ggo::color_32f;
+  };
+
+  template <>
+  struct color_traits<ggo::color_32f>
+  {
+    using float_point_t = ggo::color_32f;
+  };
+}
+
+
+namespace ggo
+{
+  template <int bit_shift>
+  ggo::color_8u alpha_blend(const ggo::color_8u & c1, const unsigned int w1, const ggo::color_8u & c2)
+  {
+    const unsigned int w2 = (1 << bit_shift) - w1;
+
+    const ggo::color_32u c1_32u(c1._r, c1._g, c1._b);
+    const ggo::color_32u c2_32u(c2._r, c2._g, c2._b);
+    const ggo::color_32u c3_32u(ggo::fixed_point_div<bit_shift>(w1 * c1_32u + w2 * c2_32u));
+
+    return ggo::color_8u(c3_32u._r, c3_32u._g, c3_32u._b);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 // Color accumulator.
 namespace ggo
 {
@@ -239,18 +311,20 @@ namespace ggo
   };
 }
 
-
 /////////////////////////////////////////////////////////////////////
 // Implementation
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  color<data_t> color<data_t>::from_hsv(float hue, float saturation, float value)
+  template <typename real_t>
+  color<data_t> color<data_t>::from_hsv(real_t hue, real_t saturation, real_t value)
   {
-    float r, g, b;
+    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+
+    real_t r, g, b;
     ggo::hsv2rgb(hue, saturation, value, r, g, b);
-    color_32f c(r, g, b);
+    color<real_t> c(r, g, b);
 
     return convert_color_to<color<data_t>>(c);
   }

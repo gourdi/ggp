@@ -98,15 +98,15 @@ namespace ggo
     using item_t = std::iterator_traits<iterator_t>::value_type;
 
     // Lambda to retrieve pixel color.
-    auto get_pixel_lambda = [&](int x, int y)
+    auto read_pixel_lambda = [&](int x, int y)
     {
-      return ggo::get_pixel<pbf>(buffer, x, y, height, line_step);
+      return ggo::read_pixel<pbf>(buffer, x, y, height, line_step);
     };
 
     // Lambda to set pixel color.
-    auto set_pixel_lambda = [&](int x, int y, const color_t & c)
+    auto write_pixel_lambda = [&](int x, int y, const color_t & c)
     {
-      ggo::set_pixel<pbf>(buffer, x, y, height, line_step, c);
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, c);
     };
 
     // Lambda that paints a block of pixels without shape sampling.
@@ -119,7 +119,7 @@ namespace ggo
         uint8_t * ptr = static_cast<uint8_t *>(get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step));
         for (int x = block_rect.left(); x <= block_rect.right(); ++x)
         {
-          color_t pixel_color = get_pixel<pbf>(ptr);
+          color_t pixel_color = read_pixel<pbf>(ptr);
 
           for (auto it = begin_it; it != end_it; ++it)
           {
@@ -127,7 +127,7 @@ namespace ggo
             pixel_color = item->blend(pixel_color, item->brush(x, y));
           }
 
-          ggo::set_pixel<pbf>(ptr, pixel_color);
+          ggo::write_pixel<pbf>(ptr, pixel_color);
           ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
         }
       }
@@ -135,7 +135,7 @@ namespace ggo
 
     paint_multi_scale<smp>(width, height, begin_it, end_it,
       scale_factor, first_scale,
-      get_pixel_lambda, set_pixel_lambda, paint_block_lambda);
+      read_pixel_lambda, write_pixel_lambda, paint_block_lambda);
   }
 }
 

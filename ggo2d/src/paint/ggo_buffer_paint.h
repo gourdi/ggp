@@ -46,7 +46,7 @@ namespace ggo
   template <pixel_buffer_format pbf, typename color_t>
   void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const color_t & c)
   {
-    process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { set_pixel<pbf>(ptr, c); });
+    process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
 }
 
@@ -60,15 +60,15 @@ namespace ggo
     const int first_scale = 2;
 
     // Lambda to retrieve pixel color.
-    auto get_pixel_lambda = [&](int x, int y)
+    auto read_pixel_lambda = [&](int x, int y)
     {
-      return ggo::get_pixel<pbf>(buffer, x, y, height, line_step);
+      return ggo::read_pixel<pbf>(buffer, x, y, height, line_step);
     };
 
     // Lambda to set pixel color.
-    auto set_pixel_lambda = [&](int x, int y, const color_t & c)
+    auto write_pixel_lambda = [&](int x, int y, const color_t & c)
     {
-      ggo::set_pixel<pbf>(buffer, x, y, height, line_step, c);
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, c);
     };
 
     // Lambda that paints a block of pixels without shape sampling.
@@ -79,10 +79,10 @@ namespace ggo
         uint8_t * ptr = static_cast<uint8_t *>(get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step));
         for (int x = block_rect.left(); x <= block_rect.right(); ++x)
         {
-          const color_t bkgd_color = get_pixel<pbf>(ptr);
+          const color_t bkgd_color = read_pixel<pbf>(ptr);
           const color_t brush_color = brush(x, y);
           const color_t pixel_color = blend(bkgd_color, brush_color);
-          ggo::set_pixel<pbf>(ptr, pixel_color);
+          ggo::write_pixel<pbf>(ptr, pixel_color);
           ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
         }
       }
@@ -92,7 +92,7 @@ namespace ggo
     paint_multi_scale<smp>(width, height, shape,
       scale_factor, first_scale,
       brush, blend,
-      get_pixel_lambda, set_pixel_lambda, paint_block_lambda);
+      read_pixel_lambda, write_pixel_lambda, paint_block_lambda);
   }
 
   /////////////////////////////////////////////////////////////////////

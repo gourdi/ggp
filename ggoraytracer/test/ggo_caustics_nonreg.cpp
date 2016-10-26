@@ -12,8 +12,8 @@ GGO_TEST(caustics, test)
 {
   const int width = 480;
   const int height = 480;
-  const int GGO_DIRECT_LIGHTING_SAMPLES_COUNT = 96;
-  const int GGO_PHOTONS_COUNT = 1 << 15;
+  const int direct_lighting_samples_coun = 96;
+  const int photos_count = 1 << 15;
 
   // The camera.
   ggo::multi_sampling_point_camera camera(width, height);
@@ -24,21 +24,21 @@ GGO_TEST(caustics, test)
   camera.basis().rotate(ggo::ray3d_float::O_X(), 0.8f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLUE));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
 
   // Light.
   auto light = scene_builder.add_sphere_light(ggo::color_32f(0.9f), 1.f, ggo::pos3f(0.f, 0.f, 20.f));
 
   // Objects.
-  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f), ggo::color_32f::RED, true);
-  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), 1.f), ggo::color_32f::WHITE, true);
+  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f), ggo::color_32f::red, true);
+  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), 1.f), ggo::color_32f::white, true);
   sphere->set_transparent(true);
   sphere->set_density(1.1f);
   sphere->set_phong_factor(5.0f);
   sphere->set_phong_shininess(100.f);
 
   // Rendering.
-  ggo::global_sampling_renderer renderer(camera, GGO_DIRECT_LIGHTING_SAMPLES_COUNT);
+  ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_coun);
   ggo::array_uint8 buffer(3 * width * height);
 
   // Without indirect lighting.
@@ -47,7 +47,7 @@ GGO_TEST(caustics, test)
 
   // With indirect lighting.
   std::vector<ggo::pos3f> target_samples;
-  for (int i = 0; i < GGO_PHOTONS_COUNT; ++i)
+  for (int i = 0; i < photos_count; ++i)
   {
     float x = ggo::rand<float>(-1, 1);
     float y = ggo::rand<float>(-1, 1);

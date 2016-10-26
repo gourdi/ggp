@@ -18,16 +18,16 @@ void test_polygon3d()
   camera.set_aperture(0.1f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLACK));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::black));
 
   // Light.  
-  scene_builder.add_point_light(ggo::color_32f::WHITE, ggo::pos3f(0.f, 0.f, 50.f));
-  scene_builder.add_point_light(ggo::color_32f::WHITE, ggo::pos3f(50.f, 0.f, 0.f));
+  scene_builder.add_point_light(ggo::color_32f::white, ggo::pos3f(0.f, 0.f, 50.f));
+  scene_builder.add_point_light(ggo::color_32f::white, ggo::pos3f(50.f, 0.f, 0.f));
 
   // Objects.
   auto sphere = ggo::polygon3d_float::create_sphere(2, 16, 8);
   auto polygon = std::make_shared<ggo::polygon3d_float>(sphere);
-  scene_builder.add_object(polygon, ggo::color_32f::RED, false);
+  scene_builder.add_object(polygon, ggo::color_32f::red, false);
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

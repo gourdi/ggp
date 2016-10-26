@@ -12,7 +12,7 @@ GGO_TEST(test_scene, scene5)
 {
   const int width = 480;
   const int height = 480;
-  const int GGO_SAMPLES_COUNT = 96;
+  const int samples_count = 96;
   
   // The camera.
   ggo::multi_sampling_point_camera camera(width, height);
@@ -23,20 +23,20 @@ GGO_TEST(test_scene, scene5)
   camera.set_depth_of_field(50.f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLUE));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
 
   // Light.
-  scene_builder.add_sphere_light(ggo::color_32f::WHITE, 10.f, ggo::pos3f(-20.f, -20.f, 200.f));
+  scene_builder.add_sphere_light(ggo::color_32f::white, 10.f, ggo::pos3f(-20.f, -20.f, 200.f));
 
   // Objects.
   for (int i = -2; i < 5; ++i)
   {
     auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(static_cast<float>(i), 2.f * static_cast<float>(i), 0.f), 0.5f);
-    scene_builder.add_object(sphere, ggo::color_32f::RED, false);
+    scene_builder.add_object(sphere, ggo::color_32f::red, false);
   }
 
   // Rendering.
-  ggo::global_sampling_renderer renderer(camera, GGO_SAMPLES_COUNT);
+  ggo::global_sampling_renderer renderer(camera, samples_count);
   ggo::array_uint8 buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, scene_builder);
   ggo::save_bmp("scene5.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);

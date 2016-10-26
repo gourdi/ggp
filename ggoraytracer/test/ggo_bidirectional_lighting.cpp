@@ -13,8 +13,7 @@ GGO_TEST(bidirectional_lighting, test)
 {
   const int width = 480;
   const int height = 480;
-  const int GGO_DIRECT_LIGHTING_SAMPLES_COUNT = 96;
-  const int GGO_INDIRECT_LIGHTING_SAMPLES_COUNT = 128;
+  const int direct_lighting_samples_coun = 96;
   
   // The camera.
   ggo::multi_sampling_point_camera camera(width, height);
@@ -24,21 +23,21 @@ GGO_TEST(bidirectional_lighting, test)
   camera.set_depth_of_field(2.5f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::BLUE));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
   
   // Light.
   scene_builder.add_sphere_light(ggo::color_32f(0.9f), 0.2f, ggo::pos3f(0.f, 0.75f, 0.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::color_32f::RED, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::color_32f::GREEN, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::color_32f::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::color_32f::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::color_32f::WHITE, true);
-  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::color_32f::WHITE, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::color_32f::red, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::color_32f::green, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::color_32f::white, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::color_32f::white, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::color_32f::white, true);
+  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::color_32f::white, true);
 
   // Rendering.
-  ggo::global_sampling_renderer renderer(camera, GGO_DIRECT_LIGHTING_SAMPLES_COUNT);
+  ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_coun);
   ggo::array_uint8 buffer(3 * width * height);
   
   // Without indirect lighting.

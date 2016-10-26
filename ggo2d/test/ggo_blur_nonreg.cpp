@@ -66,8 +66,8 @@ GGO_TEST(blur, gaussian_rgb8u)
   {
     for (int x = 0; x < width; ++x)
     {
-      auto c_rgb_8u_yu = ggo::get_pixel<ggo::rgb_8u_yu>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, line_step_rgb_8u_yu));
-      auto c_bgra_8u_yd = ggo::get_pixel<ggo::bgra_8u_yd>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, line_step_bgra_8u_yd));
+      auto c_rgb_8u_yu = ggo::read_pixel<ggo::rgb_8u_yu>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, line_step_rgb_8u_yu));
+      auto c_bgra_8u_yd = ggo::read_pixel<ggo::bgra_8u_yd>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, line_step_bgra_8u_yd));
 
       GGO_CHECK_EQ(c_rgb_8u_yu, c_bgra_8u_yd);
     }
@@ -84,7 +84,7 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 
   std::vector<uint8_t> buffer(line_step * height);
 
-  ggo::fill_solid<ggo::y_8u_yu, uint8_t>(buffer.data(), width, height, line_step, 0x00);
+  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
   auto brush = [](int x, int y) { return 0xff; };
   auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
@@ -166,8 +166,8 @@ GGO_TEST(blur, mean_box_rgb8u)
   {
     for (int x = 0; x < width; ++x)
     {
-      auto c_rgb_8u_yu = ggo::get_pixel<ggo::rgb_8u_yu>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, line_step_rgb_8u_yu));
-      auto c_bgra_8u_yd = ggo::get_pixel<ggo::bgra_8u_yd>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, line_step_bgra_8u_yd));
+      auto c_rgb_8u_yu = ggo::read_pixel<ggo::rgb_8u_yu>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, line_step_rgb_8u_yu));
+      auto c_bgra_8u_yd = ggo::read_pixel<ggo::bgra_8u_yd>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, line_step_bgra_8u_yd));
 
       GGO_CHECK_EQ(c_rgb_8u_yu, c_bgra_8u_yd);
     }
@@ -184,7 +184,7 @@ GGO_TEST(blur, mean_box_y_8u_yu)
 
   std::vector<uint8_t> buffer(line_step * height);
 
-  ggo::fill_solid<ggo::y_8u_yu, uint8_t>(buffer.data(), width, height, line_step, 0x00);
+  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
   auto brush = [](int x, int y) { return 0xff; };
   auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
