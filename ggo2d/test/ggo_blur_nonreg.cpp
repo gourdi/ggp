@@ -19,7 +19,7 @@ namespace
     ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::color_8u::blue);
 
     auto brush = [](int x, int y) { return ggo::color_8u::green; };
-    auto blend = [](ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
+    auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, width, height, line_step,
@@ -87,7 +87,7 @@ GGO_TEST(blur, gaussian_y_8u_yu)
   ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
   auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
 
   ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
@@ -119,7 +119,7 @@ namespace
     ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::color_8u::blue);
 
     auto brush = [](int x, int y) { return ggo::color_8u::green; };
-    auto blend = [](ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
+    auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, width, height, line_step,
@@ -187,7 +187,7 @@ GGO_TEST(blur, mean_box_y_8u_yu)
   ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
   auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
 
   ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,

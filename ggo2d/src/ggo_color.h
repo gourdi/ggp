@@ -42,13 +42,7 @@ namespace ggo
     bool      operator==(const color & c) const { return _r == c._r && _g == c._g && _b == c._b; }
     bool      operator!=(const color & c) const { return _r != c._r || _g != c._g || _b != c._b; }
 
-  public:
-
-    static data_t   max() { return std::is_floating_point<data_t>() ? 1 : std::numeric_limits<data_t>::max(); }
-
-    template <typename real_t>
-    static  color	  from_hsv(real_t hue, real_t saturation, real_t value);
-    static  color	  get_random();
+    static data_t max() { return std::is_floating_point<data_t>() ? 1 : std::numeric_limits<data_t>::max(); }
 
   public:
 
@@ -147,61 +141,6 @@ namespace ggo
 }
 
 /////////////////////////////////////////////////////////////////////
-// Static variables.
-namespace ggo
-{
-  template <typename data_t> const color<data_t> color<data_t>::white(color<data_t>::max(), color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::gray(color<data_t>::max() / 2, color<data_t>::max() / 2, color<data_t>::max() / 2);
-  template <typename data_t> const color<data_t> color<data_t>::black(0, 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::red(color<data_t>::max(), 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::green(0, color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::blue(0, 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::cyan(0, color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::magenta(color<data_t>::max(), 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::yellow(color<data_t>::max(), color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::orange(color<data_t>::max(), color<data_t>::max() / 2, 0);
-}
-
-/////////////////////////////////////////////////////////////////////
-// Color conversion
-// Warning: don't use ggo::to<> because uint8_t <=> float conversion won't work 
-// since float is normalized betwen 0 and 1.
-namespace ggo
-{
-  template <typename color_out_t, typename color_in_t>
-  color_out_t convert_color_to(const color_in_t & c)
-  {
-    static_assert(false, "missing specialization");
-  }
-
-  // rgb 8u => rgb 32f
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
-  }
-
-  // rgb 8u <=> rgb 32u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    return c;
-  }
-
-  // y 8u => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint8_t>(const uint8_t & c)
-  {
-    return ggo::color_8u(c, c, c);
-  }
-
-  // y 32f => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
-  {
-    uint8_t gray = static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-
-    return ggo::color_8u(gray, gray, gray);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
 // Color traits
 namespace ggo
 {
@@ -214,7 +153,7 @@ namespace ggo
     using floating_point_t = ggo::color_32f;
     using sample_t = uint8_t;
   };
-  
+
   template <>
   struct color_traits<float>
   {
@@ -235,6 +174,67 @@ namespace ggo
     using floating_point_t = ggo::color_32f;
     using sample_t = float;
   };
+}
+
+/////////////////////////////////////////////////////////////////////
+// Color conversion
+// Warning: don't use ggo::to<> because uint8_t <=> float conversion won't work 
+// since float is normalized betwen 0 and 1.
+namespace ggo
+{
+  template <typename color_out_t, typename color_in_t>
+  color_out_t convert_color_to(const color_in_t & c)
+  {
+    static_assert(false, "missing specialization");
+  }
+
+  // rgb 32f => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
+  {
+    return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
+  }
+
+  // rgb 8u <=> rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
+  {
+    return c;
+  }
+
+  // rgb 8u => rgb 32f
+  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_8u>(const ggo::color_8u & c)
+  {
+    return ggo::color_32f(c._r / 255.f, c._g / 255.f, c._b / 255.f);
+  }
+
+  // y 8u => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint8_t>(const uint8_t & c)
+  {
+    return ggo::color_8u(c, c, c);
+  }
+
+  // y 32f => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
+  {
+    uint8_t gray = static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
+
+    return ggo::color_8u(gray, gray, gray);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// Static variables.
+namespace ggo
+{
+  template <typename data_t> const color<data_t> color<data_t>::white(color<data_t>::max(), color<data_t>::max(), color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::gray(color<data_t>::max() / 2, color<data_t>::max() / 2, color<data_t>::max() / 2);
+  template <typename data_t> const color<data_t> color<data_t>::black(0, 0, 0);
+  template <typename data_t> const color<data_t> color<data_t>::red(color<data_t>::max(), 0, 0);
+  template <typename data_t> const color<data_t> color<data_t>::green(0, color<data_t>::max(), 0);
+  template <typename data_t> const color<data_t> color<data_t>::blue(0, 0, color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::cyan(0, color<data_t>::max(), color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::magenta(color<data_t>::max(), 0, color<data_t>::max());
+  template <typename data_t> const color<data_t> color<data_t>::yellow(color<data_t>::max(), color<data_t>::max(), 0);
+  template <typename data_t> const color<data_t> color<data_t>::orange(color<data_t>::max(), color<data_t>::max() / 2, 0);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -282,27 +282,25 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  template <typename real_t>
-  color<data_t> color<data_t>::from_hsv(real_t hue, real_t saturation, real_t value)
+  template <typename color_t>
+  color_t from_hsv(
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t hue,
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t sat,
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t val)
   {
+    using floating_point_color_t = color_traits<color_t>::floating_point_t;
+    using real_t = color_traits<floating_point_color_t>::sample_t;
+
+    static_assert(std::is_floating_point<decltype(hue)>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<decltype(sat)>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<decltype(val)>::value, "expecting floating point type");
     static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
 
     real_t r, g, b;
-    ggo::hsv2rgb(hue, saturation, value, r, g, b);
-    color<real_t> c(r, g, b);
+    ggo::hsv2rgb(hue, sat, val, r, g, b);
+    floating_point_color_t c(r, g, b);
 
-    return convert_color_to<color<data_t>>(c);
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  color<data_t> color<data_t>::get_random()
-  {
-    return color(
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()),
-      ggo::rand<data_t>(0, ggo::color<data_t>::max()));
+    return convert_color_to<color_t>(c);
   }
 }
 

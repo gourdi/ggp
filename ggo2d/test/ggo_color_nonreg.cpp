@@ -22,17 +22,17 @@ GGO_TEST(color, alpha_blending)
   ggo::alpha_blender<ggo::color_8u> blender_transparent(0.f);
   ggo::alpha_blender<ggo::color_8u> blender_half(0.5f);
 
-  ggo::color_8u c1 = blender_opaque(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
+  ggo::color_8u c1 = blender_opaque(0, 0, ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
   GGO_CHECK_EQ(c1._r, 0x00);
   GGO_CHECK_EQ(c1._g, 0xff);
   GGO_CHECK_EQ(c1._b, 0xff);
 
-  ggo::color_8u c2 = blender_transparent(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
+  ggo::color_8u c2 = blender_transparent(0, 0, ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
   GGO_CHECK_EQ(c2._r, 0x00);
   GGO_CHECK_EQ(c2._g, 0x00);
   GGO_CHECK_EQ(c2._b, 0xff);
 
-  ggo::color_8u c3 = blender_half(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
+  ggo::color_8u c3 = blender_half(0, 0, ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
   GGO_CHECK_EQ(c3._r, 0x00);
   GGO_CHECK_EQ(c3._g, 0x80);
   GGO_CHECK_EQ(c3._b, 0xff);

@@ -80,7 +80,7 @@ namespace ggo
     bool                  is_point_inside(real_type x_f, real_type y_f) const { return _shape.is_point_inside(x_f, y_f); }
 
     color_t brush(int x, int y) const { return _color; }
-    color_t blend(const color_t & bkgd_color, const color_t & brush_color) const { return brush_color; }
+    color_t blend(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const { return brush_color; }
   };
 }
 
@@ -122,7 +122,7 @@ namespace ggo
           for (auto it = begin_it; it != end_it; ++it)
           {
             const item_t * item = *it;
-            pixel_color = item->blend(pixel_color, item->brush(x, y));
+            pixel_color = item->blend(x, y, pixel_color, item->brush(x, y));
           }
 
           ggo::write_pixel<pbf>(ptr, pixel_color);

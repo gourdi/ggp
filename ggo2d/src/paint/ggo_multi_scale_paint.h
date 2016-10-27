@@ -73,7 +73,7 @@ namespace ggo
         ggo::accumulator<std::remove_const<decltype(bkgd_color)>::type> acc;
         ggo::sampler<smp>::sample_pixel<shape_t::type>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
         {
-          acc.add(shape.is_point_inside(x_f, y_f) ? blend(bkgd_color, brush_color) : bkgd_color);
+          acc.add(shape.is_point_inside(x_f, y_f) ? blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color) : bkgd_color);
         });
 
         const auto pixel_color = acc.div<ggo::sampler<smp>::samples_count>();
@@ -211,7 +211,7 @@ namespace ggo
             const item_t * item = *it;
             if (item->is_point_inside(x_f, y_f) == true)
             {
-              sample_color = item->blend(sample_color, item->brush(block_rect.left(), block_rect.bottom()));
+              sample_color = item->blend(block_rect.left(), block_rect.bottom(), sample_color, item->brush(block_rect.left(), block_rect.bottom()));
             }
           }
 

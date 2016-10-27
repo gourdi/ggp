@@ -52,6 +52,7 @@ namespace ggo
     using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
     using real_t = typename ggo::color_traits<floating_point_color_t>::sample_t;
 
+    static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
 
     const floating_point_color_t c1_fp = ggo::convert_color_to<floating_point_color_t>(c1);
     const floating_point_color_t c2_fp = ggo::convert_color_to<floating_point_color_t>(c2);

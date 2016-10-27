@@ -157,7 +157,7 @@ GGO_TEST(paint, shape_y_8u_yu_sampling4x4)
   std::vector<uint8_t> buffer(10 * 11, 0);
 
   auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
   ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float(2.f, 3.f, 3.f), brush, blend);
 
   const std::vector<uint8_t> expected{
@@ -193,7 +193,7 @@ GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
   std::vector<uint8_t> buffer_bgra_8u_yd(width * height * 4, 0);
 
   auto brush = [](int x, int y) { return ggo::color_8u(0xff, 0x00, 0x00); };
-  auto blend = [](ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
+  auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer_rgb_8u_yu.data(), width, height, 3 * width,
@@ -266,7 +266,7 @@ GGO_TEST(paint, y_32f_yu)
   std::vector<float> buffer_y_32f_yu(width * height, 0.0f);
 
   auto brush = [](int x, int y) { return 1.f; };
-  auto blend = [](float bkgd_color, float brush_color) { return 0.2f * bkgd_color + 0.8f * brush_color; };
+  auto blend = [](int x, int y, float bkgd_color, float brush_color) { return 0.2f * bkgd_color + 0.8f * brush_color; };
 
   ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_4x4>(buffer_y_32f_yu.data(), width, height, width * sizeof(float),
     ggo::disc_float(0.25f * width, 0.25f * height, 20.f),
@@ -290,7 +290,7 @@ GGO_TEST(paint, extended_segment_8x8_sampling)
   ggo::extended_segment_float segment({ 10.f, 10.f }, { 50.f, 15.f }, 5.f);
 
   auto brush = [](int x, int y) { return ggo::color_8u::red; };
-  auto blend = [](const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) { return brush_color; };
+  auto blend = [](int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) { return brush_color; };
 
   std::vector<uint8_t> buffer(3 * width * height, 255);
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), width, height, 3 * width, segment, brush, blend);
@@ -322,7 +322,7 @@ GGO_TEST(paint, color_triangle)
   const int height = 100;
 
   using opaque_blender_rgb8u = ggo::overwrite_blender<ggo::color_8u>;
-  using color_triangle_rgb8u = ggo::color_triangle<opaque_blender_rgb8u, ggo::color_8u, ggo::color_32f, float>;
+  using color_triangle_rgb8u = ggo::color_triangle<opaque_blender_rgb8u, ggo::color_8u>;
 
   std::vector<color_triangle_rgb8u> triangles;
 

@@ -8,7 +8,7 @@ namespace ggo
   template <typename color_t>
   struct overwrite_blender
   {
-    const color_t & operator()(const color_t & bkgd_color, const color_t &  brush_color) const { return brush_color; }
+    const color_t & operator()(int x, int y, const color_t & bkgd_color, const color_t &  brush_color) const { return brush_color; }
   };
   
   template <typename color_t>
@@ -23,7 +23,7 @@ namespace ggo
     {
     }     
 
-    ggo::color_8u operator()(const ggo::color_8u & bkgd_color, const ggo::color_8u &  brush_color) const
+    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u &  brush_color) const
     {
       const ggo::color_32u bkgd_color_32u(bkgd_color._r, bkgd_color._g, bkgd_color._b);
       const ggo::color_32u brush_color_32u(brush_color._r, brush_color._g, brush_color._b);

@@ -81,7 +81,7 @@ namespace ggo
         {
           const color_t bkgd_color = read_pixel<pbf>(ptr);
           const color_t brush_color = brush(x, y);
-          const color_t pixel_color = blend(bkgd_color, brush_color);
+          const color_t pixel_color = blend(x, y, bkgd_color, brush_color);
           ggo::write_pixel<pbf>(ptr, pixel_color);
           ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
         }
@@ -102,7 +102,7 @@ namespace ggo
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
 
     auto brush = [&c](int x, int y) { return c; };
-    auto blend = [](const color_t & bkgd_color, const color_t & brush_color) { return brush_color; };
+    auto blend = [](int x, int y, const color_t & bkgd_color, const color_t & brush_color) { return brush_color; };
 
     paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend);
   }
