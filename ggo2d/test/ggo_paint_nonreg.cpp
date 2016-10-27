@@ -327,10 +327,10 @@ GGO_TEST(paint, color_triangle)
   std::vector<color_triangle_rgb8u> triangles;
 
   ggo::triangle2d_float triangle1({ 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f });
-  triangles.emplace_back(triangle1, ggo::color_32f::green, ggo::color_32f::red, ggo::color_32f::yellow, opaque_blender_rgb8u());
+  triangles.emplace_back(triangle1, ggo::color_8u::green, ggo::color_8u::red, ggo::color_8u::yellow, opaque_blender_rgb8u());
 
   ggo::triangle2d_float triangle2(triangles[0]._triangle.v1(), { 50.f, 90.f }, triangles[0]._triangle.v3());
-  triangles.emplace_back(triangle2, ggo::color_32f::green, ggo::color_32f::blue, ggo::color_32f::yellow, opaque_blender_rgb8u());
+  triangles.emplace_back(triangle2, ggo::color_8u::green, ggo::color_8u::blue, ggo::color_8u::yellow, opaque_blender_rgb8u());
 
   std::array<uint8_t, 3 * width * height> buffer;
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::color_8u::gray);
@@ -338,4 +338,33 @@ GGO_TEST(paint, color_triangle)
 
   ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, alpha_color_triangle)
+{
+  const int width = 120;
+  const int height = 100;
+
+  std::vector<ggo::alpha_color_triangle<ggo::color_8u>> triangles;
+
+  ggo::triangle2d_float triangle1({ 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f });
+  triangles.emplace_back(triangle1,
+    ggo::color_8u::green, 1.0f,
+    ggo::color_8u::green, 0.75f,
+    ggo::color_8u::green, 0.5f);
+
+  ggo::triangle2d_float triangle2(triangle1.v1(), { 50.f, 90.f }, triangle1.v3());
+  triangles.emplace_back(triangle2,
+    ggo::color_8u::green, 1.f,
+    ggo::color_8u::green, 0.25f,
+    ggo::color_8u::green, 0.5f);
+
+  std::array<uint8_t, 3 * width * height> buffer;
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::color_8u::gray);
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles.begin(), triangles.end());
+
+  ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+}
+
+
 

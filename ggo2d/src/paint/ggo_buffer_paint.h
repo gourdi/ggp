@@ -80,8 +80,7 @@ namespace ggo
         for (int x = block_rect.left(); x <= block_rect.right(); ++x)
         {
           const color_t bkgd_color = read_pixel<pbf>(ptr);
-          const color_t brush_color = brush(x, y);
-          const color_t pixel_color = blend(x, y, bkgd_color, brush_color);
+          const color_t pixel_color = blend(x, y, bkgd_color, brush(x, y));
           ggo::write_pixel<pbf>(ptr, pixel_color);
           ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
         }

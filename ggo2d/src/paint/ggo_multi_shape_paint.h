@@ -9,61 +9,6 @@
 
 namespace ggo
 {
-  /*  template <typename color_t, typename intensity_t, typename data_t>
-    struct layer_item
-    {
-      static_assert(std::is_arithmetic<intensity_t>::value, "unexpected intensity type");
-
-      layer_item(std::shared_ptr<const ggo::paintable_shape2d_abc<data_t>> shape,
-        const color_t & color,
-        intensity_t intensity = 1,
-        std::shared_ptr<const ggo::blender_abc<color_t>> blender = std::make_shared<ggo::alpha_blender<color_t, data_t>>())
-        :
-        _shape(shape),
-        _color_brush(std::make_shared<ggo::solid_brush<color_t, data_t>>(color)),
-        _intensity_brush(std::make_shared<ggo::solid_brush<color_t, data_t>>(intensity)),
-        _blender(blender)
-      {}
-
-      layer_item(std::shared_ptr<const ggo::paintable_shape2d_abc<data_t>> shape,
-        std::shared_ptr<const ggo::brush_abc<color_t>> color_brush,
-        std::shared_ptr<const ggo::brush_abc<intensity_t>> intensity_brush,
-        std::shared_ptr<const ggo::blender_abc<color_t>> blender = std::make_shared<ggo::alpha_blender<color_t>>())
-        :
-        _shape(shape),
-        _color_brush(color_brush),
-        _intensity_brush(intensity_brush),
-        _blender(blender)
-      {}
-
-      std::shared_ptr<const ggo::paintable_shape2d_abc<data_t>>   _shape;
-      std::shared_ptr<const ggo::brush_abc<color_t, data_t>>      _color_brush;
-      std::shared_ptr<const ggo::brush_abc<intensity_t, data_t>>  _intensity_brush;
-      std::shared_ptr<const ggo::blender_abc<color_t, data_t>>    _blender;
-
-      // For this struct to be used with paint code, it must implement some methods.
-      rect_data<data_t> get_bounding_rect() const { return _shape->get_bounding_rect(); }
-      rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const { return _shape->get_bounding_rect(rect_data); }
-
-    };*/
-  /*
-  template <typename shape_t, typename paint_brush_t, typename blender_t, typename real_type = shape_t::type>
-  struct static_layer_item
-  {
-    shape_t       _shape;
-    paint_brush_t _brush;
-    blender_t     _blender;
-
-    using real_t = real_type;
-
-    rect_data<real_type>  get_bounding_rect() const { return _shape.get_bounding_rect(); }
-    rect_intersection	    get_rect_intersection(const rect_data<real_type> & rect_data) const { return _shape.get_rect_intersection(rect_data); }
-    bool                  is_point_inside(real_type x_f, real_type y_f) const { return _shape.is_point_inside(x_f, y_f); }
-
-    color_t brush(int x, int y) const { return _color_brush.get(x, y); }
-    color_t blend(const color_t & bkgd_color, const color_t & brush_color) const { return _blender.blend(bkgd_color, brush_color); }
-  };*/
-
   template <typename shape_t, typename color_t, typename real_type = shape_t::type>
   struct solid_color_shape
   {
