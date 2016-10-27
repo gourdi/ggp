@@ -3,41 +3,44 @@
 
 #include "ggo_animation_artist_abc.h"
 
-class ggo_bozons_animation_artist : public ggo_accumulation_animation_artist_abc
+namespace ggo
 {
-public:
+  class bozons_animation_artist : public static_background_animation_artist_abc
+  {
+  public:
 
-        ggo_bozons_animation_artist(int render_width, int render_height);
+    bozons_animation_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	init_sub() override;
-  void	init_output_buffer(uint8_t * buffer) override;
-	bool	render_next_frame_acc(uint8_t * buffer, int frame_index) override;
+    void init_sub() override;
+    void init_bkgd_buffer(void * buffer) override;
+    bool render_next_frame_bkgd(void * buffer, int frame_index) override;
 
-private:
+  private:
 
-	struct ggo_particle
-	{
-		ggo::pos2f  _pos;
-		ggo::color	_color;
-		float				_angle;
-		float				_dangle;
-		int 				_dangle_counter;
-		float				_radius;
-		float				_dradius;
-		int 				_dradius_counter;
-		float				_speed;
-	};
-	
-	struct ggo_color_disc
-	{
-		ggo::disc_float _disc;
-		ggo::color	    _color;
-	};
+    struct ggo_particle
+    {
+      ggo::pos2f    _pos;
+      ggo::color_8u _color;
+      float				  _angle;
+      float				  _dangle;
+      int 				  _dangle_counter;
+      float				  _radius;
+      float				  _dradius;
+      int 				  _dradius_counter;
+      float				  _speed;
+    };
 
-	std::vector<std::vector<ggo_color_disc>>  _color_discs;
-  float                                     _hue;
-};
+    struct ggo_color_disc
+    {
+      ggo::disc_float _disc;
+      ggo::color_8u   _color;
+    };
+
+    std::vector<std::vector<ggo_color_disc>>  _color_discs;
+    float                                     _hue;
+  };
+}
 
 #endif

@@ -211,7 +211,8 @@ namespace ggo
             const item_t * item = *it;
             if (item->is_point_inside(x_f, y_f) == true)
             {
-              sample_color = item->blend(block_rect.left(), block_rect.bottom(), sample_color, item->brush(block_rect.left(), block_rect.bottom()));
+              auto brush_color = item->brush(block_rect.left(), block_rect.bottom());
+              sample_color = item->blend(block_rect.left(), block_rect.bottom(), sample_color, brush_color);
             }
           }
 

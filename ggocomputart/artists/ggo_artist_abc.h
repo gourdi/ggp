@@ -43,6 +43,9 @@ namespace ggo
       return get_random_point(margin_left, margin_right, margin_top, margin_bottom, _render_width, _render_height);
     }
 
+    void map_fit(ggo::rect_float & rect, float inf, float sup) const;
+    void map_fit(ggo::disc_float & disc, float inf, float sup) const;
+
     ggo::pos2f horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _render_height); }
     ggo::pos2f vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _render_width); }
 

@@ -116,6 +116,18 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  void artist_abc::map_fit(ggo::rect_float & rect, float inf, float sup) const
+  {
+    map_fit(rect, inf, sup, _render_width, _render_height);
+  }
+
+  //////////////////////////////////////////////////////////////
+  void artist_abc::map_fit(ggo::disc_float & disc, float inf, float sup) const
+  {
+    map_fit(disc, inf, sup, _render_width, _render_height);
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::pos2f artist_abc::horz_mirror(const ggo::pos2f & p, int render_height)
   {
     return ggo::pos2f(p.get<0>(), render_height - p.get<1>());

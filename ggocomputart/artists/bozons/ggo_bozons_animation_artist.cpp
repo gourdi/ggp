@@ -1,52 +1,60 @@
 #include "ggo_bozons_animation_artist.h"
-#include <ggo_paint.h>
-#include <ggo_fill.h>
+#include <ggo_buffer_fill.h>
 #include <ggo_color.h>
+#include <ggo_multi_shape_paint.h>
 
-#define GGO_DRADIUS_AMP 0.00001f
-#define GGO_DRADIUS_COUNTER_MIN 40
-#define GGO_DRADIUS_COUNTER_MAX 80
-
-#define GGO_DANGLE_AMP (ggo::pi<float>() / 100.f)
-#define GGO_DANGLE_COUNTER_MIN 200
-#define GGO_DANGLE_COUNTER_MAX 400
+namespace
+{
+  const float dradius_amp = 0.00001f;
+  const int dradius_counter_min = 40;
+  const int dradius_counter_max = 80;
+  
+  const float dangle_amp = ggo::pi<float>() / 100.f;
+  const int dangle_counter_min = 200;
+  const int dangle_counter_max = 400;
+}
 
 //////////////////////////////////////////////////////////////
-ggo_bozons_animation_artist::ggo_bozons_animation_artist(int render_width, int render_height)
+ggo::bozons_animation_artist::bozons_animation_artist(int render_width, int render_height)
 :
-ggo_accumulation_animation_artist_abc(render_width, render_height)
+static_background_animation_artist_abc(render_width, render_height)
 {
 	
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_bozons_animation_artist::render_next_frame_acc(uint8_t * buffer, int frame_index)
+bool ggo::bozons_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
 {
 	if (frame_index >= _color_discs.size())
 	{
 		return false;
 	}
 	
-	const std::vector<ggo_color_disc> & color_discs = _color_discs[frame_index];
-	
-	for (const ggo_color_disc & color_disc : color_discs)
-	{
-		auto circle = std::make_shared<ggo::disc_float>(color_disc._disc);
-		map_fit(*circle, 0, 1);
+	std::vector<solid_color_shape<disc_float, ggo::color_8u>> color_discs;
 
-		ggo::paint(buffer, get_render_width(), get_render_height(), 
-               circle,
-               color_disc._color, 0.5);
-	}
+  for (size_t i = 0; i < _color_discs.size(); ++i)
+  {
+    for (const auto & color_disc : _color_discs[i])
+    {
+      disc_float disc(color_disc._disc);
+      map_fit(disc, 0, 1);
+
+      color_discs.emplace_back(disc, color_disc._color);
+    }
+  }
+	
+  paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+    color_discs.cbegin(), color_discs.cend());
 	
 	return true;
 }
 
 //////////////////////////////////////////////////////////////
 // Unroll all the process here and save particles for each frame.
-void ggo_bozons_animation_artist::init_sub()
+void ggo::bozons_animation_artist::init_sub()
 {
-  _hue = ggo::rand_float();
+  _hue = ggo::rand<float>();
   
 	// Create particles.
 	std::vector<ggo_particle> particles;
@@ -57,17 +65,17 @@ void ggo_bozons_animation_artist::init_sub()
 		particle._pos.get<0>() = 0.5;
 		particle._pos.get<1>() = 0.5;
 
-		particle._color	= ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
+		particle._color	= from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 		
-		particle._angle = ggo::rand_float(0, 2 * ggo::pi<float>());
-		particle._dangle = ggo::rand_float(-GGO_DANGLE_AMP, GGO_DANGLE_AMP);
-		particle._dangle_counter = ggo::rand_int(GGO_DANGLE_COUNTER_MIN, GGO_DANGLE_COUNTER_MAX);
+		particle._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+		particle._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
+		particle._dangle_counter = ggo::rand<int>(dangle_counter_min, dangle_counter_max);
 		
-		particle._radius = ggo::rand_float(0.002f, 0.004f);
-		particle._dradius = ggo::rand_float(-GGO_DRADIUS_AMP, GGO_DRADIUS_AMP);
-		particle._dradius_counter = ggo::rand_int(GGO_DRADIUS_COUNTER_MIN, GGO_DRADIUS_COUNTER_MAX);
+		particle._radius = ggo::rand<float>(0.002f, 0.004f);
+		particle._dradius = ggo::rand<float>(-dradius_amp, dradius_amp);
+		particle._dradius_counter = ggo::rand<int>(dradius_counter_min, dradius_counter_max);
 		
-		particle._speed = ggo::rand_float(0.002f, 0.004f);
+		particle._speed = ggo::rand<float>(0.002f, 0.004f);
 	}
 	
 	// Move them.
@@ -90,8 +98,8 @@ void ggo_bozons_animation_artist::init_sub()
 			--particle._dangle_counter;
 			if (particle._dangle_counter <= 0)
 			{
-				particle._dangle = -particle._dangle * ggo::rand_float(0.8f, 1.2f);
-				particle._dangle_counter = ggo::rand_int(GGO_DANGLE_COUNTER_MIN, GGO_DANGLE_COUNTER_MAX);
+				particle._dangle = -particle._dangle * ggo::rand<float>(0.8f, 1.2f);
+				particle._dangle_counter = ggo::rand<int>(dangle_counter_min, dangle_counter_max);
 			}
 	
 			--particle._dradius_counter;
@@ -99,12 +107,12 @@ void ggo_bozons_animation_artist::init_sub()
 			{
 				if (frame_index > 100)
 				{
-					particle._dradius = -GGO_DRADIUS_AMP;
+					particle._dradius = -dradius_amp;
 				}
 				else
 				{
-					particle._dradius = ggo::rand_float(-GGO_DRADIUS_AMP, GGO_DRADIUS_AMP);
-					particle._dradius_counter = ggo::rand_int(GGO_DRADIUS_COUNTER_MIN, GGO_DRADIUS_COUNTER_MAX);
+					particle._dradius = ggo::rand<float>(-dradius_amp, dradius_amp);
+					particle._dradius_counter = ggo::rand<int>(dradius_counter_min, dradius_counter_max);
 				}
 			}
 	
@@ -133,13 +141,13 @@ void ggo_bozons_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_bozons_animation_artist::init_output_buffer(uint8_t * buffer)
+void ggo::bozons_animation_artist::init_bkgd_buffer(void * buffer)
 {
-	ggo::color bkgd_color1 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
-	ggo::color bkgd_color2 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
-	ggo::color bkgd_color3 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
-	ggo::color bkgd_color4 = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float());
+	const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+	const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+	const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+	const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
   
-  auto image = make_image_buffer(buffer);
-	ggo::fill_4_colors(image, bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+    bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
 }
