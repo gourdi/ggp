@@ -1,19 +1,19 @@
 #ifndef __GGO_AGGREGATION_ARTIST__
 #define __GGO_AGGREGATION_ARTIST__
 
-#include <ggo_artist_abc.h>
 #include <ggo_array.h>
+#include <ggo_artist_abc.h>
 
 namespace ggo
 {
-  class aggregation_artist : public ggo_artist_abc
+  class aggregation_artist : public artist_abc
   {
   public:
 
-          aggregation_artist(int width, int height);
+          aggregation_artist(int render_width, int render_height);
 
     void  update(int points_count);
-    void  render(uint8_t * buffer) const;
+    void  render(void * buffer) const;
 
     int   get_final_points_count() const;
 
@@ -39,7 +39,7 @@ namespace ggo
       ggo::rect_float     _rect;
     };
 
-    ggo::color          _background_color;
+    ggo::color_8u       _background_color;
     ggo::array<cell, 2> _grid;
     float               _threshold_hypot;
     float               _threshold_dist;

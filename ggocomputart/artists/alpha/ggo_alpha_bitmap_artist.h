@@ -3,13 +3,14 @@
 
 #include "ggo_bitmap_artist_abc.h"
 
-class ggo_alpha_bitmap_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
-	
-        ggo_alpha_bitmap_artist(int render_width, int render_height);
-	
-	void	render_bitmap(uint8_t * buffer) override;
-};
+  class alpha_bitmap_artist : public bitmap_artist_abc
+  {
+  public:
+
+    void render_bitmap(void * buffer, int render_width, int render_height) override;
+  };
+}
 
 #endif

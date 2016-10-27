@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    alpha_animation_artist(int render_width, int render_height);
+          alpha_animation_artist(int render_width, int render_height);
 
     void	init_sub() override;
     bool	render_next_frame_sub(void * buffer, int frame_index) override;

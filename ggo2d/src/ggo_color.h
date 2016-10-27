@@ -194,6 +194,12 @@ namespace ggo
     return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
   }
 
+  // rgb 32f <=> rgb 32f
+  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_32f>(const ggo::color_32f & c)
+  {
+    return c;
+  }
+
   // rgb 8u <=> rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
   {

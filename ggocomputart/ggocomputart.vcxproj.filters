@@ -168,9 +168,6 @@
     <ClCompile Include="artists\aggregation\ggo_aggregation_artist.cpp">
       <Filter>artists\aggregation</Filter>
     </ClCompile>
-    <ClCompile Include="artists\alpha\ggo_alpha_anim_artist.cpp">
-      <Filter>artists\alpha</Filter>
-    </ClCompile>
     <ClCompile Include="artists\alpha\ggo_alpha_bitmap_artist.cpp">
       <Filter>artists\alpha</Filter>
     </ClCompile>
@@ -411,6 +408,9 @@
     <ClCompile Include="artists\cabrel\ggo_cabrel_bitmap_artist.cpp">
       <Filter>artists\cabrel</Filter>
     </ClCompile>
+    <ClCompile Include="artists\alpha\ggo_alpha_animation_artist.cpp">
+      <Filter>artists\alpha</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\ggo_animate_abc.h">
@@ -433,9 +433,6 @@
     </ClInclude>
     <ClInclude Include="artists\aggregation\ggo_aggregation_artist.h">
       <Filter>artists\aggregation</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\alpha\ggo_alpha_anim_artist.h">
-      <Filter>artists\alpha</Filter>
     </ClInclude>
     <ClInclude Include="artists\alpha\ggo_alpha_bitmap_artist.h">
       <Filter>artists\alpha</Filter>
@@ -679,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="artists\cabrel\ggo_cabrel_bitmap_artist.h">
       <Filter>artists\cabrel</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\alpha\ggo_alpha_animation_artist.h">
+      <Filter>artists\alpha</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

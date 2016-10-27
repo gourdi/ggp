@@ -1,20 +1,20 @@
 #include "ggo_aggregation_animation_artist.h"
 
 ////////////////////////////////////////////////////////
-ggo_aggregation_animation_artist::ggo_aggregation_animation_artist(int render_width, int render_height)
+ggo::aggregation_animation_artist::aggregation_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height)
+animation_artist_abc(render_width, render_height),
+_artist(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_aggregation_animation_artist::init_sub()
+void ggo::aggregation_animation_artist::init_sub()
 {
-  _artist.reset(new ggo::aggregation_artist(get_render_width(), get_render_height()));
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::aggregation_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
   const int frames_count = 300;
 
@@ -23,15 +23,14 @@ bool ggo_aggregation_animation_artist::render_next_frame_sub(uint8_t * buffer, i
     return false;
   }
 
-  int points_count = _artist->get_final_points_count() / frames_count;
+  int points_count = _artist.get_final_points_count() / frames_count;
 
-  _artist->update(points_count);
+  _artist.update(points_count);
 
   if (buffer != nullptr)
   {
-    _artist->render(buffer);
+    _artist.render(buffer);
   }
 
-	return true;
+  return true;
 }
-
