@@ -10,23 +10,21 @@
 namespace ggo
 {
   // No checks are performed, parameters are expected to be valid ones.
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const color_t & c);
+  template <pixel_buffer_format pbf>
+  void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c);
 
-  template <pixel_buffer_format pbf, typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const color_t & c);
+  template <pixel_buffer_format pbf>
+  void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c);
 }
 
 // Shapes.
 namespace ggo
 {
-  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t,
-    typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend);
 
-  template <pixel_buffer_format pbf, sampling smp, typename shape_t,
-    typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const color_t & color);
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t>
+  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const typename pixel_buffer_format_info<pbf>::color_t & color);
 }
 
 //////////////////////////////////////////////////////////////
@@ -36,15 +34,15 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf, typename color_t>
-  void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const color_t & c)
+  template <pixel_buffer_format pbf>
+  void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
     process_rect_fast<pbf>(buffer, height, line_step, left, right, bottom, top, [&](void * ptr) { set_pixel<pbf, color_t>(ptr, c); });
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf, typename color_t>
-  void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const color_t & c)
+  template <pixel_buffer_format pbf>
+  void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
     process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
@@ -53,9 +51,11 @@ namespace ggo
 // Shape.
 namespace ggo
 {
-  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t, typename color_t>
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend)
   {
+    using typename color_t = typename pixel_buffer_format_info<pbf>::color_t;
+
     const int scale_factor = 8;
     const int first_scale = 2;
 
@@ -96,9 +96,11 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename color_t>
-  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const color_t & c)
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t>
+  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
+
     auto brush = [&c](int x, int y) { return c; };
     auto blend = [](const color_t & bkgd_color, const color_t & brush_color) { return brush_color; };
 

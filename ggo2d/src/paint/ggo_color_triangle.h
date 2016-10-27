@@ -37,7 +37,7 @@ namespace ggo
 
     color_t blend(const color_t & bkgd_color, const color_t & brush_color) const
     { 
-      return _blender.blend(bkgd_color, brush_color);
+      return _blender(bkgd_color, brush_color);
     }
 
     ggo::triangle2d<real_t> _triangle;

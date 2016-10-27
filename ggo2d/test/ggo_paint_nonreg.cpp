@@ -9,9 +9,10 @@
 #include <ggo_buffer_paint.h>
 #include <ggo_blit.h>
 #include <ggo_color_triangle.h>
-#include <ggo_blender_abc.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_bmp.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
 #include <array>
 
 //#define GGO_BENCH
@@ -122,9 +123,9 @@ GGO_TEST(paint, shape_y_8u_yu_sampling1)
 {
   std::vector<uint8_t> buffer(10 * 11, 0);
 
-  auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_1>(buffer.data(), 10, 10, 11, ggo::disc_float(2.f, 3.f, 3.f), brush, blend);
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_1>(
+    buffer.data(), 10, 10, 11, ggo::disc_float(2.f, 3.f, 3.f),
+    ggo::make_solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>());
 
   const std::vector<uint8_t> expected{
     0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00,
@@ -320,7 +321,7 @@ GGO_TEST(paint, color_triangle)
   const int width = 120;
   const int height = 100;
 
-  using opaque_blender_rgb8u = ggo::opaque_blender<ggo::color_8u>;
+  using opaque_blender_rgb8u = ggo::overwrite_blender<ggo::color_8u>;
   using color_triangle_rgb8u = ggo::color_triangle<opaque_blender_rgb8u, ggo::color_8u, ggo::color_32f, float>;
 
   std::vector<color_triangle_rgb8u> triangles;

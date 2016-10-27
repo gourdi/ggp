@@ -2,8 +2,6 @@
 #define __GGO_LAYER__
 
 #include <ggo_shapes2d.h>
-#include <ggo_brush_abc.h>
-#include <ggo_blender_abc.h>
 #include <ggo_multi_scale_paint.h>
 #include <ggo_sampling_paint.h>
 #include <ggo_pixel_buffer.h>

@@ -70,15 +70,20 @@ namespace ggo
   template <typename data_t>
   data_t rand(data_t inf, data_t sup, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
   {
-    return std::uniform_int_distribution<data_t>(inf, sup)(get_random_generator());
+    // We must used 'long long' in order to be able to have uin8_t random number for instance.
+    return static_cast<data_t>(std::uniform_int_distribution<long long>(inf, sup)(get_random_generator()));
   }
 
   template <typename data_t>
-  data_t rand()
+  data_t rand(typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
   {
-    return rand<data_t>(
-      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::min() : 0,
-      std::is_integral<data_t>::value ? std::numeric_limits<data_t>::max() : 1);
+    return rand<data_t>(0, 1);
+  }
+
+  template <typename data_t>
+  data_t rand(typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
+  {
+    return rand(std::numeric_limits<data_t>::lowest(), std::numeric_limits<data_t>::max());
   }
 
   inline bool rand_bool() { return (rand<int>(0, 1) % 2) != 0; }

@@ -1,6 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_curve.h>
 #include <ggo_color.h>
+#include <ggo_blender.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(color, operators)
@@ -17,33 +18,24 @@ GGO_TEST(color, operators)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(color, alpha_blending)
 {
-  ggo::color_8u c1(0x00, 0x00, 0xff);
-  ggo::color_8u c2(0x00, 0xff, 0xff);
+  ggo::alpha_blender<ggo::color_8u> blender_opaque(1.f);
+  ggo::alpha_blender<ggo::color_8u> blender_transparent(0.f);
+  ggo::alpha_blender<ggo::color_8u> blender_half(0.5f);
 
-  auto c3 = ggo::alpha_blend<8>(c1, 0, c2);
+  ggo::color_8u c1 = blender_opaque(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
+  GGO_CHECK_EQ(c1._r, 0x00);
+  GGO_CHECK_EQ(c1._g, 0xff);
+  GGO_CHECK_EQ(c1._b, 0xff);
+
+  ggo::color_8u c2 = blender_transparent(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
+  GGO_CHECK_EQ(c2._r, 0x00);
+  GGO_CHECK_EQ(c2._g, 0x00);
+  GGO_CHECK_EQ(c2._b, 0xff);
+
+  ggo::color_8u c3 = blender_half(ggo::color_8u(0x00, 0x00, 0xff), ggo::color_8u(0x00, 0xff, 0xff));
   GGO_CHECK_EQ(c3._r, 0x00);
-  GGO_CHECK_EQ(c3._g, 0xff);
+  GGO_CHECK_EQ(c3._g, 0x80);
   GGO_CHECK_EQ(c3._b, 0xff);
-
-  auto c4 = ggo::alpha_blend<8>(c1, 0x100, c2);
-  GGO_CHECK_EQ(c4._r, 0x00);
-  GGO_CHECK_EQ(c4._g, 0x00);
-  GGO_CHECK_EQ(c4._b, 0xff);
-
-  auto c5 = ggo::alpha_blend<8>(c1, 64, c2);
-  GGO_CHECK_EQ(c5._r, 0x00);
-  GGO_CHECK_EQ(c5._g, 0x00);
-  GGO_CHECK_EQ(c5._b, 0xff);
-
-  auto c6 = ggo::alpha_blend<24>(c1, 0, c2);
-  GGO_CHECK_EQ(c6._r, 0x00);
-  GGO_CHECK_EQ(c6._g, 0xff);
-  GGO_CHECK_EQ(c6._b, 0xff);
-
-  auto c7 = ggo::alpha_blend<24>(c1, 0x1000000, c2);
-  GGO_CHECK_EQ(c7._r, 0x00);
-  GGO_CHECK_EQ(c7._g, 0x00);
-  GGO_CHECK_EQ(c7._b, 0xff);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -53,7 +45,7 @@ GGO_TEST(color, linear_curve)
   curve.push_point(0, ggo::color_32f(1.f, 0.f, 0.f));
   curve.push_point(1, ggo::color_32f(0.f, 1.f, 1.f));
   ggo::color_32f c = curve.evaluate(0.25f);
-  
+
   GGO_CHECK_FABS(c._r, 0.75f);
   GGO_CHECK_FABS(c._g, 0.25f);
   GGO_CHECK_FABS(c._b, 0.25f);

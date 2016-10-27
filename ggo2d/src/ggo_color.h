@@ -36,28 +36,6 @@ namespace ggo
     void		  operator*=(data_t v) { _r *= v; _g *= v; _b *= v; }
     void		  operator/=(data_t v) { _r /= v; _g /= v; _b /= v; }
 
-
-/*
-    uint8_t 	r8() const { return ggo::to<uint8_t>(0xFF*_r); }
-    uint8_t 	g8() const { return ggo::to<uint8_t>(0xFF*_g); }
-    uint8_t 	b8() const { return ggo::to<uint8_t>(0xFF*_b); }
-
-    uint16_t 	r16() const { return ggo::to<uint16_t>(0xFFFF*_r); }
-    uint16_t 	g16() const { return ggo::to<uint16_t>(0xFFFF*_g); }
-    uint16_t 	b16() const { return ggo::to<uint16_t>(0xFFFF*_b); }
-
-    uint32_t 	r32() const { return ggo::to<uint32_t>(0xFFFFFFFF*_r); }
-    uint32_t 	g32() const { return ggo::to<uint32_t>(0xFFFFFFFF*_g); }
-    uint32_t 	b32() const { return ggo::to<uint32_t>(0xFFFFFFFF*_b); }
-*/
-    //color_8u  color_8u() const { return{ r8(), g8(), b8() }; }
-
-   // void 		  randomize();
-
-    /*float		  max() const { return ggo::max(_r, _g, _b); }
-    float		  min() const { return ggo::min(_r, _g, _b); }
-    float		  mean() const { return (_r + _g + _b) / 3; }
-    */
     bool      is_black() const { return _r == 0 && _g == 0 && _b == 0; }
 
     color &   operator=(const color & c) = default;
@@ -233,42 +211,30 @@ namespace ggo
   template <>
   struct color_traits<uint8_t>
   {
-    using float_point_t = ggo::color_32f;
+    using floating_point_t = ggo::color_32f;
+    using sample_t = uint8_t;
   };
-
+  
   template <>
   struct color_traits<float>
   {
-    using float_point_t = float;
+    using floating_point_t = float;
+    using sample_t = float;
   };
 
   template <>
   struct color_traits<ggo::color_8u>
   {
-    using float_point_t = ggo::color_32f;
+    using floating_point_t = ggo::color_32f;
+    using sample_t = uint8_t;
   };
 
   template <>
   struct color_traits<ggo::color_32f>
   {
-    using float_point_t = ggo::color_32f;
+    using floating_point_t = ggo::color_32f;
+    using sample_t = float;
   };
-}
-
-
-namespace ggo
-{
-  template <int bit_shift>
-  ggo::color_8u alpha_blend(const ggo::color_8u & c1, const unsigned int w1, const ggo::color_8u & c2)
-  {
-    const unsigned int w2 = (1 << bit_shift) - w1;
-
-    const ggo::color_32u c1_32u(c1._r, c1._g, c1._b);
-    const ggo::color_32u c2_32u(c2._r, c2._g, c2._b);
-    const ggo::color_32u c3_32u(ggo::fixed_point_div<bit_shift>(w1 * c1_32u + w2 * c2_32u));
-
-    return ggo::color_8u(c3_32u._r, c3_32u._g, c3_32u._b);
-  }
 }
 
 /////////////////////////////////////////////////////////////////////

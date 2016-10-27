@@ -31,8 +31,8 @@
     <ClInclude Include="src\image\ggo_image_buffer_abc.h" />
     <ClInclude Include="src\image\ggo_rle_image.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
-    <ClInclude Include="src\paint\ggo_blender_abc.h" />
-    <ClInclude Include="src\paint\ggo_brush_abc.h" />
+    <ClInclude Include="src\paint\ggo_blender.h" />
+    <ClInclude Include="src\paint\ggo_brush.h" />
     <ClInclude Include="src\paint\ggo_buffer_paint.h" />
     <ClInclude Include="src\paint\ggo_gradient_brush.h" />
     <ClInclude Include="src\paint\ggo_hard_paint.h" />

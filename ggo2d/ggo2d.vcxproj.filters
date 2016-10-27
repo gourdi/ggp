@@ -52,12 +52,6 @@
     <ClInclude Include="src\paint\ggo_multi_shape_paint.h">
       <Filter>paint</Filter>
     </ClInclude>
-    <ClInclude Include="src\paint\ggo_blender_abc.h">
-      <Filter>paint</Filter>
-    </ClInclude>
-    <ClInclude Include="src\paint\ggo_brush_abc.h">
-      <Filter>paint</Filter>
-    </ClInclude>
     <ClInclude Include="src\paint\ggo_gradient_brush.h">
       <Filter>paint</Filter>
     </ClInclude>
@@ -72,6 +66,12 @@
     </ClInclude>
     <ClInclude Include="src\fill\ggo_buffer_fill.h">
       <Filter>fill</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_brush.h">
+      <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\paint\ggo_blender.h">
+      <Filter>paint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
