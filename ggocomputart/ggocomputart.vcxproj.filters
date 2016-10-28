@@ -375,9 +375,6 @@
     <ClCompile Include="artists\ggo_animation_artist_abc.cpp">
       <Filter>artists</Filter>
     </ClCompile>
-    <ClCompile Include="artists\ggo_artist_abc.cpp">
-      <Filter>artists</Filter>
-    </ClCompile>
     <ClCompile Include="artists\ggo_bitmap_artist_abc.cpp">
       <Filter>artists</Filter>
     </ClCompile>
@@ -410,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="artists\alpha\ggo_alpha_animation_artist.cpp">
       <Filter>artists\alpha</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\ggo_artist.cpp">
+      <Filter>artists</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -641,9 +641,6 @@
     <ClInclude Include="artists\ggo_animation_artist_abc.h">
       <Filter>artists</Filter>
     </ClInclude>
-    <ClInclude Include="artists\ggo_artist_abc.h">
-      <Filter>artists</Filter>
-    </ClInclude>
     <ClInclude Include="artists\ggo_bitmap_artist_abc.h">
       <Filter>artists</Filter>
     </ClInclude>
@@ -679,6 +676,9 @@
     </ClInclude>
     <ClInclude Include="artists\alpha\ggo_alpha_animation_artist.h">
       <Filter>artists\alpha</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\ggo_artist.h">
+      <Filter>artists</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

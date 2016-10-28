@@ -60,7 +60,7 @@
     <ClCompile Include="artists\flies\ggo_flies_artist.cpp" />
     <ClCompile Include="artists\flower\ggo_flower_artist.cpp" />
     <ClCompile Include="artists\ggo_animation_artist_abc.cpp" />
-    <ClCompile Include="artists\ggo_artist_abc.cpp" />
+    <ClCompile Include="artists\ggo_artist.cpp" />
     <ClCompile Include="artists\ggo_bitmap_artist_abc.cpp" />
     <ClCompile Include="artists\hexa\ggo_hexa_animation_artist.cpp" />
     <ClCompile Include="artists\hexa\ggo_hexa_artist.cpp" />
@@ -150,7 +150,7 @@
     <ClInclude Include="artists\flies\ggo_flies_artist.h" />
     <ClInclude Include="artists\flower\ggo_flower_artist.h" />
     <ClInclude Include="artists\ggo_animation_artist_abc.h" />
-    <ClInclude Include="artists\ggo_artist_abc.h" />
+    <ClInclude Include="artists\ggo_artist.h" />
     <ClInclude Include="artists\ggo_artist_ids.h" />
     <ClInclude Include="artists\ggo_bitmap_artist_abc.h" />
     <ClInclude Include="artists\hexa\ggo_hexa_animation_artist.h" />

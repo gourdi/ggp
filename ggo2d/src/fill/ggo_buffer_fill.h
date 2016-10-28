@@ -23,6 +23,14 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c4);
 }
 
+// Curve.
+namespace ggo
+{
+  template <pixel_buffer_format pbf, typename floating_point_color_t>
+  void fill_color_curve(void * buffer, int width, int height, int line_step,
+    const ggo::curve_abc<typename color_traits<floating_point_color_t>::smaple_t, floating_point_color_t> & curve);
+}
+
 //////////////////////////////////////////////////////////////
 // Implementation.
 
@@ -64,6 +72,24 @@ namespace ggo
     };
 
     ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, write_pixel_func);
+  }
+}
+
+// Curve.
+namespace ggo
+{
+  template <pixel_buffer_format pbf, typename floating_point_color_t>
+  void fill_color_curve(void * buffer, int width, int height, int line_step,
+    const ggo::curve_abc<typename color_traits<floating_point_color_t>::sample_t, floating_point_color_t> & curve)
+  {
+    using color_t = ggo::pixel_buffer_format_info<pbf>::color_t;
+
+    auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c)
+    {
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+    };
+
+    fill_color_curve(width, height, curve, write_pixel_func);
   }
 }
 

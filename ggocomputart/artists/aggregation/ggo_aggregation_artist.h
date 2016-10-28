@@ -2,11 +2,11 @@
 #define __GGO_AGGREGATION_ARTIST__
 
 #include <ggo_array.h>
-#include <ggo_artist_abc.h>
+#include <ggo_artist.h>
 
 namespace ggo
 {
-  class aggregation_artist : public artist_abc
+  class aggregation_artist : public artist
   {
   public:
 

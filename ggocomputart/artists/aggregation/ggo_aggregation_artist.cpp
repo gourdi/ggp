@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////
 ggo::aggregation_artist::aggregation_artist(int render_width, int render_height)
 :
-artist_abc(render_width, render_height)
+artist(render_width, render_height)
 {
   _threshold_dist = 0.00125f * std::min(render_width, render_height);
   _threshold_hypot = _threshold_dist * _threshold_dist;

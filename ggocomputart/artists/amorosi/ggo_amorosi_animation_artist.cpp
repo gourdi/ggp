@@ -21,7 +21,7 @@ void ggo::amorosi_animation_artist::random_width_interpolator::get_random_data(f
 //////////////////////////////////////////////////////////////
 ggo::amorosi_animation_artist::curve::curve(int render_width, int render_height, const ggo::color_8u & color)
 :
-artist_abc(render_width, render_height),
+artist(render_width, render_height),
 _lines_count(ggo::rand<int>(3, 10)),
 _color(color)
 {

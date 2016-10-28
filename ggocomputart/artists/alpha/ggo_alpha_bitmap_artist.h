@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-    void render_bitmap(void * buffer, int render_width, int render_height) override;
+    void render_bitmap(void * buffer, int render_width, int render_height) const override;
   };
 }
 

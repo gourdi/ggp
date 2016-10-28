@@ -6,10 +6,6 @@
 
 namespace ggo
 {
-    // Reference: http://en.wikipedia.org/wiki/HSL_color_space
-  template <typename data_t>
-  void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b);
-
   template <typename data_t>
   class color
   {
@@ -284,36 +280,10 @@ namespace ggo
 }
 
 /////////////////////////////////////////////////////////////////////
-// Implementation
+// HSV
 namespace ggo
 {
-  /////////////////////////////////////////////////////////////////////
-  template <typename color_t>
-  color_t from_hsv(
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t hue,
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t sat,
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t val)
-  {
-    using floating_point_color_t = color_traits<color_t>::floating_point_t;
-    using real_t = color_traits<floating_point_color_t>::sample_t;
-
-    static_assert(std::is_floating_point<decltype(hue)>::value, "expecting floating point type");
-    static_assert(std::is_floating_point<decltype(sat)>::value, "expecting floating point type");
-    static_assert(std::is_floating_point<decltype(val)>::value, "expecting floating point type");
-    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
-
-    real_t r, g, b;
-    ggo::hsv2rgb(hue, sat, val, r, g, b);
-    floating_point_color_t c(r, g, b);
-
-    return convert_color_to<color_t>(c);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-// Implementation.
-namespace ggo
-{
+  // Reference: http://en.wikipedia.org/wiki/HSL_color_space
   template <typename data_t>
   void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b)
   {
@@ -369,6 +339,27 @@ namespace ggo
       GGO_FAIL();
       break;
     }
+  }
+
+  template <typename color_t>
+  color_t from_hsv(
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t hue,
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t sat,
+    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t val)
+  {
+    using floating_point_color_t = color_traits<color_t>::floating_point_t;
+    using real_t = color_traits<floating_point_color_t>::sample_t;
+
+    static_assert(std::is_floating_point<decltype(hue)>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<decltype(sat)>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<decltype(val)>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+
+    real_t r, g, b;
+    ggo::hsv2rgb(hue, sat, val, r, g, b);
+    floating_point_color_t c(r, g, b);
+
+    return convert_color_to<color_t>(c);
   }
 }
 

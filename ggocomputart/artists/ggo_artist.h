@@ -11,11 +11,11 @@
 
 namespace ggo
 {
-  class artist_abc
+  class artist
   {
   public:
 
-    artist_abc(int render_width, int render_height) : _render_width(render_width), _render_height(render_height) {}
+    artist(int render_width, int render_height) : _render_width(render_width), _render_height(render_height) {}
 
     static ggo::pos2f	map_fill(const ggo::pos2f & point, float inf, float sup, int render_width, int render_height);
            
@@ -39,7 +39,7 @@ namespace ggo
 
     ggo::pos2f get_random_point() const { return get_random_point(_render_width, _render_height); }
     ggo::pos2f get_random_point(float margin) const { return get_random_point(margin, _render_width, _render_height); }
-    ggo::pos2f	get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
+    ggo::pos2f get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
       return get_random_point(margin_left, margin_right, margin_top, margin_bottom, _render_width, _render_height);
     }
 

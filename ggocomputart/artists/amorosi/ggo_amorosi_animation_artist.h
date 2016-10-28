@@ -33,7 +33,7 @@ namespace ggo
       void get_random_data(float & data, float & dt) override;
     };
 
-    class curve : public ggo::artist_abc
+    class curve : public ggo::artist
     {
     public:
 

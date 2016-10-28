@@ -3,15 +3,18 @@
 
 #include "ggo_bitmap_artist_abc.h"
 
-class ggo_bubbles_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class bubbles_artist : public bitmap_artist_abc
+  {
+  public:
 
-        ggo_bubbles_artist(int render_width, int render_height);
+    bubbles_artist(int render_width, int render_height);
 
-private:
+  private:
 
-  void  render_bitmap(uint8_t * buffer) override;
-};
+    void render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif
