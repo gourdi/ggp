@@ -2,45 +2,49 @@
 #define __GGO_CELLS_ARTIST__
 
 #include <ggo_bitmap_artist_abc.h>
-#include <ggo_paint.h>
 
-class ggo_cells_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class cells_artist : public bitmap_artist_abc
+  {
+  public:
 
-			ggo_cells_artist(int render_width, int render_height);
+    cells_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	render_bitmap(uint8_t * buffer) override;
+    void	render_bitmap(void * buffer) const override;
 
-	float	compute_potential(const std::vector<ggo::pos2f> & centers, int x, int y) const;
-	bool	paint_point(uint8_t * buffer, int x, int y, uint8_t r, uint8_t g, uint8_t b, const std::vector<ggo::pos2f> & centers) const;
+    float	compute_potential(const std::vector<ggo::pos2f> & centers, int x, int y) const;
+    bool	paint_point(uint8_t * buffer, int x, int y, uint8_t r, uint8_t g, uint8_t b, const std::vector<ggo::pos2f> & centers) const;
 
-private:
+  private:
 
-	class ggo_cell : public ggo::seed_paintable_shape2d_abc<float>
-	{
-	public:
-		
-                          ggo_cell(float left, float right, float top, float bottom, int render_width, int render_height);
-		
-		ggo::rect_data<float> get_seed_rect() const override;
-		bool                  is_point_inside(float x, float y) const override;
-		
-	private:
-		
-		ggo::pos2f	_centers[3];
-		float			  _inv_render_width;
-		float			  _inv_render_height;
-	};
-	
-	struct ggo_polynom
-	{
-		float	_deg2;
-		float	_deg1;
-		float	_deg0;
-	};
-};
+    class cell
+    {
+    public:
+
+      using real_t = float;
+
+      cell(float left, float right, float top, float bottom, int render_width, int render_height);
+
+      bool                  is_point_inside(float x, float y) const;
+      ggo::rect_data<float> get_seed_rect() const;
+
+    private:
+
+      ggo::pos2f	_centers[3];
+      float			  _inv_render_width;
+      float			  _inv_render_height;
+    };
+
+    struct polynom
+    {
+      float	_deg2;
+      float	_deg1;
+      float	_deg0;
+    };
+  };
+}
 
 #endif

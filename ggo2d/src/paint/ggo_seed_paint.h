@@ -3,105 +3,96 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class seed_paintable_shape2d_abc
-  {
-  public:
-
-    virtual	rect_data<data_t> get_seed_rect() const = 0;
-  };
-
-  template <typename real_t, typename paint_pixel_func>
-  void	paint_seed_shape(int width, int height,
-    const ggo::seed_paintable_shape2d_abc<real_t> & shape,
-    paint_pixel_func paint_pixel);
+  template <typename seed_shape_t, typename paint_pixel_func>
+  void paint_seed_shape(int width, int height, const seed_shape_t & shape, paint_pixel_func paint_pixel);
 }
 
 /////////////////////////////////////////////////////////////////////
 // Implementation.
 namespace ggo
 {
-  template <typename real_t, typename paint_pixel_func>
-  void	paint_seed_shape(int width, int height,
-    const ggo::seed_paintable_shape2d_abc<real_t> & shape,
-    paint_pixel_func paint_pixel)
-{
-  ggo::rect<real_t> rect = shape.get_seed_rect();
-
-  int seed_left   = ggo::clamp<int>(static_cast<int>(rect.left()), 0, width - 1);
-  int seed_right  = ggo::clamp<int>(static_cast<int>(rect.right() + 1), 0, width - 1);
-  int seed_bottom = ggo::clamp<int>(static_cast<int>(rect.bottom()), 0, height - 1);
-  int seed_top    = ggo::clamp<int>(static_cast<int>(rect.top() + 1), 0, height - 1);
-
-  // First paint the seed.
-  for (int y = seed_bottom; y <= seed_top; ++y)
+  template <typename seed_shape_t, typename paint_pixel_func>
+  void paint_seed_shape(int width, int height, const seed_shape_t & shape, paint_pixel_func paint_pixel)
   {
-    for (int x = seed_left; x <= seed_right; ++x)
-    {
-      paint_pixel(x, y);
-    }
-  }
+    using real_t = typename seed_shape_t::real_t;
 
-  // Then make it grow.
-  while (true)
-  {
-    bool done = true;
+    const ggo::rect<real_t> rect = shape.get_seed_rect();
 
-    // Left
-    if (seed_left > 0)
-    {
-      seed_left -= 1;
-      for (int y = seed_bottom; y <= seed_top; ++y)
-      {
-        if (paint_pixel(seed_left, y) == true)
-        {
-          done = false;
-        }
-      }
-    }
+    int seed_left = ggo::clamp<int>(static_cast<int>(rect.left()), 0, width - 1);
+    int seed_right = ggo::clamp<int>(static_cast<int>(rect.right() + 1), 0, width - 1);
+    int seed_bottom = ggo::clamp<int>(static_cast<int>(rect.bottom()), 0, height - 1);
+    int seed_top = ggo::clamp<int>(static_cast<int>(rect.top() + 1), 0, height - 1);
 
-    // Right
-    if (seed_right < width - 1)
+    // First paint the seed.
+    for (int y = seed_bottom; y <= seed_top; ++y)
     {
-      seed_right += 1;
-      for (int y = seed_bottom; y <= seed_top; ++y)
-      {
-        if (paint_pixel(seed_right, y) == true)
-        {
-          done = false;
-        }
-      }
-    }
-
-    // Top
-    if (seed_top < height - 1)
-    {
-      seed_top += 1;
       for (int x = seed_left; x <= seed_right; ++x)
       {
-        if (paint_pixel(x, seed_top) == true)
-        {
-          done = false;
-        }
+        paint_pixel(x, y);
       }
     }
 
-    // Bottom
-    if (seed_bottom > 0)
+    // Then make it grow.
+    while (true)
     {
-      seed_bottom -= 1;
-      for (int x = seed_left; x <= seed_right; ++x)
+      bool done = true;
+
+      // Left
+      if (seed_left > 0)
       {
-        if (paint_pixel(x, seed_bottom) == true)
+        seed_left -= 1;
+        for (int y = seed_bottom; y <= seed_top; ++y)
         {
-          done = false;
+          if (paint_pixel(seed_left, y) == true)
+          {
+            done = false;
+          }
         }
       }
-    }
 
-    if (done == true)
-    {
-      break;
+      // Right
+      if (seed_right < width - 1)
+      {
+        seed_right += 1;
+        for (int y = seed_bottom; y <= seed_top; ++y)
+        {
+          if (paint_pixel(seed_right, y) == true)
+          {
+            done = false;
+          }
+        }
+      }
+
+      // Top
+      if (seed_top < height - 1)
+      {
+        seed_top += 1;
+        for (int x = seed_left; x <= seed_right; ++x)
+        {
+          if (paint_pixel(x, seed_top) == true)
+          {
+            done = false;
+          }
+        }
+      }
+
+      // Bottom
+      if (seed_bottom > 0)
+      {
+        seed_bottom -= 1;
+        for (int x = seed_left; x <= seed_right; ++x)
+        {
+          if (paint_pixel(x, seed_bottom) == true)
+          {
+            done = false;
+          }
+        }
+      }
+
+      if (done == true)
+      {
+        break;
+      }
     }
   }
 }

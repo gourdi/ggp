@@ -1,99 +1,120 @@
 #include "ggo_cells_artist.h"
-#include <cstring>
 #include <ggo_array.h>
-#include <ggo_fill.h>
+#include <ggo_buffer_fill.h>
 #include <ggo_interpolation1d.h>
-#include <ggo_gaussian_blur.h>
-#include <ggo_paint.h>
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_seed_paint.h>
+#include <ggo_sampling_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo_cells_artist::ggo_cells_artist(int render_width, int render_height)
+ggo::cells_artist::cells_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_cells_artist::render_bitmap(uint8_t * buffer)
+void ggo::cells_artist::render_bitmap(void * buffer) const
 {
   const int CELLS_COUNT = 250;
   
-	float				hue1 = ggo::rand_float();
-	float				sat1 = ggo::rand_float();
-	float				hue2 = ggo::rand_float();
-	float				sat2 = ggo::rand_float();
-	float				hue3 = ggo::rand_float();
-	float				sat3 = ggo::rand_float();
-	ggo_polynom	polynom1;
-	ggo_polynom	polynom2;
+	float hue1 = ggo::rand<float>();
+	float sat1 = ggo::rand<float>();
+	float hue2 = ggo::rand<float>();
+	float sat2 = ggo::rand<float>();
+	float hue3 = ggo::rand<float>();
+	float sat3 = ggo::rand<float>();
+	polynom	polynom1;
+	polynom	polynom2;
 
-	polynom1._deg2 = ggo::rand_float(-2, 2);
-	polynom1._deg1 = ggo::rand_float(-2, 2);
-	polynom1._deg0 = ggo::rand_float(-2, 2);
+	polynom1._deg2 = ggo::rand<float>(-2, 2);
+	polynom1._deg1 = ggo::rand<float>(-2, 2);
+	polynom1._deg0 = ggo::rand<float>(-2, 2);
 	
-	polynom2._deg2 = ggo::rand_float(-2, 2);
-	polynom2._deg1 = ggo::rand_float(-2, 2);
-	polynom2._deg0 = ggo::rand_float(-2, 2);
-  
-  auto image = make_image_buffer(buffer);
-	
-	ggo::fill_solid(image, ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(), ggo::rand_float()));
+	polynom2._deg2 = ggo::rand<float>(-2, 2);
+	polynom2._deg1 = ggo::rand<float>(-2, 2);
+	polynom2._deg0 = ggo::rand<float>(-2, 2);
+
+	ggo::fill_solid<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()));
 	
 	for (int counter = 0; counter < CELLS_COUNT; ++counter)
 	{
 		float blur_start = 0.005f * get_render_min_size();
 
-		float pos_x = ggo::rand_float();
-		float pos_y = ggo::rand_float();
-		ggo_cell cell(pos_x - 0.02f, pos_x + 0.02f, pos_y + 0.02f, pos_y - 0.02f, get_render_width(), get_render_height());
+		float pos_x = ggo::rand<float>();
+		float pos_y = ggo::rand<float>();
+		cell cell(pos_x - 0.02f, pos_x + 0.02f, pos_y + 0.02f, pos_y - 0.02f, get_render_width(), get_render_height());
 
-		ggo::color color;
+		ggo::color_8u color;
 		if (polynom1._deg2 * pos_x * pos_x + polynom1._deg1 * pos_x + polynom1._deg0 < pos_y)
 		{
-			color = ggo::color::from_hsv(hue1, sat1, ggo::rand_float());
+			color = ggo::from_hsv<color_8u>(hue1, sat1, ggo::rand<float>());
 		}
 		else
 		if (polynom2._deg2 * pos_x * pos_x + polynom2._deg1 * pos_x + polynom2._deg0 < pos_y)
 		{
-			color = ggo::color::from_hsv(hue2, sat2, ggo::rand_float());
+			color = ggo::from_hsv<color_8u>(hue2, sat2, ggo::rand<float>());
 		}
 		else
 		{
-			color = ggo::color::from_hsv(hue3, sat3, ggo::rand_float());
+			color = ggo::from_hsv<color_8u>(hue3, sat3, ggo::rand<float>());
 		}
 
-		ggo::paint_seed_shape(image, cell, color);
+    using sample_t = sampler<sampling_4x4>;
+
+    auto paint_pixel = [&](int x, int y)
+    {
+      bool done = true;
+      const color_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_width());
+      accumulator<color_8u> acc;
+
+      auto sample_shape = [&](float x_f, float y_f)
+      {
+        if (cell.is_point_inside(x_f, y_f) == true)
+        {
+          acc.add(color);
+          done = false;
+        }
+        else
+        {
+          acc.add(bkgd_color);
+        }
+      };
+
+      sample_t::sample_pixel<float>(x, y, sample_shape);
+
+      write_pixel<rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_width(), acc.div<sample_t::samples_count>());
+
+      return !done;
+    };
+
+		ggo::paint_seed_shape(get_render_width(), get_render_height(), cell, paint_pixel);
         
     // Blur.
     if (counter % 10 == 0)
     {
-      float variance = 0.0005f * get_render_min_size();
+      float stddev = 0.0005f * get_render_min_size();
       
-      ggo::array_uint8 tmp_buffer(3 * get_render_width() * get_render_height());
-
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, tmp_buffer.data() + 0, get_render_width(), get_render_height(), variance, 0.001f);
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, tmp_buffer.data() + 1, get_render_width(), get_render_height(), variance, 0.001f);
-      ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, tmp_buffer.data() + 2, get_render_width(), get_render_height(), variance, 0.001f);
-      
-      memcpy(buffer, tmp_buffer.data(), tmp_buffer.get_count());
+      gaussian_blur2d<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
     }
 	}
 }
 
 //////////////////////////////////////////////////////////////
-ggo_cells_artist::ggo_cell::ggo_cell(float left, float right, float top, float bottom, int render_width, int render_height)
+ggo::cells_artist::cell::cell(float left, float right, float top, float bottom, int render_width, int render_height)
 {
 	_inv_render_width	= 1.f / render_width;
 	_inv_render_height	= 1.f / render_height;
 	
-	_centers[0] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
-	_centers[1] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
-	_centers[2] = ggo::pos2f(ggo::rand_float(left, right), ggo::rand_float(bottom, top));
+	_centers[0] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
+	_centers[1] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
+	_centers[2] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
 }
 
 //////////////////////////////////////////////////////////////
-ggo::rect_data<float> ggo_cells_artist::ggo_cell::get_seed_rect() const
+ggo::rect_data<float> ggo::cells_artist::cell::get_seed_rect() const
 {
 	float left	  = _centers[0].get<0>();
 	float right	  = _centers[0].get<0>();
@@ -119,7 +140,7 @@ ggo::rect_data<float> ggo_cells_artist::ggo_cell::get_seed_rect() const
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_cells_artist::ggo_cell::is_point_inside(float x, float y) const
+bool ggo::cells_artist::cell::is_point_inside(float x, float y) const
 {
 	float potential = 0;
 	float x_map = x * _inv_render_width;
