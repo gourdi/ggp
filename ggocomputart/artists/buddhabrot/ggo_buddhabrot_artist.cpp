@@ -1,50 +1,47 @@
 #include "ggo_buddhabrot_artist.h"
 #include <ggo_color.h>
-#include <ggo_paint.h>
 #include <algorithm>
 #include <iostream>
 #include <cstring>
 
 //////////////////////////////////////////////////////////////
-ggo_buddhabrot_artist::ggo_buddhabrot_artist(int render_width, int render_height)
+ggo::buddhabrot_artist::buddhabrot_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height),
-_accumulation_r(render_width, render_height),
-_accumulation_g(render_width, render_height),
-_accumulation_b(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {	
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_buddhabrot_artist::setup_seed_area()
+void ggo::buddhabrot_artist::setup_seed_area(int escape_threshold_r, int escape_threshold_g, int escape_threshold_b,
+  std::complex<double> & center, double & range)
 {
 	int counter_max = 0;
 	for (int j = 0; j < 100; ++j)
 	{
-		std::complex<double> center = std::complex<double>(ggo::rand_float(-2, 2), ggo::rand_float(-2, 2));
-		double range = ggo::rand_float(0.2f, 0.3f);
+		std::complex<double> center_cur = std::complex<double>(ggo::rand<float>(-2, 2), ggo::rand<float>(-2, 2));
+		double range_cur = ggo::rand<float>(0.2f, 0.3f);
 		
 		int counter = 0;
 		for (int i = 0; i < 100; ++i)
 		{
-			double real = center.real() + ggo::rand_double(-range, range);
-			double imag = center.imag() + ggo::rand_double(-range, range);
+			double real = center_cur.real() + ggo::rand<double>(-range_cur, range_cur);
+			double imag = center_cur.imag() + ggo::rand<double>(-range_cur, range_cur);
 			std::complex<double> p(real, imag);
 			
 			if (discard_point(p) == false)
 			{
-				if (iterate(p, _escape_threshold_r) == true)
+				if (iterate(p, escape_threshold_r) == true)
 				{
 					++counter;
 				}
 			
-				if (iterate(p, _escape_threshold_g) == true)
+				if (iterate(p, escape_threshold_g) == true)
 				{
 					++counter;
 				}
 			
-				if (iterate(p, _escape_threshold_b) == true)
+				if (iterate(p, escape_threshold_b) == true)
 				{
 					++counter;
 				}
@@ -53,14 +50,14 @@ void ggo_buddhabrot_artist::setup_seed_area()
 		
 		if (counter > counter_max)
 		{
-			_center = center;
-			_range = range;
+			center = center_cur;
+			range = range_cur;
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_buddhabrot_artist::discard_point(const std::complex<double> & p)
+bool ggo::buddhabrot_artist::discard_point(const std::complex<double> & p)
 {
 	double x = p.real();
 	double y = p.real();
@@ -84,14 +81,15 @@ bool ggo_buddhabrot_artist::discard_point(const std::complex<double> & p)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & accumulation) const
+void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & accumulation,
+  const std::complex<double> & center, double range) const
 {
 	std::complex<double> z(0, 0);
 
 	while (true)
 	{
-		double real = _center.real() + ggo::rand_double(-_range, _range);
-		double imag = _center.imag() + ggo::rand_double(-_range, _range);
+		double real = center.real() + ggo::rand<double>(-range, range);
+		double imag = center.imag() + ggo::rand<double>(-range, range);
 		z = std::complex<double>(real, imag);
 		
 		if (discard_point(z) == false)
@@ -107,7 +105,7 @@ void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & a
 	{	
 		for (const auto & complex : points)
 		{
-			ggo::pos2f point(static_cast<float>(complex.real() - _center.real()), static_cast<float>(complex.imag() - _center.imag()));
+			ggo::pos2f point(static_cast<float>(complex.real() - center.real()), static_cast<float>(complex.imag() - center.imag()));
 	
 			point = map_fit(point, -1, 1);
 
@@ -123,28 +121,35 @@ void ggo_buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & a
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_buddhabrot_artist::render_bitmap(uint8_t * buffer)
+void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 {
 	memset(buffer, 0, 3 * get_render_width() * get_render_height());
-  _accumulation_r.fill(0);
-	_accumulation_g.fill(0);
-	_accumulation_b.fill(0);
+
+  ggo::array<int, 2> accumulation_r(get_render_width(), get_render_height());
+  ggo::array<int, 2> accumulation_g(get_render_width(), get_render_height());
+  ggo::array<int, 2> accumulation_b(get_render_width(), get_render_height());
+
+  accumulation_r.fill(0);
+	accumulation_g.fill(0);
+	accumulation_b.fill(0);
     
     // We want the sum of the 3 escape thresholds to be constant.
 	int escape_thresholds[3];
-	escape_thresholds[0] = ggo::rand_int(20, 10000);
-	escape_thresholds[1] = ggo::rand_int(20, 10000 - escape_thresholds[0]);
+	escape_thresholds[0] = ggo::rand<int>(20, 10000);
+	escape_thresholds[1] = ggo::rand<int>(20, 10000 - escape_thresholds[0]);
 	escape_thresholds[2] = 10000 - escape_thresholds[1] - escape_thresholds[0];
 	
 	int indexes[3] = {0, 1, 2};
 	std::random_shuffle(indexes, indexes + 3);
 	
-	_escape_threshold_r = escape_thresholds[indexes[0]];
-	_escape_threshold_g = escape_thresholds[indexes[1]];
-	_escape_threshold_b = escape_thresholds[indexes[2]];
+	int escape_threshold_r = escape_thresholds[indexes[0]];
+	int escape_threshold_g = escape_thresholds[indexes[1]];
+	int escape_threshold_b = escape_thresholds[indexes[2]];
 	
 	// Accumulate.
-	setup_seed_area();
+  std::complex<double> center;
+  double range;
+	setup_seed_area(escape_threshold_r, escape_threshold_g, escape_threshold_b, center, range);
 	
 	int counter_max = get_render_width() * get_render_height() / 1000;	
 	
@@ -152,31 +157,31 @@ void ggo_buddhabrot_artist::render_bitmap(uint8_t * buffer)
 	{	
 		if (counter == counter_max / 2)
 		{
-			setup_seed_area();
+			setup_seed_area(escape_threshold_r, escape_threshold_g, escape_threshold_b, center, range);
 		}
 
 		for (int i = 0; i < 12000; ++i)
 		{
-			process(_escape_threshold_r, _accumulation_r);
-			process(_escape_threshold_g, _accumulation_g);
-			process(_escape_threshold_b, _accumulation_b);	
+			process(escape_threshold_r, accumulation_r, center, range);
+			process(escape_threshold_g, accumulation_g, center, range);
+			process(escape_threshold_b, accumulation_b, center, range);	
 		}
 	}
 	
-	uint8_t * it = buffer;
+	uint8_t * it = static_cast<uint8_t *>(buffer);
 	for (int y = 0; y < get_render_height(); ++y)
 	{
 		for (int x = 0; x < get_render_height(); ++x)
 		{
-			*it++ = std::min(_accumulation_r(x, y), 255);
-			*it++ = std::min(_accumulation_g(x, y), 255);
-			*it++ = std::min(_accumulation_b(x, y), 255);
+			*it++ = std::min(accumulation_r(x, y), 255);
+			*it++ = std::min(accumulation_g(x, y), 255);
+			*it++ = std::min(accumulation_b(x, y), 255);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_buddhabrot_artist::iterate(const std::complex<double> & p, int escape_threshold)
+bool ggo::buddhabrot_artist::iterate(const std::complex<double> & p, int escape_threshold)
 {
 	std::vector<std::complex<double> > points;
 	
@@ -184,7 +189,7 @@ bool ggo_buddhabrot_artist::iterate(const std::complex<double> & p, int escape_t
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_buddhabrot_artist::iterate(const std::complex<double> & p, std::vector<std::complex<double> > & points, int escape_threshold)
+bool ggo::buddhabrot_artist::iterate(const std::complex<double> & p, std::vector<std::complex<double> > & points, int escape_threshold)
 {
 	points.clear();
 
