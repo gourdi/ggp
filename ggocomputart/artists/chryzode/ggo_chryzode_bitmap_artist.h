@@ -3,15 +3,18 @@
 
 #include <ggo_bitmap_artist_abc.h>
 
-class ggo_chryzode_bitmap_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class chryzode_bitmap_artist : public bitmap_artist_abc
+  {
+  public:
 
-        ggo_chryzode_bitmap_artist(int render_width, int render_height);
+    chryzode_bitmap_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void  render_bitmap(uint8_t * buffer) override;
-};
+    void render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif

@@ -1,31 +1,28 @@
 #ifndef __GGO_CHRYZODE_ARTIST__
 #define __GGO_CHRYZODE_ARTIST__
 
-#include <ggo_artist_abc.h>
+#include <ggo_artist.h>
 
 namespace ggo
 {
-  class gray_image_data_uint8;
-  class pixel_sampler_abc;
+  struct chryzode_params
+  {
+    float _multiplier1;
+    float _multiplier2;
+    float _offset1;
+    float _offset2;
+    int _modulo_start;
+    int _modulo_end;
+  };
+
+  class chryzode_artist : public artist
+  {
+  public:
+
+    chryzode_artist(int width, int height);
+
+    void render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const;
+  };
 }
-
-struct ggo_chryzode_params
-{
-  float _multiplier1;
-  float _multiplier2;
-  float _offset1;
-  float _offset2;
-  int _modulo_start;
-  int _modulo_end;
-};
-
-class ggo_chryzode_artist : public ggo_artist_abc
-{
-public:
-
-                ggo_chryzode_artist(int width, int height);
-
-          void  render_chryzode(uint8_t * buffer, float radius, const ggo_chryzode_params & params, float hue_start, float hue_end) const;
-};
 
 #endif

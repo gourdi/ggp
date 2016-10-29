@@ -129,6 +129,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  ggo::pos2f artist::get_center() const
+  {
+    return ggo::pos2f(static_cast<float>(_render_width - 1) / 2, static_cast<float>(_render_height - 1) / 2);
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::pos2f artist::horz_mirror(const ggo::pos2f & p, int render_height)
   {
     return ggo::pos2f(p.get<0>(), render_height - p.get<1>());

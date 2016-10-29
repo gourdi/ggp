@@ -47,6 +47,8 @@ namespace ggo
     void        map_fit(ggo::rect_float & rect, float inf, float sup) const;
     void        map_fit(ggo::disc_float & disc, float inf, float sup) const;
 
+    ggo::pos2f get_center() const;
+
     ggo::pos2f horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _render_height); }
     ggo::pos2f vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _render_width); }
 

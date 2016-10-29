@@ -1,22 +1,19 @@
 #include "ggo_chryzode_artist.h"
-#include <ggo_gaussian_blur.h>
-#include <ggo_paint.h>
-#include <ggo_layer.h>
-#include <ggo_gray_image_buffer.h>
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo_chryzode_artist::ggo_chryzode_artist(int render_width, int render_height)
+ggo::chryzode_artist::chryzode_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height)
+artist(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_chryzode_artist::render_chryzode(uint8_t * buffer, float radius, const ggo_chryzode_params & params, float hue_start, float hue_end) const
+void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.
-  ggo::gray_image_buffer_float image_data(get_render_width(), get_render_height());
-  image_data.fill(0);
+  std::vector<float> buffer_32f(get_render_width() * get_render_height(), 0.f);
 
   // Render the chryzode.
   for (int modulo = params._modulo_start; modulo < params._modulo_end; ++modulo)
@@ -42,21 +39,22 @@ void ggo_chryzode_artist::render_chryzode(uint8_t * buffer, float radius, const 
       p2 = middle - 1000.f * diff;
 
       // Paint the segment.
-      ggo::paint(image_data,
-                 std::make_shared<ggo::extended_segment_float>(p1, p2, 0.005f * radius),
-                 1, 1, std::make_shared<ggo::gray_additive_blender>(),
-                 ggo::pixel_sampler_2X2());
+      auto brush = [](int x, int y) { return 1.f; };
+      auto blend = [](int x, int y, float bkgd_color, float brush_color) { return bkgd_color + brush_color; };
+      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_render_width(), get_render_height(), 3 * get_render_width(),
+        ggo::extended_segment_float(p1, p2, 0.005f * radius), brush, blend);
     }
   }
   
   // Convert from gray to rgb.
+  uint8_t * buffer_8u = static_cast<uint8_t *>(buffer);
   for (int i = get_render_width() * get_render_height() - 1; i >= 0; --i)
   {
-    float coef = image_data[i] / 512; // Normalize.
+    float coef = buffer_32f[i] / 512; // Normalize.
     float hue = ggo::map<float>(coef, 0, 1, hue_start, hue_end);
-    ggo::color color = ggo::color::from_hsv(hue, 1 - coef, coef);
-    buffer[3 * i + 0] = color.r8();
-    buffer[3 * i + 1] = color.g8();
-    buffer[3 * i + 2] = color.b8();
+    const ggo::color_8u color = from_hsv<ggo::color_8u>(hue, 1 - coef, coef);
+    buffer_8u[3 * i + 0] = color._r;
+    buffer_8u[3 * i + 1] = color._g;
+    buffer_8u[3 * i + 2] = color._b;
   }
 }
