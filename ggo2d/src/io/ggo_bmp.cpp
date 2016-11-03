@@ -19,9 +19,9 @@ namespace
       {
         auto c = ggo::read_pixel<pbf>(ptr);
         ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
-        ofs.write(reinterpret_cast<char*>(&rgb._b), 1);
-        ofs.write(reinterpret_cast<char*>(&rgb._g), 1);
-        ofs.write(reinterpret_cast<char*>(&rgb._r), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
         ptr = ggo::ptr_offset(ptr, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size);
       }
     }

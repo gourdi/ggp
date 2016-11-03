@@ -46,8 +46,8 @@ GGO_TEST(shapes2d, segment)
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(0, -1, 2, -1)) == false);
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(7, 3, 6, 7)) == false);
   GGO_CHECK(segment.intersect_segment(ggo::segment_float(3, 2, 5, 2), intersect) == true);
-  GGO_CHECK_FABS(intersect.get<0>(), 4);
-  GGO_CHECK_FABS(intersect.get<1>(), 2);
+  GGO_CHECK_FABS(intersect.x(), 4);
+  GGO_CHECK_FABS(intersect.y(), 2);
 
   segment = ggo::segment_float({ 2.f, 1.f }, { 4.f, 3.f });
   GGO_CHECK_FABS(segment.dist_to_point(1.f, 1.f), 1.f);
@@ -181,12 +181,12 @@ GGO_TEST(shapes2d, polygon)
     polygon.add_points(p1, p2, p3);
 
     GGO_CHECK(polygon.get_points_count() == 3); 
-    GGO_CHECK_FABS(polygon.get_point(0).get<0>(), 1);
-    GGO_CHECK_FABS(polygon.get_point(0).get<1>(), 2);
-    GGO_CHECK_FABS(polygon.get_point(1).get<0>(), 3);
-    GGO_CHECK_FABS(polygon.get_point(1).get<1>(), 4);
-    GGO_CHECK_FABS(polygon.get_point(2).get<0>(), 5);
-    GGO_CHECK_FABS(polygon.get_point(2).get<1>(), 6);
+    GGO_CHECK_FABS(polygon.get_point(0).x(), 1);
+    GGO_CHECK_FABS(polygon.get_point(0).y(), 2);
+    GGO_CHECK_FABS(polygon.get_point(1).x(), 3);
+    GGO_CHECK_FABS(polygon.get_point(1).y(), 4);
+    GGO_CHECK_FABS(polygon.get_point(2).x(), 5);
+    GGO_CHECK_FABS(polygon.get_point(2).y(), 6);
   }
 
   {
@@ -381,8 +381,8 @@ GGO_TEST(shapes2d, rect_data)
     auto rect = ggo::rect_data_union(ggo::rect_data<float>{ {1.f, -1.f}, 2.f, 3.f },
                                      ggo::rect_data<float>{ {2.f, 1.f}, 2.f, 2.f });
 
-    GGO_CHECK_FABS(rect._pos.get<0>(), 1);
-    GGO_CHECK_FABS(rect._pos.get<1>(), -1);
+    GGO_CHECK_FABS(rect._pos.x(), 1);
+    GGO_CHECK_FABS(rect._pos.y(), -1);
     GGO_CHECK_FABS(rect._width, 3);
     GGO_CHECK_FABS(rect._height, 4);
   }
@@ -411,14 +411,14 @@ GGO_TEST(shapes2d, rect_data)
     ggo::rect_data<float> rect_data2{ { 2.f, 1.f }, 3.f, 2.f };
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data1, rect_data2, result) == true);
-    GGO_CHECK_FABS(result._pos.get<0>(), 2);
-    GGO_CHECK_FABS(result._pos.get<1>(), 1);
+    GGO_CHECK_FABS(result._pos.x(), 2);
+    GGO_CHECK_FABS(result._pos.y(), 1);
     GGO_CHECK_FABS(result._width, 1);
     GGO_CHECK_FABS(result._height, 2);
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data2, rect_data1, result) == true);
-    GGO_CHECK_FABS(result._pos.get<0>(), 2);
-    GGO_CHECK_FABS(result._pos.get<1>(), 1);
+    GGO_CHECK_FABS(result._pos.x(), 2);
+    GGO_CHECK_FABS(result._pos.y(), 1);
     GGO_CHECK_FABS(result._width, 1);
     GGO_CHECK_FABS(result._height, 2);
   }
@@ -429,14 +429,14 @@ GGO_TEST(shapes2d, rect_data)
     ggo::rect_data<float> rect_data2{ { 3.f, 1.f }, 2.f, 2.f };
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data1, rect_data2, result) == true);
-    GGO_CHECK_FABS(result._pos.get<0>(), 3);
-    GGO_CHECK_FABS(result._pos.get<1>(), 2);
+    GGO_CHECK_FABS(result._pos.x(), 3);
+    GGO_CHECK_FABS(result._pos.y(), 2);
     GGO_CHECK_FABS(result._width, 2);
     GGO_CHECK_FABS(result._height, 1);
 
     GGO_CHECK(ggo::rect_data_intersection(rect_data2, rect_data1, result) == true);
-    GGO_CHECK_FABS(result._pos.get<0>(), 3);
-    GGO_CHECK_FABS(result._pos.get<1>(), 2);
+    GGO_CHECK_FABS(result._pos.x(), 3);
+    GGO_CHECK_FABS(result._pos.y(), 2);
     GGO_CHECK_FABS(result._width, 2);
     GGO_CHECK_FABS(result._height, 1);
   }

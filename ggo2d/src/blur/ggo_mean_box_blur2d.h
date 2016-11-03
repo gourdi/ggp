@@ -40,22 +40,25 @@ namespace ggo
     static ggo::color_16u divide(const color_16u c, const int div)
     {
       return ggo::color_16u(
-        ggo::round_div(c._r, static_cast<uint16_t>(div)),
-        ggo::round_div(c._g, static_cast<uint16_t>(div)),
-        ggo::round_div(c._b, static_cast<uint16_t>(div)));
+        ggo::round_div(c.r(), static_cast<uint16_t>(div)),
+        ggo::round_div(c.g(), static_cast<uint16_t>(div)),
+        ggo::round_div(c.b(), static_cast<uint16_t>(div)));
     }
 
     static ggo::color_16u convert(const ggo::color_8u & c)
     {
-      return ggo::color_16u(c._r, c._g, c._b);
+      return ggo::color_16u(
+        static_cast<uint16_t>(c.r()),
+        static_cast<uint16_t>(c.g()),
+        static_cast<uint16_t>(c.b()));
     }
 
     static ggo::color_8u convert(const ggo::color_16u & c)
     {
       return ggo::color_8u(
-        static_cast<uint8_t>(c._r),
-        static_cast<uint8_t>(c._g),
-        static_cast<uint8_t>(c._b));
+        static_cast<uint8_t>(c.r()),
+        static_cast<uint8_t>(c.g()),
+        static_cast<uint8_t>(c.b()));
     }
   };
 

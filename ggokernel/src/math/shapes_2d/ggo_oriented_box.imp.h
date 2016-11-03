@@ -42,7 +42,7 @@ namespace ggo
   template <typename data_t>
   bool oriented_box<data_t>::is_point_inside(data_t x, data_t y) const
   {
-    ggo::pos2<data_t> diff(x - _pos.template get<0>(), y - _pos.template get<1>());
+    ggo::pos2<data_t> diff(x - _pos.x(), y - _pos.y());
 
     data_t dot1 = ggo::dot(diff, _dir);
     if (std::abs(dot1) > _size1)

@@ -25,11 +25,11 @@ namespace ggo
 
     ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const
     {
-      const ggo::color_32u bkgd_color_32u(bkgd_color._r, bkgd_color._g, bkgd_color._b);
-      const ggo::color_32u brush_color_32u(brush_color._r, brush_color._g, brush_color._b);
+      const ggo::color_32u bkgd_color_32u(static_cast<uint32_t>(bkgd_color.r()), static_cast<uint32_t>(bkgd_color.g()), static_cast<uint32_t>(bkgd_color.b()));
+      const ggo::color_32u brush_color_32u(static_cast<uint32_t>(brush_color.r()), static_cast<uint32_t>(brush_color.g()), static_cast<uint32_t>(brush_color.b()));
       const ggo::color_32u output_color_32u(ggo::fixed_point_div<16>(_weight_bkgd * bkgd_color_32u + _weight_brush * brush_color_32u));
 
-      return ggo::color_8u(output_color_32u._r, output_color_32u._g, output_color_32u._b);
+      return ggo::color_8u(static_cast<uint8_t>(output_color_32u.r()), static_cast<uint8_t>(output_color_32u.g()), static_cast<uint8_t>(output_color_32u.b()));
     }
 
     const uint32_t _weight_brush;

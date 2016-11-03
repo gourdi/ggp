@@ -4,12 +4,12 @@ namespace ggo
   template <typename data_t>
   void triangle2d<data_t>::move(data_t dx, data_t dy)
   {
-    _v1.template get<0>() += dx;
-    _v1.template get<1>() += dy;
-    _v2.template get<0>() += dx;
-    _v2.template get<1>() += dy;
-    _v3.template get<0>() += dx;
-    _v3.template get<1>() += dy;
+    _v1.x() += dx;
+    _v1.y() += dy;
+    _v2.x() += dx;
+    _v2.y() += dy;
+    _v3.x() += dx;
+    _v3.y() += dy;
   }
   
   //////////////////////////////////////////////////////////////////
@@ -22,9 +22,9 @@ namespace ggo
     ggo::vec2<data_t> d3(_v3 - _v1);
     
     data_t m[2][2] = {
-      {d2.template get<0>(), d3.template get<0>()},
-      {d2.template get<1>(), d3.template get<1>()}};
-    data_t c[2] = {d.template get<0>(), d.template get<1>()};
+      {d2.x(), d3.x()},
+      {d2.y(), d3.y()}};
+    data_t c[2] = {d.x(), d.y()};
     data_t s[2] = {0, 0};
     
     if (ggo::linsolve2d(m, c, s) == false)
@@ -49,10 +49,10 @@ namespace ggo
   template <typename data_t>
   rect_data<data_t> triangle2d<data_t>::get_bounding_rect() const
   {
-    data_t left    = ggo::min(_v1.template get<0>(), _v2.template get<0>(), _v3.template get<0>());
-    data_t right   = ggo::max(_v1.template get<0>(), _v2.template get<0>(), _v3.template get<0>());
-    data_t bottom  = ggo::min(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>());
-    data_t top     = ggo::max(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>());
+    data_t left    = ggo::min(_v1.x(), _v2.x(), _v3.x());
+    data_t right   = ggo::max(_v1.x(), _v2.x(), _v3.x());
+    data_t bottom  = ggo::min(_v1.y(), _v2.y(), _v3.y());
+    data_t top     = ggo::max(_v1.y(), _v2.y(), _v3.y());
     
     return { {left, bottom}, right - left, top - bottom };
   }
@@ -61,14 +61,14 @@ namespace ggo
   template <typename data_t>
   rect_intersection triangle2d<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.template get<0>();
-    data_t bottom  = rect_data._pos.template get<1>();
+    data_t left    = rect_data._pos.x();
+    data_t bottom  = rect_data._pos.y();
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
     
-    if ((_v1.template get<0>() >= left && _v1.template get<0>() <= right && _v1.template get<1>() >= bottom && _v1.template get<1>() <= top) &&
-        (_v2.template get<0>() >= left && _v2.template get<0>() <= right && _v2.template get<1>() >= bottom && _v2.template get<1>() <= top) &&
-        (_v3.template get<0>() >= left && _v3.template get<0>() <= right && _v3.template get<1>() >= bottom && _v3.template get<1>() <= top))
+    if ((_v1.x() >= left && _v1.x() <= right && _v1.y() >= bottom && _v1.y() <= top) &&
+        (_v2.x() >= left && _v2.x() <= right && _v2.y() >= bottom && _v2.y() <= top) &&
+        (_v3.x() >= left && _v3.x() <= right && _v3.y() >= bottom && _v3.y() <= top))
     {
       return rect_intersection::shape_in_rect;
     }
@@ -81,37 +81,37 @@ namespace ggo
       return rect_intersection::rect_in_shape;
     }
     
-    if (right  < ggo::min(_v1.template get<0>(), _v2.template get<0>(), _v3.template get<0>()) ||
-        left   > ggo::max(_v1.template get<0>(), _v2.template get<0>(), _v3.template get<0>()) ||
-        top    < ggo::min(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>()) ||
-        bottom > ggo::max(_v1.template get<1>(), _v2.template get<1>(), _v3.template get<1>()))
+    if (right  < ggo::min(_v1.x(), _v2.x(), _v3.x()) ||
+        left   > ggo::max(_v1.x(), _v2.x(), _v3.x()) ||
+        top    < ggo::min(_v1.y(), _v2.y(), _v3.y()) ||
+        bottom > ggo::max(_v1.y(), _v2.y(), _v3.y()))
     {
       return rect_intersection::disjoints;
     }
     
     segment<data_t> s12(_v1, _v2);
-    if (s12.same_side(_v3.template get<0>(), _v3.template get<1>(), left,  top   ) == false &&
-        s12.same_side(_v3.template get<0>(), _v3.template get<1>(), right, top   ) == false &&
-        s12.same_side(_v3.template get<0>(), _v3.template get<1>(), right, bottom) == false &&
-        s12.same_side(_v3.template get<0>(), _v3.template get<1>(), left,  bottom) == false)
+    if (s12.same_side(_v3.x(), _v3.y(), left,  top   ) == false &&
+        s12.same_side(_v3.x(), _v3.y(), right, top   ) == false &&
+        s12.same_side(_v3.x(), _v3.y(), right, bottom) == false &&
+        s12.same_side(_v3.x(), _v3.y(), left,  bottom) == false)
     {
       return rect_intersection::disjoints;
     }
     
     segment<data_t> s23(_v2, _v3);
-    if (s23.same_side(_v1.template get<0>(), _v1.template get<1>(), left,  top   ) == false &&
-        s23.same_side(_v1.template get<0>(), _v1.template get<1>(), right, top   ) == false &&
-        s23.same_side(_v1.template get<0>(), _v1.template get<1>(), right, bottom) == false &&
-        s23.same_side(_v1.template get<0>(), _v1.template get<1>(), left,  bottom) == false)
+    if (s23.same_side(_v1.x(), _v1.y(), left,  top   ) == false &&
+        s23.same_side(_v1.x(), _v1.y(), right, top   ) == false &&
+        s23.same_side(_v1.x(), _v1.y(), right, bottom) == false &&
+        s23.same_side(_v1.x(), _v1.y(), left,  bottom) == false)
     {
       return rect_intersection::disjoints;
     }
     
         segment<data_t> s13(_v1, _v3);
-    if (s13.same_side(_v2.template get<0>(), _v2.template get<1>(), left,  top   ) == false &&
-        s13.same_side(_v2.template get<0>(), _v2.template get<1>(), right, top   ) == false &&
-        s13.same_side(_v2.template get<0>(), _v2.template get<1>(), right, bottom) == false &&
-        s13.same_side(_v2.template get<0>(), _v2.template get<1>(), left,  bottom) == false)
+    if (s13.same_side(_v2.x(), _v2.y(), left,  top   ) == false &&
+        s13.same_side(_v2.x(), _v2.y(), right, top   ) == false &&
+        s13.same_side(_v2.x(), _v2.y(), right, bottom) == false &&
+        s13.same_side(_v2.x(), _v2.y(), left,  bottom) == false)
     {
       return rect_intersection::disjoints;
     }
@@ -123,8 +123,8 @@ namespace ggo
   template <typename data_t>
   data_t triangle2d<data_t>::area() const
   {
-    return std::abs((_v2.template get<0>() - _v1.template get<0>()) * (_v3.template get<1>() - _v1.template get<1>()) -
-                    (_v3.template get<0>() - _v1.template get<0>()) * (_v2.template get<1>() - _v1.template get<1>())) / 2;
+    return std::abs((_v2.x() - _v1.x()) * (_v3.y() - _v1.y()) -
+                    (_v3.x() - _v1.x()) * (_v2.y() - _v1.y())) / 2;
   }
 
   //////////////////////////////////////////////////////////////////

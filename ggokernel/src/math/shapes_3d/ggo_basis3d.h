@@ -22,9 +22,9 @@ namespace ggo
       
     void                  reset();
   
-    void                  set_pos(T x, T y, T z) { _pos.template get<0>() = x; _pos.template get<1>() = y; _pos.template get<2>() = z; }
+    void                  set_pos(T x, T y, T z) { _pos.x() = x; _pos.y() = y; _pos.z() = z; }
     void                  move(const ggo::vec3<T> & move) { _pos += move; }
-    void                  move(T x, T y, T z) { _pos.template get<0>() += x; _pos.template get<1>() += y; _pos.template get<2>() += z; }
+    void                  move(T x, T y, T z) { _pos.x() += x; _pos.y() += y; _pos.z() += z; }
   
     void                  rotate_x(T angle);
     void                  rotate_y(T angle);
@@ -70,6 +70,6 @@ namespace ggo
   template <typename T>
   std::ostream & operator<<(std::ostream & os, const basis3d<T> & param)
   {
-    return os << "(" << param.pos() << ", " << param.template get<0>() << ", " << param.template get<1>() << ", " << param.template get<2>() << ")";
+    return os << "(" << param.pos() << ", " << param.x() << ", " << param.y() << ", " << param.z() << ")";
   }
 }

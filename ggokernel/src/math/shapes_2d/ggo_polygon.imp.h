@@ -14,20 +14,20 @@ namespace ggo
 
     polygon.clear();
 
-    data_t x1 = center.template get<0>() + size1*norm.template get<0>() + size2*norm.template get<1>();
-    data_t y1 = center.template get<1>() + size1*norm.template get<1>() - size2*norm.template get<0>();
+    data_t x1 = center.x() + size1*norm.x() + size2*norm.y();
+    data_t y1 = center.y() + size1*norm.y() - size2*norm.x();
     polygon.add_point(x1, y1);
 
-    data_t x2 = center.template get<0>() + size1*norm.template get<0>() - size2*norm.template get<1>();
-    data_t y2 = center.template get<1>() + size1*norm.template get<1>() + size2*norm.template get<0>();
+    data_t x2 = center.x() + size1*norm.x() - size2*norm.y();
+    data_t y2 = center.y() + size1*norm.y() + size2*norm.x();
     polygon.add_point(x2, y2);
 
-    data_t x3 = center.template get<0>() - size1*norm.template get<0>() - size2*norm.template get<1>();
-    data_t y3 = center.template get<1>() - size1*norm.template get<1>() + size2*norm.template get<0>();
+    data_t x3 = center.x() - size1*norm.x() - size2*norm.y();
+    data_t y3 = center.y() - size1*norm.y() + size2*norm.x();
     polygon.add_point(x3, y3);
 
-    data_t x4 = center.template get<0>() - size1*norm.template get<0>() + size2*norm.template get<1>();
-    data_t y4 = center.template get<1>() - size1*norm.template get<1>() - size2*norm.template get<0>();
+    data_t x4 = center.x() - size1*norm.x() + size2*norm.y();
+    data_t y4 = center.y() - size1*norm.y() - size2*norm.x();
     polygon.add_point(x4, y4);
   }
 
@@ -56,7 +56,7 @@ namespace ggo
       GGO_FAIL();
       return -1;
     case 1:
-      return ggo::distance(x, y, _points.front().template get<0>(), _points.front().template get<1>());
+      return ggo::distance(x, y, _points.front().x(), _points.front().y());
     }
 
     if (is_point_inside(x, y) == true)
@@ -86,18 +86,18 @@ namespace ggo
     }
 
     auto it 	     = _points.begin();
-    data_t left    = it->template get<0>();
-    data_t right   = it->template get<0>();
-    data_t bottom  = it->template get<1>();
-    data_t top     = it->template get<1>();
+    data_t left    = it->x();
+    data_t right   = it->x();
+    data_t bottom  = it->y();
+    data_t top     = it->y();
     it++;
 
     while (it != _points.end())
     {
-      left	  = std::min<data_t>(it->template get<0>(), left);
-      right	  = std::max<data_t>(it->template get<0>(), right);
-      bottom	= std::min<data_t>(it->template get<1>(), bottom);
-      top		  = std::max<data_t>(it->template get<1>(), top);
+      left	  = std::min<data_t>(it->x(), left);
+      right	  = std::max<data_t>(it->x(), right);
+      bottom	= std::min<data_t>(it->y(), bottom);
+      top		  = std::max<data_t>(it->y(), top);
 
       it++;
     }
@@ -120,10 +120,10 @@ namespace ggo
     }
 
     data_t angle(0);
-    data_t angle1 = atan2(_points.back().template get<1>() - y, _points.back().template get<0>() - x);
+    data_t angle1 = atan2(_points.back().y() - y, _points.back().x() - x);
     for (const auto & point : _points)
     {
-      data_t angle2 = atan2(point.template get<1>() - y, point.template get<0>() - x);
+      data_t angle2 = atan2(point.y() - y, point.x() - x);
       data_t dangle = angle2 - angle1;
       if (dangle >  pi<data_t>()) { dangle -= 2 * pi<data_t>(); }
       if (dangle < -pi<data_t>()) { dangle += 2 * pi<data_t>(); }
@@ -178,7 +178,7 @@ namespace ggo
   template <typename data_t>
   data_t polygon2d<data_t>::dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    return dist_to_segment(p1.template get<0>(), p1.template get<1>(), p2.template get<0>(), p2.template get<1>());
+    return dist_to_segment(p1.x(), p1.y(), p2.x(), p2.y());
   }
 
   //////////////////////////////////////////////////////////////
@@ -192,8 +192,8 @@ namespace ggo
   template <typename data_t>
   ggo::rect_intersection polygon2d<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.template get<0>();
-    data_t bottom  = rect_data._pos.template get<1>();
+    data_t left    = rect_data._pos.x();
+    data_t bottom  = rect_data._pos.y();
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
     
@@ -248,8 +248,8 @@ namespace ggo
   {
     for (auto & point : _points)
     {
-      point.template get<0>() += dx;
-      point.template get<1>() += dy;
+      point.x() += dx;
+      point.y() += dy;
     }
   }
 

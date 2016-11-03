@@ -23,10 +23,10 @@ namespace ggo
   template <typename data_t>
   rect<data_t>::rect(const pos2<data_t> & p1, const pos2<data_t> & p2)
   {
-    data_t left    = std::min(p1.template get<0>(), p2.template get<0>());
-    data_t right   = std::max(p1.template get<0>(), p2.template get<0>());
-    data_t bottom  = std::min(p1.template get<1>(), p2.template get<1>());
-    data_t top     = std::max(p1.template get<1>(), p2.template get<1>());
+    data_t left    = std::min(p1.x(), p2.x());
+    data_t right   = std::max(p1.x(), p2.x());
+    data_t bottom  = std::min(p1.y(), p2.y());
+    data_t top     = std::max(p1.y(), p2.y());
 
     _rect_data._pos = { left, bottom };
     _rect_data._width = right - left;
@@ -104,8 +104,8 @@ namespace ggo
   template <typename data_t>
   rect_intersection rect<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.template get<0>();
-    data_t bottom  = rect_data._pos.template get<1>();
+    data_t left    = rect_data._pos.x();
+    data_t bottom  = rect_data._pos.y();
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
 
@@ -138,8 +138,8 @@ namespace ggo
   template <typename data_t>
   void rect<data_t>::inflate(data_t extent)
   {
-    _rect_data._pos.template get<0>() -= extent;
-    _rect_data._pos.template get<1>() -= extent;
+    _rect_data._pos.x() -= extent;
+    _rect_data._pos.y() -= extent;
     _rect_data._width += 2 * extent;
     _rect_data._height += 2 * extent;
   }
@@ -148,8 +148,8 @@ namespace ggo
   template <typename data_t>
   void rect<data_t>::inflate(data_t horz_extent, data_t vert_extent)
   {
-    _rect_data._pos.template get<0>() -= horz_extent;
-    _rect_data._pos.template get<1>() -= vert_extent;
+    _rect_data._pos.x() -= horz_extent;
+    _rect_data._pos.y() -= vert_extent;
     _rect_data._width  += 2 * horz_extent;
     _rect_data._height += 2 * vert_extent;
   }
@@ -158,18 +158,18 @@ namespace ggo
   template <typename data_t>
   void rect<data_t>::extend(const ggo::pos2f & p)
   {
-    data_t left   = _rect_data._pos.template get<0>();
-    data_t bottom = _rect_data._pos.template get<1>();
+    data_t left   = _rect_data._pos.x();
+    data_t bottom = _rect_data._pos.y();
     data_t right  = left   + _rect_data._width;
     data_t top    = bottom + _rect_data._height;
 
-    left    = std::min(left,   p.template get<0>());
-    bottom  = std::min(bottom, p.template get<1>());
-    right   = std::max(right,  p.template get<0>());
-    top     = std::max(top,    p.template get<1>());
+    left    = std::min(left,   p.x());
+    bottom  = std::min(bottom, p.y());
+    right   = std::max(right,  p.x());
+    top     = std::max(top,    p.y());
 
-    _rect_data._pos.set<0>(left);
-    _rect_data._pos.set<1>(bottom);
+    _rect_data._pos.x() = left;
+    _rect_data._pos.y() = bottom;
     _rect_data._width = right - left;
     _rect_data._height = top - bottom;
   }

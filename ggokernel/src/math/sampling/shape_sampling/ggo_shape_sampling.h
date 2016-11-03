@@ -70,7 +70,7 @@ namespace ggo
     
     auto b = build_basis(main_dir);
     
-    sample = b.first * sample.template get<0>() + b.second * sample.template get<1>() + main_dir * sample.template get<2>();
+    sample = b.first * sample.x() + b.second * sample.y() + main_dir * sample.z();
     GGO_ASSERT_GE(ggo::dot(sample, main_dir), 0);
     GGO_ASSERT(sample.is_normalized(T(0.001)));
 

@@ -136,4 +136,14 @@ GGO_TEST(template_pointer, multiply_all)
   GGO_CHECK_EQ(v, 30);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(template_pointer, fill)
+{
+  std::array<int, 3> a{ 0, 0, 0 };
+  ggo::fill<3>(a.data(), 1);
+
+  GGO_CHECK_EQ(a[0], 1);
+  GGO_CHECK_EQ(a[1], 1);
+  GGO_CHECK_EQ(a[2], 1);
+}
 

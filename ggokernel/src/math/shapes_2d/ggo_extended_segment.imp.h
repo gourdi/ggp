@@ -19,10 +19,10 @@ namespace ggo
   template <typename data_t>
   rect_data<data_t> extended_segment<data_t>::get_bounding_rect() const
   {
-    data_t left    = std::min(_p1.template get<0>(), _p2.template get<0>()) - _width;
-    data_t right   = std::max(_p1.template get<0>(), _p2.template get<0>()) + _width;
-    data_t bottom  = std::min(_p1.template get<1>(), _p2.template get<1>()) - _width;
-    data_t top     = std::max(_p1.template get<1>(), _p2.template get<1>()) + _width;
+    data_t left    = std::min(_p1.x(), _p2.x()) - _width;
+    data_t right   = std::max(_p1.x(), _p2.x()) + _width;
+    data_t bottom  = std::min(_p1.y(), _p2.y()) - _width;
+    data_t top     = std::max(_p1.y(), _p2.y()) + _width;
 
     return { {left, bottom}, right - left, top - bottom };
   }
@@ -31,8 +31,8 @@ namespace ggo
   template <typename data_t>
   rect_intersection extended_segment<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.template get<0>();
-    data_t bottom  = rect_data._pos.template get<1>();
+    data_t left    = rect_data._pos.x();
+    data_t bottom  = rect_data._pos.y();
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
 

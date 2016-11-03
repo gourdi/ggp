@@ -107,7 +107,7 @@ namespace ggo
     add(ptr + 1, a...);
   }
 
-  // Set a buffer witg coefs.
+  // Set a buffer with coefs.
   template <typename data_t>
   void set(data_t * ptr, const data_t & v)
   {

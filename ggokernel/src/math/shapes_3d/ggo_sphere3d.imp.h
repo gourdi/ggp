@@ -98,7 +98,7 @@ namespace ggo
   template <typename data_t>
   bool sphere3d<data_t>::is_point_inside(data_t x, data_t y, data_t z) const
   {
-    ggo::vec3<data_t> diff(x - _center.template get<0>(), y - _center.template get<1>(), z - _center.template get<2>());
+    ggo::vec3<data_t> diff(x - _center.x(), y - _center.y(), z - _center.z());
 
     return diff.get_hypot() <= ggo::square(_radius);
   }
@@ -107,7 +107,7 @@ namespace ggo
   template <typename data_t>
   bool sphere3d<data_t>::is_point_inside(const ggo::pos3<data_t> & p) const
   {
-    return is_point_inside(p.template get<0>(), p.template get<1>(), p.template get<2>());
+    return is_point_inside(p.x(), p.y(), p.z());
   }
 
   //////////////////////////////////////////////////////////////

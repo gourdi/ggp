@@ -27,20 +27,20 @@ namespace ggo
                       // Conversion operator.
                       operator rect_data<data_t>() const { return _rect_data; }
                           
-    data_t					  left() const { return _rect_data._pos.template get<0>(); }
-    data_t					  bottom() const { return _rect_data._pos.template get<1>(); }
+    data_t					  left() const { return _rect_data._pos.x(); }
+    data_t					  bottom() const { return _rect_data._pos.y(); }
     data_t					  width() const { return _rect_data._width; }
     data_t					  height() const { return _rect_data._height; }
 
-    data_t & 			    left() { return _rect_data._pos.template get<0>(); }
-    data_t &				  bottom() { return _rect_data._pos.template get<1>(); }
+    data_t & 			    left() { return _rect_data._pos.x(); }
+    data_t &				  bottom() { return _rect_data._pos.y(); }
     data_t &				  width() { return _rect_data._width; }
     data_t & 			    height() { return _rect_data._height; }
 
-    data_t            right() const { return _rect_data._pos.template get<0>() + _rect_data._width; }
-    data_t            top() const { return _rect_data._pos.template get<1>() + _rect_data._height; }
+    data_t            right() const { return _rect_data._pos.x() + _rect_data._width; }
+    data_t            top() const { return _rect_data._pos.y() + _rect_data._height; }
 
-    ggo::pos2<data_t> center() const { return ggo::pos2<data_t>(_rect_data._pos.template get<0>() + _rect_data._width / 2, _rect_data._pos.template get<1>() + _rect_data._height / 2); }
+    ggo::pos2<data_t> center() const { return ggo::pos2<data_t>(_rect_data._pos.x() + _rect_data._width / 2, _rect_data._pos.y() + _rect_data._height / 2); }
                 
     void              inflate(data_t extent);
     void              inflate(data_t horz_extent, data_t vert_extent);

@@ -6,35 +6,36 @@
 #include <ggo_animator.h>
 #include <ggo_animate_abc.h>
 
-class ggo_circles_animation_artist : public ggo_dynamic_background_animation_artist_abc
+namespace ggo
 {
-public:
-
-        ggo_circles_animation_artist(int render_width, int render_height);
-
-private:
-
-	void	init_sub() override;
-  void	init_bkgd_buffer(uint8_t * bkgd_buffer) override;
-  bool	render_next_frame_bkgd(uint8_t * output_buffer, uint8_t * bkgd_buffer, int frame_index) override;
-			
-private:
-
-  struct ggo_circle_animate : public ggo_position_animate_abc
+  class circles_animation_artist : public animation_artist_abc
   {
-          ggo_circle_animate(const ggo::pos2f & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
-    
-    bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+  public:
 
-    float       _radius;
-    ggo::color  _color;
-    float       _attenuation_factor;
-    float       _bounding_factor;
-      
-    static  bool bkgd_rendering_allowed;
+    circles_animation_artist(int render_width, int render_height);
+
+  private:
+
+    void	init_sub() override;
+    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+
+  private:
+
+    struct circle_animate : public ggo_position_animate_abc
+    {
+      circle_animate(const ggo::pos2f & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
+
+      bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+
+      float         _radius;
+      ggo::color_8u _color;
+      float         _attenuation_factor;
+      float         _bounding_factor;
+      bool          _bkgd_rendering_allowed;
+    };
+
+    ggo_animator  _animator;
   };
-    
-  ggo_animator  _animator;
-};
+}
 
 #endif

@@ -16,9 +16,9 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void gaussian_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::color_8u::blue);
+    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue<ggo::color_8u>());
 
-    auto brush = [](int x, int y) { return ggo::color_8u::green; };
+    auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
     auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
@@ -116,9 +116,9 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void mean_box_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::color_8u::blue);
+    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue<ggo::color_8u>());
 
-    auto brush = [](int x, int y) { return ggo::color_8u::green; };
+    auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
     auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(

@@ -424,18 +424,18 @@ namespace ggo
 
     for (int z = 0; z < steps; ++z)
     {
-      float z_inf = inf.get<2>() + z * step_size;
-      float z_sup = inf.get<2>() + (z + 1) * step_size;
+      float z_inf = inf.z() + z * step_size;
+      float z_sup = inf.z() + (z + 1) * step_size;
       
       for (int y = 0; y < steps; ++y)
       {
-        float y_inf = inf.get<1>() + y * step_size;
-        float y_sup = inf.get<1>() + (y + 1) * step_size;
+        float y_inf = inf.y() + y * step_size;
+        float y_sup = inf.y() + (y + 1) * step_size;
         
         for (int x = 0; x < steps; ++x)
         {
-          float x_inf = inf.get<0>() + x * step_size;
-          float x_sup = inf.get<0>() + (x + 1) * step_size;
+          float x_inf = inf.x() + x * step_size;
+          float x_sup = inf.x() + (x + 1) * step_size;
           
           const float vertex_offset[8][3] = {
             {0.0, 0.0, 0.0},{1.0, 0.0, 0.0},{1.0, 1.0, 0.0},{0.0, 1.0, 0.0},
@@ -446,11 +446,11 @@ namespace ggo
           
           for(int i = 0; i < 8; i++)
           {
-            cell._pos[i].get<0>() = x_inf + vertex_offset[i][0] * step_size;
-            cell._pos[i].get<1>() = y_inf + vertex_offset[i][1] * step_size;
-            cell._pos[i].get<2>() = z_inf + vertex_offset[i][2] * step_size;
+            cell._pos[i].x() = x_inf + vertex_offset[i][0] * step_size;
+            cell._pos[i].y() = y_inf + vertex_offset[i][1] * step_size;
+            cell._pos[i].z() = z_inf + vertex_offset[i][2] * step_size;
             
-            cell._val[i] = func(cell._pos[i].get<0>(), cell._pos[i].get<1>(), cell._pos[i].get<2>());
+            cell._val[i] = func(cell._pos[i].x(), cell._pos[i].y(), cell._pos[i].z());
           }
 
           auto cell_triangles = polygonise_cell(cell);

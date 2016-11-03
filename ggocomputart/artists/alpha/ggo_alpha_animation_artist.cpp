@@ -8,7 +8,7 @@
 
 namespace
 {
-const int oscillo_size = 750;
+  const int oscillo_size = 750;
 }
 
 //////////////////////////////////////////////////////////////
@@ -196,7 +196,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer, width, height, 3 * width, multi_shape,
-    ggo::make_solid_brush(ggo::color_8u::black),
+    ggo::make_solid_brush(ggo::black<ggo::color_8u>()),
     ggo::alpha_blender<ggo::color_8u>(_opacity));
 }
 

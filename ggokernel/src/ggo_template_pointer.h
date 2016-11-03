@@ -68,6 +68,13 @@ namespace ggo
     ggo::for_each<count>(ptr, [&](data_t & v) { v *= k; });
   }
 
+  // Fill.
+  template <int count, typename data_t>
+  void fill(data_t * ptr, data_t k)
+  {
+    ggo::for_each<count>(ptr, [&](data_t & v) { v = k; });
+  }
+
   // Unary operation: a destination pointer and a source pointer.
   template <typename data_t, typename func, int index, int count>
   struct unary_operation_t

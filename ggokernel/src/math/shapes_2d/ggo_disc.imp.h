@@ -4,9 +4,9 @@ namespace ggo
   template <typename data_t>
   data_t disc<data_t>::dist_to_point(data_t x, data_t y) const
   {
-    data_t dx	        = _center.template get<0>() - x;
-    data_t dy	        = _center.template get<1>() - y;
-    data_t hypot	      = dx * dx + dy * dy;
+    data_t dy	         = _center.y() - y;
+    data_t dx	         = _center.x() - x;
+    data_t hypot	     = dx * dx + dy * dy;
     data_t sqrd_radius = _radius * _radius;
 
     if (hypot > sqrd_radius)
@@ -25,15 +25,15 @@ namespace ggo
   {
     data_t diameter = 2 * _radius;
 
-    return { { _center.template get<0>() - _radius, _center.template get<1>() - _radius }, diameter, diameter };
+    return { { _center.x() - _radius, _center.y() - _radius }, diameter, diameter };
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
   bool disc<data_t>::is_point_inside(data_t x, data_t y) const
   {
-    data_t dx 	  = _center.template get<0>() - x;
-    data_t dy 	  = _center.template get<1>() - y;
+    data_t dx 	  = _center.x() - x;
+    data_t dy 	  = _center.y() - y;
     data_t hypot	= dx * dx + dy * dy;
 
     return hypot <= _radius * _radius;
@@ -43,8 +43,8 @@ namespace ggo
   template <typename data_t>
   rect_intersection disc<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.template get<0>();
-    data_t bottom  = rect_data._pos.template get<1>();
+    data_t left    = rect_data._pos.x();
+    data_t bottom  = rect_data._pos.y();
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
 
@@ -66,10 +66,10 @@ namespace ggo
     }
 
     // Circle in rectangle?
-    if (_center.template get<0>() - left   > _radius &&
-        _center.template get<1>() - bottom > _radius &&
-        right - _center.template get<0>()  > _radius &&
-        top - _center.template get<1>()    > _radius)
+    if (_center.x() - left   > _radius &&
+        _center.y() - bottom > _radius &&
+        right - _center.x()  > _radius &&
+        top - _center.y()    > _radius)
     {
       return rect_intersection::shape_in_rect;
     }

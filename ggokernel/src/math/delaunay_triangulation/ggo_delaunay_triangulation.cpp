@@ -78,10 +78,10 @@ namespace
   template <typename T>
   T compute_angle(const ggo::pos2<T> * common, const ggo::pos2<T> * pt1, const ggo::pos2<T> * pt2)
   {
-    T dx1 = pt1->template get<0>() - common->template get<0>();
-    T dy1 = pt1->template get<1>() - common->template get<1>();
-    T dx2 = pt2->template get<0>() - common->template get<0>();
-    T dy2 = pt2->template get<1>() - common->template get<1>();
+    T dx1 = pt1->x() - common->x();
+    T dy1 = pt1->y() - common->y();
+    T dx2 = pt2->x() - common->x();
+    T dy2 = pt2->y() - common->y();
 
     T len1 = std::sqrt(dx1 * dx1 + dy1 * dy1);
     T len2 = std::sqrt(dx2 * dx2 + dy2 * dy2);
@@ -295,9 +295,9 @@ namespace
       ggo::segment<T> s12(*(it_triangle->_v1), *(it_triangle->_v2));
       ggo::segment<T> s23(*(it_triangle->_v2), *(it_triangle->_v3));
       ggo::segment<T> s13(*(it_triangle->_v1), *(it_triangle->_v3));
-      T d12 = s12.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
-      T d23 = s23.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
-      T d13 = s13.dist_to_point(new_vertex->template get<0>(), new_vertex->template get<1>());
+      T d12 = s12.dist_to_point(new_vertex->x(), new_vertex->y());
+      T d23 = s23.dist_to_point(new_vertex->x(), new_vertex->y());
+      T d13 = s13.dist_to_point(new_vertex->x(), new_vertex->y());
 
       ggo::edge<T> current_edge(nullptr, nullptr);
       ggo::edge<T> edge1(nullptr, nullptr);
@@ -383,7 +383,7 @@ namespace
       triangle.add_point(*v2);
       triangle.add_point(*v3);
 
-      if (triangle.is_point_inside(new_vertex->template get<0>(), new_vertex->template get<1>()) == true)
+      if (triangle.is_point_inside(new_vertex->x(), new_vertex->y()) == true)
       {
         // Add new triangles.
         ggo::delaunay_triangle<T> triangle1(it_triangle->_v1, it_triangle->_v2, new_vertex);
@@ -424,16 +424,16 @@ namespace
     std::vector<const ggo::pos2<T> *> vertices;
     
     // Add bounding triangles so that they overlap all the points.
-    T min_x = input_points[0].template get<0>();
-    T min_y = input_points[0].template get<1>();
-    T max_x = input_points[0].template get<0>();
-    T max_y = input_points[0].template get<1>();
+    T min_x = input_points[0].x();
+    T min_y = input_points[0].y();
+    T max_x = input_points[0].x();
+    T max_y = input_points[0].y();
     for (size_t i = 1; i < input_points.size(); ++i)
     {
-      min_x = std::min(min_x, input_points[i].template get<0>());
-      min_y = std::min(min_y, input_points[i].template get<1>());
-      max_x = std::max(max_x, input_points[i].template get<0>());
-      max_y = std::max(max_y, input_points[i].template get<1>());
+      min_x = std::min(min_x, input_points[i].x());
+      min_y = std::min(min_y, input_points[i].y());
+      max_x = std::max(max_x, input_points[i].x());
+      max_y = std::max(max_y, input_points[i].y());
     }
     T range_x = max_x - min_x;
     T range_y = max_y - min_y;

@@ -19,7 +19,7 @@ namespace ggo
                                     oriented_box(ggo::pos2<data_t> pos, ggo::pos2<data_t> dir, data_t size1, data_t size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
 
     const ggo::pos2<data_t> &       dir() const { return _dir; }
-    ggo::pos2<data_t>               dir2() const { return ggo::pos2<data_t>(-_dir.template get<1>(), _dir.template get<0>()); }
+    ggo::pos2<data_t>               dir2() const { return ggo::pos2<data_t>(-_dir.y(), _dir.x()); }
 
     data_t                          size1() const { return _size1; }
     data_t                          size2() const { return _size2; }

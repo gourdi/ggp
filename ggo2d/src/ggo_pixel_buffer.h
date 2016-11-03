@@ -82,9 +82,9 @@ namespace ggo
     static void write(void * ptr, const ggo::color_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._r;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._b;
+      ptr_8u[0] = c.r();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.b();
     }
   };
 
@@ -110,9 +110,9 @@ namespace ggo
     static void write(void * ptr, const ggo::color_32f & c)
     {
       float * ptr_32f = static_cast<float *>(ptr);
-      ptr_32f[0] = c._r;
-      ptr_32f[1] = c._g;
-      ptr_32f[2] = c._b;
+      ptr_32f[0] = c.r();
+      ptr_32f[1] = c.g();
+      ptr_32f[2] = c.b();
     }
   };
 
@@ -136,9 +136,9 @@ namespace ggo
     static void write(void * ptr, const ggo::color_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._b;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._r;
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
     }
   };
 

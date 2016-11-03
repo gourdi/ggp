@@ -22,15 +22,15 @@ namespace ggo
         
         for (const auto & p : result)
         {
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 1, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() + 0, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() + 1, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() + 0, point_cur.get<0>(), point_cur.get<1>()));
-          hypot_cur = std::min(hypot_cur, ggo::hypot(p.get<0>() - 1, p.get<1>() - 1, point_cur.get<0>(), point_cur.get<1>()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() + 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() + 0, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 1, p.y() - 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() + 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() + 0, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() + 0, p.y() - 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() + 1, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() + 0, point_cur.x(), point_cur.y()));
+          hypot_cur = std::min(hypot_cur, ggo::hypot(p.x() - 1, p.y() - 1, point_cur.x(), point_cur.y()));
         }
         
         if (hypot_cur > hypot)

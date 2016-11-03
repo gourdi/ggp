@@ -33,14 +33,14 @@ namespace ggo
     T			sin_a = sin(angle);
 
     _y = ggo::vec3<T>(
-        y.template get<0>()*cos_a + z.template get<0>()*sin_a,
-        y.template get<1>()*cos_a + z.template get<1>()*sin_a,
-        y.template get<2>()*cos_a + z.template get<2>()*sin_a);
+        y.x()*cos_a + z.x()*sin_a,
+        y.y()*cos_a + z.y()*sin_a,
+        y.z()*cos_a + z.z()*sin_a);
 
     _z = ggo::vec3<T>(
-        -y.template get<0>()*sin_a + z.template get<0>()*cos_a,
-        -y.template get<1>()*sin_a + z.template get<1>()*cos_a,
-        -y.template get<2>()*sin_a + z.template get<2>()*cos_a);
+        -y.x()*sin_a + z.x()*cos_a,
+        -y.y()*sin_a + z.y()*cos_a,
+        -y.z()*sin_a + z.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
@@ -53,14 +53,14 @@ namespace ggo
     T			sin_a = sin(angle);
 
     _x = ggo::vec3<T>(
-        x.template get<0>()*cos_a + z.template get<0>()*sin_a,
-        x.template get<1>()*cos_a + z.template get<1>()*sin_a,
-        x.template get<2>()*cos_a + z.template get<2>()*sin_a);
+        x.x()*cos_a + z.x()*sin_a,
+        x.y()*cos_a + z.y()*sin_a,
+        x.z()*cos_a + z.z()*sin_a);
 
     _z = ggo::vec3<T>(
-        -x.template get<0>()*sin_a + z.template get<0>()*cos_a,
-        -x.template get<1>()*sin_a + z.template get<1>()*cos_a,
-        -x.template get<2>()*sin_a + z.template get<2>()*cos_a);
+        -x.x()*sin_a + z.x()*cos_a,
+        -x.y()*sin_a + z.y()*cos_a,
+        -x.z()*sin_a + z.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
@@ -73,14 +73,14 @@ namespace ggo
     T			sin_a = sin(angle);
 
     _x = ggo::vec3<T>(
-        x.template get<0>()*cos_a + y.template get<0>()*sin_a,
-        x.template get<1>()*cos_a + y.template get<1>()*sin_a,
-        x.template get<2>()*cos_a + y.template get<2>()*sin_a);
+        x.x()*cos_a + y.x()*sin_a,
+        x.y()*cos_a + y.y()*sin_a,
+        x.z()*cos_a + y.z()*sin_a);
 
     _y = ggo::vec3<T>(
-        -x.template get<0>()*sin_a + y.template get<0>()*cos_a,
-        -x.template get<1>()*sin_a + y.template get<1>()*cos_a,
-        -x.template get<2>()*sin_a + y.template get<2>()*cos_a);
+        -x.x()*sin_a + y.x()*cos_a,
+        -x.y()*sin_a + y.y()*cos_a,
+        -x.z()*sin_a + y.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
@@ -118,9 +118,9 @@ namespace ggo
   {
     ggo::vec3<T>	result;
 
-    result.template get<0>() = _x.template get<0>()*vector.template get<0>() + _y.template get<0>()*vector.template get<1>() + _z.template get<0>()*vector.template get<2>();
-    result.template get<1>() = _x.template get<1>()*vector.template get<0>() + _y.template get<1>()*vector.template get<1>() + _z.template get<1>()*vector.template get<2>();
-    result.template get<2>() = _x.template get<2>()*vector.template get<0>() + _y.template get<2>()*vector.template get<1>() + _z.template get<2>()*vector.template get<2>();
+    result.x() = _x.x()*vector.x() + _y.x()*vector.y() + _z.x()*vector.z();
+    result.y() = _x.y()*vector.x() + _y.y()*vector.y() + _z.y()*vector.z();
+    result.z() = _x.z()*vector.x() + _y.z()*vector.y() + _z.z()*vector.z();
 
     return result;
   }
@@ -133,9 +133,9 @@ namespace ggo
   {
     ggo::vec3<T>	result;
 
-    result.template get<0>() = _x.template get<0>()*vector.template get<0>() + _x.template get<1>()*vector.template get<1>() + _x.template get<2>()*vector.template get<2>();
-    result.template get<1>() = _y.template get<0>()*vector.template get<0>() + _y.template get<1>()*vector.template get<1>() + _y.template get<2>()*vector.template get<2>();
-    result.template get<2>() = _z.template get<0>()*vector.template get<0>() + _z.template get<1>()*vector.template get<1>() + _z.template get<2>()*vector.template get<2>();
+    result.x() = _x.x()*vector.x() + _x.y()*vector.y() + _x.z()*vector.z();
+    result.y() = _y.x()*vector.x() + _y.y()*vector.y() + _y.z()*vector.z();
+    result.z() = _z.x()*vector.x() + _z.y()*vector.y() + _z.z()*vector.z();
 
     return result;
   }
@@ -216,7 +216,7 @@ namespace ggo
     T den = -1 / (ggo::dot(diff, _z) * aperture); // The minus sign is here because the camera is looking is the negative z-axis.
     ggo::pos2<T> proj(1 + ggo::dot(diff, _x) * den, 1 + ggo::dot(diff, _y) * den);
     proj *= static_cast<T>(screen_height);
-    proj.template get<0>() += static_cast<T>(screen_width - screen_height);
+    proj.x() += static_cast<T>(screen_width - screen_height);
     proj /= 2;
     
     return proj;

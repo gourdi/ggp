@@ -2,9 +2,9 @@
 #include "ggo_alpha_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_bitmap_artist::render_bitmap(void * buffer, int render_width, int render_height) const
+void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
 {
-  alpha_animation_artist artist(render_width, render_height);
+  alpha_animation_artist artist(get_render_width(), get_render_height());
 
   int frame_index = 0;
 

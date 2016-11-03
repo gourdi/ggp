@@ -36,13 +36,13 @@ namespace ggo
 
     for (int y = 0; y < steps; ++y)
     {
-      float y_inf = inf.get<1>() + y * step_size;
-      float y_sup = inf.get<1>() + (y + 1) * step_size;
+      float y_inf = inf.y() + y * step_size;
+      float y_sup = inf.y() + (y + 1) * step_size;
 
       for (int x = 0; x < steps; ++x)
       {
-        float x_inf = inf.get<0>() + x * step_size;
-        float x_sup = inf.get<0>() + (x + 1) * step_size;
+        float x_inf = inf.x() + x * step_size;
+        float x_sup = inf.x() + (x + 1) * step_size;
 
         float v00 = func(x_inf, y_inf);
         float v01 = func(x_inf, y_sup);

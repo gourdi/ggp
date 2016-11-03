@@ -46,10 +46,10 @@ namespace ggo
     const ggo::pos3<T> & v2 = _vertices[hit_face->_v2]._pos;
     const ggo::pos3<T> & v3 = _vertices[hit_face->_v3]._pos;
     
-    const T m[3][3] = {{v1.template get<0>(), v2.template get<0>(), v3.template get<0>()}, 
-                       {v1.template get<1>(), v2.template get<1>(), v3.template get<1>()}, 
-                       {v1.template get<2>(), v2.template get<2>(), v3.template get<2>()}};
-    const T c[3] = {normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>()};
+    const T m[3][3] = {{v1.x(), v2.x(), v3.x()}, 
+                       {v1.y(), v2.y(), v3.y()}, 
+                       {v1.z(), v2.z(), v3.z()}};
+    const T c[3] = {normal.pos().x(), normal.pos().y(), normal.pos().z()};
     T s[3] = {0, 0, 0};
     
     if (linsolve3d(m, c, s) == false)

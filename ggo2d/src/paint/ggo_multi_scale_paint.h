@@ -199,9 +199,9 @@ namespace ggo
       }
       else
       {
-        auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
+        const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
 
-        ggo::accumulator<decltype(bkgd_color)> acc;
+        ggo::accumulator<std::remove_const<decltype(bkgd_color)>::type> acc;
         ggo::sampler<smp>::sample_pixel<real_t>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
         {
           auto sample_color = bkgd_color;
@@ -211,7 +211,7 @@ namespace ggo
             const item_t * item = *it;
             if (item->is_point_inside(x_f, y_f) == true)
             {
-              auto brush_color = item->brush(block_rect.left(), block_rect.bottom());
+              const auto brush_color = item->brush(block_rect.left(), block_rect.bottom());
               sample_color = item->blend(block_rect.left(), block_rect.bottom(), sample_color, brush_color);
             }
           }

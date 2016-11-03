@@ -135,7 +135,7 @@ void ggo::aggregation_artist::render(void * buffer) const
     {
       for (const auto & point : cell._points)
       {
-        shapes.emplace_back(ggo::disc_float(point._pos, 2.f * _threshold_dist), ggo::color_8u::black);
+        shapes.emplace_back(ggo::disc_float(point._pos, 2.f * _threshold_dist), ggo::black<ggo::color_8u>());
       }
     }
 

@@ -32,7 +32,7 @@ namespace ggo
   template <typename output_color_t, typename brush_color_t>
   struct dyn_blender_abc
   {
-    virtual buffer_color_t get(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
+    virtual output_color_t get(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
   };
 
   template <typename output_color_t, typename brush_color_t>
@@ -44,22 +44,22 @@ namespace ggo
   };
 
   // Dynamic paint shape.
-  template <typename real_type, typename buffer_color_t, typename brush_color_t>
+  template <typename real_type, typename output_color_t, typename brush_color_t>
   struct dyn_paint_shape
   {
     using real_t = real_type;
     static_assert(std::is_floating_point<real_t>::value, "expecting floating point value");
 
     std::shared_ptr<paintable_shape2d_abc<real_type>> _shape;
-    std::shared_ptr<dyn_brush_abc> _brush;
-    std::shared_ptr<dyn_blender_abc> _blender;
+    std::shared_ptr<dyn_brush_abc<brush_color_t>> _brush;
+    std::shared_ptr<dyn_blender_abc<output_color_t, brush_color_t>> _blender;
 
     rect_data<real_t> get_bounding_rect() const { return _shape->get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<real_t> & rect_data) const { return _shape->get_rect_intersection(rect_data); }
     bool              is_point_inside(real_t x_f, real_t y_f) const { return _shape->is_point_inside(x_f, y_f); }
 
     brush_color_t  brush(int x, int y) const { return _brush->get(x, y); }
-    buffer_color_t blend(int x, int y, const buffer_color_t & bkgd_color, const brush_color_t & brush_color) const {
+    output_color_t blend(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const {
       return _blender->blend(x, y, bkgd_color, brush_color); }
   };
 

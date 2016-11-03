@@ -157,7 +157,7 @@ void ggo::amorosi_animation_artist::init_sub()
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::init_bkgd_buffer(void * buffer)
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::color_8u::black);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
 }
 
 //////////////////////////////////////////////////////////////
@@ -170,7 +170,7 @@ ggo::color_8u ggo::amorosi_animation_artist::get_color() const
   }
   else
   {
-    return ggo::color_8u::white;
+    return ggo::white<ggo::color_8u>();
   }
 }
 

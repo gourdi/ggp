@@ -233,12 +233,12 @@ namespace ggo
         data_t z_sup = 0;
         for (const auto * intersection : active_list)
         {
-          x_inf += intersection->_influence->evaluate({ normal.pos().template get<0>() - eps, normal.pos().template get<1>(), normal.pos().template get<2>() });
-          x_sup += intersection->_influence->evaluate({ normal.pos().template get<0>() + eps, normal.pos().template get<1>(), normal.pos().template get<2>() });
-          y_inf += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>() - eps, normal.pos().template get<2>() });
-          y_sup += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>() + eps, normal.pos().template get<2>() });
-          z_inf += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>() - eps });
-          z_sup += intersection->_influence->evaluate({ normal.pos().template get<0>(), normal.pos().template get<1>(), normal.pos().template get<2>() + eps });
+          x_inf += intersection->_influence->evaluate({ normal.pos().x() - eps, normal.pos().y(), normal.pos().z() });
+          x_sup += intersection->_influence->evaluate({ normal.pos().x() + eps, normal.pos().y(), normal.pos().z() });
+          y_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() - eps, normal.pos().z() });
+          y_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y() + eps, normal.pos().z() });
+          z_inf += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() - eps });
+          z_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() + eps });
         }
         
         normal.set_dir(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup);

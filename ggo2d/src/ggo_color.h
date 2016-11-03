@@ -3,58 +3,9 @@
 
 #include <stdint.h>
 #include <ggo_kernel.h>
+#include <ggo_vec.h>
 
-namespace ggo
-{
-  template <typename data_t>
-  class color
-  {
-  public:
-
-    using sample_t = data_t;
-
-  public:
-
-    data_t	_r = 0;
-    data_t	_g = 0;
-    data_t	_b = 0;
-
-  public:
-
-              color() = default;
-              color(data_t v) { _r = v; _g = v; _b = v; }
-              color(data_t r, data_t g, data_t b) { _r = r; _g = g; _b = b; }
-              color(const color<data_t> & c) { _r = c._r; _g = c._g; _b = c._b; }
-
-    void		  operator+=(const color<data_t> & c) { _r += c._r; _g += c._g; _b += c._b; }
-    void		  operator-=(const color<data_t> & c) { _r -= c._r; _g -= c._g; _b -= c._b; }
-    void		  operator*=(const color<data_t> & c) { _r *= c._r; _g *= c._g; _b *= c._b; }
-    void		  operator*=(data_t v) { _r *= v; _g *= v; _b *= v; }
-    void		  operator/=(data_t v) { _r /= v; _g /= v; _b /= v; }
-
-    bool      is_black() const { return _r == 0 && _g == 0 && _b == 0; }
-
-    color &   operator=(const color & c) = default;
-    bool      operator==(const color & c) const { return _r == c._r && _g == c._g && _b == c._b; }
-    bool      operator!=(const color & c) const { return _r != c._r || _g != c._g || _b != c._b; }
-
-    static data_t max() { return std::is_floating_point<data_t>() ? 1 : std::numeric_limits<data_t>::max(); }
-
-  public:
-
-    static const color white;
-    static const color gray;
-    static const color black;
-    static const color red;
-    static const color green;
-    static const color blue;
-    static const color cyan;
-    static const color magenta;
-    static const color yellow;
-    static const color orange;
-  };
-}
-
+// Aliases.
 namespace ggo
 {
   using color_8u = color<uint8_t>;
@@ -63,76 +14,21 @@ namespace ggo
   using color_32f = color<float>;
 }
 
+// Fixed point division for color.
 namespace ggo
 {
-  template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, const ggo::color<data_t> & c)
-  {
-    os << c._r << ' ' << c._g << ' ' << c._b;
-    return os;
-  }
-
-  template <typename data_t>
-  std::istream & operator >> (std::istream & is, ggo::color<data_t> & c)
-  {
-    is >> c._r >> c._g >> c._b;
-    return is;
-  }
-  
-  template <typename data_t>
-  ggo::color<data_t> operator-(const ggo::color<data_t> & c)
-  {
-  return ggo::color<data_t>(-c._r, -c._g, -c._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator+(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
-  {
-  return ggo::color<data_t>(c1._r + c2._r, c1._g + c2._g, c1._b + c2._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator-(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
-  {
-  return ggo::color<data_t>(c1._r - c2._r, c1._g - c2._g, c1._b - c2._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator*(const ggo::color<data_t> & c1, const ggo::color<data_t> & c2)
-  {
-  return ggo::color<data_t>(c1._r * c2._r, c1._g * c2._g, c1._b * c2._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator*(const ggo::color<data_t> & c, data_t k)
-  {
-  return ggo::color<data_t>(k * c._r, k * c._g, k * c._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator*(data_t k, const ggo::color<data_t> & c)
-  {
-  return ggo::color<data_t>(k * c._r, k * c._g, k * c._b);
-  }
-
-  template <typename data_t>
-  ggo::color<data_t> operator/(const ggo::color<data_t> & c, data_t k)
-  {
-    return ggo::color<data_t>(c._r / k, c._g / k, c._b / k);
-  }
-
   template <int bit_shift, typename data_t>
   ggo::color<data_t> fixed_point_div(const ggo::color<data_t> & c)
   {
-    using sample_t = typename ggo::color<data_t>::sample_t;
+    using sample_t = typename ggo::color_traits<color<data_t>>::sample_t;
 
     static_assert(bit_shift > 1, "invalid bit shift");
     static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
 
     return ggo::color<data_t>(
-      ggo::fixed_point_div<bit_shift>(c._r),
-      ggo::fixed_point_div<bit_shift>(c._g),
-      ggo::fixed_point_div<bit_shift>(c._b));
+      ggo::fixed_point_div<bit_shift>(c.r()),
+      ggo::fixed_point_div<bit_shift>(c.g()),
+      ggo::fixed_point_div<bit_shift>(c.b()));
   }
 }
 
@@ -148,6 +44,8 @@ namespace ggo
   {
     using floating_point_t = ggo::color_32f;
     using sample_t = uint8_t;
+    static uint8_t max() { return 0xff; }
+    static const int _samples_count = 1;
   };
 
   template <>
@@ -155,6 +53,8 @@ namespace ggo
   {
     using floating_point_t = float;
     using sample_t = float;
+    static float max() { return 1.f; }
+    static const int _samples_count = 1;
   };
 
   template <>
@@ -162,6 +62,17 @@ namespace ggo
   {
     using floating_point_t = ggo::color_32f;
     using sample_t = uint8_t;
+    static uint8_t max() { return 0xff; }
+    static const int _samples_count = 3;
+  };
+
+  template <>
+  struct color_traits<ggo::color_32u>
+  {
+    using floating_point_t = ggo::color_32f;
+    using sample_t = uint32_t;
+    static uint32_t max() { return 0xffffffff; }
+    static const int _samples_count = 3;
   };
 
   template <>
@@ -169,6 +80,8 @@ namespace ggo
   {
     using floating_point_t = ggo::color_32f;
     using sample_t = float;
+    static float max() { return 1.f; }
+    static const int _samples_count = 3;
   };
 }
 
@@ -187,7 +100,7 @@ namespace ggo
   // rgb 32f => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
   {
-    return ggo::color_8u(ggo::to<uint8_t>(255.f * c._r), ggo::to<uint8_t>(255.f * c._g), ggo::to<uint8_t>(255.f * c._b));
+    return ggo::color_8u(ggo::to<uint8_t>(255.f * c.r()), ggo::to<uint8_t>(255.f * c.g()), ggo::to<uint8_t>(255.f * c.b()));
   }
 
   // rgb 32f <=> rgb 32f
@@ -205,7 +118,7 @@ namespace ggo
   // rgb 8u => rgb 32f
   template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_8u>(const ggo::color_8u & c)
   {
-    return ggo::color_32f(c._r / 255.f, c._g / 255.f, c._b / 255.f);
+    return ggo::color_32f(c.r() / 255.f, c.g() / 255.f, c.b() / 255.f);
   }
 
   // y 8u => rgb 8u
@@ -227,16 +140,73 @@ namespace ggo
 // Static variables.
 namespace ggo
 {
-  template <typename data_t> const color<data_t> color<data_t>::white(color<data_t>::max(), color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::gray(color<data_t>::max() / 2, color<data_t>::max() / 2, color<data_t>::max() / 2);
-  template <typename data_t> const color<data_t> color<data_t>::black(0, 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::red(color<data_t>::max(), 0, 0);
-  template <typename data_t> const color<data_t> color<data_t>::green(0, color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::blue(0, 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::cyan(0, color<data_t>::max(), color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::magenta(color<data_t>::max(), 0, color<data_t>::max());
-  template <typename data_t> const color<data_t> color<data_t>::yellow(color<data_t>::max(), color<data_t>::max(), 0);
-  template <typename data_t> const color<data_t> color<data_t>::orange(color<data_t>::max(), color<data_t>::max() / 2, 0);
+  template <typename color_t> color_t white()
+  { 
+    const auto v = color_traits<color_t>::max();
+    return color_t(v, v, v);
+  }
+
+  template <typename color_t> color_t gray()
+  { 
+    using sample_t = color_traits<color_t>::sample_t;
+    const sample_t v = color_traits<color_t>::max() / 2;
+    return color_t(v, v, v);
+  }
+
+  template <typename color_t> color_t black()
+  { 
+    using sample_t = color_traits<color_t>::sample_t;
+    return color_t(sample_t(0), sample_t(0), sample_t(0));
+  }
+
+  template <typename color_t> color_t red()
+  { 
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(v, sample_t(0), sample_t(0));
+  }
+
+  template <typename color_t> color_t green()
+  { 
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(sample_t(0), v, sample_t(0));
+  }
+
+  template <typename color_t> color_t blue()
+  {
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(sample_t(0), sample_t(0), v);
+  }
+
+  template <typename color_t> color_t cyan()
+  {
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(sample_t(0), v, v);
+  }
+
+  template <typename color_t> color_t magenta()
+  {
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(v, sample_t(0), v);
+  }
+
+  template <typename color_t> color_t yellow()
+  {
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(v, v, sample_t(0));
+  }
+
+  template <typename color_t> color_t orange()
+  {
+    using sample_t = color_traits<color_t>::sample_t;
+    const auto v = color_traits<color_t>::max();
+    return color_t(v, sample_t(v / 2), sample_t(0));
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -258,8 +228,13 @@ namespace ggo
   struct accumulator<color_8u>
   {
     int r = 0; int g = 0; int b = 0;
-    void add(const color_8u & c) { r += c._r; g += c._g; b += c._b; }
-    template <int count> color_8u div() const { return color_8u((r + count / 2) / count, (g + count / 2) / count, (b + count / 2) / count); }
+    void add(const color_8u & c) { r += c.r(); g += c.g(); b += c.b(); }
+    template <int count> color_8u div() const {
+      return color_8u(
+        static_cast<uint8_t>((r + count / 2) / count),
+        static_cast<uint8_t>((g + count / 2) / count),
+        static_cast<uint8_t>((b + count / 2) / count));
+    }
   };
 
   template <>
@@ -274,7 +249,7 @@ namespace ggo
   struct accumulator<color_32f>
   {
     float r = 0.f; float g = 0.f; float b = 0.f;
-    void add(const color_32f & c) { r += c._r; g += c._g; b += c._b; }
+    void add(const color_32f & c) { r += c.r(); g += c.g(); b += c.b(); }
     template <int count> color_32f div() const { return color_32f(r / count, g / count, b / count); }
   };
 }

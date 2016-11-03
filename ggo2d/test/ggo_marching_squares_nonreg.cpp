@@ -23,7 +23,7 @@ GGO_TEST(marching_squares, circle)
     for (const auto & segment : cell._segments)
     {
       ggo::extended_segment_float segment(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
-      segments.emplace_back(segment, ggo::color_8u::white);
+      segments.emplace_back(segment, ggo::white<ggo::color_8u>());
     }
   }
 

@@ -10,12 +10,12 @@ GGO_TEST(shapes3d, vec3)
     auto basis = build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
-    GGO_CHECK_FABS(basis.first.get<0>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.first.get<1>(), -1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.first.get<2>(), 0);
-    GGO_CHECK_FABS(basis.second.get<0>(), 0);
-    GGO_CHECK_FABS(basis.second.get<1>(), 0);
-    GGO_CHECK_FABS(basis.second.get<2>(), -1);
+    GGO_CHECK_FABS(basis.first.x(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.first.y(), -1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.first.z(), 0);
+    GGO_CHECK_FABS(basis.second.x(), 0);
+    GGO_CHECK_FABS(basis.second.y(), 0);
+    GGO_CHECK_FABS(basis.second.z(), -1);
   }
 
   {
@@ -24,12 +24,12 @@ GGO_TEST(shapes3d, vec3)
     auto basis = build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
-    GGO_CHECK_FABS(basis.first.get<0>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.first.get<1>(), 0);
-    GGO_CHECK_FABS(basis.first.get<2>(), -1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.second.get<0>(), 0);
-    GGO_CHECK_FABS(basis.second.get<1>(), 1);
-    GGO_CHECK_FABS(basis.second.get<2>(), 0);
+    GGO_CHECK_FABS(basis.first.x(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.first.y(), 0);
+    GGO_CHECK_FABS(basis.first.z(), -1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.second.x(), 0);
+    GGO_CHECK_FABS(basis.second.y(), 1);
+    GGO_CHECK_FABS(basis.second.z(), 0);
   }
 
   {
@@ -38,12 +38,12 @@ GGO_TEST(shapes3d, vec3)
     auto basis = build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
-    GGO_CHECK_FABS(basis.first.get<0>(), 0);
-    GGO_CHECK_FABS(basis.first.get<1>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.first.get<2>(), -1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.second.get<0>(), -1);
-    GGO_CHECK_FABS(basis.second.get<1>(), 0);
-    GGO_CHECK_FABS(basis.second.get<2>(), 0);
+    GGO_CHECK_FABS(basis.first.x(), 0);
+    GGO_CHECK_FABS(basis.first.y(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.first.z(), -1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.second.x(), -1);
+    GGO_CHECK_FABS(basis.second.y(), 0);
+    GGO_CHECK_FABS(basis.second.z(), 0);
   }
 }
 
@@ -59,12 +59,12 @@ GGO_TEST(shapes3d, centered_spheres)
     GGO_CHECK(sphere.intersect_ray(ray, dist, normal) == true);
 
     GGO_CHECK_FABS(dist, 8);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 0);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 2);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+    GGO_CHECK_FABS(normal.pos().x(), 0);
+    GGO_CHECK_FABS(normal.pos().y(), 0);
+    GGO_CHECK_FABS(normal.pos().z(), 2);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
 
     ray.pos() = ggo::pos3f(5.f, 0.f, 5.f);
     GGO_CHECK(sphere.intersect_ray(ray, dist, normal) == false);
@@ -76,12 +76,12 @@ GGO_TEST(shapes3d, centered_spheres)
     ggo::ray3d_float ray2(ggo::pos3f(0.f, 0.f, 0.f), ggo::vec3f(0.f, 1.f, 0.f));
     GGO_CHECK(sphere.intersect_ray(ray2, dist, normal) == true);
     GGO_CHECK_FABS(dist, 2);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), -1);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 0);
+    GGO_CHECK_FABS(normal.pos().y(), 2);
+    GGO_CHECK_FABS(normal.pos().z(), 0);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), -1);
+    GGO_CHECK_FABS(normal.dir().z(), 0);
   }
 }
 
@@ -95,9 +95,9 @@ GGO_TEST(shapes3d, spheres)
 
     ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().get<0>(), sphere1.center().get<0>());
-    GGO_CHECK_FABS(sphere3.center().get<1>(), sphere1.center().get<1>());
-    GGO_CHECK_FABS(sphere3.center().get<2>(), sphere1.center().get<2>());
+    GGO_CHECK_FABS(sphere3.center().x(), sphere1.center().x());
+    GGO_CHECK_FABS(sphere3.center().y(), sphere1.center().y());
+    GGO_CHECK_FABS(sphere3.center().z(), sphere1.center().z());
     GGO_CHECK_FABS(sphere3.radius(), sphere1.radius());
   }
 
@@ -108,9 +108,9 @@ GGO_TEST(shapes3d, spheres)
 
     ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().get<0>(), sphere2.center().get<0>());
-    GGO_CHECK_FABS(sphere3.center().get<1>(), sphere2.center().get<1>());
-    GGO_CHECK_FABS(sphere3.center().get<2>(), sphere2.center().get<2>());
+    GGO_CHECK_FABS(sphere3.center().x(), sphere2.center().x());
+    GGO_CHECK_FABS(sphere3.center().y(), sphere2.center().y());
+    GGO_CHECK_FABS(sphere3.center().z(), sphere2.center().z());
     GGO_CHECK_FABS(sphere3.radius(), sphere2.radius());
   }
 
@@ -121,9 +121,9 @@ GGO_TEST(shapes3d, spheres)
 
     ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().get<0>(), -0.5);
-    GGO_CHECK_FABS(sphere3.center().get<1>(), 0);
-    GGO_CHECK_FABS(sphere3.center().get<2>(), 0);
+    GGO_CHECK_FABS(sphere3.center().x(), -0.5);
+    GGO_CHECK_FABS(sphere3.center().y(), 0);
+    GGO_CHECK_FABS(sphere3.center().z(), 0);
     GGO_CHECK_FABS(sphere3.radius(), 4.5);
   }
 
@@ -134,9 +134,9 @@ GGO_TEST(shapes3d, spheres)
 
     ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().get<0>(), 0);
-    GGO_CHECK_FABS(sphere3.center().get<1>(), -0.5);
-    GGO_CHECK_FABS(sphere3.center().get<2>(), 0);
+    GGO_CHECK_FABS(sphere3.center().x(), 0);
+    GGO_CHECK_FABS(sphere3.center().y(), -0.5);
+    GGO_CHECK_FABS(sphere3.center().z(), 0);
     GGO_CHECK_FABS(sphere3.radius(), 3.5);
   }
 
@@ -149,12 +149,12 @@ GGO_TEST(shapes3d, spheres)
     ggo::ray3d_float ray1(ggo::pos3f(10.f, 11.f, 3.f), ggo::vec3f(0.f, 0.f, 1.f));
     GGO_CHECK(sphere.intersect_ray(ray1, t, normal) == true);
     GGO_CHECK_FABS(t, 7);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 10);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 11);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 10);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), -1);
+    GGO_CHECK_FABS(normal.pos().x(), 10);
+    GGO_CHECK_FABS(normal.pos().y(), 11);
+    GGO_CHECK_FABS(normal.pos().z(), 10);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), -1);
 
     ggo::ray3d_float ray2(ggo::pos3f(10.f, 2.f, 3.f), ggo::vec3f(1.f, 1.f, 1.f));
     GGO_CHECK(sphere.intersect_ray(ray2, t, normal) == false);
@@ -162,33 +162,33 @@ GGO_TEST(shapes3d, spheres)
     ggo::ray3d_float ray4(ggo::pos3f(8.f, 11.f, 8.f), ggo::vec3f(1.f, 0.f, 1.f));
     GGO_CHECK(sphere.intersect_ray(ray4, t, normal) == true);
     GGO_CHECK_FABS(t, 2 * std::sqrt(2));
-    GGO_CHECK_FABS(normal.pos().get<0>(), 10);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 11);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 10);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), -1);
+    GGO_CHECK_FABS(normal.pos().x(), 10);
+    GGO_CHECK_FABS(normal.pos().y(), 11);
+    GGO_CHECK_FABS(normal.pos().z(), 10);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), -1);
 
     ggo::ray3d_float ray5(ggo::pos3f(13.f, 16.f, 12.f), ggo::vec3f(-1.f, -1.f, 0.f));
     GGO_CHECK(sphere.intersect_ray(ray5, t, normal) == true);
     GGO_CHECK_FABS(t, 3 * std::sqrt(2));
-    GGO_CHECK_FABS(normal.pos().get<0>(), 10);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 13);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 12);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 1);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 10);
+    GGO_CHECK_FABS(normal.pos().y(), 13);
+    GGO_CHECK_FABS(normal.pos().z(), 12);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 1);
+    GGO_CHECK_FABS(normal.dir().z(), 0);
 
     // Ray's origin inside the shpere.
     ggo::ray3d_float ray6(ggo::pos3f(10.f, 11.f, 12.f), ggo::vec3f(0.f, 1.f, 0.f));
     GGO_CHECK(sphere.intersect_ray(ray6, t, normal) == true);
     GGO_CHECK_FABS(t, 2);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 10);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 13);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 12);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), -1);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 10);
+    GGO_CHECK_FABS(normal.pos().y(), 13);
+    GGO_CHECK_FABS(normal.pos().z(), 12);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), -1);
+    GGO_CHECK_FABS(normal.dir().z(), 0);
   }
 
   {
@@ -209,45 +209,45 @@ GGO_TEST(shapes3d, basis)
     basis.move(1, 2, 1);
 
     ggo::vec3f v1 = basis.vector_from_local_to_world(ggo::vec3f(1.f, 2.f, 3.f));
-    GGO_CHECK_FABS(v1.get<0>(), 1);
-    GGO_CHECK_FABS(v1.get<1>(), 2);
-    GGO_CHECK_FABS(v1.get<2>(), 3);
+    GGO_CHECK_FABS(v1.x(), 1);
+    GGO_CHECK_FABS(v1.y(), 2);
+    GGO_CHECK_FABS(v1.z(), 3);
 
     ggo::vec3f v2 = basis.vector_from_world_to_local(ggo::vec3f(1.f, 2.f, 3.f));
-    GGO_CHECK_FABS(v2.get<0>(), 1);
-    GGO_CHECK_FABS(v2.get<1>(), 2);
-    GGO_CHECK_FABS(v2.get<2>(), 3);
+    GGO_CHECK_FABS(v2.x(), 1);
+    GGO_CHECK_FABS(v2.y(), 2);
+    GGO_CHECK_FABS(v2.z(), 3);
 
     ggo::pos3f p1 = basis.point_from_world_to_local(ggo::pos3f(3.f, 2.f, 0.f));
-    GGO_CHECK_FABS(p1.get<0>(), 2);
-    GGO_CHECK_FABS(p1.get<1>(), 0);
-    GGO_CHECK_FABS(p1.get<2>(), -1);
+    GGO_CHECK_FABS(p1.x(), 2);
+    GGO_CHECK_FABS(p1.y(), 0);
+    GGO_CHECK_FABS(p1.z(), -1);
 
     ggo::pos3f p2 = basis.point_from_world_to_local(ggo::pos3f(0.f, 2.f, 0.f));
-    GGO_CHECK_FABS(p2.get<0>(), -1);
-    GGO_CHECK_FABS(p2.get<1>(), 0);
-    GGO_CHECK_FABS(p2.get<2>(), -1);    
+    GGO_CHECK_FABS(p2.x(), -1);
+    GGO_CHECK_FABS(p2.y(), 0);
+    GGO_CHECK_FABS(p2.z(), -1);    
 
     basis.rotate_z(ggo::pi<float>() / 4);
-    GGO_CHECK_FABS(basis.x().get<0>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.x().get<1>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.x().get<2>(), 0);
-    GGO_CHECK_FABS(basis.y().get<0>(), -1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.y().get<1>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(basis.y().get<2>(), 0);
-    GGO_CHECK_FABS(basis.z().get<0>(), 0);
-    GGO_CHECK_FABS(basis.z().get<1>(), 0);
-    GGO_CHECK_FABS(basis.z().get<2>(), 1);
+    GGO_CHECK_FABS(basis.x().x(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.x().y(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.x().z(), 0);
+    GGO_CHECK_FABS(basis.y().x(), -1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.y().y(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(basis.y().z(), 0);
+    GGO_CHECK_FABS(basis.z().x(), 0);
+    GGO_CHECK_FABS(basis.z().y(), 0);
+    GGO_CHECK_FABS(basis.z().z(), 1);
 
     ggo::pos3f p3 = basis.point_from_world_to_local(ggo::pos3f(2.f, 4.f, 0.f));
-    GGO_CHECK_FABS(p3.get<0>(), 1.5 * std::sqrt(2));
-    GGO_CHECK_FABS(p3.get<1>(), 0.5 * std::sqrt(2));
-    GGO_CHECK_FABS(p3.get<2>(), -1);
+    GGO_CHECK_FABS(p3.x(), 1.5 * std::sqrt(2));
+    GGO_CHECK_FABS(p3.y(), 0.5 * std::sqrt(2));
+    GGO_CHECK_FABS(p3.z(), -1);
 
     ggo::pos3f p4 = basis.point_from_local_to_world(ggo::pos3f(1.f, 2.f, 0.f));
-    GGO_CHECK_FABS(p4.get<0>(), 1 - 1 / std::sqrt(2));
-    GGO_CHECK_FABS(p4.get<1>(), 2 + 3 / std::sqrt(2));
-    GGO_CHECK_FABS(p4.get<2>(), 1);
+    GGO_CHECK_FABS(p4.x(), 1 - 1 / std::sqrt(2));
+    GGO_CHECK_FABS(p4.y(), 2 + 3 / std::sqrt(2));
+    GGO_CHECK_FABS(p4.z(), 1);
   }
   
   {
@@ -256,21 +256,21 @@ GGO_TEST(shapes3d, basis)
     basis.pos() = {0.f, 0.f, 1.f };
     basis.look_at({0.f, 0.f, 0.f });
     
-    GGO_CHECK_FABS(basis.z().get<0>(), 0);
-    GGO_CHECK_FABS(basis.z().get<1>(), 0);
-    GGO_CHECK_FABS(basis.z().get<2>(), 1);
+    GGO_CHECK_FABS(basis.z().x(), 0);
+    GGO_CHECK_FABS(basis.z().y(), 0);
+    GGO_CHECK_FABS(basis.z().z(), 1);
   }
 
   {
     ggo::basis3d_float basis;
 
     ggo::pos2f proj1 = basis.project({ 0.f, 0.f, -2.f }, 0.5f, 200, 100);
-    GGO_CHECK_FABS(proj1.get<0>(), 100.f);
-    GGO_CHECK_FABS(proj1.get<1>(), 50.f);
+    GGO_CHECK_FABS(proj1.x(), 100.f);
+    GGO_CHECK_FABS(proj1.y(), 50.f);
 
     ggo::pos2f proj2 = basis.project({ 2.f, 2.f, -2.f }, 1.0f, 200, 100);
-    GGO_CHECK_FABS(proj2.get<0>(), 150.f);
-    GGO_CHECK_FABS(proj2.get<1>(), 100.f);
+    GGO_CHECK_FABS(proj2.x(), 150.f);
+    GGO_CHECK_FABS(proj2.y(), 100.f);
   }
 }
 
@@ -300,12 +300,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 3);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+  GGO_CHECK_FABS(normal.pos().x(), 0);
+  GGO_CHECK_FABS(normal.pos().y(), 0);
+  GGO_CHECK_FABS(normal.pos().z(), 5);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), 1);
   
   // Bottom -> up rays.
   ray.set_pos(2, 0, 1);
@@ -323,12 +323,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 2);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 2);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), -1);
+  GGO_CHECK_FABS(normal.pos().x(), 0);
+  GGO_CHECK_FABS(normal.pos().y(), 0);
+  GGO_CHECK_FABS(normal.pos().z(), 2);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), -1);
   
   // Left -> right rays.
   ray.set_pos(0, 3, 4);
@@ -346,12 +346,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 4);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<1>(), -1);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 4);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), -1);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+  GGO_CHECK_FABS(normal.pos().x(), 0);
+  GGO_CHECK_FABS(normal.pos().y(), -1);
+  GGO_CHECK_FABS(normal.pos().z(), 4);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), -1);
+  GGO_CHECK_FABS(normal.dir().z(), 0);
   
   // Right -> left rays.
   ray.set_pos(0, -2, 4);
@@ -369,12 +369,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 8);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 0);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 4);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 1);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+  GGO_CHECK_FABS(normal.pos().x(), 0);
+  GGO_CHECK_FABS(normal.pos().y(), 2);
+  GGO_CHECK_FABS(normal.pos().z(), 4);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 1);
+  GGO_CHECK_FABS(normal.dir().z(), 0);
   
   // Far -> near rays.
   ray.set_pos(-2, 10, 10);
@@ -392,12 +392,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 1);
-  GGO_CHECK_FABS(normal.pos().get<0>(), -1);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 1);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 3);
-  GGO_CHECK_FABS(normal.dir().get<0>(), -1);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+  GGO_CHECK_FABS(normal.pos().x(), -1);
+  GGO_CHECK_FABS(normal.pos().y(), 1);
+  GGO_CHECK_FABS(normal.pos().z(), 3);
+  GGO_CHECK_FABS(normal.dir().x(), -1);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), 0);
 
   // Near -> far rays.
   ray.set_pos(2, 10, 10);
@@ -415,12 +415,12 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FABS(dist, 7);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 1);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 1);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 3);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 1);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+  GGO_CHECK_FABS(normal.pos().x(), 1);
+  GGO_CHECK_FABS(normal.pos().y(), 1);
+  GGO_CHECK_FABS(normal.pos().z(), 3);
+  GGO_CHECK_FABS(normal.dir().x(), 1);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), 0);
   
   // Merbe axis aligned box.
   box.merge_with(ggo::aabox3d_float(-3, -2, -10, 20, 3, 4));
@@ -443,12 +443,12 @@ GGO_TEST(shapes3d, plane3d)
     ggo::ray3d_float ray1(ggo::pos3f(2.f, 3.f, 5.f), ggo::vec3f(0.f, 0.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray1, dist, normal) == true);
     GGO_CHECK_FABS(dist, 6);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 3);
-    GGO_CHECK_FABS(normal.pos().get<2>(), -1);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+    GGO_CHECK_FABS(normal.pos().x(), 2);
+    GGO_CHECK_FABS(normal.pos().y(), 3);
+    GGO_CHECK_FABS(normal.pos().z(), -1);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
 
     ggo::ray3d_float ray2(ggo::pos3f(2.f, 4.f, -2.f), ggo::vec3f(-1.f, 2.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
@@ -465,12 +465,12 @@ GGO_TEST(shapes3d, plane3d)
     ggo::ray3d_float ray(ggo::pos3f(1.f, 3.f, 2.f), ggo::vec3f(1.f, -2.f, 1.f));
     GGO_CHECK(plane.intersect_ray(ray, dist, normal) == true);
     GGO_CHECK_FABS(dist, std::sqrt(6));
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 1);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 3);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 1 / std::sqrt(6.f));
-    GGO_CHECK_FABS(normal.dir().get<1>(), 2 / std::sqrt(6.f));
-    GGO_CHECK_FABS(normal.dir().get<2>(), -1 / std::sqrt(6.f));
+    GGO_CHECK_FABS(normal.pos().x(), 2);
+    GGO_CHECK_FABS(normal.pos().y(), 1);
+    GGO_CHECK_FABS(normal.pos().z(), 3);
+    GGO_CHECK_FABS(normal.dir().x(), 1 / std::sqrt(6.f));
+    GGO_CHECK_FABS(normal.dir().y(), 2 / std::sqrt(6.f));
+    GGO_CHECK_FABS(normal.dir().z(), -1 / std::sqrt(6.f));
   }
 
   {
@@ -481,12 +481,12 @@ GGO_TEST(shapes3d, plane3d)
     ggo::ray3d_float ray1(ggo::pos3f(2.f, 3.f, 5.f), ggo::vec3f(0.f, 0.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray1, dist, normal) == true);
     GGO_CHECK_FABS(dist, 6);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 3);
-    GGO_CHECK_FABS(normal.pos().get<2>(), -1);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+    GGO_CHECK_FABS(normal.pos().x(), 2);
+    GGO_CHECK_FABS(normal.pos().y(), 3);
+    GGO_CHECK_FABS(normal.pos().z(), -1);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
 
     ggo::ray3d_float ray2(ggo::pos3f(2.f, 4.f, -2.f), ggo::vec3f(-1.f, 2.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
@@ -515,12 +515,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 1);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+    GGO_CHECK_FABS(normal.pos().x(), 1);
+    GGO_CHECK_FABS(normal.pos().y(), 2);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
   }
   
   // Hit vertex 2
@@ -529,12 +529,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 1);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 2);
+    GGO_CHECK_FABS(normal.pos().y(), 2);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 1);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 0);
   }
   
   // Hit vertex 3
@@ -543,12 +543,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 2);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 3);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 1);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 1);
+    GGO_CHECK_FABS(normal.pos().y(), 3);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 1);
+    GGO_CHECK_FABS(normal.dir().z(), 0);
   }
   
   // Hit between vertex 1 and vertex 2
@@ -557,12 +557,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1 / std::sqrt(2));
   }
   
   // Hit between vertex 2 and vertex 3
@@ -571,12 +571,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(normal.dir().get<1>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.dir().y(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.dir().z(), 0);
   }
   
   // Hit between vertex 3 and vertex 1
@@ -585,12 +585,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 1 / std::sqrt(2));
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.pos().x(), 1);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 1 / std::sqrt(2));
+    GGO_CHECK_FABS(normal.dir().z(), 1 / std::sqrt(2));
   }
   
   // Hit inside the triangle
@@ -599,12 +599,12 @@ GGO_TEST(shapes3d, polygon3d)
     float dist = 0;
     GGO_CHECK(polygon.intersect_ray(ray, dist, normal));
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.25);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.25);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0.25 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0.25 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0.5 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
+    GGO_CHECK_FABS(normal.pos().x(), 1.25);
+    GGO_CHECK_FABS(normal.pos().y(), 2.25);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0.25 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
+    GGO_CHECK_FABS(normal.dir().y(), 0.25 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
+    GGO_CHECK_FABS(normal.dir().z(), 0.5 / std::sqrt(0.5 * 0.5 + 0.25 * 0.25 + 0.25 * 0.25));
   }
   
   // No hit
@@ -630,8 +630,8 @@ GGO_TEST(shapes3d, triangle3d)
     
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == true);
     GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == false);
     
@@ -648,12 +648,12 @@ GGO_TEST(shapes3d, triangle3d)
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == true);
     GGO_CHECK_FABS(dist, 3);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), -1);
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), -1);
     
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 3.5, 6, 0, 0, -1), dist, normal) == false);
   }
@@ -665,21 +665,21 @@ GGO_TEST(shapes3d, triangle3d)
     ggo::ray3d_float normal;
     
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == true);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), 1);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == true);
     GGO_CHECK_FABS(dist, 3);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 1.5);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.5);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 5);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-    GGO_CHECK_FABS(normal.dir().get<2>(), -1);
+    GGO_CHECK_FABS(normal.pos().x(), 1.5);
+    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FABS(normal.pos().z(), 5);
+    GGO_CHECK_FABS(normal.dir().x(), 0);
+    GGO_CHECK_FABS(normal.dir().y(), 0);
+    GGO_CHECK_FABS(normal.dir().z(), -1);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 3.5, 6, 0, 0, -1), dist, normal) == false);
   }
@@ -694,12 +694,12 @@ GGO_TEST(shapes3d, disc3d)
   float dist = 0;
   GGO_CHECK(disc.intersect_ray(ggo::ray3d_float({3.f, 5.f, 0.f }, {0.f, -1.f, 0.f }, false), dist, normal) == true);
   GGO_CHECK_FABS(dist, 3);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 3);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 1);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0);
+  GGO_CHECK_FABS(normal.pos().x(), 3);
+  GGO_CHECK_FABS(normal.pos().y(), 2);
+  GGO_CHECK_FABS(normal.pos().z(), 0);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 1);
+  GGO_CHECK_FABS(normal.dir().z(), 0);
   
   GGO_CHECK(disc.intersect_ray(ggo::ray3d_float({1.f, 5.f, 0.f}, {0.f, -1.f, 0.f }, false), dist, normal) == false);
   GGO_CHECK(disc.intersect_ray(ggo::ray3d_float({4.f, 1.f, 0.f}, {0.f, -1.f, 0.f }, false), dist, normal) == false);
@@ -716,21 +716,21 @@ GGO_TEST(shapes3d, parallelogram3d)
   
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({5.f, 2.f, 2.f }, {0.f, 0.f, -1.f }, false), dist, normal) == true);
   GGO_CHECK_FABS(dist, 1);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 5);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 1);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+  GGO_CHECK_FABS(normal.pos().x(), 5);
+  GGO_CHECK_FABS(normal.pos().y(), 2);
+  GGO_CHECK_FABS(normal.pos().z(), 1);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), 1);
   
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({1.f, 2.f, 3.f }, {0.f, 0.f, -1.f }, false), dist, normal) == true);
   GGO_CHECK_FABS(dist, 2);
-  GGO_CHECK_FABS(normal.pos().get<0>(), 1);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 2);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 1);
-  GGO_CHECK_FABS(normal.dir().get<0>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 1);
+  GGO_CHECK_FABS(normal.pos().x(), 1);
+  GGO_CHECK_FABS(normal.pos().y(), 2);
+  GGO_CHECK_FABS(normal.pos().z(), 1);
+  GGO_CHECK_FABS(normal.dir().x(), 0);
+  GGO_CHECK_FABS(normal.dir().y(), 0);
+  GGO_CHECK_FABS(normal.dir().z(), 1);
 
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({5.f, 2.f, 0.f}, {0.f, 0.f, -1.f }, false), dist, normal) == false);
   GGO_CHECK(parallelogram.intersect_ray(ggo::ray3d_float({5.f, 2.f, 2.f}, {0.f, 0.f, 1.f }, false), dist, normal) == false);
@@ -749,12 +749,12 @@ GGO_TEST(shapes3d, metaball)
   ggo::ray3d_float normal;
   ggo::ray3d_float ray({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, false);
   GGO_CHECK(metaball.intersect_ray(ray, dist, normal) == true);
-  GGO_CHECK_FABS(normal.pos().get<0>(), dist);
-  GGO_CHECK_FABS(normal.pos().get<1>(), 0.f);
-  GGO_CHECK_FABS(normal.pos().get<2>(), 0.f);
-  GGO_CHECK_FABS(normal.dir().get<0>(), -1.f);
-  GGO_CHECK_FABS(normal.dir().get<1>(), 0.f);
-  GGO_CHECK_FABS(normal.dir().get<2>(), 0.f);
+  GGO_CHECK_FABS(normal.pos().x(), dist);
+  GGO_CHECK_FABS(normal.pos().y(), 0.f);
+  GGO_CHECK_FABS(normal.pos().z(), 0.f);
+  GGO_CHECK_FABS(normal.dir().x(), -1.f);
+  GGO_CHECK_FABS(normal.dir().y(), 0.f);
+  GGO_CHECK_FABS(normal.dir().z(), 0.f);
 }
 
 /////////////////////////////////////////////////////////////////////  
@@ -786,13 +786,13 @@ GGO_TEST(shapes3d, line3d)
     ggo::pos3f p1, p2;
     GGO_CHECK(ggo::find_closest_lines_points(ggo::line3d<float>(orig1, dir1), ggo::line3d<float>(orig2, dir2), p1, p2) == true);
 
-    GGO_CHECK_FABS(p1.get<0>(), 1.f);
-    GGO_CHECK_FABS(p1.get<1>(), 2.f);
-    GGO_CHECK_FABS(p1.get<2>(), 0.f);
+    GGO_CHECK_FABS(p1.x(), 1.f);
+    GGO_CHECK_FABS(p1.y(), 2.f);
+    GGO_CHECK_FABS(p1.z(), 0.f);
 
-    GGO_CHECK_FABS(p2.get<0>(), 1.f);
-    GGO_CHECK_FABS(p2.get<1>(), 2.f);
-    GGO_CHECK_FABS(p2.get<2>(), 1.f);
+    GGO_CHECK_FABS(p2.x(), 1.f);
+    GGO_CHECK_FABS(p2.y(), 2.f);
+    GGO_CHECK_FABS(p2.z(), 1.f);
   }
 
   {
@@ -819,12 +819,12 @@ GGO_TEST(shapes3d, cylinder3d)
     ggo::ray3d_float normal;
     GGO_CHECK(cylinder.intersect_ray(ray, dist, normal) == true);
     GGO_CHECK_FABS(dist, 1.f);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2.f);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 2.f);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 0.f);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0.f);
-    GGO_CHECK_FABS(normal.dir().get<1>(), -1.f);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0.f);
+    GGO_CHECK_FABS(normal.pos().x(), 2.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 0.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), -1.f);
+    GGO_CHECK_FABS(normal.dir().z(), 0.f);
   }
 
   // Ray inside the cyulinder.
@@ -833,12 +833,12 @@ GGO_TEST(shapes3d, cylinder3d)
     ggo::ray3d_float normal;
     GGO_CHECK(cylinder.intersect_ray(ggo::ray3d_float({ 2.f, 4.f, 1.f }, { 0.f, 1.f, 0.f }), dist, normal) == true);
     GGO_CHECK_FABS(dist, 2.f);
-    GGO_CHECK_FABS(normal.pos().get<0>(), 2.f);
-    GGO_CHECK_FABS(normal.pos().get<1>(), 6.f);
-    GGO_CHECK_FABS(normal.pos().get<2>(), 1.f);
-    GGO_CHECK_FABS(normal.dir().get<0>(), 0.f);
-    GGO_CHECK_FABS(normal.dir().get<1>(), -1.f);
-    GGO_CHECK_FABS(normal.dir().get<2>(), 0.f);
+    GGO_CHECK_FABS(normal.pos().x(), 2.f);
+    GGO_CHECK_FABS(normal.pos().y(), 6.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), -1.f);
+    GGO_CHECK_FABS(normal.dir().z(), 0.f);
   }
 }
 

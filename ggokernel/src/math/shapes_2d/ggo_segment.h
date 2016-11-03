@@ -28,8 +28,8 @@ namespace ggo
     data_t					          get_length() const;
   
     data_t                    hypot_to_point(data_t x, data_t y) const;
-    data_t                    hypot_to_point(const ggo::pos2<data_t> & p) const { return hypot_to_point(p.template get<0>(), p.template get<1>()); };
-    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.template get<0>(), p.template get<1>()); };
+    data_t                    hypot_to_point(const ggo::pos2<data_t> & p) const { return hypot_to_point(p.x(), p.y()); };
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.x(), p.y()); };
   
     data_t                    hypot_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
     data_t                    hypot_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;

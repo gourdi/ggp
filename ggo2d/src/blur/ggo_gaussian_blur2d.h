@@ -45,15 +45,15 @@ namespace ggo
 
     static ggo::color_16u convert(const ggo::color_8u & c)
     {
-      return ggo::color_16u(c._r, c._g, c._b);
+      return ggo::color_16u(uint16_t(c.r()), uint16_t(c.g()), uint16_t(c.b()));
     }
 
     static ggo::color_8u convert(const ggo::color_16u & c)
     {
       return ggo::color_8u(
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._r)),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._g)),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._b)));
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.r())),
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.g())),
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.b())));
     }
   };
 

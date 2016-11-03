@@ -107,8 +107,8 @@ GGO_TEST(sampling, halton)
   
   for (int i = 0; i < count_rect; ++i)
   {
-    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].get<0>()) <= 0.5f);
-    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].get<1>()) <= 0.5f);
+    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].x()) <= 0.5f);
+    GGO_CHECK(std::abs(ggo::halton_rect_2d_table_2_3[i].y()) <= 0.5f);
   }
   
   int count_disc = sizeof(ggo::halton_disc_2d_table_2_3) / sizeof(ggo::halton_disc_2d_table_2_3[0]);
@@ -116,8 +116,8 @@ GGO_TEST(sampling, halton)
   
   for (int i = 0; i < count_disc; ++i)
   {
-    float x = ggo::halton_disc_2d_table_2_3[i].get<0>();
-    float y = ggo::halton_disc_2d_table_2_3[i].get<1>();
+    float x = ggo::halton_disc_2d_table_2_3[i].x();
+    float y = ggo::halton_disc_2d_table_2_3[i].y();
     float dist = ggo::distance(x, y);
     GGO_CHECK(dist <= 0.5f);
   }

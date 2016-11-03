@@ -138,7 +138,8 @@ namespace ggo
   template <typename data_t, int row_index, int current, int size>
   struct compute_row_t
   {
-    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    template <vec_type vtype>
+    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size, vtype> & v)
     {
       return m.template get<row_index, current>() * v.template get<current>() + ggo::compute_row_t<data_t, row_index, current + 1, size>::compute_row(m, v);
     }
@@ -147,7 +148,8 @@ namespace ggo
   template <typename data_t, int row_index, int size>
   struct compute_row_t<data_t, row_index, size, size>
   {
-    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    template <vec_type vtype>
+    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size, vtype> & v)
     {
       return 0;
     }
@@ -156,7 +158,8 @@ namespace ggo
   template <typename data_t, int row_index, int size>
   struct process_row_t
   {
-    static void process_row(ggo::vec<data_t, size> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    template <vec_type vtype>
+    static void process_row(ggo::vec<data_t, size, vtype> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size, vtype> & v)
     {
       // Compute coef.
       r.template get<row_index>() = ggo::compute_row_t<data_t, row_index, 0, size>::compute_row(m, v);
@@ -169,16 +172,17 @@ namespace ggo
   template <typename data_t, int size>
   struct process_row_t<data_t, size, size>
   {
-    static void process_row(ggo::vec<data_t, size> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    template <vec_type vtype>
+    static void process_row(ggo::vec<data_t, size, vtype> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size, vtype> & v)
     {
       // Do nothing.
     }
   };
 
-  template <typename data_t, int size>
-  ggo::vec<data_t, size> operator*(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+  template <typename data_t, int size, vec_type vtype>
+  ggo::vec<data_t, size, vtype> operator*(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size, vtype> & v)
   {
-    ggo::vec<data_t, size> r;
+    ggo::vec<data_t, size, vtype> r;
 
     process_row_t<data_t, 0, size>::process_row(r, m, v);
 

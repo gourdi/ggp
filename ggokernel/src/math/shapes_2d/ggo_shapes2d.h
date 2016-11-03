@@ -32,13 +32,13 @@ namespace ggo
   template <typename T>
   rect_data<T> rect_data_union(const rect_data<T> & rect1, const rect_data<T> & rect2)
   {
-    T left1 = rect1._pos.template get<0>();
-    T bottom1 = rect1._pos.template get<1>();
+    T left1 = rect1._pos.x();
+    T bottom1 = rect1._pos.y();
     T right1 = left1 + rect1._width;
     T top1 = bottom1 + rect1._height;
 
-    T left2 = rect2._pos.template get<0>();
-    T bottom2 = rect2._pos.template get<1>();
+    T left2 = rect2._pos.x();
+    T bottom2 = rect2._pos.y();
     T right2 = left2 + rect2._width;
     T top2 = bottom2 + rect2._height;
 
@@ -53,13 +53,13 @@ namespace ggo
   template <typename T>
   bool rect_data_intersection(const rect_data<T> & rect1, const rect_data<T> & rect2, rect_data<T> & result)
   {
-    T left1 = rect1._pos.template get<0>();
-    T bottom1 = rect1._pos.template get<1>();
+    T left1 = rect1._pos.x();
+    T bottom1 = rect1._pos.y();
     T right1 = left1 + rect1._width;
     T top1 = bottom1 + rect1._height;
 
-    T left2 = rect2._pos.template get<0>();
-    T bottom2 = rect2._pos.template get<1>();
+    T left2 = rect2._pos.x();
+    T bottom2 = rect2._pos.y();
     T right2 = left2 + rect2._width;
     T top2 = bottom2 + rect2._height;
 
@@ -95,7 +95,7 @@ namespace ggo
   public:
 
     virtual	void move(data_t dx, data_t dy) = 0;
-            void move(const ggo::vec2<data_t> & m) { move(m.template get<0>(), m.template get<1>()); }
+            void move(const ggo::vec2<data_t> & m) { move(m.x(), m.y()); }
   };
 
   template <typename data_t>
@@ -112,7 +112,7 @@ namespace ggo
   public:
 
     virtual	data_t  dist_to_point(data_t x, data_t y) const = 0;
-            data_t  dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.template get<0>(), p.template get<1>()); }
+            data_t  dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.x(), p.y()); }
   };
 
   template <typename T>
@@ -139,7 +139,7 @@ namespace ggo
   public:
 
     virtual bool  is_point_inside(T x, T y) const = 0;
-            bool  is_point_inside(const ggo::pos2<T> & p) const { return is_point_inside(p.template get<0>(), p.template get<1>()); }
+            bool  is_point_inside(const ggo::pos2<T> & p) const { return is_point_inside(p.x(), p.y()); }
   };
 
   template <typename T>

@@ -12,16 +12,16 @@ namespace ggo
     auto rect_data = shape.get_bounding_rect();
     T width = rect_data._width;
     T height = rect_data._height;
-    ggo::pos2<T> center(rect_data._pos.template get<0>() + width / 2, rect_data._pos.template get<1>() + height / 2);
+    ggo::pos2<T> center(rect_data._pos.x() + width / 2, rect_data._pos.y() + height / 2);
 
     for (T y = delta_sample / 2; y < height / 2; y += delta_sample)
     {
       for (T x = delta_sample / 2; x < width / 2; x += delta_sample)
       {
-        T x1 = center.template get<0>() - x;
-        T x2 = center.template get<0>() + x;
-        T y1 = center.template get<1>() - y;
-        T y2 = center.template get<1>() + y;
+        T x1 = center.x() - x;
+        T x2 = center.x() + x;
+        T y1 = center.y() - y;
+        T y2 = center.y() + y;
 
         if (shape.is_point_inside(x1, y1) == true)
         {
@@ -52,7 +52,7 @@ namespace ggo
     auto rect_data = shape.get_bounding_rect();
     T width = rect_data._width;
     T height = rect_data._height;
-    ggo::pos2<T> center(rect_data._pos.template get<0>() + width / 2, rect_data._pos.template get<1>() + height / 2);
+    ggo::pos2<T> center(rect_data._pos.x() + width / 2, rect_data._pos.y() + height / 2);
 
     if (samples_count == 1)
     {
