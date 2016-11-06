@@ -5,7 +5,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   solid_color_material::solid_color_material()
   :
-  _color(ggo::color_32f::black)
+  _color(ggo::black<ggo::color_32f>())
   {
   }
 

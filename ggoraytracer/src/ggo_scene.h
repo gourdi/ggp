@@ -59,7 +59,7 @@ namespace ggo
 
     std::vector<std::shared_ptr<const ggo::object3d>> _objects;
     std::shared_ptr<const ggo::background3d_abc>      _background;
-    ggo::color_32f                                    _ambient_color = ggo::color_32f::black;
+    ggo::color_32f                                    _ambient_color = ggo::black<ggo::color_32f>();
     std::shared_ptr<const ggo::fog_abc>               _fog;
   };
 }

@@ -21,20 +21,20 @@ GGO_TEST(test_scene, scene4)
   camera.set_aperture(0.1f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
 
   // The fog.
-  scene_builder.set_fog(std::make_shared<ggo::z_fog>(ggo::color_32f::green, 0.f, -1.f, 3.f));
+  scene_builder.set_fog(std::make_shared<ggo::z_fog>(ggo::green<ggo::color_32f>(), 0.f, -1.f, 3.f));
 
   // Light.
-  scene_builder.add_point_light(ggo::color_32f::white, ggo::pos3f(-20.f, -20.f, 200.f));
+  scene_builder.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(-20.f, -20.f, 200.f));
 
   // Objects.
   auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), 1.f);
-  scene_builder.add_object(sphere, ggo::color_32f::red, false);
+  scene_builder.add_object(sphere, ggo::red<ggo::color_32f>(), false);
   
   auto aabox3d = std::make_shared<ggo::aabox3d_float>(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f);
-  scene_builder.add_object(aabox3d, ggo::color_32f::white, false);
+  scene_builder.add_object(aabox3d, ggo::white<ggo::color_32f>(), false);
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

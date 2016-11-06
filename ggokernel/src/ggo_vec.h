@@ -64,6 +64,7 @@ namespace ggo
 
     vec<data_t, n_dims, vtype>  operator-() const;
 
+    void            		        operator*=(const vec<data_t, n_dims, vtype> & rhs);
     void            		        operator+=(const vec<data_t, n_dims, vtype> & rhs);
     void            		        operator-=(const vec<data_t, n_dims, vtype> & rhs);
                                 
@@ -167,6 +168,14 @@ namespace ggo
 // Arithmetic global operators.
 namespace ggo
 {
+  template <typename data_t, int n_dims, vec_type vtype>
+  ggo::vec<data_t, n_dims, vtype> operator*(const ggo::vec<data_t, n_dims, vtype> & v1, const ggo::vec<data_t, n_dims, vtype> & v2)
+  {
+    ggo::vec<data_t, n_dims, vtype> r;
+    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 * src2; });
+    return r;
+  }
+
   template <typename data_t, int n_dims, vec_type vtype>
   ggo::vec<data_t, n_dims, vtype> operator+(const ggo::vec<data_t, n_dims, vtype> & v1, const ggo::vec<data_t, n_dims, vtype> & v2)
   {
@@ -351,6 +360,12 @@ namespace ggo
     vec<data_t, n_dims, vtype> v;
     ggo::unary_operation<n_dims>(v._coords, _coords, [](data_t & dst, const data_t & src) { dst = -src; });
     return v;
+  }
+
+  template <typename data_t, int n_dims, vec_type vtype>
+  void vec<data_t, n_dims, vtype>::operator*=(const vec<data_t, n_dims, vtype> & rhs)
+  {
+    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst *= src; });
   }
 
   template <typename data_t, int n_dims, vec_type vtype>

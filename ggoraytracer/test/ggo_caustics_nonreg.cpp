@@ -24,14 +24,14 @@ GGO_TEST(caustics, test)
   camera.basis().rotate(ggo::ray3d_float::O_X(), 0.8f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
 
   // Light.
   auto light = scene_builder.add_sphere_light(ggo::color_32f(0.9f), 1.f, ggo::pos3f(0.f, 0.f, 20.f));
 
   // Objects.
-  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f), ggo::color_32f::red, true);
-  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), 1.f), ggo::color_32f::white, true);
+  auto plane  = scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(0.f, 0.f, 1.f), -1.f), ggo::red<ggo::color_32f>(), true);
+  auto sphere = scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), 1.f), ggo::white<ggo::color_32f>(), true);
   sphere->set_transparent(true);
   sphere->set_density(1.1f);
   sphere->set_phong_factor(5.0f);

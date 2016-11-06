@@ -23,18 +23,18 @@ GGO_TEST(bidirectional_lighting, test)
   camera.set_depth_of_field(2.5f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
   
   // Light.
   scene_builder.add_sphere_light(ggo::color_32f(0.9f), 0.2f, ggo::pos3f(0.f, 0.75f, 0.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::color_32f::red, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::color_32f::green, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::color_32f::white, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::color_32f::white, true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::color_32f::white, true);
-  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::color_32f::white, true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::red<ggo::color_32f>(), true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::green<ggo::color_32f>(), true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::white<ggo::color_32f>(), true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::white<ggo::color_32f>(), true);
+  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::white<ggo::color_32f>(), true);
+  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::white<ggo::color_32f>(), true);
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_coun);

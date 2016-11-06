@@ -71,8 +71,8 @@ namespace ggo
     float                                                     _roughness = 0;
     float                                                     _phong_factor = 0;
     float                                                     _phong_shininess = 0;
-    ggo::color_32f                                            _transmission_color = ggo::color_32f::white;
-    ggo::color_32f                                            _emissive_color = ggo::color_32f::black;
+    ggo::color_32f                                            _transmission_color = ggo::white<ggo::color_32f>();
+    ggo::color_32f                                            _emissive_color = ggo::black<ggo::color_32f>();
     std::shared_ptr<const ggo::raytracable_shape3d_abc_float> _shape;
     std::shared_ptr<const ggo::material_abc>                  _material;
   };

@@ -106,7 +106,7 @@ namespace ggo
   {
     const float radius = 0.1f;
 
-    ggo::color_32f output_color(ggo::color_32f::black);
+    ggo::color_32f output_color(ggo::black<ggo::color_32f>());
 
     auto photons = _tree->find_points({ world_normal.pos().get<0>(), world_normal.pos().get<1>(), world_normal.pos().get<2>() }, radius);
         

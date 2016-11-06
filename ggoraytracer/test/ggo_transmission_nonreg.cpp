@@ -22,7 +22,7 @@ GGO_TEST(test_scene, transmission)
   camera.set_aperture(0.1f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::blue));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
 
   // Light.
   scene_builder.add_sphere_light(ggo::color_32f(1.25f), 100.f, ggo::pos3f(-20.f, -100.f, 200.f));
@@ -33,16 +33,16 @@ GGO_TEST(test_scene, transmission)
   for (int i = -2; i <= 2; ++i)
   {
     auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(2.f * static_cast<float>(i), 0.f, 0.f), 1.f);
-    auto object = scene_builder.add_object(sphere, ggo::color_32f::white, true);
+    auto object = scene_builder.add_object(sphere, ggo::white<ggo::color_32f>(), true);
     object->set_transparent(true);
     object->set_density(*densities_it++);
   }
 
   auto aabb = std::make_shared<ggo::aabox3d_float>(-6.f, 6.f, 5.f, 5.5f, -1.f, -0.5f);
-  scene_builder.add_object(aabb, ggo::color_32f::red, true);
+  scene_builder.add_object(aabb, ggo::red<ggo::color_32f>(), true);
 
   auto plane = std::make_shared<ggo::plane3d<float>>(ggo::pos3f(0.f, 0.f, 1.f), -1.f);
-  auto checker_material = std::make_shared<ggo::checker_xy_material>(ggo::color_32f::white, ggo::color_32f(0.5f, 0.5f, 0.5f), 0.5f);
+  auto checker_material = std::make_shared<ggo::checker_xy_material>(ggo::white<ggo::color_32f>(), ggo::color_32f(0.5f, 0.5f, 0.5f), 0.5f);
   scene_builder.add_object(plane, checker_material, true);
 
   // Rendering.

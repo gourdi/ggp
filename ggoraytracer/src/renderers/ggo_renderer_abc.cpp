@@ -71,9 +71,9 @@ namespace ggo
 
       uint8_t * ptr = buffer + 3 * (y * width + x);
         
-      *ptr++ = ggo::to<uint8_t>(color._r * 255.f);
-      *ptr++ = ggo::to<uint8_t>(color._g * 255.f);
-      *ptr++ = ggo::to<uint8_t>(color._b * 255.f);
+      *ptr++ = ggo::to<uint8_t>(color.r() * 255.f);
+      *ptr++ = ggo::to<uint8_t>(color.g() * 255.f);
+      *ptr++ = ggo::to<uint8_t>(color.b() * 255.f);
     }
   }
 #endif
@@ -131,9 +131,9 @@ namespace ggo
         {
           ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params);
 
-          *line++ = ggo::to<uint8_t>(color._r * 255.f);
-          *line++ = ggo::to<uint8_t>(color._g * 255.f);
-          *line++ = ggo::to<uint8_t>(color._b * 255.f);
+          *line++ = ggo::to<uint8_t>(color.r() * 255.f);
+          *line++ = ggo::to<uint8_t>(color.g() * 255.f);
+          *line++ = ggo::to<uint8_t>(color.b() * 255.f);
         }
       }
     }

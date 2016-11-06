@@ -18,14 +18,14 @@ GGO_TEST(cylinder, ray_outside)
   camera.set_aperture(0.1f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::red));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));
 
   // Light.
-  scene_builder.add_point_light(ggo::color_32f::white, ggo::pos3f(-100.f, -100.f, 200.f));
+  scene_builder.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(-100.f, -100.f, 200.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 5.f), ggo::vec3f(1.f, 0.f, 0.f), 0.5f), ggo::color_32f::white, false);
-  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(0.f, 0.f, 1.f), 0.f), ggo::color_32f::yellow, false);
+  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 5.f), ggo::vec3f(1.f, 0.f, 0.f), 0.5f), ggo::white<ggo::color_32f>(), false);
+  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(0.f, 0.f, 1.f), 0.f), ggo::yellow<ggo::color_32f>(), false);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
@@ -45,14 +45,14 @@ GGO_TEST(cylinder, ray_inside)
   camera.set_aperture(0.1f);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::red));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));
 
   // Light.
-  scene_builder.add_point_light(ggo::color_32f::white, ggo::pos3f(0.f, 0.f, 20.f));
+  scene_builder.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(0.f, 0.f, 20.f));
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), ggo::vec3f(0.f, 0.f, 1.f), 2.f), ggo::color_32f::white, false);
-  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(10.f, 0.f, 1.f), 0.f), ggo::color_32f::yellow, false);
+  scene_builder.add_object(std::make_shared<ggo::cylinder3d<float>>(ggo::pos3f(0.f, 0.f, 0.f), ggo::vec3f(0.f, 0.f, 1.f), 2.f), ggo::white<ggo::color_32f>(), false);
+  scene_builder.add_object(std::make_shared<ggo::plane3d_float>(ggo::pos3f(10.f, 0.f, 1.f), 0.f), ggo::yellow<ggo::color_32f>(), false);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

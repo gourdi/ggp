@@ -39,7 +39,7 @@ namespace ggo
   {
     if (!_material)
     {
-      return ggo::color_32f::black;
+      return ggo::black<ggo::color_32f>();
     }
 
     if (_discard_basis == true)

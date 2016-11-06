@@ -23,16 +23,16 @@ GGO_TEST(test_scene, scene6)
   camera.set_depth_of_field(50);
 
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f::red));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));
   
   // Light.
-  scene_builder.add_sphere_light(ggo::color_32f::white, 10.f, ggo::pos3f(-20.f, -20.f, 200.f));
+  scene_builder.add_sphere_light(ggo::white<ggo::color_32f>(), 10.f, ggo::pos3f(-20.f, -20.f, 200.f));
 
   // Objects.
   for (int i = -2; i < 5; ++i)
   {
     auto sphere = std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(static_cast<float>(i), 2.f * static_cast<float>(i), 0.f), 0.5f);
-    scene_builder.add_object(sphere, ggo::color_32f::yellow, false);
+    scene_builder.add_object(sphere, ggo::yellow<ggo::color_32f>(), false);
   }
 
   // Rendering.

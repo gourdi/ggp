@@ -84,7 +84,7 @@ namespace
   {
     if (depth < 0)
     {
-      return ggo::color_32f::black;
+      return ggo::black<ggo::color_32f>();
     }
 
     // Handle self-intersection.
@@ -116,7 +116,7 @@ namespace
     // Let's go.
     float reflection_factor = hit_object->get_reflection_factor();
     ggo::color_32f hit_color(hit_object->get_color(local_normal.pos()));
-    ggo::color_32f output_color(ggo::color_32f::black);
+    ggo::color_32f output_color(ggo::black<ggo::color_32f>());
 
     auto filtered_lights = filter_lights(scene, raycaster, world_normal, hit_object, sample_light_func);
 
@@ -218,7 +218,7 @@ namespace ggo
                                      const ggo::ray3d_float & ray,
                                      const ggo::ray3d_float & world_normal)
     {
-      return ggo::color_32f::black;
+      return ggo::black<ggo::color_32f>();
     };
 
     return process_aux(ray, scene, *raycaster, raytrace_params._indirect_lighting, raytrace_params._depth, nullptr, sample_light_func, sample_reflected_ray_func, indirect_lighting_func);
@@ -276,11 +276,11 @@ namespace ggo
       float dist = 0;
       if (raycaster.hit_test(ambient_ray, dist, ambient_local_normal, ambient_world_normal, exclude_object) != nullptr)
       {
-        return scene.fog()->process_segment(ambient_ray.pos(), ambient_world_normal.pos(), ggo::color_32f::black);
+        return scene.fog()->process_segment(ambient_ray.pos(), ambient_world_normal.pos(), ggo::black<ggo::color_32f>());
       }
       else
       {
-        return scene.fog()->process_background_ray(ambient_ray, ggo::color_32f::black);
+        return scene.fog()->process_background_ray(ambient_ray, ggo::black<ggo::color_32f>());
       }
     };
 
@@ -358,7 +358,7 @@ namespace ggo
   {
     if (phong_factor <= 0)
     {
-      return ggo::color_32f::black;
+      return ggo::black<ggo::color_32f>();
     }
 
     ggo::vec3f reflection_dir(2 * ggo::dot(world_normal.dir(), ray_to_light.dir()) * world_normal.dir() - ray_to_light.dir());
@@ -370,7 +370,7 @@ namespace ggo
     float phong = ggo::dot(reflection_dir, viewer_dir);
     if (phong <= 0)
     {
-      return ggo::color_32f::black;
+      return ggo::black<ggo::color_32f>();
     }
 
     float specular = phong_factor * std::pow(phong, phong_shininess);

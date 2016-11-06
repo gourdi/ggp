@@ -15,7 +15,7 @@ namespace ggo
   {
     for (const auto & object : objects)
     {
-      if (object->get_emissive_color().is_black() == false)
+      if (object->get_emissive_color() == ggo::black<ggo::color_32f>())
       {
         _lights.push_back(object);
       }
