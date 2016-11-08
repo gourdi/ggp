@@ -4,15 +4,18 @@
 #include "ggo_bitmap_artist_abc.h"
 #include "ggo_crystal_artist.h"
 
-class ggo_crystal_bitmap_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
-	
-        ggo_crystal_bitmap_artist(int render_width, int render_height);
+  class crystal_bitmap_artist : public bitmap_artist_abc
+  {
+  public:
 
-private:
+    crystal_bitmap_artist(int render_width, int render_height);
 
-	void	render_bitmap(uint8_t * buffer) override;
-};
+  private:
+
+    void	render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif
