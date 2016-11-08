@@ -2,14 +2,7 @@
 #include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::circles_artist::circles_artist(int render_width, int render_height)
-:
-artist(render_width, render_height)
-{
-}
-
-//////////////////////////////////////////////////////////////
-std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist::generate_discs() const
+std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist::generate_discs(int width, int height)
 {
 	const ggo::color_32f start_color1(rand<float>(), rand<float>(), rand<float>());
   const ggo::color_32f start_color2(rand<float>(), rand<float>(), rand<float>());
@@ -23,11 +16,11 @@ std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist:
     float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
     float angle_inc = ggo::rand<float>(0.02f, 0.03f) * (ggo::rand_bool() ? -1 : 1);
 
-    float radius = ggo::rand<float>(0.2f, 0.8f) * get_render_max_size();
+    float radius = ggo::rand<float>(0.2f, 0.8f) * std::max(width, height);
     
-    ggo::pos2f center(ggo::rand<float>(0.f, static_cast<float>(get_render_width())), ggo::rand<float>(0.f, static_cast<float>(get_render_height())));
+    ggo::pos2f center(ggo::rand<float>(0.f, static_cast<float>(width)), ggo::rand<float>(0.f, static_cast<float>(height)));
 
-    float circle_radius_delta = ggo::rand<float>(0.002f, 0.003f) * get_render_max_size();
+    float circle_radius_delta = ggo::rand<float>(0.002f, 0.003f) * std::max(width, height);
     int circles_count = ggo::rand<int>(25, 30);
     
     std::vector<colored_disc> discs;
@@ -37,12 +30,12 @@ std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist:
       colored_disc colored_disc;
       
       // Set up the circle.
-      colored_disc._disc.center().get<0>() = center.get<0>() + radius * std::cos(angle);
-      colored_disc._disc.center().get<1>() = center.get<1>() + radius * std::sin(angle);
+      colored_disc._disc.center().x() = center.x() + radius * std::cos(angle);
+      colored_disc._disc.center().y() = center.y() + radius * std::sin(angle);
       colored_disc._disc.radius() = (circles_count - j) * circle_radius_delta;
       
       // Set the current circle's colour.
-      float mapped_y = colored_disc._disc.center().get<1>() / get_render_height();
+      float mapped_y = colored_disc._disc.center().y() / height;
       ggo::color_32f output_color;
       if (j % 2)
       {

@@ -25,16 +25,16 @@ namespace ggo
     {
       circle_animate(const ggo::pos2f & pos, int start_offset) : ggo_position_animate_abc(pos, start_offset) {};
 
-      bool  update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+      bool update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
 
       float         _radius;
       ggo::color_8u _color;
       float         _attenuation_factor;
       float         _bounding_factor;
-      bool          _bkgd_rendering_allowed;
     };
 
     ggo_animator  _animator;
+    ggo::color_8u _bkgd_color;
   };
 }
 

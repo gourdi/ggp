@@ -5,7 +5,7 @@
 
 namespace ggo
 {
-  class circles_artist : public artist
+  class circles_artist
   {
   public:
 
@@ -15,12 +15,10 @@ namespace ggo
       ggo::color_8u   _color;
     };
 
-    circles_artist(int render_width, int render_height);
+    static std::vector<std::vector<colored_disc>> generate_discs(int width, int height);
 
-    std::vector<std::vector<colored_disc>>  generate_discs() const;
-
-    static  void  paint_disc(void * buffer, int width, int height, const ggo::pos2f & pos, float radius, const ggo::color_8u & color);
-    static  void  paint_disc(void * buffer, int width, int height, const colored_disc & colored_disc);
+    static void paint_disc(void * buffer, int width, int height, const ggo::pos2f & pos, float radius, const ggo::color_8u & color);
+    static void paint_disc(void * buffer, int width, int height, const colored_disc & colored_disc);
   };
 }
 

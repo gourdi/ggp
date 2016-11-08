@@ -27,7 +27,7 @@ namespace ggo
   template <typename T>
   ggo::pos2<T> disc_uniform_sampling(const ggo::pos2<T> & center, T radius)
   {
-    return center + radius * disc_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1));
+    return center + radius * disc_sampling(ggo::rand<T>(), ggo::rand<T>());
   }
   
   template <typename T>

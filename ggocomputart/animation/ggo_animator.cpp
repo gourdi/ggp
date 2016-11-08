@@ -2,48 +2,28 @@
 #include "ggo_animate_abc.h"
 
 //////////////////////////////////////////////////////////////
-ggo_animator::~ggo_animator()
-{
-	clear();
-}
-
-//////////////////////////////////////////////////////////////
 void ggo_animator::clear()
 {
-    for (ggo_animate_abc * animate : _animates)
-	{
-		delete animate;
-	}
+  _animates.clear();
 }
 
 //////////////////////////////////////////////////////////////
 void ggo_animator::add_animate(ggo_animate_abc * animate)
 {
-	_animates.push_back(animate);
+  _animates.push_back(std::unique_ptr<ggo_animate_abc>(animate));
 }
 
 //////////////////////////////////////////////////////////////
 void ggo_animator::insert_animate(ggo_animate_abc * animate, int pos)
 {
-	_animates.insert(_animates.begin() + pos, animate);
+  _animates.insert(_animates.begin() + pos, std::unique_ptr<ggo_animate_abc>(animate));
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_animator::update(uint8_t * output_buffer, uint8_t * bkgd_buffer, int width, int height)
+void ggo_animator::update(void * buffer, int width, int height)
 {
-    int i = 0;
-    while (i < _animates.size())
-    {
-        ggo_animate_abc * animate = _animates[i];
-        
-        if (animate->update(output_buffer, bkgd_buffer, width, height) == false)
-        {
-            delete animate;
-            _animates.erase(_animates.begin() + i);
-        }
-        else
-        {
-            ++i;
-        }
-    }
+  ggo::remove_if(_animates, [&](std::unique_ptr<ggo_animate_abc> & animate)
+  {
+    return animate->update(buffer, width, height) == false;
+  });
 }

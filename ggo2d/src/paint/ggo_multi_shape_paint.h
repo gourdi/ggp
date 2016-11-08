@@ -32,13 +32,13 @@ namespace ggo
   template <typename output_color_t, typename brush_color_t>
   struct dyn_blender_abc
   {
-    virtual output_color_t get(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
+    virtual output_color_t blend(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
   };
 
   template <typename output_color_t, typename brush_color_t>
   struct overwrite_dyn_blender : public dyn_blender_abc<output_color_t, brush_color_t>
   {
-    output_color_t get(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const override {
+    output_color_t blend(int x, int y, const output_color_t & bkgd_color, const brush_color_t & brush_color) const override {
       return ggo::convert_color_to<output_color_t>(brush_color);
     }
   };

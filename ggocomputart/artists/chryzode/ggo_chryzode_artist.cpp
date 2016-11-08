@@ -53,8 +53,8 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
     float coef = buffer_32f[i] / 512; // Normalize.
     float hue = ggo::map<float>(coef, 0, 1, hue_start, hue_end);
     const ggo::color_8u color = from_hsv<ggo::color_8u>(hue, 1 - coef, coef);
-    buffer_8u[3 * i + 0] = color._r;
-    buffer_8u[3 * i + 1] = color._g;
-    buffer_8u[3 * i + 2] = color._b;
+    buffer_8u[3 * i + 0] = color.r();
+    buffer_8u[3 * i + 1] = color.g();
+    buffer_8u[3 * i + 2] = color.b();
   }
 }
