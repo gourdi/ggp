@@ -5,21 +5,24 @@
 #include "ggo_cumbia_artist.h"
 #include <ggo_point_camera.h>
 
-class ggo_cumbia_animation_artist : public ggo_animation_artist_abc
+namespace ggo
 {
-public:
+  class cumbia_animation_artist : public animation_artist_abc
+  {
+  public:
 
-			ggo_cumbia_animation_artist(int render_width, int render_height);
+    cumbia_animation_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	init_sub() override;
-	bool	render_next_frame_sub(uint8_t * buffer, int frame_index) override;
-	
-private:
-	
-	ggo_cumbia_artist	              _artist;
-	ggo::antialiasing_point_camera	_camera;
-};
+    void	init_sub() override;
+    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+
+  private:
+
+    ggo::cumbia_artist	            _artist;
+    ggo::antialiasing_point_camera	_camera;
+  };
+}
 
 #endif
