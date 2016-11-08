@@ -3,15 +3,18 @@
 
 #include "ggo_bitmap_artist_abc.h"
 
-class ggo_filling_squares_bitmap_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class filling_squares_bitmap_artist : public bitmap_artist_abc
+  {
+  public:
 
-			ggo_filling_squares_bitmap_artist(int render_width, int render_height);
+    filling_squares_bitmap_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	render_bitmap(uint8_t * buffer) override;
-};
+    void	render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif

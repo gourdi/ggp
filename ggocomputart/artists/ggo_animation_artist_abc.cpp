@@ -220,27 +220,3 @@ bool ggo_static_background_animation_artist_abc::render_next_frame_sub(uint8_t *
   return render_next_frame_bkgd(buffer, frame_index);
 };
 
-//////////////////////////////////////////////////////////////
-// DYNAMIC BACKGROUND ARTIST
-
-//////////////////////////////////////////////////////////////
-ggo_dynamic_background_animation_artist_abc::ggo_dynamic_background_animation_artist_abc(int render_width, int render_height)
-:
-ggo_animation_artist_abc(render_width, render_height),
-_bkgd_buffer(3 * render_width * render_height)
-{
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo_dynamic_background_animation_artist_abc::render_next_frame_sub(uint8_t * buffer, int frame_index)
-{
-  if (frame_index == 0)
-  {
-    init_bkgd_buffer(_bkgd_buffer.data());
-  }
-
-  memcpy(buffer, _bkgd_buffer.data(), _bkgd_buffer.get_count());
-
-  return render_next_frame_bkgd(buffer, _bkgd_buffer.data(), frame_index);
-};
-

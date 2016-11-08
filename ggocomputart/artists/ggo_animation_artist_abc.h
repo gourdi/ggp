@@ -72,26 +72,4 @@ namespace ggo
   };
 }
 
-// The artist uses a background buffer which is initialized and then be changed by the artist.
-namespace ggo
-{
-  class dynamic_background_animation_artist_abc : public animation_artist_abc
-  {
-  public:
-
-    dynamic_background_animation_artist_abc(int render_width, int render_height);
-
-  private:
-
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
-
-    virtual void	init_bkgd_buffer(uint8_t * bkgd_buffer) = 0;
-    virtual	bool	render_next_frame_bkgd(uint8_t * output_buffer, uint8_t * bkgd_buffer, int frame_index) = 0;
-
-  private:
-
-    ggo::array_uint8 _bkgd_buffer;
-  };
-}
-
 #endif

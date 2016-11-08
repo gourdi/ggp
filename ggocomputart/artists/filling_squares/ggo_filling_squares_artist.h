@@ -5,24 +5,25 @@
 #include <ggo_vec.h>
 #include <ggo_color.h>
 
-class ggo_filling_squares_artist
+namespace ggo
 {
-public:
+  namespace filling_squares_artist
+  {
+    struct colored_square
+    {
+      float		      _size;
+      ggo::color_8u _color;
+    };
 
-	struct ggo_colored_square
-	{
-		float		    _size;
-		ggo::color	_color;
-	};
-	
-	struct ggo_multi_square
-	{
-		std::vector<ggo_colored_square> _squares;
-		ggo::pos2f				              _pos;
-	};
+    struct multi_square
+    {
+      std::vector<colored_square> _squares;
+      ggo::pos2f				              _pos;
+    };
 
-	static	void	build_squares(int render_width, int render_height, float & hue, std::vector<ggo_multi_square> & result);
-};
+    std::vector<multi_square>	build_squares(int render_width, int render_height, float & hue);
+  };
+}
 
 #endif
 

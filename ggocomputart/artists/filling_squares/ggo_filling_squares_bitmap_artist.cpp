@@ -1,25 +1,24 @@
 #include "ggo_filling_squares_bitmap_artist.h"
 #include "ggo_filling_squares_artist.h"
-#include "ggo_fill.h"
-#include "ggo_paint.h"
+#include <ggo_buffer_fill.h>
+#include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo_filling_squares_bitmap_artist::ggo_filling_squares_bitmap_artist(int render_width, int render_height)
+ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 	
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_filling_squares_bitmap_artist::render_bitmap(uint8_t * buffer)
+void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
 {
 	float hue;
-	std::vector<ggo_filling_squares_artist::ggo_multi_square> multi_squares;
-
-	ggo_filling_squares_artist::build_squares(get_render_width(), get_render_height(), hue, multi_squares);
 	
-	ggo::fill_solid_rgb_8u(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::color::from_hsv(hue, ggo::rand_float(), ggo::rand_float()).color_8u());
+  auto multi_squares = ggo::filling_squares_artist::build_squares(get_render_width(), get_render_height(), hue);
+	
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>()));
 
 	for (const auto & multi_square : multi_squares)
 	{
@@ -31,15 +30,14 @@ void ggo_filling_squares_bitmap_artist::render_bitmap(uint8_t * buffer)
       float bottom    = multi_square._pos.get<1>() - half_size;
       float top       = multi_square._pos.get<1>() + half_size;
       
-      auto square = std::make_shared<ggo::polygon2d_float>();
-      square->add_point(left, bottom);
-      square->add_point(right, bottom);
-      square->add_point(right, top);
-      square->add_point(left, top);
+      ggo::polygon2d_float square;
+      square.add_point(left, bottom);
+      square.add_point(right, bottom);
+      square.add_point(right, top);
+      square.add_point(left, top);
 
-			ggo::paint(buffer, get_render_width(), get_render_height(),
-                 square,
-                 colored_square._color);
+			ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>
+        (buffer, get_render_width(), get_render_height(), 3 * get_render_width(), square, colored_square._color);
 		}
 	}
 }
