@@ -4,20 +4,19 @@
 #include <ggo_array.h>
 #include <ggo_curve.h>
 #include <ggo_color.h>
-#include <ggo_image_abc.h>
 
-class ggo_entabeni
+namespace ggo
 {
-public:
+  class entabeni
+  {
+  public:
 
-  static  ggo::array<float, 2>                create_grid(bool loop_x, bool loop_y);
-  static  ggo::cubic_curve<float, ggo::color> create_color_map();
+    static  ggo::array<float, 2> create_grid(bool loop_x, bool loop_y);
+    static  ggo::cubic_curve<float, ggo::color_32f> create_color_map();
 
-  static  void                                render_bitmap(ggo::rgb_image_abc & image,
-                                                            const ggo::array<float, 2> & grid,
-                                                            const ggo::cubic_curve<float, ggo::color> & color_map,
-                                                            float z,
-                                                            float angle);
-};
+    static  void render_bitmap(void * buffer, int width, int height, const ggo::array<float, 2> & grid,
+      const ggo::cubic_curve<float, ggo::color_32f> & color_map, float z, float angle);
+  };
+}
 
 #endif

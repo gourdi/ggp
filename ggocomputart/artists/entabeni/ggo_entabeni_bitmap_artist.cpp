@@ -3,20 +3,19 @@
 #include "ggo_entabeni_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo_entabeni_bitmap_artist::ggo_entabeni_bitmap_artist(int render_width, int render_height)
+ggo::entabeni_bitmap_artist::entabeni_bitmap_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_entabeni_bitmap_artist::render_bitmap(uint8_t * buffer)
+void ggo::entabeni_bitmap_artist::render_bitmap(void * buffer) const
 {
-  auto grid = ggo_entabeni::create_grid(true, false);
-  auto color_map = ggo_entabeni::create_color_map();
-  float dangle = ggo::rand_float(0.f, 2 * ggo::pi<float>());
+  auto grid = ggo::entabeni::create_grid(true, false);
+  auto color_map = ggo::entabeni::create_color_map();
+  float dangle = ggo::rand<float>(0.f, 2 * ggo::pi<float>());
 
-  auto image = make_image_buffer(buffer);
-  ggo_entabeni::render_bitmap(image, grid, color_map, 0.f, dangle);
+  ggo::entabeni::render_bitmap(buffer, get_render_width(), get_render_height(), grid, color_map, 0.f, dangle);
 }
 

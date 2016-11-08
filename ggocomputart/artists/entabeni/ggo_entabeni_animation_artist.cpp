@@ -2,23 +2,23 @@
 #include "ggo_entabeni.h"
 
 //////////////////////////////////////////////////////////////
-ggo_entabeni_animation_artist::ggo_entabeni_animation_artist(int render_width, int render_height)
+ggo::entabeni_animation_artist::entabeni_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height)
+animation_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_entabeni_animation_artist::init_sub()
+void ggo::entabeni_animation_artist::init_sub()
 {
   _z = 0.f;
-  _grid_start = ggo_entabeni::create_grid(true, false);
-  _grid_end = ggo_entabeni::create_grid(true, false);
-  _color_map = ggo_entabeni::create_color_map();
+  _grid_start = ggo::entabeni::create_grid(true, false);
+  _grid_end = ggo::entabeni::create_grid(true, false);
+  _color_map = ggo::entabeni::create_color_map();
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_entabeni_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::entabeni_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
   const int frames_count = 300;
   if (frame_index > frames_count)
@@ -41,8 +41,7 @@ bool ggo_entabeni_animation_artist::render_next_frame_sub(uint8_t * buffer, int 
   ggo::for_each(grid, interpolate);
 
   // Paint the grid.
-  auto image = make_image_buffer(buffer);
-  ggo_entabeni::render_bitmap(image, grid, _color_map, z, angle);
+  ggo::entabeni::render_bitmap(buffer, get_render_width(), get_render_height(), grid, _color_map, z, angle);
 
   return true;
 }
