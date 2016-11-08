@@ -34,6 +34,22 @@ namespace ggo
   };
 
   template <>
+  struct gaussian_blur2d_helper<float>
+  {
+    using color_t = float;
+
+    static std::vector<float> build_kernel(const float stddev)
+    {
+      return ggo::build_gaussian_kernel<float>(stddev, 0.001f);
+    }
+
+    static float convert(const float & c)
+    {
+      return c;
+    }
+  };
+
+  template <>
   struct gaussian_blur2d_helper<ggo::color_8u>
   {
     using color_t = color_16u;

@@ -5,30 +5,33 @@
 #include <ggo_array.h>
 #include <ggo_curve.h>
 
-class ggo_duffing_animation_artist : public ggo_animation_artist_abc
+namespace ggo
 {
-public:
+  class duffing_animation_artist : public animation_artist_abc
+  {
+  public:
 
-              ggo_duffing_animation_artist(int render_width, int render_height);
+    duffing_animation_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void				init_sub() override;
-	bool				render_next_frame_sub(uint8_t * buffer, int frame_index) override;
+    void				init_sub() override;
+    bool				render_next_frame_sub(void * buffer, int frame_index) override;
 
-	void				apply_shadow(float * buffer, const float * shadow_buffer) const;
-	
-	ggo::pos2f  apply_duffing(float t, float dt, float angle_offset, ggo::pos2f & point) const;
+    void				apply_shadow(float * buffer, const float * shadow_buffer) const;
 
-private:
+    ggo::pos2f  apply_duffing(float t, float dt, float angle_offset, ggo::pos2f & point) const;
 
-	ggo::cubic_curve_float	_hue_curve;
-	ggo::cubic_curve_float	_sat_curve;
-	ggo::cubic_curve_float	_val_curve1;
-	ggo::cubic_curve_float	_val_curve2;
-	ggo::cubic_curve_float	_val_curve3;
-	ggo::cubic_curve_float	_val_curve4;
-	std::vector<ggo::pos2f> _points;
-};
+  private:
+
+    ggo::cubic_curve_float	_hue_curve;
+    ggo::cubic_curve_float	_sat_curve;
+    ggo::cubic_curve_float	_val_curve1;
+    ggo::cubic_curve_float	_val_curve2;
+    ggo::cubic_curve_float	_val_curve3;
+    ggo::cubic_curve_float	_val_curve4;
+    std::vector<ggo::pos2f> _points;
+  };
+}
 
 #endif

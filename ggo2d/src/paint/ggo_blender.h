@@ -35,6 +35,34 @@ namespace ggo
     const uint32_t _weight_brush;
     const uint32_t _weight_bkgd;
   };
+
+  template <>
+  struct alpha_blender<float>
+  {
+    alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
+
+    float operator()(int x, int y, const float & bkgd_color, const float & brush_color) const
+    {
+      return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
+    }
+
+    const float _weight_brush;
+    const float _weight_bkgd;
+  };
+
+  template <>
+  struct alpha_blender<ggo::color_32f>
+  {
+    alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
+
+    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
+    {
+      return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
+    }
+
+    const float _weight_brush;
+    const float _weight_bkgd;
+  };
 }
 
 #endif

@@ -1,46 +1,46 @@
 #include "ggo_duffing_bitmap_artist.h"
-#include <ggo_gaussian_blur.h>
-#include <ggo_gray_image_buffer.h>
-#include <ggo_rgb_image_buffer.h>
-#include <ggo_paint.h>
-#include <ggo_fill.h>
-
-const int GGO_ITERATIONS_COUNT = 5000000;
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_buffer_fill.h>
+#include <ggo_buffer_paint.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo_duffing_bitmap_artist::ggo_duffing_bitmap_artist(int render_width, int render_height)
+ggo::duffing_bitmap_artist::duffing_bitmap_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
+void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 {
+  const int iterations_count = 5000000;
+
 	// Compute the points.
 	std::cout << "Computing points" << std::endl;
 	
 	std::vector<ggo::pos2f>	points;
 
-	const float	A = ggo::rand_float(0.245f, 0.255f);
-	const float	B = ggo::rand_float(0.295f, 0.305f);
+	const float	A = ggo::rand<float>(0.245f, 0.255f);
+	const float	B = ggo::rand<float>(0.295f, 0.305f);
   const float dt = 0.002f;
   
-	ggo::pos2f	point(ggo::rand_float(-1, 1), ggo::rand_float(-1, 1));
-	float angle_offset = ggo::rand_float(0, 2 * ggo::pi<float>());
+	ggo::pos2f	point(ggo::rand<float>(-1, 1), ggo::rand<float>(-1, 1));
+	float angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
   float t = 0;
 	
-	for (int i = 0; i < GGO_ITERATIONS_COUNT; ++i)
+	for (int i = 0; i < iterations_count; ++i)
 	{
-		float	x	= point.get<0>();
-		float	y	= point.get<1>();
+		float	x	= point.x();
+		float	y	= point.y();
 		float	dx	= y;
 		float	dy	= x - x * x * x - A * y + B * std::cos(t);
 
-		point.get<0>() += dx * dt;
-		point.get<1>() += dy * dt;
+		point.x() += dx * dt;
+		point.y() += dy * dt;
 
-		float angle = atan2(point.get<1>(), point.get<0>()) + angle_offset;
+		float angle = atan2(point.y(), point.x()) + angle_offset;
 		float dist = point.get_length();
 
 		ggo::pos2f render_pt(dist * std::cos(angle), dist * std::sin(angle));
@@ -52,77 +52,83 @@ void ggo_duffing_bitmap_artist::render_bitmap(uint8_t * buffer)
 	}
 
 	float radius = get_render_min_size() / 1500.f;
-	ggo::rgb_image_buffer_float image_buffer_float(get_render_width(), get_render_height());
+	std::vector<float> buffer_float(3 * get_render_width() * get_render_height());
 
 	// Render the background.
 	std::cout << "Rendering background" << std::endl;
 	
-  ggo::color color1 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
-	ggo::color color2 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
-	ggo::color color3 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
-	ggo::color color4 = ggo::color::from_hsv(0, 0, ggo::rand_float(0.5, 1));
+  ggo::color_32f color1 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	ggo::color_32f color2 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	ggo::color_32f color3 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	ggo::color_32f color4 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
 	
-	ggo::fill_4_colors(image_buffer_float, color1, color2, color3, color4);
+	ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
+    color1, color2, color3, color4);
 
 	// Render the shadow points.
 	std::cout << "Rendering the shadow" << std::endl;
 	
-	ggo::gray_image_buffer_float shadow_image(get_render_width(), get_render_height());
-	shadow_image.fill(1);
-	for (int i = 0; i < points.size(); ++i)
+  std::vector<float> shadow_buffer(get_render_width() * get_render_height(), 1.f);
+	for (const auto & point : points)
 	{
 		// Offset the shadow.
-		ggo::pos2f render_pt = points[i];
-		render_pt.get<0>() += 0.05f * get_render_min_size();
-		render_pt.get<1>() += 0.05f * get_render_min_size();
+		ggo::pos2f render_pt = point;
+		render_pt.x() += 0.05f * get_render_min_size();
+		render_pt.y() += 0.05f * get_render_min_size();
 
-    auto disc = std::make_shared<const ggo::disc_float>(render_pt, radius);
-    
-		ggo::paint(shadow_image, disc, 0, 0.2f);
+		ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_2x2>(
+      shadow_buffer.data(), get_render_width(), get_render_height(), sizeof(float) * get_render_width(),
+      ggo::disc_float(render_pt, radius), ggo::make_solid_brush<float>(0.f), ggo::alpha_blender<float>(0.2f));
 	}
 
 	// Blur and blend the shadow.
 	std::cout << "Blurring the shadow" << std::endl;
 	
-	ggo::gaussian_blur_2d_mirror(shadow_image.data(),
-                               shadow_image.data(),
-                               get_render_width(),
-                               get_render_height(),
-                               0.4f * get_render_min_size(), 0.001f);
-	
+  ggo::gaussian_blur2d<ggo::y_32f_yu>(shadow_buffer.data(), get_render_width(),
+    get_render_height(), sizeof(float) * get_render_width(), 0.4f * get_render_min_size());
+
 	std::cout << "Blending the shadow" << std::endl;
 
-	apply_shadow(image_buffer_float.data(), shadow_image.data());
+	apply_shadow(buffer_float.data(), shadow_buffer.data());
 
 	// Render the points.
 	std::cout << "Rendering points" << std::endl;
 	
 	ggo::cubic_curve_float hue_curve;
-	hue_curve.push_point(0, ggo::rand_float());
-	hue_curve.push_point(1, ggo::rand_float());
+	hue_curve.push_point(0, ggo::rand<float>());
+	hue_curve.push_point(1, ggo::rand<float>());
 	for (int i = 1; i <= 3; ++i)
 	{
-		hue_curve.push_point(i / 4.f, ggo::rand_float());
+		hue_curve.push_point(i / 4.f, ggo::rand<float>());
 	}
 	
 	for (int i = 0; i < points.size(); ++i)
 	{
 		float t = float(i) / points.size();
 		float hue = hue_curve.evaluate(t);
-		ggo::color color = ggo::color::from_hsv(hue, 1, 1);
+		ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(hue, 1, 1);
 
     auto disc = std::make_shared<const ggo::disc_float>(points[i], radius);
-    
-		ggo::paint(image_buffer_float, disc, color, 0.02f);
+
+    ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
+      buffer_float.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
+      ggo::disc_float(points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender<color_32f>(0.02f));
 	}
 
 	// From float to uint8_t.
-  auto image_buffer = make_image_buffer(buffer);
-	image_buffer.from(image_buffer_float);
+  for (int y = 0; y < get_render_height(); ++y)
+  {
+    for (int x = 0; x < get_render_width(); ++x)
+    {
+      auto c_32f = ggo::read_pixel<ggo::rgb_32f_yu>(buffer_float.data(), x, y, get_render_height(), 3 * sizeof(float) * get_render_height());
+      auto c_8u = ggo::convert_color_to<ggo::color_8u>(c_32f);
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_height(), c_8u);
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_duffing_bitmap_artist::apply_shadow(float * buffer, const float * shadow_buffer) const
+void ggo::duffing_bitmap_artist::apply_shadow(float * buffer, const float * shadow_buffer) const
 {
 	int count = get_render_width() * get_render_height();
 	
