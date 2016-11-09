@@ -16,33 +16,33 @@ namespace
 	{
 	public:
 		
-                my_material(float sphere_size);
+                    my_material(float sphere_size);
 		
-		ggo::color	get_color(const ggo::pos3f & pos) const override;
+		ggo::color_32f  get_color(const ggo::pos3f & pos) const override;
 		
 	private:
 		
-		ggo::color	_color1;
-		ggo::color	_color2;
-		float		    _range_large;
-		float		    _range_small;
-		float		    _amplitude;
-		float		    _wavelength;
+		ggo::color_32f	_color1;
+		ggo::color_32f	_color2;
+		float		        _range_large;
+		float		        _range_small;
+		float		        _amplitude;
+		float		        _wavelength;
 	};
   
   //////////////////////////////////////////////////////////////
   my_material::my_material(float sphere_size)
   {
-    _color1 = ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(0.75, 1), ggo::rand_float(0.5, 1));
-    _color2 = ggo::color::from_hsv(ggo::rand_float(), ggo::rand_float(0.75, 1), ggo::rand_float(0.5, 1));
-    _range_large = sphere_size * ggo::rand_float(0.2f, 0.4f);
-    _range_small = sphere_size * ggo::rand_float(0.01f, 0.08f);
-    _amplitude = sphere_size * ggo::rand_float(0.04f, 0.08f);
-    _wavelength = sphere_size * ggo::rand_float(10, 20);
+    _color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
+    _color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
+    _range_large = sphere_size * ggo::rand<float>(0.2f, 0.4f);
+    _range_small = sphere_size * ggo::rand<float>(0.01f, 0.08f);
+    _amplitude = sphere_size * ggo::rand<float>(0.04f, 0.08f);
+    _wavelength = sphere_size * ggo::rand<float>(10, 20);
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color my_material::get_color(const ggo::pos3f & pos) const
+  ggo::color_32f my_material::get_color(const ggo::pos3f & pos) const
   {
     float x = pos.get<0>() + _amplitude * std::cos(_wavelength * pos.get<2>());
     x = std::fmod(x, _range_large);
@@ -58,30 +58,30 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo_marbles_artist::ggo_marbles_artist(int render_width, int render_height)
+ggo::marbles_artist::marbles_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
+void ggo::marbles_artist::render_bitmap(void * buffer) const
 {
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::BLACK));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
 
   // The fog.
-  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color(0.5f), 25.f));
+  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
 
 	// Setup the camera.
 	ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
 	camera.basis().set_pos(0, 0, 10);
 	camera.basis().rotate(ggo::ray3d_float::O_X(), 1.2f);
 	camera.set_aperture(0.2f);
-	camera.set_depth_of_field_factor(ggo::rand_float(0.10f, 0.15f));
-	camera.set_depth_of_field(ggo::rand_float(7, 9));
+	camera.set_depth_of_field_factor(ggo::rand<float>(0.10f, 0.15f));
+	camera.set_depth_of_field(ggo::rand<float>(7, 9));
 
 	// Floor plane.
-  auto floor = scene_builder.add_object(std::make_shared<ggo::const_plane3d<float, 0, 0, 1, 0>>(), ggo::color::WHITE, true); // z = 0
+  auto floor = scene_builder.add_object(std::make_shared<ggo::const_plane3d<float, 0, 0, 1, 0>>(), ggo::white<ggo::color_32f>(), true); // z = 0
   floor->set_reflection_factor(0.5f);
   floor->set_roughness(0.1f);
 
@@ -89,8 +89,8 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
 	std::vector<ggo::sphere3d_float> spheres;
   while (spheres.size() < 128)
 	{
-		float radius = ggo::rand_float(0.2f, 0.8f);
-		ggo::sphere3d_float sphere(ggo::pos3f(ggo::rand_float(-4, 4), ggo::rand_float(-8, 8), radius), radius);
+		float radius = ggo::rand<float>(0.2f, 0.8f);
+		ggo::sphere3d_float sphere(ggo::pos3f(ggo::rand<float>(-4, 4), ggo::rand<float>(-8, 8), radius), radius);
 		
 		bool ok = true;
 		for (const auto & sphere_cur : spheres)
@@ -119,7 +119,7 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
         (ggo::dot(dir_to_center, camera.basis().z()) < -0.98) && // In the axis of the camera
         (ggo::dot(dir_to_center, camera.basis().y()) < 0.1))     // Center of the sphere is low in the output picture.
     {
-      scene_builder.add_sphere_light(ggo::color::WHITE, sphere.radius(), sphere.center());
+      scene_builder.add_sphere_light(ggo::white<ggo::color_32f>(), sphere.radius(), sphere.center());
       ++lights_count;
     }
     else
@@ -128,11 +128,11 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
       auto material = std::make_shared<const my_material>(sphere.radius());
       auto object = scene_builder.add_object(shape, material, false);
 
-      object->set_phong_factor(ggo::rand_float(3, 5));
-      object->set_phong_shininess(ggo::rand_float(250, 500));
-      object->basis().rotate_x(ggo::rand_float(0, 2 * ggo::pi<float>()));
-      object->basis().rotate_y(ggo::rand_float(0, 2 * ggo::pi<float>()));
-      object->basis().rotate_z(ggo::rand_float(0, 2 * ggo::pi<float>()));
+      object->set_phong_factor(ggo::rand<float>(3, 5));
+      object->set_phong_shininess(ggo::rand<float>(250, 500));
+      object->basis().rotate_x(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      object->basis().rotate_y(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      object->basis().rotate_z(ggo::rand<float>(0, 2 * ggo::pi<float>()));
       object->basis().pos() = sphere.center();
     }
 	}
@@ -141,6 +141,6 @@ void ggo_marbles_artist::render_bitmap(uint8_t * buffer)
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(buffer, get_render_width(), get_render_height(), scene_builder, raytrace_params);
+	renderer.render(static_cast<uint8_t *>(buffer), get_render_width(), get_render_height(), scene_builder, raytrace_params);
 }
 

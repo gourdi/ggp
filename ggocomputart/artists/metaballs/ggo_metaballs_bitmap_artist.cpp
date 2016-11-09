@@ -4,26 +4,27 @@
 #include <ggo_global_sampling_renderer.h>
 #include <ggo_mono_sampling_renderer.h>
 
-#define GGO_BALL_SIZE 3
 #define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo_metaballs_bitmap_artist::ggo_metaballs_bitmap_artist(int render_width, int render_height)
+ggo::metaballs_bitmap_artist::metaballs_bitmap_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {	
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
+void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 {
-	ggo_metaballs_artist::ggo_metaballs_params params;
+  const float ball_size = 3.f;
+
+	ggo::metaballs_artist::params params;
 
 #ifdef MONO_SAMPLING
   ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
 #else
   ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
-  camera.set_depth_of_field_factor(ggo::rand_float(0.2f, 0.5f));
+  camera.set_depth_of_field_factor(ggo::rand<float>(0.2f, 0.5f));
   camera.set_depth_of_field(22);
 #endif
 	camera.basis().set_pos(0, 0, 25);
@@ -31,8 +32,8 @@ void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
 
 	while (params._centers.size() < 200)
 	{
-		ggo::pos3f center(ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE), ggo::rand_float(-GGO_BALL_SIZE, GGO_BALL_SIZE));
-		if (center.get_length() < GGO_BALL_SIZE)
+		ggo::pos3f center(ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size));
+		if (center.get_length() < ball_size)
 		{
 			params._centers.push_back(center);
 		}
@@ -43,6 +44,6 @@ void ggo_metaballs_bitmap_artist::render_bitmap(uint8_t * buffer)
 #else
   ggo::global_sampling_renderer renderer(camera, 56);
 #endif
-	ggo_metaballs_artist artist(get_render_width(), get_render_height());
+	ggo::metaballs_artist artist(get_render_width(), get_render_height());
 	artist.render_bitmap(buffer, renderer, params);
 }

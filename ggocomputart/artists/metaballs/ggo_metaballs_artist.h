@@ -3,35 +3,36 @@
 #ifndef __GGO_METABALLS_ARTIST__
 #define __GGO_METABALLS_ARTIST__
 
-#include "ggo_artist_abc.h"
-#include "ggo_raytracer_global.h"
-#include "ggo_renderer_abc.h"
+#include <ggo_artist.h>
+#include <ggo_raytracer_global.h>
+#include <ggo_renderer_abc.h>
 
-class ggo_camera_abc;
-
-class ggo_metaballs_artist : public ggo_artist_abc
+namespace ggo
 {
-public:
-	
-	struct ggo_metaballs_params
-	{
-    ggo_metaballs_params();
-    
-		std::vector<ggo::pos3f> _centers;
-		float 							    _threshold;
-		float					          _phong_factor;
-		float					          _phong_shininess;
-		ggo::pos3f				      _light1;
-		ggo::pos3f				      _light2;
-    ggo::color              _background_color;
-	};
-	
-public:
+  class metaballs_artist : public artist
+  {
+  public:
 
-        ggo_metaballs_artist(int render_width, int render_height);
+    struct params
+    {
+      params();
 
-	void 	render_bitmap(uint8_t * buffer, ggo::renderer_abc & renderer, const ggo_metaballs_params & params);
-};
+      std::vector<ggo::pos3f> _centers;
+      float 							    _threshold;
+      float					          _phong_factor;
+      float					          _phong_shininess;
+      ggo::pos3f				      _light1;
+      ggo::pos3f				      _light2;
+      ggo::color_32f          _background_color;
+    };
+
+  public:
+
+    metaballs_artist(int render_width, int render_height);
+
+    void 	render_bitmap(void * buffer, ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
+  };
+}
 
 #endif
 

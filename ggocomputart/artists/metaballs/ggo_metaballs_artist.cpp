@@ -7,27 +7,27 @@
 //#define GGO_METABALLS_DEBUG
 
 //////////////////////////////////////////////////////////////
-ggo_metaballs_artist::ggo_metaballs_params::ggo_metaballs_params()
+ggo::metaballs_artist::params::params()
 {
-	float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
+	float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
 	
-	_threshold = ggo::rand_float(0.8f, 0.9f);
-	_phong_factor = ggo::rand_float(2, 4);
-	_phong_shininess = ggo::rand_float(10, 100);
+	_threshold = ggo::rand<float>(0.8f, 0.9f);
+	_phong_factor = ggo::rand<float>(2, 4);
+	_phong_shininess = ggo::rand<float>(10, 100);
 	_light1 = ggo::pos3f(0.f, 0.f, 1000.f);
 	_light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
-	_background_color = ggo::color(ggo::rand_float(0.2f, 0.8f));
+	_background_color = ggo::color_32f(ggo::rand<float>(0.2f, 0.8f));
 }
 
 //////////////////////////////////////////////////////////////
-ggo_metaballs_artist::ggo_metaballs_artist(int render_width, int render_height)
+ggo::metaballs_artist::metaballs_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height)
+artist(render_width, render_height)
 {
 }	
 
 //////////////////////////////////////////////////////////////
-void ggo_metaballs_artist::render_bitmap(uint8_t * buffer, ggo::renderer_abc & renderer, const ggo_metaballs_params & params)
+void ggo::metaballs_artist::render_bitmap(void * buffer, ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params)
 {
 #ifdef GGO_METABALLS_DEBUG
 	std::cout << "Threshold: " << metaball._threshold << std::endl;
@@ -45,9 +45,9 @@ void ggo_metaballs_artist::render_bitmap(uint8_t * buffer, ggo::renderer_abc & r
   object->set_phong_factor(params._phong_factor);
   object->set_phong_shininess(params._phong_shininess);
 
-	scene_builder.add_sphere_light(ggo::color(0.8f), 0.1f, params._light1);
-  scene_builder.add_sphere_light(ggo::color(0.8f), 0.1f, params._light2);
+	scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light1);
+  scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light2);
 
-  renderer.render(buffer, get_render_width(), get_render_height(), scene_builder);
+  renderer.render(static_cast<uint8_t *>(buffer), get_render_width(), get_render_height(), scene_builder);
 }
 

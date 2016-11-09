@@ -1,34 +1,30 @@
 #ifndef __GGO_JULIA_ARTIST__
 #define __GGO_JULIA_ARTIST__
 
-#include "ggo_artist_abc.h"
+#include <ggo_artist.h>
 #include <complex>
-#include <ggo_array.h>
+#include <array>
 
-class ggo_julia_artist : public ggo_artist_abc
+namespace ggo
 {
-public:
-	
-                              ggo_julia_artist(int render_width, int render_height);
-									
-          void					      render_bitmap(uint8_t * buffer, const std::complex<float> & seed, float range = 1.7);
-			
-	static	std::complex<float> pickup_seed();
-	
-private:
+  class julia_artist : public artist
+  {
+  public:
 
-          int						      iterate(float x, float y, const std::complex<float> & seed) const;
-	
-private:
-	
-	struct ggo_rgb
-	{
-		uint8_t _r;
-		uint8_t _g;
-		uint8_t _b;
-	};
+                                julia_artist(int render_width, int render_height);
 
-	ggo::array<ggo_rgb, 1>	_palette;
-};
+            void					      render_bitmap(void * buffer, const std::complex<float> & seed, float range = 1.7f);
+
+    static	std::complex<float> pickup_seed();
+
+  private:
+
+            int						      iterate(float x, float y, const std::complex<float> & seed) const;
+
+  private:
+
+    std::array<ggo::color_8u, 1000>	_palette;
+  };
+}
 
 #endif

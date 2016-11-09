@@ -45,8 +45,8 @@ namespace ggo
 
     bool	render_next_frame_sub(void * buffer, int frame_index) override;
 
-    virtual	void	init_output_buffer(uint8_t * buffer) = 0;
-    virtual	bool	render_next_frame_acc(uint8_t * buffer, int frame_index) = 0;
+    virtual	void	init_output_buffer(void * buffer) const = 0;
+    virtual	bool	render_next_frame_acc(void * buffer, int frame_index) = 0;
   };
 }
 

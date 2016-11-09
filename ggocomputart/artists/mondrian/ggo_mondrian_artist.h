@@ -1,26 +1,21 @@
 #ifndef __GGO_BITMAP_ARTIST_MONDRIAN__
 #define __GGO_BITMAP_ARTIST_MONDRIAN__
 
-#include "ggo_bitmap_artist_abc.h"
+#include <ggo_bitmap_artist_abc.h>
 
-class ggo_mondrian_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class mondrian_artist : public bitmap_artist_abc
+  {
+  public:
 
-        ggo_mondrian_artist(int render_width, int render_height);
+    mondrian_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	render_bitmap(uint8_t * buffer) override;
-
-private:
-
-	struct ggo_area
-	{
-		ggo::polygon2d_float  _rect;
-		ggo::color			      _color;
-	};
-};
+    void	render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif
 

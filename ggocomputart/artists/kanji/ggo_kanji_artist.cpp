@@ -1,38 +1,37 @@
 #include "ggo_kanji_artist.h"
-#include <ggo_paint.h>
-#include <ggo_fill.h>
-#include <ggo_color.h>
-#include <algorithm>
-using namespace std;
+#include <ggo_buffer_fill.h>
+#include <ggo_buffer_paint.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo_kanji_artist::ggo_kanji_artist(int render_width, int render_height)
+ggo::kanji_artist::kanji_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height)
+artist(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_kanji_artist::init()
+void ggo::kanji_artist::init()
 {
-	_parts_color	= ggo::color::from_hsv(ggo::rand_float(0, 1), ggo::rand_float(0, 1), 1);
-	_timer_max		= ggo::rand_int(20000, 25000);
+	_parts_color	= ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
+	_timer_max		= ggo::rand<int>(20000, 25000);
 
 	// Create the attractor.
 	init_shaker();
 	init_attractor();
 
 	// Create the particles.
-	ggo::pos2f pos(ggo::rand_float(0.3f, 0.7f), ggo::rand_float(0.3f, 0.7f));
+	ggo::pos2f pos(ggo::rand<float>(0.3f, 0.7f), ggo::rand<float>(0.3f, 0.7f));
 	
 	_particles.clear();
 	
 	for (int i = 0; i < 400; ++i)
 	{
-		float a = ggo::rand_float(0, 2 * ggo::pi<float>());
-		float l = ggo::rand_float(0, 0.02f);
+		float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
+		float l = ggo::rand<float>(0, 0.02f);
 		
-		ggo_particle particle;
+		ggo::kanji_artist::particle particle;
 		particle._prv_pos = pos + ggo::vec2f(l * cos(a), l * sin(a));
 		particle._cur_pos = pos + ggo::vec2f(l * cos(a), l * sin(a));
 		_particles.push_back(particle);
@@ -40,13 +39,13 @@ void ggo_kanji_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_kanji_artist::init_output_buffer(uint8_t * buffer) const
+void ggo::kanji_artist::init_output_buffer(void * buffer) const
 {
-    ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::BLACK);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
+bool ggo::kanji_artist::render_frame(void * buffer, int frame_index)
 {
 	if (frame_index >= _timer_max)
 	{
@@ -54,7 +53,7 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 	}
 
 	// Update the particles system.
-	for (ggo_particle & particle : _particles)
+	for (ggo::kanji_artist::particle & particle : _particles)
 	{
 		// The further the attractor, the more the particle is attracted.
 		float dx = particle._cur_pos.get<0>() - _attractor.get<0>();
@@ -88,11 +87,11 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 	// Shake particles a bit...
 	if (--_shake_counter <= 0)
 	{
-		for (ggo_particle & particle : _particles)
+		for (ggo::kanji_artist::particle & particle : _particles)
 		{
 			particle._prv_pos = particle._cur_pos;
-			float a = ggo::rand_float(0, 2 * ggo::pi<float>());
-			float l = ggo::rand_float(0.8f, 1 / 0.8f) * 0.00002f;
+			float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
+			float l = ggo::rand<float>(0.8f, 1 / 0.8f) * 0.00002f;
 			particle._cur_pos	= particle._prv_pos + ggo::vec2f(l * cos(a), l * sin(a));
 		}
 		
@@ -112,23 +111,23 @@ bool ggo_kanji_artist::render_frame(uint8_t * buffer, int frame_index)
 	{
 		ggo::pos2f render_pt = map_fit(particle._cur_pos, 0, 1);
 		
-		ggo::paint(buffer, get_render_width(), get_render_height(),
-               std::make_shared<ggo::disc_float>(render_pt, radius),
-               _parts_color, 0.02f);
+		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+      ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f));
 	}
 	
 	return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_kanji_artist::init_shaker()
+void ggo::kanji_artist::init_shaker()
 {
-	_shake_counter = ggo::rand_int(1000, 3000);
+	_shake_counter = ggo::rand<int>(1000, 3000);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_kanji_artist::init_attractor()
+void ggo::kanji_artist::init_attractor()
 {
-	_attractor = ggo::pos2f(ggo::rand_float(), ggo::rand_float());
-	_attractor_counter = ggo::rand_int(1000, 2000);
+	_attractor = ggo::pos2f(ggo::rand<float>(), ggo::rand<float>());
+	_attractor_counter = ggo::rand<int>(1000, 2000);
 }

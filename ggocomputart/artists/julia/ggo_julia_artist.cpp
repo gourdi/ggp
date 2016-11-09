@@ -3,61 +3,61 @@
 #include <ggo_color.h>
 
 //////////////////////////////////////////////////////////////
-ggo_julia_artist::ggo_julia_artist(int render_width, int render_height)
+ggo::julia_artist::julia_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height),
-_palette(1000)
+artist(render_width, render_height)
 {
 	// Build the palette.
-	float hue = ggo::rand_float();
+	float hue = ggo::rand<float>();
 	
 	ggo::linear_curve_float sat_curve;
-	sat_curve.push_point(0, ggo::rand_float(0, 0.25));
-	sat_curve.push_point(1, ggo::rand_float());
+	sat_curve.push_point(0, ggo::rand<float>(0, 0.25));
+	sat_curve.push_point(1, ggo::rand<float>());
 	
 	ggo::linear_curve_float val_curve;
-	val_curve.push_point(0, ggo::rand_float(0.75, 1));
-	val_curve.push_point(1, ggo::rand_float(0, 0.25));
+	val_curve.push_point(0, ggo::rand<float>(0.75, 1));
+	val_curve.push_point(1, ggo::rand<float>(0, 0.25));
 	
-	for (int i = 0; i < _palette.get_count(); ++i)
+  int i = 0;
+	for (ggo::color_8u & c : _palette)
 	{
-		float x = float(i) / _palette.get_count();
+		float x = float(i) / _palette.size();
 		
 		float sat = sat_curve.evaluate(x);
 		float val = val_curve.evaluate(x);
 		
-		ggo::color color = ggo::color::from_hsv(hue, sat, val);
-		
-		_palette(i)._r = color.r8();
-		_palette(i)._b = color.g8();
-		_palette(i)._g = color.b8();
+		c = ggo::from_hsv<ggo::color_8u>(hue, sat, val);
+
+    ++i;
 	}
 }
 	
 //////////////////////////////////////////////////////////////
-std::complex<float> ggo_julia_artist::pickup_seed()
+std::complex<float> ggo::julia_artist::pickup_seed()
 {
 	if (ggo::rand_bool())
 	{	
 		// Pick the seek near the main cardioid of the Mandelbrot set.
-		float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
-		float radius = (1 - cos(angle)) / 2 + ggo::rand_float(0, 0.01f);
+		float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+		float radius = (1 - cos(angle)) / 2 + ggo::rand<float>(0, 0.01f);
 	
 		return std::complex<float>(0.25f + radius * std::cos(angle), radius * std::sin(angle));
 	}
 	else
 	{
 		// Pick the seek near the circle on the left of the main cardioid.
-		float angle = ggo::rand_float(0, 2 * ggo::pi<float>());
-		float radius = 0.25f + ggo::rand_float(0, 0.01f);
+		float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+		float radius = 0.25f + ggo::rand<float>(0, 0.01f);
 
 		return std::complex<float>(-1 + radius * std::cos(angle), radius * std::sin(angle));	
 	}
 }
 	
 //////////////////////////////////////////////////////////////
-void ggo_julia_artist::render_bitmap(uint8_t * buffer, const std::complex<float> & seed, float range)
+void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> & seed, float range)
 {
+  uint8_t * ptr = static_cast<uint8_t *>(buffer);
+
 	for (int y = 0; y < get_render_height(); ++y)
 	{
 		float range_x = get_render_width() > get_render_height() ? range * get_render_width() / get_render_height() : range;
@@ -113,23 +113,22 @@ void ggo_julia_artist::render_bitmap(uint8_t * buffer, const std::complex<float>
 			}
 		
 			// Set the proper pixel color.
-			index = std::min(_palette.get_count() - 1, index);
-			buffer[0] = _palette(index)._r;
-			buffer[1] = _palette(index)._g;
-			buffer[2] = _palette(index)._b;
-			buffer += 3;
+			index = std::min(static_cast<int>(_palette.size() - 1), index);
+			ptr[0] = _palette[index].r();
+			ptr[1] = _palette[index].g();
+			ptr[2] = _palette[index].b();
+			ptr += 3;
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////
-int ggo_julia_artist::iterate(float x, float y, const std::complex<float> & seed) const
+int ggo::julia_artist::iterate(float x, float y, const std::complex<float> & seed) const
 {
 	std::complex<float> z(x, y);
 	
-	int i;
-	
-	for (i = 0; i < _palette.get_count(); ++i)
+  int i = 0;
+	for (i = 0; i < static_cast<int>(_palette.size()); ++i)
 	{
 		z = z * z + seed;
 
