@@ -63,7 +63,7 @@ namespace ggo
 
     bool	render_next_frame_sub(void * buffer, int frame_indexx) override;
 
-    virtual void	init_bkgd_buffer(void * bkgd_buffer) = 0;
+    virtual void	init_bkgd_buffer(void * bkgd_buffer) const = 0;
     virtual	bool	render_next_frame_bkgd(void * buffer, int frame_index) = 0;
 
   private:

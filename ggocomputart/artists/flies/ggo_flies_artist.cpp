@@ -1,35 +1,37 @@
 #include "ggo_flies_artist.h"
-#include <ggo_paint.h>
-#include <ggo_fill.h>
-#include <cmath>
+#include <ggo_buffer_paint.h>
+#include <ggo_buffer_fill.h>
+#include <ggo_blur_paint.h>
+#include <ggo_blender.h>
+#include <ggo_brush.h>
 
 //////////////////////////////////////////////////////////////
-ggo_flies_artist::ggo_flies_artist(int render_width, int render_height)
+ggo::flies_artist::flies_artist(int render_width, int render_height)
 :
-ggo_static_background_animation_artist_abc(render_width, render_height)
+static_background_animation_artist_abc(render_width, render_height)
 {
 	
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_flies_artist::init_sub()
+void ggo::flies_artist::init_sub()
 {
 	_flies.clear();
 
-	_hue = ggo::rand_float();
+	_hue = ggo::rand<float>();
 	
 	float margin = 0.1f * get_render_min_size();
-	int count = ggo::rand_int(10, 20);
+	int count = ggo::rand<int>(10, 20);
 	for (int i = 0; i < count; ++i)
 	{
-		ggo_fly fly;
+		fly fly;
 
-		fly._cur_pos.get<0>() = ggo::rand_float(margin, get_render_width() - margin);
-		fly._cur_pos.get<1>() = ggo::rand_float(margin, get_render_height() - margin);
-		fly._current_angle = ggo::rand_float(0, 2 * ggo::pi<float>());
+		fly._cur_pos.get<0>() = ggo::rand<float>(margin, get_render_width() - margin);
+		fly._cur_pos.get<1>() = ggo::rand<float>(margin, get_render_height() - margin);
+		fly._current_angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
 		fly._target_angle = fly._current_angle;
-		fly._velocity = ggo::rand_float(0.01f, 0.02f) * get_render_min_size();
-		fly._hue = std::fmod(_hue + ggo::rand_float(0, 0.15f), 1.f);
+		fly._velocity = ggo::rand<float>(0.01f, 0.02f) * get_render_min_size();
+		fly._hue = std::fmod(_hue + ggo::rand<float>(0, 0.15f), 1.f);
 		fly._timer = 0;
 
 		_flies.push_back(fly);
@@ -37,16 +39,16 @@ void ggo_flies_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_flies_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
+void ggo::flies_artist::init_bkgd_buffer(void * bkgd_buffer) const
 {
-  auto image = make_image_buffer(bkgd_buffer);
-	ggo::fill_4_colors(image,
-                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)),
-                     ggo::color::from_hsv(_hue, 0, ggo::rand_float(0.75, 1)));
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(
+    bkgd_buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+    ggo::from_hsv<ggo::color_8u>(_hue, 0, ggo::rand<float>(0.75, 1)),
+    ggo::from_hsv<ggo::color_8u>(_hue, 0, ggo::rand<float>(0.75, 1)),
+    ggo::from_hsv<ggo::color_8u>(_hue, 0, ggo::rand<float>(0.75, 1)),
+    ggo::from_hsv<ggo::color_8u>(_hue, 0, ggo::rand<float>(0.75, 1)));
 		
-	uint8_t * it = bkgd_buffer;
+	uint8_t * it = static_cast<uint8_t *>(bkgd_buffer);
 	for (int y = 0; y < get_render_height(); ++y)
 	{
 		for (int x = 0; x < get_render_width(); ++x)
@@ -67,7 +69,7 @@ void ggo_flies_artist::init_bkgd_buffer(uint8_t * bkgd_buffer)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
+bool ggo::flies_artist::render_next_frame_bkgd(void * buffer, int frame_index)
 {
 	float margin = 0.1f * get_render_min_size();
 		
@@ -112,7 +114,7 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 			}
 
 			// Check for fly collision.
-			const ggo_fly * closest_fly = nullptr;
+			const ggo::flies_artist::fly * closest_fly = nullptr;
 			float dist_min = 0;
 			for (const auto & fly2 : _flies)
 			{
@@ -190,25 +192,34 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::pi<float>() / 3, shadow_scale);
 		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::pi<float>() / 3, shadow_scale);
 
-		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
-		triangle->add_point(fly._cur_pos + v1);
-		triangle->add_point(fly._cur_pos + v2);
-		triangle->add_point(fly._cur_pos + v3);
+    ggo::polygon2d_float triangle(3);
+		triangle.add_point(fly._cur_pos + v1);
+		triangle.add_point(fly._cur_pos + v2);
+		triangle.add_point(fly._cur_pos + v3);
 		
-		triangle->move(shadow_offset, shadow_offset);
+		triangle.move(shadow_offset, shadow_offset);
+
+    auto paint_pixel = [&](int x, int y, int samples_count, int samples_sup)
+    {
+      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_width());
+      uint8_t r = uint8_t(ggo::round_div<uint32_t>((samples_sup - samples_count) * c_8u.r(), samples_count));
+      uint8_t g = uint8_t(ggo::round_div<uint32_t>((samples_sup - samples_count) * c_8u.g(), samples_count));
+      uint8_t b = uint8_t(ggo::round_div<uint32_t>((samples_sup - samples_count) * c_8u.b(), samples_count));
+
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_width(), ggo::color_8u(r, g, b));
+    };
         
-    ggo::paint(buffer, get_render_width(), get_render_height(),
-               triangle,
-               ggo::color::BLACK, 1, std::make_shared<ggo::rgb_alpha_blender>(),
-               ggo::blur_pixel_sampler(shadow_blur));
+    ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
+      triangle, get_render_width(), get_render_height(), shadow_blur, paint_pixel);
 	}
 	
 	// Paint detection circles.
 	for (const auto & fly : _flies)
 	{
-		ggo::paint(buffer, get_render_width(), get_render_height(),
-               std::make_shared<ggo::disc_float>(fly._cur_pos, margin),
-               ggo::color::WHITE, 0.5f * fly._timer);
+		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      ggo::disc_float(fly._cur_pos, margin),
+      ggo::make_solid_brush(ggo::white<ggo::color_8u>()), ggo::alpha_blender<ggo::color_8u>(0.5f * fly._timer));
 	}
 	
 	// Paint flies.	
@@ -220,24 +231,26 @@ bool ggo_flies_artist::render_next_frame_bkgd(uint8_t * buffer, int frame_index)
 		ggo::vec2f v2 = ggo::from_polar(fly._current_angle + 2 * ggo::pi<float>() / 3, flies_scale);
 		ggo::vec2f v3 = ggo::from_polar(fly._current_angle - 2 * ggo::pi<float>() / 3, flies_scale);
 
-		auto triangle = std::make_shared<ggo::polygon2d_float>(3);
-		triangle->add_point(fly._cur_pos + v1);
-		triangle->add_point(fly._cur_pos + v2);
-		triangle->add_point(fly._cur_pos + v3);
+    ggo::polygon2d_float triangle(3);
+		triangle.add_point(fly._cur_pos + v1);
+		triangle.add_point(fly._cur_pos + v2);
+		triangle.add_point(fly._cur_pos + v3);
 
 		float val = std::min(1.f, 0.5f + 0.5f * fly._timer);
 		
-		ggo::paint(buffer, get_render_width(), get_render_height(),
-               triangle, 
-               ggo::color::from_hsv(fly._hue, 1, val));
+		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      triangle, ggo::from_hsv<ggo::color_8u>(fly._hue, 1, val));
 
     float width = 0.0025f * get_render_min_size();
-    auto border = std::make_shared<ggo::multi_shape_float>();
-    border->add_shape(std::make_shared<ggo::extended_segment_float>(triangle->get_point(0), triangle->get_point(1), width));
-    border->add_shape(std::make_shared<ggo::extended_segment_float>(triangle->get_point(1), triangle->get_point(2), width));
-    border->add_shape(std::make_shared<ggo::extended_segment_float>(triangle->get_point(2), triangle->get_point(0), width));
+    ggo::multi_shape_float border;
+    border.add_shape(std::make_shared<ggo::extended_segment_float>(triangle.get_point(0), triangle.get_point(1), width));
+    border.add_shape(std::make_shared<ggo::extended_segment_float>(triangle.get_point(1), triangle.get_point(2), width));
+    border.add_shape(std::make_shared<ggo::extended_segment_float>(triangle.get_point(2), triangle.get_point(0), width));
 
-		ggo::paint(buffer, get_render_width(), get_render_height(), border, ggo::color::BLACK);
+    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      border, ggo::black<ggo::color_8u>());
 	}
 	
 	// Move flies.
