@@ -13,6 +13,7 @@
 #include <ggo_bmp.h>
 #include <ggo_brush.h>
 #include <ggo_blender.h>
+#include <ggo_blur_paint.h>
 #include <array>
 
 //#define GGO_BENCH
@@ -365,6 +366,41 @@ GGO_TEST(paint, alpha_color_triangle)
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
+
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, blur)
+{
+  const int width = 120;
+  const int height = 100;
+
+  std::vector<uint8_t> buffer(3 * width * height, 0x00);
+
+  auto paint_pixel = [&](int x, int y, int samples_count, int samples_sup)
+  {
+    ggo::color_8u c(uint8_t(ggo::round_div(samples_count * 0xff, samples_sup)), uint8_t(0x00), uint8_t(0x00));
+    ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), x, y, height, 3 * width, c);
+  };
+
+  {
+    std::fill(buffer.begin(), buffer.end(), 0x00);
+
+    ggo::paint_blur_shape<ggo::blur_samples_type::disc_12_samples>(
+      ggo::disc_float(50, 40, 20), width, height, 5.f, paint_pixel);
+
+    ggo::save_bmp("paint_blur_12.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  }
+
+  {
+    std::fill(buffer.begin(), buffer.end(), 0x00);
+
+    ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
+      ggo::disc_float(50, 40, 20), width, height, 5.f, paint_pixel);
+
+    ggo::save_bmp("paint_blur_52.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  }
+}
+
 
 
 

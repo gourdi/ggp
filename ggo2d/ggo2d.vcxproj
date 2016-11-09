@@ -32,6 +32,7 @@
     <ClInclude Include="src\image\ggo_rle_image.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
     <ClInclude Include="src\paint\ggo_blender.h" />
+    <ClInclude Include="src\paint\ggo_blur_paint.h" />
     <ClInclude Include="src\paint\ggo_brush.h" />
     <ClInclude Include="src\paint\ggo_buffer_paint.h" />
     <ClInclude Include="src\paint\ggo_gradient_brush.h" />
