@@ -145,7 +145,7 @@ bool ggo::duffing_animation_artist::render_next_frame_sub(void * buffer, int fra
 
       ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_2x2>(
         shadow_buffer.data(), get_render_width(), get_render_height(), sizeof(float) * get_render_width(),
-        ggo::disc_float(render_pt, radius), ggo::make_solid_brush<float>(0.f), ggo::alpha_blender<float>(opacity));
+        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(opacity));
 		}
 	}
 
@@ -170,7 +170,7 @@ bool ggo::duffing_animation_artist::render_next_frame_sub(void * buffer, int fra
 
       ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
         buffer_float.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
-        ggo::disc_float(_points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender<color_32f>(opacity));
+        ggo::disc_float(_points[i], radius), ggo::make_solid_brush(color), ggo::alpha_blender_rgb32f(opacity));
 		}
 	}
 

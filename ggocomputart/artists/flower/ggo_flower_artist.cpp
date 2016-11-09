@@ -1,41 +1,43 @@
 #include "ggo_flower_artist.h"
 #include <ggo_array.h>
 #include <ggo_dct.h>
-#include <ggo_paint.h>
-#include <ggo_fill.h>
 #include <ggo_color.h>
+#include <ggo_curve.h>
+#include <ggo_buffer_paint.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
+#include <ggo_blit.h>
 #include <iostream>
 
-#define GGO_HORZ_COUNT 	3000
-#define GGO_VERT_COUNT	1500
-
 //////////////////////////////////////////////////////////////
-ggo_flower_artist::ggo_flower_artist(int render_width, int render_height)
+ggo::flower_artist::flower_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_flower_artist::render_bitmap(uint8_t * buffer)
+void ggo::flower_artist::render_bitmap(void * buffer) const
 {
-	float	hue				    = ggo::rand_float();
-	int		petals_count	= ggo::rand_int(8, 12);
+  const int horz_count = 3000;
+  const int vert_count = 1500;
+
+	float	hue				    = ggo::rand<float>();
+	int		petals_count	= ggo::rand<int>(8, 12);
 
 	ggo::cubic_curve_float flower_shape_curve;
-	flower_shape_curve.push_point(0, ggo::rand_float(0.25f, 0.75f));
-	flower_shape_curve.push_point(1, ggo::rand_float(0.01f, 0.1f));
-	flower_shape_curve.push_point(ggo::rand_float(0.1f, 0.5f), ggo::rand_float(0.5f, 0.9f));
-	flower_shape_curve.push_point(ggo::rand_float(0.5f, 0.9f), ggo::rand_float(0.1f, 0.5f));
+	flower_shape_curve.push_point(0, ggo::rand<float>(0.25f, 0.75f));
+	flower_shape_curve.push_point(1, ggo::rand<float>(0.01f, 0.1f));
+	flower_shape_curve.push_point(ggo::rand<float>(0.1f, 0.5f), ggo::rand<float>(0.5f, 0.9f));
+	flower_shape_curve.push_point(ggo::rand<float>(0.5f, 0.9f), ggo::rand<float>(0.1f, 0.5f));
 
 	ggo::cubic_curve_float petal_shape_curve;
 	petal_shape_curve.push_point(0, 0);
 	petal_shape_curve.push_point(1, 1);
-	petal_shape_curve.push_point(ggo::rand_float(0.1f, 0.5f), ggo::rand_float(0.1f, 0.5f));
-	petal_shape_curve.push_point(ggo::rand_float(0.5f, 0.9f), ggo::rand_float(0.5f, 0.9f));
+	petal_shape_curve.push_point(ggo::rand<float>(0.1f, 0.5f), ggo::rand<float>(0.1f, 0.5f));
+	petal_shape_curve.push_point(ggo::rand<float>(0.5f, 0.9f), ggo::rand<float>(0.5f, 0.9f));
 		
-  ggo::rgb_image_buffer_float render_buffer(get_render_width(), get_render_height());
-	render_buffer.fill(ggo::color::BLACK);
+  std::vector<float> render_buffer(3 * get_render_width() * get_render_height(), 0.f);
 
 	for (int counter = 0; counter < petals_count; ++counter)
 	{
@@ -45,40 +47,42 @@ void ggo_flower_artist::render_bitmap(uint8_t * buffer)
 
 		float ratio 		    = counter / float(petals_count);
 		float petal_height	= 0.8f * get_render_height() * counter / petals_count;
-		float dy 			      = petal_height / GGO_VERT_COUNT;
+		float dy 			      = petal_height / vert_count;
 		float radius_coef 	= flower_shape_curve.evaluate(ratio);
 
-		ggo::array_float freq(GGO_HORZ_COUNT / 2, 0.f);
-		ggo::array_float spat(GGO_HORZ_COUNT / 2, 0.f);
+		ggo::array_float freq(horz_count / 2, 0.f);
+		ggo::array_float spat(horz_count / 2, 0.f);
 		for (int i = 1; i < 10; ++i)
 		{
-			freq(i) = ggo::rand_float(-1, 1);
+			freq(i) = ggo::rand<float>(-1, 1);
 		}
-		ggo::dct(freq.data(), spat.data(), GGO_HORZ_COUNT/2);
+		ggo::dct(freq.data(), spat.data(), horz_count/2);
 
-		for (int i = 0; i < GGO_VERT_COUNT; ++i)
+		for (int i = 0; i < vert_count; ++i)
 		{
-			float 		  grow 	= i / float(GGO_VERT_COUNT);
-			ggo::color 	color = ggo::color::from_hsv(hue, grow, 1);
-			float 		  s		  = 0.5f * radius_coef * petal_shape_curve.evaluate(grow) * get_render_min_size();
+			float 		      grow 	= i / float(vert_count);
+			ggo::color_32f 	color = 0.0025f * ggo::from_hsv<ggo::color_32f>(hue, grow, 1);
+			float 		      s		  = 0.5f * radius_coef * petal_shape_curve.evaluate(grow) * get_render_min_size();
 
-			for (int j = 0; j < GGO_HORZ_COUNT; ++j) 
+			for (int j = 0; j < horz_count; ++j) 
 			{
-				int   k = j < GGO_HORZ_COUNT/2 ? j : GGO_HORZ_COUNT-j-1;
-				float t = 2 * ggo::pi<float>() * j / GGO_HORZ_COUNT;
-				float x = center.get<0>() + s * cos(t);
-				float y = center.get<1>() + s * sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
+				int   k = j < horz_count/2 ? j : horz_count-j-1;
+				float t = 2 * ggo::pi<float>() * j / horz_count;
+				float x = center.x() + s * std::cos(t);
+				float y = center.y() + s * std::sin(t) / 3 + grow * 0.5f * get_render_height() * spat(k);
 
-				ggo::paint(render_buffer, 
-                   std::make_shared<ggo::disc_float>(x, y, 0.001f * get_render_min_size()),
-                   color, 0.0025f, std::make_shared<ggo::rgb_additive_blender>());
+				ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
+          render_buffer.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
+          ggo::disc_float(x, y, 0.001f * get_render_min_size()),
+          ggo::make_solid_brush(color), ggo::additive_blender<ggo::color_32f>());
 			}
 
-			center.get<1>() -= dy;
+			center.y() -= dy;
 		}
 	}
-  
-  auto image_buffer = make_image_buffer(buffer);
-	image_buffer.from(render_buffer);
+
+  ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
+    render_buffer.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
+    buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 0, 0);
 }
 

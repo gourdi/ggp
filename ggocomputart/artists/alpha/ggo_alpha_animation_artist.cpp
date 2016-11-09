@@ -195,9 +195,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
   }
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, width, height, 3 * width, multi_shape,
-    ggo::make_solid_brush(ggo::black<ggo::color_8u>()),
-    ggo::alpha_blender<ggo::color_8u>(_opacity));
+    buffer, width, height, 3 * width, multi_shape, ggo::black_brush_rgb8u(), ggo::alpha_blender_rgb8u(_opacity));
 }
 
 //////////////////////////////////////////////////////////////
@@ -314,6 +312,6 @@ void ggo::alpha_animation_artist::line::draw(void * buffer, int width, int heigh
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, width, height, 3 * width, segment,
       ggo::make_solid_brush(_color),
-      ggo::alpha_blender<ggo::color_8u>(_opacity));
+      ggo::alpha_blender_rgb8u(_opacity));
   }
 }

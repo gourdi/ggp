@@ -49,7 +49,7 @@ namespace ggo
   template <>
   struct pixel_buffer_format_info<y_32f_yu>
   {
-    static_assert(sizeof(float) == 4 , "sizeof(float) must be 4");
+    static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
 
     static const y_direction y_dir = y_up;
     static const int pixel_byte_size = 4;
@@ -132,7 +132,7 @@ namespace ggo
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
       return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
     }
-    
+
     static void write(void * ptr, const ggo::color_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
@@ -141,17 +141,20 @@ namespace ggo
       ptr_8u[2] = c.r();
     }
   };
+}
 
+namespace ggo
+{
   // Get line pointer.
   template <pixel_buffer_format pbf>
   void * get_line_ptr(void * buffer, const int y, const int height, const int line_step)
   {
     return ptr_offset(buffer, line_step * (pixel_buffer_format_info<pbf>::y_dir == y_down ? height - y - 1 : y));
   }
-  
+
   template <pixel_buffer_format pbf>
   const void * get_line_ptr(const void * buffer, const int y, const int height, const int line_step)
-  { 
+  {
     return ptr_offset(buffer, line_step * (pixel_buffer_format_info<pbf>::y_dir == y_down ? height - y - 1 : y));
   }
 
@@ -161,7 +164,7 @@ namespace ggo
   {
     return static_cast<uint8_t *>(get_line_ptr<pbf>(buffer, y, height, line_step)) + pixel_buffer_format_info<pbf>::pixel_byte_size * x;
   }
-  
+
   template <pixel_buffer_format pbf>
   const void * get_pixel_ptr(const void * buffer, const int x, const int y, const int height, const int line_step)
   {
@@ -195,7 +198,10 @@ namespace ggo
   {
     return read_pixel<pbf>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step));
   }
+}
 
+namespace ggo
+{
   // Block processing.
   template <pixel_buffer_format pbf, typename func_t>
   void process_buffer(void * buffer, const int width, const int height, const int line_step, func_t func)
@@ -254,7 +260,6 @@ namespace ggo
     process_rect_fast<pbf, func_t>(buffer, height, line_step, left, right, bottom, top, func);
   }
 }
-
 
 #endif
 

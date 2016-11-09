@@ -35,7 +35,7 @@ bool ggo::filling_squares_animation_artist::animated_square::update(void * buffe
   float opacity = ggo::ease_in(counter, fade_in_anim_duration, 0.f, 1.f);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width,
-    square, ggo::make_solid_brush(_colored_square._color), ggo::alpha_blender<ggo::color_8u>(opacity));
+    square, ggo::make_solid_brush(_colored_square._color), ggo::alpha_blender_rgb8u(opacity));
 
   return true;
 }

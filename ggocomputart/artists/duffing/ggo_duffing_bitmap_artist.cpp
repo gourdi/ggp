@@ -4,6 +4,7 @@
 #include <ggo_buffer_paint.h>
 #include <ggo_brush.h>
 #include <ggo_blender.h>
+#include <ggo_blit.h>
 
 //////////////////////////////////////////////////////////////
 ggo::duffing_bitmap_artist::duffing_bitmap_artist(int render_width, int render_height)
@@ -116,15 +117,9 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	}
 
 	// From float to uint8_t.
-  for (int y = 0; y < get_render_height(); ++y)
-  {
-    for (int x = 0; x < get_render_width(); ++x)
-    {
-      auto c_32f = ggo::read_pixel<ggo::rgb_32f_yu>(buffer_float.data(), x, y, get_render_height(), 3 * sizeof(float) * get_render_height());
-      auto c_8u = ggo::convert_color_to<ggo::color_8u>(c_32f);
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_render_height(), 3 * get_render_height(), c_8u);
-    }
-  }
+  ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
+    buffer_float.data(), get_render_width(), get_render_height(), 3 * sizeof(float) * get_render_width(),
+    buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 0, 0);
 }
 
 //////////////////////////////////////////////////////////////

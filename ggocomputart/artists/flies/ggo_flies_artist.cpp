@@ -219,7 +219,7 @@ bool ggo::flies_artist::render_next_frame_bkgd(void * buffer, int frame_index)
 		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
       ggo::disc_float(fly._cur_pos, margin),
-      ggo::make_solid_brush(ggo::white<ggo::color_8u>()), ggo::alpha_blender<ggo::color_8u>(0.5f * fly._timer));
+      ggo::make_solid_brush(ggo::white<ggo::color_8u>()), ggo::alpha_blender_rgb8u(0.5f * fly._timer));
 	}
 	
 	// Paint flies.	

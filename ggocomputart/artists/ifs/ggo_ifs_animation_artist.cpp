@@ -1,53 +1,59 @@
 #include "ggo_ifs_animation_artist.h"
-#include <ggo_fill.h>
+#include <ggo_buffer_fill.h>
 
 namespace
 {
-  const int FRAMES_COUNT = 300;
+  const int frames_count = 300;
 }
 
 //////////////////////////////////////////////////////////////
-ggo_ifs_animation_artist::ggo_ifs_animation_artist(int render_width, int render_height)
+ggo::ifs_animation_artist::ifs_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height),
+animation_artist_abc(render_width, render_height),
 _artist(render_width, render_height)
 {
 	
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_ifs_animation_artist::init_sub()
+void ggo::ifs_animation_artist::init_sub()
 {
-	_transform_start[0] = ggo::rand_float(1, 2);
-	_transform_start[1] = ggo::rand_float(1, 2);
-	_transform_start[2] = ggo::rand_float(1, 2);
-	_transform_start[3] = ggo::rand_float(1, 2);
+	_transform_start[0] = ggo::rand<float>(1, 2);
+	_transform_start[1] = ggo::rand<float>(1, 2);
+	_transform_start[2] = ggo::rand<float>(1, 2);
+	_transform_start[3] = ggo::rand<float>(1, 2);
 	
-	_transform_end[0] = _transform_start[0] + ggo::rand_float(-0.3f, 0.3f);
-	_transform_end[1] = _transform_start[1] + ggo::rand_float(-0.3f, 0.3f);
-	_transform_end[2] = _transform_start[2] + ggo::rand_float(-0.3f, 0.3f);
-	_transform_end[3] = _transform_start[3] + ggo::rand_float(-0.3f, 0.3f);
+	_transform_end[0] = _transform_start[0] + ggo::rand<float>(-0.3f, 0.3f);
+	_transform_end[1] = _transform_start[1] + ggo::rand<float>(-0.3f, 0.3f);
+	_transform_end[2] = _transform_start[2] + ggo::rand<float>(-0.3f, 0.3f);
+	_transform_end[3] = _transform_start[3] + ggo::rand<float>(-0.3f, 0.3f);
 	
-	_angle1_start = ggo::rand_float(0, 2 * ggo::pi<float>());
-	_angle1_end = ggo::rand_float(0, 2 * ggo::pi<float>());
-	_angle2_start = ggo::rand_float(0, 2 * ggo::pi<float>());
-	_angle2_end = ggo::rand_float(0, 2 * ggo::pi<float>());
+	_angle1_start = ggo::rand<float>(0, 2 * ggo::pi<float>());
+	_angle1_end = ggo::rand<float>(0, 2 * ggo::pi<float>());
+	_angle2_start = ggo::rand<float>(0, 2 * ggo::pi<float>());
+	_angle2_end = ggo::rand<float>(0, 2 * ggo::pi<float>());
 	
-	_hue = ggo::rand_float();
+	_hue = ggo::rand<float>();
 	
-	_bkgd_colors[0] = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float(0, 0.25));
-	_bkgd_colors[1] = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float(0.5, 0.75));
-	_bkgd_colors[2] = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float(0, 0.25));
-	_bkgd_colors[3] = ggo::color::from_hsv(_hue, ggo::rand_float(), ggo::rand_float(0.5, 0.75));
+	_bkgd_colors[0] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
+	_bkgd_colors[1] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
+	_bkgd_colors[2] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
+	_bkgd_colors[3] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_ifs_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::ifs_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
-  auto image = make_image_buffer(buffer);
-	ggo::fill_4_colors(image, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+  if (frame_index >= frames_count)
+  {
+    return false;
+  }
+
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(
+    buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
-	float t =  ggo::ease_inout_to<float>(frame_index, FRAMES_COUNT);
+	float t =  ggo::ease_inout_to<float>(frame_index, frames_count);
 	
 	float angle1 = ggo::map<float>(t, 0, 1, _angle1_start, _angle1_end);
 	float angle2 = ggo::map<float>(t, 0, 1, _angle2_start, _angle2_end);
@@ -60,5 +66,5 @@ bool ggo_ifs_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame
 	
 	_artist.render(buffer, transform, _hue, angle1, angle2);
 	
-	return frame_index < FRAMES_COUNT;
+	return true;
 }

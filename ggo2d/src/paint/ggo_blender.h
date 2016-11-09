@@ -10,7 +10,10 @@ namespace ggo
   {
     const color_t & operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const { return brush_color; }
   };
-  
+}
+
+namespace ggo
+{  
   template <typename color_t>
   struct alpha_blender { };
 
@@ -62,6 +65,25 @@ namespace ggo
 
     const float _weight_brush;
     const float _weight_bkgd;
+  };
+
+  using alpha_blender_rgb8u = alpha_blender<ggo::color_8u>;
+  using alpha_blender_y32f = alpha_blender<float>;
+  using alpha_blender_rgb32f = alpha_blender<ggo::color_32f>;
+}
+
+namespace ggo
+{
+  template <typename color_t>
+  struct additive_blender { };
+
+  template <>
+  struct additive_blender<ggo::color_32f>
+  {
+    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
+    {
+      return brush_color + bkgd_color;
+    }
   };
 }
 
