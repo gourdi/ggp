@@ -1,29 +1,32 @@
 #ifndef __GGO_NEON_ARTIST__
 #define __GGO_NEON_ARTIST__
 
-#include "ggo_animation_artist_abc.h"
+#include <ggo_animation_artist_abc.h>
 
-class ggo_neon_artist : public ggo_accumulation_animation_artist_abc
+namespace ggo
 {
-public:
+  class neon_artist : public accumulation_animation_artist_abc
+  {
+  public:
 
-        ggo_neon_artist(int render_width, int render_height);
+    neon_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void	init_sub() override;
-  void	init_output_buffer(uint8_t * buffer) override;
-	bool	render_next_frame_sub(uint8_t * buffer, int frame_index) override;
+    void	init_sub() override;
+    void	init_output_buffer(void * buffer) const override;
+    bool	render_next_frame_sub(void * buffer, int frame_index) override;
 
-	void	paint_point(uint8_t * buffer, const ggo::pos2f & point_pos, const ggo::color & color) const;
+    void	paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color) const;
 
-private:
+  private:
 
-	float	_angle;
-	float	_radius_prv;
-	float	_radius_cur;
-	float	_radius_attractor;
-	float	_hue_point;
-};
+    float	_angle;
+    float	_radius_prv;
+    float	_radius_cur;
+    float	_radius_attractor;
+    float	_hue_point;
+  };
+}
 
 #endif

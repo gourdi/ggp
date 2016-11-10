@@ -78,6 +78,18 @@ namespace ggo
   struct additive_blender { };
 
   template <>
+  struct additive_blender<ggo::color_8u>
+  {
+    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const
+    {
+      return ggo::color_8u(
+        uint8_t(std::min<int>(0xff, int(bkgd_color.r()) + int(brush_color.r()))),
+        uint8_t(std::min<int>(0xff, int(bkgd_color.g()) + int(brush_color.g()))),
+        uint8_t(std::min<int>(0xff, int(bkgd_color.b()) + int(brush_color.b()))));
+    }
+  };
+
+  template <>
   struct additive_blender<ggo::color_32f>
   {
     ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
