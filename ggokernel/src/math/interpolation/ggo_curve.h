@@ -14,6 +14,9 @@ namespace ggo
   {
   public:
 
+    using coord_t = T_X;
+    using data_t = T_Y;
+
     void		                      reset();
     void		                      push_point(T_X x, T_Y y);
 

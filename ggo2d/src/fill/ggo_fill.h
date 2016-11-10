@@ -17,8 +17,8 @@ namespace ggo
 // Curve.
 namespace ggo
 {
-  template <typename color_t, typename real_t, typename set_pixel_func>
-  void fill_color_curve(int width, int height, const ggo::curve_abc<real_t, color_t> & curve, set_pixel_func set_pixel);
+  template <typename color_t, typename real_t, typename curve_t, typename set_pixel_func>
+  void fill_color_curve(int width, int height, const curve_t & curve, set_pixel_func set_pixel);
 }
 
 // Gaussian.
@@ -55,6 +55,8 @@ namespace ggo
     const color_t & c1, const color_t & c2,
     set_pixel_func set_pixel)
   {
+    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+
     for (int y = 0; y < height; ++y)
     {
       for (int x = 0; x < width; ++x)
@@ -89,12 +91,12 @@ namespace ggo
 // Curve implementation.
 namespace ggo
 {
-  template <typename color_t, typename real_t, typename set_pixel_func>
-  void fill_color_curve(int width, int height, const ggo::curve_abc<real_t, color_t> & curve, set_pixel_func set_pixel)
+  template <typename color_t, typename real_t, typename curve_t, typename set_pixel_func>
+  void fill_color_curve(int width, int height, const curve_t & curve, set_pixel_func set_pixel)
   {
     for (int y = 0; y < height; ++y)
     {
-      color_t c = curve.evaluate(y / real_t(height));
+      const color_t c = curve.evaluate(y / real_t(height));
 
       for (int x = 0; x < width; ++x)
       {
@@ -150,7 +152,7 @@ namespace ggo
 
     perlin_field2d.add_octave(size, 1);
 
-    fill_scalar_field2d<color_t>(image, perlin_field2d, c1, c2, set_pixel);
+    fill_scalar_field2d<color_t>(width, height, perlin_field2d, c1, c2, set_pixel);
   }
 }
 

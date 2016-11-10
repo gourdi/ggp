@@ -58,7 +58,7 @@ namespace ggo
   {
     for (auto & noise_value : _noise)
     {
-      noise_value = ggo::rand_real<data_t>(0, amplitude);
+      noise_value = ggo::rand<data_t>(0, amplitude);
     }
   }
 
@@ -74,7 +74,7 @@ namespace ggo
     x = x_tmp;
     y = y_tmp;
 
-    return ggo::bilinear_interpolation2d_mirror<data_t, data_t, 1>(_noise.data(), _noise_size, _noise_size, x, y);
+    return ggo::bilinear_interpolation2d_mirror<data_t, data_t, y_up, 1>(_noise.data(), _noise_size, _noise_size, x, y);
   }
       
   template <typename data_t>
