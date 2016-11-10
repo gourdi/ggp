@@ -28,12 +28,14 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t, int stride = 1>
+  template <typename data_t, int item_byte_step = sizeof(data_t)>
   void set1d(data_t * buffer, int x, int width, const data_t & v)
   {
+    static_assert(item_byte_step >= sizeof(data_t), "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(x, 0, width - 1);
-    buffer[stride * x] = v;
+    data_t * ptr = ptr_offset(buffer, x * item_byte_step);
+    *ptr = v;
   }
 }
 
@@ -42,34 +44,35 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t, int stride = 1>
+  template <typename data_t, int item_byte_step = sizeof(data_t)>
   const data_t & get1d(const data_t * buffer, int x, int width)
   {
-    static_assert(stride >= 1, "invalid stride");
+    static_assert(item_byte_step >= sizeof(data_t), "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(x, 0, width - 1);
-    return buffer[stride * x];
+    const data_t * ptr = ptr_offset(buffer, x * item_byte_step);
+    return *ptr;
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, int stride = 1>
+  template <typename data_t, int item_byte_step = sizeof(data_t)>
   const data_t & get1d_mirror(const data_t * buffer, int x, int width)
   {
-    static_assert(stride >= 1, "invalid stride");
+    static_assert(item_byte_step >= sizeof(data_t), "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
     x = mirror_index_edge_duplicated(x, width);
-    return buffer[stride * x];
+    return get1d<data_t, item_byte_step>(buffer, x, width);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, int stride = 1>
+  template <typename data_t, int item_byte_step = sizeof(data_t)>
   const data_t & get1d_fixed_value(const data_t * buffer, int x, int width, const data_t & fixed_value)
   {
-    static_assert(stride >= 1, "invalid stride");
+    static_assert(item_byte_step >= sizeof(data_t), "invalid item byte step");
     if (x < 0 || x >= width) { return fixed_value; }
 
     GGO_ASSERT_PTR(buffer);
-    return buffer[stride * x];
+    return get1d<data_t, item_byte_step>(buffer, x, width);
   }
 }
 
@@ -79,45 +82,43 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <y_direction y_dir = y_up>
-  void * get_line_ptr(void * buffer, int y, int height, int line_step)
+  void * get_line_ptr(void * buffer, int y, int height, int line_byte_step)
   {
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(y, 0, height - 1);
-    return ggo::ptr_offset<void>(buffer, (y_dir == y_down ? height - y - 1 : y) * line_step);
+    return ggo::ptr_offset<void>(buffer, (y_dir == y_down ? height - y - 1 : y) * line_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
   template <y_direction y_dir = y_up>
-  const void * get_line_ptr(const void * buffer, int y, int height, int line_step)
+  const void * get_line_ptr(const void * buffer, int y, int height, int line_byte_step)
   {
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(y, 0, height - 1);
-    return ggo::ptr_offset<void>(buffer, (y_dir == y_down ? height - y - 1 : y) * line_step);
+    return ggo::ptr_offset<void>(buffer, (y_dir == y_down ? height - y - 1 : y) * line_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
   template <int item_byte_step, y_direction y_dir = y_up>
-  void * get_pixel_ptr(void * buffer, int x, int y, int width, int height, int line_step)
+  void * get_pixel_ptr(void * buffer, int x, int y, int height, int line_byte_step)
   {
     static_assert(item_byte_step >= 1, "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(x, 0, width - 1);
+    GGO_ASSERT_BTW(x * item_byte_step, 0, line_byte_step);
     GGO_ASSERT_BTW(y, 0, height - 1);
-    GGO_ASSERT_LE(line_step, width * item_byte_step);
-    void * line_ptr = get_line_ptr<y_dir>(buffer, y, height, line_step);
+    void * line_ptr = get_line_ptr<y_dir>(buffer, y, height, line_byte_step);
     return ptr_offset<void>(line_ptr, x * item_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
   template <int item_byte_step, y_direction y_dir = y_up>
-  const void * get_pixel_ptr(const void * buffer, int x, int y, int width, int height, int line_step)
+  const void * get_pixel_ptr(const void * buffer, int x, int y, int height, int line_byte_step)
   {
     static_assert(item_byte_step >= 1, "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(x, 0, width - 1);
+    GGO_ASSERT_BTW(x * item_byte_step, 0, line_byte_step);
     GGO_ASSERT_BTW(y, 0, height - 1);
-    GGO_ASSERT_LE(line_step, width * item_byte_step);
-    const void * line_ptr = get_line_ptr<y_dir>(buffer, y, height, line_step);
+    const void * line_ptr = get_line_ptr<y_dir>(buffer, y, height, line_byte_step);
     return ptr_offset<void>(line_ptr, x * item_byte_step);
   }
 }
@@ -127,25 +128,11 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  void set2d(data_t * buffer, int x, int y, int width, int height, int line_step, const data_t & data)
+  template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  void set2d(data_t * buffer, int x, int y, int width, int height, int line_byte_step, const data_t & data)
   {
-    GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(x, 0, width - 1);
-    GGO_ASSERT_BTW(y, 0, height - 1);
-    auto * line_ptr = ggo::ptr_offset(buffer, (y_dir ? height - y - 1 : y) * line_step);
-    line_ptr[stride * x] = data;
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  void set2d(data_t * buffer, int x, int y, int width, int height, const data_t & data)
-  {
-    GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(x, 0, width - 1);
-    GGO_ASSERT_BTW(y, 0, height - 1);
-    auto * line_ptr = ggo::ptr_offset(buffer, (y_dir ? height - y - 1 : y) * width * sizeof(data_t));
-    line_ptr[stride * x] = data;
+    data_t * ptr = static_cast<data_t *>(get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, width, height, line_byte_step));
+    *ptr = data;
   }
 }
 
@@ -154,91 +141,47 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d(const data_t * buffer, int x, int y, int width, int height, int line_step)
+  template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  const data_t & get2d(const data_t * buffer, int x, int y, int height, int line_byte_step)
   {
-    auto * pixel_ptr = get_pixel_ptr<stride * sizeof(data_t), y_dir>(buffer, x, y, width, height, stride * width * sizeof(data_t));
-    return *static_cast<data_t*>(pixel_ptr);
+    const data_t * ptr = static_cast<const data_t *>(get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step));
+    return *ptr;
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d(const data_t * buffer, int x, int y, int width, int height)
-  {
-    auto * pixel_ptr = get_pixel_ptr<stride * sizeof(data_t), y_dir>(buffer, x, y, width, height, stride * width * sizeof(data_t));
-    return *static_cast<const data_t*>(pixel_ptr);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_loop(const data_t * buffer, int x, int y, int width, int height, int line_step)
+  template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  const data_t & get2d_loop(const data_t * buffer, int x, int y, int width, int height, int line_byte_step)
   {
     x = loop_index(x, width);
     y = loop_index(y, height);
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height, line_step);
+    return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_loop(const data_t * buffer, int x, int y, int width, int height)
-  {
-    x = loop_index(x, width);
-    y = loop_index(y, height);
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_step)
+  template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_byte_step)
   {
     x = mirror_index_edge_duplicated(x, width);
     y = mirror_index_edge_duplicated(y, height);
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height, line_step);
+    return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height)
-  {
-    x = mirror_index_edge_duplicated(x, width);
-    y = mirror_index_edge_duplicated(y, height);
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_fixed_value(const data_t * buffer, int x, int y, int width, int height, int line_step, const data_t & fixed_value)
+  template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  const data_t & get2d_fixed_value(const data_t * buffer, int x, int y, int width, int height, int line_byte_step, const data_t & fixed_value)
   {
     if (x < 0 || x >= width) { return fixed_value; }
     if (y < 0 || y >= height) { return fixed_value; }
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height, line_step);
+    return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, y_direction y_dir = y_up, int stride = 1>
-  const data_t & get2d_fixed_value(const data_t * buffer, int x, int y, int width, int height, const data_t & fixed_value)
+  template <typename data_t, data_t fixed_value, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  data_t get2d_fixed_value_t(const data_t * buffer, int x, int y, int width, int height, int line_byte_step)
   {
     if (x < 0 || x >= width) { return fixed_value; }
     if (y < 0 || y >= height) { return fixed_value; }
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, data_t fixed_value, y_direction y_dir = y_up, int stride = 1>
-  data_t get2d_fixed_value_t(const data_t * buffer, int x, int y, int width, int height, int line_step)
-  {
-    if (x < 0 || x >= width) { return fixed_value; }
-    if (y < 0 || y >= height) { return fixed_value; }
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height, line_step);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, data_t fixed_value, y_direction y_dir = y_up, int stride = 1>
-  data_t get2d_fixed_value_t(const data_t * buffer, int x, int y, int width, int height)
-  {
-    if (x < 0 || x >= width) { return fixed_value; }
-    if (y < 0 || y >= height) { return fixed_value; }
-    return get2d<data_t, y_dir, stride>(buffer, x, y, width, height);
+    return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
   }
 }
 

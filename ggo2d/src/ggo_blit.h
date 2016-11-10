@@ -2,6 +2,7 @@
 #define __GGO_BLIT__
 
 #include <ggo_pixel_buffer.h>
+#include <ggo_buffer_access.h>
 
 namespace ggo
 {
@@ -18,6 +19,9 @@ namespace ggo
     void * output, int output_width, int output_height, int output_line_step,
     int left, int bottom)
   {
+    using format_in = pixel_buffer_format_info<pbf_in>;
+    using format_out = pixel_buffer_format_info<pbf_out>;
+
     if (left >= output_height || bottom >= output_height)
     {
       return;
@@ -47,8 +51,8 @@ namespace ggo
 
     for (int y = 0; y < input_height; ++y)
     {
-      const void * input_line_ptr = ggo::get_line_ptr<pbf_in>(input, y, input_height, input_line_step);
-      void * output_line_ptr = ggo::get_line_ptr<pbf_out>(output, y, output_height, output_line_step);
+      const void * input_line_ptr = ggo::get_line_ptr<format_in::y_dir>(input, y, input_height, input_line_step);
+      void * output_line_ptr = ggo::get_line_ptr<format_out::y_dir>(output, y, output_height, output_line_step);
 
       for (int x = 0; x < input_width; ++x)
       {

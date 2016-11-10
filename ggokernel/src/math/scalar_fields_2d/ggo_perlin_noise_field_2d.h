@@ -26,11 +26,11 @@ namespace ggo
     {
     public:
     
-                octave(data_t scale, data_t amplitude, data_t angle, int noise_size);
+              octave(data_t scale, data_t amplitude, data_t angle, int noise_size);
       
-        data_t  evaluate(data_t x, data_t y) const;
+      data_t  evaluate(data_t x, data_t y) const;
       
-        data_t  get(int x, int y) const;
+      data_t  get(int x, int y) const;
 
     private:
       
@@ -74,7 +74,8 @@ namespace ggo
     x = x_tmp;
     y = y_tmp;
 
-    return ggo::bilinear_interpolation2d_mirror<data_t, data_t, y_up, 1>(_noise.data(), _noise_size, _noise_size, x, y);
+    return ggo::bilinear_interpolation2d_mirror<data_t, data_t>(
+      _noise.data(), _noise_size, _noise_size, _noise_size * sizeof(data_t), x, y);
   }
       
   template <typename data_t>

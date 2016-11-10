@@ -145,32 +145,6 @@ namespace ggo
 
 namespace ggo
 {
-  // Get line pointer.
-  template <pixel_buffer_format pbf>
-  void * get_line_ptr(void * buffer, const int y, const int height, const int line_step)
-  {
-    return ptr_offset(buffer, line_step * (pixel_buffer_format_info<pbf>::y_dir == y_down ? height - y - 1 : y));
-  }
-
-  template <pixel_buffer_format pbf>
-  const void * get_line_ptr(const void * buffer, const int y, const int height, const int line_step)
-  {
-    return ptr_offset(buffer, line_step * (pixel_buffer_format_info<pbf>::y_dir == y_down ? height - y - 1 : y));
-  }
-
-  // Get pixel pointer.
-  template <pixel_buffer_format pbf>
-  void * get_pixel_ptr(void * buffer, const int x, const int y, const int height, const int line_step)
-  {
-    return static_cast<uint8_t *>(get_line_ptr<pbf>(buffer, y, height, line_step)) + pixel_buffer_format_info<pbf>::pixel_byte_size * x;
-  }
-
-  template <pixel_buffer_format pbf>
-  const void * get_pixel_ptr(const void * buffer, const int x, const int y, const int height, const int line_step)
-  {
-    return static_cast<const uint8_t *>(get_line_ptr<pbf>(buffer, y, height, line_step)) + pixel_buffer_format_info<pbf>::pixel_byte_size * x;
-  }
-
   // Set pixel to pointer.
   template <pixel_buffer_format pbf>
   void write_pixel(void * ptr, const typename pixel_buffer_format_info<pbf>::color_t & c)
@@ -182,7 +156,9 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    write_pixel<pbf>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step), c);
+    ptr = get_pixel_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
+
+    write_pixel<pbf>(ptr, c);
   }
 
   // Get pixel from pointer.
@@ -196,7 +172,9 @@ namespace ggo
   template <pixel_buffer_format pbf>
   typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    return read_pixel<pbf>(get_pixel_ptr<pbf>(ptr, x, y, height, line_step));
+    ptr = get_pixel_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
+
+    return read_pixel<pbf>(ptr);
   }
 }
 
@@ -228,14 +206,16 @@ namespace ggo
   template <pixel_buffer_format pbf, typename func_t>
   void process_rect_fast(void * buffer, const int height, const int line_step, const int left, const int right, const int bottom, const int top, func_t func)
   {
+    using format = pixel_buffer_format_info<pbf>;
+
     if (pixel_buffer_format_info<pbf>::y_dir == y_down)
     {
-      void * ptr = get_pixel_ptr<pbf>(buffer, left, top, height, line_step);
+      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, left, top, height, line_step);
       ggo::process_buffer<pbf>(ptr, right - left + 1, top - bottom + 1, line_step, func);
     }
     else
     {
-      void * ptr = get_pixel_ptr<pbf>(buffer, left, bottom, height, line_step);
+      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, left, bottom, height, line_step);
       ggo::process_buffer<pbf>(ptr, right - left + 1, top - bottom + 1, line_step, func);
     }
   }

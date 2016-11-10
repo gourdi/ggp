@@ -1,6 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
+#include <ggo_buffer_access.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(buffer_pixel, y_8u_yu)
@@ -9,10 +10,10 @@ GGO_TEST(buffer_pixel, y_8u_yu)
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
 
-  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::y_8u_yu>(buffer.data(), 1, 2, 10));
+  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::y_8u_yu>::y_dir>(buffer.data(), 1, 2, 10));
   GGO_CHECK_EQ(*line_ptr, 20);
 
-  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10));
+  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<1, ggo::pixel_buffer_format_info<ggo::y_8u_yu>::y_dir>(buffer.data(), 7, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 27);
 
   auto c = ggo::read_pixel<ggo::y_8u_yu>(buffer.data(), 7, 1, 2, 10);
@@ -35,10 +36,10 @@ GGO_TEST(buffer_pixel, y_32f_yu)
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
     20.f, 21.f, 22.f, 23.f, 24.f, 25.f, 26.f, 27.f, 28.f, 29.f };
 
-  const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::y_32f_yu>(buffer.data(), 1, 2, 10 * sizeof(float)));
+  const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::y_32f_yu>::y_dir>(buffer.data(), 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*line_ptr, 20.f);
 
-  const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float)));
+  const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<sizeof(float), ggo::pixel_buffer_format_info<ggo::y_32f_yu>::y_dir>(buffer.data(), 7, 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*pixel_ptr, 27.f);
 
   auto c = ggo::read_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float));
@@ -61,10 +62,10 @@ GGO_TEST(buffer_pixel, rgb_8u_yu)
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
 
-  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::rgb_8u_yu>(buffer.data(), 1, 2, 10));
+  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer.data(), 1, 2, 10));
   GGO_CHECK_EQ(*line_ptr, 20);
 
-  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10));
+  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<3, ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer.data(), 2, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 26);
 
   auto c = ggo::read_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10);
@@ -89,10 +90,10 @@ GGO_TEST(buffer_pixel, rgb_32f_yu)
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
     20.f, 21.f, 22.f, 23.f, 24.f, 25.f, 26.f, 27.f, 28.f, 29.f };
 
-  const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::rgb_32f_yu>(buffer.data(), 1, 2, 10 * sizeof(float)));
+  const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_32f_yu>::y_dir>(buffer.data(), 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*line_ptr, 20.f);
 
-  const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float)));
+  const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<3 * sizeof(float), ggo::pixel_buffer_format_info<ggo::rgb_32f_yu>::y_dir>(buffer.data(), 2, 1, 2, 10 * sizeof(float)));
   GGO_CHECK_FABS(*pixel_ptr, 26.f);
 
   auto c = ggo::read_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float));
@@ -111,16 +112,16 @@ GGO_TEST(buffer_pixel, rgb_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, bgra_8u_yu)
+GGO_TEST(buffer_pixel, bgra_8u_yd)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29 };
 
-  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::bgra_8u_yd>(buffer.data(), 1, 2, 10));
+  const uint8_t * line_ptr = static_cast<const uint8_t*>(ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::bgra_8u_yd>::y_dir>(buffer.data(), 1, 2, 10));
   GGO_CHECK_EQ(*line_ptr, 10);
 
-  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10));
+  const uint8_t * pixel_ptr = static_cast<const uint8_t*>(ggo::get_pixel_ptr<4, ggo::pixel_buffer_format_info<ggo::bgra_8u_yd>::y_dir>(buffer.data(), 1, 1, 2, 10));
   GGO_CHECK_EQ(*pixel_ptr, 14);
 
   auto c = ggo::read_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10);

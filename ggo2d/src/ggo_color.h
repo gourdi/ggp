@@ -42,7 +42,7 @@ namespace ggo
   template <>
   struct color_traits<uint8_t>
   {
-    using floating_point_t = ggo::color_32f;
+    using floating_point_t = float;
     using sample_t = uint8_t;
     static uint8_t max() { return 0xff; }
     static const int _samples_count = 1;
@@ -127,12 +127,24 @@ namespace ggo
     return ggo::color_8u(c, c, c);
   }
 
+  // y 8u => y 32f
+  template <> inline float convert_color_to<float, uint8_t>(const uint8_t & c)
+  {
+    return c / 255.f;
+  }
+
   // y 32f => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
   {
     uint8_t gray = static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
 
     return ggo::color_8u(gray, gray, gray);
+  }
+
+  // y 32f => y 8u
+  template <> inline uint8_t convert_color_to<uint8_t, float>(const float & c)
+  {
+    return static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
   }
 }
 

@@ -18,6 +18,42 @@ namespace ggo
   struct alpha_blender { };
 
   template <>
+  struct alpha_blender<uint8_t>
+  {
+    alpha_blender(float opacity) :
+      _weight_brush(ggo::to<uint32_t>(0x10000 * opacity)),
+      _weight_bkgd(0x10000 - _weight_brush)
+    {
+    }
+
+    uint8_t operator()(int x, int y, const uint8_t & bkgd_color, const uint8_t & brush_color) const
+    {
+      const uint32_t bkgd_color_32u(static_cast<uint32_t>(bkgd_color));
+      const uint32_t brush_color_32u(static_cast<uint32_t>(brush_color));
+      const uint32_t output_color_32u(ggo::fixed_point_div<16>(_weight_bkgd * bkgd_color_32u + _weight_brush * brush_color_32u));
+
+      return static_cast<uint8_t>(output_color_32u);
+    }
+
+    const uint32_t _weight_brush;
+    const uint32_t _weight_bkgd;
+  };
+
+  template <>
+  struct alpha_blender<float>
+  {
+    alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
+
+    float operator()(int x, int y, const float & bkgd_color, const float & brush_color) const
+    {
+      return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
+    }
+
+    const float _weight_brush;
+    const float _weight_bkgd;
+  };
+
+  template <>
   struct alpha_blender<ggo::color_8u>
   {
     alpha_blender(float opacity) :
@@ -40,20 +76,6 @@ namespace ggo
   };
 
   template <>
-  struct alpha_blender<float>
-  {
-    alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
-
-    float operator()(int x, int y, const float & bkgd_color, const float & brush_color) const
-    {
-      return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
-    }
-
-    const float _weight_brush;
-    const float _weight_bkgd;
-  };
-
-  template <>
   struct alpha_blender<ggo::color_32f>
   {
     alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
@@ -67,8 +89,9 @@ namespace ggo
     const float _weight_bkgd;
   };
 
-  using alpha_blender_rgb8u = alpha_blender<ggo::color_8u>;
+  using alpha_blender_y8u = alpha_blender<uint8_t>;
   using alpha_blender_y32f = alpha_blender<float>;
+  using alpha_blender_rgb8u = alpha_blender<ggo::color_8u>;
   using alpha_blender_rgb32f = alpha_blender<ggo::color_32f>;
 }
 

@@ -20,37 +20,37 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename interpolation_t, y_direction y_dir = y_up, int stride = 1>
-  inline data_t bilinear_interpolation2d_mirror(const data_t * input, int width, int height, interpolation_t x, interpolation_t y)
+  template <typename data_t, typename interpolation_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  inline data_t bilinear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<data_t, y_dir, stride>(input, x, y, width, height); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<data_t, y_dir, item_byte_step>(input, x, y, width, height, line_byte_step); };
 
     return bilinear_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <y_direction y_dir = y_up, int stride = 1>
-  inline uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y)
+  template <y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  inline uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<uint8_t, y_dir, stride>(input, x, y, width, height)); };
+    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<uint8_t, y_dir, item_byte_step>(input, x, y, width, height, line_byte_step)); };
 
     return ggo::to<uint8_t>(bilinear_interpolation2d<float>(in, x, y));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename interpolation_t, y_direction y_dir = y_up, int stride = 1>
-  inline data_t bicubic_interpolation2d_mirror(const data_t * input, int width, int height, interpolation_t x, interpolation_t y)
+  template <typename data_t, typename interpolation_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  inline data_t bicubic_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<data_t, y_dir, stride>(input, x, y, width, height); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<data_t, y_dir, item_byte_step>(input, x, y, width, height, line_byte_step); };
 
     return bicubic_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <y_direction y_dir = y_up, int stride = 1>
-  inline uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y)
+  template <y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
+  inline uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<uint8_t, y_dir, stride>(input, x, y, width, height)); };
+    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<uint8_t, y_dir, item_byte_step>(input, x, y, width, height, line_byte_step)); };
 
     return ggo::to<uint8_t>(bicubic_interpolation2d<float>(in, x, y));
   }

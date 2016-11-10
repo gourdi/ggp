@@ -55,6 +55,7 @@ namespace ggo
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend)
   {
     using typename color_t = typename pixel_buffer_format_info<pbf>::color_t;
+    using format = pixel_buffer_format_info<pbf>;
 
     const int scale_factor = 8;
     const int first_scale = 2;
@@ -76,7 +77,7 @@ namespace ggo
     {
       for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
       {
-        uint8_t * ptr = static_cast<uint8_t *>(get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step));
+        uint8_t * ptr = static_cast<uint8_t *>(get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, block_rect.left(), y, height, line_step));
         for (int x = block_rect.left(); x <= block_rect.right(); ++x)
         {
           const color_t bkgd_color = read_pixel<pbf>(ptr);

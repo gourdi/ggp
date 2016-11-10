@@ -105,20 +105,20 @@ namespace ggo
     // First horizontal pass.
     {
       auto input_line_iterator = [&](int y) {
-        const void * ptr = ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step);
+        const void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, 0, y, height, line_step);
         return ggo::const_buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
       };
 
       auto output_line_iterator = [&](int y) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), 0, y, height, line_step);
+        void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), 0, y, height, line_step);
         return ggo::buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
       };
 
       auto left = [&](int x, int y) {
-        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step)));
+        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, 0, y, height, line_step)));
       };
       auto right = [&](int x, int y) {
-        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, width - 1, y, height, line_step)));
+        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, width - 1, y, height, line_step)));
       };
 
       ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator,
@@ -128,20 +128,20 @@ namespace ggo
     // Second vertical pass.
     {
       auto input_column_iterator = [&](int x) {
-        const void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), x, 0, height, line_step);
+        const void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), x, 0, height, line_step);
         return ggo::const_buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
       };
 
       auto output_column_iterator = [&](int x) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_step);
+        void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, x, 0, height, line_step);
         return ggo::buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
       };
 
       auto bottom = [&](int x, int y) {
-        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(tmp.data(), x, 0, height, line_step)));
+        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), x, 0, height, line_step)));
       };
       auto top = [&](int x, int y) {
-        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(tmp.data(), x, height - 1, height, line_step)));
+        return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), x, height - 1, height, line_step)));
       };
 
       ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator,
