@@ -1,18 +1,20 @@
 #include "ggo_plastic_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo_plastic_artist::ggo_plastic_artist(int render_width, int render_height)
+ggo::plastic_artist::plastic_artist(int render_width, int render_height)
 :
-ggo_artist_abc(render_width, render_height)
+artist(render_width, render_height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_plastic_artist::render(uint8_t * buffer, const std::vector<ggo_plastic_params> & params, const ggo::color & color, float altitude_factor) const
+void ggo::plastic_artist::render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
 {
 	float range_x = get_render_width() > get_render_height() ? get_render_width() / float(get_render_height()) : 1;
 	float range_y = get_render_width() > get_render_height() ? 1 : get_render_height() / float(get_render_width());
+
+  uint8_t * ptr = static_cast<uint8_t *>(buffer);
 
 	for (int y = 0; y < get_render_height(); ++y)
 	{
@@ -38,30 +40,32 @@ void ggo_plastic_artist::render(uint8_t * buffer, const std::vector<ggo_plastic_
 			ggo::vec3f normal = ggo::cross(v1, v2);
 			normal.normalize();
 		
-			ggo::color pixel_color = color;
-			pixel_color *= altitude_factor + std::abs(normal.get<2>()) / altitude_factor;
+			ggo::color_32f pixel_color_32f = color;
+      pixel_color_32f *= altitude_factor + std::abs(normal.get<2>()) / altitude_factor;
+
+      const ggo::color_8u pixel_color = ggo::convert_color_to<ggo::color_8u>(pixel_color_32f);
 		
-			buffer[0] = pixel_color.r8();
-			buffer[1] = pixel_color.g8();
-			buffer[2] = pixel_color.b8();
+			ptr[0] = pixel_color.r();
+			ptr[1] = pixel_color.g();
+			ptr[2] = pixel_color.b();
 		
-			buffer += 3;
+      ptr += 3;
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////
-float ggo_plastic_artist::evaluate(float x, float y, const std::vector<ggo_plastic_params> & params) const
+float ggo::plastic_artist::evaluate(float x, float y, const std::vector<ggo::plastic_artist::params> & params) const
 {
 	float z = 0;
-	for (std::vector<ggo_plastic_params>::const_iterator it = params.begin(); it != params.end(); ++it)
+	for (const auto & param : params)
 	{
-		float dx = it->_pos_x - x;
-		float dy = it->_pos_y - y;
+		float dx = param._pos_x - x;
+		float dy = param._pos_y - y;
 		
 		float r = dx * dx + dy * dy;
-		z += it->_den / (0.1f + std::pow(r * it->_mult, it->_power));
-		z += it->_den / (0.1f + std::pow(r * it->_mult, it->_power));
+		z += param._den / (0.1f + std::pow(r * param._mult, param._power));
+		z += param._den / (0.1f + std::pow(r * param._mult, param._power));
 	}
 
 	return z;

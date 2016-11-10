@@ -1,7 +1,6 @@
 #include "ggo_chryzode_bitmap_artist.h"
 #include "ggo_chryzode_artist.h"
 #include <ggo_gaussian_blur.h>
-#include <ggo_pixel_sampler_abc.h>
 
 //////////////////////////////////////////////////////////////
 ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int render_width, int render_height)

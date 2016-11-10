@@ -75,15 +75,6 @@
     <ClInclude Include="src\math\sampling\low_discrepancy_sequences\ggo_poisson_sampling.h">
       <Filter>math\sampling\low_discrepancy_sequences</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.h">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.h">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClInclude>
-    <ClInclude Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.h">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\sampling\shape_sampling\ggo_shape_sampling.h">
       <Filter>math\sampling\shape_sampling</Filter>
     </ClInclude>
@@ -346,15 +337,6 @@
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp">
       <Filter>math\sampling\low_discrepancy_sequences</Filter>
     </ClCompile>
-    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_pixel_sampler_abc.cpp">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_shape_sampling_coef.cpp">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClCompile>
-    <ClCompile Include="src\math\sampling\pixel_sampling\ggo_blur_pixel_sampler.cpp">
-      <Filter>math\sampling\pixel_sampling</Filter>
-    </ClCompile>
     <ClCompile Include="src\nonreg\ggo_unit_test.cpp">
       <Filter>nonreg</Filter>
     </ClCompile>
@@ -393,9 +375,6 @@
     </Filter>
     <Filter Include="math\sampling\low_discrepancy_sequences">
       <UniqueIdentifier>{f29c2192-c36c-408d-9b72-200caa083906}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math\sampling\pixel_sampling">
-      <UniqueIdentifier>{e97bdbc2-7579-4e2b-be93-834bdd19d3fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="math\sampling\shape_sampling">
       <UniqueIdentifier>{f7562b5c-e6d5-4731-8f85-192a39939ad6}</UniqueIdentifier>

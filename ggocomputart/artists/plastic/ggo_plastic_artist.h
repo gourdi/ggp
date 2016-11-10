@@ -1,32 +1,34 @@
 #ifndef __GGO_PLASTIC_ARTIST__
 #define __GGO_PLASTIC_ARTIST__
 
-#include "ggo_bitmap_artist_abc.h"
+#include <ggo_artist.h>
 #include <ggo_color.h>
-#include <vector>
 
-class ggo_plastic_artist : public ggo_artist_abc
+namespace ggo
 {
-public:
-	
-	struct ggo_plastic_params
-	{
-		float _pos_x;
-		float _pos_y;
-		float _den;
-		float _mult;
-		float _power;
-	};
-	
-public:
-	
-        ggo_plastic_artist(int render_width, int render_height);
-						
-	void	render(uint8_t * buffer, const std::vector<ggo_plastic_params> & params, const ggo::color & color, float altitude_factor) const;
-	
-private:
+  class plastic_artist : public artist
+  {
+  public:
 
-	float	evaluate(float x, float y, const std::vector<ggo_plastic_params> & params) const;
-};
+    struct params
+    {
+      float _pos_x;
+      float _pos_y;
+      float _den;
+      float _mult;
+      float _power;
+    };
+
+  public:
+
+    plastic_artist(int render_width, int render_height);
+
+    void	render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const;
+
+  private:
+
+    float	evaluate(float x, float y, const std::vector<ggo::plastic_artist::params> & params) const;
+  };
+}
 
 #endif
