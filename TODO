@@ -4,3 +4,4 @@
 - https://softologyblog.wordpress.com/2011/07/05/multi-scale-turing-patterns/
 - http://www.wblut.com/
 - Visual : raytracer -> remettre le Whole Program Optimization à Use Link Time Code Generation
+- nattoyer la duplication de ptr_offset/get_line_ptr/get_pixel_ptr

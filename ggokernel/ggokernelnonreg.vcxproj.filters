@@ -39,9 +39,6 @@
     <ClCompile Include="test\interpolation\ggo_interpolation2d_nonreg.cpp">
       <Filter>interpolation</Filter>
     </ClCompile>
-    <ClCompile Include="test\sampling\ggo_pixel_sampling_nonreg.cpp">
-      <Filter>sampling</Filter>
-    </ClCompile>
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp">
       <Filter>sampling</Filter>
     </ClCompile>

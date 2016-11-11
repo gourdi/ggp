@@ -129,9 +129,9 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
-  void set2d(data_t * buffer, int x, int y, int width, int height, int line_byte_step, const data_t & data)
+  void set2d(data_t * buffer, int x, int y, int height, int line_byte_step, const data_t & data)
   {
-    data_t * ptr = static_cast<data_t *>(get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, width, height, line_byte_step));
+    data_t * ptr = static_cast<data_t *>(get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step));
     *ptr = data;
   }
 }

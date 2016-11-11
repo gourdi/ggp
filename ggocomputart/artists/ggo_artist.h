@@ -54,6 +54,36 @@ namespace ggo
     ggo::pos2f horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _render_height); }
     ggo::pos2f vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _render_width); }
 
+    template <typename pixel_func_t>
+    void for_each_pixel(pixel_func_t pixel_func) const
+    {
+      for (int y = 0; y < get_render_height(); ++y)
+      {
+        for (int x = 0; x < get_render_width(); ++x)
+        {
+          pixel_func(x, y);
+        }
+      }
+    }
+
+    template <typename data_t>
+    const data_t & get2d(const data_t * buffer, int x, int y) const
+    {
+      return ggo::get2d(buffer, x, y, get_render_height(), sizeof(data_t) * get_render_width());
+    }
+
+    template <typename data_t>
+    const data_t & get2d_loop(const data_t * buffer, int x, int y) const
+    {
+      return ggo::get2d_loop(buffer, x, y, get_render_width(), get_render_height(), sizeof(data_t) * get_render_width());
+    }
+
+    template <typename data_t>
+    void set2d(data_t * buffer, int x, int y, const data_t & v) const
+    {
+      return ggo::set2d(buffer, x, y, get_render_height(), sizeof(data_t) * get_render_width(), v);
+    }
+
   private:
 
     int	_render_width;

@@ -29,7 +29,7 @@ namespace
       buffer, width, height, line_step,
       ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
 
-    ggo::gaussian_blur2d<pbf>(buffer, width, height, line_step, 5.f);
+    ggo::gaussian_blur2d_mirror<pbf>(buffer, width, height, line_step, 5.f);
 
 #ifdef GGO_BENCH
     ggo::chronometer chronometer;
@@ -97,7 +97,7 @@ GGO_TEST(blur, gaussian_y_8u_yu)
     buffer.data(), width, height, line_step,
     ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
 
-  ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
 
 #ifdef GGO_BENCH
   ggo::chronometer chronometer;
