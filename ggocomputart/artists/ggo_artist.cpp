@@ -117,6 +117,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  float artist::map_fit(float value, float inf, float sup) const
+  {
+    return map_fit(value, inf, sup, _render_width, _render_height);
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::pos2f artist::map_fit(const ggo::pos2f & point, float inf, float sup) const
   {
     return map_fit(point, inf, sup, _render_width, _render_height);

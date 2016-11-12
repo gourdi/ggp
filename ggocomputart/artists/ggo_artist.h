@@ -45,6 +45,7 @@ namespace ggo
 
     ggo::pos2f	map_fill(const ggo::pos2f & point, float inf, float sup) const;
 
+    float       map_fit(float value, float inf, float sup) const;
     ggo::pos2f	map_fit(const ggo::pos2f & point, float inf, float sup) const;
     void        map_fit(ggo::rect_float & rect, float inf, float sup) const;
     void        map_fit(ggo::disc_float & disc, float inf, float sup) const;
