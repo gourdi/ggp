@@ -7,73 +7,75 @@
 #include <ggo_curve.h>
 #include <memory>
 
-class ggo_sonson_animation_artist : public ggo_animation_artist_abc
+namespace ggo
 {
-public:
-
-              ggo_sonson_animation_artist(int render_width, int render_height);
-
-  void        init_sub() override;
-  bool        render_next_frame_sub(uint8_t * buffer, int frame_index) override;
-
-private:
-
-  void        create_line(int frame_index, bool foreground);
-
-private:
-
-  class ggo_line
+  class sonson_animation_artist : public animation_artist_abc
   {
   public:
 
-    static  ggo_line *                      create(float hue, int width, int height, int scale_factor);
-
-            bool                            update();
-            void                            render(ggo::rgb_image_buffer_uint8 & image) const;
+          sonson_animation_artist(int render_width, int render_height);
 
   private:
 
-                                            ggo_line(int width, int height, int scale_factor);
+    void  init_sub() override;
+    bool  render_next_frame_sub(void * buffer, int frame_index) override;
 
-
-    std::pair<float, ggo::color>            get_pixel(int x, int y) const;
-    ggo::segment_float                      get_segment() const;
-    ggo::extended_segment_float             get_glow_segment() const;
-    const std::vector<ggo::segment_float> & get_sparks() const { return _sparks; }
-
-    void  render_masks();
-    void  update_strips();
-    void  update_sparks();
-    void  setup_cw();
-    void  setup_ccw();
+    void  create_line(int frame_index, bool foreground);
 
   private:
 
-    ggo::pos2f _pos;
-    ggo::vec2f _strip_dir;
-    ggo::vec2f _velocity;
+    class line
+    {
+    public:
 
-    // Arc.
-    float _radius;
-    ggo::pos2f _center;
-    float _angle_start;
-    float _angle_end;
-    bool _clock_wise;
-    
-    int _step;
-    int _step_end;
+      static  line *  create(float hue, int width, int height, int scale_factor);
 
-    int _scale_factor;
+      bool            update();
+      void            render(void * buffer, int width, int height) const;
 
-    std::vector<std::pair<int, ggo::color>> _strips;
-    ggo::rle_image<float>                   _opacity_mask;
-    ggo::rle_image<ggo::color>              _color_mask;
-    std::vector<ggo::segment_float>         _sparks;
+    private:
+
+      line(int width, int height, int scale_factor);
+
+      std::pair<float, ggo::color_32f>        get_pixel(int x, int y) const;
+      ggo::segment_float                      get_segment() const;
+      ggo::extended_segment_float             get_glow_segment() const;
+      const std::vector<ggo::segment_float> & get_sparks() const { return _sparks; }
+
+      void  render_masks();
+      void  update_strips();
+      void  update_sparks();
+      void  setup_cw();
+      void  setup_ccw();
+
+    private:
+
+      ggo::pos2f _pos;
+      ggo::vec2f _strip_dir;
+      ggo::vec2f _velocity;
+
+      // Arc.
+      float _radius;
+      ggo::pos2f _center;
+      float _angle_start;
+      float _angle_end;
+      bool _clock_wise;
+
+      int _step;
+      int _step_end;
+
+      int _scale_factor;
+
+      std::vector<std::pair<int, ggo::color_32f>> _strips;
+      ggo::rle_image<float>                       _opacity_mask;
+      ggo::rle_image<ggo::color_32f>              _color_mask;
+      std::vector<ggo::segment_float>             _sparks;
+    };
+
+    float                                           _hue1;
+    float                                           _hue2;
+    std::vector<std::vector<std::unique_ptr<line>>> _lines;
   };
-
-  float                                               _hue1;
-  float                                               _hue2;
-  std::vector<std::vector<std::unique_ptr<ggo_line>>> _lines;
-};
+}
 
 #endif

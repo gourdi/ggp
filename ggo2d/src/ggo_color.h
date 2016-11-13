@@ -91,28 +91,18 @@ namespace ggo
 // since float is normalized betwen 0 and 1.
 namespace ggo
 {
+  // Default case : return input color.
   template <typename color_out_t, typename color_in_t>
   color_out_t convert_color_to(const color_in_t & c)
   {
-    static_assert(false, "missing specialization");
+    static_assert(std::is_same<color_in_t, color_out_t>::value, "expecting same color type");
+    return c;
   }
 
   // rgb 32f => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
   {
     return ggo::color_8u(ggo::to<uint8_t>(255.f * c.r()), ggo::to<uint8_t>(255.f * c.g()), ggo::to<uint8_t>(255.f * c.b()));
-  }
-
-  // rgb 32f <=> rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    return c;
-  }
-
-  // rgb 8u <=> rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    return c;
   }
 
   // rgb 8u => rgb 32f

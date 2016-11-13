@@ -1,20 +1,22 @@
 #include "ggo_sonson_animation_artist.h"
-#include <ggo_gaussian_blur.h>
-#include <ggo_fill.h>
-#include <ggo_gradient_brush.h>
-#include <ggo_paint.h>
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_buffer_fill.h>
 #include <ggo_pixel_rect.h>
-#include <numeric>
+#include <ggo_multi_scale_paint.h>
+#include <ggo_buffer_paint.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
+#include <ggo_gradient_brush.h>
 
 namespace
 {
   const int frames_count = 200;
 
   //////////////////////////////////////////////////////////////
-  void paint_arc(ggo::gray_image_abc & opacity_mask,
-                 ggo::rgb_image_abc & color_mask,
+  void paint_arc(ggo::rle_image<float> & opacity_mask,
+                 ggo::rle_image<ggo::color_32f> & color_mask,
                  const ggo::pos2f & center, float radius1, float radius2, float angle1, float angle2,
-                 const ggo::color & color)
+                 const ggo::color_32f & color)
   {
     GGO_ASSERT_EQ(opacity_mask.get_width(), color_mask.get_width());
     GGO_ASSERT_EQ(opacity_mask.get_height(), color_mask.get_height());
@@ -61,17 +63,28 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void paint_rect(ggo::gray_image_abc & opacity_mask,
-                  ggo::rgb_image_abc & color_mask, const ggo::pos2f & p1, const ggo::pos2f & p2,
-                  const ggo::color & color)
+  void paint_rect(ggo::rle_image<float> & opacity_mask,
+    ggo::rle_image<ggo::color_32f> & color_mask, const ggo::pos2f & p1, const ggo::pos2f & p2,
+    const ggo::color_32f & color)
   {
     GGO_ASSERT_EQ(opacity_mask.get_width(), color_mask.get_width());
     GGO_ASSERT_EQ(opacity_mask.get_height(), color_mask.get_height());
 
     ggo::rect_float rect(p1, p2);
 
-    ggo::paint(opacity_mask, std::make_shared<ggo::rect_float>(rect), 1.f, 1.f, std::make_shared<ggo::gray_alpha_blender>(), ggo::pixel_sampler_1(), ggo::space_partitionning::block8x8);
-    ggo::paint(color_mask, std::make_shared<ggo::rect_float>(rect), color, 1.f, std::make_shared<ggo::rgb_alpha_blender>(), ggo::pixel_sampler_1(), ggo::space_partitionning::block8x8);
+    ggo::paint_multi_scale<ggo::sampling_1>(
+      opacity_mask.get_width(), opacity_mask.get_height(), rect, 8, 2,
+      ggo::make_solid_brush(1.f), ggo::overwrite_blender<float>(),
+      [&](int x, int y) { return opacity_mask.get(x, y); },
+      [&](int x, int y, float c) { opacity_mask.set(x, y, c); },
+      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { opacity_mask.set(x, y, 1.f); }); });
+
+    ggo::paint_multi_scale<ggo::sampling_1>(
+      color_mask.get_width(), color_mask.get_height(), rect, 8, 2,
+      ggo::make_solid_brush(color), ggo::overwrite_blender<ggo::color_32f>(),
+      [&](int x, int y) { return color_mask.get(x, y); },
+      [&](int x, int y, const ggo::color_32f & c) { color_mask.set(x, y, c); },
+      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { color_mask.set(x, y, color); }); });
   }
 
   //////////////////////////////////////////////////////////////
@@ -89,16 +102,16 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  int strips_size(const std::vector<std::pair<int, ggo::color>> & strips)
+  int strips_size(const std::vector<std::pair<int, ggo::color_32f>> & strips)
   {
-    auto func = [](int sum, const std::pair<int, ggo::color> & p) { return sum + p.first; };
+    auto func = [](int sum, const std::pair<int, ggo::color_32f> & p) { return sum + p.first; };
 
     return std::accumulate(strips.begin(), strips.end(), 0, func);
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo_sonson_animation_artist::ggo_line::ggo_line(int width, int height, int scale_factor)
+ggo::sonson_animation_artist::line::line(int width, int height, int scale_factor)
 :
 _opacity_mask(scale_factor * width, scale_factor * height),
 _color_mask(scale_factor * width, scale_factor * height),
@@ -108,61 +121,61 @@ _scale_factor(scale_factor)
 }
 
 //////////////////////////////////////////////////////////////
-ggo_sonson_animation_artist::ggo_line * ggo_sonson_animation_artist::ggo_line::create(float hue, int width, int height, int scale_factor)
+ggo::sonson_animation_artist::line * ggo::sonson_animation_artist::line::create(float hue, int width, int height, int scale_factor)
 {
-  ggo_line * line = new ggo_line(width, height, scale_factor);
+  auto * line = new ggo::sonson_animation_artist::line(width, height, scale_factor);
 
   float velocity = ggo::to<float>(scale_factor * ggo::to<int>(0.025f * std::min(width, height)));
 
-  switch (ggo::rand_int(1, 4))
+  switch (ggo::rand<int>(1, 4))
   {
   case 1: // Left
-    line->_pos = { -0.5f, scale_factor * ggo::to<float>(ggo::rand_int(0, height)) - 0.5f };
+    line->_pos = { -0.5f, scale_factor * ggo::to<float>(ggo::rand<int>(0, height)) - 0.5f };
     line->_velocity = { velocity, 0.f };
     line->_strip_dir = { 0.f, -1.f };
     break;
   case 2: // Right
-    line->_pos = { scale_factor * ggo::to<float>(width) - 0.5f, scale_factor * ggo::to<float>(ggo::rand_int(0, height)) - 0.5f };
+    line->_pos = { scale_factor * ggo::to<float>(width) - 0.5f, scale_factor * ggo::to<float>(ggo::rand<int>(0, height)) - 0.5f };
     line->_velocity = { -velocity, 0.f };
     line->_strip_dir = { 0.f, 1.f };
     break;
   case 3: // Bottom
-    line->_pos = { scale_factor * ggo::to<float>(ggo::rand_int(0, width)) - 0.5f, -0.5f };
+    line->_pos = { scale_factor * ggo::to<float>(ggo::rand<int>(0, width)) - 0.5f, -0.5f };
     line->_velocity = { 0.f, velocity };
     line->_strip_dir = { 1.f, 0.f };
     break;
   case 4: // Top
-    line->_pos = { scale_factor * ggo::to<float>(ggo::rand_int(0, width)) - 0.5f, scale_factor * ggo::to<float>(height) - 0.5f };
+    line->_pos = { scale_factor * ggo::to<float>(ggo::rand<int>(0, width)) - 0.5f, scale_factor * ggo::to<float>(height) - 0.5f };
     line->_velocity = { 0.f, -velocity };
     line->_strip_dir = { -1.f, 0.f };
     break;
   }
 
-  line->_step = ggo::rand_int(3, 20);
+  line->_step = ggo::rand<int>(3, 20);
   line->_step_end = 0;
 
-  int strip_size = ggo::rand_int(3, 10);
+  int strip_size = ggo::rand<int>(3, 10);
 
-  line->_strips.push_back(std::make_pair(scale_factor, ggo::color::BLACK));
-  float sat = ggo::rand_float(0.5f, 1.0f);
-  float val = ggo::rand_float(0.5f, 1.0f);
+  line->_strips.push_back(std::make_pair(scale_factor, ggo::black<ggo::color_32f>()));
+  float sat = ggo::rand<float>(0.5f, 1.0f);
+  float val = ggo::rand<float>(0.5f, 1.0f);
   for (int i = 0; i < strip_size; ++i)
   {
-    float sat_cur = sat + ggo::rand_float(-0.1f, 0.1f);
-    float val_cur = sat + ggo::rand_float(-0.1f, 0.1f);
+    float sat_cur = sat + ggo::rand<float>(-0.1f, 0.1f);
+    float val_cur = sat + ggo::rand<float>(-0.1f, 0.1f);
 
     int min_size = std::min(width, height);
-    int strip_size = scale_factor * ggo::to<int>(ggo::rand_float(0.002f * min_size, 0.008f * min_size));
+    int strip_size = scale_factor * ggo::to<int>(ggo::rand<float>(0.002f * min_size, 0.008f * min_size));
 
-    line->_strips.push_back(std::make_pair(strip_size, ggo::color::from_hsv(hue, sat_cur, val_cur)));
-    line->_strips.push_back(std::make_pair(scale_factor, ggo::color::BLACK));
+    line->_strips.push_back(std::make_pair(strip_size, ggo::from_hsv<ggo::color_32f>(hue, sat_cur, val_cur)));
+    line->_strips.push_back(std::make_pair(scale_factor, ggo::black<ggo::color_32f>()));
   }
 
   return line;
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_sonson_animation_artist::ggo_line::update()
+bool ggo::sonson_animation_artist::line::update()
 {
   if (_strips.empty() == false)
   {
@@ -176,7 +189,7 @@ bool ggo_sonson_animation_artist::ggo_line::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::update_strips()
+void ggo::sonson_animation_artist::line::update_strips()
 {
   --_step;
 
@@ -204,7 +217,7 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
   // Set up the straight line.
   if (_step == _step_end)
   {
-    _step = ggo::rand_int(5, 30);
+    _step = ggo::rand<int>(5, 30);
     _pos = _center + ggo::from_polar(_angle_end, _radius + (_clock_wise ? strips_size(_strips) : 0.f));
 
     float velocity = std::max(std::abs(_velocity.get<0>()), std::abs(_velocity.get<1>()));
@@ -231,7 +244,7 @@ void ggo_sonson_animation_artist::ggo_line::update_strips()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::render_masks()
+void ggo::sonson_animation_artist::line::render_masks()
 {
   if (_step > 0) // Positive step => line is moving forward.
   {
@@ -281,9 +294,9 @@ void ggo_sonson_animation_artist::ggo_line::render_masks()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::setup_cw()
+void ggo::sonson_animation_artist::line::setup_cw()
 {
-  _radius = ggo::to<float>(_scale_factor * ggo::rand_int(10, 50));
+  _radius = ggo::to<float>(_scale_factor * ggo::rand<int>(10, 50));
 
   float outter_radius = _radius + strips_size(_strips);
 
@@ -302,9 +315,9 @@ void ggo_sonson_animation_artist::ggo_line::setup_cw()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::setup_ccw()
+void ggo::sonson_animation_artist::line::setup_ccw()
 {
-  _radius = ggo::to<float>(_scale_factor * ggo::rand_int(10, 50));
+  _radius = ggo::to<float>(_scale_factor * ggo::rand<int>(10, 50));
   _center = _pos - _radius * _strip_dir;
   _clock_wise = false;
 
@@ -320,7 +333,7 @@ void ggo_sonson_animation_artist::ggo_line::setup_ccw()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::update_sparks()
+void ggo::sonson_animation_artist::line::update_sparks()
 {
   int render_min_size = std::min(_opacity_mask.get_width(), _opacity_mask.get_height()) / _scale_factor;
 
@@ -329,11 +342,11 @@ void ggo_sonson_animation_artist::ggo_line::update_sparks()
   {
     for (int i = 0; i < 5; ++i)
     {
-      float weight = ggo::rand_float();
+      float weight = ggo::rand<float>();
       ggo::segment_float segment = get_segment();
       ggo::pos2f p1 = weight * segment.p1() + (1.f - weight) * segment.p2();
 
-      float angle = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
+      float angle = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
       float length = 0.01f * render_min_size;
       ggo::vec2f vel = ggo::from_polar(angle, length);
 
@@ -355,10 +368,10 @@ void ggo_sonson_animation_artist::ggo_line::update_sparks()
 }
 
 //////////////////////////////////////////////////////////////
-std::pair<float, ggo::color> ggo_sonson_animation_artist::ggo_line::get_pixel(int x, int y) const
+std::pair<float, ggo::color_32f> ggo::sonson_animation_artist::line::get_pixel(int x, int y) const
 {
   float opacity = 0.f;
-  ggo::color layer_color = ggo::color::BLACK;
+  ggo::color_32f layer_color = ggo::black<ggo::color_32f>();
 
   for (int y_mask = _scale_factor * y; y_mask < _scale_factor * (y + 1); ++y_mask)
   {
@@ -376,7 +389,7 @@ std::pair<float, ggo::color> ggo_sonson_animation_artist::ggo_line::get_pixel(in
 }
 
 //////////////////////////////////////////////////////////////
-ggo::segment_float ggo_sonson_animation_artist::ggo_line::get_segment() const
+ggo::segment_float ggo::sonson_animation_artist::line::get_segment() const
 {
   ggo::pos2f p1, p2;
 
@@ -400,7 +413,7 @@ ggo::segment_float ggo_sonson_animation_artist::ggo_line::get_segment() const
 }
 
 //////////////////////////////////////////////////////////////
-ggo::extended_segment_float ggo_sonson_animation_artist::ggo_line::get_glow_segment() const
+ggo::extended_segment_float ggo::sonson_animation_artist::line::get_glow_segment() const
 {
   const int min_size = std::min(_opacity_mask.get_width(), _opacity_mask.get_height()) / _scale_factor;
   const float radius = 0.0025f * min_size;
@@ -410,63 +423,66 @@ ggo::extended_segment_float ggo_sonson_animation_artist::ggo_line::get_glow_segm
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::ggo_line::render(ggo::rgb_image_buffer_uint8 & image) const
+void ggo::sonson_animation_artist::line::render(void * buffer, int width, int height) const
 {
-  uint8_t * buffer = image.data();
+  uint8_t * ptr = static_cast<uint8_t *>(buffer);
 
   // Paint the strips.
-  uint8_t * it = buffer;
-  for (int y = 0; y < image.get_height(); ++y)
+  for (int y = 0; y < height; ++y)
   {
-    for (int x = 0; x < image.get_width(); ++x)
+    for (int x = 0; x < width; ++x)
     {
-      ggo::color pixel_color(it[0] / 255.f, it[1] / 255.f, it[2] / 255.f);
+      ggo::color_32f pixel_color_32f(ptr[0] / 255.f, ptr[1] / 255.f, ptr[2] / 255.f);
 
       auto line_pixel = get_pixel(x, y);
 
-      pixel_color = line_pixel.first * line_pixel.second + (1.f - line_pixel.first) * pixel_color;
+      pixel_color_32f = line_pixel.first * line_pixel.second + (1.f - line_pixel.first) * pixel_color_32f;
 
-      it[0] = pixel_color.r8();
-      it[1] = pixel_color.g8();
-      it[2] = pixel_color.b8();
+      ggo::color_8u pixel_color_8u = ggo::convert_color_to<ggo::color_8u>(pixel_color_32f);
 
-      it += 3;
+      ptr[0] = pixel_color_8u.r();
+      ptr[1] = pixel_color_8u.g();
+      ptr[2] = pixel_color_8u.b();
+
+      ptr += 3;
     }
   }
 
   // Paint line's glow.
   auto glow_segment = get_glow_segment();
-  ggo::paint(image, std::make_shared<ggo::extended_segment_float>(glow_segment), ggo::color::WHITE);
+  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width, glow_segment, ggo::white<ggo::color_8u>());
 
   // Paint sparks.
   for (const auto & spark : _sparks)
   {
-    auto opacity_brush = std::make_shared<ggo::gradient_brush<float, true>>();
-    opacity_brush->_pos1 = spark.p1();
-    opacity_brush->_value1 = 0.f;
-    opacity_brush->_pos2 = spark.p2();
-    opacity_brush->_value2 = 1.f;
+    ggo::gradient_brush<float> opacity_brush(0.f, spark.p1(), 1.f, spark.p2());
 
-    ggo::paint(image,
-               std::make_shared<ggo::extended_segment_float>(spark.p1(), spark.p2(), 0.001f * std::min(image.get_width(), image.get_height())),
-               std::make_shared<ggo::rgb_solid_brush>(ggo::color::WHITE),
-               opacity_brush);
+    auto blend = [&](int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color)
+    {
+      const float opacity = opacity_brush(x, y);
+      const ggo::alpha_blender<ggo::color_8u> blender(opacity);
+      return blender(x, y, bkgd_color, brush_color);
+    };
+
+    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, width, height, 3 * width, ggo::extended_segment_float(spark.p1(), spark.p2(), 0.001f * std::min(width, height)),
+      ggo::white_brush_8u(), blend);
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo_sonson_animation_artist::ggo_sonson_animation_artist(int width, int height)
+ggo::sonson_animation_artist::sonson_animation_artist(int width, int height)
 :
-ggo_animation_artist_abc(width, height)
+animation_artist_abc(width, height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::init_sub()
+void ggo::sonson_animation_artist::init_sub()
 {
-  _hue1 = ggo::rand_float();
-  _hue2 = _hue1 + ggo::rand_float(0.25f, 0.75f);
+  _hue1 = ggo::rand<float>();
+  _hue2 = _hue1 + ggo::rand<float>(0.25f, 0.75f);
 
   _lines.clear();
   _lines.resize(32);
@@ -479,16 +495,17 @@ void ggo_sonson_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
   if (buffer != nullptr)
   {
-    auto image = make_image_buffer(buffer);
-    ggo::fill_4_colors(image, ggo::color::WHITE, ggo::color::WHITE, ggo::color::WHITE, ggo::color::BLACK);
+    ggo::fill_4_colors<ggo::rgb_8u_yu>(
+      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::black<ggo::color_8u>());
   }
 
   // Create new lines.
-  if (frame_index < frames_count && ggo::rand_float() < 0.25f)
+  if (frame_index < frames_count && ggo::rand<float>() < 0.25f)
   {
     create_line(frame_index, false);
   }
@@ -510,21 +527,19 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
   // Paint lines.
   if (buffer != nullptr)
   {
-    auto image = make_image_buffer(buffer);
     for (const auto & sub_lines : _lines)
     {
       for (const auto & line : sub_lines)
       {
-        line->render(image);
+        line->render(buffer, get_render_width(), get_render_height());
       }
 
       // Blur (only when needed).
       if (&sub_lines != &_lines.back())
       {
-        float stddev = 0.001f * get_render_min_size();
-        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 0, buffer + 0, get_render_width(), get_render_height(), stddev, 0.01f);
-        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 1, buffer + 1, get_render_width(), get_render_height(), stddev, 0.01f);
-        ggo::gaussian_blur_2d_mirror<3, 3>(buffer + 2, buffer + 2, get_render_width(), get_render_height(), stddev, 0.01f);
+        const float stddev = 0.001f * get_render_min_size();
+        ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(
+          buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
       }
     }
   }
@@ -533,12 +548,12 @@ bool ggo_sonson_animation_artist::render_next_frame_sub(uint8_t * buffer, int fr
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_sonson_animation_artist::create_line(int frame_index, bool foreground)
+void ggo::sonson_animation_artist::create_line(int frame_index, bool foreground)
 {
-  float hue = (ggo::rand_float() < ggo::map(static_cast<float>(frame_index), 0.f, static_cast<float>(frames_count), 0.1f, 0.9f)) ? _hue1 : _hue2;
+  float hue = (ggo::rand<float>() < ggo::map(static_cast<float>(frame_index), 0.f, static_cast<float>(frames_count), 0.1f, 0.9f)) ? _hue1 : _hue2;
 
   int stack_size = ggo::to<int>(_lines.size());
-  int stack_index = foreground ? stack_size - 1 : ggo::rand_int(0, stack_size - 1);
+  int stack_index = foreground ? stack_size - 1 : ggo::rand<int>(0, stack_size - 1);
 
   int scale_factor = 8;
   if (stack_index < _lines.size() / 4)
@@ -550,5 +565,5 @@ void ggo_sonson_animation_artist::create_line(int frame_index, bool foreground)
     scale_factor = 4;
   }
 
-  _lines[stack_index].emplace_back(ggo_line::create(hue, get_render_width(), get_render_height(), scale_factor));
+  _lines[stack_index].emplace_back(ggo::sonson_animation_artist::line::create(hue, get_render_width(), get_render_height(), scale_factor));
 }

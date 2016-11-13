@@ -1,7 +1,6 @@
 #ifndef __GGO_RLE_IMAGE__
 #define __GGO_RLE_IMAGE__
 
-#include <ggo_image_abc.h>
 #include <ggo_rle.h>
 #include <ggo_array.h>
 
@@ -17,6 +16,9 @@ namespace ggo
     void                      set(int x, int y, const color_t & value);
     color_t                   get(int x, int y) const;
 
+    int                       get_width() const { return _width; }
+    int                       get_height() const { return _rle_lines.get_size<0>(); }
+
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;
     void                      operator=(const rle_image<color_t> & rhs) = delete;
@@ -30,6 +32,7 @@ namespace ggo
     mutable ggo::array<std::vector<std::pair<color_t, int>>, 1> _rle_lines;
     mutable std::vector<std::pair<int, ggo::array<color_t, 1>>> _cache_lines;
             const int                                           _cache_size;
+            const int                                           _width;
   };
 }
 
@@ -39,9 +42,9 @@ namespace ggo
   template <typename color_t>
   rle_image<color_t>::rle_image(int width, int height, const color_t & fill_value, int cache_size)
   :
-  image_abc<color_t>(width, height),
   _rle_lines(height),
-  _cache_size(cache_size)
+  _cache_size(cache_size),
+  _width(width)
   {
     for (int i = 0; i < height; ++i)
     {
@@ -71,7 +74,7 @@ namespace ggo
   template <typename color_t>
   ggo::array<color_t, 1> & rle_image<color_t>::get_cache_line(int y) const
   {
-    GGO_ASSERT_BTW(y, 0, _height - 1);
+    GGO_ASSERT_BTW(y, 0, get_height() - 1);
 
     // Check if the requiredd line already is in the cache.
     auto find_func = [&](const std::pair<int, ggo::array<color_t, 1>> & cache_line) { return cache_line.first == y; };

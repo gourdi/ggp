@@ -7,14 +7,14 @@
     <Filter Include="paint">
       <UniqueIdentifier>{e9dcf075-766d-4cf5-9411-d8f8d457b249}</UniqueIdentifier>
     </Filter>
-    <Filter Include="image">
-      <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
-    </Filter>
     <Filter Include="blur">
       <UniqueIdentifier>{1bb4cc4b-37a8-4fba-be97-fb4e32c2a183}</UniqueIdentifier>
     </Filter>
     <Filter Include="fill">
       <UniqueIdentifier>{a72e2f86-8c3e-432d-9140-569970dd4ef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rle_image">
+      <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -28,15 +28,6 @@
       <Filter>paint</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_pixel_rect.h" />
-    <ClInclude Include="src\image\ggo_image_abc.h">
-      <Filter>image</Filter>
-    </ClInclude>
-    <ClInclude Include="src\image\ggo_image_buffer_abc.h">
-      <Filter>image</Filter>
-    </ClInclude>
-    <ClInclude Include="src\image\ggo_rle_image.h">
-      <Filter>image</Filter>
-    </ClInclude>
     <ClInclude Include="src\ggo_color.h" />
     <ClInclude Include="src\ggo_blit.h" />
     <ClInclude Include="src\paint\ggo_multi_scale_paint.h">
@@ -75,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="src\paint\ggo_blur_paint.h">
       <Filter>paint</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rle_image\ggo_rle_image.h">
+      <Filter>rle_image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

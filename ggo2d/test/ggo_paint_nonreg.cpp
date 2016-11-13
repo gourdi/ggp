@@ -12,6 +12,7 @@
 #include <ggo_buffer_fill.h>
 #include <ggo_bmp.h>
 #include <ggo_brush.h>
+#include <ggo_gradient_brush.h>
 #include <ggo_blender.h>
 #include <ggo_blur_paint.h>
 #include <array>
@@ -399,6 +400,23 @@ GGO_TEST(paint, blur)
 
     ggo::save_bmp("paint_blur_52.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   }
+}
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, gradient)
+{
+  const int width = 140;
+  const int height = 120;
+  const int line_step = 3 * width;
+
+  std::vector<uint8_t> buffer(line_step * height, 0);
+
+  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step, ggo::disc_float(40.f, 50.f, 35.f),
+    ggo::gradient_brush<ggo::color_8u>(ggo::red<ggo::color_8u>(), { 20.f, 30.f }, ggo::green<ggo::color_8u>(), { 60.f, 70.f }),
+    ggo::overwrite_blender<ggo::color_8u>());
+
+  ggo::save_bmp("paint_gradient.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
 

@@ -27,9 +27,6 @@
     <ClInclude Include="src\ggo_color.h" />
     <ClInclude Include="src\ggo_blit.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
-    <ClInclude Include="src\image\ggo_image_abc.h" />
-    <ClInclude Include="src\image\ggo_image_buffer_abc.h" />
-    <ClInclude Include="src\image\ggo_rle_image.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
     <ClInclude Include="src\paint\ggo_blender.h" />
     <ClInclude Include="src\paint\ggo_blur_paint.h" />
@@ -41,6 +38,7 @@
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_multi_scale_paint.h" />
     <ClInclude Include="src\paint\ggo_color_triangle.h" />
+    <ClInclude Include="src\rle_image\ggo_rle_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\io\ggo_bmp.cpp" />

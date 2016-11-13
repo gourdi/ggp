@@ -40,8 +40,8 @@ namespace ggo
     return solid_brush<color_t>(c);
   }
 
-  using black_brush_rgb8u = black_brush<ggo::color_8u>;
-  using white_brush_rgb8u = white_brush<ggo::color_8u>;
+  using black_brush_8u = black_brush<ggo::color_8u>;
+  using white_brush_8u = white_brush<ggo::color_8u>;
 }
 
 #endif
