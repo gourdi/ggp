@@ -50,3 +50,31 @@ GGO_TEST(fill, curve)
   ggo::save_bmp("fill_curve.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, gaussian)
+{
+  const int width = 160;
+  const int height = 140;
+
+  std::vector<uint8_t> buffer(3 * width * height);
+
+  ggo::fill_gaussian<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, 50.f, ggo::yellow<ggo::color_8u>(), ggo::blue<ggo::color_8u>());
+
+  ggo::save_bmp("fill_gaussian.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, checker)
+{
+  const int width = 160;
+  const int height = 140;
+
+  std::vector<uint8_t> buffer(3 * width * height);
+
+  ggo::fill_checker<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::yellow<ggo::color_8u>(), ggo::blue<ggo::color_8u>(), 10);
+
+  ggo::save_bmp("fill_checker.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+}
+
+
+

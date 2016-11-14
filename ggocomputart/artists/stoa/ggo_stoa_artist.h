@@ -11,56 +11,59 @@
 
 // Reference: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch01.html
 
-class ggo_stoa_artist
+namespace ggo
 {
-public:
-
-        ggo_stoa_artist(int steps);
-
-  void  render(uint8_t * buffer, int width, int height, float hue,
-               const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2, 
-               ggo::renderer_abc& renderer) const;
-
-private:
-
-  struct ggo_face_object
-  {
-    std::shared_ptr<const ggo::object3d>            _object;
-    std::shared_ptr<const ggo::face3d<float, true>> _face;
-  };
-
-  class ggo_stoa_raycaster : public ggo::raycaster_abc
+  class stoa_artist
   {
   public:
 
-    ggo_stoa_raycaster(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects);
+          stoa_artist(int steps);
 
-    const ggo::object3d * hit_test(const ggo::ray3d_float & ray,
-                                   float & dist,
-                                   ggo::ray3d_float & local_normal,
-                                   ggo::ray3d_float & world_normal,
-                                   const ggo::object3d * exclude_object1 = nullptr,
-                                   const ggo::object3d * exclude_object2 = nullptr) const override;
-
-    bool check_visibility(const ggo::ray3d_float & ray,
-                          float dist_max,
-                          const ggo::object3d * exclude_object1 = nullptr,
-                          const ggo::object3d * exclude_object2 = nullptr) const override;
-
-    static  ggo::aabox3d_float  get_bounding_box(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects);
+    void  render(void * buffer, int width, int height, float hue,
+                 const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
+                 ggo::renderer_abc& renderer) const;
 
   private:
 
-    struct ggo_node
+    struct face_object
     {
-      ggo::aabox3d_float            _bounding_box;
-      std::vector<ggo_face_object>  _face_objects;
+      std::shared_ptr<const ggo::object3d>            _object;
+      std::shared_ptr<const ggo::face3d<float, true>> _face;
     };
 
-    ggo::tree<ggo_node> _octree;
-  };
+    class raycaster : public ggo::raycaster_abc
+    {
+    public:
 
-  std::unique_ptr<ggo_stoa_raycaster> _raycaster;
-};
+      raycaster(const std::vector<stoa_artist::face_object> & face_objects);
+
+      const ggo::object3d * hit_test(const ggo::ray3d_float & ray,
+        float & dist,
+        ggo::ray3d_float & local_normal,
+        ggo::ray3d_float & world_normal,
+        const ggo::object3d * exclude_object1 = nullptr,
+        const ggo::object3d * exclude_object2 = nullptr) const override;
+
+      bool check_visibility(const ggo::ray3d_float & ray,
+        float dist_max,
+        const ggo::object3d * exclude_object1 = nullptr,
+        const ggo::object3d * exclude_object2 = nullptr) const override;
+
+      static  ggo::aabox3d_float  get_bounding_box(const std::vector<stoa_artist::face_object> & face_objects);
+
+    private:
+
+      struct node
+      {
+        ggo::aabox3d_float        _bounding_box;
+        std::vector<face_object>  _face_objects;
+      };
+
+      ggo::tree<raycaster::node> _octree;
+    };
+
+    std::unique_ptr<ggo::stoa_artist::raycaster> _raycaster;
+  };
+}
 
 #endif

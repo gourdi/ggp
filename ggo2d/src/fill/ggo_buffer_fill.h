@@ -12,6 +12,16 @@ namespace ggo
   void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c);
 }
 
+// Checker.
+namespace ggo
+{
+  template <pixel_buffer_format pbf>
+  void fill_checker(void * buffer, int width, int height, int line_step, 
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2, 
+    int tile_size);
+}
+
 // 4 colors.
 namespace ggo
 {
@@ -40,6 +50,16 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c2);
 }
 
+// Gaussian.
+namespace ggo
+{
+  template <pixel_buffer_format pbf>
+  void fill_gaussian(void * buffer, int width, int height, int line_step, 
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2);
+}
+
 //////////////////////////////////////////////////////////////
 // Implementation.
 
@@ -53,6 +73,30 @@ namespace ggo
     process_buffer<pbf>(buffer, width, height, line_step, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
 }
+
+// Checker.
+namespace ggo
+{
+  template <pixel_buffer_format pbf>
+  void fill_checker(void * buffer, int width, int height, int line_step,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2,
+    int tile_size)
+  {
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
+
+    const floating_point_color_t c1_fp = ggo::convert_color_to<floating_point_color_t>(c1);
+    const floating_point_color_t c2_fp = ggo::convert_color_to<floating_point_color_t>(c2);
+
+    auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c) {
+      write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+    };
+
+    ggo::fill_checker<floating_point_color_t>(width, height, c1_fp, c2_fp, tile_size, write_pixel_func);
+  }
+}
+
 
 // 4 colors.
 namespace ggo
@@ -134,5 +178,34 @@ namespace ggo
     fill_perlin(width, height, size, c1_fp, c2_fp, write_pixel_func);
   }
 }
+
+// Gaussian.
+namespace ggo
+{
+  template <pixel_buffer_format pbf>
+  void fill_gaussian(void * buffer, int width, int height, int line_step,
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2)
+  {
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
+    using floating_point_color_t = typename color_traits<color_t>::floating_point_t;
+    using real_t = typename color_traits<floating_point_color_t>::sample_t;
+
+    static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
+    static_assert(std::is_same<real_t, decltype(stddev)>::value, "type mismatch");
+
+    const floating_point_color_t c1_fp = ggo::convert_color_to<floating_point_color_t>(c1);
+    const floating_point_color_t c2_fp = ggo::convert_color_to<floating_point_color_t>(c2);
+
+    auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c)
+    {
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+    };
+
+    fill_gaussian(width, height, stddev, c1_fp, c2_fp, write_pixel_func);
+  }
+}
+
 
 #endif

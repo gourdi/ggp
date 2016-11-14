@@ -5,20 +5,20 @@
 
 namespace ggo
 {
-  template <typename T = float>
-  class gaussian_field2d : public scalar_field_2d_abc<T>
+  template <typename data_t = float>
+  class gaussian_field2d : public scalar_field_2d_abc<data_t>
   {
   public:
 
-    T evaluate(T x, T y) const override
+    data_t evaluate(data_t x, data_t y) const override
     {
       return _amp * std::exp(-(ggo::square(x - _x) + ggo::square(y - _y)) / _var);
     }
 
-    T _x = 0;
-    T _y = 0;
-    T _var = 1;
-    T _amp = 1;
+    data_t _x = 0;
+    data_t _y = 0;
+    data_t _var = 1; // = stddev^2
+    data_t _amp = 1;
   };
 }
 

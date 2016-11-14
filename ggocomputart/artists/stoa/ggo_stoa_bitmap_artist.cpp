@@ -7,14 +7,14 @@
 //#define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo_stoa_bitmap_artist::ggo_stoa_bitmap_artist(int render_width, int render_height)
-  :
-  ggo_bitmap_artist_abc(render_width, render_height)
+ggo::stoa_bitmap_artist::stoa_bitmap_artist(int render_width, int render_height)
+:
+bitmap_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
+void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
 {
   // The camera.
 #ifdef MONO_SAMPLING
@@ -26,8 +26,8 @@ void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
   camera.set_aperture(0.1f);
 
   // Lights.
-  float angle1 = ggo::rand_float(0, ggo::pi<float>());
-  float angle2 = ggo::rand_float(0, ggo::pi<float>());
+  float angle1 = ggo::rand<float>(0, ggo::pi<float>());
+  float angle2 = ggo::rand<float>(0, ggo::pi<float>());
   const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
   const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
@@ -38,8 +38,8 @@ void ggo_stoa_bitmap_artist::render_bitmap(uint8_t * buffer)
   ggo::antialiasing_renderer renderer(camera);
 #endif
 
-  float hue = ggo::rand_float();
+  float hue = ggo::rand<float>();
 
-  ggo_stoa_artist artist(384);
+  ggo::stoa_artist artist(384);
   artist.render(buffer, get_render_width(), get_render_height(), hue, light_pos1, light_pos2, renderer);
 }

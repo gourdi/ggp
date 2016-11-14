@@ -12,7 +12,7 @@ namespace
   template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
   bool compare_point(const ggo::pos3f & p1, const ggo::pos3f & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
   {
-    return cmp_x(p1.get<0>(), p2.get<0>()) && cmp_y(p1.get<1>(), p2.get<1>()) && cmp_z(p1.get<2>(), p2.get<2>());
+    return cmp_x(p1.x(), p2.x()) && cmp_y(p1.y(), p2.y()) && cmp_z(p1.z(), p2.z());
   }
 
   //////////////////////////////////////////////////////////////
@@ -25,22 +25,22 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  struct ggo_noise3d
+  struct noise3d
   {
-    ggo_noise3d(float amplitude, float scale) : _amplitude(amplitude), _scale(scale)
+    noise3d(float amplitude, float scale) : _amplitude(amplitude), _scale(scale)
     {
-      _offset_x = ggo::rand_float(0, 16);
-      _offset_y = ggo::rand_float(0, 16);
-      _offset_z = ggo::rand_float(0, 16);
+      _offset_x = ggo::rand<float>(0, 16);
+      _offset_y = ggo::rand<float>(0, 16);
+      _offset_z = ggo::rand<float>(0, 16);
 
-      float angle1 = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
-      float angle2 = ggo::rand_float(0.f, 2.f * ggo::pi<float>());
+      float angle1 = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
+      float angle2 = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
       ggo::vec3f axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
-      ggo::fill_rotation_matrix(axis, ggo::rand_float(0, 2 * ggo::pi<float>()), _rotation);
+      ggo::fill_rotation_matrix(axis, ggo::rand<float>(0, 2 * ggo::pi<float>()), _rotation);
 
       for (auto & value : _noise3d)
       {
-        value = ggo::rand_float(-1.f, 1.f);
+        value = ggo::rand<float>(-1.f, 1.f);
       }
     }
 
@@ -69,9 +69,9 @@ namespace
   ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::pos3f & p)
   {
     const float epsilon = 0.01f;
-    float dx = density(p.get<0>() + epsilon, p.get<1>(), p.get<2>()) - density(p.get<0>() - epsilon, p.get<1>(), p.get<2>());
-    float dy = density(p.get<0>(), p.get<1>() + epsilon, p.get<2>()) - density(p.get<0>(), p.get<1>() - epsilon, p.get<2>());
-    float dz = density(p.get<0>(), p.get<1>(), p.get<2>() + epsilon) - density(p.get<0>(), p.get<1>(), p.get<2>() - epsilon);
+    float dx = density(p.x() + epsilon, p.y(), p.z()) - density(p.x() - epsilon, p.y(), p.z());
+    float dy = density(p.x(), p.y() + epsilon, p.z()) - density(p.x(), p.y() - epsilon, p.z());
+    float dz = density(p.x(), p.y(), p.z() + epsilon) - density(p.x(), p.y(), p.z() - epsilon);
 
     return ggo::vertex<float>(p, { dx, dy, dz });
   }
@@ -79,15 +79,15 @@ namespace
 
 //////////////////////////////////////////////////////////////
 // RAYCASTER
-ggo_stoa_artist::ggo_stoa_raycaster::ggo_stoa_raycaster(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects)
+ggo::stoa_artist::raycaster::raycaster(const std::vector<ggo::stoa_artist::face_object> & face_objects)
 :
 _octree({ get_bounding_box(face_objects), face_objects })
 {
-  auto recursion = [](ggo::tree<ggo_node> & tree)
+  auto recursion = [](ggo::tree<raycaster::node> & tree)
   {
     ggo::pos3f center = tree.data()._bounding_box.get_center();
 
-    std::array<ggo_node, 8> nodes;
+    std::array<raycaster::node, 8> nodes;
 
     std::less_equal<float> le;
     std::greater_equal<float> ge;
@@ -122,21 +122,21 @@ _octree({ get_bounding_box(face_objects), face_objects })
 }
 
 //////////////////////////////////////////////////////////////
-const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                                    float & dist,
-                                                                    ggo::ray3d_float & local_normal,
-                                                                    ggo::ray3d_float & world_normal,
-                                                                    const ggo::object3d * exclude_object1,
-                                                                    const ggo::object3d * exclude_object2) const
+const ggo::object3d * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_float & ray,
+                                                            float & dist,
+                                                            ggo::ray3d_float & local_normal,
+                                                            ggo::ray3d_float & world_normal,
+                                                            const ggo::object3d * exclude_object1,
+                                                            const ggo::object3d * exclude_object2) const
 {
   const ggo::object3d * hit_object = nullptr;
-  std::vector<const ggo::tree<ggo_node> *> trees{ &_octree };
+  std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
 
   dist = std::numeric_limits<float>::max();
 
   while (trees.empty() == false)
   {
-    std::vector<const ggo::tree<ggo_node> *> sub_trees;
+    std::vector<const ggo::tree<raycaster::node> *> sub_trees;
 
     for (const auto * tree : trees)
     {
@@ -175,16 +175,16 @@ const ggo::object3d * ggo_stoa_artist::ggo_stoa_raycaster::hit_test(const ggo::r
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_float & ray,
-                                                           float dist_max,
-                                                           const ggo::object3d * exclude_object1,
-                                                           const ggo::object3d * exclude_object2) const
+bool ggo::stoa_artist::raycaster::check_visibility(const ggo::ray3d_float & ray,
+                                                   float dist_max,
+                                                   const ggo::object3d * exclude_object1,
+                                                   const ggo::object3d * exclude_object2) const
 {
-  std::vector<const ggo::tree<ggo_node> *> trees{ &_octree };
+  std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
 
   while (trees.empty() == false)
   {
-    std::vector<const ggo::tree<ggo_node> *> sub_trees;
+    std::vector<const ggo::tree<raycaster::node> *> sub_trees;
 
     for (const auto * tree : trees)
     {
@@ -220,7 +220,7 @@ bool ggo_stoa_artist::ggo_stoa_raycaster::check_visibility(const ggo::ray3d_floa
 }
 
 //////////////////////////////////////////////////////////////
-ggo::aabox3d_float ggo_stoa_artist::ggo_stoa_raycaster::get_bounding_box(const std::vector<ggo_stoa_artist::ggo_face_object> & face_objects)
+ggo::aabox3d_float ggo::stoa_artist::raycaster::get_bounding_box(const std::vector<ggo::stoa_artist::face_object> & face_objects)
 {
   ggo::aabox3d_float bounding_box(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
 
@@ -238,10 +238,10 @@ ggo::aabox3d_float ggo_stoa_artist::ggo_stoa_raycaster::get_bounding_box(const s
 // ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo_stoa_artist::ggo_stoa_artist(int steps)
+ggo::stoa_artist::stoa_artist(int steps)
 {
   // Objects.
-  std::vector<ggo_noise3d> noises;
+  std::vector<noise3d> noises;
 
   float amplitude = 1.f;
   float scale = 0.5f;
@@ -273,7 +273,7 @@ ggo_stoa_artist::ggo_stoa_artist(int steps)
   const float range = 3.2f;
   auto cells = ggo::marching_cubes(density_func, ggo::pos3f(-range, -range, -range), steps, 2 * range / steps);
 
-  std::vector<ggo_face_object> face_objects;
+  std::vector<ggo::stoa_artist::face_object> face_objects;
 
   for (const auto & cell : cells)
   {
@@ -284,30 +284,30 @@ ggo_stoa_artist::ggo_stoa_artist(int steps)
       auto v3 = compute_vertex(density_func, triangle.v3());
 
       auto face_ptr = std::make_shared<const ggo::face3d<float, true>>(v1, v2, v3);
-      auto object_ptr = std::make_shared<const ggo::object3d>(face_ptr, ggo::color::WHITE);
+      auto object_ptr = std::make_shared<const ggo::object3d>(face_ptr, ggo::white<ggo::color_32f>());
 
-      ggo_face_object face_object{ object_ptr, face_ptr };
+      ggo::stoa_artist::face_object face_object{ object_ptr, face_ptr };
 
       face_objects.push_back(face_object);
     }
   }
 
-  _raycaster.reset(new ggo_stoa_raycaster(face_objects));
+  _raycaster.reset(new ggo::stoa_artist::raycaster(face_objects));
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_stoa_artist::render(uint8_t * buffer, int width, int height, float hue,
-                             const ggo::pos3f& light_pos1, const ggo::pos3f& light_pos2,
-                             ggo::renderer_abc& renderer) const
+void ggo::stoa_artist::render(void * buffer, int width, int height, float hue,
+                              const ggo::pos3f& light_pos1, const ggo::pos3f& light_pos2,
+                              ggo::renderer_abc& renderer) const
 {
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color::from_hsv(hue, 1.f, 1.f)));
+  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::color_32f>(hue, 1.f, 1.f)));
 
   // Lights.
-  scene_builder.add_sphere_light(ggo::color::from_hsv(hue, 0.5f, 0.8f), 1, light_pos1);
-  scene_builder.add_sphere_light(ggo::color::from_hsv(hue, 0.5f, 0.2f), 1, light_pos2);
+  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.8f), 1, light_pos1);
+  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), 1, light_pos2);
 
   // Rendering.
   ggo::raytrace_params params;
   params._raycaster = _raycaster.get();
-  renderer.render(buffer, width, height, scene_builder, params);
+  renderer.render(static_cast<uint8_t *>(buffer), width, height, scene_builder, params);
 }

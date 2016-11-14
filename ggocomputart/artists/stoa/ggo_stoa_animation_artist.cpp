@@ -4,31 +4,31 @@
 #include <ggo_antialiasing_renderer.h>
 
 //////////////////////////////////////////////////////////////
-ggo_stoa_animation_artist::ggo_stoa_animation_artist(int render_width, int render_height)
+ggo::stoa_animation_artist::stoa_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height)
+animation_artist_abc(render_width, render_height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_stoa_animation_artist::init_sub()
+void ggo::stoa_animation_artist::init_sub()
 {
-  _artist.reset(new ggo_stoa_artist(256));
+  _artist.reset(new ggo::stoa_artist(256));
 
-  _hue = ggo::rand_float();
+  _hue = ggo::rand<float>();
 
-  _light1_angle_start = ggo::rand_float(0, ggo::pi<float>());
-  _light1_angle_end   = ggo::rand_float(0, ggo::pi<float>());
-  _light2_angle_start = ggo::rand_float(0, ggo::pi<float>());
-  _light2_angle_end   = ggo::rand_float(0, ggo::pi<float>());
+  _light1_angle_start = ggo::rand<float>(0, ggo::pi<float>());
+  _light1_angle_end   = ggo::rand<float>(0, ggo::pi<float>());
+  _light2_angle_start = ggo::rand<float>(0, ggo::pi<float>());
+  _light2_angle_end   = ggo::rand<float>(0, ggo::pi<float>());
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_stoa_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::stoa_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
-  const int FRAMES_COUNT = 150;
+  const int frames_count = 150;
 
-  if (frame_index > FRAMES_COUNT)
+  if (frame_index > frames_count)
   {
     return false;
   }
@@ -43,11 +43,11 @@ bool ggo_stoa_animation_artist::render_next_frame_sub(uint8_t * buffer, int fram
   camera.set_aperture(0.1f);
 
   float range = ggo::pi<float>() / 6.f;
-  camera.basis().rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(frame_index, FRAMES_COUNT, -range, range));
+  camera.basis().rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(frame_index, frames_count, -range, range));
 
   // Lights.
-  float angle1 = ggo::ease_inout(frame_index, FRAMES_COUNT, _light1_angle_start, _light1_angle_end);
-  float angle2 = ggo::ease_inout(frame_index, FRAMES_COUNT, _light2_angle_start, _light2_angle_end);
+  float angle1 = ggo::ease_inout(frame_index, frames_count, _light1_angle_start, _light1_angle_end);
+  float angle2 = ggo::ease_inout(frame_index, frames_count, _light2_angle_start, _light2_angle_end);
   const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
   const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
