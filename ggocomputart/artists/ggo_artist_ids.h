@@ -3,89 +3,89 @@
 
 namespace ggo
 {
-  enum bitmap_artist_id
+  enum class bitmap_artist_id
   {
-    GGO_BITMAP_ARTIST_TREES, // 0
-    GGO_BITMAP_ARTIST_FLOWER,
-    GGO_BITMAP_ARTIST_DUFFING,
-    GGO_BITMAP_ARTIST_WORMS,
-    GGO_BITMAP_ARTIST_JULIA,
-    GGO_BITMAP_ARTIST_CELLS, // 5
-    GGO_BITMAP_ARTIST_BUDDHABROT,
-    GGO_BITMAP_ARTIST_KANJI,
-    GGO_BITMAP_ARTIST_BOZONS,
-    GGO_BITMAP_ARTIST_CRYSTAL,
-    GGO_BITMAP_ARTIST_FILLING_SQUARES, // 10
-    GGO_BITMAP_ARTIST_VORONOI,
-    GGO_BITMAP_ARTIST_IKEDA,
-    GGO_BITMAP_ARTIST_VORTEX,
-    GGO_BITMAP_ARTIST_VORTEX2,
-    GGO_BITMAP_ARTIST_PLASTIC, //15
-    GGO_BITMAP_ARTIST_MANDELBROT,
-    GGO_BITMAP_ARTIST_MONDRIAN,
-    GGO_BITMAP_ARTIST_IFS,
-    GGO_BITMAP_ARTIST_MOSAIC,
-    GGO_BITMAP_ARTIST_METABALLS, // 20
-    GGO_BITMAP_ARTIST_MARBLES,
-    GGO_BITMAP_ARTIST_ALPHA,
-    GGO_BITMAP_ARTIST_DUPECHECK,
-    GGO_BITMAP_ARTIST_TOPODOKO,
-    GGO_BITMAP_ARTIST_REX, // 25
-    GGO_BITMAP_ARTIST_SMOKE,
-    GGO_BITMAP_ARTIST_LAGAUDE,
-    GGO_BITMAP_ARTIST_CUMBIA,
-    GGO_BITMAP_ARTIST_CIRCLES,
-    GGO_BITMAP_ARTIST_AGGREGATION, // 30
-    GGO_BITMAP_ARTIST_BUBBLE,
-    GGO_BITMAP_ARTIST_DISTORSION,
-    GGO_BITMAP_ARTIST_TOUTOUYOUTOU,
-    GGO_BITMAP_ARTIST_AMOROSI,
-    GGO_BITMAP_ARTIST_RAH, //35
-    GGO_BITMAP_ARTIST_HEXA,
-    GGO_BITMAP_ARTIST_CHRYZODE,
-    GGO_BITMAP_ARTIST_STOA,
-    GGO_BITMAP_ARTIST_SONSON,
-    GGO_BITMAP_ARTIST_REDIFF, // 40
-    GGO_BITMAP_ARTIST_ENTABENI,
-    GGO_BITMAP_ARTIST_CABREL
+    trees, // 0
+    flower,
+    duffing,
+    worms,
+    julia,
+    cells, // 5
+    buddhabrot,
+    kanji,
+    bozons,
+    crystal,
+    filling_squares, // 10
+    voronoi,
+    ikeda,
+    vortex,
+    vortex2,
+    plastic, //15
+    mandelbrot,
+    mondrian,
+    ifs,
+    mosaic,
+    metaballs, // 20
+    marbles,
+    alpha,
+    dupecheck,
+    topodoko,
+    rex, // 25
+    smoke,
+    lagaude,
+    cumbia,
+    circles,
+    aggregation, // 30
+    bubble,
+    distorsion,
+    toutouyoutou,
+    amorosi,
+    rah, //35
+    hexa,
+    chryzode,
+    stoa,
+    sonson,
+    rediff, // 40
+    entabeni,
+    cabrel
   };
 }
 
 namespace ggo
 {
-  enum animation_artist_id
+  enum class animation_artist_id
   {
-    GGO_ANIMATION_ARTIST_DUFFING, // 0
-    GGO_ANIMATION_ARTIST_JULIA,
-    GGO_ANIMATION_ARTIST_KANJI,
-    GGO_ANIMATION_ARTIST_BOZONS,
-    GGO_ANIMATION_ARTIST_FILLING_SQUARES,
-    GGO_ANIMATION_ARTIST_PLASTIC, // 5
-    GGO_ANIMATION_ARTIST_AGGREGATION,
-    GGO_ANIMATION_ARTIST_IFS,
-    GGO_ANIMATION_ARTIST_METABALLS,
-    GGO_ANIMATION_ARTIST_RUBIKS_CUBE,
-    GGO_ANIMATION_ARTIST_SMOKE, // 10
-    GGO_ANIMATION_ARTIST_SONSON,
-    GGO_ANIMATION_ARTIST_NEWTON,
-    GGO_ANIMATION_ARTIST_ALPHA,
-    GGO_ANIMATION_ARTIST_DUPECHECK,
-    GGO_ANIMATION_ARTIST_LAGAUDE, // 15
-    GGO_ANIMATION_ARTIST_CRYSTAL,
-    GGO_ANIMATION_ARTIST_IKEDA,
-    GGO_ANIMATION_ARTIST_CUMBIA,
-    GGO_ANIMATION_ARTIST_VORTEX2,
-    GGO_ANIMATION_ARTIST_CIRCLES, // 20
-    GGO_ANIMATION_ARTIST_DISTORSION,
-    GGO_ANIMATION_ARTIST_TOUTOUYOUTOU,
-    GGO_ANIMATION_ARTIST_AMOROSI,
-    GGO_ANIMATION_ARTIST_RAH,
-    GGO_ANIMATION_ARTIST_HEXA, // 25
-    GGO_ANIMATION_ARTIST_CHRYZODE,
-    GGO_ANIMATION_ARTIST_STOA,
-    GGO_ANIMATION_ARTIST_FLIES,
-    GGO_ANIMATION_ARTIST_REDIFF,
-    GGO_ANIMATION_ARTIST_ENTABENI, // 30
+    duffing, // 0
+    julia,
+    kanji,
+    bozons,
+    filling_squares,
+    plastic, // 5
+    aggregation,
+    ifs,
+    metaballs,
+    rubiks_cube,
+    smoke, // 10
+    sonson,
+    newton,
+    alpha,
+    dupecheck,
+    lagaude, // 15
+    crystal,
+    ikeda,
+    cumbia,
+    vortex2,
+    circles, // 20
+    distorsion,
+    toutouyoutou,
+    amorosi,
+    rah,
+    hexa, // 25
+    chryzode,
+    stoa,
+    flies,
+    rediff,
+    entabeni, // 30
   };
 }
 

@@ -3,16 +3,19 @@
 
 #include <ggo_bitmap_artist_abc.h>
 
-class ggo_worms_artist : public ggo_bitmap_artist_abc
+namespace ggo
 {
-public:
+  class worms_artist : public bitmap_artist_abc
+  {
+  public:
 
-        ggo_worms_artist(int render_width, int render_height);
+          worms_artist(int render_width, int render_height);
 
-private:
+  private:
 
-	void  render_bitmap(uint8_t * buffer) override;
-};
+    void  render_bitmap(void * buffer) const override;
+  };
+}
 
 #endif
 

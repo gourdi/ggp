@@ -68,7 +68,7 @@ bool ggo::lagaude_animation_artist::render_next_frame_sub(void * buffer, int fra
 		
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
-      ggo::disc_float(x, y, radius), ggo::black_brush_rgb8u(), ggo::alpha_blender_rgb8u(0.1f));
+      ggo::disc_float(x, y, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
 			
 		bkgd_disc._pos += bkgd_disc._vel;
 	}

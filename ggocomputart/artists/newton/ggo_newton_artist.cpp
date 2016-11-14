@@ -254,7 +254,7 @@ void ggo::newton_artist::newton_paint(void * buffer) const
       ggo::disc_float(newton_item._cur_pos + _shadow_offset, 0.025f * get_render_min_size()), uint8_t(0));
   }
 
-  ggo::gaussian_blur2d<ggo::y_8u_yu>(
+  ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(
     shadow_buffer.data(), get_render_width(), get_render_height(), 3 * get_render_width(), 0.05f * get_render_min_size());
 
   ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(

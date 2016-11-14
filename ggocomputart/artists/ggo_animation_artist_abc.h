@@ -13,14 +13,14 @@ namespace ggo
 
     static animation_artist_abc * create(animation_artist_id artist_id, int render_width, int render_height);
 
-    bool render_next_frame(void * buffer, int line_step, bool y_down);
-    void init();
+    bool  render_next_frame(void * buffer);
+    void  init();
 
-    int get_frame_index() const { return _counter; };
+    int   get_frame_index() const { return _counter; };
 
   protected:
 
-    animation_artist_abc(int render_width, int render_height);
+                 animation_artist_abc(int render_width, int render_height);
 
     virtual	void init_sub() = 0;
 
@@ -39,7 +39,7 @@ namespace ggo
   {
   public:
 
-    accumulation_animation_artist_abc(int render_width, int render_height);
+          accumulation_animation_artist_abc(int render_width, int render_height);
 
   private:
 
@@ -57,7 +57,7 @@ namespace ggo
   {
   public:
 
-    static_background_animation_artist_abc(int render_width, int render_height);
+          static_background_animation_artist_abc(int render_width, int render_height);
 
   private:
 

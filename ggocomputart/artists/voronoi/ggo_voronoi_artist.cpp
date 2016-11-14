@@ -2,13 +2,15 @@
 #include <map>
 #include <ggo_tree.h>
 #include <ggo_array.h>
+#include <ggo_pixel_buffer.h>
 #include <ggo_morphology.h>
-
-#define GGO_POINTS_COUNT 500
+#include <ggo_blender.h>
 
 namespace
 {
-  struct ggo_buffer_view
+  const int point_count = 500;
+
+  struct buffer_view
   {
     uint8_t * _ptr;
     int _view_width;
@@ -19,7 +21,7 @@ namespace
     void    operator()(int x, int y, uint8_t v) { _ptr[y * _line_step + x] = v; }
   };
 
-  struct ggo_const_buffer_view
+  struct const_buffer_view
   {
     const uint8_t * _ptr;
     int _view_width;
@@ -29,20 +31,17 @@ namespace
     uint8_t operator()(int x, int y) const { return _ptr[y * _line_step + x]; }
   };
 
-  struct ggo_voronoi_node
+  struct voronoi_node
   {
-    const ggo::tree<ggo_voronoi_node> * _parent_node;
-    ggo::pos2f                  _position;
-    ggo::color                          _color;
+    const ggo::tree<voronoi_node> * _parent_node;
+    ggo::pos2f                      _position;
+    ggo::color_8u                   _color;
   };
-}
 
-namespace
-{
   //////////////////////////////////////////////////////////////
-  ggo::tree<ggo_voronoi_node> * find_voronoi_leaf(ggo::tree<ggo_voronoi_node> & voronoi_tree, float x, float y)
+  ggo::tree<voronoi_node> * find_voronoi_leaf(ggo::tree<voronoi_node> & voronoi_tree, float x, float y)
   {
-    ggo::tree<ggo_voronoi_node> * cur_tree = &voronoi_tree;
+    ggo::tree<voronoi_node> * cur_tree = &voronoi_tree;
 
     while (true)
     {
@@ -51,7 +50,7 @@ namespace
         return cur_tree;
       }
 
-      ggo::tree<ggo_voronoi_node> * closest_subtree = nullptr;
+      ggo::tree<voronoi_node> * closest_subtree = nullptr;
       float hypot = std::numeric_limits<float>::max();
       for (auto & subtree : cur_tree->subtrees())
       {
@@ -105,9 +104,9 @@ namespace
     ggo::array<uint8_t, 2> tmp(input.get_size<0>(), input.get_size<1>(), 0);
     ggo::array<uint8_t, 2> output(input.get_size<0>(), input.get_size<1>(), 0);
 
-    ggo_const_buffer_view input_view{ input.data() + view_offset, view_width, view_height, input.get_size<0>() };
-    ggo_buffer_view tmp_view{ tmp.data() + view_offset, view_width, view_height, input.get_size<0>() };
-    ggo_buffer_view output_view{ output.data() + view_offset, view_width, view_height, input.get_size<0>() };
+    const_buffer_view input_view{ input.data() + view_offset, view_width, view_height, input.get_size<0>() };
+    buffer_view tmp_view{ tmp.data() + view_offset, view_width, view_height, input.get_size<0>() };
+    buffer_view output_view{ output.data() + view_offset, view_width, view_height, input.get_size<0>() };
 
     // Once the views are properly set up, then erode it and dilate it back with a smaller radius.
     int size_min = std::min(input.get_size<0>(), input.get_size<1>());
@@ -147,15 +146,15 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::tree<ggo_voronoi_node> create_voronoi_tree(int width, int height)
+  ggo::tree<voronoi_node> create_voronoi_tree(int width, int height)
   {
     // Pick up 2 colors that are not too close.
-    ggo::color color1 = ggo::color::get_random();
-    ggo::color color2 = color1;
+    ggo::color_32f color1(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
+    ggo::color_32f color2 = color1;
     float diff = 0.f;
     for (int i = 0; i < 4; ++i)
     {
-      ggo::color candidate = ggo::color::get_random();
+      ggo::color_32f candidate(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
       float diff_cur = std::abs(candidate.r() - color1.r()) +
                        std::abs(candidate.g() - color1.g()) +
                        std::abs(candidate.b() - color1.b());
@@ -166,25 +165,25 @@ namespace
       }
     }
 
-    ggo::tree<ggo_voronoi_node> voronoi_tree({ nullptr,{ 0.f, 0.f }, ggo::color::WHITE });
+    ggo::tree<voronoi_node> voronoi_tree({ nullptr,{ 0.f, 0.f }, ggo::white<ggo::color_8u>() });
 
     // First layer.
     for (int i = 0; i < 16; ++i)
     {
-      ggo_voronoi_node node;
+      voronoi_node node;
       node._parent_node = &voronoi_tree;
-      node._position.get<0>() = ggo::rand_float(0.f, ggo::to<float>(width));
-      node._position.get<1>() = ggo::rand_float(0.f, ggo::to<float>(height));
-      node._color = ggo::color::BLACK;
+      node._position.get<0>() = ggo::rand<float>(0.f, ggo::to<float>(width));
+      node._position.get<1>() = ggo::rand<float>(0.f, ggo::to<float>(height));
+      node._color = ggo::black<ggo::color_8u>();
 
       voronoi_tree.create_leaf(node);
     }
 
     // Second layer. Leaves must be created after creating new points.
-    std::map<ggo::tree<ggo_voronoi_node> *, std::vector<ggo::pos2f>> subpoints;
+    std::map<ggo::tree<voronoi_node> *, std::vector<ggo::pos2f>> subpoints;
     for (int i = 0; i < 1024; ++i)
     {
-      ggo::pos2f point(ggo::rand_float(0.f, ggo::to<float>(width)), ggo::rand_float(0.f, ggo::to<float>(height)));
+      ggo::pos2f point(ggo::rand<float>(0.f, ggo::to<float>(width)), ggo::rand<float>(0.f, ggo::to<float>(height)));
 
       auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.get<0>(), point.get<1>());
 
@@ -193,16 +192,16 @@ namespace
 
     for (auto it = subpoints.begin(); it != subpoints.end(); ++it)
     {
-      float ratio = ggo::rand_float(0.8f, 1.0f / 0.8f);
+      float ratio = ggo::rand<float>(0.8f, 1.0f / 0.8f);
 
       for (const auto & point : it->second)
       {
-        float interp = ggo::rand_float();
+        float interp = ggo::rand<float>();
 
-        ggo_voronoi_node node;
+        voronoi_node node;
         node._parent_node = &voronoi_tree;
         node._position = point;
-        node._color = ratio * (interp * color1 + (1.f - interp) * color2);
+        node._color = ggo::convert_color_to<ggo::color_8u>(color1 * (interp * color1 + (1.f - interp) * color2));
 
         it->first->create_leaf(node);
       }
@@ -212,10 +211,10 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::array<const ggo::tree<ggo_voronoi_node> *, 2> create_voronoi_map(ggo::tree<ggo_voronoi_node> & voronoi_tree,
-                                                                        int width, int height, int scale_factor)
+  ggo::array<const ggo::tree<voronoi_node> *, 2> create_voronoi_map(ggo::tree<voronoi_node> & voronoi_tree,
+                                                                    int width, int height, int scale_factor)
   {
-    ggo::array<const ggo::tree<ggo_voronoi_node> *, 2> voronoi_map(width, height);
+    ggo::array<const ggo::tree<voronoi_node> *, 2> voronoi_map(width, height);
 
     for (int y = 0; y < voronoi_map.get_size<1>(); y += scale_factor)
     {
@@ -253,12 +252,12 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void paint_voronoi_map(ggo::rgb_image_abc & image,
-                         const ggo::tree<ggo_voronoi_node> & voronoi_tree,
-                         const ggo::array<const ggo::tree<ggo_voronoi_node> *, 2> & voronoi_map, 
+  void paint_voronoi_map(void * buffer, int width, int height,
+                         const ggo::tree<voronoi_node> & voronoi_tree,
+                         const ggo::array<const ggo::tree<voronoi_node> *, 2> & voronoi_map, 
                          int scale_factor)
   {
-    auto paint_voronoi_leaf = [&](const ggo::tree<ggo_voronoi_node> & voronoi_leaf)
+    auto paint_voronoi_leaf = [&](const ggo::tree<voronoi_node> & voronoi_leaf)
     {
       ggo::array<uint8_t, 2> mask(voronoi_map.get_size<0>(), voronoi_map.get_size<1>(), 0);
 
@@ -275,14 +274,23 @@ namespace
 
       mask = round_mask(mask);
       auto downsampled = downsample(mask, scale_factor);
-      GGO_ASSERT_EQ(downsampled.get_size<0>(), image.get_width());
-      GGO_ASSERT_EQ(downsampled.get_size<1>(), image.get_height());
+      GGO_ASSERT_EQ(downsampled.get_size<0>(), width);
+      GGO_ASSERT_EQ(downsampled.get_size<1>(), height);
 
-      image.for_each_pixel([&](int x, int y)
+      for (int y = 0; y < height; ++y)
       {
-        float opacity = downsampled(x, y);
-        image.set(x, y, voronoi_leaf.data()._color, opacity);
-      });
+        for (int x = 0; x < width; ++x)
+        {
+          float opacity = downsampled(x, y);
+
+          auto pixel_color = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+
+          ggo::alpha_blender<ggo::color_8u> blender(opacity);
+          pixel_color = blender(x, y, pixel_color, voronoi_leaf.data()._color);
+
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, pixel_color);
+        }
+      }
     };
 
     voronoi_tree.visit_leaves(paint_voronoi_leaf);
@@ -290,21 +298,20 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo_voronoi_artist::ggo_voronoi_artist(int render_width, int render_height)
+ggo::voronoi_artist::voronoi_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+ggo::bitmap_artist_abc(render_width, render_height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_voronoi_artist::render_bitmap(uint8_t * buffer)
+void ggo::voronoi_artist::render_bitmap(void * buffer) const
 {
   int scale_factor = 4;
 
   auto voronoi_tree = create_voronoi_tree(scale_factor * get_render_width(), scale_factor * get_render_height());
   auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * get_render_width(), scale_factor * get_render_height(), scale_factor);
-  
-  auto image = make_image_buffer(buffer);
-  paint_voronoi_map(image, voronoi_tree, voronoi_map, scale_factor);
+
+  paint_voronoi_map(buffer, get_render_width(), get_render_height(), voronoi_tree, voronoi_map, scale_factor);
 }

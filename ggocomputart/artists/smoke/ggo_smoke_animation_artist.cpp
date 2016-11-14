@@ -1,9 +1,9 @@
 #include "ggo_smoke_animation_artist.h"
 #include <ggo_kernel.h>
-#include <ggo_fill.h>
+#include <ggo_buffer_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo_smoke_animation_artist::ggo_loop_array2d::ggo_loop_array2d(int size_x, int size_y)
+ggo::smoke_animation_artist::loop_array2d::loop_array2d(int size_x, int size_y)
 :
 ggo::array<double, 2>(size_x, size_y)
 {
@@ -13,7 +13,7 @@ ggo::array<double, 2>(size_x, size_y)
 // Here this(0, 0) is really located at (0, 0), meaning that
 // the array covers a (-0.5, size_x+0.5) x (-0.5, size_y+0.5)
 // region.
-double ggo_smoke_animation_artist::ggo_loop_array2d::interpolate(double x, double y) const
+double ggo::smoke_animation_artist::loop_array2d::interpolate(double x, double y) const
 {
 	// Bilinear interpolation.
 	int src_left = x < 0 ? int(x) - 1 : int(x);
@@ -37,7 +37,7 @@ double ggo_smoke_animation_artist::ggo_loop_array2d::interpolate(double x, doubl
 }
 
 //////////////////////////////////////////////////////////////
-double ggo_smoke_animation_artist::ggo_loop_array2d::loop_value(int x, int y) const
+double ggo::smoke_animation_artist::loop_array2d::loop_value(int x, int y) const
 {
 	x = ggo::pos_mod(x, get_size<0>());
 	y = ggo::pos_mod(y, get_size<1>());
@@ -46,9 +46,9 @@ double ggo_smoke_animation_artist::ggo_loop_array2d::loop_value(int x, int y) co
 }
 
 //////////////////////////////////////////////////////////////
-ggo_smoke_animation_artist::ggo_smoke_animation_artist(int render_width, int render_height)
+ggo::smoke_animation_artist::smoke_animation_artist(int render_width, int render_height)
 :
-ggo_animation_artist_abc(render_width, render_height),
+animation_artist_abc(render_width, render_height),
 _velocity_x1(render_width + 1, render_height),
 _velocity_x2(render_width + 1, render_height),
 _velocity_y1(render_width, render_height + 1),
@@ -61,7 +61,7 @@ _sources(4)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_smoke_animation_artist::init_sub()
+void ggo::smoke_animation_artist::init_sub()
 {
 	_velocity_x_cur = &_velocity_x1;
 	_velocity_x_tmp = &_velocity_x2;
@@ -82,7 +82,7 @@ void ggo_smoke_animation_artist::init_sub()
 
 	for (int i = 0; i < _sources.get_count(); ++i)
 	{
-		ggo_fluid_source & source = _sources(i);
+		ggo::smoke_animation_artist::fluid_source & source = _sources(i);
 		
 		switch (i)
 		{
@@ -112,34 +112,38 @@ void ggo_smoke_animation_artist::init_sub()
 			break;
 		}
 	
-		source._circle.radius() = ggo::rand_float(0.03f * get_render_min_size(), 0.04f * get_render_min_size());
-		source._speed = ggo::rand_float(0.007f * get_render_min_size(), 0.009f * get_render_min_size());
-		source._timer1 = ggo::rand_int(50, 100);
-		source._timer2 = ggo::rand_int(50, 150);
-		source._angle_amplitude = ggo::rand_float(ggo::pi<float>() / 4, ggo::pi<float>());
-		source._angle_offset = ggo::rand_float(0, 2 * ggo::pi<float>());
-		source._wave_length = ggo::rand_float(0.05f, 0.2f);
+		source._circle.radius() = ggo::rand<float>(0.03f * get_render_min_size(), 0.04f * get_render_min_size());
+		source._speed = ggo::rand<float>(0.007f * get_render_min_size(), 0.009f * get_render_min_size());
+		source._timer1 = ggo::rand<int>(50, 100);
+		source._timer2 = ggo::rand<int>(50, 150);
+		source._angle_amplitude = ggo::rand<float>(ggo::pi<float>() / 4, ggo::pi<float>());
+		source._angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
+		source._wave_length = ggo::rand<float>(0.05f, 0.2f);
 		source._density = 0;
 	}
 	
-	ggo_fluid_source & source = _sources(ggo::rand_int(0, 3));
+	ggo::smoke_animation_artist::fluid_source & source = _sources(ggo::rand<int>(0, 3));
 	source._timer1 = 0;
 
-	float hue = ggo::rand_float();
-	_smoke_color = ggo::color::from_hsv(hue, 1, ggo::rand_float(0.2f, 0.8f));
-	ggo::color color1 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
-	ggo::color color2 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
-	ggo::color color3 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
-	ggo::color color4 = ggo::color::from_hsv(hue, ggo::rand_float(0.f, 0.2f), ggo::rand_float(0.8f, 1.f));
+	float hue = ggo::rand<float>();
+	_smoke_color = ggo::from_hsv<ggo::color_8u>(hue, 1, ggo::rand<float>(0.2f, 0.8f));
+
+	const ggo::color_8u color1 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+	const ggo::color_8u color2 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+	const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+	const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
   
-  auto bkgd_image = make_image_buffer(_bkgd_buffer.data());
-	ggo::fill_4_colors(bkgd_image, color1, color2, color3, color4);
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(
+    _bkgd_buffer.data(), get_render_width(), get_render_height(), 3 * get_render_width(), color1, color2, color3, color4);
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int frame_index)
+bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
-	if (frame_index > GGO_SMOKE_FRAMES_COUNT)
+  const int frames_count = 600;
+
+
+	if (frame_index > frames_count)
 	{
 		return false;
 	}
@@ -217,8 +221,8 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 	std::swap(_velocity_y_tmp, _velocity_y_cur);
 	
 	// Compute pressure.
-	ggo_loop_array2d divergence(get_render_width(), get_render_height());
-	ggo_loop_array2d pressure(get_render_width(), get_render_height());
+	ggo::smoke_animation_artist::loop_array2d divergence(get_render_width(), get_render_height());
+	ggo::smoke_animation_artist::loop_array2d pressure(get_render_width(), get_render_height());
 	for (int y = 0; y < get_render_height(); ++y)
 	{
 		for (int x = 0; x < get_render_width(); ++x) 
@@ -276,19 +280,20 @@ bool ggo_smoke_animation_artist::render_next_frame_sub(uint8_t * buffer, int fra
 	std::swap(_density_cur, _density_tmp);
 	
 	// Draw the density.
-	uint8_t * bkgd_it = _bkgd_buffer.data();
+  uint8_t * buffer_ptr = static_cast<uint8_t *>(buffer);
+	const uint8_t * bkgd_ptr = _bkgd_buffer.data();
 	for (int y = 0; y < get_render_height(); ++y) 
 	{
 		for (int x = 0; x < get_render_width(); ++x)
 		{
 			double density = _density_cur->operator()(x, y);
 
-			buffer[0] = ggo::to<uint8_t>(density * 255 * _smoke_color.r() + (1 - density) * bkgd_it[0]);
-			buffer[1] = ggo::to<uint8_t>(density * 255 * _smoke_color.g() + (1 - density) * bkgd_it[1]);
-			buffer[2] = ggo::to<uint8_t>(density * 255 * _smoke_color.b() + (1 - density) * bkgd_it[2]);
+			buffer_ptr[0] = ggo::to<uint8_t>(density * 255 * _smoke_color.r() + (1 - density) * bkgd_ptr[0]);
+			buffer_ptr[1] = ggo::to<uint8_t>(density * 255 * _smoke_color.g() + (1 - density) * bkgd_ptr[1]);
+			buffer_ptr[2] = ggo::to<uint8_t>(density * 255 * _smoke_color.b() + (1 - density) * bkgd_ptr[2]);
 			
-			buffer += 3;
-			bkgd_it += 3;
+      buffer_ptr += 3;
+      bkgd_ptr += 3;
 		}
 	}
 

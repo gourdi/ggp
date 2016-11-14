@@ -8,10 +8,10 @@
 
 struct ggo_params
 {
-	ggo_animation_artist_id	_artist_id;
-	std::string				      _output_directory;
-	int						          _width;
-	int						          _height;
+	ggo::animation_artist_id  _artist_id;
+	std::string				        _output_directory;
+	int						            _width;
+	int						            _height;
 };
 
 //////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : invalid artist id argument" << std::endl;
 				return false;
 			}
-			params._artist_id = static_cast<ggo_animation_artist_id>(artist_id);
+			params._artist_id = static_cast<ggo::animation_artist_id>(artist_id);
 		}
 		else
 		if (arg.compare("-d") == 0)
@@ -101,11 +101,11 @@ int main(int argc, char ** argv)
 
   ggo::array_uint8 buffer(3 * params._width * params._height);
 
-	std::cout << "Artist ID: " << params._artist_id << std::endl;
+	std::cout << "Artist ID: " << static_cast<int>(params._artist_id) << std::endl;
 	std::cout << "Output resolution: " << params._width << 'x' << params._height << std::endl;
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
-	std::unique_ptr<ggo_animation_artist_abc> artist(ggo_animation_artist_abc::create(params._artist_id, params._width, params._height));
+  std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(params._artist_id, params._width, params._height));
     
   if (artist.get() == nullptr)
   {
@@ -135,7 +135,10 @@ int main(int argc, char ** argv)
 		filename << i << ".bmp";
 		std::cout << "Saved image " << filename.str() << " (image computed in " << frame_chronometer.get_display_time() << ")" << std::endl;
 
-		ggo::save_bmp(filename.str(), buffer.data(), params._width, params._height);
+    if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, 3 * params._width) == false)
+    {
+      std::cerr << "Failed saving image " + filename.str() << std::endl;
+    }
 
 		++i;
 	}

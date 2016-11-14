@@ -62,7 +62,7 @@ namespace ggo
   private:
 
     void init_sub() override;
-    void init_bkgd_buffer(void * buffer) override;
+    void init_bkgd_buffer(void * buffer) const override;
     bool render_next_frame_bkgd(void * buffer, int frame_index) override;
 
     ggo::color_8u get_color() const;

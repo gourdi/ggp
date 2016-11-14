@@ -1,7 +1,6 @@
 #include "ggo_amorosi_animation_artist.h"
 #include <ggo_multi_shape_paint.h>
 #include <ggo_color_triangle.h>
-#include <ggo_shape_sampling_coef.h>
 #include <ggo_buffer_fill.h>
 
 //////////////////////////////////////////////////////////////
@@ -155,7 +154,7 @@ void ggo::amorosi_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::init_bkgd_buffer(void * buffer)
+void ggo::amorosi_animation_artist::init_bkgd_buffer(void * buffer) const
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
 }

@@ -11,15 +11,14 @@ namespace ggo
   {
   public:
 
-    static bitmap_artist_abc * create(bitmap_artist_id artist_id);
+    static bitmap_artist_abc * create(ggo::bitmap_artist_id artist_id, int render_width, int render_height);
 
-    bitmap_artist_abc(int render_width, int render_height);
-
-    virtual	void render_bitmap(void * buffer) const = 0;
+    virtual	void  render_bitmap(void * buffer) const = 0;
 
   protected:
 
-    bitmap_artist_abc();
+                  bitmap_artist_abc(int render_width, int render_height);
+                  bitmap_artist_abc() = delete;
   };
 }
 

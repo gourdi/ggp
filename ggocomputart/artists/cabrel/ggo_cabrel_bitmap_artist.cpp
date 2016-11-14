@@ -236,7 +236,7 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
     shadows.begin(), shadows.end());
 
   float stddev = 0.01f * get_render_min_size();
-  gaussian_blur2d<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
+  gaussian_blur2d_mirror<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
 
   // Paint the triangles.
   std::vector<dyn_paint_shape<float, color_8u, color_8u>> shapes;

@@ -5,27 +5,30 @@
 #include "ggo_vortex2_artist.h"
 #include <map>
 
-class ggo_vortex2_animation_artist : public ggo_animation_artist_abc
+namespace ggo
 {
-public:
+  class vortex2_animation_artist : public animation_artist_abc
+  {
+  public:
 
-        ggo_vortex2_animation_artist(int render_width, int render_height);
+          vortex2_animation_artist(int render_width, int render_height);
 
-private:
-	
-	void	init_sub() override;
-	bool	render_next_frame_sub(uint8_t * buffer, int frame_index) override;
-	
-private:
-	
-	struct ggo_vortex_path
-	{
-		ggo::pos2f	_start_pos;
-		ggo::pos2f	_end_pos;
-	};
-	
-	std::map<ggo_vortex2_artist::ggo_vortex *, ggo_vortex_path>	_vortices_paths;
-	ggo_vortex2_artist::ggo_vortex2_params 						          _params;
-};
+  private:
+
+    void	init_sub() override;
+    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+
+  private:
+
+    struct vortex_path
+    {
+      ggo::pos2f	_start_pos;
+      ggo::pos2f	_end_pos;
+    };
+
+    std::map<ggo::vortex2_artist::vortex *, vortex_path>  _vortices_paths;
+    ggo::vortex2_artist::params                           _params;
+  };
+}
 
 #endif

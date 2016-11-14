@@ -221,7 +221,6 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -259,8 +258,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-   <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\shaders;$(SolutionDir)\ggoraytracer\src\materials;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggocomputart;$(SolutionDir)\ggocomputart\artists;$(SolutionDir)\ggocomputart\animation;$(SolutionDir)\ggocomputart\animation\paths</IncludePath>
-   </PropertyGroup>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\shaders;$(SolutionDir)\ggoraytracer\src\materials;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggocomputart;$(SolutionDir)\ggocomputart\artists;$(SolutionDir)\ggocomputart\animation;$(SolutionDir)\ggocomputart\animation\paths</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -275,7 +274,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>

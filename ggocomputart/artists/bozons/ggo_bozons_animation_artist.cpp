@@ -141,7 +141,7 @@ void ggo::bozons_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::init_bkgd_buffer(void * buffer)
+void ggo::bozons_animation_artist::init_bkgd_buffer(void * buffer) const
 {
 	const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 	const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());

@@ -31,15 +31,15 @@ namespace ggo
     static ggo::pos2f horz_mirror(const ggo::pos2f & p, int render_height);
     static ggo::pos2f vert_mirror(const ggo::pos2f & p, int render_width);
 
-    int get_render_width() const { return _render_width; }
-    int get_render_height() const { return _render_height; }
-    int get_render_max_size() const { return std::max(_render_width, _render_height); }
-    int get_render_min_size() const { return std::min(_render_width, _render_height); }
-    int get_pixels_count() const { return _render_width * _render_height; }
+    int         get_render_width() const { return _render_width; }
+    int         get_render_height() const { return _render_height; }
+    int         get_render_max_size() const { return std::max(_render_width, _render_height); }
+    int         get_render_min_size() const { return std::min(_render_width, _render_height); }
+    int         get_pixels_count() const { return _render_width * _render_height; }
 
-    ggo::pos2f get_random_point() const { return get_random_point(_render_width, _render_height); }
-    ggo::pos2f get_random_point(float margin) const { return get_random_point(margin, _render_width, _render_height); }
-    ggo::pos2f get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
+    ggo::pos2f  get_random_point() const { return get_random_point(_render_width, _render_height); }
+    ggo::pos2f  get_random_point(float margin) const { return get_random_point(margin, _render_width, _render_height); }
+    ggo::pos2f  get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
       return get_random_point(margin_left, margin_right, margin_top, margin_bottom, _render_width, _render_height);
     }
 
@@ -50,10 +50,10 @@ namespace ggo
     void        map_fit(ggo::rect_float & rect, float inf, float sup) const;
     void        map_fit(ggo::disc_float & disc, float inf, float sup) const;
 
-    ggo::pos2f get_center() const;
+    ggo::pos2f  get_center() const;
 
-    ggo::pos2f horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _render_height); }
-    ggo::pos2f vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _render_width); }
+    ggo::pos2f  horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _render_height); }
+    ggo::pos2f  vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _render_width); }
 
     template <typename pixel_func_t>
     void for_each_pixel(pixel_func_t pixel_func) const

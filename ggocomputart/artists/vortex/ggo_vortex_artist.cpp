@@ -1,45 +1,45 @@
 #include "ggo_vortex_artist.h"
-#include <ggo_paint.h>
-#include <ggo_fill.h>
-#include <ggo_color_conv.h>
-using namespace std;
-
-#define GGO_POINTS_COUNT 75
+#include <ggo_buffer_paint.h>
+#include <ggo_buffer_fill.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo_vortex_artist::ggo_vortex_artist(int render_width, int render_height)
+ggo::vortex_artist::vortex_artist(int render_width, int render_height)
 :
-ggo_bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(render_width, render_height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo_vortex_artist::render_bitmap(uint8_t * buffer)
+void ggo::vortex_artist::render_bitmap(void * buffer) const
 {
-	ggo::fill_solid_rgb(buffer, get_render_width() * get_render_height(), ggo::color::BLACK);
+  const int points_count = 75;
 
-	float hue				      = ggo::rand_float();
-	float	sat				      = ggo::rand_float();
-	float	vortex_angle	  = ggo::rand_float(0.2f, 0.5f);
-	float	vortex_speed	  = ggo::rand_float(0.04f, 0.08f);
-	int		ellipse_count1	= ggo::rand_int(50, 70);
-	int		ellipse_count2	= ggo::rand_int(20, 30);
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
+
+	float hue				      = ggo::rand<float>();
+	float	sat				      = ggo::rand<float>();
+	float	vortex_angle	  = ggo::rand<float>(0.2f, 0.5f);
+	float	vortex_speed	  = ggo::rand<float>(0.04f, 0.08f);
+	int		ellipse_count1	= ggo::rand<int>(50, 70);
+	int		ellipse_count2	= ggo::rand<int>(20, 30);
 
 	for (int i1 = 0; i1 < ellipse_count1; ++i1)
 	{
 		ggo::polygon2d_float	eclipse;
 
-		float m		= ggo::rand_float(0.001f, 2.f);
-		float n		= ggo::rand_float(0.001f, 2.f);
-		float a		= ggo::rand_float(0.1f, 0.2f);
-		float b		= ggo::rand_float(0.1f, 0.2f);
-		float pos_x	= ggo::rand_float(-1.5f, 1.5f);
-		float pos_y	= ggo::rand_float(-1.5f, 1.5f);
+		float m		  = ggo::rand<float>(0.001f, 2.f);
+		float n		  = ggo::rand<float>(0.001f, 2.f);
+		float a		  = ggo::rand<float>(0.1f, 0.2f);
+		float b		  = ggo::rand<float>(0.1f, 0.2f);
+		float pos_x	= ggo::rand<float>(-1.5f, 1.5f);
+		float pos_y	= ggo::rand<float>(-1.5f, 1.5f);
 
-		for (int i = 0; i < GGO_POINTS_COUNT; ++i)
+		for (int i = 0; i < points_count; ++i)
 		{
-			float angle	= 2 * ggo::pi<float>() * i / GGO_POINTS_COUNT;
+			float angle	= 2 * ggo::pi<float>() * i / points_count;
 			float x 	= pos_x + a * std::pow(std::abs(std::cos(angle)), m) * ggo::sign(std::cos(angle));
 			float y 	= pos_y + b * std::pow(std::abs(std::sin(angle)), n) * ggo::sign(std::sin(angle));
 			eclipse.add_point(x, y);
@@ -60,23 +60,23 @@ void ggo_vortex_artist::render_bitmap(uint8_t * buffer)
 			}
 
 			// Switch to render coordinates.
-			auto eclipse_render = std::make_shared<ggo::polygon2d_float>();
+      ggo::polygon2d_float eclipse_render;
 			for (int i = 0; i < eclipse.get_points_count(); ++i)
 			{
 				ggo::pos2f pt = map_fit(eclipse.get_point(i), -1, 1);
         
-				eclipse_render->add_point(pt);
+				eclipse_render.add_point(pt);
 			}
 
 			// Paint the shape (change a bit the color).
-			float h = std::fmod(hue + ggo::rand_float(-0.1f, 0.1f), 1.f); 
+			float h = std::fmod(hue + ggo::rand<float>(-0.1f, 0.1f), 1.f); 
 			if (h < 0) { h += 1; }
 			
-			float s = ggo::clamp(sat + ggo::rand_float(-0.1f, 0.1f), 0.f, 1.f);
+			float s = ggo::clamp(sat + ggo::rand<float>(-0.1f, 0.1f), 0.f, 1.f);
 			
-			ggo::paint(buffer, get_render_width(), get_render_height(),
-                 eclipse_render,
-                 ggo::color::from_hsv(h, s, 1), 0.2f);
+			ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+        buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+        eclipse_render, ggo::white_brush_8u(), ggo::alpha_blender_rgb8u(0.2f));
 		}
 	}
 }
