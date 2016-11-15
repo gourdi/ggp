@@ -450,7 +450,7 @@ std::vector<ggo::hexa_artist::hexa_info> ggo::hexa_artist::generate_hexa_infos()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_artist::render(void * buffer, int width, int height,
+void ggo::hexa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                               const std::vector<hexa_info> & hexa_infos,
                               const ggo::color_32f & color_top, const ggo::color_32f & color_side,
                               const std::vector<ggo::pos3f> & lights_pos,
@@ -494,5 +494,5 @@ void ggo::hexa_artist::render(void * buffer, int width, int height,
   raytrace_params._raycaster = &raycaster;
 
   // Rendering.
-  renderer.render(static_cast<uint8_t *>(buffer), width, height, scene_builder, raytrace_params);
+  renderer.render(buffer, width, height, line_step, pbf, scene_builder, raytrace_params);
 }

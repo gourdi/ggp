@@ -29,114 +29,118 @@
 #include "artists/sonson/ggo_sonson_animation_artist.h"
 #include "artists/rediff/ggo_rediff_animation_artist.h"
 #include "artists/entabeni/ggo_entabeni_animation_artist.h"
+#include "artists/neon/ggo_neon_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS
 
 //////////////////////////////////////////////////////////////
-ggo::animation_artist_abc::animation_artist_abc(int render_width, int render_height)
+ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-ggo::artist(render_width, render_height)
+ggo::artist(width, height, line_step, pbf)
 {
 	_counter = 0;
 }
 
 //////////////////////////////////////////////////////////////
-ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_artist_id artist_id, int render_width, int render_height)
+ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 {
 	ggo::animation_artist_abc * artist = nullptr;
 	
 	switch (artist_id)
 	{
 	case ggo::animation_artist_id::duffing:
-		artist = new ggo::duffing_animation_artist(render_width, render_height);
+		artist = new ggo::duffing_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::julia:
-		artist = new ggo::julia_animation_artist(render_width, render_height);
+		artist = new ggo::julia_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::kanji:
-		artist = new ggo::kanji_animation_artist(render_width, render_height);
+		artist = new ggo::kanji_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::bozons:
-		artist = new ggo::bozons_animation_artist(render_width, render_height);
+		artist = new ggo::bozons_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::filling_squares:
-		artist = new ggo::filling_squares_animation_artist(render_width, render_height);
+		artist = new ggo::filling_squares_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::plastic:
-		artist = new ggo::plastic_animation_artist(render_width, render_height);
+		artist = new ggo::plastic_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::aggregation:
-		artist = new ggo::aggregation_animation_artist(render_width, render_height);
+		artist = new ggo::aggregation_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::ifs:
-		artist = new ggo::ifs_animation_artist(render_width, render_height);
+		artist = new ggo::ifs_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::metaballs:
-		artist = new ggo::metaballs_animation_artist(render_width, render_height);
+		artist = new ggo::metaballs_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::smoke:
-		artist = new ggo::smoke_animation_artist(render_width, render_height);
+		artist = new ggo::smoke_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::sonson:
-    artist = new ggo::sonson_animation_artist(render_width, render_height);
+    artist = new ggo::sonson_animation_artist(width, height, line_step, pbf);
     break;
 	case ggo::animation_artist_id::newton:
-		artist = new ggo::newton_artist(render_width, render_height);
+		artist = new ggo::newton_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::alpha:
-		artist = new ggo::alpha_animation_artist(render_width, render_height);
+		artist = new ggo::alpha_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::dupecheck:
-		artist = new ggo::dupecheck_animation_artist(render_width, render_height);
+		artist = new ggo::dupecheck_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::lagaude:
-		artist = new ggo::lagaude_animation_artist(render_width, render_height);
+		artist = new ggo::lagaude_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::crystal:
-		artist = new ggo::crystal_animation_artist(render_width, render_height);
+		artist = new ggo::crystal_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::ikeda:
-		artist = new ggo::ikeda_artist(render_width, render_height);
+		artist = new ggo::ikeda_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::cumbia:
-		artist = new ggo::cumbia_animation_artist(render_width, render_height);
+		artist = new ggo::cumbia_animation_artist(width, height, line_step, pbf);
 		break;
 	case ggo::animation_artist_id::vortex2:
-		artist = new ggo::vortex2_animation_artist(render_width, render_height);
+		artist = new ggo::vortex2_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::circles:
-		artist = new ggo::circles_animation_artist(render_width, render_height);
+		artist = new ggo::circles_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::distorsion:
-    artist = new ggo::distorsion_animation_artist(render_width, render_height);
+    artist = new ggo::distorsion_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::toutouyoutou:
-    artist = new ggo::toutouyoutou_anim_artist(render_width, render_height);
+    artist = new ggo::toutouyoutou_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::amorosi:
-    artist = new ggo::amorosi_animation_artist(render_width, render_height);
+    artist = new ggo::amorosi_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::rah:
-    artist = new ggo::rah_animation_artist(render_width, render_height);
+    artist = new ggo::rah_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::hexa:
-    artist = new ggo::hexa_animation_artist(render_width, render_height);
+    artist = new ggo::hexa_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::chryzode:
-    artist = new ggo::chryzode_animation_artist(render_width, render_height);
+    artist = new ggo::chryzode_animation_artist(width, height, line_step, pbf);
 		break;
   case ggo::animation_artist_id::stoa:
-    artist = new ggo::stoa_animation_artist(render_width, render_height);
+    artist = new ggo::stoa_animation_artist(width, height, line_step, pbf);
     break;
   case ggo::animation_artist_id::flies:
-    artist = new ggo::flies_artist(render_width, render_height);
+    artist = new ggo::flies_artist(width, height, line_step, pbf);
     break;
   case ggo::animation_artist_id::rediff:
-    artist = new ggo::rediff_animation_artist(render_width, render_height);
+    artist = new ggo::rediff_animation_artist(width, height, line_step, pbf);
     break;
   case ggo::animation_artist_id::entabeni:
-    artist = new ggo::entabeni_animation_artist(render_width, render_height);
+    artist = new ggo::entabeni_animation_artist(width, height, line_step, pbf);
+    break;
+  case ggo::animation_artist_id::neon:
+    artist = new ggo::neon_artist(width, height, line_step, pbf);
     break;
 	default:
 		GGO_FAIL();
@@ -176,9 +180,9 @@ bool ggo::animation_artist_abc::render_next_frame(void * buffer)
 // ACCUMULATION ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::accumulation_animation_artist_abc::accumulation_animation_artist_abc(int render_width, int render_height)
+ggo::accumulation_animation_artist_abc::accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -197,10 +201,10 @@ bool ggo::accumulation_animation_artist_abc::render_next_frame_sub(void * buffer
 // STATIC BACKGROUND ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::static_background_animation_artist_abc::static_background_animation_artist_abc(int render_width, int render_height)
+ggo::static_background_animation_artist_abc::static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_bkgd_buffer(3 * render_width * render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_bkgd_buffer(line_step * height)
 {
 }
 

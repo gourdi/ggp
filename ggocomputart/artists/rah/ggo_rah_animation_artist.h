@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-    rah_animation_artist(int render_width, int render_height);
+    rah_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
@@ -46,7 +46,7 @@ namespace ggo
         int _height;
       };
 
-      fog(int width, int height);
+            fog(int width, int height);
 
       void  update(int min_size) override;
       void  paint(void * buffer, int width, int height, float focus_dist) const override;
@@ -70,7 +70,7 @@ namespace ggo
         }
       };
 
-      particle(int render_width, int render_height, float focus_dist);
+            particle(int width, int height, float focus_dist);
 
       float blur_radius(int min_size, float focus_dist) const;
       float disc_radius(int min_size) const;
@@ -92,7 +92,7 @@ namespace ggo
     // PARTICLE 1
     struct particle1 : public particle
     {
-      particle1(int render_width, int render_height, float focus_dist);
+            particle1(int width, int height, float focus_dist);
 
       void  update(int min_size) override;
       void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
@@ -114,7 +114,7 @@ namespace ggo
     // PARTICLE 2
     struct particle2 : public particle
     {
-      particle2(int render_width, int render_height, float focus_dist);
+            particle2(int width, int height, float focus_dist);
 
       void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
 
@@ -125,7 +125,7 @@ namespace ggo
     // PARTICLE 3
     struct particle3 : public particle
     {
-      particle3(int render_width, int render_height, float focus_dist);
+            particle3(int width, int height, float focus_dist);
 
       void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
       void  update(int min_size) override;
@@ -149,7 +149,7 @@ namespace ggo
     // PARTICLE 4
     struct particle4 : public particle
     {
-      particle4(int render_width, int render_height, float focus_dist);
+            particle4(int width, int height, float focus_dist);
 
       void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
     };
@@ -175,7 +175,7 @@ namespace ggo
     void    init_sub() override;
     bool    render_next_frame_sub(void * buffer, int frame_index) override;
 
-    static  std::shared_ptr<particle>   create_particle(float focus_dist, int render_width, int render_height);
+    static  std::shared_ptr<particle>   create_particle(float focus_dist, int width, int height);
   };
 }
 

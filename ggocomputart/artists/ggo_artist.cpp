@@ -9,17 +9,17 @@ namespace ggo
 
     if (render_width >= render_height)
     {
-      result.get<0>() = ggo::map(point.get<0>(), inf, sup, 0.f, static_cast<float>(render_width));
-      result.get<1>() = ggo::map(point.get<1>(), inf, sup, 0.f, static_cast<float>(render_width));
+      result.x() = ggo::map(point.x(), inf, sup, 0.f, static_cast<float>(render_width));
+      result.y() = ggo::map(point.y(), inf, sup, 0.f, static_cast<float>(render_width));
 
-      result.get<1>() -= 0.5f * (render_width - render_height);
+      result.y() -= 0.5f * (render_width - render_height);
     }
     else
     {
-      result.get<0>() = ggo::map(point.get<0>(), inf, sup, 0.f, static_cast<float>(render_height));
-      result.get<1>() = ggo::map(point.get<1>(), inf, sup, 0.f, static_cast<float>(render_height));
+      result.x() = ggo::map(point.x(), inf, sup, 0.f, static_cast<float>(render_height));
+      result.y() = ggo::map(point.y(), inf, sup, 0.f, static_cast<float>(render_height));
 
-      result.get<0>() -= 0.5f * (render_height - render_width);
+      result.x() -= 0.5f * (render_height - render_width);
     }
 
     return result;
@@ -45,17 +45,17 @@ namespace ggo
 
     if (render_width >= render_height)
     {
-      result.get<0>() = ggo::map(point.get<0>(), inf, sup, 0.f, static_cast<float>(render_height));
-      result.get<1>() = ggo::map(point.get<1>(), inf, sup, 0.f, static_cast<float>(render_height));
+      result.x() = ggo::map(point.x(), inf, sup, 0.f, static_cast<float>(render_height));
+      result.y() = ggo::map(point.y(), inf, sup, 0.f, static_cast<float>(render_height));
 
-      result.get<0>() += 0.5f * (render_width - render_height);
+      result.x() += 0.5f * (render_width - render_height);
     }
     else
     {
-      result.get<0>() = ggo::map(point.get<0>(), inf, sup, 0.f, static_cast<float>(render_width));
-      result.get<1>() = ggo::map(point.get<1>(), inf, sup, 0.f, static_cast<float>(render_width));
+      result.x() = ggo::map(point.x(), inf, sup, 0.f, static_cast<float>(render_width));
+      result.y() = ggo::map(point.y(), inf, sup, 0.f, static_cast<float>(render_width));
 
-      result.get<1>() += 0.5f * (render_height - render_width);
+      result.y() += 0.5f * (render_height - render_width);
     }
 
     return result;
@@ -113,49 +113,49 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::pos2f artist::map_fill(const ggo::pos2f & point, float inf, float sup) const
   {
-    return map_fill(point, inf, sup, _render_width, _render_height);
+    return map_fill(point, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
   float artist::map_fit(float value, float inf, float sup) const
   {
-    return map_fit(value, inf, sup, _render_width, _render_height);
+    return map_fit(value, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
   ggo::pos2f artist::map_fit(const ggo::pos2f & point, float inf, float sup) const
   {
-    return map_fit(point, inf, sup, _render_width, _render_height);
+    return map_fit(point, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
   void artist::map_fit(ggo::rect_float & rect, float inf, float sup) const
   {
-    map_fit(rect, inf, sup, _render_width, _render_height);
+    map_fit(rect, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
   void artist::map_fit(ggo::disc_float & disc, float inf, float sup) const
   {
-    map_fit(disc, inf, sup, _render_width, _render_height);
+    map_fit(disc, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
   ggo::pos2f artist::get_center() const
   {
-    return ggo::pos2f(static_cast<float>(_render_width - 1) / 2, static_cast<float>(_render_height - 1) / 2);
+    return ggo::pos2f(static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2);
   }
 
   //////////////////////////////////////////////////////////////
   ggo::pos2f artist::horz_mirror(const ggo::pos2f & p, int render_height)
   {
-    return ggo::pos2f(p.get<0>(), render_height - p.get<1>());
+    return ggo::pos2f(p.x(), render_height - p.y());
   }
 
   //////////////////////////////////////////////////////////////
   ggo::pos2f artist::vert_mirror(const ggo::pos2f & p, int render_width)
   {
-    return ggo::pos2f(render_width - p.get<0>(), p.get<1>());
+    return ggo::pos2f(render_width - p.x(), p.y());
   }
 }
 

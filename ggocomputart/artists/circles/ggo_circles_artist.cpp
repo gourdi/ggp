@@ -59,7 +59,7 @@ std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist:
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::circles_artist::paint_disc(void * buffer, int width, int height, const ggo::pos2f & pos, float radius, const ggo::color_8u & color)
+void ggo::circles_artist::paint_disc(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos, float radius, const ggo::color_8u & color)
 {
   ggo::paint_shape<rgb_8u_yu, sampling_8x8>(buffer, width, height, 3 * width,
     disc_float(pos, radius + 0.002f * std::min(width, height)), color / static_cast<uint8_t>(4));
@@ -68,9 +68,9 @@ void ggo::circles_artist::paint_disc(void * buffer, int width, int height, const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::circles_artist::paint_disc(void * buffer, int width, int height, const colored_disc & colored_disc)
+void ggo::circles_artist::paint_disc(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const colored_disc & colored_disc)
 {
-  paint_disc(buffer, width, height, colored_disc._disc.center(), colored_disc._disc.radius(), colored_disc._color);
+  paint_disc(buffer, width, height, line_step, pbf, colored_disc._disc.center(), colored_disc._disc.radius(), colored_disc._color);
 }
 
 

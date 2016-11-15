@@ -5,17 +5,17 @@
 #include <ggo_morphology.h>
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::particle_emitter::create_particles(std::vector<ggo::toutouyoutou_anim_artist::particle> & particles)
+void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std::vector<ggo::toutouyoutou_animation_artist::particle> & particles)
 {
-  constexpr int PARTICLES_COUNT = 15;
+  constexpr int particles_count = 15;
   
   if (_counter >= 0 && _counter < 1000)
   {
-    for (int i = 0; i < PARTICLES_COUNT; ++i)
+    for (int i = 0; i < particles_count; ++i)
     {
-      ggo::toutouyoutou_anim_artist::particle particle;
+      ggo::toutouyoutou_animation_artist::particle particle;
       float x = _x;
-      float y = ggo::map(static_cast<float>(i), 0.f, static_cast<float>(PARTICLES_COUNT - 1), static_cast<float>(_y_inf), static_cast<float>(_y_sup)) * view_height;
+      float y = ggo::map(static_cast<float>(i), 0.f, static_cast<float>(particles_count - 1), static_cast<float>(_y_inf), static_cast<float>(_y_sup)) * view_height;
       particle._cur_pos = particle._prv_pos = ggo::pos2f(x, y);
       particle._speed = _speed;
       particle._prv_temperature = _temperature;
@@ -29,15 +29,15 @@ void ggo::toutouyoutou_anim_artist::particle_emitter::create_particles(std::vect
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_anim_artist::toutouyoutou_anim_artist(int render_width, int render_height)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-static_background_animation_artist_abc(render_width, render_height),
+static_background_animation_artist_abc(width, height, line_step, pbf),
 _grid(ggo::to<int>(view_height / influence_radius), ggo::to<int>(view_height / influence_radius)) // Grid size is the same as the discard radius.
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::init_sub()
+void ggo::toutouyoutou_animation_artist::init_sub()
 {
   _particles.clear();
 
@@ -82,14 +82,14 @@ void ggo::toutouyoutou_anim_artist::init_sub()
 }
 
 ////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_anim_artist::init_bkgd_buffer(void * bkgd_buffer) const
+void ggo::toutouyoutou_animation_artist::init_bkgd_buffer(void * bkgd_buffer) const
 {
-  ggo::fill_gaussian<ggo::rgb_8u_yu>(bkgd_buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
-    static_cast<float>(get_render_min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
+  ggo::fill_gaussian<ggo::rgb_8u_yu>(bkgd_buffer, get_width(), get_height(), get_line_step(),
+    static_cast<float>(get_min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::toutouyoutou_anim_artist::render_next_frame_bkgd(void * buffer, int frame_index)
+bool ggo::toutouyoutou_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
 {
   if (frame_index > 1000)
   {
@@ -122,7 +122,7 @@ bool ggo::toutouyoutou_anim_artist::render_next_frame_bkgd(void * buffer, int fr
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::calculate_pressure()
+void ggo::toutouyoutou_animation_artist::calculate_pressure()
 {
   for (auto & particle1 : _particles)
   {
@@ -158,7 +158,7 @@ void ggo::toutouyoutou_anim_artist::calculate_pressure()
           density += _particle_mass * influence_pow3 * norm;
           near_density += _particle_mass * influence_pow4 * near_norm;
   
-          ggo::toutouyoutou_anim_artist::particle_neighbour neighbour;
+          ggo::toutouyoutou_animation_artist::particle_neighbour neighbour;
           neighbour._particle = particle2;
           neighbour._dist = dist;
           neighbour._influence = influence;
@@ -174,7 +174,7 @@ void ggo::toutouyoutou_anim_artist::calculate_pressure()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::calculate_relaxed_positions()
+void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
 {
   for (auto & particle : _particles)
   {
@@ -213,7 +213,7 @@ void ggo::toutouyoutou_anim_artist::calculate_relaxed_positions()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::move_to_relaxed_positions()
+void ggo::toutouyoutou_animation_artist::move_to_relaxed_positions()
 {
   for (auto & particle : _particles)
   {
@@ -223,7 +223,7 @@ void ggo::toutouyoutou_anim_artist::move_to_relaxed_positions()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::advance()
+void ggo::toutouyoutou_animation_artist::advance()
 {
   for (auto & particle : _particles)
   {
@@ -233,7 +233,7 @@ void ggo::toutouyoutou_anim_artist::advance()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::update_grid()
+void ggo::toutouyoutou_animation_artist::update_grid()
 {
   // Clear grid.
   for (auto & particles : _grid)
@@ -255,7 +255,7 @@ void ggo::toutouyoutou_anim_artist::update_grid()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::apply_body_forces()
+void ggo::toutouyoutou_animation_artist::apply_body_forces()
 {
   for (auto & particle : _particles)
   {
@@ -264,7 +264,7 @@ void ggo::toutouyoutou_anim_artist::apply_body_forces()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::resolve_collisions()
+void ggo::toutouyoutou_animation_artist::resolve_collisions()
 {
   for (auto & particle : _particles)
   {
@@ -299,7 +299,7 @@ void ggo::toutouyoutou_anim_artist::resolve_collisions()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::apply_temperature()
+void ggo::toutouyoutou_animation_artist::apply_temperature()
 {
   for (auto & particle : _particles)
   {
@@ -340,16 +340,16 @@ void ggo::toutouyoutou_anim_artist::apply_temperature()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_anim_artist::paint_flow(void * buffer) const
+void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
 {
   constexpr float potential_threshold = 0.8f;
   
-  ggo::array_uint8 sample_buffer(get_render_width() * get_render_height());
+  ggo::array_uint8 sample_buffer(get_width() * get_height());
 
   uint8_t * ptr = sample_buffer.data();
-  for (int render_y = 0; render_y < get_render_height(); ++render_y)
+  for (int render_y = 0; render_y < get_height(); ++render_y)
   {
-    for (int render_x = 0; render_x < get_render_width(); ++render_x)
+    for (int render_x = 0; render_x < get_width(); ++render_x)
     {
       ptr[0] = 0;
       if (get_potiental(render_x - 3 / 8.f, render_y - 3 / 8.f) > potential_threshold) { ptr[0] += 1; }
@@ -402,9 +402,9 @@ void ggo::toutouyoutou_anim_artist::paint_flow(void * buffer) const
   }
   
   // Border.
-  //ggo::array_uint8 border_buffer(get_render_width() * get_render_height());
-  //float radius = 0.0025f * get_render_min_size();
-  //ggo::dilate_circle_kernel(sample_buffer, border_buffer, get_render_width(), get_render_height(), radius);
+  //ggo::array_uint8 border_buffer(get_width() * get_height());
+  //float radius = 0.0025f * get_min_size();
+  //ggo::dilate_circle_kernel(sample_buffer, border_buffer, get_width(), get_height(), radius);
   
   //for (int i = 0; i < border_buffer.get_size(); ++i)
   //{   
@@ -418,9 +418,9 @@ void ggo::toutouyoutou_anim_artist::paint_flow(void * buffer) const
   
   // Inside.
   uint8_t * ptr_sample = sample_buffer.data();
-  for (int render_y = 0; render_y < get_render_height(); ++render_y)
+  for (int render_y = 0; render_y < get_height(); ++render_y)
   {
-    for (int render_x = 0; render_x < get_render_width(); ++render_x)
+    for (int render_x = 0; render_x < get_width(); ++render_x)
     {
       if (ptr_sample[0] > 0)
       {
@@ -437,7 +437,7 @@ void ggo::toutouyoutou_anim_artist::paint_flow(void * buffer) const
         float val = temperature * _val1 + (1 - temperature) * _val2;
         const ggo::color_8u color(ggo::from_hsv<ggo::color_8u>(hue, sat, val));
         
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,get_render_height(), 3 * get_render_width(), color);
+        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,get_height(), get_line_step(), color);
       }
       
       ptr_sample += 1;
@@ -448,21 +448,21 @@ void ggo::toutouyoutou_anim_artist::paint_flow(void * buffer) const
   for (const auto & particle : _particles)
   {
     ggo::pos2f center = particle._cur_pos;
-    center *= get_render_height() / view_height;
+    center *= get_height() / view_height;
     
-    ggo_disc_float disc(center, 0.001 * get_render_height());
+    ggo_disc_float disc(center, 0.001 * get_height());
     disc.center() = horz_mirror(disc.center());
 
-    ggo_paint_shape_rgb(buffer, get_render_width(), get_render_height(), disc, ggo::color::RED);
+    ggo_paint_shape_rgb(buffer, get_width(), get_height(), disc, ggo::color::RED);
   }
 #endif
 }
 
 //////////////////////////////////////////////////////////////
-float ggo::toutouyoutou_anim_artist::get_potiental(float render_x, float render_y) const
+float ggo::toutouyoutou_animation_artist::get_potiental(float render_x, float render_y) const
 {
-  float view_x = render_x * view_height / get_render_height();
-  float view_y = view_height - render_y * view_height / get_render_height();
+  float view_x = render_x * view_height / get_height();
+  float view_y = view_height - render_y * view_height / get_height();
   
   int grid_x = ggo::clamp(ggo::to<int>(view_x / influence_radius), 1, _grid.get_size<0>() - 2);
   int grid_y = ggo::clamp(ggo::to<int>(view_y / influence_radius), 1, _grid.get_size<1>() - 2);
@@ -491,10 +491,10 @@ float ggo::toutouyoutou_anim_artist::get_potiental(float render_x, float render_
 }
 
 //////////////////////////////////////////////////////////////
-float ggo::toutouyoutou_anim_artist::get_temperature(float render_x, float render_y) const
+float ggo::toutouyoutou_animation_artist::get_temperature(float render_x, float render_y) const
 {
-  float view_x = render_x * view_height / get_render_height();
-  float view_y = view_height - render_y * view_height / get_render_height();
+  float view_x = render_x * view_height / get_height();
+  float view_y = view_height - render_y * view_height / get_height();
   
   int grid_x = ggo::clamp(ggo::to<int>(view_x / influence_radius), 1, _grid.get_size<0>() - 2);
   int grid_y = ggo::clamp(ggo::to<int>(view_y / influence_radius), 1, _grid.get_size<1>() - 2);
@@ -532,7 +532,7 @@ float ggo::toutouyoutou_anim_artist::get_temperature(float render_x, float rende
 }
 
 //////////////////////////////////////////////////////////////
-float ggo::toutouyoutou_anim_artist::get_view_width() const
+float ggo::toutouyoutou_animation_artist::get_view_width() const
 {
-  return get_render_width() * view_height / static_cast<float>(get_render_height());
+  return get_width() * view_height / static_cast<float>(get_height());
 }

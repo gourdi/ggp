@@ -5,9 +5,9 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_artist::kanji_artist(int render_width, int render_height)
+ggo::kanji_artist::kanji_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(render_width, render_height)
+artist(width, height, line_step, pbf)
 {
 }
 
@@ -41,7 +41,7 @@ void ggo::kanji_artist::init()
 //////////////////////////////////////////////////////////////
 void ggo::kanji_artist::init_output_buffer(void * buffer) const
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
 }
 
 //////////////////////////////////////////////////////////////
@@ -105,14 +105,14 @@ bool ggo::kanji_artist::render_frame(void * buffer, int frame_index)
 	}
 
 	// Paint the particles.
-	float radius = 0.0005f * get_render_min_size();
+	float radius = 0.0005f * get_min_size();
 
 	for (const auto & particle :_particles)
 	{
 		ggo::pos2f render_pt = map_fit(particle._cur_pos, 0, 1);
 		
 		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+      buffer, get_width(), get_height(), get_line_step(), 
       ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f));
 	}
 	

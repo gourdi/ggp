@@ -46,16 +46,16 @@ double ggo::smoke_animation_artist::loop_array2d::loop_value(int x, int y) const
 }
 
 //////////////////////////////////////////////////////////////
-ggo::smoke_animation_artist::smoke_animation_artist(int render_width, int render_height)
+ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_velocity_x1(render_width + 1, render_height),
-_velocity_x2(render_width + 1, render_height),
-_velocity_y1(render_width, render_height + 1),
-_velocity_y2(render_width, render_height + 1),
-_density1(render_width, render_height),
-_density2(render_width, render_height),
-_bkgd_buffer(3 * render_width * render_height),
+animation_artist_abc(width, height, line_step, pbf),
+_velocity_x1(width + 1, height),
+_velocity_x2(width + 1, height),
+_velocity_y1(width, height + 1),
+_velocity_y2(width, height + 1),
+_density1(width, height),
+_density2(width, height),
+_bkgd_buffer(3 * width * height),
 _sources(4)
 {
 }
@@ -77,8 +77,8 @@ void ggo::smoke_animation_artist::init_sub()
 	_density_cur->fill(0);
 	_density_tmp->fill(0);
 	
-	double center_x = get_render_width() / 2;
-	double center_y = get_render_height() / 2;
+	double center_x = get_width() / 2;
+	double center_y = get_height() / 2;
 
 	for (int i = 0; i < _sources.get_count(); ++i)
 	{
@@ -89,31 +89,31 @@ void ggo::smoke_animation_artist::init_sub()
 		case 0:
 			// Top.
 			source._circle.center().get<0>() = center_x;
-			source._circle.center().get<1>() = center_y + 0.25 * get_render_min_size();
+			source._circle.center().get<1>() = center_y + 0.25 * get_min_size();
 			source._angle = -ggo::pi<float>() / 2;
 			break;
 		case 1:
 			// Right.
-			source._circle.center().get<0>() = center_x + 0.25 * get_render_min_size();
+			source._circle.center().get<0>() = center_x + 0.25 * get_min_size();
 			source._circle.center().get<1>() = center_y;
 			source._angle = ggo::pi<float>();
 			break;
 		case 2:
 			// Bottom.
 			source._circle.center().get<0>() = center_x;
-			source._circle.center().get<1>() = center_y - 0.25 * get_render_min_size();
+			source._circle.center().get<1>() = center_y - 0.25 * get_min_size();
 			source._angle = ggo::pi<float>() / 2;
 			break;
 		case 3:
 			// Left.
-			source._circle.center().get<0>() = center_x - 0.25 * get_render_min_size();
+			source._circle.center().get<0>() = center_x - 0.25 * get_min_size();
 			source._circle.center().get<1>() = center_y;
 			source._angle = 0;
 			break;
 		}
 	
-		source._circle.radius() = ggo::rand<float>(0.03f * get_render_min_size(), 0.04f * get_render_min_size());
-		source._speed = ggo::rand<float>(0.007f * get_render_min_size(), 0.009f * get_render_min_size());
+		source._circle.radius() = ggo::rand<float>(0.03f * get_min_size(), 0.04f * get_min_size());
+		source._speed = ggo::rand<float>(0.007f * get_min_size(), 0.009f * get_min_size());
 		source._timer1 = ggo::rand<int>(50, 100);
 		source._timer2 = ggo::rand<int>(50, 150);
 		source._angle_amplitude = ggo::rand<float>(ggo::pi<float>() / 4, ggo::pi<float>());
@@ -134,7 +134,7 @@ void ggo::smoke_animation_artist::init_sub()
 	const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
   
 	ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    _bkgd_buffer.data(), get_render_width(), get_render_height(), 3 * get_render_width(), color1, color2, color3, color4);
+    _bkgd_buffer.data(), get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
 }
 
 //////////////////////////////////////////////////////////////
@@ -166,9 +166,9 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 		}
 	}
 	
-	for (int y = 0; y < get_render_height(); ++y) 
+	for (int y = 0; y < get_height(); ++y) 
 	{
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
 			for (const auto & source : _sources)
 			{
@@ -193,9 +193,9 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	}
 	
 	// Horizontal self advection.
-	for (int y = 0; y < get_render_height(); ++y) 
+	for (int y = 0; y < get_height(); ++y) 
 	{
-		for (int x = 0; x < get_render_width() + 1; ++x)
+		for (int x = 0; x < get_width() + 1; ++x)
 		{
 			double velocity_x = _velocity_x_cur->loop_value(x, y);
 			double velocity_y = 0.25 * (_velocity_y_cur->loop_value(x, y) + _velocity_y_cur->loop_value(x, y + 1) + _velocity_y_cur->loop_value(x - 1, y) + _velocity_y_cur->loop_value(x - 1, y + 1));
@@ -207,9 +207,9 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	std::swap(_velocity_x_tmp, _velocity_x_cur);
 	
 	// Vertical self advection.
-	for (int y = 0; y < get_render_height() + 1; ++y) 
+	for (int y = 0; y < get_height() + 1; ++y) 
 	{
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
 			double velocity_x = 0.25 * (_velocity_x_cur->loop_value(x, y) + _velocity_x_cur->loop_value(x, y - 1) + _velocity_x_cur->loop_value(x + 1, y) + _velocity_x_cur->loop_value(x + 1, y - 1));
 			double velocity_y = _velocity_y_cur->loop_value(x, y);
@@ -221,14 +221,14 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	std::swap(_velocity_y_tmp, _velocity_y_cur);
 	
 	// Compute pressure.
-	ggo::smoke_animation_artist::loop_array2d divergence(get_render_width(), get_render_height());
-	ggo::smoke_animation_artist::loop_array2d pressure(get_render_width(), get_render_height());
-	for (int y = 0; y < get_render_height(); ++y)
+	ggo::smoke_animation_artist::loop_array2d divergence(get_width(), get_height());
+	ggo::smoke_animation_artist::loop_array2d pressure(get_width(), get_height());
+	for (int y = 0; y < get_height(); ++y)
 	{
-		for (int x = 0; x < get_render_width(); ++x) 
+		for (int x = 0; x < get_width(); ++x) 
 		{
 			divergence(x, y) = -(_velocity_x_cur->loop_value(x + 1, y) - _velocity_x_cur->loop_value(x, y) + _velocity_y_cur->loop_value(x, y + 1) - _velocity_y_cur->loop_value(x, y));
-			divergence(x, y) *= get_render_min_size();
+			divergence(x, y) *= get_min_size();
 			pressure(x, y) = 0;
 		}
 	}
@@ -236,9 +236,9 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	// Solve pressure with Gauss-Seidel.
 	for (int k = 0; k < 50; ++k) 
 	{
-		for (int y = 0; y < get_render_height(); ++y)
+		for (int y = 0; y < get_height(); ++y)
 		{
-			for (int x = 0; x < get_render_width(); ++x) 
+			for (int x = 0; x < get_width(); ++x) 
 			{
 				pressure(x, y) = (divergence(x, y) + pressure.loop_value(x - 1, y) + pressure.loop_value(x + 1, y) + pressure.loop_value(x, y - 1) + pressure.loop_value(x, y + 1)) / 4;
 			}
@@ -246,26 +246,26 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	}
 
 	// Apply pressure.
-	for (int y = 0; y < get_render_height(); ++y) 
+	for (int y = 0; y < get_height(); ++y) 
 	{
-		for (int x = 0; x < get_render_width() + 1; ++x)
+		for (int x = 0; x < get_width() + 1; ++x)
 		{
-			_velocity_x_cur->operator()(x, y) -= (pressure.loop_value(x, y) - pressure.loop_value(x - 1, y)) / get_render_min_size();
+			_velocity_x_cur->operator()(x, y) -= (pressure.loop_value(x, y) - pressure.loop_value(x - 1, y)) / get_min_size();
 		}
 	}
 	
-	for (int y = 0; y < get_render_height() + 1; ++y) 
+	for (int y = 0; y < get_height() + 1; ++y) 
 	{
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
-			_velocity_y_cur->operator()(x, y) -= (pressure.loop_value(x, y) - pressure.loop_value(x, y - 1)) / get_render_min_size();
+			_velocity_y_cur->operator()(x, y) -= (pressure.loop_value(x, y) - pressure.loop_value(x, y - 1)) / get_min_size();
 		}
 	}
 
 	// Density advection.
-	for (int y = 0; y < get_render_height(); ++y) 
+	for (int y = 0; y < get_height(); ++y) 
 	{
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
 			// Backtracking.
 			double velocity_x = 0.5 * (_velocity_x_cur->loop_value(x, y) + _velocity_x_cur->loop_value(x + 1, y));
@@ -280,22 +280,16 @@ bool ggo::smoke_animation_artist::render_next_frame_sub(void * buffer, int frame
 	std::swap(_density_cur, _density_tmp);
 	
 	// Draw the density.
-  uint8_t * buffer_ptr = static_cast<uint8_t *>(buffer);
-	const uint8_t * bkgd_ptr = _bkgd_buffer.data();
-	for (int y = 0; y < get_render_height(); ++y) 
-	{
-		for (int x = 0; x < get_render_width(); ++x)
-		{
-			double density = _density_cur->operator()(x, y);
+  for_each_pixel([&](int x, int y)
+  {
+    double density = _density_cur->operator()(x, y);
 
-			buffer_ptr[0] = ggo::to<uint8_t>(density * 255 * _smoke_color.r() + (1 - density) * bkgd_ptr[0]);
-			buffer_ptr[1] = ggo::to<uint8_t>(density * 255 * _smoke_color.g() + (1 - density) * bkgd_ptr[1]);
-			buffer_ptr[2] = ggo::to<uint8_t>(density * 255 * _smoke_color.b() + (1 - density) * bkgd_ptr[2]);
-			
-      buffer_ptr += 3;
-      bkgd_ptr += 3;
-		}
-	}
+    ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, get_height(), 3 * get_width());
+    c_8u.r() = ggo::to<uint8_t>(density * 255 * _smoke_color.r() + (1 - density) * c_8u.r());
+    c_8u.g() = ggo::to<uint8_t>(density * 255 * _smoke_color.g() + (1 - density) * c_8u.g());
+    c_8u.b() = ggo::to<uint8_t>(density * 255 * _smoke_color.b() + (1 - density) * c_8u.b());
+    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+  });
 
 	return true;
 }

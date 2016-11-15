@@ -5,9 +5,9 @@
 
 namespace
 {
-  const float NEAR = 1;
-  const float FAR = 15;
-  const int FOG_COUNT = 32;
+  const float near = 1;
+  const float far = 15;
+  const int fog_count = 32;
 }
 
 //////////////////////////////////////////////////////////////
@@ -62,15 +62,15 @@ bool ggo::rah_animation_artist::fog::is_alive(int width, int height, float focus
 // PARTICLE
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::particle::particle(int render_width, int render_height, float focus_dist)
+ggo::rah_animation_artist::particle::particle(int width, int height, float focus_dist)
 {
-  int min_size = std::min(render_width, render_height);
+  int min_size = std::min(width, height);
 
   _angle = ggo::rand<float>(0,  2 *ggo::pi<float>());
-  _dist = ggo::map<float>(std::sqrt(ggo::rand<float>()), 0, 1, NEAR, FAR);
+  _dist = ggo::map<float>(std::sqrt(ggo::rand<float>()), 0, 1, near, far);
   float total_radius = disc_radius(min_size) + blur_radius(min_size, focus_dist);
   _pos.x() = -total_radius;
-  _pos.y() = ggo::rand<float>(0, static_cast<float>(render_height));
+  _pos.y() = ggo::rand<float>(0, static_cast<float>(height));
   _color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), 1, 1);
 }
 
@@ -153,9 +153,9 @@ bool ggo::rah_animation_artist::particle::is_alive(int width, int height, float 
 // PARTICLE 1
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::particle1::particle1(int render_width, int render_height, float focus_dist)
+ggo::rah_animation_artist::particle1::particle1(int width, int height, float focus_dist)
 :
-particle(render_width, render_height, focus_dist),
+particle(width, height, focus_dist),
 _polygon(std::make_shared<ggo::polygon2d_float>())
 {    
   int points_count = ggo::rand<int>(3, 6);
@@ -198,9 +198,9 @@ void ggo::rah_animation_artist::particle1::fill_multi_shapes(ggo::multi_shape_fl
 // PARTICLE 2
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::particle2::particle2(int render_width, int render_height, float focus_dist)
+ggo::rah_animation_artist::particle2::particle2(int width, int height, float focus_dist)
 :
-particle(render_width, render_height, focus_dist),
+particle(width, height, focus_dist),
 _point_count(ggo::rand<int>(5, 8))
 {
 }
@@ -232,9 +232,9 @@ void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_fl
 // PARTICLE 3
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::particle3::particle3(int render_width, int render_height, float focus_dist)
+ggo::rah_animation_artist::particle3::particle3(int width, int height, float focus_dist)
 :
-particle(render_width, render_height, focus_dist)
+particle(width, height, focus_dist)
 {
 }
 
@@ -285,9 +285,9 @@ void ggo::rah_animation_artist::particle3::fill_multi_shapes(ggo::multi_shape_fl
 }
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::particle4::particle4(int render_width, int render_height, float focus_dist)
+ggo::rah_animation_artist::particle4::particle4(int width, int height, float focus_dist)
 :
-particle(render_width, render_height, focus_dist)
+particle(width, height, focus_dist)
 {
 }
 
@@ -341,12 +341,12 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
 // ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::rah_animation_artist(int render_width, int render_height)
+ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
-  _focus_dist_interpolator._near = NEAR;
-  _focus_dist_interpolator._far = FAR;
+  _focus_dist_interpolator._near = near;
+  _focus_dist_interpolator._far = far;
 
   _sort_func = [](const rah_item_ptr & item1, const rah_item_ptr & item2)
   {
@@ -360,10 +360,10 @@ void ggo::rah_animation_artist::init_sub()
   _items.clear();
   
   // Create fog planes.
-  for (int i = 0; i < FOG_COUNT; ++i)
+  for (int i = 0; i < fog_count; ++i)
   {
-    auto fog_item = std::make_shared<fog>(get_render_width(), get_render_height());
-    fog_item->_dist = ggo::map(static_cast<float>(i + 1), 0.f, 31.f, NEAR, FAR);
+    auto fog_item = std::make_shared<fog>(get_width(), get_height());
+    fog_item->_dist = ggo::map(static_cast<float>(i + 1), 0.f, 31.f, near, far);
     
     _items.push_back(fog_item);
   }
@@ -379,25 +379,25 @@ bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_i
   // Paint background.
   if (buffer != nullptr)
   {    
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::white<ggo::color_8u>());
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
   }
 
   // Update and paint items (far from near).
   for (auto & item : _items)
   {
-    item->update(get_render_min_size());
+    item->update(get_min_size());
   }
 
   ggo::remove_if(_items, [&](const rah_item_ptr & item)
   {
-    return item->is_alive(get_render_width(), get_render_height(), focus_dist) == false;
+    return item->is_alive(get_width(), get_height(), focus_dist) == false;
   });
 
   if (buffer != nullptr)
   {
     for (const auto & item : _items)
     {
-      item->paint(buffer, get_render_width(), get_render_height(), focus_dist);
+      item->paint(buffer, get_width(), get_height(), focus_dist);
     }
   }
 
@@ -410,7 +410,7 @@ bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_i
     for (int i = 0; i < create_count; ++i)
     {
       // Sorted insertion.
-      auto particle = create_particle(focus_dist, get_render_width(), get_render_height());
+      auto particle = create_particle(focus_dist, get_width(), get_height());
       _items.insert(std::upper_bound(_items.begin(), _items.end(), particle, _sort_func), particle);
     }
 
@@ -425,24 +425,24 @@ bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_i
 
 //////////////////////////////////////////////////////////////
 std::shared_ptr<ggo::rah_animation_artist::particle> ggo::rah_animation_artist::create_particle(float focus_dist,
-                                                                                                int render_width,
-                                                                                                int render_height)
+                                                                                                int width,
+                                                                                                int height)
 {
   std::shared_ptr<particle> particle;
   
   switch (ggo::rand<int>(0, 3))
   {
   case 0:
-    particle = std::make_shared<particle1>(render_width, render_height, focus_dist);
+    particle = std::make_shared<particle1>(width, height, focus_dist);
     break;
   case 1:
-    particle = std::make_shared<particle2>(render_width, render_height, focus_dist);
+    particle = std::make_shared<particle2>(width, height, focus_dist);
     break;
   case 2:
-    particle = std::make_shared<particle3>(render_width, render_height, focus_dist);
+    particle = std::make_shared<particle3>(width, height, focus_dist);
     break;
   case 3:
-    particle = std::make_shared<particle4>(render_width, render_height, focus_dist);
+    particle = std::make_shared<particle4>(width, height, focus_dist);
     break;
   }
   

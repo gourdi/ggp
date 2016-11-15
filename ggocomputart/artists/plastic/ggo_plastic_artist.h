@@ -21,7 +21,7 @@ namespace ggo
 
   public:
 
-    plastic_artist(int render_width, int render_height);
+          plastic_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const;
 

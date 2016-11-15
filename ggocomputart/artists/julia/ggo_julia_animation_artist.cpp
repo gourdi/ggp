@@ -1,10 +1,10 @@
 #include "ggo_julia_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::julia_animation_artist::julia_animation_artist(int render_width, int render_height)
+ggo::julia_animation_artist::julia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_artist(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_artist(width, height, line_step, pbf)
 {
 	
 }
@@ -20,7 +20,6 @@ void ggo::julia_animation_artist::init_sub()
 bool ggo::julia_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
   const int frames_count = 500;
-
 
 	if (frame_index > frames_count)
 	{

@@ -1,9 +1,9 @@
 #include "ggo_crystal_bitmap_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::crystal_bitmap_artist::crystal_bitmap_artist(int render_width, int render_height)
+ggo::crystal_bitmap_artist::crystal_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -11,7 +11,7 @@ bitmap_artist_abc(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo::crystal_bitmap_artist::render_bitmap(void * buffer) const
 {
-	ggo::crystal_artist artist(get_render_width(), get_render_height());
+	ggo::crystal_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 	
 	ggo::color_8u bkgd_colors[4];
 	bkgd_colors[0] = ggo::from_hsv<color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f));

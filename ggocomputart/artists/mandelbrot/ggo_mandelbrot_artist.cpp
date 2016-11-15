@@ -148,9 +148,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mandelbrot_artist::mandelbrot_artist(int render_width, int render_height)
+ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 	
@@ -163,27 +163,25 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
   double range;
 	std::tie(center, range) = setup_block(static_cast<int>(palette.size()));
 
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
-
-	for (int y = 0; y < get_render_height(); ++y)
+	for (int y = 0; y < get_height(); ++y)
 	{
-		double range_x = get_render_width() > get_render_height() ? range * get_render_width() / get_render_height() : range;
-		double range_y = get_render_width() > get_render_height() ? range : range * get_render_height() / get_render_width();
+		double range_x = get_width() > get_height() ? range * get_width() / get_height() : range;
+		double range_y = get_width() > get_height() ? range : range * get_height() / get_width();
 
-		double y1 = ggo::map<double>(y - 3 / 8., 0, get_render_height(), center.imag() - range_y, center.imag() + range_y);
-		double y2 = ggo::map<double>(y - 1 / 8., 0, get_render_height(), center.imag() - range_y, center.imag() + range_y);
-		double y3 = ggo::map<double>(y + 1 / 8., 0, get_render_height(), center.imag() - range_y, center.imag() + range_y);
-		double y4 = ggo::map<double>(y + 3 / 8., 0, get_render_height(), center.imag() - range_y, center.imag() + range_y);
+		double y1 = ggo::map<double>(y - 3 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
+		double y2 = ggo::map<double>(y - 1 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
+		double y3 = ggo::map<double>(y + 1 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
+		double y4 = ggo::map<double>(y + 3 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
 	
 		int iterations[16];
 
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
 			// Iterate and sample.
-			double x1 = ggo::map<double>(x - 3 / 8., 0, get_render_width(), center.real() - range_x, center.real() + range_x);
-			double x2 = ggo::map<double>(x - 1 / 8., 0, get_render_width(), center.real() - range_x, center.real() + range_x);
-			double x3 = ggo::map<double>(x + 1 / 8., 0, get_render_width(), center.real() - range_x, center.real() + range_x);
-			double x4 = ggo::map<double>(x + 3 / 8., 0, get_render_width(), center.real() - range_x, center.real() + range_x);
+			double x1 = ggo::map<double>(x - 3 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
+			double x2 = ggo::map<double>(x - 1 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
+			double x3 = ggo::map<double>(x + 1 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
+			double x4 = ggo::map<double>(x + 3 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
 		
 			iterations[0] = iterate(x1, y1, static_cast<int>(palette.size()));
 			iterations[1] = iterate(x1, y4, static_cast<int>(palette.size()));
@@ -194,9 +192,7 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
 			{
 				int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
-				ptr[0] = palette[index].r();
-				ptr[1] = palette[index].g();
-				ptr[2] = palette[index].b();
+        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), palette[index]);
 			}
 			else
 			{
@@ -226,13 +222,10 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
           g += palette[index].g();
           b += palette[index].b();
 				}
-			
-				ptr[0] = (r + 8) / 16;
-				ptr[1] = (g + 8) / 16;
-				ptr[2] = (b + 8) / 16;
-			}
 
-      ptr += 3;
+        ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
+        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+			}
 		}
 	}
 }

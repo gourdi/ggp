@@ -12,9 +12,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_bitmap_artist::hexa_bitmap_artist(int render_width, int render_height)
+ggo::hexa_bitmap_artist::hexa_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -23,9 +23,9 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 {
   // The camera.
 #ifdef GGO_PREVIEW
-  ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height());
 #else
-  ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
+  ggo::multi_sampling_point_camera camera(get_width(), get_height());
   camera.set_depth_of_field_factor(3);
   camera.set_depth_of_field(375);
 #endif
@@ -47,8 +47,6 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  ggo::hexa_artist::render(buffer, get_render_width(), get_render_height(),
-                           hexa_infos,
-                           colors.first, colors.second,
-                           lights_pos, ggo::color_32f(ggo::rand<float>(0, 0.25)), renderer);
+  ggo::hexa_artist::render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(),
+                           hexa_infos, colors.first, colors.second, lights_pos, ggo::color_32f(ggo::rand<float>(0, 0.25)), renderer);
 }

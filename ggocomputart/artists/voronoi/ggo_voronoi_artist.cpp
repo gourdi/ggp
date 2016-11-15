@@ -252,7 +252,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void paint_voronoi_map(void * buffer, int width, int height,
+  void paint_voronoi_map(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                          const ggo::tree<voronoi_node> & voronoi_tree,
                          const ggo::array<const ggo::tree<voronoi_node> *, 2> & voronoi_map, 
                          int scale_factor)
@@ -283,12 +283,12 @@ namespace
         {
           float opacity = downsampled(x, y);
 
-          auto pixel_color = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+          auto pixel_color = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step);
 
           ggo::alpha_blender<ggo::color_8u> blender(opacity);
           pixel_color = blender(x, y, pixel_color, voronoi_leaf.data()._color);
 
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, pixel_color);
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, pixel_color);
         }
       }
     };
@@ -298,9 +298,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::voronoi_artist::voronoi_artist(int render_width, int render_height)
+ggo::voronoi_artist::voronoi_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-ggo::bitmap_artist_abc(render_width, render_height)
+ggo::bitmap_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -310,8 +310,8 @@ void ggo::voronoi_artist::render_bitmap(void * buffer) const
 {
   int scale_factor = 4;
 
-  auto voronoi_tree = create_voronoi_tree(scale_factor * get_render_width(), scale_factor * get_render_height());
-  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * get_render_width(), scale_factor * get_render_height(), scale_factor);
+  auto voronoi_tree = create_voronoi_tree(scale_factor * get_width(), scale_factor * get_height());
+  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * get_width(), scale_factor * get_height(), scale_factor);
 
-  paint_voronoi_map(buffer, get_render_width(), get_render_height(), voronoi_tree, voronoi_map, scale_factor);
+  paint_voronoi_map(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, voronoi_tree, voronoi_map, scale_factor);
 }

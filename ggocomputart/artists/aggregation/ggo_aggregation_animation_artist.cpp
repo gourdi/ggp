@@ -1,10 +1,10 @@
 #include "ggo_aggregation_animation_artist.h"
 
 ////////////////////////////////////////////////////////
-ggo::aggregation_animation_artist::aggregation_animation_artist(int render_width, int render_height)
+ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_artist(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_artist(width, height, line_step, pbf)
 {
 }
 

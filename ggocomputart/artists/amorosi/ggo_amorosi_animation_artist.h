@@ -9,11 +9,11 @@
 
 namespace ggo
 {
-  class amorosi_animation_artist : public static_background_animation_artist_abc
+  class amorosi_animation_artist : public animation_artist_abc
   {
   public:
 
-    amorosi_animation_artist(int render_width, int render_height);
+    amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     struct opacity_point
     {
@@ -37,12 +37,12 @@ namespace ggo
     {
     public:
 
-      curve(int render_width, int render_height, const ggo::color_8u & color);
+            curve(int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::color_8u & color);
 
-      void update();
-      void paint(void * buffer) const;
-           
-      bool is_dead() const;
+      void  update();
+      void  paint(void * buffer) const;
+            
+      bool  is_dead() const;
 
     private:
 
@@ -62,8 +62,7 @@ namespace ggo
   private:
 
     void init_sub() override;
-    void init_bkgd_buffer(void * buffer) const override;
-    bool render_next_frame_bkgd(void * buffer, int frame_index) override;
+    bool render_next_frame_sub(void * buffer, int frame_index) override;
 
     ggo::color_8u get_color() const;
 

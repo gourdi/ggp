@@ -4,9 +4,9 @@
 #include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int render_width, int render_height)
+ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -16,9 +16,9 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
 {
 	float hue;
 	
-  auto multi_squares = ggo::filling_squares_artist::build_squares(get_render_width(), get_render_height(), hue);
+  auto multi_squares = ggo::filling_squares_artist::build_squares(get_width(), get_height(), hue);
 	
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>()));
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>()));
 
 	for (const auto & multi_square : multi_squares)
 	{
@@ -37,7 +37,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
       square.add_point(left, top);
 
 			ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>
-        (buffer, get_render_width(), get_render_height(), 3 * get_render_width(), square, colored_square._color);
+        (buffer, get_width(), get_height(), get_line_step(), square, colored_square._color);
 		}
 	}
 }

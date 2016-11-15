@@ -2,7 +2,7 @@
 #include <ggo_kernel.h>
 
 //////////////////////////////////////////////////////////////
-bool ggo_animate_abc::update(void * buffer, int width, int height)
+bool ggo::animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 {
   if (_start_offset > 0)
   {
@@ -11,20 +11,20 @@ bool ggo_animate_abc::update(void * buffer, int width, int height)
   }
   else
   {
-    return update(buffer, width, height, _counter++);
+    return update(buffer, width, height, line_step, pbf, _counter++);
   }
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_position_animate_abc::update(void * buffer, int width, int height, int counter)
+bool ggo::position_animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter)
 {
-  return update(buffer, width, height, counter, _pos);
+  return update(buffer, width, height, line_step, pbf, counter, _pos);
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo_path_animate_abc::update(void * buffer, int width, int height, int counter)
+bool ggo::path_animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter)
 {
   GGO_ASSERT(_path != nullptr);
 
-  return update(buffer, width, height, counter, _pos + _path->get_pos(counter));
+  return update(buffer, width, height, line_step, pbf, counter, _pos + _path->get_pos(counter));
 }

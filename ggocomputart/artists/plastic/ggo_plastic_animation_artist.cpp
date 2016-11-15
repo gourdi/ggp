@@ -1,9 +1,9 @@
 #include "ggo_plastic_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_animation_artist::plastic_animation_artist(int render_width, int render_height)
+ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -56,7 +56,7 @@ bool ggo::plastic_animation_artist::render_next_frame_sub(void * buffer, int fra
 		anim_params._angle += anim_params._dangle;
 	}
 	
-	ggo::plastic_artist artist(get_render_width(), get_render_height());
+	ggo::plastic_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 	artist.render(buffer, bitmap_params, _color, _altitude_factor);
 
 	return true;

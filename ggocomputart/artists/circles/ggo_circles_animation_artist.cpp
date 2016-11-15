@@ -5,19 +5,19 @@
 #include <ggo_buffer_fill.h>
 
 //////////////////////////////////////////////////////////////
-bool ggo::circles_animation_artist::circle_animate::update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos)
+bool ggo::circles_animation_artist::circle_animate::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
 {    
   float radius = _radius * (1 - std::cos(_bounding_factor * counter) * std::exp(-_attenuation_factor * counter));
   
-  circles_artist::paint_disc(buffer, width, height, pos, radius, _color);
+  circles_artist::paint_disc(buffer, width, height, line_step, pbf, pos, radius, _color);
 
   return true;
 }
 
 //////////////////////////////////////////////////////////////
-ggo::circles_animation_artist::circles_animation_artist(int render_width, int render_height)
+ggo::circles_animation_artist::circles_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -27,7 +27,7 @@ void ggo::circles_animation_artist::init_sub()
 {
   _bkgd_color.set(rand<uint8_t>(), rand<uint8_t>(), rand<uint8_t>());
 
-  auto all_discs = circles_artist::generate_discs(get_render_width(), get_render_height());
+  auto all_discs = circles_artist::generate_discs(get_width(), get_height());
 
   int start_offset = 0;
   for (const auto & discs : all_discs)
@@ -60,9 +60,9 @@ bool ggo::circles_animation_artist::render_next_frame_sub(void * buffer, int fra
     return false;
   }
 
-  ggo::fill_solid<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), _bkgd_color);
+  ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color);
 
-  _animator.update(buffer, get_render_width(), get_render_height());
+  _animator.update(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
 	return true;
 }

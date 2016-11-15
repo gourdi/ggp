@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          smoke_animation_artist(int render_width, int render_height);
+          smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	init_sub() override;
     bool	render_next_frame_sub(void * buffer, int frame_index) override;

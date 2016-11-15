@@ -30,7 +30,7 @@ GGO_TEST(cylinder, ray_outside)
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("cylinder_outside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
@@ -57,7 +57,7 @@ GGO_TEST(cylinder, ray_inside)
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("cylinder_inside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 

@@ -11,13 +11,13 @@ namespace ggo
   {
   public:
 
-    static bitmap_artist_abc * create(ggo::bitmap_artist_id artist_id, int render_width, int render_height);
+    static bitmap_artist_abc * create(ggo::bitmap_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
-    virtual	void  render_bitmap(void * buffer) const = 0;
+    virtual	void render_bitmap(void * buffer) const = 0;
 
   protected:
 
-                  bitmap_artist_abc(int render_width, int render_height);
+                  bitmap_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
                   bitmap_artist_abc() = delete;
   };
 }

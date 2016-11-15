@@ -12,23 +12,21 @@ namespace ggo
   {
   public:
 
-    filling_squares_animation_artist(int render_width, int render_height);
+    filling_squares_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    class animated_square : public ggo_animate_abc
+    class animated_square : public ggo::animate_abc
     {
     public:
 
-      animated_square(int start_offset) : ggo_animate_abc(start_offset) {};
+            animated_square(int start_offset) : ggo::animate_abc(start_offset) {};
 
-      bool update(void * buffer, int width, int height, int counter) override;
+      bool  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter) override;
 
       ggo::pos2f  						                    _pos;
       float											                  _angle;
       ggo::filling_squares_artist::colored_square _colored_square;
-
-      static  bool bkgd_rendering_allowed;
     };
 
     void	init_sub() override;
@@ -36,7 +34,7 @@ namespace ggo
 
   private:
 
-    ggo_animator  _animator;
+    ggo::animator _animator;
     float         _hue;
     ggo::color_8u _bkgd_color;
   };

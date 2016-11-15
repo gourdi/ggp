@@ -5,9 +5,9 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::lagaude_animation_artist(int render_width, int render_height)
+ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -58,16 +58,16 @@ bool ggo::lagaude_animation_artist::render_next_frame_sub(void * buffer, int fra
 	}
 
 	// Render background.
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::white<ggo::color_8u>());
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
 
 	for (auto & bkgd_disc : _bkgd_discs)
 	{
-		float x = get_render_width() * bkgd_disc._pos.x();
-		float y = get_render_height() * bkgd_disc._pos.y();
-		float radius = get_render_min_size() * bkgd_disc._radius;
+		float x = get_width() * bkgd_disc._pos.x();
+		float y = get_height() * bkgd_disc._pos.y();
+		float radius = get_min_size() * bkgd_disc._radius;
 		
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      buffer, get_width(), get_height(), get_line_step(),
       ggo::disc_float(x, y, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
 			
 		bkgd_disc._pos += bkgd_disc._vel;
@@ -78,12 +78,12 @@ bool ggo::lagaude_animation_artist::render_next_frame_sub(void * buffer, int fra
 	{
 		float scale = ggo::rand<float>(0.5, 1);
 		ggo::pos2f pos(ggo::rand<float>(), ggo::rand<float>());
-		ggo_path_abc * path = new ggo_linear_path(scale * ggo::rand<float>(0.002f, 0.005f), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+		ggo::path_abc * path = new ggo::linear_path(scale * ggo::rand<float>(0.002f, 0.005f), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 		
 		insert_scale_animator(new ggo::lagaude_animation_artist::seed(pos, path, scale, _hue));
 	}
 
-	_animator.update(buffer, get_render_width(), get_render_height());
+	_animator.update(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
 	return true;
 }
@@ -120,7 +120,7 @@ void ggo::lagaude_animation_artist::angle_generator::get_random_data(float & dat
 }
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::seed::seed(const ggo::pos2f & pos, ggo_path_abc * path, float scale, float hue)
+ggo::lagaude_animation_artist::seed::seed(const ggo::pos2f & pos, ggo::path_abc * path, float scale, float hue)
 :
 scale_animate_abc(pos, path, scale)
 {
@@ -131,7 +131,7 @@ scale_animate_abc(pos, path, scale)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::seed::update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos)
+bool ggo::lagaude_animation_artist::seed::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
 {
 	// Create the particles if not dead.
 	float opacity = 1;
@@ -146,7 +146,7 @@ bool ggo::lagaude_animation_artist::seed::update(void * buffer, int width, int h
 		{
 			float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.get_count();
 
-			auto * particle = new ggo::lagaude_animation_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo_linear_path(0.02f * _scale, angle));
+			auto * particle = new ggo::lagaude_animation_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo::linear_path(0.02f * _scale, angle));
 			particle->_angle = angle;
 			particle->_dangle = _dangle;
 			particle->_radius = 0.025f * _scale;
@@ -158,20 +158,20 @@ bool ggo::lagaude_animation_artist::seed::update(void * buffer, int width, int h
 		}
 	}
 
-	_particles_animator.update(buffer, width, height);
+	_particles_animator.update(buffer, width, height, line_step, pbf);
 
 	return !_particles_animator.is_empty();
 }
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::particle::particle(const ggo::pos2f & pos, ggo_linear_path * path)
+ggo::lagaude_animation_artist::particle::particle(const ggo::pos2f & pos, ggo::linear_path * path)
 :
-ggo_path_animate_abc(pos, path)
+ggo::path_animate_abc(pos, path)
 {
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::particle::update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos)
+bool ggo::lagaude_animation_artist::particle::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
 {
 	ggo::pos2f p1 = map_fit(ggo::from_polar(_angle, _radius), 0, 1, width, height);
 	ggo::pos2f p2 = map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0, 1, width, height);
@@ -199,7 +199,7 @@ bool ggo::lagaude_animation_artist::particle::update(void * buffer, int width, i
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::dust::update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos)
+bool ggo::lagaude_animation_artist::dust::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
 {
 	if (pos.x() > 1.1)
   {

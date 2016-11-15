@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    plastic_bitmap_artist(int render_width, int render_height);
+          plastic_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	render_bitmap(void * buffer) const override;
   };

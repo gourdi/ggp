@@ -2,10 +2,10 @@
 #include <ggo_antialiasing_renderer.h>
 
 //////////////////////////////////////////////////////////////
-ggo::metaballs_animation_artist::metaballs_animation_artist(int render_width, int render_height)
+ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_camera(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_camera(width, height)
 {
 	
 }
@@ -14,7 +14,6 @@ _camera(render_width, render_height)
 void ggo::metaballs_animation_artist::init_sub()
 {
   const float ball_size = 2;
-
 
 	for (int i = 0; i < 200; ++i)
 	{
@@ -76,7 +75,7 @@ bool ggo::metaballs_animation_artist::render_next_frame_sub(void * buffer, int f
 		}
 
     ggo::antialiasing_renderer renderer(_camera);
-		ggo::metaballs_artist artist(get_render_width(), get_render_height());
+		ggo::metaballs_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 		artist.render_bitmap(buffer, renderer, _params);
 		
 		return true;

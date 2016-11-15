@@ -1,11 +1,12 @@
 #include "ggo_ifs_artist.h"
 #include <ggo_gaussian_blur2d.h>
+#include <ggo_blender.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_artist::ifs_artist(int render_width, int render_height)
+ggo::ifs_artist::ifs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(render_width, render_height)
+artist(width, height, line_step, pbf)
 {
 }
 
@@ -26,7 +27,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 {
 	std::cout << "Computing points" << std::endl;
 
-	ggo::array_float accumul_buffer(get_render_width() * get_render_height());
+	ggo::array_float accumul_buffer(get_width() * get_height());
 	accumul_buffer.fill(0);
 
 	float cos1 = std::cos(angle1);
@@ -34,7 +35,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 	float cos2 = std::cos(angle2);
 	float sin2 = std::sin(angle2);
 
-	int counter_max = get_render_min_size() * get_render_min_size();
+	int counter_max = get_min_size() * get_min_size();
 	for (int counter= 0; counter < counter_max; ++counter)
 	{
 		// Get a starting point
@@ -63,10 +64,10 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 
 			int x_i = ggo::to<int>(render_point.x());
 			int y_i = ggo::to<int>(render_point.y());
-			int index = y_i * get_render_width() + x_i;
+			int index = y_i * get_width() + x_i;
 
-			if ((x_i >= 0) && (x_i < get_render_width()) &&
-				(y_i >= 0) && (y_i < get_render_height()))
+			if ((x_i >= 0) && (x_i < get_width()) &&
+				(y_i >= 0) && (y_i < get_height()))
 			{
 				accumul_buffer(index) = std::min(1.f, accumul_buffer(index) + 0.00015f);
 			}
@@ -78,7 +79,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 	
 	ggo::array_float shadow_buffer(accumul_buffer);
 	ggo::gaussian_blur2d_mirror<ggo::y_32f_yu>(
-    shadow_buffer.data(), get_render_width(), get_render_height(), sizeof(float) * get_render_width(), 0.4f * get_render_min_size());
+    shadow_buffer.data(), get_width(), get_height(), sizeof(float) * get_width(), 0.4f * get_min_size());
 	paint_buffer(buffer, 255, shadow_buffer);
 
 	// Render the shape.
@@ -90,21 +91,21 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 //////////////////////////////////////////////////////////////
 void ggo::ifs_artist::paint_buffer(void * buffer, uint8_t color, const ggo::array_float & accumul_buffer) const
 {
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
+  const float * ptr_src = accumul_buffer.data();
 
-	for (int i = 0; i < get_render_width() * get_render_height(); ++i)
+	for (int y = 0; y < get_height(); ++y)
 	{
-		float alpha = accumul_buffer(i);
+    void * ptr_dst = ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer, y, get_height(), get_line_step());
 
-		float r = (1 - alpha) * ptr[0] + alpha * color;
-		float g = (1 - alpha) * ptr[1] + alpha * color;
-		float b = (1 - alpha) * ptr[2] + alpha * color;
+    for (int x = 0; x < get_width(); ++x)
+    {
+      ggo::alpha_blender_rgb8u blender(*ptr_src);
+      ggo::color_8u c_8u = blender(x, y, ggo::read_pixel<ggo::rgb_8u_yu>(ptr_dst), ggo::color_8u(color, color, color));
+      ggo::write_pixel<ggo::rgb_8u_yu>(ptr_dst, c_8u);
 
-    ptr[0] = ggo::to<uint8_t>(r);
-    ptr[1] = ggo::to<uint8_t>(g);
-    ptr[2] = ggo::to<uint8_t>(b);
-	
-    ptr += 3;
+      ptr_src++;
+      ptr_dst = ggo::ptr_offset(ptr_dst, ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size);
+    }
 	}
 }
 

@@ -97,7 +97,7 @@ ggo::cubic_curve<float, ggo::color_32f> ggo::entabeni::create_color_map()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni::render_bitmap(void * buffer, int width, int height,
+void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                                   const ggo::array<float, 2> & grid,
                                   const ggo::cubic_curve<float, ggo::color_32f> & color_map,
                                   float z,
@@ -168,8 +168,8 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height,
     }
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, 3 * width, ggo::black<ggo::color_8u>());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width, shapes.begin(), shapes.end());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black<ggo::color_8u>());
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes.begin(), shapes.end());
 }
 
 

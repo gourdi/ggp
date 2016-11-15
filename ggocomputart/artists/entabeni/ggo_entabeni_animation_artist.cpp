@@ -2,9 +2,9 @@
 #include "ggo_entabeni.h"
 
 //////////////////////////////////////////////////////////////
-ggo::entabeni_animation_artist::entabeni_animation_artist(int render_width, int render_height)
+ggo::entabeni_animation_artist::entabeni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -41,7 +41,7 @@ bool ggo::entabeni_animation_artist::render_next_frame_sub(void * buffer, int fr
   ggo::for_each(grid, interpolate);
 
   // Paint the grid.
-  ggo::entabeni::render_bitmap(buffer, get_render_width(), get_render_height(), grid, _color_map, z, angle);
+  ggo::entabeni::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), grid, _color_map, z, angle);
 
   return true;
 }

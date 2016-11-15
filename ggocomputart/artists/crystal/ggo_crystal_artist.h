@@ -20,9 +20,9 @@ namespace ggo
 
   public:
 
-    crystal_artist(int render_width, int render_height);
+          crystal_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
-    void render_bitmap(uint8_t * buffer, const params & params, const ggo::color_8u bkgd_colors[4]);
+    void  render_bitmap(void * buffer, const params & params, const ggo::color_8u bkgd_colors[4]);
 
     static void randomize_params(params & params);
 

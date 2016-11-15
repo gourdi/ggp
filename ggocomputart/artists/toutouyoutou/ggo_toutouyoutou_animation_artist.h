@@ -9,11 +9,11 @@
 
 namespace ggo
 {
-  class toutouyoutou_anim_artist : public static_background_animation_artist_abc
+  class toutouyoutou_animation_artist : public static_background_animation_artist_abc
   {
   public:
 
-    toutouyoutou_anim_artist(int render_width, int render_height);
+    toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 

@@ -4,29 +4,33 @@
 #include <vector>
 #include <stdint.h>
 #include <memory>
+#include <ggo_pixel_buffer.h>
 
-class ggo_animate_abc;
-
-class ggo_animator final
+namespace ggo
 {
-public:
-	
-  ~ggo_animator() = default;
+  class animate_abc;
 
-	void					          add_animate(ggo_animate_abc * animate); // The animator takes ownership of the pointer.
-	void					          insert_animate(ggo_animate_abc * animate, int pos); // The animator takes ownership of the pointer.
-	                        
-	int						          get_animates_count() const { return static_cast<int>(_animates.size()); }
-	bool					          is_empty() const { return _animates.empty(); }
-	const ggo_animate_abc *	get_animate(int index) const { return _animates[index].get(); }
-	
-	void					          clear();
+  class animator final
+  {
+  public:
 
-	void					          update(void * buffer, int width, int height);
-		
-private:
+                             ~animator() = default;
 
-  std::vector<std::unique_ptr<ggo_animate_abc>> _animates;
-};
+    void					            add_animate(ggo::animate_abc * animate); // The animator takes ownership of the pointer.
+    void					            insert_animate(ggo::animate_abc * animate, int pos); // The animator takes ownership of the pointer.
+
+    int						            get_animates_count() const { return static_cast<int>(_animates.size()); }
+    bool					            is_empty() const { return _animates.empty(); }
+    const ggo::animate_abc *	get_animate(int index) const { return _animates[index].get(); }
+
+    void					            clear();
+
+    void					            update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+
+  private:
+
+    std::vector<std::unique_ptr<ggo::animate_abc>> _animates;
+  };
+}
 
 #endif

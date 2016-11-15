@@ -15,9 +15,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::topodoko_artist::topodoko_artist(int render_width, int render_height)
+ggo::topodoko_artist::topodoko_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -33,7 +33,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 	const ggo::color_8u bkgd_color3 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
 	const ggo::color_8u bkgd_color4 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
 
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
 	
 	std::vector<color_square>	color_squares;
@@ -92,7 +92,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 	std::cout << "Rendering shadow" << std::endl;
 	
 	// Render the shadow.
-	std::vector<uint8_t> shadow_buffer(get_render_width() * get_render_height(), 0xff);
+	std::vector<uint8_t> shadow_buffer(get_width() * get_height(), 0xff);
 	
 	float shadow_offset_scalar = 0.25f * square_size;
 	ggo::pos2f shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
@@ -108,14 +108,14 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 		}
 
 		ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
-      shadow_buffer.data(), get_render_width(), get_render_height(), get_render_width(), square, uint8_t(0x40f));
+      shadow_buffer.data(), get_width(), get_height(), get_width(), square, uint8_t(0x40f));
 	}
 
 	ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(
-    shadow_buffer.data(), get_render_width(), get_render_height(), get_render_width(), 0.05f * get_render_min_size());
+    shadow_buffer.data(), get_width(), get_height(), get_width(), 0.05f * get_min_size());
 
-  ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(shadow_buffer.data(), get_render_width(), get_render_height(), get_render_width(),
-    buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 0, 0);
+  ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(shadow_buffer.data(), get_width(), get_height(), get_width(),
+    buffer, get_width(), get_height(), get_line_step(), 0, 0);
 	
 	std::cout << "Rendering squares" << std::endl;
 	
@@ -131,7 +131,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 		}
 		
 		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(
-      buffer, get_render_width(), get_render_height(), 3 * get_render_width(), square, ggo::convert_color_to<ggo::color_8u>(color_square._color));
+      buffer, get_width(), get_height(), get_line_step(), square, ggo::convert_color_to<ggo::color_8u>(color_square._color));
 	}
 }
 

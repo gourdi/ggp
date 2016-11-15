@@ -29,7 +29,7 @@ namespace ggo
       float 					      _split_vert;
     };
 
-    static	void	render(void * buffer, int render_width, int render_height, const ggo::vortex2_artist::params & params);
+    static	void	render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex2_artist::params & params);
   };
 }
 

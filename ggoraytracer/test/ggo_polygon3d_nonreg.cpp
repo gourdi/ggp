@@ -32,6 +32,6 @@ void test_polygon3d()
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("sphere3d.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

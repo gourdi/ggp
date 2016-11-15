@@ -14,7 +14,7 @@ namespace ggo
   {
   public:
 
-    hexa_animation_artist(int render_width, int render_height);
+          hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 

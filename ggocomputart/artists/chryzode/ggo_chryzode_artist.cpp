@@ -3,9 +3,9 @@
 #include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_artist::chryzode_artist(int render_width, int render_height)
+ggo::chryzode_artist::chryzode_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(render_width, render_height)
+artist(width, height, line_step, pbf)
 {
 }
 
@@ -13,7 +13,7 @@ artist(render_width, render_height)
 void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.
-  std::vector<float> buffer_32f(get_render_width() * get_render_height(), 0.f);
+  std::vector<float> buffer_32f(get_width() * get_height(), 0.f);
 
   // Render the chryzode.
   for (int modulo = params._modulo_start; modulo < params._modulo_end; ++modulo)
@@ -41,14 +41,14 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
       // Paint the segment.
       auto brush = [](int x, int y) { return 1.f; };
       auto blend = [](int x, int y, float bkgd_color, float brush_color) { return bkgd_color + brush_color; };
-      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_render_width(), get_render_height(), 3 * get_render_width(),
+      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_width(), get_height(), get_line_step(),
         ggo::extended_segment_float(p1, p2, 0.005f * radius), brush, blend);
     }
   }
   
   // Convert from gray to rgb.
   uint8_t * buffer_8u = static_cast<uint8_t *>(buffer);
-  for (int i = get_render_width() * get_render_height() - 1; i >= 0; --i)
+  for (int i = get_width() * get_height() - 1; i >= 0; --i)
   {
     float coef = buffer_32f[i] / 512; // Normalize.
     float hue = ggo::map<float>(coef, 0, 1, hue_start, hue_end);

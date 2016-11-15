@@ -18,19 +18,19 @@ void ggo::amorosi_animation_artist::random_width_interpolator::get_random_data(f
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::curve::curve(int render_width, int render_height, const ggo::color_8u & color)
+ggo::amorosi_animation_artist::curve::curve(int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::color_8u & color)
 :
-artist(render_width, render_height),
+artist(width, height, line_step, pbf),
 _lines_count(ggo::rand<int>(3, 10)),
 _color(color)
 {
   _counter = ggo::rand<int>(100, 200);
-  _speed = ggo::rand<float>(0.002f, 0.004f) * get_render_min_size();
+  _speed = ggo::rand<float>(0.002f, 0.004f) * get_min_size();
 
-  _prv_pos.get<0>() = ggo::rand<float>(0.2f, 0.8f) * render_width;
-  _prv_pos.get<1>() = ggo::rand<float>(0.2f, 0.8f) * render_height;
+  _prv_pos.x() = ggo::rand<float>(0.2f, 0.8f) * width;
+  _prv_pos.y() = ggo::rand<float>(0.2f, 0.8f) * height;
   _prv_subangle = _subangle_interpolator.update(0.005f);
-  _prv_width = _width_interpolator.update(0.05f) * get_render_min_size();
+  _prv_width = _width_interpolator.update(0.05f) * get_min_size();
 }
 
 //////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ void ggo::amorosi_animation_artist::curve::update()
     // Create new triangles.
     if (_counter > 0)
     {
-      float width = _width_interpolator.update(0.05f) * get_render_min_size();
+      float width = _width_interpolator.update(0.05f) * get_min_size();
       float padding = 0.5f * width;
       float prv_padding = 0.5f * _prv_width;
         
@@ -135,14 +135,14 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
   }
   
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+    buffer, get_width(), get_height(), get_line_step(),
     triangles.begin(), triangles.end());
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::amorosi_animation_artist(int render_width, int render_height)
+ggo::amorosi_animation_artist::amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-static_background_animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -150,13 +150,7 @@ static_background_animation_artist_abc(render_width, render_height)
 void ggo::amorosi_animation_artist::init_sub()
 {
   _hue = ggo::rand<float>();
-  _curves.push_back(std::unique_ptr<curve>(new curve(get_render_width(), get_render_height(), get_color())));
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::init_bkgd_buffer(void * buffer) const
-{
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
+  _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), get_color())));
 }
 
 //////////////////////////////////////////////////////////////
@@ -174,7 +168,7 @@ ggo::color_8u ggo::amorosi_animation_artist::get_color() const
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::amorosi_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
+bool ggo::amorosi_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
   const int frames_count = 300;
 
@@ -183,9 +177,11 @@ bool ggo::amorosi_animation_artist::render_next_frame_bkgd(void * buffer, int fr
     return false;
   }
 
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>());
+
   if (ggo::rand<float>() < 0.05 && frame_index < frames_count)
   {
-    _curves.push_back(std::unique_ptr<curve>(new curve(get_render_width(), get_render_height(), get_color())));
+    _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), get_color())));
   }
 
   for (auto & curve : _curves)

@@ -236,14 +236,11 @@ void ggo::cumbia_artist::init(ggo::multi_sampling_point_camera & camera, int box
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::render_bitmap(void * buffer,
-                                       int render_width,
-                                       int render_height,
-                                       ggo::renderer_abc & renderer)
+void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer)
 {
 	ggo::raytrace_params raytrace_params;
 	raytrace_params._depth = 2;
 
-	renderer.render(static_cast<uint8_t *>(buffer), render_width, render_height, _scene, raytrace_params);
+	renderer.render(buffer, width, height, line_step, pbf, _scene, raytrace_params);
 }
 

@@ -1,26 +1,26 @@
 #include "ggo_toutouyoutou_bitmap_artist.h"
-#include <ggo_animation_artist_abc.h>
+#include "ggo_toutouyoutou_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_bitmap_artist::toutouyoutou_bitmap_artist(int render_width, int render_height)
+ggo::toutouyoutou_bitmap_artist::toutouyoutou_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::toutouyoutou_bitmap_artist::render_bitmap(void * buffer) const
 {
-    int frames_count = ggo::rand<int>(100, 400);
+  int frames_count = ggo::rand<int>(100, 400);
 
-    std::unique_ptr<ggo::animation_artist_abc> anim_artist(ggo::animation_artist_abc::create(ggo::animation_artist_id::toutouyoutou, get_render_width(), get_render_height()));
-        
-    anim_artist->render_next_frame(buffer);
+  ggo::toutouyoutou_animation_artist anim_artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
-    for (int i = 1; i < frames_count; ++i)
-    {
-        anim_artist->render_next_frame(nullptr);
-    }
-    
-    anim_artist->render_next_frame(buffer);
+  anim_artist.render_next_frame(buffer);
+
+  for (int i = 1; i < frames_count; ++i)
+  {
+    anim_artist.render_next_frame(nullptr);
+  }
+
+  anim_artist.render_next_frame(buffer);
 }

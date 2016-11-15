@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-                dupecheck_animation_artist(int render_width, int render_height);
+                dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void				init_sub() override;
     bool				render_next_frame_sub(void * buffer, int frame_index) override;
@@ -23,7 +23,7 @@ namespace ggo
 
   private:
 
-    class dupecheck_animate_abc : public ggo_path_animate_abc
+    class dupecheck_animate_abc : public ggo::path_animate_abc
     {
     protected:
 
@@ -32,17 +32,17 @@ namespace ggo
       float		      _radius;
       float		      _dradius;
 
-                    dupecheck_animate_abc(ggo::pos2f pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size);
-              bool	update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
-      virtual	void  update(void * buffer, int width, int height, const ggo::pos2f & pos) = 0;
+                    dupecheck_animate_abc(ggo::pos2f pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
+              bool	update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
+      virtual	void  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos) = 0;
     };
 
     class animate1 : public dupecheck_animate_abc
     {
     public:
 
-            animate1(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size);
-      void  update(void * buffer, int width, int height, const ggo::pos2f & pos) override;
+            animate1(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
+      void  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos) override;
 
     private:
 
@@ -55,8 +55,8 @@ namespace ggo
     {
     public:
 
-            animate2(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size);
-      void	update(void * buffer, int width, int height, const ggo::pos2f & pos) override;
+            animate2(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
+      void	update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos) override;
 
     private:
 
@@ -67,8 +67,8 @@ namespace ggo
     {
     public:
 
-            animate3(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size);
-      void	update(void * buffer, int width, int height, const ggo::pos2f & pos) override;
+            animate3(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
+      void	update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos) override;
 
     private:
 
@@ -94,7 +94,7 @@ namespace ggo
     std::vector<background_color> _bkgd_colors;
     ggo::color_32f 					      _colors[4];
     ggo::pos2f 					          _points[4];
-    ggo_animator						      _animator;
+    ggo::animator						      _animator;
   };
 }
 

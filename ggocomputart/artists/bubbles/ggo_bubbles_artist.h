@@ -9,11 +9,11 @@ namespace ggo
   {
   public:
 
-    bubbles_artist(int render_width, int render_height);
+          bubbles_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    void render_bitmap(void * buffer) const override;
+    void  render_bitmap(void * buffer) const override;
   };
 }
 

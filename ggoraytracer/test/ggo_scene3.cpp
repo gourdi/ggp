@@ -41,7 +41,7 @@ GGO_TEST(test_scene, scene3)
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_uint8 buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
 
   // Overlay, to check that basis::project is working as expected.
   ggo::pos2f proj1 = camera.basis().project(sphere1->center(), camera.get_aperture(), width, height);

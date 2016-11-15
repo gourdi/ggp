@@ -3,13 +3,16 @@
 
 #include <ggo_vec.h>
 
-class ggo_path_abc
+namespace ggo
 {
-public:	
+  class path_abc
+  {
+  public:
 
-	virtual 			     ~ggo_path_abc() {}
-	
-	virtual	ggo::pos2f  get_pos(int counter) = 0;
-};
+    virtual 			     ~path_abc() {}
+
+    virtual	ggo::pos2f  get_pos(int counter) = 0;
+  };
+}
 
 #endif

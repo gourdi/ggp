@@ -423,28 +423,20 @@ ggo::extended_segment_float ggo::sonson_animation_artist::line::get_glow_segment
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_animation_artist::line::render(void * buffer, int width, int height) const
+void ggo::sonson_animation_artist::line::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const
 {
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
-
   // Paint the strips.
   for (int y = 0; y < height; ++y)
   {
     for (int x = 0; x < width; ++x)
     {
-      ggo::color_32f pixel_color_32f(ptr[0] / 255.f, ptr[1] / 255.f, ptr[2] / 255.f);
-
       auto line_pixel = get_pixel(x, y);
 
-      pixel_color_32f = line_pixel.first * line_pixel.second + (1.f - line_pixel.first) * pixel_color_32f;
+      ggo::color_32f c_32f = ggo::convert_color_to<ggo::color_32f>(ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step));
 
-      ggo::color_8u pixel_color_8u = ggo::convert_color_to<ggo::color_8u>(pixel_color_32f);
+      c_32f = line_pixel.first * line_pixel.second + (1.f - line_pixel.first) * c_32f;
 
-      ptr[0] = pixel_color_8u.r();
-      ptr[1] = pixel_color_8u.g();
-      ptr[2] = pixel_color_8u.b();
-
-      ptr += 3;
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(c_32f));
     }
   }
 
@@ -471,9 +463,9 @@ void ggo::sonson_animation_artist::line::render(void * buffer, int width, int he
 }
 
 //////////////////////////////////////////////////////////////
-ggo::sonson_animation_artist::sonson_animation_artist(int width, int height)
+ggo::sonson_animation_artist::sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(width, height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -500,7 +492,7 @@ bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int fram
   if (buffer != nullptr)
   {
     ggo::fill_4_colors<ggo::rgb_8u_yu>(
-      buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+      buffer, get_width(), get_height(), get_line_step(),
       ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::black<ggo::color_8u>());
   }
 
@@ -531,15 +523,15 @@ bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int fram
     {
       for (const auto & line : sub_lines)
       {
-        line->render(buffer, get_render_width(), get_render_height());
+        line->render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
       }
 
       // Blur (only when needed).
       if (&sub_lines != &_lines.back())
       {
-        const float stddev = 0.001f * get_render_min_size();
+        const float stddev = 0.001f * get_min_size();
         ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(
-          buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
+          buffer, get_width(), get_height(), get_line_step(), stddev);
       }
     }
   }
@@ -565,5 +557,5 @@ void ggo::sonson_animation_artist::create_line(int frame_index, bool foreground)
     scale_factor = 4;
   }
 
-  _lines[stack_index].emplace_back(ggo::sonson_animation_artist::line::create(hue, get_render_width(), get_render_height(), scale_factor));
+  _lines[stack_index].emplace_back(ggo::sonson_animation_artist::line::create(hue, get_width(), get_height(), scale_factor));
 }

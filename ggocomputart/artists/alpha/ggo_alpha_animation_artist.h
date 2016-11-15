@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          alpha_animation_artist(int render_width, int render_height);
+          alpha_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	init_sub() override;
     bool	render_next_frame_sub(void * buffer, int frame_index) override;
@@ -23,7 +23,7 @@ namespace ggo
     {
     public:
 
-      line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color_8u & color);
+            line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color_8u & color);
 
       bool	update(int width, int height);
       void	draw(void * buffer, int width, int height) const;
@@ -49,7 +49,7 @@ namespace ggo
     {
     public:
 
-      item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
+                        item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
 
       bool						  update(int width, int height);
       void						  draw(void * buffer, int width, int height) const;
@@ -65,7 +65,7 @@ namespace ggo
     {
     public:
 
-      oscillo(float y, float dy);
+            oscillo(float y, float dy);
 
       float	y() const { return _y; };
       bool	update();

@@ -9,13 +9,13 @@ namespace ggo
   {
   public:
 
-    bozons_animation_artist(int render_width, int render_height);
+          bozons_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    void init_sub() override;
-    void init_bkgd_buffer(void * buffer) const override;
-    bool render_next_frame_bkgd(void * buffer, int frame_index) override;
+    void  init_sub() override;
+    void  init_bkgd_buffer(void * buffer) const override;
+    bool  render_next_frame_bkgd(void * buffer, int frame_index) override;
 
   private:
 

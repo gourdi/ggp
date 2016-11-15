@@ -41,7 +41,7 @@ GGO_TEST(bidirectional_lighting, test)
   ggo::array_uint8 buffer(3 * width * height);
   
   // Without indirect lighting.
-  renderer.render(buffer.data(), width, height, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("bidirectional_lighting_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   
   // With indirect lighting.
@@ -51,7 +51,7 @@ GGO_TEST(bidirectional_lighting, test)
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &indirect_lighting;
   
-  renderer.render(buffer.data(), width, height, scene, raytrace_params);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, raytrace_params);
   ggo::save_bmp("bidirectional_lighting_on.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 

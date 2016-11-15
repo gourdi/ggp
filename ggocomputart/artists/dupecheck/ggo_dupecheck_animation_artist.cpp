@@ -9,9 +9,9 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::dupecheck_animation_artist(int render_width, int render_height)
+ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -39,14 +39,14 @@ void ggo::dupecheck_animation_artist::init_sub()
 		_bkgd_colors.push_back(bkgd_color);
 	}
 
-	_points[0].x() = ggo::rand<float>() * get_render_width();
-	_points[0].y() = ggo::rand<float>() * get_render_height();
-	_points[1].x() = ggo::rand<float>() * get_render_width();
-	_points[1].y() = ggo::rand<float>() * get_render_height();
-	_points[2].x() = ggo::rand<float>() * get_render_width();
-	_points[2].y() = ggo::rand<float>() * get_render_height();
-	_points[3].x() = ggo::rand<float>() * get_render_width();
-	_points[3].y() = ggo::rand<float>() * get_render_height();
+	_points[0].x() = ggo::rand<float>() * get_width();
+	_points[0].y() = ggo::rand<float>() * get_height();
+	_points[1].x() = ggo::rand<float>() * get_width();
+	_points[1].y() = ggo::rand<float>() * get_height();
+	_points[2].x() = ggo::rand<float>() * get_width();
+	_points[2].y() = ggo::rand<float>() * get_height();
+	_points[3].x() = ggo::rand<float>() * get_width();
+	_points[3].y() = ggo::rand<float>() * get_height();
 }
 
 //////////////////////////////////////////////////////////////
@@ -71,8 +71,8 @@ ggo::pos2f ggo::dupecheck_animation_artist::get_position(int frame_index)
 		_points[0] = _points[1];
 		_points[1] = _points[2];
 		_points[2] = _points[3];
-		_points[3].x() = ggo::rand<float>() * get_render_width();
-		_points[3].y() = ggo::rand<float>() * get_render_height();
+		_points[3].x() = ggo::rand<float>() * get_width();
+		_points[3].y() = ggo::rand<float>() * get_height();
 	}
 	
 	return p;
@@ -126,18 +126,18 @@ bool ggo::dupecheck_animation_artist::render_next_frame_sub(void * buffer, int f
 	{
 		uint8_t * ptr = static_cast<uint8_t *>(buffer);
 	
-		for (int y = 0; y < get_render_height(); ++y)
+		for (int y = 0; y < get_height(); ++y)
 		{
 			float v_f = 1;
 			for (const auto & bkgd_color : _bkgd_colors)
 			{
 				float pos = bkgd_color._y + bkgd_color._radius * std::cos(bkgd_color._angle);
-				float dpos = pos - y / float(get_render_height());
+				float dpos = pos - y / float(get_height());
 				v_f -= bkgd_color._val * std::exp(-(dpos * dpos) * bkgd_color._var);
 			}
 			uint8_t v = std::max(0, ggo::to<int>(255 * v_f));
 		
-			for (int x = 0; x < get_render_width(); ++x)
+			for (int x = 0; x < get_width(); ++x)
 			{
 				*ptr++ = v;
 				*ptr++ = v;
@@ -155,31 +155,31 @@ bool ggo::dupecheck_animation_artist::render_next_frame_sub(void * buffer, int f
 	ggo::color_8u color = get_color(frame_index);
 	if ((frame_index < counter_max) && ((frame_index % 4) == 0))
 	{		
-		ggo_path_abc * path = NULL;
+		ggo::path_abc * path = nullptr;
 		
 		switch (ggo::rand<int>(0, 2))
 		{
 		case 0:
 			break;
 		case 1:
-		 	path = new ggo_linear_path(ggo::rand<float>(0.001f, 0.01f) * get_render_min_size(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+		 	path = new ggo::linear_path(ggo::rand<float>(0.001f, 0.01f) * get_min_size(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 			break;
 		case 2:
-		 	path = new ggo_spiral_path(ggo::rand<float>(-ggo::pi<float>() / 32, ggo::pi<float>() / 32), ggo::rand<float>(0.001f, 0.01f) * get_render_min_size());
+		 	path = new ggo::spiral_path(ggo::rand<float>(-ggo::pi<float>() / 32, ggo::pi<float>() / 32), ggo::rand<float>(0.001f, 0.01f) * get_min_size());
 			break;
 		}
 		
-		ggo_animate_abc * animate = NULL;
+		ggo::animate_abc * animate = nullptr;
 		switch (ggo::rand<int>(0, 2)) 
 		{
 		case 0:
-			animate = new ggo::dupecheck_animation_artist::animate1(pos, path, color, get_render_min_size());
+			animate = new ggo::dupecheck_animation_artist::animate1(pos, path, color, get_min_size());
 			break;
 		case 1:
-			animate = new ggo::dupecheck_animation_artist::animate2(pos, path, color, get_render_min_size());
+			animate = new ggo::dupecheck_animation_artist::animate2(pos, path, color, get_min_size());
 			break;
 		case 2:
-			animate = new ggo::dupecheck_animation_artist::animate3(pos, path, color, get_render_min_size());
+			animate = new ggo::dupecheck_animation_artist::animate3(pos, path, color, get_min_size());
 			break;
 		default:
 			GGO_FAIL();
@@ -190,15 +190,15 @@ bool ggo::dupecheck_animation_artist::render_next_frame_sub(void * buffer, int f
 	}
 	
 	// Update anim items.
-	_animator.update(buffer, get_render_width(), get_render_height());
+	_animator.update(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
 	return true;
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::dupecheck_animate_abc::dupecheck_animate_abc(ggo::pos2f pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::dupecheck_animate_abc::dupecheck_animate_abc(ggo::pos2f pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size)
 :
-ggo_path_animate_abc(pos, path)
+ggo::path_animate_abc(pos, path)
 {
 	_color = color;
 	_opacity = 1;
@@ -207,7 +207,7 @@ ggo_path_animate_abc(pos, path)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos)
+bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
 {
 	if (counter > 30) 
 	{
@@ -221,13 +221,13 @@ bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(void * buffe
 
 	_radius += _dradius;
     
-    update(buffer, width, height, pos);
+    update(buffer, width, height, line_step, pbf, pos);
 	
 	return true;
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate1::animate1(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate1::animate1(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -238,7 +238,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate1::update(void * buffer, int width, int height, const ggo::pos2f & pos)
+void ggo::dupecheck_animation_artist::animate1::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
@@ -255,14 +255,14 @@ void ggo::dupecheck_animation_artist::animate1::update(void * buffer, int width,
         opened_disc.add_shape(disc2);
 
 				ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-          buffer, width, height, 3 * width, opened_disc, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
+          buffer, width, height, line_step, opened_disc, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
 			}
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate2::animate2(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate2::animate2(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -270,7 +270,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate2::update(void * buffer, int width, int height, const ggo::pos2f & pos)
+void ggo::dupecheck_animation_artist::animate2::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
@@ -301,12 +301,12 @@ void ggo::dupecheck_animation_artist::animate2::update(void * buffer, int width,
     }
 	
 		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, 3 * width, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
+      buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
 	}
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate3::animate3(const ggo::pos2f & pos, ggo_path_abc * path, const ggo::color_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate3::animate3(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -320,7 +320,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate3::update(void * buffer, int width, int height, const ggo::pos2f & pos)
+void ggo::dupecheck_animation_artist::animate3::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::pos2f & pos)
 {
 	if (buffer != nullptr)
 	{
@@ -340,7 +340,7 @@ void ggo::dupecheck_animation_artist::animate3::update(void * buffer, int width,
 			}
 
       ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, width, height, 3 * width, shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
+        buffer, width, height, line_step, shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
 		}	
 	}
     

@@ -11,11 +11,11 @@ namespace ggo
   {
   public:
 
-    buddhabrot_artist(int render_width, int render_height);
+          buddhabrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    void render_bitmap(void * buffer) const override;
+    void  render_bitmap(void * buffer) const override;
 
     static bool discard_point(const std::complex<double> & p);
     static bool iterate(const std::complex<double> & p, int escape_threshold);

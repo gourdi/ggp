@@ -4,6 +4,7 @@
 #include <ggo_artist.h>
 #include <ggo_artist_ids.h>
 #include <ggo_array.h>
+#include <ggo_pixel_buffer.h>
 
 namespace ggo
 {
@@ -11,7 +12,7 @@ namespace ggo
   {
   public:
 
-    static animation_artist_abc * create(animation_artist_id artist_id, int render_width, int render_height);
+    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     bool  render_next_frame(void * buffer);
     void  init();
@@ -20,15 +21,16 @@ namespace ggo
 
   protected:
 
-                 animation_artist_abc(int render_width, int render_height);
+                 animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     virtual	void init_sub() = 0;
 
     virtual	bool render_next_frame_sub(void * buffer, int frame_index) = 0;
+    
 
   private:
 
-    int	_counter;
+    int _counter;
   };
 }
 
@@ -39,11 +41,11 @@ namespace ggo
   {
   public:
 
-          accumulation_animation_artist_abc(int render_width, int render_height);
+                  accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+            bool	render_next_frame_sub(void * buffer, int frame_index) override;
 
     virtual	void	init_output_buffer(void * buffer) const = 0;
     virtual	bool	render_next_frame_acc(void * buffer, int frame_index) = 0;
@@ -57,11 +59,11 @@ namespace ggo
   {
   public:
 
-          static_background_animation_artist_abc(int render_width, int render_height);
+                  static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
-    bool	render_next_frame_sub(void * buffer, int frame_indexx) override;
+            bool	render_next_frame_sub(void * buffer, int frame_indexx) override;
 
     virtual void	init_bkgd_buffer(void * bkgd_buffer) const = 0;
     virtual	bool	render_next_frame_bkgd(void * buffer, int frame_index) = 0;

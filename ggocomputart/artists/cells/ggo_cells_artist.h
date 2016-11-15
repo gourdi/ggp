@@ -9,14 +9,11 @@ namespace ggo
   {
   public:
 
-    cells_artist(int render_width, int render_height);
+          cells_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
     void	render_bitmap(void * buffer) const override;
-
-    float	compute_potential(const std::vector<ggo::pos2f> & centers, int x, int y) const;
-    bool	paint_point(uint8_t * buffer, int x, int y, uint8_t r, uint8_t g, uint8_t b, const std::vector<ggo::pos2f> & centers) const;
 
   private:
 
@@ -34,8 +31,8 @@ namespace ggo
     private:
 
       ggo::pos2f	_centers[3];
-      float			  _inv_render_width;
-      float			  _inv_render_height;
+      float			  _inv_width;
+      float			  _inv_height;
     };
 
     struct polynom

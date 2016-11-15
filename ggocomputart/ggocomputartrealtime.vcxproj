@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ggocomputartrealtime.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D304025F-BC5E-497D-B219-0878F97A6B69}</ProjectGuid>
     <RootNamespace>ggogame</RootNamespace>
@@ -69,7 +72,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\externals\SDL2-2.0.4\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggocomputart;$(SolutionDir)\ggocomputart\artists;$(SolutionDir)\externals\SDL2-2.0.4\include</IncludePath>
+    <LibraryPath>$(SolutionDir)\externals\SDL2-2.0.4\lib\x64;$(LibraryPath);$(SolutionDir)\x64\$(Configuration)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\blender;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggocomputart;$(SolutionDir)\ggocomputart\artists;$(SolutionDir)\externals\SDL2-2.0.4\include</IncludePath>
     <LibraryPath>$(SolutionDir)\externals\SDL2-2.0.4\lib\x64;$(LibraryPath);$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -87,7 +94,7 @@
       <PreprocessorDefinitions>_GGO_WIN;GGO_DEBUG;_DEBUG;MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;ggokernel.lib;ggo2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;;ggokernel.lib;ggo2d.lib;ggoraytracer.lib;ggocomputart.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
     </Link>
@@ -116,11 +123,10 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;;ggokernel.lib;ggo2d.lib;ggoraytracer.lib;ggocomputart.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

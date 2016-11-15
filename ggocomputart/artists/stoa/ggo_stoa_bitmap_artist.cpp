@@ -7,9 +7,9 @@
 //#define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_bitmap_artist::stoa_bitmap_artist(int render_width, int render_height)
+ggo::stoa_bitmap_artist::stoa_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -18,9 +18,9 @@ void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
 {
   // The camera.
 #ifdef MONO_SAMPLING
-  ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height());
 #else
-  ggo::antialiasing_point_camera camera(get_render_width(), get_render_height());
+  ggo::antialiasing_point_camera camera(get_width(), get_height());
 #endif
   camera.basis().set_pos(0, 0, 40);
   camera.set_aperture(0.1f);
@@ -41,5 +41,5 @@ void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
   float hue = ggo::rand<float>();
 
   ggo::stoa_artist artist(384);
-  artist.render(buffer, get_render_width(), get_render_height(), hue, light_pos1, light_pos2, renderer);
+  artist.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), hue, light_pos1, light_pos2, renderer);
 }

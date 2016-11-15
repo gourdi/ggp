@@ -1,13 +1,13 @@
 #include "ggo_buddhabrot_artist.h"
-#include <ggo_color.h>
+#include <ggo_buffer_fill.h>
 #include <algorithm>
 #include <iostream>
 #include <cstring>
 
 //////////////////////////////////////////////////////////////
-ggo::buddhabrot_artist::buddhabrot_artist(int render_width, int render_height)
+ggo::buddhabrot_artist::buddhabrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {	
 
 }
@@ -111,8 +111,8 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 
 			int x = ggo::to<int>(point.get<0>());
 			int y = ggo::to<int>(point.get<1>());
-			if ((x >= 0) && (x < get_render_width()) &&
-		    	(y >= 0) && (y < get_render_height()))
+			if ((x >= 0) && (x < get_width()) &&
+		    	(y >= 0) && (y < get_height()))
 			{
 				accumulation(x, y) += 1;
 			}
@@ -123,11 +123,11 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 //////////////////////////////////////////////////////////////
 void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 {
-	memset(buffer, 0, 3 * get_render_width() * get_render_height());
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
 
-  ggo::array<int, 2> accumulation_r(get_render_width(), get_render_height());
-  ggo::array<int, 2> accumulation_g(get_render_width(), get_render_height());
-  ggo::array<int, 2> accumulation_b(get_render_width(), get_render_height());
+  ggo::array<int, 2> accumulation_r(get_width(), get_height());
+  ggo::array<int, 2> accumulation_g(get_width(), get_height());
+  ggo::array<int, 2> accumulation_b(get_width(), get_height());
 
   accumulation_r.fill(0);
 	accumulation_g.fill(0);
@@ -151,7 +151,7 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
   double range;
 	setup_seed_area(escape_threshold_r, escape_threshold_g, escape_threshold_b, center, range);
 	
-	int counter_max = get_render_width() * get_render_height() / 1000;	
+	int counter_max = get_width() * get_height() / 1000;	
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{	
@@ -168,14 +168,14 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 		}
 	}
 	
-	uint8_t * it = static_cast<uint8_t *>(buffer);
-	for (int y = 0; y < get_render_height(); ++y)
+	uint8_t * ptr = static_cast<uint8_t *>(buffer);
+	for (int y = 0; y < get_height(); ++y)
 	{
-		for (int x = 0; x < get_render_height(); ++x)
+		for (int x = 0; x < get_height(); ++x)
 		{
-			*it++ = std::min(accumulation_r(x, y), 255);
-			*it++ = std::min(accumulation_g(x, y), 255);
-			*it++ = std::min(accumulation_b(x, y), 255);
+			*ptr++ = std::min(accumulation_r(x, y), 255);
+			*ptr++ = std::min(accumulation_g(x, y), 255);
+			*ptr++ = std::min(accumulation_b(x, y), 255);
 		}
 	}
 }

@@ -145,15 +145,6 @@ namespace ggo
     if (y < 0 || y >= height) { return fixed_value; }
     return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
   }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, data_t fixed_value, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
-  data_t get2d_fixed_value_t(const data_t * buffer, int x, int y, int width, int height, int line_byte_step)
-  {
-    if (x < 0 || x >= width) { return fixed_value; }
-    if (y < 0 || y >= height) { return fixed_value; }
-    return get2d<data_t, y_dir, item_byte_step>(buffer, x, y, height, line_byte_step);
-  }
 }
 
 #endif

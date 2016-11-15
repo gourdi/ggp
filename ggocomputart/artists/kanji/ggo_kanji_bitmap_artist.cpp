@@ -2,9 +2,9 @@
 #include "ggo_kanji_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_bitmap_artist::kanji_bitmap_artist(int render_width, int render_height)
+ggo::kanji_bitmap_artist::kanji_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -12,7 +12,7 @@ bitmap_artist_abc(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo::kanji_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::kanji_artist	artist(get_render_width(), get_render_height());
+  ggo::kanji_artist	artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
 	artist.init();
   artist.init_output_buffer(buffer);

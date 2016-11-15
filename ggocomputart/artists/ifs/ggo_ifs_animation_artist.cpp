@@ -7,10 +7,10 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_animation_artist::ifs_animation_artist(int render_width, int render_height)
+ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_artist(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_artist(width, height, line_step, pbf)
 {
 	
 }
@@ -50,7 +50,7 @@ bool ggo::ifs_animation_artist::render_next_frame_sub(void * buffer, int frame_i
   }
 
   ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+    buffer, get_width(), get_height(), get_line_step(), 
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	float t =  ggo::ease_inout_to<float>(frame_index, frames_count);

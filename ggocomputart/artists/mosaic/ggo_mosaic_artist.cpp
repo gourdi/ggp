@@ -1,5 +1,6 @@
 #include "ggo_mosaic_artist.h"
 #include <ggo_buffer_paint.h>
+#include <ggo_buffer_fill.h>
 
 namespace
 {
@@ -78,16 +79,16 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mosaic_artist::mosaic_artist(int render_width, int render_height)
+ggo::mosaic_artist::mosaic_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 						
 //////////////////////////////////////////////////////////////
 void ggo::mosaic_artist::render_bitmap(void * buffer) const
 {
-	memset(buffer, 0, 3 * get_render_width() * get_render_height());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
 	
 	// Create the seeds.
 	ggo::polygon2d_float	seed1;
@@ -113,9 +114,9 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 	std::vector<seed_positions> seeds;
 	
 	const int points_in_block = 20;
-	for (int y = 0; y < get_render_height() / points_in_block; ++y)
+	for (int y = 0; y < get_height() / points_in_block; ++y)
 	{
-		for (int x = 0; x < get_render_width() / points_in_block; ++x)
+		for (int x = 0; x < get_width() / points_in_block; ++x)
 		{
 			seed_positions cur_seed_positions;
 			cur_seed_positions._left = static_cast<float>(points_in_block * x);
@@ -145,7 +146,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 	float angle_amplitude = ggo::rand<float>(0, 2 * ggo::pi<float>());
 	
 	int failures_count = 0;
-	float scale = ggo::rand<float>(0.1f * get_render_min_size(), 0.2f * get_render_min_size());
+	float scale = ggo::rand<float>(0.1f * get_min_size(), 0.2f * get_min_size());
 	int failures_max = 1;
 	int counter = 0;
 	while (scale > 4)
@@ -212,13 +213,13 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 					}
 				}
 				
-				float hue = (counter % 2 ? hue_offset1 : hue_offset2) + 0.5f * scale / get_render_min_size();
+				float hue = (counter % 2 ? hue_offset1 : hue_offset2) + 0.5f * scale / get_min_size();
 				float saturation = (counter % 2 ? saturation1 : saturation2);
-				float value = 0.5f + 0.5f * scale / get_render_min_size();
+				float value = 0.5f + 0.5f * scale / get_min_size();
 
 				polygons.push_back(polygon);
 				ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-          buffer, get_render_width(), get_render_height(), 3 * get_render_width(), polygon, ggo::from_hsv<ggo::color_8u>(hue, saturation, value));
+          buffer, get_width(), get_height(), get_line_step(), polygon, ggo::from_hsv<ggo::color_8u>(hue, saturation, value));
 				
 				++counter;
 			}
@@ -226,7 +227,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 			std::cout << "S " << scale << ' ' << failures_count << ' ' << failures_max << ' ' << seeds.size() << std::endl;
 			
 			failures_count = 0;
-			failures_max = ggo::to<int>(2000.f * get_render_min_size() / scale);
+			failures_max = ggo::to<int>(2000.f * get_min_size() / scale);
 			scale *= 0.999f;
 		}
 		else
@@ -239,7 +240,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 			std::cout << "F " << scale << ' ' << failures_count << ' ' << failures_max << ' ' << seeds.size() << std::endl;
 			
 			failures_count = 0;
-			failures_max = ggo::to<int>(2000.f * get_render_min_size() / scale);
+			failures_max = ggo::to<int>(2000.f * get_min_size() / scale);
 			scale *= 0.995f;
 		}
 	}
@@ -247,23 +248,24 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 	polygons.clear();
 	
 	// Render the light.
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
-	float variance = ggo::rand<float>(0.1f, 0.2f) * get_render_min_size() * get_render_min_size();
-	for (int y = 0; y < get_render_height(); ++y)
+	float variance = ggo::rand<float>(0.1f, 0.2f) * get_min_size() * get_min_size();
+	for (int y = 0; y < get_height(); ++y)
 	{
-		float dy = static_cast<float>(y - get_render_height()) / 2;
+		float dy = static_cast<float>(y - get_height()) / 2;
 		
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
-			float dx = static_cast<float>(x - get_render_width()) / 2;
+			float dx = static_cast<float>(x - get_width()) / 2;
 			int val = ggo::to<uint8_t>(92 * std::exp(-(dx * dx + dy * dy ) / variance));
 
-			ptr[0] = std::min(255, ptr[0] + val);
-			ptr[1] = std::min(255, ptr[1] + val);
-			ptr[2] = std::min(255, ptr[2] + val);
+      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
+
+			c_8u.r() = uint8_t(std::min(255, c_8u.r() + val));
+			c_8u.g() = uint8_t(std::min(255, c_8u.g() + val));
+			c_8u.b() = uint8_t(std::min(255, c_8u.b() + val));
 			
-      ptr += 3;
-		}
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+    }
 	}
 }
 

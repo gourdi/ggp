@@ -28,7 +28,7 @@ namespace ggo
 
   public:
 
-    metaballs_artist(int render_width, int render_height);
+          metaballs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void 	render_bitmap(void * buffer, ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
   };

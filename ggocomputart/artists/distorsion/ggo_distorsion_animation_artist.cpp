@@ -8,9 +8,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::distorsion_animation_artist::distorsion_animation_artist(int render_width, int render_height)
+ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
+animation_artist_abc(width, height, line_step, pbf),
 _transforms(32)
 {
 }
@@ -28,14 +28,14 @@ void ggo::distorsion_animation_artist::init_sub()
 
   for (auto & transform : _transforms)
   {
-    transform._center_start.get<0>() = ggo::rand<float>(-0.25, 1.25) * get_render_width();
-    transform._center_start.get<1>() = ggo::rand<float>(-0.25, 1.25) * get_render_height();
-    transform._center_end.get<0>() = ggo::rand<float>(-0.25, 1.25) * get_render_width();
-    transform._center_end.get<1>() = ggo::rand<float>(-0.25, 1.25) * get_render_height();
-    transform._variance = 0.05f * ggo::square(get_render_min_size());
+    transform._center_start.x() = ggo::rand<float>(-0.25, 1.25) * get_width();
+    transform._center_start.y() = ggo::rand<float>(-0.25, 1.25) * get_height();
+    transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * get_width();
+    transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * get_height();
+    transform._variance = 0.05f * ggo::square(get_min_size());
     
     float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-    float length = 0.5f * get_render_min_size();
+    float length = 0.5f * get_min_size();
     transform._disp = ggo::from_polar(angle, length);
   }
 
@@ -46,14 +46,14 @@ void ggo::distorsion_animation_artist::init_sub()
   {
     ggo::distorsion_animation_artist::colored_stripe colored_stripe;
     
-    x += ggo::rand<float>(0.01f, 0.06f) * get_render_min_size();
+    x += ggo::rand<float>(0.01f, 0.06f) * get_min_size();
 
     colored_stripe._x_sup = x;
     colored_stripe._color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
     
     _stripes.push_back(colored_stripe);
 
-    if (x > get_render_width())
+    if (x > get_width())
     {
       break;
     }
@@ -79,9 +79,9 @@ bool ggo::distorsion_animation_artist::render_next_frame_sub(void * buffer, int 
 
   uint8_t * ptr = static_cast<uint8_t *>(buffer);
 
-  for (int y = 0; y < get_render_height(); ++y)
+  for (int y = 0; y < get_height(); ++y)
   {
-    for (int x = 0; x < get_render_width(); ++x)
+    for (int x = 0; x < get_width(); ++x)
     {
       float x1 = x - 0.25f;
       float x2 = x + 0.25f;
@@ -138,12 +138,12 @@ float ggo::distorsion_animation_artist::transform(float x, float y, const std::v
   
   for (const auto & transform : transforms)
   {
-    float dx = x - transform._center.get<0>();
-    float dy = y - transform._center.get<1>();
+    float dx = x - transform._center.x();
+    float dy = y - transform._center.y();
     
     float influence = std::exp(-(dx * dx + dy * dy) / transform._variance);
       
-    result += influence * transform._disp.get<0>();
+    result += influence * transform._disp.x();
   }
     
   return result;
@@ -152,7 +152,7 @@ float ggo::distorsion_animation_artist::transform(float x, float y, const std::v
 //////////////////////////////////////////////////////////////
 std::vector<ggo::distorsion_animation_artist::colored_stripe>::const_iterator ggo::distorsion_animation_artist::get_stripe_at(float x) const
 {
-  x = ggo::pos_mod(x, static_cast<float>(get_render_width()));
+  x = ggo::pos_mod(x, static_cast<float>(get_width()));
   
   std::vector<colored_stripe>::const_iterator it = _stripes.begin();
   for (; it != _stripes.end(); ++it)

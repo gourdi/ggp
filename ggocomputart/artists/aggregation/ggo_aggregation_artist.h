@@ -10,20 +10,6 @@ namespace ggo
   {
   public:
 
-          aggregation_artist(int render_width, int render_height);
-
-    void  update(int points_count);
-    void  render(void * buffer) const;
-
-    int   get_final_points_count() const;
-
-  private:
-
-    void  register_point(const ggo::pos2f & pos, float hue, float sat, float val);
-    void  update();
-
-  private:
-
     struct point
     {
       ggo::pos2f  _pos;
@@ -38,6 +24,24 @@ namespace ggo
       std::vector<point>  _points;
       ggo::rect_float     _rect;
     };
+
+                                aggregation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+
+    void                        update(int points_count);
+    void                        render(void * buffer) const;
+
+    int                         get_final_points_count() const;
+    ggo::color_8u               get_background_color() const { return _background_color; }
+    const ggo::array<cell, 2> & get_grid() const { return _grid; }
+    float                       get_threshold_dist() const { return _threshold_dist; }
+
+
+  private:
+
+    void                        register_point(const ggo::pos2f & pos, float hue, float sat, float val);
+    void                        update();
+
+  private:
 
     ggo::color_8u       _background_color;
     ggo::array<cell, 2> _grid;

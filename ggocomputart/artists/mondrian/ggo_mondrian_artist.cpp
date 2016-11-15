@@ -14,9 +14,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mondrian_artist::mondrian_artist(int render_width, int render_height)
+ggo::mondrian_artist::mondrian_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -26,7 +26,7 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
 {
 	float	base_hue = ggo::rand<float>();
   float	base_sat = ggo::rand<float>();
-	float	range	= static_cast<float>(get_render_max_size());
+	float	range	= static_cast<float>(get_max_size());
 	
 	std::vector<area>	areas;
 	for (int i = 0; i < 15; ++i)
@@ -54,8 +54,8 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
       area._val = 1;
     }
 		
-		float x = ggo::rand<float>(0, static_cast<float>(get_render_width()));
-		float y = ggo::rand<float>(0, static_cast<float>(get_render_height()));
+		float x = ggo::rand<float>(0, static_cast<float>(get_width()));
+		float y = ggo::rand<float>(0, static_cast<float>(get_height()));
 		float range_x = ggo::rand<float>(0, range);
 		float range_y = ggo::rand<float>(0, range);
 
@@ -65,10 +65,10 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
 		range *= 0.9f;
 	}
 
-	float size1 = ggo::rand<float>(0.7f, 1 / 0.7f) * get_render_min_size() * 0.001f;
-	float size2 = ggo::rand<float>(0.7f, 1 / 0.7f) * get_render_min_size() * 0.01f;
+	float size1 = ggo::rand<float>(0.7f, 1 / 0.7f) * get_min_size() * 0.001f;
+	float size2 = ggo::rand<float>(0.7f, 1 / 0.7f) * get_min_size() * 0.01f;
 	
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::from_hsv<ggo::color_8u>(base_hue, base_sat, 1));
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::from_hsv<ggo::color_8u>(base_hue, base_sat, 1));
 	
 	for (int i = 0; i < 200000; ++i)
 	{
@@ -97,7 +97,7 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
 
 		// Render the current box.
 		ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, get_render_width(), get_render_height(), 3 * get_render_width(), box, ggo::from_hsv<ggo::color_8u>(hue, sat, val));
+      buffer, get_width(), get_height(), get_line_step(), box, ggo::from_hsv<ggo::color_8u>(hue, sat, val));
 	}
 }
 

@@ -5,7 +5,7 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-bool ggo::filling_squares_animation_artist::animated_square::update(void * buffer, int width, int height, int counter)
+bool ggo::filling_squares_animation_artist::animated_square::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter)
 {
 	constexpr int fade_in_anim_duration = 25;
 
@@ -41,9 +41,9 @@ bool ggo::filling_squares_animation_artist::animated_square::update(void * buffe
 }
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_animation_artist::filling_squares_animation_artist(int render_width, int render_height)
+ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -54,7 +54,7 @@ void ggo::filling_squares_animation_artist::init_sub()
 	_animator.clear();
 	
 	_hue = ggo::rand<float>();
-	auto multi_squares = ggo::filling_squares_artist::build_squares(get_render_width(), get_render_height(), _hue);
+	auto multi_squares = ggo::filling_squares_artist::build_squares(get_width(), get_height(), _hue);
 
 	int counter = 0;
 	for (const auto & multi_square : multi_squares)
@@ -88,9 +88,9 @@ bool ggo::filling_squares_animation_artist::render_next_frame_sub(void * buffer,
     return false;
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), _bkgd_color);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color);
 
-	_animator.update(buffer, get_render_width(), get_render_height());
+	_animator.update(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 
 	return true;
 }

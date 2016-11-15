@@ -5,9 +5,9 @@
 #define GGO_HEXA_ANTIALIASING 1
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_animation_artist::hexa_animation_artist(int render_width, int render_height)
+ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 } 
 
@@ -45,9 +45,9 @@ bool ggo::hexa_animation_artist::render_next_frame_sub(void * buffer, int frame_
   }
   // Update camera.
 #ifdef GGO_HEXA_ANTIALIASING
-  ggo::antialiasing_point_camera camera(get_render_width(), get_render_height());
+  ggo::antialiasing_point_camera camera(get_width(), get_height());
 #else
-  ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height());
 #endif
   
   camera.basis().set_pos(0.f, 0.f, ggo::ease_inout(frame_index, frames_count, 1.f, 350.f));
@@ -68,10 +68,8 @@ bool ggo::hexa_animation_artist::render_next_frame_sub(void * buffer, int frame_
     hexa_info._height = ggo::ease_inout(frame_index, frames_count, 0.f, hexa_info._height);
   }
 
-  ggo::hexa_artist::render(buffer, get_render_width(), get_render_height(),
-                           hexa_infos,
-                           _color_top, _color_side,
-                           _lights_pos, _fog_color, renderer);
+  ggo::hexa_artist::render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(),
+                           hexa_infos, _color_top, _color_side, _lights_pos, _fog_color, renderer);
   
   return true;
 }

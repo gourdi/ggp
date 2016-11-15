@@ -58,9 +58,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::marbles_artist::marbles_artist(int render_width, int render_height)
+ggo::marbles_artist::marbles_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -73,7 +73,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
 
 	// Setup the camera.
-	ggo::multi_sampling_point_camera camera(get_render_width(), get_render_height());
+	ggo::multi_sampling_point_camera camera(get_width(), get_height());
 	camera.basis().set_pos(0, 0, 10);
 	camera.basis().rotate(ggo::ray3d_float::O_X(), 1.2f);
 	camera.set_aperture(0.2f);
@@ -141,6 +141,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(static_cast<uint8_t *>(buffer), get_render_width(), get_render_height(), scene_builder, raytrace_params);
+	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene_builder, raytrace_params);
 }
 

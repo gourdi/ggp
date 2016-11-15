@@ -20,9 +20,9 @@ ggo::metaballs_artist::params::params()
 }
 
 //////////////////////////////////////////////////////////////
-ggo::metaballs_artist::metaballs_artist(int render_width, int render_height)
+ggo::metaballs_artist::metaballs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(render_width, render_height)
+artist(width, height, line_step, pbf)
 {
 }	
 
@@ -48,6 +48,6 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, ggo::renderer_abc & ren
 	scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light1);
   scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light2);
 
-  renderer.render(static_cast<uint8_t *>(buffer), get_render_width(), get_render_height(), scene_builder);
+  renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene_builder);
 }
 

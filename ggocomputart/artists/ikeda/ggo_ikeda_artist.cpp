@@ -5,9 +5,9 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::ikeda_artist(int render_width, int render_height)
+ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -57,7 +57,7 @@ bool ggo::ikeda_artist::render_next_frame_sub(void * buffer, int frame_index)
 	}
   
 	ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+    buffer, get_width(), get_height(), get_line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	std::vector<particle> particles = _seeds;
@@ -97,11 +97,11 @@ bool ggo::ikeda_artist::render_next_frame_sub(void * buffer, int frame_index)
 			// Paint the point.
 			ggo::pos2f point = map_fill(particle._pos, -_range, _range);
 				
-			float radius = 0.0025f * particle._radius * get_render_max_size();
+			float radius = 0.0025f * particle._radius * get_max_size();
 			radius = std::max(1.5f, radius);
 
       ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+        buffer, get_width(), get_height(), get_line_step(),
         ggo::disc_float(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.15f));
 				
 			// Move points slowly.

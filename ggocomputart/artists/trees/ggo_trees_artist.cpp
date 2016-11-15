@@ -3,6 +3,7 @@
 #include <ggo_tree.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_buffer_paint.h>
+#include <ggo_buffer_fill.h>
 
 namespace
 {
@@ -46,9 +47,9 @@ namespace
   std::vector<ggo::polygon2d_float> create_tree(const ggo::bitmap_artist_abc & artist, const std::vector<ggo_rule> & rules, int max_depth, float y)
   {
     // Create tree with first leaf.        
-    float height = 0.1f * artist.get_render_min_size();
+    float height = 0.1f * artist.get_min_size();
     float dx = height / 15 * ggo::rand<float>(0.8f, 1.2f);
-    float x = ggo::rand<float>(-0.2f * artist.get_render_width(), 1.2f * artist.get_render_width());
+    float x = ggo::rand<float>(-0.2f * artist.get_width(), 1.2f * artist.get_width());
 
     ggo_leaf leaf;
     leaf._bottom_points[0] = ggo::pos2f(x - dx, y);
@@ -162,7 +163,7 @@ namespace
       {
         const ggo::pos2f & p1 = polygon.get_point(i);
         const ggo::pos2f & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
-        paint_borders.add_shape(std::make_shared<ggo::extended_segment<float>>(p1, p2, 0.002f * artist.get_render_min_size()));
+        paint_borders.add_shape(std::make_shared<ggo::extended_segment<float>>(p1, p2, 0.002f * artist.get_min_size()));
       }
 
       paint_polygons.add_shape(std::make_shared<ggo::polygon2d_float>(polygon));
@@ -170,26 +171,26 @@ namespace
 
     // Paint everything.
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, artist.get_render_width(), artist.get_render_height(), 3 * artist.get_render_width(),
+      buffer, artist.get_width(), artist.get_height(), 3 * artist.get_width(),
       paint_borders, ggo::black<ggo::color_8u>());
 
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, artist.get_render_width(), artist.get_render_height(), 3 * artist.get_render_width(),
+      buffer, artist.get_width(), artist.get_height(), 3 * artist.get_width(),
       paint_polygons, ggo::from_hsv<ggo::color_8u>(hue, dhue, val));
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::trees_artist::trees_artist(int render_width, int render_height)
+ggo::trees_artist::trees_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::trees_artist::render_bitmap(void * buffer) const
 {
-  memset(buffer, 0, 3 * get_render_width() * get_render_height());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
     
 	// Build the rules.
 	std::vector<ggo_rule> rules;
@@ -209,22 +210,22 @@ void ggo::trees_artist::render_bitmap(void * buffer) const
 	}
 	
   // Build and render the trees.
-  float stddev = 0.005f * get_render_min_size();
+  float stddev = 0.005f * get_min_size();
   float hue = ggo::rand<float>();
   float dhue = ggo::rand<float>(0.1f, 0.2f);
   int max_depth = ggo::rand<int>(8, 10);
   int counter = 0;
   
-  for (float y = static_cast<float>(get_render_height()); y > -0.4f * get_render_height(); y -= 0.005f * get_render_height())
+  for (float y = static_cast<float>(get_height()); y > -0.4f * get_height(); y -= 0.005f * get_height())
   {
     auto tree = create_tree(*this, rules, max_depth, y);
   
-    float val = 1.f - y / float(get_render_height());
+    float val = 1.f - y / float(get_height());
     render_tree(*this, buffer, tree, hue, dhue, val);
 
     if (counter % 2)
     {
-      ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
+      ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), stddev);
       stddev *= 0.95f;
     }
     

@@ -9,19 +9,19 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex2_artist::render(void * buffer, int render_width, int render_height, const ggo::vortex2_artist::params & params)
+void ggo::vortex2_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex2_artist::params & params)
 {
-  int counter_max = render_width * render_height;
-  int max_size = std::max(render_width, render_height);
+  int counter_max = width * height;
+  int max_size = std::max(width, height);
   
-  ggo::array<ggo::color_32f, 2> color_buffer(render_width, render_height, ggo::black<ggo::color_32f>());
+  ggo::array<ggo::color_32f, 2> color_buffer(width, height, ggo::black<ggo::color_32f>());
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
 		ggo::pos2f particle;
 
-		particle.x() = ggo::rand<float>(-0.1f * render_width, 1.1f * render_width);
-		particle.y() = ggo::rand<float>(-0.1f * render_height, 1.1f * render_height);
+		particle.x() = ggo::rand<float>(-0.1f * width, 1.1f * width);
+		particle.y() = ggo::rand<float>(-0.1f * height, 1.1f * height);
 
 		// The particle color.
 		ggo::color_32f color;
@@ -60,33 +60,33 @@ void ggo::vortex2_artist::render(void * buffer, int render_width, int render_hei
 			}
 			particle += move;
 
-			if (particle.x() < 0) { particle.x() += render_width; }
-			else if (particle.x() > render_width) { particle.x() -= render_width; }
+			if (particle.x() < 0) { particle.x() += width; }
+			else if (particle.x() > width) { particle.x() -= width; }
 
-			if (particle.y() < 0) { particle.y() += render_height; }
-			else if (particle.y() > render_height) { particle.y() -= render_height; }
+			if (particle.y() < 0) { particle.y() += height; }
+			else if (particle.y() > height) { particle.y() -= height; }
 
 			// Render the particle.
 			int render_x = ggo::to<int>(particle.x());
 			int render_y = ggo::to<int>(particle.y());
 
-			if ((render_x >= 0) && (render_x < render_width) &&
-				  (render_y >= 0) && (render_y < render_height))
+			if ((render_x >= 0) && (render_x < width) &&
+				  (render_y >= 0) && (render_y < height))
 			{
 				color_buffer(render_x, render_y) += color;
 			}
 		}
 	}
     
-    // Merge render buffer from each thread.
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
-	for (int i = 0; i < render_width * render_height; ++i)
-	{
-    const ggo::color_8u color = ggo::convert_color_to<ggo::color_8u>(ggo::white<ggo::color_32f>() - color_buffer.data()[i]);
-    
-		*ptr++ = color.r();
-		*ptr++ = color.g();
-		*ptr++ = color.b();
+  // Merge render buffer from each thread.
+  for (int y = 0; y < height; ++y)
+  {
+    for (int x = 0; x < width; ++x)
+    {
+      const ggo::color_8u color = ggo::convert_color_to<ggo::color_8u>(ggo::white<ggo::color_32f>() - color_buffer(x, y));
+
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, color);
+    }
 	}
 }
 

@@ -296,7 +296,7 @@ ggo::stoa_artist::stoa_artist(int steps)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_artist::render(void * buffer, int width, int height, float hue,
+void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, float hue,
                               const ggo::pos3f& light_pos1, const ggo::pos3f& light_pos2,
                               ggo::renderer_abc& renderer) const
 {
@@ -309,5 +309,5 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, float hue,
   // Rendering.
   ggo::raytrace_params params;
   params._raycaster = _raycaster.get();
-  renderer.render(static_cast<uint8_t *>(buffer), width, height, scene_builder, params);
+  renderer.render(buffer, width, height, line_step, pbf, scene_builder, params);
 }

@@ -10,15 +10,15 @@ namespace ggo
   {
   public:
 
-    ifs_artist(int render_width, int render_height);
+          ifs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
-    void render(void * buffer, float transform[4], float hue, float angle1, float angle2);
+    void  render(void * buffer, float transform[4], float hue, float angle1, float angle2);
 
   private:
 
-    void update(ggo::pos3f & point, const float transform[4]);
+    void  update(ggo::pos3f & point, const float transform[4]);
 
-    void paint_buffer(void * buffer, uint8_t color, const ggo::array_float & accumul_buffer) const;
+    void  paint_buffer(void * buffer, uint8_t color, const ggo::array_float & accumul_buffer) const;
   };
 }
 

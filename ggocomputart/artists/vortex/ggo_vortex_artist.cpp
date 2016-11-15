@@ -5,9 +5,9 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
-ggo::vortex_artist::vortex_artist(int render_width, int render_height)
+ggo::vortex_artist::vortex_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 
 }
@@ -17,7 +17,7 @@ void ggo::vortex_artist::render_bitmap(void * buffer) const
 {
   const int points_count = 75;
 
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::black<ggo::color_8u>());
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
 
 	float hue				      = ggo::rand<float>();
 	float	sat				      = ggo::rand<float>();
@@ -75,7 +75,7 @@ void ggo::vortex_artist::render_bitmap(void * buffer) const
 			float s = ggo::clamp(sat + ggo::rand<float>(-0.1f, 0.1f), 0.f, 1.f);
 			
 			ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+        buffer, get_width(), get_height(), get_line_step(),
         eclipse_render, ggo::white_brush_8u(), ggo::alpha_blender_rgb8u(0.2f));
 		}
 	}

@@ -1,10 +1,10 @@
 #include "ggo_kanji_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_animation_artist::kanji_animation_artist(int render_width, int render_height)
+ggo::kanji_animation_artist::kanji_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-accumulation_animation_artist_abc(render_width, render_height),
-_kanji_artist(render_width, render_height)
+accumulation_animation_artist_abc(width, height, line_step, pbf),
+_kanji_artist(width, height, line_step, pbf)
 {
 	
 }

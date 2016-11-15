@@ -32,9 +32,7 @@ namespace ggo
 #ifndef GGO_CYGWIN
   //////////////////////////////////////////////////////////////
   void renderer_abc::render_thread_func(const ggo::renderer_abc * renderer,
-                                        uint8_t * buffer,
-                                        int width,
-                                        int height,
+                                        void * buffer,int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                                         const ggo::scene * scene,
                                         const ggo::raytrace_params * raytrace_params)
   {
@@ -67,31 +65,33 @@ namespace ggo
         break;
       }
       
-      ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raytrace_params);
+      const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raytrace_params);
 
-      uint8_t * ptr = buffer + 3 * (y * width + x);
-        
-      *ptr++ = ggo::to<uint8_t>(color.r() * 255.f);
-      *ptr++ = ggo::to<uint8_t>(color.g() * 255.f);
-      *ptr++ = ggo::to<uint8_t>(color.b() * 255.f);
+      switch (pbf)
+      {
+      case ggo::rgb_8u_yu:
+        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
+        break;
+      default:
+        GGO_FAIL();
+        break;
+      }
     }
   }
 #endif
 
   //////////////////////////////////////////////////////////////
-  void renderer_abc::render(uint8_t * buffer, int width, int height,
+  void renderer_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                             const ggo::scene_builder & scene_builder,
                             const ggo::raytrace_params & raytrace_params)
   {
     auto scene = scene_builder.build_scene();
 
-    render(buffer, width, height, scene, raytrace_params);
+    render(buffer, width, height, line_step, pbf, scene, raytrace_params);
   }
 
   //////////////////////////////////////////////////////////////
-  void renderer_abc::render(uint8_t * buffer,
-                            int width,
-                            int height,
+  void renderer_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                             const ggo::scene & scene,
                             const ggo::raytrace_params & raytrace_params)
   {
@@ -124,16 +124,20 @@ namespace ggo
       for (int y = 0; y < height; ++y)
       {
         print_line_number(y + 1);
-        
-        uint8_t * line = buffer + 3 * y * width;
 
         for (int x = 0; x < width; ++x)
         {
-          ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params);
-
-          *line++ = ggo::to<uint8_t>(color.r() * 255.f);
-          *line++ = ggo::to<uint8_t>(color.g() * 255.f);
-          *line++ = ggo::to<uint8_t>(color.b() * 255.f);
+          const ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params);
+          
+          switch (pbf)
+          {
+          case ggo::rgb_8u_yu:
+            ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
+            break;
+          default:
+            GGO_FAIL();
+            break;
+          }
         }
       }
     }
@@ -150,7 +154,7 @@ namespace ggo
       std::vector<std::thread> threads;
       for (int i = 0; i < threads_count; ++i)
       {
-        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, &scene, &raytrace_params));
+        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, line_step, pbf, &scene, &raytrace_params));
       }
       for (auto & thread : threads)
       {

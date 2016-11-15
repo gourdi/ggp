@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    flies_artist(int render_width, int render_height);
+          flies_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	init_sub() override;
     void	init_bkgd_buffer(void * bkgd_buffer) const override;

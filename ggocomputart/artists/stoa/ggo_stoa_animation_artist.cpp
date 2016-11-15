@@ -4,9 +4,9 @@
 #include <ggo_antialiasing_renderer.h>
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_animation_artist::stoa_animation_artist(int render_width, int render_height)
+ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf)
 {
 }
 
@@ -35,9 +35,9 @@ bool ggo::stoa_animation_artist::render_next_frame_sub(void * buffer, int frame_
 
   // The camera.
 #ifdef MONO_SAMPLING
-  ggo::mono_sampling_point_camera camera(get_render_width(), get_render_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height());
 #else
-  ggo::antialiasing_point_camera camera(get_render_width(), get_render_height());
+  ggo::antialiasing_point_camera camera(get_width(), get_height());
 #endif
   camera.basis().set_pos(0, 0, 40);
   camera.set_aperture(0.1f);
@@ -58,7 +58,7 @@ bool ggo::stoa_animation_artist::render_next_frame_sub(void * buffer, int frame_
   ggo::antialiasing_renderer renderer(camera);
 #endif
 
-  _artist->render(buffer, get_render_width(), get_render_height(), _hue, light_pos1, light_pos2, renderer);
+  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), _hue, light_pos1, light_pos2, renderer);
 
   return true;
 }

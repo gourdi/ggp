@@ -179,16 +179,16 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int render_width, int render_height)
+ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), ggo::white<ggo::color_8u>());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
 
   auto triangles = compute_triangles();
 
@@ -203,8 +203,8 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
   }
 
   // Scale and move triangles.
-  const float ratio = 0.75f * get_render_min_size() / (std::max(bounding_box.width(), bounding_box.height()));
-  const ggo::vec2f offset(0.5f * get_render_width(), 0.5f * get_render_height());
+  const float ratio = 0.75f * get_min_size() / (std::max(bounding_box.width(), bounding_box.height()));
+  const ggo::vec2f offset(0.5f * get_width(), 0.5f * get_height());
   for (auto & triangle : triangles)
   {
     triangle.v1() -= bounding_box.center();
@@ -222,7 +222,7 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
 
   // Paint shadows.
   std::vector<solid_color_shape<triangle2d_float, color_8u>> shadows;
-  const ggo::vec2f shadow_offset(0.01f * get_render_min_size(), -0.01f * get_render_min_size());
+  const ggo::vec2f shadow_offset(0.01f * get_min_size(), -0.01f * get_min_size());
   for (auto triangle : triangles)
   {
     triangle2d_float shadow_triangle(triangle);
@@ -232,11 +232,11 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
 
     shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
   }
-  ggo::paint_shapes<rgb_8u_yu, sampling_4x4>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+  ggo::paint_shapes<rgb_8u_yu, sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
     shadows.begin(), shadows.end());
 
-  float stddev = 0.01f * get_render_min_size();
-  gaussian_blur2d_mirror<rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), stddev);
+  float stddev = 0.01f * get_min_size();
+  gaussian_blur2d_mirror<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), stddev);
 
   // Paint the triangles.
   std::vector<dyn_paint_shape<float, color_8u, color_8u>> shapes;
@@ -256,7 +256,7 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
     auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2) {
 
       dyn_paint_shape<float, color_8u, color_8u> segment;
-      segment._shape = std::make_shared<ggo::extended_segment_float>(p1, p2, 0.00025f * get_render_min_size());
+      segment._shape = std::make_shared<ggo::extended_segment_float>(p1, p2, 0.00025f * get_min_size());
       segment._brush = black_brush;
       segment._blender = blender;
 
@@ -268,6 +268,6 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
     create_segment(triangle.v3(), triangle.v1());
   }
 
-  ggo::paint_shapes<rgb_8u_yu, sampling_4x4>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
+  ggo::paint_shapes<rgb_8u_yu, sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
     shapes.begin(), shapes.end());
 }

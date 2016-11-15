@@ -1,10 +1,10 @@
 #include "ggo_crystal_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::crystal_animation_artist::crystal_animation_artist(int render_width, int render_height)
+ggo::crystal_animation_artist::crystal_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_artist(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_artist(width, height, line_step, pbf)
 {
 	
 }
@@ -47,7 +47,7 @@ bool ggo::crystal_animation_artist::render_next_frame_sub(void * buffer, int fra
 		params._db[i] = ggo::ease_inout(frame_index, frames_count, _start_params._db[i], _end_params._db[i]);
 	}
 	
-	_artist.render_bitmap(static_cast<uint8_t *>(buffer), params, _bkgd_colors);
+	_artist.render_bitmap(buffer, params, _bkgd_colors);
 	
 	return true;
 }

@@ -21,7 +21,7 @@ namespace ggo
       ggo::pos2f				              _pos;
     };
 
-    std::vector<multi_square>	build_squares(int render_width, int render_height, float & hue);
+    std::vector<multi_square>	build_squares(int width, int height, float & hue);
   };
 }
 

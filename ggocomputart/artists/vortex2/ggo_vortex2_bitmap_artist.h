@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          vortex2_bitmap_artist(int render_width, int render_height);
+          vortex2_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 

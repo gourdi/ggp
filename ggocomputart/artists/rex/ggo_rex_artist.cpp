@@ -57,10 +57,10 @@ namespace
       int y_min = int(std::min(v1.y(), std::min(v2.y(), v3.y())));
       int y_max = int(std::max(v1.y(), std::max(v2.y(), v3.y()))) + 1;
 
-      x_min = ggo::clamp(x_min, 0, artist.get_render_width());
-      x_max = ggo::clamp(x_max, 0, artist.get_render_width());
-      y_min = ggo::clamp(y_min, 0, artist.get_render_height());
-      y_max = ggo::clamp(y_max, 0, artist.get_render_height());
+      x_min = ggo::clamp(x_min, 0, artist.get_width());
+      x_max = ggo::clamp(x_max, 0, artist.get_width());
+      y_min = ggo::clamp(y_min, 0, artist.get_height());
+      y_max = ggo::clamp(y_max, 0, artist.get_height());
 
       ggo::polygon2d_float mapped_triangle;
       mapped_triangle.add_point(v1);
@@ -87,10 +87,7 @@ namespace
 
             ggo::color_8u c_8u = ggo::convert_color_to<ggo::color_8u>(c_32f);
 
-            uint8_t * ptr = static_cast<uint8_t *>(buffer) + 3 * (y * artist.get_render_width() + x);
-            ptr[0] = c_8u.r();
-            ptr[1] = c_8u.g();
-            ptr[2] = c_8u.b();
+            ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, artist.get_height(), artist.get_line_step(), c_8u);
           }
         }
       }
@@ -133,8 +130,8 @@ namespace
       // Paint the pattern.
       std::vector<uint8_t> pattern_buffer(size_x * size_y, 0);
 
-      float delta = pattern_triangle._delta * artist.get_render_min_size();
-      float radius = pattern_triangle._radius * artist.get_render_min_size();
+      float delta = pattern_triangle._delta * artist.get_min_size();
+      float radius = pattern_triangle._radius * artist.get_min_size();
       for (float y = 0; y < size_y; y += delta)
       {
         for (float x = 0; x < size_x; x += delta)
@@ -151,23 +148,24 @@ namespace
       for (int y = 0; y < size_y; ++y)
       {
         int dst_y = pos_y + y;
-        int v = 255 - (255 * dst_y / artist.get_render_height());
-        if ((dst_y >= 0) && (dst_y < artist.get_render_height()))
+        int v = 255 - (255 * dst_y / artist.get_height());
+        if ((dst_y >= 0) && (dst_y < artist.get_height()))
         {
           for (int x = 0; x < size_x; ++x)
           {
             int dst_x = pos_x + x;
-            if ((dst_x >= 0) && (dst_x < artist.get_render_width()))
+            if ((dst_x >= 0) && (dst_x < artist.get_width()))
             {
               // Opacity.
               int opacity = (mask_buffer.data()[y * size_x + x] * pattern_buffer.data()[y * size_x + x] + 128) >> 8;
               int inv_opacity = 255 - opacity;
 
               // Paint pixel.
-              uint8_t * it = static_cast<uint8_t *>(buffer) + 3 * (dst_y * artist.get_render_width() + dst_x);
-              it[0] = (inv_opacity * it[0] + 128) >> 8;
-              it[1] = (inv_opacity * it[1] + 128) >> 8;
-              it[2] = (inv_opacity * it[2] + 128) >> 8;
+              ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, artist.get_height(), artist.get_line_step());
+              c_8u.r() = uint8_t((inv_opacity * c_8u.r() + 128) >> 8);
+              c_8u.g() = uint8_t((inv_opacity * c_8u.g() + 128) >> 8);
+              c_8u.b() = uint8_t((inv_opacity * c_8u.b() + 128) >> 8);
+              ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, artist.get_height(), artist.get_line_step(), c_8u);
             }
           }
         }
@@ -181,7 +179,7 @@ namespace
     const std::vector<rex_opened_disc_data> & opened_discs)
   {
     // Paint clipped circle triangles.
-    std::vector<uint8_t> mask1_buffer(artist.get_render_width() * artist.get_render_height(), 0);
+    std::vector<uint8_t> mask1_buffer(artist.get_width() * artist.get_height(), 0);
 
     for (const auto & disc_clip_triangle : discs_clip_triangles)
     {
@@ -195,12 +193,12 @@ namespace
       mapped_triangle.add_point(v3);
 
       ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_1>(
-        mask1_buffer.data(), artist.get_render_width(), artist.get_render_height(), artist.get_render_width(),
+        mask1_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
         mapped_triangle, uint8_t(1));
     }
 
     // Paint circles.
-    std::vector<uint8_t> mask2_buffer(artist.get_render_width() * artist.get_render_height(), 0);
+    std::vector<uint8_t> mask2_buffer(artist.get_width() * artist.get_height(), 0);
 
     for (const auto & opened_disc : opened_discs)
     {
@@ -215,27 +213,27 @@ namespace
       multi_shape.add_shapes(disc1, disc2);
 
       ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_16x16>(
-        mask2_buffer.data(), artist.get_render_width(), artist.get_render_height(), artist.get_render_width(),
+        mask2_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
         multi_shape, uint8_t(1));
     }
 
     // Blend masks in the render buffer.
-    uint8_t * ptr = static_cast<uint8_t *>(buffer);
     const uint8_t * ptr1 = mask1_buffer.data();
     const uint8_t * ptr2 = mask2_buffer.data();
-    for (int i = 0; i < artist.get_render_height() * artist.get_render_width(); ++i)
+    artist.for_each_pixel([&](int x, int y)
     {
       int opacity = ((*ptr1) * (*ptr2) + 128) >> 8;
       int inv_opacity = 255 - opacity;
 
-      ptr[0] = (inv_opacity * ptr[0] + 128) >> 8;
-      ptr[1] = (inv_opacity * ptr[1] + 128) >> 8;
-      ptr[2] = (inv_opacity * ptr[2] + 128) >> 8;
+      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, artist.get_height(), artist.get_line_step());
+      c_8u.r() = uint8_t((inv_opacity * c_8u.r() + 128) >> 8);
+      c_8u.g() = uint8_t((inv_opacity * c_8u.g() + 128) >> 8);
+      c_8u.b() = uint8_t((inv_opacity * c_8u.b() + 128) >> 8);
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, artist.get_height(), artist.get_line_step(), c_8u);
 
       ++ptr1;
       ++ptr2;
-      ptr += 3;
-    }
+    });
   }
 
   //////////////////////////////////////////////////////////////
@@ -248,21 +246,21 @@ namespace
       ggo::pos2f v1 = artist.map_fit(edge.p1(), 0, 1);
       ggo::pos2f v2 = artist.map_fit(edge.p2(), 0, 1);
 
-      auto segment = std::make_shared<ggo::extended_segment_float>(v1, v2, 0.001f * artist.get_render_min_size());
+      auto segment = std::make_shared<ggo::extended_segment_float>(v1, v2, 0.001f * artist.get_min_size());
 
       multi_shape.add_shape(segment);
     }
 
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(
-      buffer, artist.get_render_width(), artist.get_render_height(), 3 * artist.get_render_width(),
+      buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       multi_shape, ggo::black<ggo::color_8u>());
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::rex_artist::rex_artist(int render_width, int render_height)
+ggo::rex_artist::rex_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-bitmap_artist_abc(render_width, render_height)
+bitmap_artist_abc(width, height, line_step, pbf)
 {
 	
 }

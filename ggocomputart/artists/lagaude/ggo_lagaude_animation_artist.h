@@ -14,7 +14,7 @@ namespace ggo
   {
   public:
 
-    lagaude_animation_artist(int render_width, int render_height);
+          lagaude_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
     void	init_sub() override;
     bool	render_next_frame_sub(void * buffer, int frame_index) override;
@@ -22,13 +22,13 @@ namespace ggo
   private:
 
     //////////////////////////////////////////////////////////////
-    class particle : public ggo_path_animate_abc
+    class particle : public ggo::path_animate_abc
     {
     public:
 
-      particle(const ggo::pos2f & pos, ggo_linear_path * path);
+            particle(const ggo::pos2f & pos, ggo::linear_path * path);
 
-      bool  update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+      bool  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
 
     public:
 
@@ -47,11 +47,11 @@ namespace ggo
     };
 
     //////////////////////////////////////////////////////////////
-    class scale_animate_abc : public ggo_path_animate_abc
+    class scale_animate_abc : public ggo::path_animate_abc
     {
     public:
 
-      scale_animate_abc(const ggo::pos2f & pos, ggo_path_abc * path, float scale) : ggo_path_animate_abc(pos, path), _scale(scale) {};
+      scale_animate_abc(const ggo::pos2f & pos, ggo::path_abc * path, float scale) : ggo::path_animate_abc(pos, path), _scale(scale) {};
 
       float	get_scale() const { return _scale; };
 
@@ -65,14 +65,14 @@ namespace ggo
     {
     public:
 
-      seed(const ggo::pos2f & pos, ggo_path_abc * path, float scale, float hue);
+      seed(const ggo::pos2f & pos, ggo::path_abc * path, float scale, float hue);
 
-      bool	update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+      bool	update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
 
     private:
 
       ggo::array<angle_generator, 1>  _angle_generators;
-      ggo_animator					          _particles_animator;
+      ggo::animator					          _particles_animator;
       int								              _life;
       ggo::color_8u			              _color;
       float							              _dangle;
@@ -83,9 +83,9 @@ namespace ggo
     {
     public:
 
-      dust(const ggo::pos2f & pos, ggo_path_abc * path, float scale) : scale_animate_abc(pos, path, scale) {};
+      dust(const ggo::pos2f & pos, ggo::path_abc * path, float scale) : scale_animate_abc(pos, path, scale) {};
 
-      bool	update(void * buffer, int width, int height, int counter, const ggo::pos2f & pos) override;
+      bool	update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
 
     public:
 
@@ -95,7 +95,7 @@ namespace ggo
     };
 
     //////////////////////////////////////////////////////////////
-    class sinuoid_path : public ggo_path_abc
+    class sinuoid_path : public ggo::path_abc
     {
     public:
 
@@ -122,7 +122,7 @@ namespace ggo
 
   private:
 
-    ggo_animator				    _animator;
+    ggo::animator				    _animator;
     std::vector<bkgd_disc>  _bkgd_discs;
     float						        _hue;
   };

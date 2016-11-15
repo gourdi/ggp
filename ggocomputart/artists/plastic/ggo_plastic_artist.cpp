@@ -1,9 +1,9 @@
 #include "ggo_plastic_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_artist::plastic_artist(int render_width, int render_height)
+ggo::plastic_artist::plastic_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(render_width, render_height)
+artist(width, height, line_step, pbf)
 {
 
 }
@@ -11,21 +11,19 @@ artist(render_width, render_height)
 //////////////////////////////////////////////////////////////
 void ggo::plastic_artist::render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
 {
-	float range_x = get_render_width() > get_render_height() ? get_render_width() / float(get_render_height()) : 1;
-	float range_y = get_render_width() > get_render_height() ? 1 : get_render_height() / float(get_render_width());
+	float range_x = get_width() > get_height() ? get_width() / float(get_height()) : 1;
+	float range_y = get_width() > get_height() ? 1 : get_height() / float(get_width());
 
-  uint8_t * ptr = static_cast<uint8_t *>(buffer);
-
-	for (int y = 0; y < get_render_height(); ++y)
+	for (int y = 0; y < get_height(); ++y)
 	{
-		float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(get_render_height()), -range_y, range_y);
-		float y2 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(get_render_height()), -range_y, range_y);
+		float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(get_height()), -range_y, range_y);
+		float y2 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(get_height()), -range_y, range_y);
 	
-		for (int x = 0; x < get_render_width(); ++x)
+		for (int x = 0; x < get_width(); ++x)
 		{
 			// Compute altitude.
-			float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(get_render_width()), -range_x, range_x);
-			float x2 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(get_render_width()), -range_x, range_x);
+			float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(get_width()), -range_x, range_x);
+			float x2 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(get_width()), -range_x, range_x);
 
 			float z11 = evaluate(x1, y1, params);
 			float z12 = evaluate(x1, y2, params);
@@ -44,12 +42,8 @@ void ggo::plastic_artist::render(void * buffer, const std::vector<ggo::plastic_a
       pixel_color_32f *= altitude_factor + std::abs(normal.get<2>()) / altitude_factor;
 
       const ggo::color_8u pixel_color = ggo::convert_color_to<ggo::color_8u>(pixel_color_32f);
-		
-			ptr[0] = pixel_color.r();
-			ptr[1] = pixel_color.g();
-			ptr[2] = pixel_color.b();
-		
-      ptr += 3;
+
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), pixel_color);
 		}
 	}
 }

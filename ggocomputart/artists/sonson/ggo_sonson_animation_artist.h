@@ -13,7 +13,7 @@ namespace ggo
   {
   public:
 
-          sonson_animation_artist(int render_width, int render_height);
+          sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
 
   private:
 
@@ -31,7 +31,7 @@ namespace ggo
       static  line *  create(float hue, int width, int height, int scale_factor);
 
       bool            update();
-      void            render(void * buffer, int width, int height) const;
+      void            render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const;
 
     private:
 

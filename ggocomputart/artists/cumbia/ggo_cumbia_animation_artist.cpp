@@ -2,10 +2,10 @@
 #include "ggo_antialiasing_renderer.h"
 
 //////////////////////////////////////////////////////////////
-ggo::cumbia_animation_artist::cumbia_animation_artist(int render_width, int render_height)
+ggo::cumbia_animation_artist::cumbia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-animation_artist_abc(render_width, render_height),
-_camera(render_width, render_height)
+animation_artist_abc(width, height, line_step, pbf),
+_camera(width, height)
 {
 	
 }
@@ -23,7 +23,7 @@ bool ggo::cumbia_animation_artist::render_next_frame_sub(void * buffer, int fram
 
   ggo::antialiasing_renderer renderer(_camera);
   
-	_artist.render_bitmap(buffer, get_render_width(), get_render_height(), renderer);
+	_artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer);
 	
 	_camera.basis().rotate(ggo::ray3d_float::O_Z(), 2 * ggo::pi<float>() / frames_count);
 	

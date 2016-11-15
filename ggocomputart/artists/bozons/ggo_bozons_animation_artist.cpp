@@ -15,9 +15,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::bozons_animation_artist::bozons_animation_artist(int render_width, int render_height)
+ggo::bozons_animation_artist::bozons_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-static_background_animation_artist_abc(render_width, render_height)
+static_background_animation_artist_abc(width, height, line_step, pbf)
 {
 	
 }
@@ -44,8 +44,7 @@ bool ggo::bozons_animation_artist::render_next_frame_bkgd(void * buffer, int fra
   }
 	
   paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, get_render_width(), get_render_height(), 3 * get_render_width(),
-    color_discs.cbegin(), color_discs.cend());
+    buffer, get_width(), get_height(), get_line_step(), color_discs.cbegin(), color_discs.cend());
 	
 	return true;
 }
@@ -148,6 +147,6 @@ void ggo::bozons_animation_artist::init_bkgd_buffer(void * buffer) const
 	const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 	const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
   
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_render_width(), get_render_height(), 3 * get_render_width(), 
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), 
     bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
 }
