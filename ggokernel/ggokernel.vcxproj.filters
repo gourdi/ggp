@@ -313,6 +313,9 @@
       <Filter>math\signal_proc</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_circular_buffer.h" />
+    <ClInclude Include="src\threading\ggo_signal.h">
+      <Filter>threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -396,6 +399,9 @@
     </Filter>
     <Filter Include="math\marching_algorithms">
       <UniqueIdentifier>{a95367df-6a81-4683-b9a5-71d83cbb63fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{2731c668-f22e-4125-94f7-698e365e3dcf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
