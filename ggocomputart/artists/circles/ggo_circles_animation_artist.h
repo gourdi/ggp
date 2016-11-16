@@ -23,9 +23,9 @@ namespace ggo
 
     struct circle_animate : public ggo::position_animate_abc
     {
-      circle_animate(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
+            circle_animate(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
 
-      bool update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
+      bool  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
 
       float         _radius;
       ggo::color_8u _color;

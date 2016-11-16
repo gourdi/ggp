@@ -21,7 +21,7 @@ namespace
 
     std::array<ggo::color_8u, 1000> palette;
 
-    ggo::cubic_curve_float sat_curve;
+    ggo::linear_curve_float sat_curve;
     sat_curve.push_point(0, 0);
     sat_curve.push_point(ggo::rand<float>(0, 0.5), 1);
     sat_curve.push_point(1, 0);
@@ -40,6 +40,8 @@ namespace
       float val = val_curve.evaluate(x);
 
       color = ggo::from_hsv<ggo::color_8u>(hue, sat, val);
+
+      ++i;
     }
 
     return palette;
@@ -88,11 +90,11 @@ namespace
 
           // The current sub block position.
           block._range = 0.5 * range / blocks_count;
-          double real = block._center.real() + block_x * range / blocks_count;
-          double imag = block._center.imag() + block_y * range / blocks_count;
+          double real = center.real() + block_x * range / blocks_count;
+          double imag = center.imag() + block_y * range / blocks_count;
 
           // Shake it a bit.
-          block._range *= ggo::rand<float>(0.9f, 1.1f);
+          block._range *= ggo::rand<double>(0.9, 1.1);
           real += ggo::rand<double>(-block._range / 10, block._range / 10);
           imag += ggo::rand<double>(-block._range / 10, block._range / 10);
 
@@ -113,17 +115,17 @@ namespace
           }
 
           // Compute mean and deviation.
-          double mean = 0;
-          for (std::vector<int>::const_iterator it = iterations.begin(); it != iterations.end(); ++it)
+          double mean = 0.f;
+          for (int v : iterations)
           {
-            mean += *it;
+            mean += v;
           }
           mean /= iterations.size();
 
           block._deviation = 0;
-          for (std::vector<int>::const_iterator it = iterations.begin(); it != iterations.end(); ++it)
+          for (int v : iterations)
           {
-            double delta = mean - *it;
+            double delta = mean - v;
             block._deviation += delta * delta;
           }
 
@@ -131,10 +133,9 @@ namespace
         }
       }
 
-      std::sort(blocks.begin(), blocks.end(), [](const block & v1, const block & v2) { return v1._deviation > v2._deviation; });
-
-      center = blocks.front()._center;
-      range = blocks.front()._range;
+      auto max_elmt = std::max_element(blocks.begin(), blocks.end(), [](const block & v1, const block & v2) { return v1._deviation < v2._deviation; });
+      center = max_elmt->_center;
+      range = max_elmt->_range;
 
       ++depth;
       if (depth == 4)
@@ -188,11 +189,19 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 			iterations[2] = iterate(x4, y1, static_cast<int>(palette.size()));
 			iterations[3] = iterate(x4, y4, static_cast<int>(palette.size()));
 		
-			int index = 0;
 			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
 			{
 				int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+
+        switch (get_pixel_buffer_format())
+        {
+        case ggo::rgb_8u_yu:
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+          break;
+        case ggo::bgra_8u_yd:
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+          break;
+        }
 			}
 			else
 			{
@@ -224,7 +233,16 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 				}
 
         ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+
+        switch (get_pixel_buffer_format())
+        {
+        case ggo::rgb_8u_yu:
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          break;
+        case ggo::bgra_8u_yd:
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          break;
+        }
 			}
 		}
 	}

@@ -80,10 +80,19 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 			iterations[2] = iterate(x4, y1, seed);
 			iterations[3] = iterate(x4, y4, seed);
 		
-			int index = 0;
 			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
 			{
-				index = iterations[0];
+        int index = iterations[0];
+
+        switch (get_pixel_buffer_format())
+        {
+        case ggo::rgb_8u_yu:
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
+          break;
+        case ggo::bgra_8u_yd:
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
+          break;
+        }
 			}
 			else
 			{
@@ -103,17 +112,29 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 				iterations[14] = iterate(x4, y2, seed);
 				iterations[15] = iterate(x4, y3, seed);
 			
-				index = iterations[0] + iterations[1]+ iterations[2] + iterations[3];
-				index += iterations[4] + iterations[5]+ iterations[6] + iterations[7];
-				index += iterations[8] + iterations[9]+ iterations[10] + iterations[11];
-				index += iterations[12] + iterations[13]+ iterations[14] + iterations[15];
-				index = (index + 8) / 16;
-			}
-		
-			// Set the proper pixel color.
-			index = std::min(static_cast<int>(_palette.size() - 1), index);
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        for (int i = 0; i < 16; ++i)
+        {
+          int index = std::min(static_cast<int>(_palette.size() - 1), iterations[i]);
+          r += _palette[index].r();
+          g += _palette[index].g();
+          b += _palette[index].b();
+        }
 
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
+        ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
+
+        switch (get_pixel_buffer_format())
+        {
+        case ggo::rgb_8u_yu:
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          break;
+        case ggo::bgra_8u_yd:
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          break;
+        }
+			}
 		}
 	}
 }
