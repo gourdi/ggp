@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-          cumbia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          cumbia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
   private:
 

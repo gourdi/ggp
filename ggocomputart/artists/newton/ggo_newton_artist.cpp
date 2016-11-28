@@ -7,9 +7,9 @@
 #include <ggo_blit.h>
 
 //////////////////////////////////////////////////////////////
-ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf)
+static_background_animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }

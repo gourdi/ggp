@@ -5,9 +5,9 @@
 #include <ggo_buffer_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-accumulation_animation_artist_abc(width, height, line_step, pbf),
+accumulation_animation_artist_abc(width, height, line_step, pbf, rt),
 _feed_map(width * height),
 _kill_map(width * height),
 _food(width * height),

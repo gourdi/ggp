@@ -12,9 +12,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }

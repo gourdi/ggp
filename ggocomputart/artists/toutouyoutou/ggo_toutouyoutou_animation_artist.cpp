@@ -29,9 +29,9 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf),
+static_background_animation_artist_abc(width, height, line_step, pbf, rt),
 _grid(ggo::to<int>(view_height / influence_radius), ggo::to<int>(view_height / influence_radius)) // Grid size is the same as the discard radius.
 {
 }

@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-                dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+                dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
     void				init_sub() override;
     bool				render_next_frame_sub(void * buffer, int frame_index) override;

@@ -5,9 +5,9 @@
 #define GGO_HEXA_ANTIALIASING 1
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 } 
 

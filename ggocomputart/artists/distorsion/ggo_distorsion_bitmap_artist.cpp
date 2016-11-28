@@ -11,7 +11,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 //////////////////////////////////////////////////////////////
 void ggo::distorsion_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::distorsion_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+  ggo::distorsion_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
     
   artist.init();
   artist.render_last_frame(buffer);

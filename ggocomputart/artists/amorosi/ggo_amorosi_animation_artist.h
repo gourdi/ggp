@@ -13,7 +13,7 @@ namespace ggo
   {
   public:
 
-    amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+    amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
     struct opacity_point
     {

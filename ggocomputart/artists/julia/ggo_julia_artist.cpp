@@ -82,7 +82,7 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 		
 			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
 			{
-        int index = iterations[0];
+        int index = std::min(static_cast<int>(_palette.size() - 1), iterations[0]);
 
         switch (get_pixel_buffer_format())
         {

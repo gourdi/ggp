@@ -463,9 +463,9 @@ void ggo::sonson_animation_artist::line::render(void * buffer, int width, int he
 }
 
 //////////////////////////////////////////////////////////////
-ggo::sonson_animation_artist::sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::sonson_animation_artist::sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }

@@ -1,9 +1,9 @@
 #include "ggo_plastic_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }

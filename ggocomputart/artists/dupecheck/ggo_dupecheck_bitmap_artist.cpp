@@ -14,7 +14,7 @@ void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer) const
 {
 	const int frame_index = 100;
 	
-	ggo::dupecheck_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+	ggo::dupecheck_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
 
 	artist.init_sub();
 	for (int i = 0; i < frame_index; ++i)

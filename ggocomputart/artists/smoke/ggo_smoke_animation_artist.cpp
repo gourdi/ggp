@@ -46,9 +46,9 @@ double ggo::smoke_animation_artist::loop_array2d::loop_value(int x, int y) const
 }
 
 //////////////////////////////////////////////////////////////
-ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf),
+animation_artist_abc(width, height, line_step, pbf, rt),
 _velocity_x1(width + 1, height),
 _velocity_x2(width + 1, height),
 _velocity_y1(width, height + 1),

@@ -25,8 +25,6 @@ namespace ggo
 
     void	render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const;
 
-  private:
-
     float	evaluate(float x, float y, const std::vector<ggo::plastic_artist::params> & params) const;
   };
 }

@@ -1,7 +1,6 @@
 #include "ggo_vortex2_artist.h"
 #include <ggo_color.h>
 #include <ggo_fill.h>
-#include <thread>
 
 namespace
 {

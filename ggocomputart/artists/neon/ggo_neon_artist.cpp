@@ -30,9 +30,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-accumulation_animation_artist_abc(width, height, line_step, pbf)
+accumulation_animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }

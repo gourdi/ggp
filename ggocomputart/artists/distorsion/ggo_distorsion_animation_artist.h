@@ -11,12 +11,10 @@ namespace ggo
   {
   public:
 
-          distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
     void	init_sub() override;
     void	render_last_frame(void * buffer);
-
-  private:
 
     struct colored_stripe
     {
@@ -45,11 +43,10 @@ namespace ggo
 
     float _hue;
 
-  private:
-
     bool	                                      render_next_frame_sub(void * buffer, int frame_index) override;
 
     std::vector<colored_stripe>::const_iterator get_stripe_at(float x) const;
+
     static  float                               transform(float x, float y, const std::vector<fixed_transform> & transforms);
 
   private:
