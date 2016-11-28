@@ -17,7 +17,7 @@ namespace ggo
   };
 
   template <typename T, boolean_mode mode = boolean_mode::UNION>
-  class multi_shape : public paintable_shape2d_abc<T>
+  class multi_shape final : public paintable_shape2d_abc<T>
   {
   public:
 

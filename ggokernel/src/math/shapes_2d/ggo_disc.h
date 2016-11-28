@@ -8,9 +8,9 @@
 namespace ggo
 {
   template <typename data_t>
-  class disc : public paintable_shape2d_abc<data_t>,
-               public distancable_shape2d_abc<data_t>,
-               public affine_shape2d_abc<data_t>
+  class disc final : public paintable_shape2d_abc<data_t>,
+                     public distancable_shape2d_abc<data_t>,
+                     public affine_shape2d_abc<data_t>
   {
   public:
     

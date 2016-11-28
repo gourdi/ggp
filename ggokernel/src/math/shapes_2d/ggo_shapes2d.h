@@ -21,12 +21,15 @@ namespace ggo
     unknown
   };
 
-  template <typename T>
+  template <typename data_t>
   struct rect_data
   {
-    pos2<T>  _pos;
-    T        _width;
-    T        _height;
+    rect_data() = default;
+    rect_data(const ggo::pos2<data_t> & pos, data_t width, data_t height) : _pos(pos), _width(width), _height(height) {}
+
+    pos2<data_t>  _pos;
+    data_t        _width;
+    data_t        _height;
   };
 
   template <typename T>
@@ -51,32 +54,58 @@ namespace ggo
   }
 
   template <typename T>
-  bool rect_data_intersection(const rect_data<T> & rect1, const rect_data<T> & rect2, rect_data<T> & result)
+  bool rect_data_intersect(const rect_data<T> & rect1, const rect_data<T> & rect2)
   {
-    T left1 = rect1._pos.x();
-    T bottom1 = rect1._pos.y();
-    T right1 = left1 + rect1._width;
-    T top1 = bottom1 + rect1._height;
-
-    T left2 = rect2._pos.x();
-    T bottom2 = rect2._pos.y();
-    T right2 = left2 + rect2._width;
-    T top2 = bottom2 + rect2._height;
+    const T left1 = rect1._pos.x();
+    const T right1 = left1 + rect1._width;
+    const T left2 = rect2._pos.x();
+    const T right2 = left2 + rect2._width;
 
     if (right1 < left2 || right2 < left1)
     {
       return false;
     }
 
+    const T bottom1 = rect1._pos.y();
+    const T top1 = bottom1 + rect1._height;
+    const T bottom2 = rect2._pos.y();
+    const T top2 = bottom2 + rect2._height;
+
     if (bottom1 > top2 || bottom2 > top1)
     {
       return false;
     }
 
-    T left = std::max(left1, left2);
-    T bottom = std::max(bottom1, bottom2);
-    T right = std::min(right1, right2);
-    T top = std::min(top1, top2);
+    return true;
+  }
+
+  template <typename T>
+  bool rect_data_intersection(const rect_data<T> & rect1, const rect_data<T> & rect2, rect_data<T> & result)
+  {
+    const T left1 = rect1._pos.x();
+    const T right1 = left1 + rect1._width;
+    const T left2 = rect2._pos.x();
+    const T right2 = left2 + rect2._width;
+
+    if (right1 < left2 || right2 < left1)
+    {
+      return false;
+    }
+
+    const T bottom1 = rect1._pos.y();
+    const T top1 = bottom1 + rect1._height;
+    const T bottom2 = rect2._pos.y();
+    const T top2 = bottom2 + rect2._height;
+
+    if (bottom1 > top2 || bottom2 > top1)
+    {
+      return false;
+    }
+
+    const T left = std::max(left1, left2);
+    const T bottom = std::max(bottom1, bottom2);
+    const T right = std::min(right1, right2);
+    const T top = std::min(top1, top2);
 
     result = { { left, bottom }, right - left, top - bottom };
 

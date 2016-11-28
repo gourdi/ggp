@@ -8,7 +8,7 @@
 namespace ggo
 {
   template <typename data_t>
-  class oriented_box : public affine_shape2d_abc<data_t>, public samplable_shape2d_abc<data_t>
+  class oriented_box final : public affine_shape2d_abc<data_t>, public samplable_shape2d_abc<data_t>
   {
   public:
 

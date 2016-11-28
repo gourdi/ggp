@@ -8,8 +8,8 @@
 namespace ggo
 {
   template <typename data_t>
-  class triangle2d : public paintable_shape2d_abc<data_t>,
-                     public movable_shape2d_abc<data_t>
+  class triangle2d final : public paintable_shape2d_abc<data_t>,
+                           public movable_shape2d_abc<data_t>
   {
   public:
 

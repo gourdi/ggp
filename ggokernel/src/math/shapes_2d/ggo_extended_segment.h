@@ -8,10 +8,10 @@
 namespace ggo
 {
   template <typename data_t>
-  class extended_segment: public paintable_shape2d_abc<data_t>,
-                          public distancable_shape2d_abc<data_t>,
-                          public movable_shape2d_abc<data_t>,
-                          public rotatable_shape2d_abc<data_t>
+  class extended_segment final : public paintable_shape2d_abc<data_t>,
+                                 public distancable_shape2d_abc<data_t>,
+                                 public movable_shape2d_abc<data_t>,
+                                 public rotatable_shape2d_abc<data_t>
   {
   public:
 
