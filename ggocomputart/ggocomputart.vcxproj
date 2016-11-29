@@ -57,7 +57,6 @@
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_animation_artist.cpp" />
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_artist.cpp" />
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_bitmap_artist.cpp" />
-    <ClCompile Include="artists\flies\ggo_flies_artist.cpp" />
     <ClCompile Include="artists\flower\ggo_flower_artist.cpp" />
     <ClCompile Include="artists\ggo_animation_artist_abc.cpp" />
     <ClCompile Include="artists\ggo_artist.cpp" />
@@ -148,7 +147,6 @@
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_animation_artist.h" />
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_artist.h" />
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_bitmap_artist.h" />
-    <ClInclude Include="artists\flies\ggo_flies_artist.h" />
     <ClInclude Include="artists\flower\ggo_flower_artist.h" />
     <ClInclude Include="artists\ggo_animation_artist_abc.h" />
     <ClInclude Include="artists\ggo_artist.h" />

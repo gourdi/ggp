@@ -55,9 +55,6 @@
     <Filter Include="artists\filling_squares">
       <UniqueIdentifier>{b75f2bed-64b1-40bd-979c-d54bd5d5a301}</UniqueIdentifier>
     </Filter>
-    <Filter Include="artists\flies">
-      <UniqueIdentifier>{6c8c2f3e-4504-44b2-87ba-ac9f4840021b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="artists\flower">
       <UniqueIdentifier>{2d0c3207-f92f-4106-b02b-96150e84b1c9}</UniqueIdentifier>
     </Filter>
@@ -251,9 +248,6 @@
     </ClCompile>
     <ClCompile Include="artists\filling_squares\ggo_filling_squares_bitmap_artist.cpp">
       <Filter>artists\filling_squares</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\flies\ggo_flies_artist.cpp">
-      <Filter>artists\flies</Filter>
     </ClCompile>
     <ClCompile Include="artists\flower\ggo_flower_artist.cpp">
       <Filter>artists\flower</Filter>
@@ -520,9 +514,6 @@
     </ClInclude>
     <ClInclude Include="artists\filling_squares\ggo_filling_squares_bitmap_artist.h">
       <Filter>artists\filling_squares</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\flies\ggo_flies_artist.h">
-      <Filter>artists\flies</Filter>
     </ClInclude>
     <ClInclude Include="artists\flower\ggo_flower_artist.h">
       <Filter>artists\flower</Filter>

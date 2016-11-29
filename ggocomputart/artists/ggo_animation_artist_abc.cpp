@@ -9,7 +9,6 @@
 #include "artists/ifs/ggo_ifs_animation_artist.h"
 #include "artists/metaballs/ggo_metaballs_animation_artist.h"
 #include "artists/smoke/ggo_smoke_animation_artist.h"
-#include "artists/flies/ggo_flies_artist.h"
 #include "artists/newton/ggo_newton_artist.h"
 #include "artists/alpha/ggo_alpha_animation_artist.h"
 #include "artists/dupecheck/ggo_dupecheck_animation_artist.h"
@@ -131,9 +130,6 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
 		break;
   case ggo::animation_artist_id::stoa:
     artist = new ggo::stoa_animation_artist(width, height, line_step, pbf, rt);
-    break;
-  case ggo::animation_artist_id::flies:
-    artist = new ggo::flies_artist(width, height, line_step, pbf, rt);
     break;
   case ggo::animation_artist_id::rediff:
     artist = new ggo::rediff_animation_artist(width, height, line_step, pbf, rt);
