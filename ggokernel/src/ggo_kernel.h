@@ -161,14 +161,14 @@ namespace ggo
     }
   };
 
-  template <typename T>	T	      clamp(T v, T inf, T sup)				      { return v > sup ? sup : (v < inf ? inf : v); };
-  template <typename T>	T	      square(T value)							          { return value * value; };
-  template <typename T>	T	      sign(T value)							            { return value > T(0) ? T(1) : T(-1); };
-  template <typename T> T       cotan(T angle)                        { return 1 / std::tan(angle); }
-  inline					      int		  pad(int value, int pad)				        { return (((value-1)/pad)+1)*pad; };
-  inline					      bool	  is_even(int value)						        { return (value&1)==0; };
-  inline					      bool	  is_odd(int value)						          { return (value&1)==1; };
-  inline					      int		  log2(int v)								            { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
+  template <typename data_t>  data_t  clamp(data_t v, data_t inf, data_t sup) { return v > sup ? sup : (v < inf ? inf : v); };
+  template <typename data_t>  data_t  square(data_t value)							      { return value * value; };
+  template <typename data_t>  data_t  sign(data_t value)							        { return value > data_t(0) ? data_t(1) : data_t(-1); };
+  template <typename data_t>  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
+  inline					            int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
+  inline					            bool	  is_even(int value)						          { return (value&1)==0; };
+  inline					            bool	  is_odd(int value)						            { return (value&1)==1; };
+  inline					            int		  log2(int v)								              { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
 }
 
 //////////////////////////////////////////////////////////////
@@ -345,6 +345,7 @@ namespace ggo
 {
   class dimension_mismatch_exception : public std::exception {};
   class inplace_exception : public std::exception {};
+  class invalid_parameter_exception : public std::exception {};
 }
 
 //////////////////////////////////////////////////////////////

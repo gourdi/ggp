@@ -14,24 +14,6 @@ namespace ggo
   using color_32f = color<float>;
 }
 
-// Fixed point division for color.
-namespace ggo
-{
-  template <int bit_shift, typename data_t>
-  ggo::color<data_t> fixed_point_div(const ggo::color<data_t> & c)
-  {
-    using sample_t = typename ggo::color_traits<color<data_t>>::sample_t;
-
-    static_assert(bit_shift > 1, "invalid bit shift");
-    static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
-
-    return ggo::color<data_t>(
-      ggo::fixed_point_div<bit_shift>(c.r()),
-      ggo::fixed_point_div<bit_shift>(c.g()),
-      ggo::fixed_point_div<bit_shift>(c.b()));
-  }
-}
-
 /////////////////////////////////////////////////////////////////////
 // Color traits
 namespace ggo
@@ -150,65 +132,76 @@ namespace ggo
 
   template <typename color_t> color_t gray()
   { 
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const sample_t v = color_traits<color_t>::max() / 2;
     return color_t(v, v, v);
   }
 
   template <typename color_t> color_t black()
   { 
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     return color_t(sample_t(0), sample_t(0), sample_t(0));
   }
 
   template <typename color_t> color_t red()
   { 
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(v, sample_t(0), sample_t(0));
   }
 
   template <typename color_t> color_t green()
   { 
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(sample_t(0), v, sample_t(0));
   }
 
   template <typename color_t> color_t blue()
   {
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(sample_t(0), sample_t(0), v);
   }
 
   template <typename color_t> color_t cyan()
   {
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(sample_t(0), v, v);
   }
 
   template <typename color_t> color_t magenta()
   {
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(v, sample_t(0), v);
   }
 
   template <typename color_t> color_t yellow()
   {
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(v, v, sample_t(0));
   }
 
   template <typename color_t> color_t orange()
   {
-    using sample_t = color_traits<color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
     const auto v = color_traits<color_t>::max();
     return color_t(v, sample_t(v / 2), sample_t(0));
   }
+
+  inline ggo::color_8u white_8u()    { return ggo::white<ggo::color_8u>(); }
+  inline ggo::color_8u gray_8u()     { return ggo::gray<ggo::color_8u>(); }
+  inline ggo::color_8u black_8u()    { return ggo::black<ggo::color_8u>(); }
+  inline ggo::color_8u red_8u()      { return ggo::red<ggo::color_8u>(); }
+  inline ggo::color_8u green_8u()    { return ggo::green<ggo::color_8u>(); }
+  inline ggo::color_8u blue_8u()     { return ggo::blue<ggo::color_8u>(); }
+  inline ggo::color_8u cyan_8u()     { return ggo::cyan<ggo::color_8u>(); }
+  inline ggo::color_8u magenta_8u()  { return ggo::magenta<ggo::color_8u>(); }
+  inline ggo::color_8u yellow_8u()   { return ggo::yellow<ggo::color_8u>(); }
+  inline ggo::color_8u orange_8u()   { return ggo::orange<ggo::color_8u>(); }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -216,7 +209,9 @@ namespace ggo
 namespace ggo
 {
   template <typename color_t>
-  struct accumulator {};
+  struct accumulator
+  {
+  };
 
   template <>
   struct accumulator<uint8_t>
@@ -254,6 +249,25 @@ namespace ggo
     void add(const color_32f & c) { r += c.r(); g += c.g(); b += c.b(); }
     template <int count> color_32f div() const { return color_32f(r / count, g / count, b / count); }
   };
+}
+
+/////////////////////////////////////////////////////////////////////
+// Fixed point division for color.
+namespace ggo
+{
+  template <int bit_shift, typename data_t>
+  ggo::color<data_t> fixed_point_div(const ggo::color<data_t> & c)
+  {
+    using sample_t = typename ggo::color_traits<color<data_t>>::sample_t;
+
+    static_assert(bit_shift > 1, "invalid bit shift");
+    static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
+
+    return ggo::color<data_t>(
+      ggo::fixed_point_div<bit_shift>(c.r()),
+      ggo::fixed_point_div<bit_shift>(c.g()),
+      ggo::fixed_point_div<bit_shift>(c.b()));
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -324,8 +338,8 @@ namespace ggo
     typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t sat,
     typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t val)
   {
-    using floating_point_color_t = color_traits<color_t>::floating_point_t;
-    using real_t = color_traits<floating_point_color_t>::sample_t;
+    using floating_point_color_t = typename color_traits<color_t>::floating_point_t;
+    using real_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<decltype(hue)>::value, "expecting floating point type");
     static_assert(std::is_floating_point<decltype(sat)>::value, "expecting floating point type");

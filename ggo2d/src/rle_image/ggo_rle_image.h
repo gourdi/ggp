@@ -17,7 +17,7 @@ namespace ggo
     color_t                   get(int x, int y) const;
 
     int                       get_width() const { return _width; }
-    int                       get_height() const { return _rle_lines.get_size<0>(); }
+    int                       get_height() const { return _rle_lines.template get_size<0>(); }
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;

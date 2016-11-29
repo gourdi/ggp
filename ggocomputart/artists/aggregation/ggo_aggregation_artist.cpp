@@ -181,6 +181,9 @@ void ggo::aggregation_artist::render(void * buffer) const
   case ggo::bgra_8u_yd:
     render_t<ggo::bgra_8u_yd>(buffer, *this);
     break;
+  default:
+    GGO_FAIL();
+    break;
   }
 }
 

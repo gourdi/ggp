@@ -47,7 +47,7 @@ namespace ggo
   {
     GGO_ASSERT(current_scale >= 0);
 
-    using real_t = shape_t::type;
+    using real_t = typename shape_t::type;
 
     // Check for shape intersecting the current block.
     const ggo::rect<real_t> block_rect_real = block_rect.get_rect<real_t>();
@@ -70,13 +70,13 @@ namespace ggo
         const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
         const auto brush_color = brush(block_rect.left(), block_rect.bottom());
 
-        ggo::accumulator<std::remove_const<decltype(bkgd_color)>::type> acc;
-        ggo::sampler<smp>::sample_pixel<shape_t::type>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
+        ggo::accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
+        ggo::sampler<smp>::template sample_pixel<typename shape_t::type>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
         {
           acc.add(shape.is_point_inside(x_f, y_f) ? blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color) : bkgd_color);
         });
 
-        const auto pixel_color = acc.div<ggo::sampler<smp>::samples_count>();
+        const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
         write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
       }
       else
@@ -109,7 +109,7 @@ namespace ggo
     write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
-    using real_t = shape_t::type;
+    using real_t = typename shape_t::type;
 
     // Bounding rect.
     const auto shape_bounding_rect_data = shape.get_bounding_rect();
@@ -152,9 +152,9 @@ namespace ggo
     write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
-    using item_pointer_t = std::iterator_traits<iterator_t>::value_type;
-    using item_t = std::remove_pointer<item_pointer_t>::type;
-    using real_t = item_t::real_t;
+    using item_pointer_t = typename std::iterator_traits<iterator_t>::value_type;
+    using item_t = typename std::remove_pointer<item_pointer_t>::type;
+    using real_t = typename item_t::real_t;
 
     GGO_ASSERT(current_scale >= 0);
 
@@ -201,8 +201,8 @@ namespace ggo
       {
         const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
 
-        ggo::accumulator<std::remove_const<decltype(bkgd_color)>::type> acc;
-        ggo::sampler<smp>::sample_pixel<real_t>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
+        ggo::accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
+        ggo::sampler<smp>::template sample_pixel<real_t>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
         {
           auto sample_color = bkgd_color;
 
@@ -219,7 +219,7 @@ namespace ggo
           acc.add(sample_color);
         });
 
-        const auto pixel_color = acc.div<ggo::sampler<smp>::samples_count>();
+        const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
         write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
       }
     }
@@ -256,39 +256,47 @@ namespace ggo
     write_pixel_t write_pixel,
     paint_block_t paint_block)
   {
-    using item_t = std::iterator_traits<iterator_t>::value_type;
-    using real_t = item_t::real_t;
+    using item_t = typename std::iterator_traits<iterator_t>::value_type;
+    using real_t = typename item_t::real_t;
 
-    if (begin_it == end_it)
+    // Clip.
+    const ggo::rect_data<real_t> image_rect_data({ real_t(-0.5), real_t(-0.5) }, real_t(width) - real_t(0.5), real_t(height) - real_t(0.5));
+    ggo::rect_data<real_t> bounding_rect_data;
+    bool first = true;
+    std::vector<const item_t *> items;
+    for (auto it = begin_it; it != end_it; ++it)
+    {
+      const ggo::rect_data<real_t> cur_rect_data = it->get_bounding_rect();
+      if (ggo::rect_data_intersect(cur_rect_data, image_rect_data) == true)
+      {
+        const auto & item = *it;
+        items.push_back(&item);
+
+        if (first == true)
+        {
+          bounding_rect_data = cur_rect_data;
+          first = false;
+        }
+        else
+        {
+          bounding_rect_data = ggo::rect_data_union(bounding_rect_data, cur_rect_data);
+        }
+      }
+    }
+
+    if (items.empty() == true)
     {
       return;
     }
 
-    // Bounding rect.
-    auto it = begin_it;
-    auto layers_rect_data = it->get_bounding_rect();
-    it++;
-    for (; it != end_it; ++it)
-    {
-      layers_rect_data = ggo::rect_data_union(layers_rect_data, it->get_bounding_rect());
-    }
+    ggo::pixel_rect bounding_pixel_rect(bounding_rect_data);
 
-    // Clip.
-    ggo::rect<real_t> bounding_rect(layers_rect_data);
-    pixel_rect bounding_pixel_rect(bounding_rect);
     if (bounding_pixel_rect.crop(width, height) == false)
     {
       return;
     }
 
     // Process blocks.
-    std::vector<const item_t *> items;
-    for (auto it = begin_it; it != end_it; ++it)
-    {
-      const auto & item = *it;
-      items.push_back(&item);
-    }
-
     auto process_block = [&](const ggo::pixel_rect & block_rect)
     {
       paint_block_multi_t<smp>(block_rect,

@@ -86,7 +86,8 @@ namespace ggo
     flies,
     rediff,
     entabeni, // 30
-    neon
+    neon,
+    storni
   };
 }
 

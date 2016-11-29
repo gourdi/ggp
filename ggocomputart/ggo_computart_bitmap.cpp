@@ -192,7 +192,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 //////////////////////////////////////////////////////////////
 void render_images(const ggo_params & params, int thread_id)
 {
-  std::unique_ptr<ggo::bitmap_artist_abc> artist(ggo::bitmap_artist_abc::create(params._artist_id, params._width, params._height));
+  std::unique_ptr<ggo::bitmap_artist_abc> artist(ggo::bitmap_artist_abc::create(params._artist_id, params._width, params._height, ggo::rgb_8u_yu));
   ggo::array_uint8 buffer(3 * params._width * params._height);
   
   while (true)

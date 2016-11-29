@@ -148,6 +148,9 @@
     <Filter Include="artists\cabrel">
       <UniqueIdentifier>{6f9b13fc-cffb-46e2-8cd5-44c7309c78be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\storni">
+      <UniqueIdentifier>{a75e96a5-6908-40d9-9829-5361033df73d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -410,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="artists\ggo_artist.cpp">
       <Filter>artists</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\storni\ggo_storni_animation_artist.cpp">
+      <Filter>artists\storni</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -679,6 +685,12 @@
     </ClInclude>
     <ClInclude Include="artists\ggo_artist.h">
       <Filter>artists</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\storni\ggo_storni_animation_artist.h">
+      <Filter>artists\storni</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\storni\ggo_storni_animation_artist.imp.h">
+      <Filter>artists\storni</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

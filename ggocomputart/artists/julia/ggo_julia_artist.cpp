@@ -92,6 +92,9 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
         case ggo::bgra_8u_yd:
           ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
           break;
+				default:
+					GGO_FAIL();
+					break;
         }
 			}
 			else
@@ -133,6 +136,9 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
         case ggo::bgra_8u_yd:
           ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
           break;
+				default:
+					GGO_FAIL();
+					break;
         }
 			}
 		}

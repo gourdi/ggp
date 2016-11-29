@@ -12,25 +12,32 @@ namespace ggo
   {
   public:
 
-    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+    enum rendering_type
+    {
+      offscreen_rendering,
+      realtime_rendering
+    };
 
-    bool  render_next_frame(void * buffer);
-    void  init();
+    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    int   get_frame_index() const { return _counter; };
+    bool            render_next_frame(void * buffer);
+    void            init();
+
+    int             get_frame_index() const { return _counter; };
+    rendering_type  get_rendering_type() const { return _rendering_type; }
 
   protected:
 
-                 animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+                 animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
     virtual	void init_sub() = 0;
 
     virtual	bool render_next_frame_sub(void * buffer, int frame_index) = 0;
-    
 
   private:
 
     int _counter;
+    const rendering_type _rendering_type;
   };
 }
 
@@ -41,11 +48,11 @@ namespace ggo
   {
   public:
 
-                  accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+                  accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
   private:
 
-            bool	render_next_frame_sub(void * buffer, int frame_index) override;
+            bool	render_next_frame_sub(void * buffer, int frame_index) override final;
 
     virtual	void	init_output_buffer(void * buffer) const = 0;
     virtual	bool	render_next_frame_acc(void * buffer, int frame_index) = 0;
@@ -59,11 +66,11 @@ namespace ggo
   {
   public:
 
-                  static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+                  static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
   private:
 
-            bool	render_next_frame_sub(void * buffer, int frame_indexx) override;
+            bool	render_next_frame_sub(void * buffer, int frame_indexx) override final;
 
     virtual void	init_bkgd_buffer(void * bkgd_buffer) const = 0;
     virtual	bool	render_next_frame_bkgd(void * buffer, int frame_index) = 0;

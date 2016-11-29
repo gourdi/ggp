@@ -26,6 +26,9 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
   case ggo::bgra_8u_yd:
     ggo::fill_color_curve<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
     break;
+    default:
+      GGO_FAIL();
+      break;
   }
 
   const int bubbles_count = 100;
@@ -70,6 +73,9 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
         break;
       case ggo::bgra_8u_yd:
         paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
+        break;
+      default:
+        GGO_FAIL();
         break;
       }
     }

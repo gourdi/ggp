@@ -282,5 +282,8 @@ void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
   case ggo::bgra_8u_yd:
     render_bitmap_t<ggo::bgra_8u_yd>(buffer, *this);
     break;
+  default:
+    GGO_FAIL();
+    break;
   }
 }

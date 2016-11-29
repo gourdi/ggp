@@ -10,6 +10,11 @@ namespace ggo
   void blit(const void * input, int input_width, int input_height, int input_line_step,
     void * output, int output_width, int output_height, int output_line_step,
     int left, int bottom);
+
+  template <pixel_buffer_format pbf_in, pixel_buffer_format pbf_out, typename blend_func_t>
+  void blit(const void * input, int input_width, int input_height, int input_line_step,
+    void * output, int output_width, int output_height, int output_line_step,
+    int left, int bottom, blend_func_t blend_func);
 }
 
 namespace ggo
@@ -21,6 +26,26 @@ namespace ggo
   {
     using format_in = pixel_buffer_format_info<pbf_in>;
     using format_out = pixel_buffer_format_info<pbf_out>;
+    using color_t_in = typename format_in::color_t;
+    using color_t_out = typename format_out::color_t;
+
+    auto blend_func = [](int x, int y, const color_t_in & c)
+    {
+      return ggo::convert_color_to<color_t_out>(c);
+    };
+
+    blit<pbf_in, pbf_out>(
+      input, input_width, input_height, input_line_step,
+      output, output_width, output_height, output_line_step, 0, 0, blend_func);
+  }
+
+  template <pixel_buffer_format pbf_in, pixel_buffer_format pbf_out, typename blend_func_t>
+  void blit(const void * input, int input_width, int input_height, int input_line_step,
+    void * output, int output_width, int output_height, int output_line_step,
+    int left, int bottom, blend_func_t blend_func)
+  {
+    using format_in = pixel_buffer_format_info<pbf_in>;
+    using format_out = pixel_buffer_format_info<pbf_out>;
 
     if (left >= output_height || bottom >= output_height)
     {
@@ -29,9 +54,7 @@ namespace ggo
 
     if (left < 0)
     {
-      input = ggo::ptr_offset(input, -left * pixel_buffer_format_info<pbf_in>::pixel_byte_size);
-      input_width -= -left;
-      left = 0;
+      GGO_FAIL();
     }
 
     if (bottom < 0)
@@ -57,12 +80,12 @@ namespace ggo
       for (int x = 0; x < input_width; ++x)
       {
         auto color_in = ggo::read_pixel<pbf_in>(input_line_ptr);
-        auto color_out = ggo::convert_color_to<ggo::pixel_buffer_format_info<pbf_out>::color_t>(color_in);
+        auto color_out = blend_func(x, y, color_in);
 
         ggo::write_pixel<pbf_out>(output_line_ptr, color_out);
 
-        input_line_ptr = ggo::ptr_offset(input_line_ptr, ggo::pixel_buffer_format_info<pbf_in>::pixel_byte_size);
-        output_line_ptr = ggo::ptr_offset(output_line_ptr, ggo::pixel_buffer_format_info<pbf_out>::pixel_byte_size);
+        input_line_ptr = ggo::ptr_offset(input_line_ptr, format_in::pixel_byte_size);
+        output_line_ptr = ggo::ptr_offset(output_line_ptr, format_out::pixel_byte_size);
       }
     }
   }

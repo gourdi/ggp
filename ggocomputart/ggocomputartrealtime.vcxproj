@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\externals\SDL2-2.0.4\src\main\windows\SDL_windows_main.c" />
     <ClCompile Include="ggocomputartrealtime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

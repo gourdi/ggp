@@ -9,6 +9,8 @@ namespace ggo
   template <typename T>
   ggo::pos2<T> disc_sampling(T random_variable1, T random_variable2)
   {
+    static_assert(std::is_floating_point<T>::value, "expecting floating point type");
+
     GGO_ASSERT_BTW(random_variable1, 0, 1.001);
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
@@ -21,7 +23,7 @@ namespace ggo
   template <typename T>
   ggo::pos2<T> disc_uniform_sampling()
   {
-    return disc_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1));
+    return disc_sampling(ggo::rand<T>(0, 1), ggo::rand<T>(0, 1));
   }
 
   template <typename T>
@@ -33,6 +35,8 @@ namespace ggo
   template <typename T>
   ggo::pos3<T> sphere_sampling(T random_variable1, T random_variable2)
   {
+    static_assert(std::is_floating_point<T>::value, "expecting floating point type");
+
     GGO_ASSERT_BTW(random_variable1, 0, 1.001);
     GGO_ASSERT_BTW(random_variable2, 0, 1.001);
     
@@ -45,7 +49,7 @@ namespace ggo
   template <typename T>
   ggo::pos3<T> sphere_uniform_sampling()
   {
-    return sphere_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1));
+    return sphere_sampling(ggo::rand<T>(0, 1), ggo::rand<T>(0, 1));
   }
 
   // The main direction is the Z one (ie. [0, 0, 1]).
@@ -80,7 +84,7 @@ namespace ggo
   template <typename T>
   ggo::pos3<T> hemisphere_uniform_sampling(T theta_max = pi<T>() / 2)
   {
-    return hemisphere_sampling(ggo::rand_real<T>(0, 1), ggo::rand_real<T>(0, 1), theta_max);
+    return hemisphere_sampling(ggo::rand<T>(0, 1), ggo::rand<T>(0, 1), theta_max);
   }
   
   template <typename T>

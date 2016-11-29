@@ -99,13 +99,14 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 
-  ggo::array_uint8 buffer(3 * params._width * params._height);
+  ggo::array_uint8 buffer(4 * params._width * params._height);
 
 	std::cout << "Artist ID: " << static_cast<int>(params._artist_id) << std::endl;
 	std::cout << "Output resolution: " << params._width << 'x' << params._height << std::endl;
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
-  std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(params._artist_id, params._width, params._height));
+  std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
+    params._artist_id, params._width, params._height, 3 * params._width, ggo::rgb_8u_yu, ggo::animation_artist_abc::offscreen_rendering));
     
   if (artist.get() == nullptr)
   {

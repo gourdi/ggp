@@ -17,10 +17,6 @@ GGO_TEST(vec, contruction_copy)
   v1 = v2;
   GGO_CHECK_EQ(v1.x(), 8);
   GGO_CHECK_EQ(v1.y(), 9);
-
-  ggo::vec<int, 2, ggo::geometry_t> v3(2);
-  GGO_CHECK_EQ(v3.x(), 2);
-  GGO_CHECK_EQ(v3.y(), 2);
 }
 
 /////////////////////////////////////////////////////////////////////

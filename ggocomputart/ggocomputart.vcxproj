@@ -96,6 +96,7 @@
     <ClCompile Include="artists\stoa\ggo_stoa_animation_artist.cpp" />
     <ClCompile Include="artists\stoa\ggo_stoa_artist.cpp" />
     <ClCompile Include="artists\stoa\ggo_stoa_bitmap_artist.cpp" />
+    <ClCompile Include="artists\storni\ggo_storni_animation_artist.cpp" />
     <ClCompile Include="artists\topodoko\ggo_topodoko_artist.cpp" />
     <ClCompile Include="artists\toutouyoutou\ggo_toutouyoutou_animation_artist.cpp" />
     <ClCompile Include="artists\toutouyoutou\ggo_toutouyoutou_bitmap_artist.cpp" />
@@ -187,6 +188,8 @@
     <ClInclude Include="artists\stoa\ggo_stoa_animation_artist.h" />
     <ClInclude Include="artists\stoa\ggo_stoa_artist.h" />
     <ClInclude Include="artists\stoa\ggo_stoa_bitmap_artist.h" />
+    <ClInclude Include="artists\storni\ggo_storni_animation_artist.h" />
+    <ClInclude Include="artists\storni\ggo_storni_animation_artist.imp.h" />
     <ClInclude Include="artists\topodoko\ggo_topodoko_artist.h" />
     <ClInclude Include="artists\toutouyoutou\ggo_toutouyoutou_animation_artist.h" />
     <ClInclude Include="artists\toutouyoutou\ggo_toutouyoutou_bitmap_artist.h" />

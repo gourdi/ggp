@@ -21,8 +21,8 @@ enum class rendering_state
 SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
 const int nominal_frame_duration_ms = 40; // 25 fps
-std::atomic_bool bitmap_rendered = false;
-ggo::signal signal;
+std::atomic_bool bitmap_rendered(false);
+ggo::signal rendering_bitmap_signal;
 std::unique_ptr<uint8_t[]> bitmap_buffer;
 
 /////////////////////////////////////////////////////////////////////
@@ -41,10 +41,12 @@ ggo::bitmap_artist_abc * create_bitmap_artist()
   const std::vector<ggo::bitmap_artist_id> ids{
     ggo::bitmap_artist_id::julia,
     ggo::bitmap_artist_id::topodoko,
-    ggo::bitmap_artist_id::mandelbrot
+    ggo::bitmap_artist_id::mandelbrot,
+    ggo::bitmap_artist_id::distorsion,
+    ggo::bitmap_artist_id::plastic
   };
 
-  auto index = 2;// ggo::rand<size_t>(0, ids.size() - 1);
+  auto index = ggo::rand<size_t>(0, ids.size() - 1);
 
   std::cout << "Bitmap artist ID: " << index << std::endl;
 
@@ -52,10 +54,27 @@ ggo::bitmap_artist_abc * create_bitmap_artist()
 }
 
 /////////////////////////////////////////////////////////////////////
+ggo::animation_artist_abc * create_animation_artist()
+{
+  const std::vector<ggo::animation_artist_id> ids{
+    ggo::animation_artist_id::neon,
+    ggo::animation_artist_id::storni,
+    ggo::animation_artist_id::kanji,
+    ggo::animation_artist_id::circles
+  };
+
+  auto index = ggo::rand<size_t>(0, ids.size() - 1);
+
+  std::cout << "Animation artist ID: " << index << std::endl;
+
+  return ggo::animation_artist_abc::create(ids[index],
+    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering);
+}
+
+/////////////////////////////////////////////////////////////////////
 void main_loop()
 {
-  std::unique_ptr<ggo::animation_artist_abc> animation_artist(ggo::animation_artist_abc::create(
-    ggo::animation_artist_id::neon, screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd));
+  std::unique_ptr<ggo::animation_artist_abc> animation_artist(create_animation_artist());
 
   int bitmap_counter = 300;
   rendering_state state = rendering_state::animation;
@@ -107,12 +126,11 @@ void main_loop()
 
           // Start rendering another bitmap.
           bitmap_rendered = false;
-          signal.notify();
+          rendering_bitmap_signal.notify();
         }
         else
         {
-          animation_artist.reset(ggo::animation_artist_abc::create(
-            ggo::animation_artist_id::neon, screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd));
+          animation_artist.reset(create_animation_artist());
         }
       }
       break;
@@ -123,8 +141,7 @@ void main_loop()
       {
         state = rendering_state::animation;
 
-        animation_artist.reset(ggo::animation_artist_abc::create(
-          ggo::animation_artist_id::neon, screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd));
+        animation_artist.reset(create_animation_artist());
       }
       break;
     }
@@ -133,15 +150,17 @@ void main_loop()
 
     // Check FPS.
     auto frame_duration_ms = SDL_GetTicks() - frame_start_time_ms;
+    Uint32 delay_ms = 0;
 
     if (frame_duration_ms < nominal_frame_duration_ms)
     {
-      SDL_Delay(nominal_frame_duration_ms - frame_duration_ms);
+      delay_ms = nominal_frame_duration_ms - frame_duration_ms;
+      SDL_Delay(delay_ms);
       frame_duration_ms = nominal_frame_duration_ms;
     }
 
     std::ostringstream oss;
-    oss << "FPS: " << 1000 / frame_duration_ms;
+    oss << "FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";
     SDL_SetWindowTitle(window, oss.str().c_str());
   }
 }
@@ -156,7 +175,7 @@ void render_bitmap_func()
   while (true)
   {
     // Wait until main() signals a bitmap to be rendered.
-    signal.wait();
+    rendering_bitmap_signal.wait();
 
     std::cout << "Starting rendering bitmap" << std::endl;
     bitmap_artist.reset(create_bitmap_artist());
@@ -170,17 +189,17 @@ void render_bitmap_func()
 }
 
 /////////////////////////////////////////////////////////////////////
-int main(int argc, char ** argv)
+int SDL_main(int argc, char ** argv)
 {
   try
   {
     // Initialize SDL
-    const int screen_width = 320;
-    const int screen_height = 240;
+    const int screen_width = 1280;
+    const int screen_height = 720;
     const int screen_bpp = 32;
 
     GGO_SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
-    window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("title", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
       GGO_SDL_ERROR("Window could not be created");
@@ -197,7 +216,7 @@ int main(int argc, char ** argv)
     render_bitmap_thread.detach(); // We don't want bitmap rendering to block exit.
 
     bitmap_rendered = false;
-    signal.notify(); // Start rendering bitmap immediatly.
+    rendering_bitmap_signal.notify(); // Start rendering bitmap immediatly.
 
     main_loop();
   }

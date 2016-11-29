@@ -147,6 +147,9 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
   case ggo::bgra_8u_yd:
     render_t<ggo::bgra_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares);
     break;
+    default:
+      GGO_FAIL();
+      break;
   }
 }
 

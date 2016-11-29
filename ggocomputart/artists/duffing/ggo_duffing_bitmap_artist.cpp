@@ -109,8 +109,6 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 		float hue = hue_curve.evaluate(t);
 		ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(hue, 1, 1);
 
-    auto disc = std::make_shared<const ggo::disc_float>(points[i], radius);
-
     ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
       buffer_float.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
       ggo::disc_float(points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender<color_32f>(0.02f));

@@ -59,6 +59,9 @@ void ggo::neon_artist::init_output_buffer(void * buffer) const
   case ggo::bgra_8u_yd:
     ggo::fill_solid<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
     break;
+  default:
+    GGO_FAIL();
+    break;
   }
 }
 
@@ -114,6 +117,9 @@ void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, 
     break;
   case ggo::bgra_8u_yd:
     paint_point_t<ggo::bgra_8u_yd>(*this, buffer, point_pos, color);
+    break;
+  default:
+    GGO_FAIL();
     break;
   }
 }

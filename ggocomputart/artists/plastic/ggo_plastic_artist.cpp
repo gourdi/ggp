@@ -68,6 +68,9 @@ void ggo::plastic_artist::render(void * buffer, const std::vector<ggo::plastic_a
   case ggo::bgra_8u_yd:
     render_t<ggo::bgra_8u_yd>(buffer, *this, params, color, altitude_factor);
     break;
+  default:
+    GGO_FAIL();
+    break;
   }
 }
 

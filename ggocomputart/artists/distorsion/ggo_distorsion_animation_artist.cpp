@@ -148,6 +148,9 @@ bool ggo::distorsion_animation_artist::render_next_frame_sub(void * buffer, int 
   case ggo::bgra_8u_yd:
     render_t<ggo::bgra_8u_yd>(buffer, *this, transforms);
     break;
+  default:
+    GGO_FAIL();
+    break;
   }
   
   return true;

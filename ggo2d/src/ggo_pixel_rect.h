@@ -15,6 +15,9 @@ namespace ggo
           template <typename data_t>
           pixel_rect(const ggo::rect<data_t> & rect);
 
+          template <typename data_t>
+          pixel_rect(const ggo::rect_data<data_t> & rect);
+
     int   left() const   { return _left; }
     int   right() const  { return _right; }
     int   bottom() const { return _bottom; }
@@ -135,6 +138,18 @@ namespace ggo
     _right = ggo::to<int>(rect.right());
     _bottom = ggo::to<int>(rect.bottom());
     _top = ggo::to<int>(rect.top());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  pixel_rect::pixel_rect(const ggo::rect_data<data_t> & rect)
+  {
+    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+
+    _left = ggo::to<int>(rect._pos.x());
+    _right = ggo::to<int>(rect._pos.x() + rect._width);
+    _bottom = ggo::to<int>(rect._pos.y());
+    _top = ggo::to<int>(rect._pos.y() + rect._height);
   }
 
   //////////////////////////////////////////////////////////////

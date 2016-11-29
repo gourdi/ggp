@@ -125,7 +125,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
     else
     {
       auto shape = std::make_shared<ggo::centered_sphere3d_float>(sphere.radius());
-      auto material = std::make_shared<const my_material>(sphere.radius());
+      auto material = std::make_shared<my_material>(sphere.radius());
       auto object = scene_builder.add_object(shape, material, false);
 
       object->set_phong_factor(ggo::rand<float>(3, 5));

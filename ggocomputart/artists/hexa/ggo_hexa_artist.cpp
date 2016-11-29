@@ -462,8 +462,8 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
   // Objects.
   std::map<std::string, std::vector<std::shared_ptr<hexa>>> hexa_groups_map;
   
-  auto material_top = std::make_shared<const ggo::solid_color_material>(color_top);
-  auto material_side = std::make_shared<const ggo::solid_color_material>(color_side);
+  auto material_top = std::make_shared<ggo::solid_color_material>(color_top);
+  auto material_side = std::make_shared<ggo::solid_color_material>(color_side);
 
   for (const auto & hexa_info : hexa_infos)
   {

@@ -4,8 +4,7 @@ namespace ggo
   template <typename data_t>
   rect<data_t>::rect()
   {
-    _rect_data._pos.set<0>(0);
-    _rect_data._pos.set<1>(0);
+    _rect_data._pos = { 0, 0 };
     _rect_data._width = 0;
     _rect_data._height = 0;
   }

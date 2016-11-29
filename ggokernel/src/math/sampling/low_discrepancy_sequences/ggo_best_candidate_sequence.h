@@ -13,7 +13,7 @@ namespace ggo
 
 namespace ggo
 {
-  const pos2f best_candidate_table[] = {
+  const std::vector<ggo::pos2f> best_candidate_table {
     { 0.0754634f, 0.645212f },
     { 0.739848f, 0.162f },
     { 0.220326f, 0.128471f },

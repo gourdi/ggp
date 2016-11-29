@@ -20,18 +20,20 @@ namespace ggo
   {
   public:
 
-    vec() {}
+    vec()
+    {
+    }
 
-    vec(const data_t & v)
+    explicit vec(const data_t & v)
     {
       ggo::fill<n_dims>(_coords, v);
     }
 
     template <typename... args>
-    vec(const data_t & v, args... a)
+    vec(const data_t & v1, const data_t & v2, args... a)
     {
-      static_assert(sizeof...(a) + 1 == n_dims, "invalid number of arguments");
-      ggo::set<data_t>(_coords, v, a...);
+      static_assert(sizeof...(a) + 2 == n_dims, "invalid number of arguments");
+      ggo::set<data_t>(_coords, v1, v2, a...);
     }
 
     vec(const vec<data_t, n_dims, vtype> & rhs)
@@ -98,20 +100,20 @@ namespace ggo
     }
 
     // Geometry only.
-    template <typename = typename std::enable_if<vtype == geometry_t>::type> const data_t & x() const { return _coords[0]; }
-    template <typename = typename std::enable_if<vtype == geometry_t>::type> data_t & x() { return _coords[0]; }
-    template <typename = typename std::enable_if<vtype == geometry_t>::type> const data_t & y() const { return _coords[1]; }
-    template <typename = typename std::enable_if<vtype == geometry_t>::type> data_t & y() { return _coords[1]; }
-    template <typename = typename std::enable_if<(vtype == geometry_t) && (n_dims == 3)>::type> const data_t & z() const { return _coords[2]; }
-    template <typename = typename std::enable_if<(vtype == geometry_t) && (n_dims == 3)>::type> data_t & z() { return _coords[2]; }
+    const data_t & x() const  { static_assert(vtype == geometry_t, ""); return _coords[0]; }
+          data_t & x()        { static_assert(vtype == geometry_t, ""); return _coords[0]; }
+    const data_t & y() const  { static_assert(vtype == geometry_t, ""); return _coords[1]; }
+          data_t & y()        { static_assert(vtype == geometry_t, ""); return _coords[1]; }
+    const data_t & z() const  { static_assert(vtype == geometry_t && n_dims == 3, ""); return _coords[2]; }
+          data_t & z()        { static_assert(vtype == geometry_t && n_dims == 3, ""); return _coords[2]; }
 
     // Color only.
-    template <typename = typename std::enable_if<vtype == color_t>::type> const data_t & r() const { return _coords[0]; }
-    template <typename = typename std::enable_if<vtype == color_t>::type> data_t & r() { return _coords[0]; }
-    template <typename = typename std::enable_if<vtype == color_t>::type> const data_t & g() const { return _coords[1]; }
-    template <typename = typename std::enable_if<vtype == color_t>::type> data_t & g() { return _coords[1]; }
-    template <typename = typename std::enable_if<vtype == color_t>::type> const data_t & b() const { return _coords[2]; }
-    template <typename = typename std::enable_if<vtype == color_t>::type> data_t & b() { return _coords[2]; }
+    const data_t & r() const  { static_assert(vtype == color_t, ""); return _coords[0]; }
+          data_t & r()        { static_assert(vtype == color_t, ""); return _coords[0]; }
+    const data_t & g() const  { static_assert(vtype == color_t, ""); return _coords[1]; }
+          data_t & g()        { static_assert(vtype == color_t, ""); return _coords[1]; }
+    const data_t & b() const  { static_assert(vtype == color_t, ""); return _coords[2]; }
+          data_t & b()        { static_assert(vtype == color_t, ""); return _coords[2]; }
 
   private:
 

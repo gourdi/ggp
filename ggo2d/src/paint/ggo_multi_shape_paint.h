@@ -94,7 +94,7 @@ namespace ggo
     const int scale_factor = 8;
     const int first_scale = 2;
 
-    using item_t = std::iterator_traits<iterator_t>::value_type;
+    using item_t = typename std::iterator_traits<iterator_t>::value_type;
     using format = pixel_buffer_format_info<pbf>;
 
     // Lambda to retrieve pixel color.
@@ -111,8 +111,8 @@ namespace ggo
 
     // Lambda that paints a block of pixels without shape sampling.
     auto paint_block_func = [&](const ggo::pixel_rect & block_rect,
-      std::vector<const item_t *>::const_iterator begin_it,
-      std::vector<const item_t *>::const_iterator end_it)
+      typename std::vector<const item_t *>::const_iterator begin_it,
+      typename std::vector<const item_t *>::const_iterator end_it)
     {
       for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
       {

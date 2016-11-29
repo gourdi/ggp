@@ -201,6 +201,9 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
         case ggo::bgra_8u_yd:
           ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), palette[index]);
           break;
+        default:
+          GGO_FAIL();
+          break;
         }
 			}
 			else
@@ -241,6 +244,9 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
           break;
         case ggo::bgra_8u_yd:
           ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          break;
+        default:
+          GGO_FAIL();
           break;
         }
 			}

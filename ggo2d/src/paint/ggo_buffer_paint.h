@@ -37,7 +37,7 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    process_rect_fast<pbf>(buffer, height, line_step, left, right, bottom, top, [&](void * ptr) { set_pixel<pbf, color_t>(ptr, c); });
+    process_rect_fast<pbf>(buffer, height, line_step, left, right, bottom, top, [&](void * ptr) { write_pixel<pbf, color_t>(ptr, c); });
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ namespace ggo
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
   void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend)
   {
-    using typename color_t = typename pixel_buffer_format_info<pbf>::color_t;
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using format = pixel_buffer_format_info<pbf>;
 
     const int scale_factor = 8;

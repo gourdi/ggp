@@ -6,42 +6,42 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_type, typename time_type>
+  template <typename data_t, typename time_t>
   class random_interpolator_abc
   {
   public:
 
-                  random_interpolator_abc();
-    virtual	     ~random_interpolator_abc();
+                    random_interpolator_abc();
+    virtual	       ~random_interpolator_abc();
 
-    data_type		  update(time_type dt);
+            data_t  update(time_t dt);
 
-    virtual	void  get_random_data(data_type & data, time_type & dt) = 0;
+    virtual	void    get_random_data(data_t & data, time_t & dt) = 0;
 
   private:
 
-    time_type	_time;
-    struct ggo_interpolation_data
+    time_t	_time;
+    struct interpolation_data
     {
-      data_type _interp;
-      time_type	_time;
+      data_t  _interp;
+      time_t  _time;
     };
-    ggo_interpolation_data * _interp;
+    interpolation_data * _interp;
   };
 }
 
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_type, typename time_type>
-  random_interpolator_abc<data_type, time_type>::random_interpolator_abc()
+  template <typename data_t, typename time_t>
+  random_interpolator_abc<data_t, time_t>::random_interpolator_abc()
   {
     _interp = nullptr;
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_type, typename time_type>
-  random_interpolator_abc<data_type, time_type>::~random_interpolator_abc()
+  template <typename data_t, typename time_t>
+  random_interpolator_abc<data_t, time_t>::~random_interpolator_abc()
   {
     if (_interp != nullptr)
     {
@@ -50,14 +50,14 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_type, typename time_type>
-  data_type random_interpolator_abc<data_type, time_type>::update(time_type dt)
+  template <typename data_t, typename time_t>
+  data_t random_interpolator_abc<data_t, time_t>::update(time_t dt)
   {
     if (_interp == nullptr)
     {
-      _interp = new ggo_interpolation_data[4];
+      _interp = new interpolation_data[4];
 
-      time_type dt;
+      time_t dt;
 
       get_random_data(_interp[0]._interp, dt);
       _interp[0]._time = 0;
@@ -74,10 +74,10 @@ namespace ggo
       _time = _interp[1]._time;
     }
 
-    data_type result = ggo::cubic_interpolation<time_type, data_type>(_interp[0]._time, _interp[0]._interp,
-                                                                      _interp[1]._time, _interp[1]._interp,
-                                                                      _interp[2]._time, _interp[2]._interp,
-                                                                      _interp[3]._time, _interp[3]._interp, _time);
+    data_t result = ggo::cubic_interpolation<time_t, data_t>(_interp[0]._time, _interp[0]._interp,
+                                                             _interp[1]._time, _interp[1]._interp,
+                                                             _interp[2]._time, _interp[2]._interp,
+                                                             _interp[3]._time, _interp[3]._interp, _time);
 
     // Update spline points if needed.
     _time += dt;
@@ -87,7 +87,7 @@ namespace ggo
       _interp[1] = _interp[2];
       _interp[2] = _interp[3];
 
-      time_type dt;
+      time_t dt;
       get_random_data(_interp[3]._interp, dt);
       _interp[3]._time = _interp[2]._time + dt;
 

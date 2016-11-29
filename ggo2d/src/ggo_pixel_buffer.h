@@ -23,6 +23,7 @@ namespace ggo
   enum pixel_buffer_format
   {
     y_8u_yu,
+    y_8u_yd,
     y_32f_yu,
     rgb_8u_yu,
     rgb_32f_yu,
@@ -36,6 +37,20 @@ namespace ggo
   struct pixel_buffer_format_info<y_8u_yu>
   {
     static const y_direction y_dir = y_up;
+    static const int pixel_byte_size = 1;
+
+    using color_t = uint8_t;
+
+    // Accessor interface.
+    using type = uint8_t;
+    static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
+    static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
+  };
+
+  template <>
+  struct pixel_buffer_format_info<y_8u_yd>
+  {
+    static const y_direction y_dir = y_down;
     static const int pixel_byte_size = 1;
 
     using color_t = uint8_t;
@@ -67,6 +82,7 @@ namespace ggo
   {
     static const y_direction y_dir = y_up;
     static const int pixel_byte_size = 3;
+    static const pixel_buffer_format gray_pbf = y_8u_yu;
 
     using color_t = ggo::color_8u;
 
@@ -121,6 +137,7 @@ namespace ggo
   {
     static const y_direction y_dir = y_down;
     static const int pixel_byte_size = 4;
+    static const pixel_buffer_format gray_pbf = y_8u_yd;
 
     using color_t = ggo::color_8u;
 

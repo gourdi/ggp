@@ -283,8 +283,8 @@ ggo::stoa_artist::stoa_artist(int steps)
       auto v2 = compute_vertex(density_func, triangle.v2());
       auto v3 = compute_vertex(density_func, triangle.v3());
 
-      auto face_ptr = std::make_shared<const ggo::face3d<float, true>>(v1, v2, v3);
-      auto object_ptr = std::make_shared<const ggo::object3d>(face_ptr, ggo::white<ggo::color_32f>());
+      auto face_ptr = std::make_shared<ggo::face3d<float, true>>(v1, v2, v3);
+      auto object_ptr = std::make_shared<ggo::object3d>(face_ptr, ggo::white<ggo::color_32f>());
 
       ggo::stoa_artist::face_object face_object{ object_ptr, face_ptr };
 
