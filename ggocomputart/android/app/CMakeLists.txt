@@ -148,7 +148,6 @@ set(GGO_COMPUTART_SOURCES_FILES
     ${GGP_SOURCE_DIR}/ggocomputart/artists/filling_squares/ggo_filling_squares_animation_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/filling_squares/ggo_filling_squares_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/filling_squares/ggo_filling_squares_bitmap_artist.cpp
-    ${GGP_SOURCE_DIR}/ggocomputart/artists/flies/ggo_flies_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/flower/ggo_flower_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/hexa/ggo_hexa_animation_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/hexa/ggo_hexa_artist.cpp

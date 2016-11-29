@@ -81,10 +81,10 @@ ggo::pos2f ggo::dupecheck_animation_artist::get_position(int frame_index)
 //////////////////////////////////////////////////////////////
 ggo::color_8u ggo::dupecheck_animation_artist::get_color(int frame_index)
 {
-	const float SCALE = 0.01f;
+	const float scale = 0.01f;
 	
 	// Compute current position.
-	float t = std::fmod(SCALE * frame_index, 1.f);
+	float t = std::fmod(scale * frame_index, 1.f);
 	
 	ggo::color_32f c;
 	c  = t*t*t*(-1.f*_colors[0] +  3.f*_colors[1] + -3.f*_colors[2] + _colors[3]);
@@ -94,7 +94,7 @@ ggo::color_8u ggo::dupecheck_animation_artist::get_color(int frame_index)
 	c /= 6.f;		
 	
 	// Update spline points if needed.
-	float t_next = std::fmod(SCALE * (frame_index + 1), 1.f);
+	float t_next = std::fmod(scale * (frame_index + 1), 1.f);
 	if (std::fmod(t, 1.f) > std::fmod(t_next, 1.f)) 
 	{
 		_colors[0] = _colors[1];

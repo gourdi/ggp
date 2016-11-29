@@ -1,152 +1,136 @@
 #include "ggo_bozons_animation_artist.h"
 #include <ggo_buffer_fill.h>
-#include <ggo_color.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_multi_shape_paint.h>
 
 namespace
 {
-  const float dradius_amp = 0.00001f;
-  const int dradius_counter_min = 40;
-  const int dradius_counter_max = 80;
-  
-  const float dangle_amp = ggo::pi<float>() / 100.f;
-  const int dangle_counter_min = 200;
-  const int dangle_counter_max = 400;
+  const float dangle_amp = 0.025f * ggo::pi<float>();
 }
 
 //////////////////////////////////////////////////////////////
 ggo::bozons_animation_artist::bozons_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf, rt)
+ggo::animation_artist_abc(width, height, line_step, pbf, rt)
 {
 	
 }
 
-//////////////////////////////////////////////////////////////
-bool ggo::bozons_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
-{
-	if (frame_index >= _color_discs.size())
-	{
-		return false;
-	}
-	
-	std::vector<solid_color_shape<disc_float, ggo::color_8u>> color_discs;
-
-  for (size_t i = 0; i < _color_discs.size(); ++i)
-  {
-    for (const auto & color_disc : _color_discs[i])
-    {
-      disc_float disc(color_disc._disc);
-      map_fit(disc, 0, 1);
-
-      color_discs.emplace_back(disc, color_disc._color);
-    }
-  }
-	
-  paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, get_width(), get_height(), get_line_step(), color_discs.cbegin(), color_discs.cend());
-	
-	return true;
-}
 
 //////////////////////////////////////////////////////////////
-// Unroll all the process here and save particles for each frame.
 void ggo::bozons_animation_artist::init_sub()
 {
   _hue = ggo::rand<float>();
-  
-	// Create particles.
-	std::vector<ggo_particle> particles;
-	particles.resize(50);
 
-	for (ggo_particle & particle : particles)
-	{
-		particle._pos.get<0>() = 0.5;
-		particle._pos.get<1>() = 0.5;
+  // Create bozons.
+  _bozons.clear();
+  for (int i = 0; i < 10; ++i)
+  {
+    bozon new_bozon;
+    new_bozon._prv_pos = get_center();
+    new_bozon._cur_pos = get_center();
 
-		particle._color	= from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-		
-		particle._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-		particle._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
-		particle._dangle_counter = ggo::rand<int>(dangle_counter_min, dangle_counter_max);
-		
-		particle._radius = ggo::rand<float>(0.002f, 0.004f);
-		particle._dradius = ggo::rand<float>(-dradius_amp, dradius_amp);
-		particle._dradius_counter = ggo::rand<int>(dradius_counter_min, dradius_counter_max);
-		
-		particle._speed = ggo::rand<float>(0.002f, 0.004f);
-	}
-	
-	// Move them.
-	int frame_index = 0;
-	
-	_color_discs.clear();
-	
-	while (particles.empty() == false)
-	{
-		std::vector<ggo_color_disc> color_discs;
-		
-		for (int i = static_cast<int>(particles.size()) - 1; i >= 0; --i)
-		{	
-			ggo_particle & particle = particles[i];
+    new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
-			// Move particle.
-			particle._pos += ggo::from_polar(particle._angle, particle._speed);
-	
-			// Update particle.
-			--particle._dangle_counter;
-			if (particle._dangle_counter <= 0)
-			{
-				particle._dangle = -particle._dangle * ggo::rand<float>(0.8f, 1.2f);
-				particle._dangle_counter = ggo::rand<int>(dangle_counter_min, dangle_counter_max);
-			}
-	
-			--particle._dradius_counter;
-			if (particle._dradius_counter <= 0)
-			{
-				if (frame_index > 100)
-				{
-					particle._dradius = -dradius_amp;
-				}
-				else
-				{
-					particle._dradius = ggo::rand<float>(-dradius_amp, dradius_amp);
-					particle._dradius_counter = ggo::rand<int>(dradius_counter_min, dradius_counter_max);
-				}
-			}
-	
-			particle._radius += particle._dradius;
-			particle._angle += particle._dangle;
-			particle._speed *= 0.999f;
-	
-			if (particle._radius <= 0)
-			{
-				particles.erase(particles.begin() + i);
-			}
-			else 
-			{
-				ggo_color_disc color_disc;
-				color_disc._disc = ggo::disc_float(particle._pos, particle._radius);
-				color_disc._color = particle._color;
-				
-				color_discs.push_back(color_disc);
-			}
-		}
-		
-		_color_discs.push_back(color_discs);
-		
-		++frame_index;
-	}
+    new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+    new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
+
+    new_bozon._counter = ggo::rand<int>(200, 300);
+
+    new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
+
+    _bozons.push_back(new_bozon);
+  }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::init_bkgd_buffer(void * buffer) const
+bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
 {
-	const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-	const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-	const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-	const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), 
-    bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+	if (_bozons.empty() == true)
+	{
+		return false;
+	}
+
+  if (frame_index == 0)
+  {
+    const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+
+    ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
+      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+  }
+
+  // Update bozons.
+  for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
+  {
+    --bozon_it->_counter;
+    if (bozon_it->_counter <= 0)
+    {
+      bozon_it = _bozons.erase(bozon_it);
+    }
+    else
+    {
+      // Split bozon?
+      if (frame_index < 100 && ggo::rand<int>(0, 256) == 0)
+      {
+        bozon new_bozon;
+
+        const float angle_offset = ggo::rand<float>(0.f, ggo::pi<float>() / 4.f);
+
+        new_bozon._angle = bozon_it->_angle + angle_offset;
+        bozon_it->_angle -= angle_offset;
+        new_bozon._dangle = -bozon_it->_dangle; // Change direction too.
+
+        // Since this new bozon will be updated at the end of the current loop, 
+        // there is no need to move it now.
+        new_bozon._prv_pos = bozon_it->_cur_pos;
+        new_bozon._cur_pos = bozon_it->_cur_pos;
+        new_bozon._speed = bozon_it->_speed;
+        new_bozon._color = bozon_it->_color;
+        new_bozon._counter = bozon_it->_counter;
+
+        _bozons.push_back(new_bozon);
+      }
+
+      // Update current bozon.
+      bozon_it->_angle += bozon_it->_dangle;
+      bozon_it->_dangle *= 1.01f;
+      bozon_it->_speed *= 0.99f;
+      bozon_it->_prv_pos = bozon_it->_cur_pos;
+      bozon_it->_cur_pos += ggo::from_polar(bozon_it->_angle, bozon_it->_speed);
+
+      ++bozon_it;
+    }
+  }
+
+  if (frame_index < 100 && ggo::rand<int>(0, 16) == 0)
+  {
+    bozon new_bozon;
+    new_bozon._prv_pos = get_center();
+    new_bozon._cur_pos = get_center();
+
+    new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+
+    new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+    new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
+
+    new_bozon._counter = ggo::rand<int>(200, 300);
+
+    new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
+
+    _bozons.push_back(new_bozon);
+  }
+
+  // Paint bozons.
+  const float radius = 0.001f * get_min_size();
+  for (const auto & bozon : _bozons)
+  {
+    ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius), bozon._color);
+  }
+
+  return true;
 }
+

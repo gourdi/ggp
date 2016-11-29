@@ -211,16 +211,16 @@ void ggo::newton_artist::newton_update()
       newton._cur_pos.x() = 2 * get_width() - newton._cur_pos.x();
     }
 
-    if (newton._cur_pos.get<1>() < 0)
+    if (newton._cur_pos.y < 0)
     {
-      newton._prv_pos.get<1>() = -newton._prv_pos.get<1>();
-      newton._cur_pos.get<1>() = -newton._cur_pos.get<1>();
+      newton._prv_pos.y = -newton._prv_pos.y;
+      newton._cur_pos.y = -newton._cur_pos.y;
     }
 
-    if (newton._cur_pos.get<1>() > get_height())
+    if (newton._cur_pos.y > get_height())
     {
-      newton._prv_pos.get<1>() = 2 * get_height() - newton._prv_pos.get<1>();
-      newton._cur_pos.get<1>() = 2 * get_height() - newton._cur_pos.get<1>();
+      newton._prv_pos.y = 2 * get_height() - newton._prv_pos.y;
+      newton._cur_pos.y = 2 * get_height() - newton._cur_pos.y;
     }*/
   }
 }
@@ -297,7 +297,7 @@ void ggo::newton_artist::newton_paint(void * buffer) const
       buffer, get_width(), get_height(), get_line_step(), disc,
       ggo::from_hsv<ggo::color_8u>(_hue, sat, val));
 
-    disc.center().get<1>() -= 0.0125f * get_min_size();
+    disc.center().y() -= 0.0125f * get_min_size();
     disc.radius() = 0.002f * get_min_size();
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, get_width(), get_height(), get_line_step(), disc,

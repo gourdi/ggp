@@ -2,10 +2,11 @@
 #define __GGO_BOZONS_ANIMATION_ARTIST__
 
 #include "ggo_animation_artist_abc.h"
+#include <list>
 
 namespace ggo
 {
-  class bozons_animation_artist : public static_background_animation_artist_abc
+  class bozons_animation_artist : public animation_artist_abc
   {
   public:
 
@@ -14,32 +15,23 @@ namespace ggo
   private:
 
     void  init_sub() override;
-    void  init_bkgd_buffer(void * buffer) const override;
-    bool  render_next_frame_bkgd(void * buffer, int frame_index) override;
+    bool  render_next_frame_sub(void * buffer, int frame_index) override;
 
   private:
 
-    struct ggo_particle
+    struct bozon
     {
-      ggo::pos2f    _pos;
+      ggo::pos2f    _prv_pos;
+      ggo::pos2f    _cur_pos;
       ggo::color_8u _color;
       float				  _angle;
       float				  _dangle;
-      int 				  _dangle_counter;
-      float				  _radius;
-      float				  _dradius;
-      int 				  _dradius_counter;
+      int           _counter;
       float				  _speed;
     };
 
-    struct ggo_color_disc
-    {
-      ggo::disc_float _disc;
-      ggo::color_8u   _color;
-    };
-
-    std::vector<std::vector<ggo_color_disc>>  _color_discs;
-    float                                     _hue;
+    std::list<bozon>  _bozons;
+    float             _hue;
   };
 }
 

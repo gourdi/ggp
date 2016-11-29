@@ -5,6 +5,7 @@
 #include <ggo_log.h>
 #include <ggo_kernel.h>
 #include <ggo_signal.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_animation_artist_abc.h>
 #include <ggo_bitmap_artist_abc.h>
 
@@ -57,10 +58,10 @@ ggo::bitmap_artist_abc * create_bitmap_artist()
 ggo::animation_artist_abc * create_animation_artist()
 {
   const std::vector<ggo::animation_artist_id> ids{
-    ggo::animation_artist_id::neon,
+    //ggo::animation_artist_id::neon,
     ggo::animation_artist_id::storni,
-    ggo::animation_artist_id::kanji,
-    ggo::animation_artist_id::circles
+    //ggo::animation_artist_id::kanji,
+    //ggo::animation_artist_id::bozons,
   };
 
   auto index = ggo::rand<size_t>(0, ids.size() - 1);
@@ -146,11 +147,16 @@ void main_loop()
       break;
     }
 
-    SDL_UpdateWindowSurface(window);
-
     // Check FPS.
     auto frame_duration_ms = SDL_GetTicks() - frame_start_time_ms;
     Uint32 delay_ms = 0;
+
+    ggo::paint_rect_safe<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      0, screen_surface->w, 0, 10, ggo::black_8u());
+    ggo::paint_rect_safe<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      0, 100, 0, 10, ggo::white_8u());
+    ggo::paint_rect_safe<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      0, 100 * frame_duration_ms / nominal_frame_duration_ms, 0, 10, ggo::red_8u());
 
     if (frame_duration_ms < nominal_frame_duration_ms)
     {
@@ -158,6 +164,8 @@ void main_loop()
       SDL_Delay(delay_ms);
       frame_duration_ms = nominal_frame_duration_ms;
     }
+
+    SDL_UpdateWindowSurface(window);
 
     std::ostringstream oss;
     oss << "FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";
