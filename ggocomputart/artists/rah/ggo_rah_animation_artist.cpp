@@ -354,17 +354,20 @@ animation_artist_abc(width, height, line_step, pbf, rt)
   };
 }
 
+
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::init_sub()
+void ggo::rah_animation_artist::init()
 {
+  _frame_index = -1;
+
   _items.clear();
-  
+
   // Create fog planes.
   for (int i = 0; i < fog_count; ++i)
   {
     auto fog_item = std::make_shared<fog>(get_width(), get_height());
     fog_item->_dist = ggo::map(static_cast<float>(i + 1), 0.f, 31.f, near, far);
-    
+
     _items.push_back(fog_item);
   }
 
@@ -372,17 +375,13 @@ void ggo::rah_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::rah_animation_artist::update()
 {
-  float focus_dist = _focus_dist_interpolator.update(1);
-  
-  // Paint background.
-  if (buffer != nullptr)
-  {    
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
-  }
+  ++_frame_index;
 
-  // Update and paint items (far from near).
+  _focus_dist = _focus_dist_interpolator.update(1);
+
+  // Update items (far from near).
   for (auto & item : _items)
   {
     item->update(get_min_size());
@@ -390,27 +389,17 @@ bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_i
 
   ggo::remove_if(_items, [&](const rah_item_ptr & item)
   {
-    return item->is_alive(get_width(), get_height(), focus_dist) == false;
+    return item->is_alive(get_width(), get_height(), _focus_dist) == false;
   });
 
-  if (buffer != nullptr)
-  {
-    for (const auto & item : _items)
-    {
-      item->paint(buffer, get_width(), get_height(), focus_dist);
-    }
-  }
-
-  std::cout << _items.size() << std::endl;
-  
   // Create new particles.
-  if (frame_index < 1000)
+  if (_frame_index < 1000)
   {
-    int create_count = std::min(frame_index / 5, 12);
+    int create_count = std::min(_frame_index / 5, 12);
     for (int i = 0; i < create_count; ++i)
     {
       // Sorted insertion.
-      auto particle = create_particle(focus_dist, get_width(), get_height());
+      auto particle = create_particle(_focus_dist, get_width(), get_height());
       _items.insert(std::upper_bound(_items.begin(), _items.end(), particle, _sort_func), particle);
     }
 
@@ -421,6 +410,29 @@ bool ggo::rah_animation_artist::render_next_frame_sub(void * buffer, int frame_i
     // Check there is only fog items left.
     return ggo::find_if(_items, [](const rah_item_ptr & item_ptr) { return item_ptr->is_fog() == false; });
   }
+
+  return false;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  // Paint background.
+  if (buffer != nullptr)
+  {    
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
+  }
+
+  // Paint items (far from near).
+  if (buffer != nullptr)
+  {
+    for (const auto & item : _items)
+    {
+      item->paint(buffer, get_width(), get_height(), _focus_dist);
+    }
+  }
+
+  std::cout << _items.size() << std::endl;
 }
 
 //////////////////////////////////////////////////////////////

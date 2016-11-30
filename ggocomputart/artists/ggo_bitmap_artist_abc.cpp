@@ -90,30 +90,37 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 	
 	if (artist)
   {
-    while (true)
-    {
-      bool done = false;
+    int frame_index = 0;
 
-      if (_frames_count > 0 && artist->get_frame_index() >= _frames_count)
-      {
-        done = true;
-      }
+    artist->init();
 
-      void * frame_buffer = buffer;
-      if (_render_last_frame_only == true && artist->get_frame_index() != _frames_count)
-      {
-        frame_buffer = nullptr;
-      }
-      if (artist->render_next_frame(frame_buffer) == false)
-      {
-        done = true;
-      }
+    //while (true)
+    //{
+    //  bool done = false;
 
-      if (done == true)
-      {
-        break;
-      }
-    }
+    //  if (_frames_count > 0 && frame_index >= _frames_count)
+    //  {
+    //    done = true;
+    //  }
+
+    //  void * frame_buffer = buffer;
+    //  if (_render_last_frame_only == true && frame_index != _frames_count)
+    //  {
+    //    frame_buffer = nullptr;
+    //  }
+    //  if (artist->render_next_frame(frame_buffer) == false)
+    //  {
+    //    done = true;
+    //  }
+
+    //  if (done == true)
+    //  {
+    //    break;
+    //  }
+
+    //  if (artist->render_next_frame(frame_buffer) == false)
+
+    //}
   }
 }
 
@@ -123,7 +130,9 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 //////////////////////////////////////////////////////////////
 ggo::bitmap_artist_abc::bitmap_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
-artist(width, height, line_step, pbf)
+artist(width, height),
+_line_step(line_step),
+_pbf(pbf)
 {
 	
 }

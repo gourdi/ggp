@@ -10,14 +10,16 @@ namespace
 ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt),
-_artist(width, height, line_step, pbf)
+_artist(width, height)
 {
 	
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_animation_artist::init_sub()
+void ggo::ifs_animation_artist::init()
 {
+  _frame_index = -1;
+
 	_transform_start[0] = ggo::rand<float>(1, 2);
 	_transform_start[1] = ggo::rand<float>(1, 2);
 	_transform_start[2] = ggo::rand<float>(1, 2);
@@ -42,18 +44,26 @@ void ggo::ifs_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::ifs_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::ifs_animation_artist::update()
 {
-  if (frame_index >= frames_count)
+  ++_frame_index;
+
+  if (_frame_index >= frames_count)
   {
     return false;
   }
 
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::ifs_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
   ggo::fill_4_colors<ggo::rgb_8u_yu>(
     buffer, get_width(), get_height(), get_line_step(), 
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
-	float t =  ggo::ease_inout_to<float>(frame_index, frames_count);
+	float t =  ggo::ease_inout_to<float>(_frame_index, frames_count);
 	
 	float angle1 = ggo::map<float>(t, 0, 1, _angle1_start, _angle1_end);
 	float angle2 = ggo::map<float>(t, 0, 1, _angle2_start, _angle2_end);
@@ -64,7 +74,5 @@ bool ggo::ifs_animation_artist::render_next_frame_sub(void * buffer, int frame_i
 	transform[2] = ggo::map<float>(t, 0, 1, _transform_start[2], _transform_end[2]);
 	transform[3] = ggo::map<float>(t, 0, 1, _transform_start[3], _transform_end[3]);
 	
-	_artist.render(buffer, transform, _hue, angle1, angle2);
-	
-	return true;
+	_artist.render(buffer, get_line_step(), get_pixel_buffer_format(), transform, _hue, angle1, angle2);
 }

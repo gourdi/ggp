@@ -30,8 +30,6 @@ namespace ggo
   class mono_sampling_camera_abc
   {
   public:
-    
-    virtual void              on_start_rendering_frame() = 0;
 
     virtual ggo::ray3d_float  get_ray(int x, int y) const = 0;
   };
@@ -40,8 +38,6 @@ namespace ggo
   class antialiasing_camera_abc
   {
   public:
-    
-    virtual void                              on_start_rendering_frame() = 0;
 
     virtual std::array<ggo::ray3d_float, 4>   get_first_pass_rays(int x, int y) const = 0;
     virtual std::array<ggo::ray3d_float, 12>  get_second_pass_rays(int x, int y) const = 0;
@@ -51,8 +47,6 @@ namespace ggo
   class multi_sampling_camera_abc
   {
   public:
-    
-    virtual void                          on_start_rendering_frame() = 0;
 
     virtual std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const = 0;
   };

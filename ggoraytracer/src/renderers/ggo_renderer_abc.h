@@ -42,8 +42,6 @@ namespace ggo
                                                                      const ggo::raytrace_params * raytrace_params);
 
     virtual std::shared_ptr<ggo::render_task_abc> create_render_task(const ggo::scene & scene) const = 0;
-                                                                     
-    virtual void                                  on_start_rendering() = 0;
   };
 }
 

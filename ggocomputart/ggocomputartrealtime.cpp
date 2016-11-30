@@ -116,7 +116,11 @@ void main_loop()
     switch (state)
     {
     case rendering_state::animation:
-      if (animation_artist->render_next_frame(screen_surface->pixels) == false || next == true)
+      if (animation_artist->update() == true && next == false)
+      {
+        animation_artist->render_frame(screen_surface->pixels, ggo::pixel_rect::from_width_height(screen_surface->w, screen_surface->h));
+      }
+      else
       {
         if (bitmap_rendered == true)
         {

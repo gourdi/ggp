@@ -16,8 +16,9 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -25,7 +26,8 @@ namespace ggo
     {
             circle_animate(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
 
-      bool  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos) override;
+      bool  update(int frame_index, const ggo::pos2f & pos) override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
 
       float         _radius;
       ggo::color_8u _color;
@@ -33,6 +35,7 @@ namespace ggo
       float         _bounding_factor;
     };
 
+    int _frame_index;
     ggo::animator _animator;
     ggo::color_8u _bkgd_color;
   };

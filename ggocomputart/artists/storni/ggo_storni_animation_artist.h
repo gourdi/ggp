@@ -7,7 +7,7 @@
 
 namespace ggo
 {
-  class storni_animation_artist : public static_background_animation_artist_abc
+  class storni_animation_artist : public animation_artist_abc
   {
   public:
 
@@ -29,9 +29,9 @@ namespace ggo
 
   private:
 
-    void init_sub() override;
-    void init_bkgd_buffer(void * buffer) const override;
-    bool render_next_frame_bkgd(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
     void update_predators(float velocity_hypot_min, float velocity_hypot_max, float border_margin);
     void update_stornis(float velocity_hypot_min, float velocity_hypot_max, float border_margin);
@@ -42,11 +42,13 @@ namespace ggo
 
     float get_obstacle_hypot() const { return ggo::square(0.1f) * get_width() * get_height(); }
 
+    int                         _frame_index;
     float                       _hue;
     std::vector<storni>         _stornis;
     std::vector<storni>         _predators;
     std::vector<ggo::pos2f>     _obstacles;
     std::unique_ptr<uint8_t[]>  _stornis_buffer;
+    std::unique_ptr<uint8_t[]>  _background;
   };
 }
 

@@ -3,14 +3,15 @@
 #include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_artist::chryzode_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::chryzode_artist::chryzode_artist(int width, int height)
 :
-artist(width, height, line_step, pbf)
+artist(width, height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const
+void ggo::chryzode_artist::render_chryzode(void * buffer, int line_step, ggo::pixel_buffer_format pbf,
+  float radius, const chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.
   std::vector<float> buffer_32f(get_width() * get_height(), 0.f);
@@ -41,7 +42,7 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
       // Paint the segment.
       auto brush = [](int x, int y) { return 1.f; };
       auto blend = [](int x, int y, float bkgd_color, float brush_color) { return bkgd_color + brush_color; };
-      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_width(), get_height(), get_line_step(),
+      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_width(), get_height(), line_step,
         ggo::extended_segment_float(p1, p2, 0.005f * radius), brush, blend);
     }
   }

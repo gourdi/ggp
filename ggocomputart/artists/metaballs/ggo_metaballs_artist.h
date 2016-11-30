@@ -9,10 +9,8 @@
 
 namespace ggo
 {
-  class metaballs_artist : public artist
+  namespace metaballs_artist
   {
-  public:
-
     struct params
     {
       params();
@@ -26,11 +24,8 @@ namespace ggo
       ggo::color_32f          _background_color;
     };
 
-  public:
-
-          metaballs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
-
-    void 	render_bitmap(void * buffer, ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
+    void render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+      ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
   };
 }
 

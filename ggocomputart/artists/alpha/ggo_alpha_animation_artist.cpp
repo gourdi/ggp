@@ -20,7 +20,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::init_sub()
+void ggo::alpha_animation_artist::init()
 {
   _remaining_counter = 7;
   _creation_counter = ggo::rand<int>(40, 60);
@@ -72,24 +72,10 @@ void ggo::alpha_animation_artist::add_new_item()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::alpha_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::alpha_animation_artist::update()
 {
-  if (buffer != nullptr)
-  {
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
-  }
-
   // Oscillos.
   ggo::remove_if(_oscillos, [&](oscillo & oscil) { return oscil.update() == false; });
-
-  if (buffer != nullptr)
-  {
-    for (const auto & oscillo : _oscillos)
-    {
-      oscillo.draw(buffer, get_width(), get_height());
-    }
-  }
 
   if ((_remaining_counter > 0) && (_oscillos.size() < 5) && (ggo::rand<int>(0, 2) == 0))
   {
@@ -113,14 +99,6 @@ bool ggo::alpha_animation_artist::render_next_frame_sub(void * buffer, int frame
   // Items.
   ggo::remove_if(_items, [&](item & item) { return item.update(get_width(), get_height()) == false; });
 
-  if (buffer != nullptr)
-  {
-    for (const auto & item : _items)
-    {
-      item.draw(buffer, get_width(), get_height());
-    }
-  }
-
   if (_creation_counter > 0)
   {
     --_creation_counter;
@@ -136,6 +114,34 @@ bool ggo::alpha_animation_artist::render_next_frame_sub(void * buffer, int frame
   }
 
   return _remaining_counter > 0 || !_items.empty() || !_oscillos.empty();
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (buffer != nullptr)
+  {
+    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
+  }
+
+  // Oscillos.
+  if (buffer != nullptr)
+  {
+    for (const auto & oscillo : _oscillos)
+    {
+      oscillo.draw(buffer, get_width(), get_height());
+    }
+  }
+
+  // Items.
+  if (buffer != nullptr)
+  {
+    for (const auto & item : _items)
+    {
+      item.draw(buffer, get_width(), get_height());
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////

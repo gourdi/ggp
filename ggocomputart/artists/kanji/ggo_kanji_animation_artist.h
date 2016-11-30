@@ -6,7 +6,7 @@
 
 namespace ggo
 {
-  class kanji_animation_artist : public accumulation_animation_artist_abc
+  class kanji_animation_artist : public animation_artist_abc
   {
   public:
 
@@ -14,13 +14,14 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    void  init_output_buffer(void * buffer) const override;
-    bool	render_next_frame_acc(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
     ggo::kanji_artist	_kanji_artist;
+    int               _frame_index;
   };
 }
 

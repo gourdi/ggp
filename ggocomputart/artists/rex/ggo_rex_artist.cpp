@@ -44,7 +44,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void render_color_triangles(void * buffer, const ggo::artist & artist, const std::vector<rex_color_triangle> & color_triangles)
+  void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<rex_color_triangle> & color_triangles)
   {
     for (const auto & color_triangle : color_triangles)
     {
@@ -95,7 +95,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void render_patterns(void * buffer, const ggo::artist & artist, const std::vector<rex_pattern_triangle> & pattern_triangles)
+  void render_patterns(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<rex_pattern_triangle> & pattern_triangles)
   {
     for (const auto & pattern_triangle : pattern_triangles)
     {
@@ -174,7 +174,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void render_clipped_discs(void * buffer, const ggo::artist & artist,
+  void render_clipped_discs(void * buffer, const ggo::bitmap_artist_abc & artist,
     const std::vector<rex_disc_clip_triangle> & discs_clip_triangles,
     const std::vector<rex_opened_disc_data> & opened_discs)
   {
@@ -237,7 +237,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void render_edges(void * buffer, const ggo::artist & artist, const std::vector<ggo::segment_float> & edges)
+  void render_edges(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<ggo::segment_float> & edges)
   {
     ggo::multi_shape_float multi_shape;
 

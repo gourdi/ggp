@@ -118,94 +118,10 @@ void ggo::storni_animation_artist::storni::clamp_velocity(float velocity_hypot_m
 //////////////////////////////////////////////////////////////
 ggo::storni_animation_artist::storni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, pbf, rt),
+_background(new uint8_t[width * line_step])
 {
 
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::storni_animation_artist::init_sub()
-{
-  _hue = ggo::rand<float>();
-
-  _stornis_buffer.reset(new uint8_t[get_width() * get_height()]);
-  std::fill(_stornis_buffer.get(), _stornis_buffer.get() + get_width() * get_height(), 0);
-
-  _stornis.clear();
-  switch (get_rendering_type())
-  {
-  case ggo::animation_artist_abc::offscreen_rendering:
-    for (int i = 0; i < 512; ++i)
-    {
-      _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
-    }
-    break;
-  case ggo::animation_artist_abc::realtime_rendering:
-    for (int i = 0; i < 256; ++i)
-    {
-      _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
-    }
-    break;
-  default:
-    throw ggo::invalid_parameter_exception();
-    break;
-  }
-
-  _predators.clear();
-  for (int i = 0; i < 2; ++i)
-  {
-    _predators.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
-  }
-
-  _obstacles.clear();
-  for (int i = 0; i < 4; ++i)
-  {
-    while (true)
-    {
-      const ggo::pos2f new_obstacle = get_random_point(0.1f * get_min_size());
-
-      bool inserted = true;
-      for (const auto & obstacle : _obstacles)
-      {
-        if (ggo::hypot(new_obstacle, obstacle) < 4 * get_obstacle_hypot())
-        {
-          inserted = false;
-          break;
-        }
-      }
-
-      if (inserted == true)
-      {
-        _obstacles.push_back(new_obstacle);
-        break;
-      }
-    }
-  }
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::storni_animation_artist::init_bkgd_buffer(void * buffer) const
-{
-  switch (get_pixel_buffer_format())
-  {
-  case ggo::rgb_8u_yu:
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
-    break;
-  case ggo::bgra_8u_yd:
-    ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-      ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
-    break;
-    default:
-      GGO_FAIL();
-      break;
-  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -347,9 +263,73 @@ void ggo::storni_animation_artist::update_stornis(float velocity_hypot_min, floa
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::storni_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
+void ggo::storni_animation_artist::init()
 {
-  if (frame_index > 800)
+  _frame_index = -1;
+
+  _hue = ggo::rand<float>();
+
+  _stornis_buffer.reset(new uint8_t[get_width() * get_height()]);
+  std::fill(_stornis_buffer.get(), _stornis_buffer.get() + get_width() * get_height(), 0);
+
+  _stornis.clear();
+  switch (get_rendering_type())
+  {
+  case ggo::animation_artist_abc::offscreen_rendering:
+    for (int i = 0; i < 512; ++i)
+    {
+      _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
+    }
+    break;
+  case ggo::animation_artist_abc::realtime_rendering:
+    for (int i = 0; i < 256; ++i)
+    {
+      _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
+    }
+    break;
+  default:
+    throw ggo::invalid_parameter_exception();
+    break;
+  }
+
+  _predators.clear();
+  for (int i = 0; i < 2; ++i)
+  {
+    _predators.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
+  }
+
+  _obstacles.clear();
+  for (int i = 0; i < 4; ++i)
+  {
+    while (true)
+    {
+      const ggo::pos2f new_obstacle = get_random_point(0.1f * get_min_size());
+
+      bool inserted = true;
+      for (const auto & obstacle : _obstacles)
+      {
+        if (ggo::hypot(new_obstacle, obstacle) < 4 * get_obstacle_hypot())
+        {
+          inserted = false;
+          break;
+        }
+      }
+
+      if (inserted == true)
+      {
+        _obstacles.push_back(new_obstacle);
+        break;
+      }
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////
+bool ggo::storni_animation_artist::update()
+{
+  ++_frame_index;
+
+  if (_frame_index > 800)
   {
     return false;
   }
@@ -372,6 +352,36 @@ bool ggo::storni_animation_artist::render_next_frame_bkgd(void * buffer, int fra
     predator._pos += predator._vel;
   }
 
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (_frame_index == 0)
+  {
+    switch (get_pixel_buffer_format())
+    {
+    case ggo::rgb_8u_yu:
+      ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
+      break;
+    case ggo::bgra_8u_yd:
+      ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
+      break;
+    default:
+      GGO_FAIL();
+      break;
+    }
+  }
+
   // Paint.
   switch (get_pixel_buffer_format())
   {
@@ -386,7 +396,7 @@ bool ggo::storni_animation_artist::render_next_frame_bkgd(void * buffer, int fra
       paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer);
       paint_predators<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer);
     }
-    paint_obstacles<ggo::rgb_8u_yu>(buffer, frame_index);
+    paint_obstacles<ggo::rgb_8u_yu>(buffer, _frame_index);
     break;
   case ggo::bgra_8u_yd:
     if (get_rendering_type() == ggo::animation_artist_abc::realtime_rendering)
@@ -399,12 +409,10 @@ bool ggo::storni_animation_artist::render_next_frame_bkgd(void * buffer, int fra
       paint_stornies<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer);
       paint_predators<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer);
     }
-    paint_obstacles<ggo::bgra_8u_yd>(buffer, frame_index);
+    paint_obstacles<ggo::bgra_8u_yd>(buffer, _frame_index);
     break;
-    default:
-      GGO_FAIL();
-      break;
+  default:
+    GGO_FAIL();
+    break;
   }
-
-  return true;
 }

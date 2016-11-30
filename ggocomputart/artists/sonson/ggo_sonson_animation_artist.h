@@ -17,8 +17,9 @@ namespace ggo
 
   private:
 
-    void  init_sub() override;
-    bool  render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
     void  create_line(int frame_index, bool foreground);
 
@@ -72,6 +73,7 @@ namespace ggo
       std::vector<ggo::segment_float>             _sparks;
     };
 
+    int                                             _frame_index;
     float                                           _hue1;
     float                                           _hue2;
     std::vector<std::vector<std::unique_ptr<line>>> _lines;

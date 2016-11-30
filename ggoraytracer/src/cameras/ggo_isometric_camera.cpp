@@ -20,11 +20,6 @@ namespace ggo
   :
   isometric_camera(width, height)
   {
-  }
-
-  //////////////////////////////////////////////////////////////
-  void mono_sampling_isometric_camera::on_start_rendering_frame()
-  {
     _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
     _offset_y = 0.5f - 0.5f * _height;
     _ratio = _span / (0.5f * _height);
@@ -51,11 +46,6 @@ namespace ggo
   multi_sampling_isometric_camera::multi_sampling_isometric_camera(int width, int height)
   :
   isometric_camera(width, height)
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  void multi_sampling_isometric_camera::on_start_rendering_frame()
   {
     _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
     _offset_y = 0.5f - 0.5f * _height;

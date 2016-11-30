@@ -14,7 +14,6 @@ namespace ggo
                                           global_sampling_renderer(ggo::multi_sampling_camera_abc & camera, int samples_count);
                                           
     std::shared_ptr<ggo::render_task_abc> create_render_task(const ggo::scene & scene) const override;
-    void                                  on_start_rendering() override;
     
   private:
 

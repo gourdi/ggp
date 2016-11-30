@@ -3,9 +3,9 @@
 #include <ggo_color.h>
 
 //////////////////////////////////////////////////////////////
-ggo::julia_artist::julia_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::julia_artist::julia_artist(int width, int height)
 :
-artist(width, height, line_step, pbf)
+artist(width, height)
 {
 	// Build the palette.
 	float hue = ggo::rand<float>();
@@ -54,7 +54,7 @@ std::complex<float> ggo::julia_artist::pickup_seed()
 }
 	
 //////////////////////////////////////////////////////////////
-void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> & seed, float range)
+void ggo::julia_artist::render_bitmap(void * buffer, int line_step, ggo::pixel_buffer_format pbf, const std::complex<float> & seed, float range) const
 {
 	for (int y = 0; y < get_height(); ++y)
 	{
@@ -84,13 +84,13 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 			{
         int index = std::min(static_cast<int>(_palette.size() - 1), iterations[0]);
 
-        switch (get_pixel_buffer_format())
+        switch (pbf)
         {
         case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), line_step, _palette[index]);
           break;
         case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), _palette[index]);
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), line_step, _palette[index]);
           break;
 				default:
 					GGO_FAIL();
@@ -128,13 +128,13 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 
         ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
-        switch (get_pixel_buffer_format())
+        switch (pbf)
         {
         case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), line_step, c_8u);
           break;
         case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), line_step, c_8u);
           break;
 				default:
 					GGO_FAIL();

@@ -6,7 +6,7 @@
 
 namespace ggo
 {
-  class crystal_artist : public artist
+  class crystal_artist
   {
   public:
 
@@ -20,19 +20,12 @@ namespace ggo
 
   public:
 
-          crystal_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
-
-    void  render_bitmap(void * buffer, const params & params, const ggo::color_8u bkgd_colors[4]);
-
+    static void render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params);
     static void randomize_params(params & params);
 
   private:
 
-    void process_transform(const params & params);
-
-  private:
-
-    ggo::array_float	_render_buffer;
+    static void render_transform(float * buffer, int width, int height, const params & params);
   };
 }
 

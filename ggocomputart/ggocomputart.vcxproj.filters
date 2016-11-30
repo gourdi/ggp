@@ -683,5 +683,11 @@
     <ClInclude Include="artists\storni\ggo_storni_animation_artist.imp.h">
       <Filter>artists\storni</Filter>
     </ClInclude>
+    <ClInclude Include="artists\aggregation\ggo_aggregation_artist.imp.h">
+      <Filter>artists\aggregation</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\plastic\ggo_plastic_artist.imp.h">
+      <Filter>artists\plastic</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

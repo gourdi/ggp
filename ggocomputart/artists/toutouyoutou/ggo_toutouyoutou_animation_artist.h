@@ -9,11 +9,15 @@
 
 namespace ggo
 {
-  class toutouyoutou_animation_artist : public static_background_animation_artist_abc
+  class toutouyoutou_animation_artist : public animation_artist_abc
   {
   public:
 
-    toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -55,10 +59,6 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    void	init_bkgd_buffer(void * bkgd_buffer) const override;
-    bool	render_next_frame_bkgd(void * buffer, int frame_index) override;
-
     void  apply_body_forces();
     void  advance();
     void  calculate_pressure();
@@ -86,6 +86,8 @@ namespace ggo
     constexpr static float near_norm = 30 / (2 * ggo::pi<float>() * influence_radius * influence_radius);
     constexpr static float view_height = 20;
 
+    int                                           _frame_index;
+    std::unique_ptr<uint8_t>                      _background;
     std::vector<particle>                         _particles;
     ggo::array<std::vector<const particle *>, 2>  _grid;
     particle_emitter                              _emitter1;

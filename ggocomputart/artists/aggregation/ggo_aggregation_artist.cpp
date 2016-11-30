@@ -4,57 +4,10 @@
 #include <ggo_buffer_fill.h>
 #include <ggo_gaussian_blur2d.h>
 
-namespace
-{
-  template <ggo::pixel_buffer_format pbf>
-  void render_t(void * buffer, const ggo::aggregation_artist & artist)
-  {
-    ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), artist.get_background_color());
-
-    {
-      std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;
-
-      for (const auto & cell : artist.get_grid())
-      {
-        for (const auto & point : cell._points)
-        {
-          shapes.emplace_back(ggo::disc_float(point._pos, 2.f * artist.get_threshold_dist()), ggo::black<ggo::color_8u>());
-        }
-      }
-
-      ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), artist.get_background_color());
-
-      ggo::paint_shapes<pbf, ggo::sampling_4x4>(
-        buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes.begin(), shapes.end());
-    }
-
-    float stddev = 0.001f * artist.get_min_size();
-    ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
-
-    {
-      std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;
-
-      for (const auto & cell : artist.get_grid())
-      {
-        for (const auto & point : cell._points)
-        {
-          float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
-          float sat = point._sat - 0.0015f * point._counter;
-          ggo::color_8u c = ggo::from_hsv<ggo::color_8u>(hue, sat, point._val);
-          shapes.emplace_back(ggo::disc_float(point._pos, artist.get_threshold_dist()), c);
-        }
-      }
-
-      ggo::paint_shapes<pbf, ggo::sampling_4x4>(
-        buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes.begin(), shapes.end());
-    }
-  }
-}
-
 //////////////////////////////////////////////////////////////
-ggo::aggregation_artist::aggregation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::aggregation_artist::aggregation_artist(int width, int height)
 :
-artist(width, height, line_step, pbf)
+artist(width, height)
 {
   _threshold_dist = 0.00125f * std::min(width, height);
   _threshold_hypot = _threshold_dist * _threshold_dist;
@@ -90,8 +43,8 @@ void ggo::aggregation_artist::register_point(const ggo::pos2f & pos, float hue, 
 {
   std::vector<ggo::pos2f> loop_pos{
     pos,
-    { pos.get<0>() - get_width(), pos.get<1>() }, { pos.get<0>() + get_width(), pos.get<1>() },
-    { pos.get<0>(), pos.get<1>() - get_height() },{ pos.get<0>(), pos.get<1>() + get_height() },
+    { pos.x() - get_width(), pos.y() }, { pos.x() + get_width(), pos.y() },
+    { pos.x(), pos.y() - get_height() },{ pos.x(), pos.y() + get_height() },
   };
 
   for (auto & cell : _grid)
@@ -145,9 +98,9 @@ void ggo::aggregation_artist::update()
 
     // Move the point.
     ggo::vec2f disp = ggo::from_polar(ggo::rand<float>(0.f, 2.f * ggo::pi<float>()), _threshold_dist);
-    p.move(disp.get<0>(), disp.get<1>());
-    p.set<0>(ggo::pos_mod(p.get<0>(), static_cast<float>(get_width())));
-    p.set<1>(ggo::pos_mod(p.get<1>(), static_cast<float>(get_height())));
+    p.move(disp.x(), disp.y());
+    p.set<0>(ggo::pos_mod(p.x(), static_cast<float>(get_width())));
+    p.set<1>(ggo::pos_mod(p.y(), static_cast<float>(get_height())));
 
     ++count;
   }
@@ -171,15 +124,15 @@ void ggo::aggregation_artist::update(int points_count)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_artist::render(void * buffer) const
+void ggo::aggregation_artist::render(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const
 {
-  switch (get_pixel_buffer_format())
+  switch (pbf)
   {
   case ggo::rgb_8u_yu:
-    render_t<ggo::rgb_8u_yu>(buffer, *this);
+    render<ggo::rgb_8u_yu>(buffer, line_step);
     break;
   case ggo::bgra_8u_yd:
-    render_t<ggo::bgra_8u_yd>(buffer, *this);
+    render<ggo::bgra_8u_yd>(buffer, line_step);
     break;
   default:
     GGO_FAIL();

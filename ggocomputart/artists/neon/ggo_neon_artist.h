@@ -5,7 +5,7 @@
 
 namespace ggo
 {
-  class neon_artist : public accumulation_animation_artist_abc
+  class neon_artist : public animation_artist_abc
   {
   public:
 
@@ -13,14 +13,15 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    void	init_output_buffer(void * buffer) const override;
-    bool	render_next_frame_acc(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
     void	paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color) const;
 
   private:
 
+    int _frame_index;
     float	_angle;
     float	_radius_prv;
     float	_radius_cur;

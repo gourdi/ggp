@@ -14,12 +14,14 @@ namespace ggo
 
   private:
 
-    void  init_sub() override;
-    bool  render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
     chryzode_params _params;
+    int _frame_index;
     float _hue_start = 0;
     float _hue_end = 0;
     float _multiplier1_start = 0;

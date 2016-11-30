@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////
 ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-accumulation_animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, pbf, rt),
 _feed_map(width * height),
 _kill_map(width * height),
 _food(width * height),
@@ -17,8 +17,10 @@ _life(width * height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::init_sub()
+void ggo::rediff_animation_artist::init()
 {
+  _frame_index = -1;
+
   _hue = ggo::rand<float>();
 
   _food_stddev = 0.005f * get_min_size();
@@ -49,14 +51,15 @@ void ggo::rediff_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::init_output_buffer(void * buffer) const
+bool ggo::rediff_animation_artist::update()
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
-}
+  ++_frame_index;
 
-//////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::update()
-{
+  if (_frame_index > 350)
+  {
+    return false;
+  }
+
   std::vector<float> diffused_food;
   std::vector<float> diffused_life;
 
@@ -79,11 +82,23 @@ void ggo::rediff_animation_artist::update()
       set2d(_life.data(), x, y, life);
     });
   }
+
+  return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::render(void * buffer) const
+void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
 {
+  if (buffer == nullptr)
+  {
+    return;
+  }
+
+  if (_frame_index == 0)
+  {
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+  }
+
   const float x1 = 0.8f;
   const float x2 = 0.16f;
   const float x3 = 0.24f;
@@ -128,22 +143,4 @@ void ggo::rediff_animation_artist::render(void * buffer) const
 
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), ggo::convert_color_to<ggo::color_8u>(pixel));
   });
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::rediff_animation_artist::render_next_frame_acc(void * buffer, int frame_index)
-{
-  if (frame_index > 350)
-  {
-    return false;
-  }
-
-  update();
-  
-  if (buffer != nullptr)
-  {
-    render(buffer);
-  }
-
-  return true;
 }

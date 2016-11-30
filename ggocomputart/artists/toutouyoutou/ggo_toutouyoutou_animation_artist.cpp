@@ -31,14 +31,17 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 //////////////////////////////////////////////////////////////
 ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf, rt),
-_grid(ggo::to<int>(view_height / influence_radius), ggo::to<int>(view_height / influence_radius)) // Grid size is the same as the discard radius.
+animation_artist_abc(width, height, line_step, pbf, rt),
+_grid(ggo::to<int>(view_height / influence_radius), ggo::to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
+_background(new uint8_t[height * line_step])
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_animation_artist::init_sub()
+void ggo::toutouyoutou_animation_artist::init()
 {
+  _frame_index = -1;
+
   _particles.clear();
 
   _rest_density = ggo::rand<float>(100.f, 200.f); // 150
@@ -81,26 +84,22 @@ void ggo::toutouyoutou_animation_artist::init_sub()
   }
 }
 
-////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::init_bkgd_buffer(void * bkgd_buffer) const
-{
-  ggo::fill_gaussian<ggo::rgb_8u_yu>(bkgd_buffer, get_width(), get_height(), get_line_step(),
-    static_cast<float>(get_min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
-}
 
-//////////////////////////////////////////////////////////////
-bool ggo::toutouyoutou_animation_artist::render_next_frame_bkgd(void * buffer, int frame_index)
+////////////////////////////////////////////////////////////// 
+bool ggo::toutouyoutou_animation_artist::update()
 {
-  if (frame_index > 1000)
+  ++_frame_index;
+
+  if (_frame_index > 1000)
   {
-      return false;
+    return false;
   }
-  
+
   for (int step = 0; step < sub_steps_count; ++step)
   {
     _emitter1.create_particles(_particles);
     _emitter2.create_particles(_particles);
-  
+
     apply_body_forces();
     advance();
     update_grid();
@@ -108,17 +107,29 @@ bool ggo::toutouyoutou_animation_artist::render_next_frame_bkgd(void * buffer, i
     calculate_relaxed_positions();
     move_to_relaxed_positions();
     resolve_collisions();
-    
+
     apply_temperature();
+  }
+
+  update_grid();
+
+  return true;
+}
+
+////////////////////////////////////////////////////////////// 
+void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (_frame_index == 0)
+  {
+    ggo::fill_gaussian<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
+      static_cast<float>(get_min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
   }
 
   if (buffer != nullptr)
   {
-    update_grid();
+    memcpy(buffer, _background.get(), get_height() * get_line_step());
     paint_flow(buffer);
   }
-
-  return true;
 }
 
 //////////////////////////////////////////////////////////////

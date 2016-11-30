@@ -236,7 +236,7 @@ void ggo::cumbia_artist::init(ggo::multi_sampling_point_camera & camera, int box
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer)
+void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer) const
 {
 	ggo::raytrace_params raytrace_params;
 	raytrace_params._depth = 2;

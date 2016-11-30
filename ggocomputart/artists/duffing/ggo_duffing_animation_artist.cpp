@@ -9,6 +9,8 @@
 namespace
 {
   const int iterations_count = 200000;
+  const int points_per_frame = 500;
+  const int visible_points_count = 12000;
 }
 
 //////////////////////////////////////////////////////////////
@@ -41,86 +43,96 @@ ggo::pos2f ggo::duffing_animation_artist::apply_duffing(float t, float dt, float
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::init_sub()
+void ggo::duffing_animation_artist::init()
 {
-	// Compute points.
-	float 			t = 0;
-	float 			dt = 0.002f;
-	ggo::pos2f	point(ggo::rand<float>(-1, 1), ggo::rand<float>(-1, 1));
-	float				angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
+  _frame_index = 0;
 
-	_points.clear();
-	_points.reserve(iterations_count);
+  // Compute points.
+  float 			t = 0;
+  float 			dt = 0.002f;
+  ggo::pos2f	point(ggo::rand<float>(-1, 1), ggo::rand<float>(-1, 1));
+  float				angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
 
-	for (int i = 0; i < iterations_count; ++i)
-	{
-		ggo::pos2f render_pt = apply_duffing(t, dt, angle_offset, point);
-		
-		_points.push_back(render_pt);
-		
-		angle_offset = std::fmod(angle_offset + 0.00005f, 2 * ggo::pi<float>());
-		t += dt;
-	}
-	
-	// Init color mappings.
-	_hue_curve.reset();
-	_hue_curve.push_point(0, ggo::rand<float>());
-	_hue_curve.push_point(1, ggo::rand<float>());
-	_hue_curve.push_point(0.5, ggo::rand<float>());
-	
-	_sat_curve.reset();
-	_sat_curve.push_point(0, ggo::rand<float>(0.5, 1));
-	_sat_curve.push_point(1, ggo::rand<float>(0.5, 1));
-	_sat_curve.push_point(0.5, ggo::rand<float>(0.5, 1));
+  _points.clear();
+  _points.reserve(iterations_count);
 
-	_val_curve1.reset();
-	_val_curve1.push_point(0, ggo::rand<float>());
-	_val_curve1.push_point(1, ggo::rand<float>());
-	_val_curve1.push_point(0.25, ggo::rand<float>());
-	_val_curve1.push_point(0.5, ggo::rand<float>());
-	_val_curve1.push_point(0.75, ggo::rand<float>());
-	
-	_val_curve2.reset();
-	_val_curve2.push_point(0, ggo::rand<float>());
-	_val_curve2.push_point(1, ggo::rand<float>());
-	_val_curve2.push_point(0.25, ggo::rand<float>());
-	_val_curve2.push_point(0.5, ggo::rand<float>());
-	_val_curve2.push_point(0.75, ggo::rand<float>());
-	
-	_val_curve3.reset();
-	_val_curve3.push_point(0, ggo::rand<float>());
-	_val_curve3.push_point(1, ggo::rand<float>());
-	_val_curve3.push_point(0.25, ggo::rand<float>());
-	_val_curve3.push_point(0.5, ggo::rand<float>());
-	_val_curve3.push_point(0.75, ggo::rand<float>());
-	
-	_val_curve4.reset();
-	_val_curve4.push_point(0, ggo::rand<float>());
-	_val_curve4.push_point(1, ggo::rand<float>());
-	_val_curve4.push_point(0.25, ggo::rand<float>());
-	_val_curve4.push_point(0.5, ggo::rand<float>());
-	_val_curve4.push_point(0.75, ggo::rand<float>());
+  for (int i = 0; i < iterations_count; ++i)
+  {
+    ggo::pos2f render_pt = apply_duffing(t, dt, angle_offset, point);
+
+    _points.push_back(render_pt);
+
+    angle_offset = std::fmod(angle_offset + 0.00005f, 2 * ggo::pi<float>());
+    t += dt;
+  }
+
+  // Init color mappings.
+  _hue_curve.reset();
+  _hue_curve.push_point(0, ggo::rand<float>());
+  _hue_curve.push_point(1, ggo::rand<float>());
+  _hue_curve.push_point(0.5, ggo::rand<float>());
+
+  _sat_curve.reset();
+  _sat_curve.push_point(0, ggo::rand<float>(0.5, 1));
+  _sat_curve.push_point(1, ggo::rand<float>(0.5, 1));
+  _sat_curve.push_point(0.5, ggo::rand<float>(0.5, 1));
+
+  _val_curve1.reset();
+  _val_curve1.push_point(0, ggo::rand<float>());
+  _val_curve1.push_point(1, ggo::rand<float>());
+  _val_curve1.push_point(0.25, ggo::rand<float>());
+  _val_curve1.push_point(0.5, ggo::rand<float>());
+  _val_curve1.push_point(0.75, ggo::rand<float>());
+
+  _val_curve2.reset();
+  _val_curve2.push_point(0, ggo::rand<float>());
+  _val_curve2.push_point(1, ggo::rand<float>());
+  _val_curve2.push_point(0.25, ggo::rand<float>());
+  _val_curve2.push_point(0.5, ggo::rand<float>());
+  _val_curve2.push_point(0.75, ggo::rand<float>());
+
+  _val_curve3.reset();
+  _val_curve3.push_point(0, ggo::rand<float>());
+  _val_curve3.push_point(1, ggo::rand<float>());
+  _val_curve3.push_point(0.25, ggo::rand<float>());
+  _val_curve3.push_point(0.5, ggo::rand<float>());
+  _val_curve3.push_point(0.75, ggo::rand<float>());
+
+  _val_curve4.reset();
+  _val_curve4.push_point(0, ggo::rand<float>());
+  _val_curve4.push_point(1, ggo::rand<float>());
+  _val_curve4.push_point(0.25, ggo::rand<float>());
+  _val_curve4.push_point(0.5, ggo::rand<float>());
+  _val_curve4.push_point(0.75, ggo::rand<float>());
 }
 
-//////////////////////////////////////////////////////////////				
-bool ggo::duffing_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+//////////////////////////////////////////////////////////////
+bool ggo::duffing_animation_artist::update()
 {
-  const int points_per_frame = 500;
-  const int visible_points_count = 12000;
+  ++_frame_index;
 
-	int last_point = std::max(1, frame_index * points_per_frame);
+  int last_point = std::max(1, _frame_index * points_per_frame);
+  int first_point = last_point - visible_points_count;
+
+  if (first_point > iterations_count)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+	int last_point = std::max(1, _frame_index * points_per_frame);
 	int first_point = last_point - visible_points_count;
-	
-	if (first_point > iterations_count)
-	{
-		return false;
-	}
-	
+
 	float radius = get_min_size() / 100.f;
   std::vector<float> buffer_float(3 * get_width() * get_height());
 
 	// Render the background.
-	float t = float(points_per_frame) * frame_index / _points.size();
+	float t = float(points_per_frame) * _frame_index / _points.size();
 	
 	float hue = _hue_curve.evaluate(t);
   ggo::color_32f color1 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve1.evaluate(t));
@@ -179,8 +191,6 @@ bool ggo::duffing_animation_artist::render_next_frame_sub(void * buffer, int fra
   ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
     buffer_float.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
     buffer, get_width(), get_height(), get_line_step(), 0, 0);
-
-	return true;
 }
 
 //////////////////////////////////////////////////////////////

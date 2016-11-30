@@ -16,25 +16,27 @@ namespace ggo
 
   private:
 
-    class animated_square : public ggo::animate_abc
+    class animated_square : public ggo::position_animate_abc
     {
     public:
 
-            animated_square(int start_offset) : ggo::animate_abc(start_offset) {};
+            animated_square(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
 
-      bool  update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter) override;
+      bool  update(int frame_index, const ggo::pos2f & pos) override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
 
-      ggo::pos2f  						                    _pos;
       float											                  _angle;
       ggo::filling_squares_artist::colored_square _colored_square;
     };
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
     ggo::animator _animator;
+    int           _frame_index;
     float         _hue;
     ggo::color_8u _bkgd_color;
   };

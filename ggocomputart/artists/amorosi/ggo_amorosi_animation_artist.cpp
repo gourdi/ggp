@@ -18,9 +18,9 @@ void ggo::amorosi_animation_artist::random_width_interpolator::get_random_data(f
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::curve::curve(int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::color_8u & color)
+ggo::amorosi_animation_artist::curve::curve(int width, int height, const ggo::color_8u & color)
 :
-artist(width, height, line_step, pbf),
+artist(width, height),
 _lines_count(ggo::rand<int>(3, 10)),
 _color(color)
 {
@@ -120,7 +120,7 @@ void ggo::amorosi_animation_artist::curve::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
+void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const
 {
   std::vector<ggo::alpha_color_triangle<ggo::color_8u>> triangles;
   
@@ -135,7 +135,7 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
   }
   
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, get_width(), get_height(), get_line_step(),
+    buffer, get_width(), get_height(), line_step,
     triangles.begin(), triangles.end());
 }
 
@@ -147,10 +147,11 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::init_sub()
+void ggo::amorosi_animation_artist::init()
 {
+  _frame_index = -1;
   _hue = ggo::rand<float>();
-  _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), get_color())));
+  _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_color())));
 }
 
 //////////////////////////////////////////////////////////////
@@ -168,20 +169,20 @@ ggo::color_8u ggo::amorosi_animation_artist::get_color() const
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::amorosi_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::amorosi_animation_artist::update()
 {
+  ++_frame_index;
+
   const int frames_count = 300;
 
-  if (frame_index > frames_count && _curves.empty())
+  if (_frame_index > frames_count && _curves.empty())
   {
     return false;
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>());
-
-  if (ggo::rand<float>() < 0.05 && frame_index < frames_count)
+  if (ggo::rand<float>() < 0.05 && _frame_index < frames_count)
   {
-    _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), get_color())));
+    _curves.push_back(std::unique_ptr<curve>(new curve(get_width(), get_height(), get_color())));
   }
 
   for (auto & curve : _curves)
@@ -194,15 +195,22 @@ bool ggo::amorosi_animation_artist::render_next_frame_sub(void * buffer, int fra
     return curve->is_dead();
   });
 
+  _hue += 0.001f;
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>());
+
   if (buffer != nullptr)
   {
     for (const auto & curve : _curves)
     {
-      curve->paint(buffer);
+      curve->paint(buffer, get_line_step(), get_pixel_buffer_format());
     }
   }
-  
-  _hue += 0.001f;
-    
-  return true;
 }
+

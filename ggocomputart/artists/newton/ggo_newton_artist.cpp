@@ -9,33 +9,16 @@
 //////////////////////////////////////////////////////////////
 ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-static_background_animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
-
+  _background.reset(new uint8_t[line_step * height]);
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::newton_artist::find_string(int index1, int index2) const
+void ggo::newton_artist::init()
 {
-  for (const auto & string : _strings)
-  {
-    if ((string._index1 == index1) && (string._index2 == index2))
-    {
-      return true;
-    }
+  _frame_index = -1;
 
-    if ((string._index1 == index2) && (string._index2 == index1))
-    {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::newton_artist::init_sub()
-{
   _hue = ggo::rand<float>();
 
   _shadow_offset = ggo::vec2f(ggo::rand<float>(-0.01f, 0.01f) * get_min_size(), ggo::rand<float>(0.02f, 0.05f) * get_min_size());
@@ -73,44 +56,44 @@ void ggo::newton_artist::init_sub()
       _strings.push_back(string);
     }
   }
-}
 
-//////////////////////////////////////////////////////////////
-void ggo::newton_artist::init_bkgd_buffer(void * bkgd_buffer) const
-{
+  // Render background.
   const ggo::color_8u color1 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
   const ggo::color_8u color2 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
   const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
 
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(bkgd_buffer, get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
 
-  std::vector<uint8_t> perlin_buffer(get_width(), get_height());
-  ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.data(), get_width(), get_height(), get_width(),
+  std::unique_ptr<uint8_t> perlin_buffer(new uint8_t[get_width() * get_height()]);
+  ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.get(), get_width(), get_height(), get_width(),
     0.4f * get_min_size(), uint8_t(0), uint8_t(192));
-
-  uint8_t * ptr = static_cast<uint8_t *>(bkgd_buffer);
-  for (int i = 0; i < get_width() * get_height(); ++i)
+  
+  for (int y = 0; y < get_height(); ++y)
   {
-    float val = perlin_buffer[i] / 255.f;
+    uint8_t * ptr = _background.get() + get_line_step();
 
-    ptr[3 * i + 0] = ggo::to<uint8_t>(val * ptr[3 * i + 0]);
-    ptr[3 * i + 1] = ggo::to<uint8_t>(val * ptr[3 * i + 1]);
-    ptr[3 * i + 2] = ggo::to<uint8_t>(val * ptr[3 * i + 2]);
+    for (int x = 0; x < get_width(); ++x)
+    {
+      float val = *(perlin_buffer.get() + y * get_width() + x) / 255.f;
+
+      ptr[3 * x + 0] = ggo::to<uint8_t>(val * ptr[3 * x + 0]);
+      ptr[3 * x + 1] = ggo::to<uint8_t>(val * ptr[3 * x + 1]);
+      ptr[3 * x + 2] = ggo::to<uint8_t>(val * ptr[3 * x + 2]);
+    }
   }
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::newton_artist::render_next_frame_bkgd(void * buffer, int frame_index)
+bool ggo::newton_artist::update()
 {
   // Remove some strings at random.
-  if ((frame_index < 300) && (ggo::rand<int>(0, 50) == 0))
+  if ((_frame_index < 300) && (ggo::rand<int>(0, 50) == 0))
   {
     _strings.erase(_strings.begin() + ggo::rand<int>(0, static_cast<int>(_strings.size()) - 1));
   }
 
   newton_update();
-  newton_paint(buffer);
 
   // Look for maximum velocity.
   float max_velocity = 0;
@@ -139,6 +122,33 @@ bool ggo::newton_artist::render_next_frame_bkgd(void * buffer, int frame_index)
   }
 
   return max_velocity > 0.0001 * get_min_size();
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::newton_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  memcpy(buffer, _background.get(), get_width() * get_line_step());
+
+  newton_paint(buffer);
+}
+
+//////////////////////////////////////////////////////////////
+bool ggo::newton_artist::find_string(int index1, int index2) const
+{
+  for (const auto & string : _strings)
+  {
+    if ((string._index1 == index1) && (string._index2 == index2))
+    {
+      return true;
+    }
+
+    if ((string._index1 == index2) && (string._index2 == index1))
+    {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 //////////////////////////////////////////////////////////////

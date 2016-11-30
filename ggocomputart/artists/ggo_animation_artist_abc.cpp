@@ -37,10 +37,11 @@
 //////////////////////////////////////////////////////////////
 ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-ggo::artist(width, height, line_step, pbf),
+ggo::artist(width, height),
+_line_step(line_step),
+_pbf(pbf),
 _rendering_type(rt)
 {
-	_counter = 0;
 }
 
 //////////////////////////////////////////////////////////////
@@ -155,73 +156,4 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
 
 	return artist;
 }
-
-//////////////////////////////////////////////////////////////
-void ggo::animation_artist_abc::init()
-{
-	_counter = 0;
-	
-	init_sub();
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::animation_artist_abc::render_next_frame(void * buffer)
-{
-	if (render_next_frame_sub(buffer, _counter) == false)
-	{
-		return false;
-	}
-	
-	++_counter;
-	
-	return true;
-}
-
-//////////////////////////////////////////////////////////////
-// ACCUMULATION ARTIST
-
-//////////////////////////////////////////////////////////////
-ggo::accumulation_animation_artist_abc::accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
-:
-animation_artist_abc(width, height, line_step, pbf, rt)
-{
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::accumulation_animation_artist_abc::render_next_frame_sub(void * buffer, int frame_index)
-{
-  if (frame_index == 0)
-  {
-    init_output_buffer(buffer);
-  }
-
-  return render_next_frame_acc(buffer, frame_index);
-};
-
-//////////////////////////////////////////////////////////////
-// STATIC BACKGROUND ARTIST
-
-//////////////////////////////////////////////////////////////
-ggo::static_background_animation_artist_abc::static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
-:
-animation_artist_abc(width, height, line_step, pbf, rt),
-_bkgd_buffer(line_step * height)
-{
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::static_background_animation_artist_abc::render_next_frame_sub(void * buffer, int frame_index)
-{
-  if (frame_index == 0)
-  {
-    init_bkgd_buffer(_bkgd_buffer.data());
-  }
-
-  if (buffer != nullptr)
-  {
-    memcpy(buffer, _bkgd_buffer.data(), _bkgd_buffer.get_count());
-  }
-
-  return render_next_frame_bkgd(buffer, frame_index);
-};
 

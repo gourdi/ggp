@@ -15,8 +15,9 @@ namespace ggo
 
   private:
 
-    void				init_sub() override;
-    bool				render_next_frame_sub(void * buffer, int frame_index) override;
+    void        init() override;
+    bool        update() override;
+    void        render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
     void				apply_shadow(float * buffer, const float * shadow_buffer) const;
 
@@ -24,6 +25,7 @@ namespace ggo
 
   private:
 
+    int                     _frame_index;
     ggo::cubic_curve_float	_hue_curve;
     ggo::cubic_curve_float	_sat_curve;
     ggo::cubic_curve_float	_val_curve1;

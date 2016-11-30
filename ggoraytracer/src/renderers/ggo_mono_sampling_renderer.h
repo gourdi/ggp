@@ -16,7 +16,6 @@ namespace ggo
                                           mono_sampling_renderer(ggo::mono_sampling_camera_abc & camera);
 
     std::shared_ptr<ggo::render_task_abc> create_render_task(const ggo::scene & scene) const override;
-    void                                  on_start_rendering() override;
 
   private:
 

@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
     
-                antialiasing_render_task(ggo::antialiasing_camera_abc & camera) : _camera(camera) {}
+                antialiasing_render_task(const ggo::antialiasing_camera_abc & camera) : _camera(camera) {}
 
     ggo::color_32f  render_pixel(int x, int y,
                                  const ggo::scene & scene,
@@ -73,7 +73,7 @@ namespace ggo
 // ggo_antialiasing_renderer
 namespace ggo
 {
-  antialiasing_renderer::antialiasing_renderer(ggo::antialiasing_camera_abc & camera)
+  antialiasing_renderer::antialiasing_renderer(const ggo::antialiasing_camera_abc & camera)
   :
   _camera(camera)
   {
@@ -83,12 +83,6 @@ namespace ggo
   std::shared_ptr<ggo::render_task_abc> antialiasing_renderer::create_render_task(const ggo::scene& scene) const
   {
     return std::make_shared<antialiasing_render_task>(_camera);
-  }
-
-  //////////////////////////////////////////////////////////////
-  void antialiasing_renderer::on_start_rendering()
-  {
-    _camera.on_start_rendering_frame();
   }
 }
 

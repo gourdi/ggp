@@ -57,10 +57,4 @@ namespace ggo
 
     return render_task;
   }
-
-  //////////////////////////////////////////////////////////////
-  void global_sampling_renderer::on_start_rendering()
-  {
-    _camera.on_start_rendering_frame();
-  }
 }

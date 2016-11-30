@@ -16,10 +16,11 @@ ggo::animation_artist_abc(width, height, line_step, pbf, rt)
 	
 }
 
-
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::init_sub()
+void ggo::bozons_animation_artist::init()
 {
+  _frame_index = -1;
+
   _hue = ggo::rand<float>();
 
   // Create bozons.
@@ -44,25 +45,15 @@ void ggo::bozons_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::bozons_animation_artist::update()
 {
-	if (_bozons.empty() == true)
-	{
-		return false;
-	}
+  ++_frame_index;
 
-  if (frame_index == 0)
+  if (_bozons.empty() == true)
   {
-    const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-
-    ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
-      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+    return false;
   }
 
-  // Update bozons.
   for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
   {
     --bozon_it->_counter;
@@ -73,7 +64,7 @@ bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int fram
     else
     {
       // Split bozon?
-      if (frame_index < 100 && ggo::rand<int>(0, 256) == 0)
+      if (_frame_index < 100 && ggo::rand<int>(0, 256) == 0)
       {
         bozon new_bozon;
 
@@ -83,8 +74,8 @@ bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int fram
         bozon_it->_angle -= angle_offset;
         new_bozon._dangle = -bozon_it->_dangle; // Change direction too.
 
-        // Since this new bozon will be updated at the end of the current loop, 
-        // there is no need to move it now.
+                                                // Since this new bozon will be updated at the end of the current loop, 
+                                                // there is no need to move it now.
         new_bozon._prv_pos = bozon_it->_cur_pos;
         new_bozon._cur_pos = bozon_it->_cur_pos;
         new_bozon._speed = bozon_it->_speed;
@@ -105,7 +96,8 @@ bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int fram
     }
   }
 
-  if (frame_index < 100 && ggo::rand<int>(0, 16) == 0)
+  // Create new bozons.
+  if (_frame_index < 100 && ggo::rand<int>(0, 16) == 0)
   {
     bozon new_bozon;
     new_bozon._prv_pos = get_center();
@@ -123,14 +115,28 @@ bool ggo::bozons_animation_artist::render_next_frame_sub(void * buffer, int fram
     _bozons.push_back(new_bozon);
   }
 
-  // Paint bozons.
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (_frame_index == 0)
+  {
+    const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+
+    ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
+      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+  }
+
   const float radius = 0.001f * get_min_size();
   for (const auto & bozon : _bozons)
   {
     ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
       ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius), bozon._color);
   }
-
-  return true;
 }
 

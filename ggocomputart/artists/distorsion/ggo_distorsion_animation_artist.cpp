@@ -79,14 +79,16 @@ _transforms(32)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_last_frame(void * buffer)
+void ggo::distorsion_animation_artist::render_last_frame(void * buffer) const
 {
-  render_next_frame_sub(buffer, frames_count);
+  render_frame(frames_count, buffer, ggo::pixel_rect::from_left_right_bottom_top(0, get_width() - 1, 0, get_height() - 1));
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::init_sub()
+void ggo::distorsion_animation_artist::init()
 {
+  _frame_index = -1;
+
   _hue = ggo::rand<float>();
 
   for (auto & transform : _transforms)
@@ -96,7 +98,7 @@ void ggo::distorsion_animation_artist::init_sub()
     transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * get_width();
     transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * get_height();
     transform._variance = 0.05f * ggo::square(get_min_size());
-    
+
     float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
     float length = 0.5f * get_min_size();
     transform._disp = ggo::from_polar(angle, length);
@@ -108,12 +110,12 @@ void ggo::distorsion_animation_artist::init_sub()
   while (true)
   {
     ggo::distorsion_animation_artist::colored_stripe colored_stripe;
-    
+
     x += ggo::rand<float>(0.01f, 0.06f) * get_min_size();
 
     colored_stripe._x_sup = x;
     colored_stripe._color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    
+
     _stripes.push_back(colored_stripe);
 
     if (x > get_width())
@@ -124,16 +126,30 @@ void ggo::distorsion_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::distorsion_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::distorsion_animation_artist::update()
 {
-  if (frame_index > frames_count)
+  ++_frame_index;
+
+  if (_frame_index > frames_count)
   {
     return false;
   }
 
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  render_frame(_frame_index, buffer, clipping);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::distorsion_animation_artist::render_frame(int frame_index, void * buffer, const ggo::pixel_rect & clipping) const
+{
   std::vector<fixed_transform> transforms;
   for (auto & transform : _transforms)
-  { 
+  {
     transforms.emplace_back(
       ggo::ease_inout(frame_index, frames_count, transform._center_start, transform._center_end),
       ggo::ease_inout(frame_index, frames_count, ggo::vec2f(0.f, 0.f), transform._disp),
@@ -152,8 +168,6 @@ bool ggo::distorsion_animation_artist::render_next_frame_sub(void * buffer, int 
     GGO_FAIL();
     break;
   }
-  
-  return true;
 }
 
 //////////////////////////////////////////////////////////////

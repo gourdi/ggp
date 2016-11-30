@@ -20,10 +20,20 @@ void ggo::animator::insert_animate(ggo::animate_abc * animate, int pos)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::animator::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+void ggo::animator::update()
 {
   ggo::remove_if(_animates, [&](std::unique_ptr<ggo::animate_abc> & animate)
   {
-    return animate->update(buffer, width, height, line_step, pbf) == false;
+    return animate->update() == false;
   });
 }
+
+//////////////////////////////////////////////////////////////
+void ggo::animator::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const
+{
+  for (const auto & animate : _animates)
+  {
+    animate->render(buffer, width, height, line_step, pbf);
+  }
+}
+

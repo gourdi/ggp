@@ -12,8 +12,9 @@ namespace ggo
 
           ikeda_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -30,6 +31,7 @@ namespace ggo
 
   private:
 
+    int                         _frame_index;
     ggo::color_8u				        _bkgd_colors[4];
     ggo::harmonic_curve<float> 	_u0;
     ggo::harmonic_curve<float> 	_u1;

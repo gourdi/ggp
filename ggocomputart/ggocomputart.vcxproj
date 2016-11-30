@@ -115,6 +115,7 @@
     <ClInclude Include="animation\paths\ggo_spiral_path.h" />
     <ClInclude Include="artists\aggregation\ggo_aggregation_animation_artist.h" />
     <ClInclude Include="artists\aggregation\ggo_aggregation_artist.h" />
+    <ClInclude Include="artists\aggregation\ggo_aggregation_artist.imp.h" />
     <ClInclude Include="artists\alpha\ggo_alpha_animation_artist.h" />
     <ClInclude Include="artists\alpha\ggo_alpha_bitmap_artist.h" />
     <ClInclude Include="artists\amorosi\ggo_amorosi_animation_artist.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="artists\newton\ggo_newton_artist.h" />
     <ClInclude Include="artists\plastic\ggo_plastic_animation_artist.h" />
     <ClInclude Include="artists\plastic\ggo_plastic_artist.h" />
+    <ClInclude Include="artists\plastic\ggo_plastic_artist.imp.h" />
     <ClInclude Include="artists\plastic\ggo_plastic_bitmap_artist.h" />
     <ClInclude Include="artists\rah\ggo_rah_animation_artist.h" />
     <ClInclude Include="artists\rediff\ggo_rediff_animation_artist.h" />

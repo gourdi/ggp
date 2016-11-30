@@ -4,6 +4,11 @@
 #include <ggo_brush.h>
 #include <ggo_blender.h>
 
+namespace
+{
+  const int frames_count = 200;
+}
+
 //////////////////////////////////////////////////////////////
 ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
@@ -13,58 +18,67 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ikeda_artist::init_sub()
+void ggo::ikeda_artist::init()
 {
-	_u0.set_harmonic(0, 0, 0);
-	_u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
-	_u0.set_harmonic(2, ggo::rand<float>(-1, 1), 0);
-	_u0.set_harmonic(3, ggo::rand<float>(-1, 1), 0);
+  _frame_index = -1;
 
-	_u1.set_harmonic(0, 0, 0);
-	_u1.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
-	_u1.set_harmonic(2, ggo::rand<float>(-1, 1), 0);
-	_u1.set_harmonic(3, ggo::rand<float>(-1, 1), 0);
+  _u0.set_harmonic(0, 0, 0);
+  _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
+  _u0.set_harmonic(2, ggo::rand<float>(-1, 1), 0);
+  _u0.set_harmonic(3, ggo::rand<float>(-1, 1), 0);
 
-	_u2.set_harmonic(0, 0, 0);
-	_u2.set_harmonic(1, ggo::rand<float>(-10, 10), 0);
-	_u2.set_harmonic(2, ggo::rand<float>(-10, 10), 0);
-	_u2.set_harmonic(3, ggo::rand<float>(-10, 10), 0);
+  _u1.set_harmonic(0, 0, 0);
+  _u1.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
+  _u1.set_harmonic(2, ggo::rand<float>(-1, 1), 0);
+  _u1.set_harmonic(3, ggo::rand<float>(-1, 1), 0);
 
-	_hue1 = ggo::rand<float>();
-	_hue2 = ggo::rand<float>();
-	_range = ggo::rand<float>(3, 5);
-	
-	_seeds.clear();
-	for (int i = 0; i < 500; ++i) 
-	{
-		_seeds.push_back(create_seed());
-	}
-	
-	_bkgd_colors[0] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
-	_bkgd_colors[1] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
-	_bkgd_colors[2] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
-	_bkgd_colors[3] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
+  _u2.set_harmonic(0, 0, 0);
+  _u2.set_harmonic(1, ggo::rand<float>(-10, 10), 0);
+  _u2.set_harmonic(2, ggo::rand<float>(-10, 10), 0);
+  _u2.set_harmonic(3, ggo::rand<float>(-10, 10), 0);
+
+  _hue1 = ggo::rand<float>();
+  _hue2 = ggo::rand<float>();
+  _range = ggo::rand<float>(3, 5);
+
+  _seeds.clear();
+  for (int i = 0; i < 500; ++i)
+  {
+    _seeds.push_back(create_seed());
+  }
+
+  _bkgd_colors[0] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
+  _bkgd_colors[1] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
+  _bkgd_colors[2] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
+  _bkgd_colors[3] = ggo::from_hsv<ggo::color_8u>(0, 0, ggo::rand<float>(0, 0.5f));
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::ikeda_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::ikeda_artist::update()
 {
-  const int frames_count = 200;
+  ++_frame_index;
 
-	if (frame_index > frames_count)
-	{
-		return false;
-	}
-  
+  if (_frame_index > frames_count)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::ikeda_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+
 	ggo::fill_4_colors<ggo::rgb_8u_yu>(
     buffer, get_width(), get_height(), get_line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	std::vector<particle> particles = _seeds;
 	
-	float u0 = _u0.evaluate(frame_index * ggo::pi<float>() / frames_count);
-	float u1 = _u1.evaluate(frame_index * ggo::pi<float>() / frames_count);
-	float u2 = _u2.evaluate(frame_index * ggo::pi<float>() / frames_count);
+	float u0 = _u0.evaluate(_frame_index * ggo::pi<float>() / frames_count);
+	float u1 = _u1.evaluate(_frame_index * ggo::pi<float>() / frames_count);
+	float u2 = _u2.evaluate(_frame_index * ggo::pi<float>() / frames_count);
 	
 	while (particles.empty() == false)
 	{
@@ -109,8 +123,6 @@ bool ggo::ikeda_artist::render_next_frame_sub(void * buffer, int frame_index)
 			particle._pos.y() += 0.005f * (next_pt.y() - particle._pos.y());
 		}
 	}
-
-	return true;
 }
 
 //////////////////////////////////////////////////////////////

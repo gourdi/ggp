@@ -32,8 +32,6 @@ namespace ggo
                       mono_sampling_isometric_camera(int width, int height);
     
   private:
-    
-    void              on_start_rendering_frame() override;
 
     ggo::ray3d_float  get_ray(int x, int y) const override;
     
@@ -58,8 +56,6 @@ namespace ggo
     void	                        set_depth_of_field(float v) { _depth_of_field = std::max(0.001f, v); }
     
   private:
-
-    void                          on_start_rendering_frame() override;
 
     std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const override;
     

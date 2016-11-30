@@ -4,14 +4,14 @@
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_artist::ifs_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::ifs_artist::ifs_artist(int width, int height)
 :
-artist(width, height, line_step, pbf)
+artist(width, height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::update(ggo::pos3f & point, const float transform[4])
+void ggo::ifs_artist::update(ggo::pos3f & point, const float transform[4]) const
 {
 	float x_fp	= point.x();
 	float y_fp	= point.y();
@@ -23,7 +23,7 @@ void ggo::ifs_artist::update(ggo::pos3f & point, const float transform[4])
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float angle1, float angle2)
+void ggo::ifs_artist::render(void * buffer, int line_step, ggo::pixel_buffer_format pbf, float transform[4], float hue, float angle1, float angle2) const
 {
 	std::cout << "Computing points" << std::endl;
 
@@ -80,22 +80,22 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 	ggo::array_float shadow_buffer(accumul_buffer);
 	ggo::gaussian_blur2d_mirror<ggo::y_32f_yu>(
     shadow_buffer.data(), get_width(), get_height(), sizeof(float) * get_width(), 0.4f * get_min_size());
-	paint_buffer(buffer, 255, shadow_buffer);
+	paint_buffer(buffer, line_step, pbf, 255, shadow_buffer);
 
 	// Render the shape.
 	std::cout << "Rendering shape" << std::endl;
 	
-	paint_buffer(buffer, 255, accumul_buffer);
+	paint_buffer(buffer, line_step, pbf, 255, accumul_buffer);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::paint_buffer(void * buffer, uint8_t color, const ggo::array_float & accumul_buffer) const
+void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::pixel_buffer_format pbf, uint8_t color, const ggo::array_float & accumul_buffer) const
 {
   const float * ptr_src = accumul_buffer.data();
 
 	for (int y = 0; y < get_height(); ++y)
 	{
-    void * ptr_dst = ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer, y, get_height(), get_line_step());
+    void * ptr_dst = ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {

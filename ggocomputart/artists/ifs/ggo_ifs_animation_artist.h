@@ -10,15 +10,17 @@ namespace ggo
   {
   public:
 
-    ifs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          ifs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
   private:
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
+    int             _frame_index;
     ggo::ifs_artist	_artist;
     ggo::color_8u   _bkgd_colors[4];
     float			      _hue;

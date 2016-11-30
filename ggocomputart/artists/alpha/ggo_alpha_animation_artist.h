@@ -12,9 +12,9 @@ namespace ggo
 
           alpha_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
-
+    void	init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
     int		get_items_count() const { return static_cast<int>(_items.size()); }
 
   private:

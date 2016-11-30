@@ -4,7 +4,9 @@
 #include <ggo_artist.h>
 #include <ggo_artist_ids.h>
 #include <ggo_array.h>
+#include <ggo_pixel_rect.h>
 #include <ggo_pixel_buffer.h>
+#include <mutex>
 
 namespace ggo
 {
@@ -20,64 +22,23 @@ namespace ggo
 
     static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    bool            render_next_frame(void * buffer);
-    void            init();
+    virtual void init() = 0;
+    virtual bool update() = 0;
+    virtual void render_frame(void * buffer, const ggo::pixel_rect & clipping) const = 0;
 
-    int             get_frame_index() const { return _counter; };
-    rendering_type  get_rendering_type() const { return _rendering_type; }
+    int                       get_line_step() const { return _line_step; }
+    ggo::pixel_buffer_format  get_pixel_buffer_format() const { return _pbf; }
+    rendering_type            get_rendering_type() const { return _rendering_type; }
 
   protected:
 
                  animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    virtual	void init_sub() = 0;
-
-    virtual	bool render_next_frame_sub(void * buffer, int frame_index) = 0;
-
   private:
 
-    int _counter;
+    const int _line_step;
+    const ggo::pixel_buffer_format _pbf;
     const rendering_type _rendering_type;
-  };
-}
-
-// The artist reuses the same buffer each time.
-namespace ggo
-{
-  class accumulation_animation_artist_abc : public animation_artist_abc
-  {
-  public:
-
-                  accumulation_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
-
-  private:
-
-            bool	render_next_frame_sub(void * buffer, int frame_index) override final;
-
-    virtual	void	init_output_buffer(void * buffer) const = 0;
-    virtual	bool	render_next_frame_acc(void * buffer, int frame_index) = 0;
-  };
-}
-
-// The artist uses a background buffer which is set up once at initialization time.
-namespace ggo
-{
-  class static_background_animation_artist_abc : public animation_artist_abc
-  {
-  public:
-
-                  static_background_animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
-
-  private:
-
-            bool	render_next_frame_sub(void * buffer, int frame_indexx) override final;
-
-    virtual void	init_bkgd_buffer(void * bkgd_buffer) const = 0;
-    virtual	bool	render_next_frame_bkgd(void * buffer, int frame_index) = 0;
-
-  private:
-
-    ggo::array_uint8 _bkgd_buffer;
   };
 }
 

@@ -4,21 +4,24 @@
 ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt),
-_artist(width, height, line_step, pbf)
+_artist(width, height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_animation_artist::init_sub()
+void ggo::aggregation_animation_artist::init()
 {
+  _frame_index = -1;
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::aggregation_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::aggregation_animation_artist::update()
 {
+  ++_frame_index;
+
   const int frames_count = 300;
 
-  if (frame_index > frames_count)
+  if (_frame_index > frames_count)
   {
     return false;
   }
@@ -27,10 +30,14 @@ bool ggo::aggregation_animation_artist::render_next_frame_sub(void * buffer, int
 
   _artist.update(points_count);
 
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::aggregation_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
   if (buffer != nullptr)
   {
-    _artist.render(buffer);
+    _artist.render(buffer, get_line_step(), get_pixel_buffer_format());
   }
-
-  return true;
 }

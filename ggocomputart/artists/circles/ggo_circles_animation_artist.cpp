@@ -5,13 +5,17 @@
 #include <ggo_buffer_fill.h>
 
 //////////////////////////////////////////////////////////////
-bool ggo::circles_animation_artist::circle_animate::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter, const ggo::pos2f & pos)
-{    
-  float radius = _radius * (1 - std::cos(_bounding_factor * counter) * std::exp(-_attenuation_factor * counter));
-  
-  circles_artist::paint_disc(buffer, width, height, line_step, pbf, pos, radius, _color);
-
+bool ggo::circles_animation_artist::circle_animate::update(int frame_index, const ggo::pos2f & pos)
+{
   return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::circles_animation_artist::circle_animate::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const
+{
+  float radius = _radius * (1 - std::cos(_bounding_factor * frame_index) * std::exp(-_attenuation_factor * frame_index));
+
+  circles_artist::paint_disc(buffer, width, height, line_step, pbf, pos, radius, _color);
 }
 
 //////////////////////////////////////////////////////////////
@@ -23,8 +27,10 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::circles_animation_artist::init_sub()
+void ggo::circles_animation_artist::init()
 {
+  _frame_index = -1;
+
   _bkgd_color.set(rand<uint8_t>(), rand<uint8_t>(), rand<uint8_t>());
 
   auto all_discs = circles_artist::generate_discs(get_width(), get_height());
@@ -53,17 +59,25 @@ void ggo::circles_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::circles_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::circles_animation_artist::update()
 {
-  if (frame_index > 900)
+  ++_frame_index;
+
+  if (_frame_index > 900)
   {
     return false;
   }
 
+  _animator.update();
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::circles_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
   ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color);
 
-  _animator.update(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
-
-	return true;
+  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 }
 

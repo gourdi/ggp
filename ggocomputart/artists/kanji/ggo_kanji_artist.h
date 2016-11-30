@@ -10,11 +10,11 @@ namespace ggo
   {
   public:
 
-          kanji_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          kanji_artist(int width, int height);
 
-    bool	render_frame(void * buffer, int frame_index);
     void	init();
-    void  init_output_buffer(void * buffer) const;
+    bool	update(int frame_index);
+    void	render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const;
 
   private:
 

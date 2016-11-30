@@ -15,12 +15,17 @@ void ggo::toutouyoutou_bitmap_artist::render_bitmap(void * buffer) const
 
   ggo::toutouyoutou_animation_artist anim_artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
 
-  anim_artist.render_next_frame(buffer);
+  anim_artist.init();
+
+  anim_artist.update();
+  anim_artist.render_frame(buffer, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
   for (int i = 1; i < frames_count; ++i)
   {
-    anim_artist.render_next_frame(nullptr);
+    anim_artist.update();
+    anim_artist.render_frame(nullptr, ggo::pixel_rect::from_width_height(get_width(), get_height()));
   }
 
-  anim_artist.render_next_frame(buffer);
+  anim_artist.update();
+  anim_artist.render_frame(buffer, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 }

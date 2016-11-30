@@ -471,8 +471,10 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_animation_artist::init_sub()
+void ggo::sonson_animation_artist::init()
 {
+  _frame_index = -1;
+
   _hue1 = ggo::rand<float>();
   _hue2 = _hue1 + ggo::rand<float>(0.25f, 0.75f);
 
@@ -487,19 +489,14 @@ void ggo::sonson_animation_artist::init_sub()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int frame_index)
+bool ggo::sonson_animation_artist::update()
 {
-  if (buffer != nullptr)
-  {
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(
-      buffer, get_width(), get_height(), get_line_step(),
-      ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::black<ggo::color_8u>());
-  }
+  ++_frame_index;
 
   // Create new lines.
-  if (frame_index < frames_count && ggo::rand<float>() < 0.25f)
+  if (_frame_index < frames_count && ggo::rand<float>() < 0.25f)
   {
-    create_line(frame_index, false);
+    create_line(_frame_index, false);
   }
 
   // Update lines.
@@ -514,6 +511,19 @@ bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int fram
         render_next_frame = true;
       }
     }
+  }
+
+  return render_next_frame;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::sonson_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (buffer != nullptr)
+  {
+    ggo::fill_4_colors<ggo::rgb_8u_yu>(
+      buffer, get_width(), get_height(), get_line_step(),
+      ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::black<ggo::color_8u>());
   }
 
   // Paint lines.
@@ -535,8 +545,6 @@ bool ggo::sonson_animation_artist::render_next_frame_sub(void * buffer, int fram
       }
     }
   }
-
-  return buffer == nullptr || render_next_frame == true;
 }
 
 //////////////////////////////////////////////////////////////

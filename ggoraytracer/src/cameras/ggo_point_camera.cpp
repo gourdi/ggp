@@ -20,11 +20,6 @@ namespace ggo
   :
   point_camera(width, height)
   {
-  }
-
-  //////////////////////////////////////////////////////////////
-  void mono_sampling_point_camera::on_start_rendering_frame()
-  {
     // Don't forget the camera is looking in the z negative direction.
     _center_focus_point = _basis.pos() - _basis.z();
 
@@ -58,11 +53,6 @@ namespace ggo
   antialiasing_point_camera::antialiasing_point_camera(int width, int height)
   :
   point_camera(width, height)
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  void antialiasing_point_camera::on_start_rendering_frame()
   {
     // Don't forget the camera is looking in the z negative direction.
     _center_focus_point = _basis.pos() - _basis.z();
@@ -151,11 +141,6 @@ namespace ggo
   multi_sampling_point_camera::multi_sampling_point_camera(int width, int height)
   :
   point_camera(width, height)
-  {
-  }
-
-  //////////////////////////////////////////////////////////////
-  void multi_sampling_point_camera::on_start_rendering_frame()
   {
     // Don't forget the camera is looking in the z negative direction.
     _center_focus_point = _basis.pos() - _depth_of_field * _basis.z();

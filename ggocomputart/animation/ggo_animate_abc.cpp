@@ -2,8 +2,10 @@
 #include <ggo_kernel.h>
 
 //////////////////////////////////////////////////////////////
-bool ggo::animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+bool ggo::animate_abc::update()
 {
+  _frame_index++;
+
   if (_start_offset > 0)
   {
     --_start_offset;
@@ -11,20 +13,40 @@ bool ggo::animate_abc::update(void * buffer, int width, int height, int line_ste
   }
   else
   {
-    return update(buffer, width, height, line_step, pbf, _counter++);
+    return update(_frame_index);
   }
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::position_animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter)
+void ggo::animate_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const
 {
-  return update(buffer, width, height, line_step, pbf, counter, _pos);
+  render(buffer, width, height, line_step, pbf, _frame_index);
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::path_animate_abc::update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int counter)
+bool ggo::position_animate_abc::update(int frame_index)
+{
+  return update(frame_index, _pos);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::position_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const
+{
+  render(buffer, width, height, line_step, pbf, frame_index, _pos);
+}
+
+//////////////////////////////////////////////////////////////
+bool ggo::path_animate_abc::update(int frame_index)
 {
   GGO_ASSERT(_path != nullptr);
 
-  return update(buffer, width, height, line_step, pbf, counter, _pos + _path->get_pos(counter));
+  _cur_pos = _start_pos + _path->get_pos(frame_index);
+
+  return update(frame_index, _cur_pos);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::path_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const
+{
+  render(buffer, width, height, line_step, pbf, frame_index, _cur_pos);
 }

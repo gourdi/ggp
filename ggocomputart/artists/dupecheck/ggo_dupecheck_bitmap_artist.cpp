@@ -16,12 +16,14 @@ void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer) const
 	
 	ggo::dupecheck_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
 
-	artist.init_sub();
+	artist.init();
 	for (int i = 0; i < frame_index; ++i)
 	{
-		artist.render_next_frame_sub(nullptr, i);
+    artist.update();
+		artist.render_frame(nullptr, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 	}
-	
-	artist.render_next_frame_sub(buffer, frame_index);
+
+  artist.update();
+  artist.render_frame(buffer, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 }
 

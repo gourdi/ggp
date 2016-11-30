@@ -25,7 +25,8 @@ namespace ggo
 
     void					            clear();
 
-    void					            update(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+    void					            update();
+    void					            render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const;
 
   private:
 

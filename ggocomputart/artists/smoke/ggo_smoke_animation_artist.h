@@ -12,8 +12,9 @@ namespace ggo
 
           smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -40,6 +41,7 @@ namespace ggo
       double				      _density;
     };
 
+    int                         _frame_index;
     loop_array2d	              _velocity_x1;
     loop_array2d	              _velocity_x2;
     loop_array2d	              _velocity_y1;

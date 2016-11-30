@@ -22,7 +22,7 @@ namespace ggo
 
     void	init(ggo::point_camera & camera, int boxes_count);
     void	init(ggo::multi_sampling_point_camera & camera, int boxes_count);
-    void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer);
+    void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer) const;
 
   private:
 

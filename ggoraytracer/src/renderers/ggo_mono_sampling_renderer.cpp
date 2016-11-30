@@ -36,10 +36,4 @@ namespace ggo
   {
     return std::make_shared<mono_sampling_render_task>(_camera);
   }
-
-  //////////////////////////////////////////////////////////////
-  void mono_sampling_renderer::on_start_rendering()
-  {
-    _camera.on_start_rendering_frame();
-  }
 }

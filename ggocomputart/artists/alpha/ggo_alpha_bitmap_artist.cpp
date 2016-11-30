@@ -16,24 +16,20 @@ void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
 
   int frame_index = 0;
 
-  artist.init_sub();
-  while (artist.render_next_frame_sub(nullptr, frame_index) == true)
+  while (artist.update() == true)
   {
     if (artist.get_items_count() >= 3)
     {
       break;
     }
-
-    ++frame_index;
   }
 
   int timer = ggo::rand<int>(5, 10);
   for (int i = 0; i < timer; ++i)
   {
-    artist.render_next_frame_sub(nullptr, frame_index);
-
-    frame_index++;
+    artist.update();
+    artist.render_frame(nullptr, ggo::pixel_rect::from_width_height(get_width(), get_height()));
   }
 
-  artist.render_next_frame_sub(buffer, frame_index);
+  artist.render_frame(buffer, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 }

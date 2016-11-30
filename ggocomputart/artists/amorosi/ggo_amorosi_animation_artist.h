@@ -37,10 +37,10 @@ namespace ggo
     {
     public:
 
-            curve(int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::color_8u & color);
+            curve(int width, int height, const ggo::color_8u & color);
 
       void  update();
-      void  paint(void * buffer) const;
+      void  paint(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const;
             
       bool  is_dead() const;
 
@@ -61,13 +61,15 @@ namespace ggo
 
   private:
 
-    void init_sub() override;
-    bool render_next_frame_sub(void * buffer, int frame_index) override;
+    void init() override;
+    bool update() override;
+    void render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
     ggo::color_8u get_color() const;
 
   private:
 
+    int                                 _frame_index;
     std::vector<std::unique_ptr<curve>> _curves;
     float                               _hue;
   };

@@ -5,7 +5,7 @@
 
 namespace ggo
 {
-  class newton_artist : public static_background_animation_artist_abc
+  class newton_artist : public animation_artist_abc
   {
   public:
 
@@ -13,9 +13,9 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    void	init_bkgd_buffer(void * bkgd_buffer) const override;
-    bool	render_next_frame_bkgd(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -42,11 +42,13 @@ namespace ggo
       float	_length;
     };
 
-    float					      _hue;
-    std::vector<newton> _newtons;
-    std::vector<string> _strings;
-    std::vector<float>	_max_velocities;
-    ggo::vec2f		      _shadow_offset;
+    int                       _frame_index;
+    std::unique_ptr<uint8_t>  _background;
+    float					            _hue;
+    std::vector<newton>       _newtons;
+    std::vector<string>       _strings;
+    std::vector<float>	      _max_velocities;
+    ggo::vec2f		            _shadow_offset;
   };
 }
 

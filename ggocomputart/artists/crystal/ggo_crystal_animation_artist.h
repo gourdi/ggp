@@ -14,13 +14,15 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
-    ggo::crystal_artist	        _artist;
-    ggo::color_8u   		        _bkgd_colors[4];
+    int _frame_index;
+    ggo::crystal_artist _artist;
+    ggo::color_8u _bkgd_colors[4];
     ggo::crystal_artist::params _start_params;
     ggo::crystal_artist::params _end_params;
   };

@@ -16,7 +16,7 @@ namespace ggo
   {
   public:
 
-    artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf) : _width(width), _height(height), _line_step(line_step), _pbf(pbf) {}
+    artist(int width, int height) : _width(width), _height(height) {}
 
     // Static methods.
     static ggo::pos2f	map_fill(const ggo::pos2f & point, float inf, float sup, int render_width, int render_height);
@@ -39,8 +39,6 @@ namespace ggo
     int                       get_max_size() const { return std::max(_width, _height); }
     int                       get_min_size() const { return std::min(_width, _height); }
     int                       get_pixels_count() const { return _width * _height; }
-    int                       get_line_step() const { return _line_step; }
-    ggo::pixel_buffer_format  get_pixel_buffer_format() const { return _pbf; }
 
     ggo::pos2f                get_random_point() const { return get_random_point(_width, _height); }
     ggo::pos2f                get_random_point(float margin) const { return get_random_point(margin, _width, _height); }
@@ -96,8 +94,6 @@ namespace ggo
 
     const int	_width;
     const int	_height;
-    const int _line_step;
-    const ggo::pixel_buffer_format _pbf;
   };
 }
 

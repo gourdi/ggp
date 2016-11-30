@@ -34,8 +34,6 @@ namespace ggo
                       mono_sampling_point_camera(int width, int height);
 
   private:
-    
-    void              on_start_rendering_frame() override;
 
     ggo::ray3d_float  get_ray(int x, int y) const override;
     
@@ -58,8 +56,6 @@ namespace ggo
                                       antialiasing_point_camera(int width, int height);
 
   private:
-    
-    void                              on_start_rendering_frame() override;
 
     std::array<ggo::ray3d_float, 4>   get_first_pass_rays(int x, int y) const override;
     std::array<ggo::ray3d_float, 12>  get_second_pass_rays(int x, int y) const override;
@@ -89,9 +85,7 @@ namespace ggo
     float get_depth_of_field() const { return _depth_of_field; }
 
   private:
-    
-    void                          on_start_rendering_frame() override;
-                                            
+
     std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const override;
     
   private:

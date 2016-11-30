@@ -95,8 +95,6 @@ namespace ggo
                             const ggo::scene & scene,
                             const ggo::raytrace_params & raytrace_params)
   {
-    on_start_rendering();
-
     std::cout << scene.lights().size() << " light(s) in the scene." << std::endl;
 
     int threads_count = raytrace_params._threads_count;

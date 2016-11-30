@@ -44,6 +44,5 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, 56);
 #endif
-	ggo::metaballs_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
-	artist.render_bitmap(buffer, renderer, params);
+	ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer, params);
 }

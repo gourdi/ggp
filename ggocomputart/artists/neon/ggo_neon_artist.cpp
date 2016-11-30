@@ -32,55 +32,41 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-accumulation_animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::init_sub()
+void ggo::neon_artist::init()
 {
-	_angle 				    = 0;
-	_radius_prv			  = ggo::rand<float>();
-	_radius_cur			  = _radius_prv;
-	_radius_attractor	= ggo::rand<float>();
-	_angle				    = ggo::rand<float>(0, 2 * ggo::pi<float>());
-	_hue			        = ggo::rand<float>();
+  _frame_index = -1;
+  _angle = 0;
+  _radius_prv = ggo::rand<float>();
+  _radius_cur = _radius_prv;
+  _radius_attractor = ggo::rand<float>();
+  _angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+  _hue = ggo::rand<float>();
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::init_output_buffer(void * buffer) const
+bool ggo::neon_artist::update()
 {
-  switch (get_pixel_buffer_format())
-  {
-  case ggo::rgb_8u_yu:
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
-    break;
-  case ggo::bgra_8u_yd:
-    ggo::fill_solid<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
-    break;
-  default:
-    GGO_FAIL();
-    break;
-  }
-}
+  ++_frame_index;
 
-//////////////////////////////////////////////////////////////
-bool ggo::neon_artist::render_next_frame_acc(void * buffer, int frame_index)
-{
   const int frames_count = 2000;
 
-	if (frame_index >= frames_count)
-	{
-		return false;
-	}
+  if (_frame_index >= frames_count)
+  {
+    return false;
+  }
 
-  if ((frame_index % 100) == 0)
+  if ((_frame_index % 100) == 0)
   {
     _radius_attractor = ggo::rand<float>(0.2f, 1);
     _hue = ggo::rand<float>();
   }
-	
+
   for (int substep = 0; substep < 10; ++substep)
   {
     const float velocity = _radius_cur - _radius_prv;
@@ -89,7 +75,32 @@ bool ggo::neon_artist::render_next_frame_acc(void * buffer, int frame_index)
     _radius_cur += velocity + force;
 
     _angle += 0.001f;
+  }
 
+  return true;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::neon_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  if (_frame_index == 0)
+  {
+    switch (get_pixel_buffer_format())
+    {
+    case ggo::rgb_8u_yu:
+      ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+      break;
+    case ggo::bgra_8u_yd:
+      ggo::fill_solid<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+      break;
+    default:
+      GGO_FAIL();
+      break;
+    }
+  }
+
+  for (int substep = 0; substep < 10; ++substep)
+  {
     ggo::pos2f pos;
 
     pos.x() = _radius_cur * cos(_angle);
@@ -103,8 +114,6 @@ bool ggo::neon_artist::render_next_frame_acc(void * buffer, int frame_index)
       paint_point(buffer, pos, ggo::from_hsv<ggo::color_8u>(_hue, 1.0f, 8.f / 255.f));
     }
   }
-	
-	return true;
 }
 
 //////////////////////////////////////////////////////////////

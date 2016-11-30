@@ -15,8 +15,9 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
@@ -26,6 +27,7 @@ namespace ggo
       ggo::pos2f	_end_pos;
     };
 
+    int                                                   _frame_index;
     std::map<ggo::vortex2_artist::vortex *, vortex_path>  _vortices_paths;
     ggo::vortex2_artist::params                           _params;
   };

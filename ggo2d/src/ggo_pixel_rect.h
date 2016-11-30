@@ -55,7 +55,8 @@ namespace ggo
   public:
     
     static pixel_rect  from_left_right_bottom_top(int left, int right, int bottom, int top);
-    
+    static pixel_rect  from_width_height(int width, int height);
+
   private:
     
     int _left = 0;
@@ -86,6 +87,19 @@ namespace ggo
     pixel_rect._right = right;
     pixel_rect._bottom = bottom;
     pixel_rect._top = top;
+
+    return pixel_rect;
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline pixel_rect pixel_rect::from_width_height(int width, int height)
+  {
+    pixel_rect pixel_rect;
+
+    pixel_rect._left = 0;
+    pixel_rect._right = width - 1;
+    pixel_rect._bottom = 0;
+    pixel_rect._top = height - 1;
 
     return pixel_rect;
   }

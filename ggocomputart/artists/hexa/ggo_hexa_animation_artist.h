@@ -18,11 +18,13 @@ namespace ggo
 
   private:
 
-    void	init_sub() override;
-    bool	render_next_frame_sub(void * buffer, int frame_index) override;
+    void  init() override;
+    bool  update() override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
 
   private:
 
+    int                                       _frame_index;
     ggo::color_32f                            _color_top;
     ggo::color_32f                            _color_side;
     float                                     _camera_rotation_start;
