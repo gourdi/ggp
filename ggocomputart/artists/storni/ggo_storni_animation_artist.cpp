@@ -119,6 +119,7 @@ void ggo::storni_animation_artist::storni::clamp_velocity(float velocity_hypot_m
 ggo::storni_animation_artist::storni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt),
+_stornis_buffer(new uint8_t[width * height]),
 _background(new uint8_t[width * line_step])
 {
 
@@ -269,7 +270,6 @@ void ggo::storni_animation_artist::init()
 
   _hue = ggo::rand<float>();
 
-  _stornis_buffer.reset(new uint8_t[get_width() * get_height()]);
   std::fill(_stornis_buffer.get(), _stornis_buffer.get() + get_width() * get_height(), 0);
 
   _stornis.clear();
@@ -363,14 +363,14 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
     switch (get_pixel_buffer_format())
     {
     case ggo::rgb_8u_yu:
-      ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
       break;
     case ggo::bgra_8u_yd:
-      ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.get(), get_width(), get_height(), get_line_step(),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
@@ -381,6 +381,8 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
       break;
     }
   }
+
+  memcpy(buffer, _background.get(), get_height() * get_line_step());
 
   // Paint.
   switch (get_pixel_buffer_format())
