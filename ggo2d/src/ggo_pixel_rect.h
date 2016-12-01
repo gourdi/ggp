@@ -32,10 +32,9 @@ namespace ggo
     int   height() const { return _top   - _bottom + 1; }
           
     bool  is_one_pixel() const;
-          
-    bool  is_visible(int image_width, int image_height) const;
-          
-    bool  crop(int image_width, int image_height);
+
+    bool  clip(int image_width, int image_height);
+    bool  clip(const pixel_rect & other);
      
     template <typename pixel_func>
     void  for_each_pixel(const pixel_func & f) const
@@ -81,6 +80,9 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   inline pixel_rect pixel_rect::from_left_right_bottom_top(int left, int right, int bottom, int top)
   {
+    GGO_ASSERT_LE(left, right);
+    GGO_ASSERT_LE(bottom, top);
+
     pixel_rect pixel_rect;
 
     pixel_rect._left = left;
@@ -111,33 +113,28 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  inline bool pixel_rect::is_visible(int image_width, int image_height) const
+  inline bool pixel_rect::clip(int image_width, int image_height)
   {
-    if (_right < 0 || _left >= image_width)
-    {
-      return false;
-    }
-
-    if (_top < 0 || _bottom >= image_height)
-    {
-      return false;
-    }
-
-    return true;
+    return clip(from_width_height(image_width, image_height));
   }
 
   //////////////////////////////////////////////////////////////
-  inline bool pixel_rect::crop(int image_width, int image_height)
+  inline bool pixel_rect::clip(const pixel_rect & other)
   {
-    if (is_visible(image_width, image_height) == false)
+    if (_right < other._left || _left > other._right)
     {
       return false;
     }
 
-    _left = std::max(_left, 0);
-    _right = std::min(_right, image_width - 1);
-    _bottom = std::max(_bottom, 0);
-    _top = std::min(_top, image_height - 1);
+    if (_top < other._bottom || _bottom > other._top)
+    {
+      return false;
+    }
+
+    _left = std::max(_left, other._left);
+    _right = std::min(_right, other._right);
+    _bottom = std::max(_bottom, other._bottom);
+    _top = std::min(_top, other._top);
 
     return true;
   }
