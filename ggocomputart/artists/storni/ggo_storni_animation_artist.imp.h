@@ -5,37 +5,69 @@
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
+template <ggo::pixel_buffer_format pbf>
+void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::pixel_rect & clipping) const
+{
+  const int clipping_width_byte_size = clipping.width() * ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
+  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
+  {
+    const void * src = ggo::get_pixel_ptr<pbf>(_background.get(), clipping.left(), y, get_height(), get_line_step());
+    void * dst = ggo::get_pixel_ptr<pbf>(buffer, clipping.left(), y, get_height(), get_line_step());
+
+    memcpy(dst, src, clipping_width_byte_size);
+  }
+}
+
+//////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
 void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixel_rect & clipping) const
 {
-  for (int i = 0; i < get_width() * get_height(); ++i)
+  constexpr ggo::pixel_buffer_format gray_pbf = ggo::pixel_buffer_format_info<pbf>::gray_pbf;
+
+  // Fade out.
+  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
-    _stornis_buffer.get()[i] = _stornis_buffer.get()[i] >= 32 ? _stornis_buffer.get()[i] - 32 : 0;
+    for (int x = clipping.left(); x <= clipping.right(); ++x)
+    {
+      void * ptr = ggo::get_pixel_ptr<gray_pbf>(_stornis_buffer.get(), x, y, get_height(), get_width());
+
+      auto y_8u = ggo::read_pixel<gray_pbf>(ptr);
+      y_8u = y_8u >= 32 ? y_8u - 32 : 0;
+      ggo::write_pixel<gray_pbf>(ptr, y_8u);
+    }
   }
 
+  // Paint stornis.
   const float storni_radius = 0.0025f * get_min_size();
   for (const auto & storni : _stornis)
   {
-    ggo::paint_shape<ggo::pixel_buffer_format_info<pbf>::gray_pbf, smp>(
-      _stornis_buffer.get(), get_width(), get_height(), get_width(),
+    ggo::paint_shape<gray_pbf, smp>(_stornis_buffer.get(), get_width(), get_height(), get_width(),
       ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius),
       ggo::solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
 
-  auto blend = [&](int x, int y, uint8_t c)
+  // Blend.
+  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
-    auto rgb_8u = ggo::read_pixel<pbf>(buffer, x, y, get_height(), get_line_step());
+    for (int x = clipping.left(); x <= clipping.right(); ++x)
+    {
+      void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, y, get_height(), get_line_step());
 
-    const uint32_t weight_rgb = 255 - c;
-    const uint32_t weighted_white = c * 255;
-    const uint32_t r = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.r());
-    const uint32_t g = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.g());
-    const uint32_t b = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.b());
-    return ggo::color_8u(static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b));
-  };
+      auto y_8u = ggo::read_pixel<gray_pbf>(_stornis_buffer.get(), x, y, get_height(), get_width());
+      auto rgb_8u = ggo::read_pixel<pbf>(ptr);
 
-  ggo::blit<ggo::pixel_buffer_format_info<pbf>::gray_pbf, pbf>(_stornis_buffer.get(), get_width(), get_height(), get_width(),
-    buffer, get_width(), get_height(), get_line_step(), 0, 0, blend);
+      const uint32_t weight_rgb = 255 - y_8u;
+      const uint32_t weighted_white = y_8u * 255;
+      const uint32_t r = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.r());
+      const uint32_t g = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.g());
+      const uint32_t b = ggo::fixed_point_div<8>(weighted_white + weight_rgb * rgb_8u.b());
+      rgb_8u.r() = static_cast<uint8_t>(r);
+      rgb_8u.g() = static_cast<uint8_t>(g);
+      rgb_8u.b() = static_cast<uint8_t>(b);
+
+      ggo::write_pixel<pbf>(ptr, rgb_8u);
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -76,7 +108,7 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::pix
       shapes[2]._shape = std::make_shared<ggo::extended_segment_float>(v2, v3, border_size);
       shapes[3]._shape = std::make_shared<ggo::extended_segment_float>(v3, v1, border_size);
 
-      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), shapes.cbegin(), shapes.cend(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
+      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), shapes.cbegin(), shapes.cend(), clipping);
     }
   }
 }
@@ -99,19 +131,22 @@ void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::pix
     ggo::pixel_rect obstacle_pixel_rect(obstacle_rect);
     obstacle_pixel_rect.clip(get_width(), get_height());
 
-    obstacle_pixel_rect.for_each_pixel([&](int x, int y)
+    if (obstacle_pixel_rect.clip(clipping) == true)
     {
-      const float hypot = ggo::hypot(obstacle, { float(x), float(y) });
-      if (hypot < obstacle_hypot)
+      obstacle_pixel_rect.for_each_pixel([&](int x, int y)
       {
-        float opacity = (obstacle_hypot - hypot) * obstacle_hypot_inv;
-        opacity *= 0.5f + 0.5f * std::sin(20.f * opacity + phase);
+        const float hypot = ggo::hypot(obstacle, { float(x), float(y) });
+        if (hypot < obstacle_hypot)
+        {
+          float opacity = (obstacle_hypot - hypot) * obstacle_hypot_inv;
+          opacity *= 0.5f + 0.5f * std::sin(20.f * opacity + phase);
 
-        const ggo::alpha_blender_rgb8u blender(opacity);
-        auto pixel = ggo::read_pixel<pbf>(buffer, x, y, get_height(), get_line_step());
-        pixel = blender(x, y, pixel, color);
-        ggo::write_pixel<pbf>(buffer, x, y, get_height(), get_line_step(), pixel);
-      }
-    });
+          const ggo::alpha_blender_rgb8u blender(opacity);
+          auto pixel = ggo::read_pixel<pbf>(buffer, x, y, get_height(), get_line_step());
+          pixel = blender(x, y, pixel, color);
+          ggo::write_pixel<pbf>(buffer, x, y, get_height(), get_line_step(), pixel);
+        }
+      });
+    }
   }
 }

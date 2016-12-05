@@ -17,7 +17,7 @@ namespace
       const float y3 = y + 0.125f;
       const float y4 = y + 0.375f;
 
-      void * ptr = ggo::get_line_ptr<ggo::pixel_buffer_format_info<pbf>::y_dir>(buffer, y, artist.get_height(), artist.get_line_step());
+      void * ptr = ggo::get_line_ptr<pbf>(buffer, y, artist.get_height(), artist.get_line_step());
 
       for (int x = 0; x < artist.get_width(); ++x)
       {
@@ -64,7 +64,7 @@ namespace
           ggo::write_pixel<pbf>(buffer, acc.div<16>());
         }
 
-        buffer = ggo::ptr_offset(buffer, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size);
+        buffer = ggo::ptr_offset<ggo::pixel_buffer_format_info<pbf>::pixel_byte_size>(buffer);
       }
     }
   }

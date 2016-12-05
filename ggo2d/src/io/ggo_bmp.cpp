@@ -15,7 +15,7 @@ namespace
 
     for (int y = 0; y < height; ++y)
     {
-      const void * ptr = ggo::get_line_ptr<format::y_dir>(buffer, y, height, line_step);
+      const void * ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_step);
 
       for (int x = 0; x < width; ++x)
       {
@@ -24,7 +24,7 @@ namespace
         ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
         ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
         ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
-        ptr = ggo::ptr_offset<void>(ptr, format::pixel_byte_size);
+        ptr = ggo::ptr_offset<format::pixel_byte_size>(ptr);
       }
     }
   }

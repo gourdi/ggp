@@ -29,8 +29,8 @@ std::condition_variable anim_condition_done;
 std::unique_ptr<ggo::animation_artist_abc> anim_artist;
 
 // Bitmap.
-std::atomic<bool> bitmap_rendering_start = false;
-std::atomic<bool> bitmap_rendering_done = false;
+bool bitmap_rendering_start = false;
+bool bitmap_rendering_done = false;
 std::mutex bitmap_mutex;
 std::condition_variable bitmap_condition_start;
 std::unique_ptr<uint8_t[]> bitmap_buffer;
@@ -61,19 +61,31 @@ ggo::bitmap_artist_abc * create_bitmap_artist()
 /////////////////////////////////////////////////////////////////////
 ggo::animation_artist_abc * create_animation_artist()
 {
+#ifdef GGO_ANDROID
   const std::vector<ggo::animation_artist_id> ids{
     ggo::animation_artist_id::neon,
-    //ggo::animation_artist_id::storni,
+    ggo::animation_artist_id::bozons,
+  };
+#else
+  const std::vector<ggo::animation_artist_id> ids{
+    //ggo::animation_artist_id::neon,
+    ggo::animation_artist_id::storni,
     //ggo::animation_artist_id::kanji,
     //ggo::animation_artist_id::bozons,
   };
+#endif
 
   auto index = ggo::rand<size_t>(0, ids.size() - 1);
 
   std::cout << "Animation artist ID: " << index << std::endl;
 
+#ifdef GGO_ANDROID
   return ggo::animation_artist_abc::create(ids[index],
-    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering);
+    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering_android);
+#else
+  return ggo::animation_artist_abc::create(ids[index],
+    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering_pc);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -118,12 +130,13 @@ void render_bitmap_func()
 
   bitmap_buffer.reset(new uint8_t[screen_surface->h * screen_surface->pitch]);
 
-  while (quit == false)
+  while (true)
   {
     {
       // Wait until main() signals a bitmap to be rendered.
       std::unique_lock<std::mutex> lock(bitmap_mutex);
-      bitmap_condition_start.wait(lock, [&] { return bitmap_rendering_start = true || quit == true; });
+      bitmap_condition_start.wait(lock, [&] { return bitmap_rendering_start == true || quit == true; });
+      bitmap_rendering_start = false;
     }
 
     if (quit == true)
@@ -166,9 +179,17 @@ void main_loop()
 
   // Init animation rendering.
   ggo::pixel_rect pixel_rect1 = ggo::pixel_rect::from_width_height(screen_surface->w, screen_surface->h);
-  pixel_rect1.top() /= 2;
   ggo::pixel_rect pixel_rect2 = ggo::pixel_rect::from_width_height(screen_surface->w, screen_surface->h);
-  pixel_rect2.bottom() = pixel_rect1.top() + 1;
+  if (screen_surface->w > screen_surface->h)
+  {
+    pixel_rect1.right() /= 2;
+    pixel_rect2.left() = pixel_rect1.right() + 1;
+  }
+  else
+  {
+    pixel_rect1.top() /= 2;
+    pixel_rect2.bottom() = pixel_rect1.top() + 1;
+  }
 
   std::thread anim_thread1(render_anim_func, pixel_rect1, 1);
   std::thread anim_thread2(render_anim_func, pixel_rect2, 2);
@@ -294,6 +315,9 @@ void main_loop()
     SDL_SetWindowTitle(window, oss.str().c_str());
   }
 
+  bitmap_condition_start.notify_one();
+  anim_condition_start.notify_all();
+
   anim_thread1.join();
   anim_thread2.join();
   bitmap_thread.join();
@@ -305,8 +329,8 @@ int SDL_main(int argc, char ** argv)
   try
   {
     // Initialize SDL
-    const int screen_width = 1280;
-    const int screen_height = 720;
+    const int screen_width = 640;
+    const int screen_height = 480;
     const int screen_bpp = 32;
 
     GGO_SDL_CALL(SDL_Init(SDL_INIT_VIDEO));

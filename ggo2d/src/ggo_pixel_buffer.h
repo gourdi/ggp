@@ -163,6 +163,20 @@ namespace ggo
 
 namespace ggo
 {
+  // Pointer to line.
+  template <pixel_buffer_format pbf, typename data_t>
+  data_t * get_line_ptr(data_t * ptr, const int y, const int height, const int line_step)
+  {
+    return get_y_ptr<pixel_buffer_format_info<pbf>::y_dir>(ptr, y, height, line_step);
+  }
+
+  // Pointer to pixel.
+  template <pixel_buffer_format pbf, typename data_t>
+  data_t * get_pixel_ptr(data_t * ptr, const int x, const int y, const int height, const int line_step)
+  {
+    return get_xy_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
+  }
+
   // Set pixel to pointer.
   template <pixel_buffer_format pbf>
   void write_pixel(void * ptr, const typename pixel_buffer_format_info<pbf>::color_t & c)
@@ -174,7 +188,7 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    ptr = get_pixel_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
+    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
 
     write_pixel<pbf>(ptr, c);
   }
@@ -190,7 +204,7 @@ namespace ggo
   template <pixel_buffer_format pbf>
   typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    ptr = get_pixel_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
+    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
 
     return read_pixel<pbf>(ptr);
   }
@@ -228,12 +242,12 @@ namespace ggo
 
     if (pixel_buffer_format_info<pbf>::y_dir == y_down)
     {
-      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, rect.left(), rect.top(), height, line_step);
+      void * ptr = get_pixel_ptr<pbf>(buffer, rect.left(), rect.top(), height, line_step);
       ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
     }
     else
     {
-      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, rect.left(), rect.bottom(), height, line_step);
+      void * ptr = get_pixel_ptr<pbf>(buffer, rect.left(), rect.bottom(), height, line_step);
       ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
     }
   }

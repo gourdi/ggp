@@ -1,3 +1,7 @@
+#include <ggo_buffer_fill.h>
+#include <ggo_multi_shape_paint.h>
+#include <ggo_gaussian_blur2d.h>
+
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf>
 void ggo::aggregation_artist::render(void * buffer, int line_step) const

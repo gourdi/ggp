@@ -12,7 +12,7 @@ void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector
     const float y1 = ggo::map(y - 3 / 8.f, 0.f, height_f, -range_y, range_y);
     const float y2 = ggo::map(y + 3 / 8.f, 0.f, height_f, -range_y, range_y);
 
-    void * ptr = ggo::get_line_ptr<ggo::pixel_buffer_format_info<pbf>::y_dir>(buffer, y, get_height(), line_step);
+    void * ptr = ggo::get_line_ptr<pbf>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {
@@ -37,7 +37,7 @@ void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector
 
       ggo::write_pixel<pbf>(buffer, ggo::convert_color_to<ggo::color_8u>(pixel_color));
 
-      buffer = ggo::ptr_offset(buffer, ggo::pixel_buffer_format_info<pbf>::pixel_byte_size);
+      buffer = ggo::ptr_offset<ggo::pixel_buffer_format_info<pbf>::pixel_byte_size>(buffer);
     }
   }
 }

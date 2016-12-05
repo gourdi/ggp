@@ -14,7 +14,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
 	for (int y = 0; y < height; ++y)
 	{
     const float * ptr_in = float_buffer.get() + 3 * y * width;
-    void * ptr_out = ggo::get_line_ptr<ggo::y_up>(buffer, y, height, line_step);
+    void * ptr_out = ggo::get_line_ptr<ggo::y_8u_yu>(buffer, y, height, line_step);
 
     for (int x = 0; x < width; ++x)
     {
@@ -22,7 +22,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, ggo::convert_color_to<ggo::color_8u>(c_32f));
 
       ptr_in += 3;
-      ptr_out = ggo::ptr_offset(ptr_out, ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size);
+      ptr_out = ggo::ptr_offset<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
     }
 	}
 }

@@ -36,19 +36,21 @@ namespace ggo
     void update_predators(float velocity_hypot_min, float velocity_hypot_max, float border_margin);
     void update_stornis(float velocity_hypot_min, float velocity_hypot_max, float border_margin);
 
+    template <ggo::pixel_buffer_format pbf> void blit_background(void * buffer, const ggo::pixel_rect & clipping) const;
     template <ggo::pixel_buffer_format pbf, ggo::sampling smp> void paint_stornies(void * buffer, const ggo::pixel_rect & clipping) const;
     template <ggo::pixel_buffer_format pbf, ggo::sampling smp> void paint_predators(void * buffer, const ggo::pixel_rect & clipping) const;
     template <ggo::pixel_buffer_format pbf> void paint_obstacles(void * buffer, const ggo::pixel_rect & clipping, int frame_index) const;
 
     float get_obstacle_hypot() const { return ggo::square(0.1f) * get_width() * get_height(); }
 
-    int                         _frame_index;
-    float                       _hue;
-    std::vector<storni>         _stornis;
-    std::vector<storni>         _predators;
-    std::vector<ggo::pos2f>     _obstacles;
-    std::unique_ptr<uint8_t[]>  _stornis_buffer;
-    std::unique_ptr<uint8_t[]>  _background;
+    int                           _frame_index;
+    float                         _hue;
+    std::vector<storni>           _stornis;
+    std::vector<storni>           _predators;
+    std::vector<ggo::pos2f>       _obstacles;
+    std::unique_ptr<uint8_t[]>    _stornis_buffer;
+    std::array<ggo::color_8u, 4>  _background_colors;
+    std::unique_ptr<uint8_t[]>    _background;
   };
 }
 

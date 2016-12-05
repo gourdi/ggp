@@ -95,7 +95,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::pixel_buff
 
 	for (int y = 0; y < get_height(); ++y)
 	{
-    void * ptr_dst = ggo::get_line_ptr<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::y_dir>(buffer, y, get_height(), line_step);
+    void * ptr_dst = ggo::get_line_ptr<ggo::rgb_8u_yu>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {
@@ -104,7 +104,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::pixel_buff
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_dst, c_8u);
 
       ptr_src++;
-      ptr_dst = ggo::ptr_offset(ptr_dst, ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size);
+      ptr_dst = ggo::ptr_offset<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_dst);
     }
 	}
 }

@@ -18,6 +18,9 @@ namespace ggo
 {
   template <typename data_t> data_t *       ptr_offset(data_t * ptr, int offset) { return reinterpret_cast<data_t *>(reinterpret_cast<uint8_t *>(ptr) + offset); }
   template <typename data_t> const data_t * ptr_offset(const data_t * ptr, int offset) { return reinterpret_cast<const data_t *>(reinterpret_cast<const uint8_t *>(ptr) + offset); }
+
+  template <int offset, typename data_t> data_t *       ptr_offset(data_t * ptr) { return reinterpret_cast<data_t *>(reinterpret_cast<uint8_t *>(ptr) + offset); }
+  template <int offset, typename data_t> const data_t * ptr_offset(const data_t * ptr) { return reinterpret_cast<const data_t *>(reinterpret_cast<const uint8_t *>(ptr) + offset); }
 }
 
 //////////////////////////////////////////////////////////////
@@ -74,7 +77,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <y_direction y_dir, typename data_t>
-  data_t * get_line_ptr(data_t * buffer, int y, int height, int line_byte_step)
+  data_t * get_y_ptr(data_t * buffer, int y, int height, int line_byte_step)
   {
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(y, 0, height - 1);
@@ -83,13 +86,13 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <int item_byte_step, y_direction y_dir, typename data_t>
-  data_t * get_pixel_ptr(data_t * buffer, int x, int y, int height, int line_byte_step)
+  data_t * get_xy_ptr(data_t * buffer, int x, int y, int height, int line_byte_step)
   {
     static_assert(item_byte_step >= 1, "invalid item byte step");
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_BTW(x * item_byte_step, 0, line_byte_step);
     GGO_ASSERT_BTW(y, 0, height - 1);
-    auto * line_ptr = get_line_ptr<y_dir>(buffer, y, height, line_byte_step);
+    auto * line_ptr = get_y_ptr<y_dir>(buffer, y, height, line_byte_step);
     return ptr_offset(line_ptr, x * item_byte_step);
   }
 }
@@ -102,7 +105,7 @@ namespace ggo
   template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
   void set2d(data_t * buffer, int x, int y, int height, int line_byte_step, const data_t & data)
   {
-    data_t * ptr = get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step);
+    data_t * ptr = get_xy_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step);
     *ptr = data;
   }
 }
@@ -115,7 +118,7 @@ namespace ggo
   template <typename data_t, y_direction y_dir = y_up, int item_byte_step = sizeof(data_t)>
   const data_t & get2d(const data_t * buffer, int x, int y, int height, int line_byte_step)
   {
-    const data_t * ptr = get_pixel_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step);
+    const data_t * ptr = get_xy_ptr<item_byte_step, y_dir>(buffer, x, y, height, line_byte_step);
     return *ptr;
   }
 

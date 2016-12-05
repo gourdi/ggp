@@ -52,7 +52,7 @@ namespace ggo
             bool  update(int frame_index) override;
     virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
 
-            void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const;
+            void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const override;
     virtual void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const = 0;
 
   private:
@@ -81,7 +81,7 @@ namespace ggo
             bool  update(int frame_index) override;
     virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
 
-            void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const;
+            void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const override;
     virtual void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const = 0;
 
   private:

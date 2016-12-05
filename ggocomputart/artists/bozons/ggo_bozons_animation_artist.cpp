@@ -31,7 +31,19 @@ void ggo::bozons_animation_artist::init()
 
   // Create bozons.
   _bozons.clear();
-  for (int i = 0; i < 10; ++i)
+
+  int bozons_count = 0;
+  switch (get_rendering_type())
+  {
+  case rendering_type::realtime_rendering_android:
+    bozons_count = 8;
+    break;
+  case rendering_type::realtime_rendering_pc:
+    bozons_count = 32;
+    break;
+  }
+
+  for (int i = 0; i < bozons_count; ++i)
   {
     bozon new_bozon;
     new_bozon._prv_pos = get_center();
@@ -103,7 +115,7 @@ bool ggo::bozons_animation_artist::update()
   }
 
   // Create new bozons.
-  if (_frame_index < 100 && ggo::rand<int>(0, 16) == 0)
+  if (_frame_index < 100 && ggo::rand<int>(0, 12) == 0)
   {
     bozon new_bozon;
     new_bozon._prv_pos = get_center();
@@ -134,11 +146,25 @@ void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_
   }
 
   const float radius = 0.001f * get_min_size();
-  for (const auto & bozon : _bozons)
+
+  switch (get_rendering_type())
   {
-    ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
-      ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
-      ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
+  case rendering_type::realtime_rendering_android:
+    for (const auto & bozon : _bozons)
+    {
+      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
+        ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
+        ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
+    }
+    break;
+  case rendering_type::realtime_rendering_pc:
+    for (const auto & bozon : _bozons)
+    {
+      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
+        ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
+        ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
+    }
+    break;
   }
 }
 

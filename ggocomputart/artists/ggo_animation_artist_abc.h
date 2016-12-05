@@ -17,7 +17,8 @@ namespace ggo
     enum rendering_type
     {
       offscreen_rendering,
-      realtime_rendering
+      realtime_rendering_android,
+      realtime_rendering_pc
     };
 
     static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);

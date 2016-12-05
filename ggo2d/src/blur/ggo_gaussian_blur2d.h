@@ -106,12 +106,12 @@ namespace ggo
     // First horizontal pass.
     {
       auto input_line_iterator = [&](int y) {
-        const void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, 0, y, height, line_step);
+        const void * ptr = ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step);
         return ggo::const_buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
       };
 
       auto output_line_iterator = [&](int y) {
-        void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), 0, y, height, line_step);
+        void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), 0, y, height, line_step);
         return ggo::buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
       };
 
@@ -122,12 +122,12 @@ namespace ggo
     // Second vertical pass.
     {
       auto input_column_iterator = [&](int x) {
-        const void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(tmp.data(), x, 0, height, line_step);
+        const void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), x, 0, height, line_step);
         return ggo::const_buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
       };
 
       auto output_column_iterator = [&](int x) {
-        void * ptr = ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, x, 0, height, line_step);
+        void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_step);
         return ggo::buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
       };
 
@@ -144,19 +144,19 @@ namespace ggo
     using gaussian_helper = gaussian_blur2d_helper<typename format::color_t>;
 
     auto left = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, 0, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, 0, y, height, line_step)));
     };
 
     auto right = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, width - 1, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, width - 1, y, height, line_step)));
     };
 
     auto bottom = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, x, 0, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, 0, height, line_step)));
     };
 
     auto top = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, x, height - 1, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, height - 1, height, line_step)));
     };
 
     gaussian_blur2d<pbf>(buffer, width, height, line_step, stddev, left, right, bottom, top);
@@ -171,12 +171,12 @@ namespace ggo
 
     auto horz = [&](int x, int y, void * buf) {
       x = loop_index(x, width);
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, x, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_step)));
     };
 
     auto vert = [&](int x, int y, void * buf) {
       y = loop_index(y, height);
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buf, x, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_step)));
     };
 
     gaussian_blur2d<pbf>(buffer, width, height, line_step, stddev, horz, horz, vert, vert);

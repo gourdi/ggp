@@ -74,8 +74,8 @@ namespace ggo
 
     for (int y = 0; y < input_height; ++y)
     {
-      const void * input_line_ptr = ggo::get_line_ptr<format_in::y_dir>(input, y, input_height, input_line_step);
-      void * output_line_ptr = ggo::get_line_ptr<format_out::y_dir>(output, y, output_height, output_line_step);
+      const void * input_line_ptr = ggo::get_line_ptr<pbf_in>(input, y, input_height, input_line_step);
+      void * output_line_ptr = ggo::get_line_ptr<pbf_out>(output, y, output_height, output_line_step);
 
       for (int x = 0; x < input_width; ++x)
       {
@@ -84,8 +84,8 @@ namespace ggo
 
         ggo::write_pixel<pbf_out>(output_line_ptr, color_out);
 
-        input_line_ptr = ggo::ptr_offset(input_line_ptr, format_in::pixel_byte_size);
-        output_line_ptr = ggo::ptr_offset(output_line_ptr, format_out::pixel_byte_size);
+        input_line_ptr = ggo::ptr_offset<format_in::pixel_byte_size>(input_line_ptr);
+        output_line_ptr = ggo::ptr_offset<format_out::pixel_byte_size>(output_line_ptr);
       }
     }
   }

@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-add_definitions(-D__ANDROID__ -DGL_GLEXT_PROTOTYPES)
+add_definitions(-D__ANDROID__ -DGGO_ANDROID -DGL_GLEXT_PROTOTYPES)
 
 set(GGP_SOURCE_DIR "../../../")
 set(SDL2_SOURCE_DIR ${GGP_SOURCE_DIR}/externals/SDL2-2.0.4/)

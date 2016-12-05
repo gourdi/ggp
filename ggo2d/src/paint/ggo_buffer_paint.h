@@ -4,6 +4,7 @@
 #include <ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
 #include <ggo_sampling_paint.h>
+#include <ggo_shapes2d.h>
 #include <ggo_multi_scale_paint.h>
 
 // Hard rectangles.
@@ -90,13 +91,13 @@ namespace ggo
     {
       for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
       {
-        uint8_t * ptr = static_cast<uint8_t *>(get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, block_rect.left(), y, height, line_step));
+        void * ptr = get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step);
         for (int x = block_rect.left(); x <= block_rect.right(); ++x)
         {
           const color_t bkgd_color = read_pixel<pbf>(ptr);
           const color_t pixel_color = blend(x, y, bkgd_color, brush(x, y));
           ggo::write_pixel<pbf>(ptr, pixel_color);
-          ptr += pixel_buffer_format_info<pbf>::pixel_byte_size;
+          ptr = ptr_offset<format::pixel_byte_size>(ptr);
         }
       }
     };

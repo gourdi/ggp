@@ -270,6 +270,11 @@ void ggo::storni_animation_artist::init()
 
   _hue = ggo::rand<float>();
 
+  _background_colors[0] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
+  _background_colors[1] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
+  _background_colors[2] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
+  _background_colors[3] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
+
   std::fill(_stornis_buffer.get(), _stornis_buffer.get() + get_width() * get_height(), 0);
 
   _stornis.clear();
@@ -281,7 +286,8 @@ void ggo::storni_animation_artist::init()
       _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
     }
     break;
-  case ggo::animation_artist_abc::realtime_rendering:
+  case ggo::animation_artist_abc::realtime_rendering_android:
+  case ggo::animation_artist_abc::realtime_rendering_pc:
     for (int i = 0; i < 256; ++i)
     {
       _stornis.emplace_back(get_random_point(), ggo::vec2f(0.f, 0.f));
@@ -364,18 +370,12 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
     {
     case ggo::rgb_8u_yu:
       ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;
     case ggo::bgra_8u_yd:
       ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.get(), get_width(), get_height(), get_line_step(),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;
     default:
@@ -384,34 +384,35 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
     }
   }
 
-  memcpy(buffer, _background.get(), get_height() * get_line_step());
-
-  // Paint.
   switch (get_pixel_buffer_format())
   {
   case ggo::rgb_8u_yu:
-    if (get_rendering_type() == ggo::animation_artist_abc::realtime_rendering)
-    {
-      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
-      paint_predators<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
-    }
-    else
+    blit_background<ggo::rgb_8u_yu>(buffer, clipping);
+
+    if (get_rendering_type() == ggo::animation_artist_abc::offscreen_rendering)
     {
       paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, clipping);
       paint_predators<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, clipping);
     }
+    else
+    {
+      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
+      paint_predators<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
+    }
     paint_obstacles<ggo::rgb_8u_yu>(buffer, clipping, _frame_index);
     break;
   case ggo::bgra_8u_yd:
-    if (get_rendering_type() == ggo::animation_artist_abc::realtime_rendering)
-    {
-      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
-      paint_predators<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
-    }
-    else
+    blit_background<ggo::bgra_8u_yd>(buffer, clipping);
+
+    if (get_rendering_type() == ggo::animation_artist_abc::offscreen_rendering)
     {
       paint_stornies<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
       paint_predators<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
+    }
+    else
+    {
+      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
+      paint_predators<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
     }
     paint_obstacles<ggo::bgra_8u_yd>(buffer, clipping, _frame_index);
     break;
