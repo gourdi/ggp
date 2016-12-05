@@ -367,14 +367,16 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        clipping);
       break;
     case ggo::bgra_8u_yd:
       ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.get(), get_width(), get_height(), get_line_step(),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
         ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
-        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)));
+        ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f)),
+        clipping);
       break;
     default:
       GGO_FAIL();
@@ -390,28 +392,28 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_
   case ggo::rgb_8u_yu:
     if (get_rendering_type() == ggo::animation_artist_abc::realtime_rendering)
     {
-      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer);
-      paint_predators<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer);
+      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
+      paint_predators<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, clipping);
     }
     else
     {
-      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer);
-      paint_predators<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer);
+      paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, clipping);
+      paint_predators<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, clipping);
     }
-    paint_obstacles<ggo::rgb_8u_yu>(buffer, _frame_index);
+    paint_obstacles<ggo::rgb_8u_yu>(buffer, clipping, _frame_index);
     break;
   case ggo::bgra_8u_yd:
     if (get_rendering_type() == ggo::animation_artist_abc::realtime_rendering)
     {
-      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer);
-      paint_predators<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer);
+      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
+      paint_predators<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
     }
     else
     {
-      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer);
-      paint_predators<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer);
+      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
+      paint_predators<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
     }
-    paint_obstacles<ggo::bgra_8u_yd>(buffer, _frame_index);
+    paint_obstacles<ggo::bgra_8u_yd>(buffer, clipping, _frame_index);
     break;
   default:
     GGO_FAIL();

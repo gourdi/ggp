@@ -9,7 +9,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::plastic_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::plastic_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
 	std::vector<ggo::plastic_artist::params> params;
 	for (int i = 0; i < 50; ++i)

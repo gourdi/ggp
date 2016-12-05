@@ -420,7 +420,7 @@ void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::pixel_rec
   // Paint background.
   if (buffer != nullptr)
   {    
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
   }
 
   // Paint items (far from near).

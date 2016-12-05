@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <ggo_buffer_access.h>
 #include <ggo_color.h>
+#include <ggo_pixel_rect.h>
 
 /////////////////////////////////////////////////////////////////////
 // The sampling is rule is that the pixel (0, 0) represents 
@@ -221,40 +222,31 @@ namespace ggo
 
   // Fast rectangle processing: no check on arguments.
   template <pixel_buffer_format pbf, typename func_t>
-  void process_rect_fast(void * buffer, const int height, const int line_step, const int left, const int right, const int bottom, const int top, func_t func)
+  void process_rect_fast(void * buffer, const int height, const int line_step, const ggo::pixel_rect & rect, func_t func)
   {
     using format = pixel_buffer_format_info<pbf>;
 
     if (pixel_buffer_format_info<pbf>::y_dir == y_down)
     {
-      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, left, top, height, line_step);
-      ggo::process_buffer<pbf>(ptr, right - left + 1, top - bottom + 1, line_step, func);
+      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, rect.left(), rect.top(), height, line_step);
+      ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
     }
     else
     {
-      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, left, bottom, height, line_step);
-      ggo::process_buffer<pbf>(ptr, right - left + 1, top - bottom + 1, line_step, func);
+      void * ptr = get_pixel_ptr<format::pixel_byte_size, format::y_dir>(buffer, rect.left(), rect.bottom(), height, line_step);
+      ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
     }
   }
 
   // Safe rectangle processing: rectangle is normalized and clamped.
   template <pixel_buffer_format pbf, typename func_t>
-  void process_rect_safe(void * buffer, const int width, const int height, const int line_step, int left, int right, int bottom, int top, func_t func)
+  void process_rect_safe(void * buffer, const int width, const int height, const int line_step, const ggo::pixel_rect & rect, func_t func)
   {
-    if (left > right) std::swap(left, right);
-    if (bottom > top) std::swap(bottom, top);
-
-    if (left >= width || right < 0 || bottom >= height || top < 0)
+    ggo::pixel_rect safe_rect(rect);
+    if (safe_rect.clip(width, height) == true)
     {
-      return;
+      process_rect_fast<pbf, func_t>(buffer, height, line_step, safe_rect, func);
     }
-
-    left = std::max(left, 0);
-    right = std::min(right, width - 1);
-    bottom = std::max(bottom, 0);
-    top = std::min(top, height - 1);
-
-    process_rect_fast<pbf, func_t>(buffer, height, line_step, left, right, bottom, top, func);
   }
 }
 

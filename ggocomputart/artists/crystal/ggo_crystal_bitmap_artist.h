@@ -14,7 +14,7 @@ namespace ggo
 
   private:
 
-    void	render_bitmap(void * buffer) const override;
+    void	render_bitmap(void * buffer, const bool & quit) const override;
   };
 }
 

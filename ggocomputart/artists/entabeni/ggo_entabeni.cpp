@@ -168,8 +168,8 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     }
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black<ggo::color_8u>());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes.begin(), shapes.end());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes.begin(), shapes.end(), ggo::pixel_rect::from_width_height(width, height));
 }
 
 

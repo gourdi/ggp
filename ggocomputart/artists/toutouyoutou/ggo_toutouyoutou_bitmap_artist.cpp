@@ -9,7 +9,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::toutouyoutou_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   int frames_count = ggo::rand<int>(100, 400);
 

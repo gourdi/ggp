@@ -181,7 +181,9 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void render_bitmap_t(void * buffer, const ggo::cabrel_bitmap_artist & artist)
   {
-    ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), ggo::white<ggo::color_8u>());
+    ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      ggo::white_8u(),
+      ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
 
     auto triangles = compute_triangles();
 
@@ -225,7 +227,8 @@ namespace
 
       shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
     }
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shadows.begin(), shadows.end());
+    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      shadows.begin(), shadows.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
 
     float stddev = 0.01f * artist.get_min_size();
     ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
@@ -260,7 +263,9 @@ namespace
       create_segment(triangle.v3(), triangle.v1());
     }
 
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes.begin(), shapes.end());
+    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      shapes.begin(), shapes.end(),
+      ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
   }
 }
 
@@ -272,7 +277,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   switch (get_pixel_buffer_format())
   {

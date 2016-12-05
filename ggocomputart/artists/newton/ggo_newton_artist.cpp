@@ -63,7 +63,8 @@ void ggo::newton_artist::init()
   const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
 
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
+    color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
   std::unique_ptr<uint8_t> perlin_buffer(new uint8_t[get_width() * get_height()]);
   ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.get(), get_width(), get_height(), get_width(),

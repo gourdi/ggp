@@ -86,7 +86,7 @@ bool ggo::lagaude_animation_artist::update()
 void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
 {
   // Render background.
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
 
   for (auto & bkgd_disc : _bkgd_discs)
   {

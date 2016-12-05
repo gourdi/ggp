@@ -12,7 +12,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bubbles_artist::render_bitmap(void * buffer) const
+void ggo::bubbles_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   // Render background.
 	ggo::linear_curve<float, ggo::color_32f> bkgd_gradient;

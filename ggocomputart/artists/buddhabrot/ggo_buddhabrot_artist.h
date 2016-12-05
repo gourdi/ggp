@@ -15,7 +15,7 @@ namespace ggo
 
   private:
 
-    void  render_bitmap(void * buffer) const override;
+    void  render_bitmap(void * buffer, const bool & quit) const override;
 
     static bool discard_point(const std::complex<double> & p);
     static bool iterate(const std::complex<double> & p, int escape_threshold);

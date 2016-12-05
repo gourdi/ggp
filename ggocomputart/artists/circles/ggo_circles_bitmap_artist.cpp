@@ -10,10 +10,10 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::circles_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::circles_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const ggo::color_8u bkgd_color(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>());
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), bkgd_color);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), bkgd_color, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
   auto all_discs = ggo::circles_artist::generate_discs(get_width(), get_height());
 

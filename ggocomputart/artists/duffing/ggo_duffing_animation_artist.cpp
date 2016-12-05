@@ -141,7 +141,7 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::pixel
   ggo::color_32f color4 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve4.evaluate(t));
 	
   ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-    color1, color2, color3, color4);
+    color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
 	// Render the shadow points.
   std::vector<float> shadow_buffer(get_width() * get_height(), 1.f);

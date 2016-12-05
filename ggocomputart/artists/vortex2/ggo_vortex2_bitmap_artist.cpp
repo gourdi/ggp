@@ -9,7 +9,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex2_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::vortex2_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const int vortices_count = 20;
 

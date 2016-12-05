@@ -32,6 +32,10 @@ namespace ggo
     int               _frame_index;
     std::list<bozon>  _bozons;
     float             _hue;
+    ggo::color_8u     _bkgd_color1;
+    ggo::color_8u     _bkgd_color2;
+    ggo::color_8u     _bkgd_color3;
+    ggo::color_8u     _bkgd_color4; 
   };
 }
 

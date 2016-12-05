@@ -136,7 +136,7 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, g
   
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer, get_width(), get_height(), line_step,
-    triangles.begin(), triangles.end());
+    triangles.begin(), triangles.end(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
 }
 
 //////////////////////////////////////////////////////////////
@@ -203,7 +203,7 @@ bool ggo::amorosi_animation_artist::update()
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>(), clipping);
 
   if (buffer != nullptr)
   {

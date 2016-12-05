@@ -101,7 +101,7 @@ bool ggo::kanji_artist::update(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index) const
+void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pixel_rect & clipping) const
 {
   float radius = 0.0005f * get_min_size();
 
@@ -112,14 +112,12 @@ void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::pixel_bu
     switch (pbf)
     {
     case ggo::rgb_8u_yu:
-      ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, get_width(), get_height(), line_step,
-        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f));
+      ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
+        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f), clipping);
       break;
     case ggo::bgra_8u_yd:
-      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(
-        buffer, get_width(), get_height(), line_step,
-        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f));
+      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
+        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(_parts_color), ggo::alpha_blender_rgb8u(0.02f), clipping);
       break;
     default:
       GGO_FAIL();

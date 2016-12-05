@@ -9,7 +9,7 @@
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c);
+  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping);
 }
 
 // Checker.
@@ -30,7 +30,8 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2,
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
-    const typename pixel_buffer_format_info<pbf>::color_t & c4);
+    const typename pixel_buffer_format_info<pbf>::color_t & c4,
+    const ggo::pixel_rect & clipping);
 }
 
 // Curve.
@@ -68,9 +69,9 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
+  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping)
   {
-    process_buffer<pbf>(buffer, width, height, line_step, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+    process_rect_safe<pbf>(buffer, width, height, line_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
 }
 
@@ -107,7 +108,8 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2,
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
-    const typename pixel_buffer_format_info<pbf>::color_t & c4)
+    const typename pixel_buffer_format_info<pbf>::color_t & c4,
+    const ggo::pixel_rect & clipping)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
@@ -124,7 +126,7 @@ namespace ggo
       write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
     };
 
-    ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, write_pixel_func);
+    ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, clipping, write_pixel_func);
   }
 }
 

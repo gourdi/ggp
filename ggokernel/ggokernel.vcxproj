@@ -203,6 +203,7 @@
     <ClInclude Include="src\math\shapes_2d\ggo_polygon.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_rect.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_rect.imp.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_rect_data.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_segment.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_segment.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_shapes2d.h" />

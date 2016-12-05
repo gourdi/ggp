@@ -61,20 +61,14 @@ namespace ggo
   template <typename data_t>
   rect<data_t> rect<data_t>::from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top)
   {
-    GGO_ASSERT(left <= right);
-    GGO_ASSERT(bottom <= top);
-
-    return rect(left, bottom, right - left, top - bottom);
+    return rect(ggo::rect_data_from_left_right_bottom_top(left, right, bottom, top));
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
   rect<data_t> rect<data_t>::from_union(const rect<data_t> & rect1, const rect<data_t> & rect2)
   {
-    return from_left_right_bottom_top(std::min(rect1.left(), rect2.left()),
-                                      std::max(rect1.right(), rect2.right()),
-                                      std::min(rect1.bottom(), rect2.bottom()),
-                                      std::max(rect1.top(), rect2.top()));
+    return rect(ggo::rect_data_union(rect1.data(), rect2.data()));
   }
 
   /////////////////////////////////////////////////////////////////////

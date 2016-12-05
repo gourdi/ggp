@@ -21,10 +21,17 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
-  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend);
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend,
+    const ggo::pixel_rect & clipping);
+
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend);
 
   template <pixel_buffer_format pbf, sampling smp, typename shape_t>
-  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, const typename pixel_buffer_format_info<pbf>::color_t & color);
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, const typename pixel_buffer_format_info<pbf>::color_t & color);
 }
 
 //////////////////////////////////////////////////////////////
@@ -37,14 +44,18 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void paint_rect_fast(void * buffer, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    process_rect_fast<pbf>(buffer, height, line_step, left, right, bottom, top, [&](void * ptr) { write_pixel<pbf, color_t>(ptr, c); });
+    process_rect_fast<pbf>(buffer, height, line_step,
+      ggo::pixel_rect::from_left_right_bottom_top(left, right, bottom, top),
+      [&](void * ptr) { write_pixel<pbf, color_t>(ptr, c); });
   }
 
   /////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
   void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    process_rect_safe<pbf>(buffer, width, height, line_step, left, right, bottom, top, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+    process_rect_safe<pbf>(buffer, width, height, line_step,
+      ggo::pixel_rect::from_left_right_bottom_top(left, right, bottom, top),
+      [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
 }
 
@@ -52,7 +63,9 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
-  void paint_shape(void * buffer, int width, int height, int line_step, const shape_t & shape, brush_t brush, blend_t blend)
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend,
+    const ggo::pixel_rect & clipping)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using format = pixel_buffer_format_info<pbf>;
@@ -92,7 +105,16 @@ namespace ggo
     paint_multi_scale<smp>(width, height, shape,
       scale_factor, first_scale,
       brush, blend,
-      read_pixel_lambda, write_pixel_lambda, paint_block_lambda);
+      read_pixel_lambda, write_pixel_lambda, paint_block_lambda,
+      clipping);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend)
+  {
+    paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend, ggo::pixel_rect::from_width_height(width, height));
   }
 
   /////////////////////////////////////////////////////////////////////

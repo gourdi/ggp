@@ -122,7 +122,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::pixel_r
   if (buffer != nullptr)
   {
     ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
+      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
   }
 
   // Oscillos.

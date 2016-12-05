@@ -96,7 +96,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::pixel_
 
   if (_frame_index == 0)
   {
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
   }
 
   const float x1 = 0.8f;

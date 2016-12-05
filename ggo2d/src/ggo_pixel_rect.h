@@ -1,7 +1,7 @@
 #ifndef __GGO_PIXEL_RECT__
 #define __GGO_PIXEL_RECT__
 
-#include <ggo_shapes2d.h>
+#include <ggo_rect_data.h>
 #include <functional>
 
 namespace ggo
@@ -11,9 +11,6 @@ namespace ggo
   public:
     
           pixel_rect() = default;
-
-          template <typename data_t>
-          pixel_rect(const ggo::rect<data_t> & rect);
 
           template <typename data_t>
           pixel_rect(const ggo::rect_data<data_t> & rect);
@@ -35,7 +32,7 @@ namespace ggo
 
     bool  clip(int image_width, int image_height);
     bool  clip(const pixel_rect & other);
-     
+ 
     template <typename pixel_func>
     void  for_each_pixel(const pixel_func & f) const
     {
@@ -49,7 +46,7 @@ namespace ggo
     }
 
     template <typename data_t>
-    ggo::rect<data_t> get_rect() const;
+    ggo::rect_data<data_t> get_rect_data() const;
     
   public:
     
@@ -141,18 +138,6 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  pixel_rect::pixel_rect(const ggo::rect<data_t> & rect)
-  {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
-
-    _left = ggo::to<int>(rect.left());
-    _right = ggo::to<int>(rect.right());
-    _bottom = ggo::to<int>(rect.bottom());
-    _top = ggo::to<int>(rect.top());
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t>
   pixel_rect::pixel_rect(const ggo::rect_data<data_t> & rect)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
@@ -165,7 +150,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::rect<data_t> pixel_rect::get_rect() const
+  ggo::rect_data<data_t> pixel_rect::get_rect_data() const
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -174,7 +159,7 @@ namespace ggo
     data_t bottom = static_cast<data_t>(_bottom) - data_t(0.5);
     data_t top =  static_cast<data_t>(_top) + data_t(0.5);
 
-    return ggo::rect<data_t>::from_left_right_bottom_top(left, right, bottom, top);
+    return ggo::rect_data_from_left_right_bottom_top<data_t>(left, right, bottom, top);
   }
 
   //////////////////////////////////////////////////////////////

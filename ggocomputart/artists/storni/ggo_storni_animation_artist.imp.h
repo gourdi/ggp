@@ -1,11 +1,12 @@
 #include <ggo_buffer_paint.h>
 #include <ggo_multi_shape_paint.h>
 #include <ggo_blit.h>
+#include <ggo_brush.h>
 #include <ggo_blender.h>
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
-void ggo::storni_animation_artist::paint_stornies(void * buffer) const
+void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixel_rect & clipping) const
 {
   for (int i = 0; i < get_width() * get_height(); ++i)
   {
@@ -17,7 +18,8 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer) const
   {
     ggo::paint_shape<ggo::pixel_buffer_format_info<pbf>::gray_pbf, smp>(
       _stornis_buffer.get(), get_width(), get_height(), get_width(),
-      ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius), 0xff);
+      ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius),
+      ggo::solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
 
   auto blend = [&](int x, int y, uint8_t c)
@@ -38,7 +40,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer) const
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
-void ggo::storni_animation_artist::paint_predators(void * buffer) const
+void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::pixel_rect & clipping) const
 {
   const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(_hue + 0.5f, 1.f, 1.f);
   const float direction_length = 0.03f * std::sqrt(float(get_width() * get_height()));
@@ -74,14 +76,14 @@ void ggo::storni_animation_artist::paint_predators(void * buffer) const
       shapes[2]._shape = std::make_shared<ggo::extended_segment_float>(v2, v3, border_size);
       shapes[3]._shape = std::make_shared<ggo::extended_segment_float>(v3, v1, border_size);
 
-      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), shapes.cbegin(), shapes.cend());
+      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), shapes.cbegin(), shapes.cend(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf>
-void ggo::storni_animation_artist::paint_obstacles(void * buffer, int frame_index) const
+void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::pixel_rect & clipping, int frame_index) const
 {
   const float obstacle_hypot = get_obstacle_hypot();
   const float obstacle_hypot_inv = 1.f / obstacle_hypot;
@@ -90,12 +92,12 @@ void ggo::storni_animation_artist::paint_obstacles(void * buffer, int frame_inde
 
   for (const auto & obstacle : _obstacles)
   {
-    const ggo::rect_float obstacle_rect = ggo::rect_float::from_left_right_bottom_top(
+    const ggo::rect_data<float> obstacle_rect = ggo::rect_data_from_left_right_bottom_top(
       obstacle.x() - obstacle_hypot, obstacle.x() + obstacle_hypot,
       obstacle.y() - obstacle_hypot, obstacle.y() + obstacle_hypot);
 
     ggo::pixel_rect obstacle_pixel_rect(obstacle_rect);
-    obstacle_pixel_rect.crop(get_width(), get_height());
+    obstacle_pixel_rect.clip(get_width(), get_height());
 
     obstacle_pixel_rect.for_each_pixel([&](int x, int y)
     {

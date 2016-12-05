@@ -135,8 +135,8 @@ void ggo::smoke_animation_artist::init()
   const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
 
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    _bkgd_buffer.data(), get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_buffer.data(), get_width(), get_height(), get_line_step(),
+    color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
 }
 
 //////////////////////////////////////////////////////////////

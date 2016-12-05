@@ -188,9 +188,10 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::trees_artist::render_bitmap(void * buffer) const
+void ggo::trees_artist::render_bitmap(void * buffer, const bool & quit) const
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+    ggo::black_8u(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
     
 	// Build the rules.
 	std::vector<ggo_rule> rules;

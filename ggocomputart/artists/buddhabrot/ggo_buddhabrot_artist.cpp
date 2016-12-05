@@ -121,9 +121,9 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
+void ggo::buddhabrot_artist::render_bitmap(void * buffer, const bool & quit) const
 {
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>());
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
   ggo::array<int, 2> accumulation_r(get_width(), get_height());
   ggo::array<int, 2> accumulation_g(get_width(), get_height());

@@ -316,6 +316,9 @@
     <ClInclude Include="src\threading\ggo_signal.h">
       <Filter>threading</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_rect_data.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

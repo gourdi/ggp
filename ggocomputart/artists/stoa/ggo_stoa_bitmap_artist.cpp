@@ -14,7 +14,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::stoa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   // The camera.
 #ifdef MONO_SAMPLING

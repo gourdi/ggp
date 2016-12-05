@@ -1,6 +1,8 @@
 #include "ggo_bozons_animation_artist.h"
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
+#include <ggo_brush.h>
+#include <ggo_blender.h>
 #include <ggo_multi_shape_paint.h>
 
 namespace
@@ -22,6 +24,10 @@ void ggo::bozons_animation_artist::init()
   _frame_index = -1;
 
   _hue = ggo::rand<float>();
+  _bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
   // Create bozons.
   _bozons.clear();
@@ -123,20 +129,16 @@ void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_
 {
   if (_frame_index == 0)
   {
-    const ggo::color_8u bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-    const ggo::color_8u bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-
     ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
-      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
   }
 
   const float radius = 0.001f * get_min_size();
   for (const auto & bozon : _bozons)
   {
     ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
-      ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius), bozon._color);
+      ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
+      ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
   }
 }
 

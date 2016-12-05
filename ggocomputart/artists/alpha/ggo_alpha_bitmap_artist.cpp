@@ -10,7 +10,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::alpha_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   alpha_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
 

@@ -266,7 +266,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rex_artist::render_bitmap(void * buffer) const
+void ggo::rex_artist::render_bitmap(void * buffer, const bool & qui) const
 {
   std::vector<ggo::segment_float>		  edges;
   std::vector<rex_color_triangle>		  color_triangles;

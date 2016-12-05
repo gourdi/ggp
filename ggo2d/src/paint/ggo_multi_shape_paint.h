@@ -89,7 +89,7 @@ namespace ggo
 {
   template <ggo::pixel_buffer_format pbf, sampling smp, typename iterator_t,
     typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, iterator_t begin_it, iterator_t end_it)
+  void paint_shapes(void * buffer, int width, int height, int line_step, iterator_t begin_it, iterator_t end_it, const ggo::pixel_rect & clipping)
   {
     const int scale_factor = 8;
     const int first_scale = 2;
@@ -135,7 +135,8 @@ namespace ggo
 
     paint_multi_scale<smp>(width, height, begin_it, end_it,
       scale_factor, first_scale,
-      read_pixel_func, write_pixel_func, paint_block_func);
+      read_pixel_func, write_pixel_func, paint_block_func,
+      clipping);
   }
 }
 

@@ -11,7 +11,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
 	ggo::multi_sampling_point_camera camera(get_width(), get_height());
 

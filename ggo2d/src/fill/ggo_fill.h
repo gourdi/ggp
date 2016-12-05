@@ -6,6 +6,7 @@
 #include <ggo_perlin_noise_field_2d.h>
 #include <ggo_gaussian_field_2d.h>
 #include <ggo_color.h>
+#include <ggo_pixel_rect.h>
 
 // Checker.
 namespace ggo
@@ -32,7 +33,8 @@ namespace ggo
 namespace ggo
 {
   template <typename color_t, typename real_t, typename set_pixel_func_t>
-  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4, set_pixel_func_t set_pixel_func);
+  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4,
+    const ggo::pixel_rect & clipping, set_pixel_func_t set_pixel_func);
 }
 
 // Perlin
@@ -127,14 +129,15 @@ namespace ggo
 namespace ggo
 {
   template <typename color_t, typename real_t, typename set_pixel_func_t>
-  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4, set_pixel_func_t set_pixel_func)
+  void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4,
+    const ggo::pixel_rect & clipping, set_pixel_func_t set_pixel_func)
   {
-    for (int y = 0; y < height; ++y)
+    for (int y = clipping.bottom(); y <= clipping.top(); ++y)
     {
       color_t color5 = (static_cast<real_t>(y) * c1 + static_cast<real_t>(height - y) * c2) / static_cast<real_t>(height);
       color_t color6 = (static_cast<real_t>(y) * c3 + static_cast<real_t>(height - y) * c4) / static_cast<real_t>(height);
 
-      for (int x = 0; x < width; ++x)
+      for (int x = clipping.left(); x <= clipping.right(); ++x)
       {
         set_pixel_func(x, y, (static_cast<real_t>(x) * color5 + static_cast<real_t>(width - x) * color6) / static_cast<real_t>(width));
       }

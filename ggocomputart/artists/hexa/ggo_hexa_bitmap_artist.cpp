@@ -19,7 +19,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::hexa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   // The camera.
 #ifdef GGO_PREVIEW

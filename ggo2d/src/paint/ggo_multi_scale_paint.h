@@ -16,18 +16,16 @@ namespace ggo
     const shape_t & shape,
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
-    read_pixel_t read_pixel,
-    write_pixel_t write_pixel,
-    paint_block_t paint_block);
+    read_pixel_t read_pixel, write_pixel_t write_pixel, paint_block_t paint_block,
+    const ggo::pixel_rect & clipping);
 
   // Paint multiple shapes.
   template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t, typename paint_block_t>
     void paint_multi_scale(int width, int height,
       iterator_t begin_it, iterator_t end_it,
       int scale_factor, int first_scale,
-      read_pixel_t read_pixel,
-      write_pixel_t write_pixel,
-      paint_block_t paint_block);
+      read_pixel_t read_pixel, write_pixel_t write_pixel, paint_block_t paint_block,
+      const ggo::pixel_rect & clipping);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -50,9 +48,9 @@ namespace ggo
     using real_t = typename shape_t::type;
 
     // Check for shape intersecting the current block.
-    const ggo::rect<real_t> block_rect_real = block_rect.get_rect<real_t>();
+    const ggo::rect_data<real_t> block_rect_data = block_rect.get_rect_data<real_t>();
 
-    const ggo::rect_intersection intersection = shape.get_rect_intersection(block_rect_real);
+    const ggo::rect_intersection intersection = shape.get_rect_intersection(block_rect_data);
 
     switch (intersection)
     {
@@ -105,9 +103,8 @@ namespace ggo
     const shape_t & shape,
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
-    read_pixel_t read_pixel,
-    write_pixel_t write_pixel,
-    paint_block_t paint_block)
+    read_pixel_t read_pixel, write_pixel_t write_pixel, paint_block_t paint_block,
+    const ggo::pixel_rect & clipping)
   {
     using real_t = typename shape_t::type;
 
@@ -116,8 +113,8 @@ namespace ggo
 
     // Clip.
     ggo::rect<real_t> shape_bounding_rect(shape_bounding_rect_data);
-    pixel_rect shape_pixel_rect(shape_bounding_rect);
-    if (shape_pixel_rect.crop(width, height) == false)
+    pixel_rect shape_pixel_rect(shape_bounding_rect.data());
+    if (shape_pixel_rect.clip(width, height) == false || shape_pixel_rect.clip(clipping) == false)
     {
       return;
     }
@@ -159,7 +156,7 @@ namespace ggo
     GGO_ASSERT(current_scale >= 0);
 
     // Check for shapes intersecting the current block.
-    auto block_rect_float = block_rect.get_rect<real_t>();
+    auto block_rect_data = block_rect.get_rect_data<real_t>();
 
     bool block_inside_all_shapes = true;
 
@@ -168,7 +165,7 @@ namespace ggo
     {
       const item_t * item = *it;
 
-      ggo::rect_intersection intersection = item->get_rect_intersection(block_rect_float);
+      ggo::rect_intersection intersection = item->get_rect_intersection(block_rect_data);
 
       switch (intersection)
       {
@@ -252,22 +249,27 @@ namespace ggo
   void paint_multi_scale(int width, int height,
     iterator_t begin_it, iterator_t end_it,
     int scale_factor, int first_scale,
-    read_pixel_t read_pixel,
-    write_pixel_t write_pixel,
-    paint_block_t paint_block)
+    read_pixel_t read_pixel, write_pixel_t write_pixel, paint_block_t paint_block,
+    const ggo::pixel_rect & clipping)
   {
     using item_t = typename std::iterator_traits<iterator_t>::value_type;
     using real_t = typename item_t::real_t;
 
     // Clip.
-    const ggo::rect_data<real_t> image_rect_data({ real_t(-0.5), real_t(-0.5) }, real_t(width) - real_t(0.5), real_t(height) - real_t(0.5));
+    ggo::pixel_rect safe_clipping(clipping);
+    if (safe_clipping.clip(width, height) == false)
+    {
+      return;
+    }
+
+    const ggo::rect_data<real_t> clipping_rect_data(safe_clipping.get_rect_data<real_t>());
     ggo::rect_data<real_t> bounding_rect_data;
     bool first = true;
     std::vector<const item_t *> items;
     for (auto it = begin_it; it != end_it; ++it)
     {
       const ggo::rect_data<real_t> cur_rect_data = it->get_bounding_rect();
-      if (ggo::rect_data_intersect(cur_rect_data, image_rect_data) == true)
+      if (ggo::rect_data_intersect(cur_rect_data, clipping_rect_data) == true)
       {
         const auto & item = *it;
         items.push_back(&item);
@@ -290,8 +292,7 @@ namespace ggo
     }
 
     ggo::pixel_rect bounding_pixel_rect(bounding_rect_data);
-
-    if (bounding_pixel_rect.crop(width, height) == false)
+    if (bounding_pixel_rect.clip(safe_clipping) == false)
     {
       return;
     }

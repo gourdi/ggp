@@ -11,11 +11,12 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::worms_artist::render_bitmap(void * buffer) const
+void ggo::worms_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const int counter_max = 1500;
 
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white<ggo::color_8u>());
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+    ggo::white_8u(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
 
 	float hue1 = ggo::rand<float>();
 	float hue2 = ggo::rand<float>();

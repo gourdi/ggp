@@ -28,12 +28,12 @@ namespace
     GGO_ASSERT_LT(radius_inf, radius_sup);
     GGO_ASSERT_LT(angle_inf, angle_sup);
 
-    ggo::pixel_rect pixel_rect(ggo::rect_float::from_left_right_bottom_top(center.get<0>() - radius_sup,
-                                                                           center.get<0>() + radius_sup,
-                                                                           center.get<1>() - radius_sup,
-                                                                           center.get<1>() + radius_sup));
+    ggo::pixel_rect pixel_rect(ggo::rect_data_from_left_right_bottom_top<float>(center.get<0>() - radius_sup,
+                                                                                center.get<0>() + radius_sup,
+                                                                                center.get<1>() - radius_sup,
+                                                                                center.get<1>() + radius_sup));
 
-    if (pixel_rect.crop(opacity_mask.get_width(), opacity_mask.get_height()) == false)
+    if (pixel_rect.clip(opacity_mask.get_width(), opacity_mask.get_height()) == false)
     {
       return;
     }
@@ -77,14 +77,16 @@ namespace
       ggo::make_solid_brush(1.f), ggo::overwrite_blender<float>(),
       [&](int x, int y) { return opacity_mask.get(x, y); },
       [&](int x, int y, float c) { opacity_mask.set(x, y, c); },
-      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { opacity_mask.set(x, y, 1.f); }); });
+      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { opacity_mask.set(x, y, 1.f); }); },
+      ggo::pixel_rect::from_width_height(opacity_mask.get_width(), opacity_mask.get_height()));
 
     ggo::paint_multi_scale<ggo::sampling_1>(
       color_mask.get_width(), color_mask.get_height(), rect, 8, 2,
       ggo::make_solid_brush(color), ggo::overwrite_blender<ggo::color_32f>(),
       [&](int x, int y) { return color_mask.get(x, y); },
       [&](int x, int y, const ggo::color_32f & c) { color_mask.set(x, y, c); },
-      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { color_mask.set(x, y, color); }); });
+      [&](const ggo::pixel_rect & block) { block.for_each_pixel([&](int x, int y) { color_mask.set(x, y, color); }); },
+      ggo::pixel_rect::from_width_height(color_mask.get_width(), color_mask.get_height()));
   }
 
   //////////////////////////////////////////////////////////////
@@ -236,7 +238,7 @@ void ggo::sonson_animation_artist::line::update_strips()
     int width = _opacity_mask.get_width() / _scale_factor;
     int height = _opacity_mask.get_height() / _scale_factor;
 
-    if (glow_segment.get_rect_intersection(ggo::rect_float::from_left_right_bottom_top(-0.5f, width - 0.5f, -0.5f, height - 0.5f)) == ggo::rect_intersection::disjoints)
+    if (glow_segment.get_rect_intersection(ggo::rect_data_from_left_right_bottom_top<float>(-0.5f, width - 0.5f, -0.5f, height - 0.5f)) == ggo::rect_intersection::disjoints)
     {
       _strips.clear();
     }
@@ -521,9 +523,8 @@ void ggo::sonson_animation_artist::render_frame(void * buffer, const ggo::pixel_
 {
   if (buffer != nullptr)
   {
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(
-      buffer, get_width(), get_height(), get_line_step(),
-      ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::white<ggo::color_8u>(), ggo::black<ggo::color_8u>());
+    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::white_8u(), ggo::white_8u(), ggo::white_8u(), ggo::black_8u(), clipping);
   }
 
   // Paint lines.

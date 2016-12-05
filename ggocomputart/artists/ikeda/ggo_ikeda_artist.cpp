@@ -69,10 +69,9 @@ bool ggo::ikeda_artist::update()
 //////////////////////////////////////////////////////////////
 void ggo::ikeda_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
 {
-
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    buffer, get_width(), get_height(), get_line_step(),
-    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3],
+    ggo::pixel_rect::from_width_height(get_width(), get_height()));
 	
 	std::vector<particle> particles = _seeds;
 	

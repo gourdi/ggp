@@ -76,7 +76,7 @@ bool ggo::circles_animation_artist::update()
 //////////////////////////////////////////////////////////////
 void ggo::circles_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
 {
-  ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color);
+  ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
 
   _animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
 }

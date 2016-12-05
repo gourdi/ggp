@@ -17,7 +17,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::flower_artist::render_bitmap(void * buffer) const
+void ggo::flower_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const int horz_count = 3000;
   const int vert_count = 1500;

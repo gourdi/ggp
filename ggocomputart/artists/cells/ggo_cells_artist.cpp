@@ -15,7 +15,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cells_artist::render_bitmap(void * buffer) const
+void ggo::cells_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const int cells_count = 250;
   
@@ -37,7 +37,8 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 	polynom2._deg0 = ggo::rand<float>(-2, 2);
 
 	ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()));
+    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()),
+    ggo::pixel_rect::from_width_height(get_width(), get_height()));
 	
 	for (int counter = 0; counter < cells_count; ++counter)
 	{
