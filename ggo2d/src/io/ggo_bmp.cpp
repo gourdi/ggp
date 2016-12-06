@@ -1,6 +1,5 @@
 #include "ggo_bmp.h"
 #include <ggo_kernel.h>
-#include <ggo_memory.h>
 #include <ggo_color.h>
 #include <fstream>
 
@@ -42,7 +41,7 @@ namespace ggo
     int filesize	= 14 + 40 + 3 * line_size * height;
 
     // File header.
-    ggo::mem_zero(header, sizeof(header));
+    std::fill(std::begin(header), std::end(header), 0);
 
     header[ 0]	= 'B';
     header[ 1]	= 'M';
@@ -57,7 +56,7 @@ namespace ggo
     ofs.write(reinterpret_cast<char*>(header), 14);
 
     // Info header.
-    ggo::mem_zero(header, sizeof(header));
+    std::fill(std::begin(header), std::end(header), 0);
 
     header[ 0] = 40; // sizeof info header
 

@@ -49,6 +49,8 @@
     <ClCompile Include="artists\distorsion\ggo_distorsion_bitmap_artist.cpp" />
     <ClCompile Include="artists\duffing\ggo_duffing_animation_artist.cpp" />
     <ClCompile Include="artists\duffing\ggo_duffing_bitmap_artist.cpp" />
+    <ClCompile Include="artists\duffing\ggo_duffing_offscreen_animation_artist.cpp" />
+    <ClCompile Include="artists\duffing\ggo_duffing_realtime_animation_artist.cpp" />
     <ClCompile Include="artists\dupecheck\ggo_dupecheck_animation_artist.cpp" />
     <ClCompile Include="artists\dupecheck\ggo_dupecheck_bitmap_artist.cpp" />
     <ClCompile Include="artists\entabeni\ggo_entabeni.cpp" />
@@ -138,8 +140,11 @@
     <ClInclude Include="artists\cumbia\ggo_cumbia_bitmap_artist.h" />
     <ClInclude Include="artists\distorsion\ggo_distorsion_animation_artist.h" />
     <ClInclude Include="artists\distorsion\ggo_distorsion_bitmap_artist.h" />
+    <ClInclude Include="artists\duffing\ggo_duffing.h" />
     <ClInclude Include="artists\duffing\ggo_duffing_animation_artist.h" />
     <ClInclude Include="artists\duffing\ggo_duffing_bitmap_artist.h" />
+    <ClInclude Include="artists\duffing\ggo_duffing_offscreen_animation_artist.h" />
+    <ClInclude Include="artists\duffing\ggo_duffing_realtime_animation_artist.h" />
     <ClInclude Include="artists\dupecheck\ggo_dupecheck_animation_artist.h" />
     <ClInclude Include="artists\dupecheck\ggo_dupecheck_bitmap_artist.h" />
     <ClInclude Include="artists\entabeni\ggo_entabeni.h" />

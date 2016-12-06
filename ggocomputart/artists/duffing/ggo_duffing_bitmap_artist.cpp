@@ -1,4 +1,5 @@
 #include "ggo_duffing_bitmap_artist.h"
+#include "ggo_duffing.h"
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
@@ -23,33 +24,21 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer, const bool & quit)
 	
 	std::vector<ggo::pos2f>	points;
 
-	const float	A = ggo::rand<float>(0.245f, 0.255f);
-	const float	B = ggo::rand<float>(0.295f, 0.305f);
-  const float dt = 0.002f;
+  ggo::duffing duffing;
+
+	const float angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
   
-	ggo::pos2f	point(ggo::rand<float>(-1, 1), ggo::rand<float>(-1, 1));
-	float angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
-  float t = 0;
-	
 	for (int i = 0; i < iterations_count; ++i)
 	{
-		float	x	= point.x();
-		float	y	= point.y();
-		float	dx	= y;
-		float	dy	= x - x * x * x - A * y + B * std::cos(t);
-
-		point.x() += dx * dt;
-		point.y() += dy * dt;
+    ggo::pos2f point = duffing.update(0.002f);
 
 		float angle = atan2(point.y(), point.x()) + angle_offset;
 		float dist = point.get_length();
 
-		ggo::pos2f render_pt(dist * std::cos(angle), dist * std::sin(angle));
-		render_pt = map_fit(render_pt, -1.7f, 1.7f);
+    point.set(dist * std::cos(angle), dist * std::sin(angle));
+    point = map_fit(point, -1.7f, 1.7f);
 		
-		points.push_back(render_pt);
-		
-		t += dt;
+		points.push_back(point);
 	}
 
 	float radius = get_min_size() / 1500.f;

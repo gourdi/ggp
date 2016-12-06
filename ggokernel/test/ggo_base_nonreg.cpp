@@ -238,6 +238,13 @@ GGO_TEST(base, pow)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(base, fixed_point_div)
+{
+  GGO_CHECK_EQ(ggo::fixed_point_div<4>(128), 8);
+  GGO_CHECK_EQ(ggo::fixed_point_div<4>(-128), -8);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, round_div)
 {
   GGO_CHECK_EQ(ggo::round_div(-9, 4), -2);

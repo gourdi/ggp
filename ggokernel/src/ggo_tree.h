@@ -1,7 +1,6 @@
 #ifndef __GGO_TREE__
 #define __GGO_TREE__
 
-#include <ggo_memory.h>
 #include <ggo_kernel.h>
 
 namespace ggo

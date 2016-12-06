@@ -54,7 +54,7 @@ bool ggo::neon_artist::update()
 {
   ++_frame_index;
 
-  const int frames_count = 2000;
+  const int frames_count = 1000;
 
   if (_frame_index >= frames_count)
   {

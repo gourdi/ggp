@@ -411,6 +411,12 @@
     <ClCompile Include="artists\storni\ggo_storni_animation_artist.cpp">
       <Filter>artists\storni</Filter>
     </ClCompile>
+    <ClCompile Include="artists\duffing\ggo_duffing_offscreen_animation_artist.cpp">
+      <Filter>artists\duffing</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\duffing\ggo_duffing_realtime_animation_artist.cpp">
+      <Filter>artists\duffing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\ggo_animate_abc.h">
@@ -688,6 +694,15 @@
     </ClInclude>
     <ClInclude Include="artists\plastic\ggo_plastic_artist.imp.h">
       <Filter>artists\plastic</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\duffing\ggo_duffing_offscreen_animation_artist.h">
+      <Filter>artists\duffing</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\duffing\ggo_duffing.h">
+      <Filter>artists\duffing</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\duffing\ggo_duffing_realtime_animation_artist.h">
+      <Filter>artists\duffing</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

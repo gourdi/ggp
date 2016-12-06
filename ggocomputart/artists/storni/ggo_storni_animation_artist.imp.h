@@ -46,7 +46,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixe
       ggo::solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
 
-  // Blend.
+  // Blend. 
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     for (int x = clipping.left(); x <= clipping.right(); ++x)

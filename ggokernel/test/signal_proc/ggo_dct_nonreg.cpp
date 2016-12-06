@@ -1,7 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
 #include <ggo_dct.h>
-#include <ggo_memory.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(dct, dct)
@@ -10,7 +9,7 @@ GGO_TEST(dct, dct)
     float data2[8];
     
     ggo::dct(data1, data2, 8);
-    ggo::mem_zero(data1, 8);
+    std::fill(std::begin(data1), std::end(data1), 0.f);
     ggo::dct(data2, data1, 8);
 
     GGO_CHECK_FABS(data1[0], 1);

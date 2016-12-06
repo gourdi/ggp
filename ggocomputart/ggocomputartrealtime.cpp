@@ -44,11 +44,11 @@ bool quit = false;
 ggo::bitmap_artist_abc * create_bitmap_artist()
 {
   const std::vector<ggo::bitmap_artist_id> ids{
-    //ggo::bitmap_artist_id::julia,
+    ggo::bitmap_artist_id::julia,
     ggo::bitmap_artist_id::topodoko,
-    /*ggo::bitmap_artist_id::mandelbrot,
+    ggo::bitmap_artist_id::mandelbrot,
     ggo::bitmap_artist_id::distorsion,
-    ggo::bitmap_artist_id::plastic*/
+    ggo::bitmap_artist_id::plastic
   };
 
   auto index = ggo::rand<size_t>(0, ids.size() - 1);
@@ -68,10 +68,11 @@ ggo::animation_artist_abc * create_animation_artist()
   };
 #else
   const std::vector<ggo::animation_artist_id> ids{
-    //ggo::animation_artist_id::neon,
+    ggo::animation_artist_id::neon,
     ggo::animation_artist_id::storni,
-    //ggo::animation_artist_id::kanji,
-    //ggo::animation_artist_id::bozons,
+    ggo::animation_artist_id::duffing,
+    ggo::animation_artist_id::kanji,
+    ggo::animation_artist_id::bozons,
   };
 #endif
 

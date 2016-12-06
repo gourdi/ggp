@@ -1,7 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
 #include <ggo_dwt.h>
-#include <ggo_memory.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(dwt, haar)
@@ -11,7 +10,7 @@ GGO_TEST(dwt, haar)
   float high[3];
 
   ggo::fdwt(data, low, high, 6, ggo::DWT_HAAR);
-  ggo::mem_zero(data, 6);
+  std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 6, ggo::DWT_HAAR);
 
   GGO_CHECK_FABS(data[0], 1);
@@ -30,7 +29,7 @@ GGO_TEST(dwt, daubechies4)
   double high[4];
 
   ggo::fdwt(data, low, high, 8, ggo::DWT_D4);
-  ggo::mem_zero(data, 8);
+  std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 8, ggo::DWT_D4);
 
   GGO_CHECK_FABS(data[0], 1);
@@ -51,7 +50,7 @@ GGO_TEST(dwt, daubechies6)
   double high[4];
 
   ggo::fdwt(data, low, high, 8, ggo::DWT_D6);
-  ggo::mem_zero(data, 8);
+  std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 8, ggo::DWT_D6);
 
   GGO_CHECK_FABS(data[0], 1);
@@ -72,7 +71,7 @@ GGO_TEST(dwt, daubechies8)
   float high[3];
 
   ggo::fdwt(data, low, high, 6, ggo::DWT_D8);
-  ggo::mem_zero(data, 6);
+  std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 6, ggo::DWT_D8);
 
   GGO_CHECK_FABS(data[0], 1);

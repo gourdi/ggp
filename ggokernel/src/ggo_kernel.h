@@ -133,12 +133,26 @@ namespace ggo
   }
 
   template <int bit_shift, typename data_t>
-  data_t fixed_point_div(data_t v)
+  data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_unsigned<data_t>::value>::type* = 0)
   {
     static_assert(bit_shift > 1, "invalid bit shift");
-    static_assert(std::is_integral<data_t>::value && std::is_unsigned<data_t>::value, "expected unsigned integral type");
 
     return (v + (1 << (bit_shift - 1))) >> bit_shift;
+  }
+
+  template <int bit_shift, typename data_t>
+  data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_signed<data_t>::value>::type* = 0)
+  {
+    static_assert(bit_shift > 1, "invalid bit shift");
+
+    if (v >= 0)
+    {
+      return (v + (1 << (bit_shift - 1))) >> bit_shift;
+    }
+    else
+    {
+      return -((-v + (1 << (bit_shift - 1))) >> bit_shift);
+    }
   }
 
   template <typename data_t>

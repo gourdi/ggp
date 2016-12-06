@@ -7,7 +7,6 @@
     <ClInclude Include="src\ggo_helpers.h" />
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
-    <ClInclude Include="src\ggo_memory.h" />
     <ClInclude Include="src\ggo_tree.h" />
     <ClInclude Include="src\math\ggo_harmonic_curve.h">
       <Filter>math</Filter>
