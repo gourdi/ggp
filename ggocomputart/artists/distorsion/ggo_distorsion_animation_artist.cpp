@@ -139,7 +139,7 @@ bool ggo::distorsion_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   render_frame(_frame_index, buffer, clipping);
 }

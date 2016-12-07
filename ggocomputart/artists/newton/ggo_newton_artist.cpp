@@ -126,7 +126,7 @@ bool ggo::newton_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::newton_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::newton_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   memcpy(buffer, _background.get(), get_width() * get_line_step());
 

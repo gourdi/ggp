@@ -11,7 +11,7 @@ void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::pix
   const int clipping_width_byte_size = clipping.width() * ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
-    const void * src = ggo::get_pixel_ptr<pbf>(_background.get(), clipping.left(), y, get_height(), get_line_step());
+    const void * src = ggo::get_pixel_ptr<pbf>(_background.data(), clipping.left(), y, get_height(), get_line_step());
     void * dst = ggo::get_pixel_ptr<pbf>(buffer, clipping.left(), y, get_height(), get_line_step());
 
     memcpy(dst, src, clipping_width_byte_size);
@@ -20,7 +20,7 @@ void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::pix
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
-void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixel_rect & clipping)
 {
   constexpr ggo::pixel_buffer_format gray_pbf = ggo::pixel_buffer_format_info<pbf>::gray_pbf;
 
@@ -29,7 +29,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixe
   {
     for (int x = clipping.left(); x <= clipping.right(); ++x)
     {
-      void * ptr = ggo::get_pixel_ptr<gray_pbf>(_stornis_buffer.get(), x, y, get_height(), get_width());
+      void * ptr = ggo::get_pixel_ptr<gray_pbf>(_stornis_buffer.data(), x, y, get_height(), get_width());
 
       auto y_8u = ggo::read_pixel<gray_pbf>(ptr);
       y_8u = y_8u >= 32 ? y_8u - 32 : 0;
@@ -41,7 +41,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixe
   const float storni_radius = 0.0025f * get_min_size();
   for (const auto & storni : _stornis)
   {
-    ggo::paint_shape<gray_pbf, smp>(_stornis_buffer.get(), get_width(), get_height(), get_width(),
+    ggo::paint_shape<gray_pbf, smp>(_stornis_buffer.data(), get_width(), get_height(), get_width(),
       ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius),
       ggo::solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
@@ -53,7 +53,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixe
     {
       void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, y, get_height(), get_line_step());
 
-      auto y_8u = ggo::read_pixel<gray_pbf>(_stornis_buffer.get(), x, y, get_height(), get_width());
+      auto y_8u = ggo::read_pixel<gray_pbf>(_stornis_buffer.data(), x, y, get_height(), get_width());
       auto rgb_8u = ggo::read_pixel<pbf>(ptr);
 
       const uint32_t weight_rgb = 255 - y_8u;

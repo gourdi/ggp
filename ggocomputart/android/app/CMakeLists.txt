@@ -139,6 +139,8 @@ set(GGO_COMPUTART_SOURCES_FILES
     ${GGP_SOURCE_DIR}/ggocomputart/artists/distorsion/ggo_distorsion_animation_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/distorsion/ggo_distorsion_bitmap_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/duffing/ggo_duffing_animation_artist.cpp
+    ${GGP_SOURCE_DIR}/ggocomputart/artists/duffing/ggo_duffing_offscreen_animation_artist.cpp
+    ${GGP_SOURCE_DIR}/ggocomputart/artists/duffing/ggo_duffing_realtime_animation_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/duffing/ggo_duffing_bitmap_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/dupecheck/ggo_dupecheck_animation_artist.cpp
     ${GGP_SOURCE_DIR}/ggocomputart/artists/dupecheck/ggo_dupecheck_bitmap_artist.cpp

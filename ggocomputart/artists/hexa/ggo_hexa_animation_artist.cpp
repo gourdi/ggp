@@ -54,7 +54,7 @@ bool ggo::hexa_animation_artist::update()
 
   
 //////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   // Update camera.
 #ifdef GGO_HEXA_ANTIALIASING

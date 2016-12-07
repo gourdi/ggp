@@ -119,8 +119,8 @@ void ggo::storni_animation_artist::storni::clamp_velocity(float velocity_hypot_m
 ggo::storni_animation_artist::storni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt),
-_stornis_buffer(new uint8_t[width * height]),
-_background(new uint8_t[width * line_step])
+_stornis_buffer(width * height),
+_background(width * line_step)
 {
 
 }
@@ -275,7 +275,7 @@ void ggo::storni_animation_artist::init()
   _background_colors[2] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
   _background_colors[3] = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, ggo::rand<float>(0.f, 0.75f));
 
-  std::fill(_stornis_buffer.get(), _stornis_buffer.get() + get_width() * get_height(), 0);
+  std::fill(_stornis_buffer.data(), _stornis_buffer.data() + get_width() * get_height(), 0);
 
   _stornis.clear();
   switch (get_rendering_type())
@@ -362,19 +362,19 @@ bool ggo::storni_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   if (_frame_index == 0)
   {
     switch (get_pixel_buffer_format())
     {
     case ggo::rgb_8u_yu:
-      ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.data(), get_width(), get_height(), get_line_step(),
         _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;
     case ggo::bgra_8u_yd:
-      ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.get(), get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.data(), get_width(), get_height(), get_line_step(),
         _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;

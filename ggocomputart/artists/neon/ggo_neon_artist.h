@@ -15,7 +15,7 @@ namespace ggo
 
     void  init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
 
     void	paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::pixel_rect & clipping) const;
 

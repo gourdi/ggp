@@ -42,7 +42,7 @@ bool ggo::stoa_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   // The camera.
 #ifdef MONO_SAMPLING

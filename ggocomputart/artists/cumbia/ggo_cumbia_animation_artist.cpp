@@ -38,7 +38,7 @@ bool ggo::cumbia_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   ggo::antialiasing_renderer renderer(_camera);
 

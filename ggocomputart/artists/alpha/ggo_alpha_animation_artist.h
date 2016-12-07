@@ -14,7 +14,8 @@ namespace ggo
 
     void	init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
+
     int		get_items_count() const { return static_cast<int>(_items.size()); }
 
   private:

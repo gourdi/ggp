@@ -105,7 +105,7 @@ bool ggo::duffing_offscreen_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_offscreen_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::duffing_offscreen_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   int last_point = std::max(1, _frame_index * points_per_frame);
   int first_point = last_point - visible_points_count;

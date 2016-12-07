@@ -117,7 +117,7 @@ bool ggo::dupecheck_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   // Background.
   if (buffer != nullptr)

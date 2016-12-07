@@ -87,7 +87,7 @@ bool ggo::rediff_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   if (buffer == nullptr)
   {

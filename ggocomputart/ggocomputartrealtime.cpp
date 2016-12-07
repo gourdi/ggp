@@ -63,16 +63,17 @@ ggo::animation_artist_abc * create_animation_artist()
 {
 #ifdef GGO_ANDROID
   const std::vector<ggo::animation_artist_id> ids{
-    ggo::animation_artist_id::neon,
     ggo::animation_artist_id::bozons,
+    ggo::animation_artist_id::duffing,
+    ggo::animation_artist_id::neon
   };
 #else
   const std::vector<ggo::animation_artist_id> ids{
-    ggo::animation_artist_id::neon,
-    ggo::animation_artist_id::storni,
+    ggo::animation_artist_id::bozons,
     ggo::animation_artist_id::duffing,
     ggo::animation_artist_id::kanji,
-    ggo::animation_artist_id::bozons,
+    ggo::animation_artist_id::neon,
+    ggo::animation_artist_id::storni
   };
 #endif
 

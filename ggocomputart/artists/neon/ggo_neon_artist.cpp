@@ -84,7 +84,7 @@ bool ggo::neon_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::neon_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   if (_frame_index == 0)
   {

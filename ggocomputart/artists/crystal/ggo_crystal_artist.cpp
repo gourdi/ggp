@@ -1,19 +1,20 @@
 #include "ggo_crystal_artist.h"
 #include <ggo_color.h>
+#include <ggo_buffer.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params)
 {
-  std::unique_ptr<float[]> float_buffer(new float[3 * width * height]);
+  ggo::buffer<float> float_buffer(3 * width * height);
 
 	for (int j = 0; j < 16 * width * height; ++j)
 	{
-		render_transform(float_buffer.get(), width, height, params);
+		render_transform(float_buffer.data(), width, height, params);
 	}
 
 	for (int y = 0; y < height; ++y)
 	{
-    const float * ptr_in = float_buffer.get() + 3 * y * width;
+    const float * ptr_in = float_buffer.data() + 3 * y * width;
     void * ptr_out = ggo::get_line_ptr<ggo::y_8u_yu>(buffer, y, height, line_step);
 
     for (int x = 0; x < width; ++x)

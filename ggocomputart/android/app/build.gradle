@@ -4,7 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "25.0.1"
     defaultConfig {
-        applicationId "com.example.ggourdin.myapplication"
+        applicationId "net.gourdi.computart"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1

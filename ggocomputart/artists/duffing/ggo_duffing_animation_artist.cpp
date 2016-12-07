@@ -30,7 +30,7 @@ bool ggo::duffing_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   _artist->render_frame(buffer, clipping);
 }

@@ -54,7 +54,7 @@ bool ggo::plastic_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   std::vector<ggo::plastic_artist::params> bitmap_params;
   for (auto & anim_params : _params)

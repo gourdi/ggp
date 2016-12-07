@@ -201,7 +201,7 @@ bool ggo::amorosi_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>(), clipping);
 

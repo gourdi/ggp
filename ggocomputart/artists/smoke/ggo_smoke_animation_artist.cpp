@@ -284,7 +284,7 @@ bool ggo::smoke_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
 	// Draw the density.
   for_each_pixel([&](int x, int y)

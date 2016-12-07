@@ -63,7 +63,7 @@ namespace ggo
 
     void init() override;
     bool update() override;
-    void render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
+    void render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
 
     ggo::color_8u get_color() const;
 

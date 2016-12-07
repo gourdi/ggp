@@ -19,7 +19,7 @@ namespace ggo
 
     void  init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) const override;
+    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
 
     void  create_line(int frame_index, bool foreground);
 
