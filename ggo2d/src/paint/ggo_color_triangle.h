@@ -24,6 +24,16 @@ namespace ggo
       _blender(blender)
     { }
 
+    color_triangle(const ggo::triangle2d<real_t> & triangle,
+      const floating_point_color_t & color1, const floating_point_color_t & color2, const floating_point_color_t & color3,
+      const blender_t & blender) :
+      _triangle(triangle),
+      _color1(color1),
+      _color2(color2),
+      _color3(color3),
+      _blender(blender)
+    { }
+
     // Geometry.
     rect_data<real_t> get_bounding_rect() const { return _triangle.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<real_t> & rect_data) const { return _triangle.get_rect_intersection(rect_data); }

@@ -6,7 +6,7 @@
 #include <ggo_linear_path.h>
 #include <ggo_spiral_path.h>
 #include <ggo_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)

@@ -4,7 +4,7 @@
 #include <ggo_array.h>
 #include <ggo_pixel_buffer.h>
 #include <ggo_morphology.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 
 namespace
 {

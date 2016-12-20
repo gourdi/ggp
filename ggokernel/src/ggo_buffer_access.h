@@ -79,8 +79,6 @@ namespace ggo
   template <y_direction y_dir, typename data_t>
   data_t * get_y_ptr(data_t * buffer, int y, int height, int line_byte_step)
   {
-    GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(y, 0, height - 1);
     return ptr_offset(buffer, (y_dir == y_down ? height - y - 1 : y) * line_byte_step);
   }
 
@@ -89,9 +87,6 @@ namespace ggo
   data_t * get_xy_ptr(data_t * buffer, int x, int y, int height, int line_byte_step)
   {
     static_assert(item_byte_step >= 1, "invalid item byte step");
-    GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_BTW(x * item_byte_step, 0, line_byte_step);
-    GGO_ASSERT_BTW(y, 0, height - 1);
     auto * line_ptr = get_y_ptr<y_dir>(buffer, y, height, line_byte_step);
     return ptr_offset(line_ptr, x * item_byte_step);
   }

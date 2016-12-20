@@ -39,16 +39,18 @@ SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
 const int nominal_frame_duration_ms = 40; // 25 fps
 bool quit = false;
+bool paused = false;
 
 /////////////////////////////////////////////////////////////////////
 ggo::bitmap_artist_abc * create_bitmap_artist()
 {
   const std::vector<ggo::bitmap_artist_id> ids{
-    ggo::bitmap_artist_id::julia,
-    ggo::bitmap_artist_id::topodoko,
-    ggo::bitmap_artist_id::mandelbrot,
-    ggo::bitmap_artist_id::distorsion,
-    ggo::bitmap_artist_id::plastic
+    //ggo::bitmap_artist_id::julia,
+    //ggo::bitmap_artist_id::topodoko,
+    //ggo::bitmap_artist_id::mandelbrot,
+    //ggo::bitmap_artist_id::distorsion,
+    //ggo::bitmap_artist_id::plastic,
+    ggo::bitmap_artist_id::rex
   };
 
   auto index = ggo::rand<size_t>(0, ids.size() - 1);
@@ -65,7 +67,8 @@ ggo::animation_artist_abc * create_animation_artist()
   const std::vector<ggo::animation_artist_id> ids{
     ggo::animation_artist_id::bozons,
     ggo::animation_artist_id::duffing,
-    ggo::animation_artist_id::neon
+    ggo::animation_artist_id::neon,
+    ggo::animation_artist_id::kanji
   };
 #else
   const std::vector<ggo::animation_artist_id> ids{
@@ -222,6 +225,12 @@ void main_loop()
         if (event.button.button == 1)
         {
           next = true;
+        }
+        break;
+      case SDL_WINDOWEVENT:
+        if (event.window.event == SDL_WINDOWEVENT_RESTORED)
+        {
+          screen_surface = SDL_GetWindowSurface(window);
         }
         break;
       }

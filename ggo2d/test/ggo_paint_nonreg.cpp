@@ -13,7 +13,7 @@
 #include <ggo_bmp.h>
 #include <ggo_brush.h>
 #include <ggo_gradient_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 #include <ggo_blur_paint.h>
 #include <array>
 
@@ -434,12 +434,12 @@ GGO_TEST(paint, clipping)
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float(70.f, 40.f, 35.f),
     ggo::make_solid_brush<ggo::color_8u>(ggo::red_8u()), ggo::overwrite_blender<ggo::color_8u>(),
-    ggo::pixel_rect::from_left_right_bottom_top(0, width / 2, 0, height - 1));
+    ggo::pixel_rect::from_left_right_bottom_top(0, width / 2, 0, height - 1), 8, 2);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float(70.f, 60.f, 35.f),
     ggo::make_solid_brush<ggo::color_8u>(ggo::blue_8u()), ggo::overwrite_blender<ggo::color_8u>(),
-    ggo::pixel_rect::from_left_right_bottom_top(width / 2 + 1, width - 1, 0, height - 1));
+    ggo::pixel_rect::from_left_right_bottom_top(width / 2 + 1, width - 1, 0, height - 1), 8, 2);
 
   ggo::save_bmp("paint_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

@@ -18,23 +18,14 @@ namespace ggo
 
   private:
 
-    void	init_shaker();
-    void	init_attractor();
+    static constexpr int substeps_count = 8;
 
-  private:
-
-    struct particle
-    {
-      ggo::pos2f _prv_pos;
-      ggo::pos2f _cur_pos;
-    };
-
-    std::vector<particle> _particles;
-    ggo::pos2f        		_attractor;
-    int							      _timer_max;
-    ggo::color_8u 	      _parts_color;
-    int							      _attractor_counter;
-    int							      _shake_counter;
+    std::vector<std::array<ggo::pos2f, substeps_count>> _particles;
+    ggo::pos2f        		                              _attractor;
+    int							                                    _timer_max;
+    ggo::color_8u 	                                    _parts_color;
+    int							                                    _attractor_counter;
+    int							                                    _shake_counter;
   };
 }
 

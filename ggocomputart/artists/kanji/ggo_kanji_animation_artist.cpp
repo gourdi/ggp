@@ -43,9 +43,6 @@ void ggo::kanji_animation_artist::render_frame(void * buffer, const ggo::pixel_r
     }
   }
 
-  for (int i = 0; i < 50; ++i)
-  {
-    _kanji_artist.render_frame(buffer, get_line_step(), get_pixel_buffer_format(), 50 * _frame_index + i, clipping);
-  }
+  _kanji_artist.render_frame(buffer, get_line_step(), get_pixel_buffer_format(), _frame_index, clipping);
 }
 

@@ -2,7 +2,7 @@
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 bool ggo::filling_squares_animation_artist::animated_square::update(int frame_index, const ggo::pos2f & pos)

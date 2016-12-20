@@ -28,7 +28,7 @@
     <ClInclude Include="src\ggo_blit.h" />
     <ClInclude Include="src\ggo_pixel_rect.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
-    <ClInclude Include="src\paint\ggo_blender.h" />
+    <ClInclude Include="src\paint\ggo_blend.h" />
     <ClInclude Include="src\paint\ggo_blur_paint.h" />
     <ClInclude Include="src\paint\ggo_brush.h" />
     <ClInclude Include="src\paint\ggo_buffer_paint.h" />

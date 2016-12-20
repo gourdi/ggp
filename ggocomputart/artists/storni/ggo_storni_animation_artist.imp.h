@@ -2,7 +2,7 @@
 #include <ggo_multi_shape_paint.h>
 #include <ggo_blit.h>
 #include <ggo_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf>

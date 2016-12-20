@@ -1,6 +1,6 @@
 #include "ggo_ifs_artist.h"
 #include <ggo_gaussian_blur2d.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////

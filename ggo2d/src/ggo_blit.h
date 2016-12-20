@@ -29,14 +29,14 @@ namespace ggo
     using color_t_in = typename format_in::color_t;
     using color_t_out = typename format_out::color_t;
 
-    auto blend_func = [](int x, int y, const color_t_in & c)
+    auto blend_func = [](const color_t_out & c_out, const color_t_in & c_in)
     {
-      return ggo::convert_color_to<color_t_out>(c);
+      return ggo::convert_color_to<color_t_out>(c_in);
     };
 
     blit<pbf_in, pbf_out>(
       input, input_width, input_height, input_line_step,
-      output, output_width, output_height, output_line_step, 0, 0, blend_func);
+      output, output_width, output_height, output_line_step, left, bottom, blend_func);
   }
 
   template <pixel_buffer_format pbf_in, pixel_buffer_format pbf_out, typename blend_func_t>
@@ -47,45 +47,74 @@ namespace ggo
     using format_in = pixel_buffer_format_info<pbf_in>;
     using format_out = pixel_buffer_format_info<pbf_out>;
 
-    if (left >= output_height || bottom >= output_height)
+    // Nothing to do.
+    if (left >= output_width || left + input_width <= 0)
     {
       return;
     }
 
-    if (left < 0)
+    if (bottom >= output_height || bottom + input_height <= 0)
     {
-      GGO_FAIL();
+      return;
     }
 
+    // Clip.
     if (bottom < 0)
     {
-      GGO_FAIL();
+      if (format_in::y_dir == ggo::y_up)
+      {
+        input = ggo::ptr_offset(input, -bottom * input_line_step);
+      }
+      input_height = input_height + bottom;
+      bottom = 0;
     }
 
-    if (left + input_width > output_width)
+    const int top = bottom + input_height - 1; // Inclusive, output coordinates.
+    if (top >= output_height)
     {
-      GGO_FAIL();
+      if (format_in::y_dir == ggo::y_down)
+      {
+        input = ggo::ptr_offset(input, (top - output_height + 1) * input_line_step);
+      }
+      input_height = output_height - bottom;
     }
 
-    if (bottom + input_height > output_height)
+    if (left < 0)
     {
-      GGO_FAIL();
+      input = ggo::ptr_offset(input, -left * format_in::pixel_byte_size);
+      input_width = input_width + left;
+      left = 0;
     }
 
+    const int right = left + input_width - 1; // Inclusive, output coordinates.
+    if (right >= output_width)
+    {
+      input_width = output_width - left;
+    }
+
+    // Copy pixels.
     for (int y = 0; y < input_height; ++y)
     {
-      const void * input_line_ptr = ggo::get_line_ptr<pbf_in>(input, y, input_height, input_line_step);
-      void * output_line_ptr = ggo::get_line_ptr<pbf_out>(output, y, output_height, output_line_step);
+      const void * input_ptr = ggo::get_line_ptr<pbf_in>(input, y, input_height, input_line_step);
+      const void * input_end = ggo::get_pixel_ptr<pbf_in>(input, input_width, y, input_height, input_line_step);
+      void * output_ptr = ggo::get_pixel_ptr<pbf_out>(output, left, bottom + y, output_height, output_line_step);
 
-      for (int x = 0; x < input_width; ++x)
+      while (true)
       {
-        auto color_in = ggo::read_pixel<pbf_in>(input_line_ptr);
-        auto color_out = blend_func(x, y, color_in);
+        const auto color_in = ggo::read_pixel<pbf_in>(input_ptr);
+        const auto color_out = ggo::read_pixel<pbf_out>(output_ptr);
+        const auto color_blended = blend_func(color_out, color_in);
 
-        ggo::write_pixel<pbf_out>(output_line_ptr, color_out);
+        ggo::write_pixel<pbf_out>(output_ptr, color_blended);
 
-        input_line_ptr = ggo::ptr_offset<format_in::pixel_byte_size>(input_line_ptr);
-        output_line_ptr = ggo::ptr_offset<format_out::pixel_byte_size>(output_line_ptr);
+        input_ptr = ggo::ptr_offset<format_in::pixel_byte_size>(input_ptr);
+
+        if (input_ptr == input_end)
+        {
+          break;
+        }
+
+        output_ptr = ggo::ptr_offset<format_out::pixel_byte_size>(output_ptr);
       }
     }
   }

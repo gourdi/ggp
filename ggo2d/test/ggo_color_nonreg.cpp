@@ -1,7 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_curve.h>
 #include <ggo_color.h>
-#include <ggo_blender.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(color, operators)
@@ -13,29 +12,6 @@ GGO_TEST(color, operators)
   GGO_CHECK_FABS(c3.r(), 0.26f);
   GGO_CHECK_FABS(c3.g(), 0.6f);
   GGO_CHECK_FABS(c3.b(), 0.76f);
-}
-
-////////////////////////////////////////////////////////////////////
-GGO_TEST(color, alpha_blending)
-{
-  ggo::alpha_blender<ggo::color_8u> blender_opaque(1.f);
-  ggo::alpha_blender<ggo::color_8u> blender_transparent(0.f);
-  ggo::alpha_blender<ggo::color_8u> blender_half(0.5f);
-
-  ggo::color_8u c1 = blender_opaque(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c1.r(), 0x00);
-  GGO_CHECK_EQ(c1.g(), 0xff);
-  GGO_CHECK_EQ(c1.b(), 0xff);
-
-  ggo::color_8u c2 = blender_transparent(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c2.r(), 0x00);
-  GGO_CHECK_EQ(c2.g(), 0x00);
-  GGO_CHECK_EQ(c2.b(), 0xff);
-
-  ggo::color_8u c3 = blender_half(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c3.r(), 0x00);
-  GGO_CHECK_EQ(c3.g(), 0x80);
-  GGO_CHECK_EQ(c3.b(), 0xff);
 }
 
 ////////////////////////////////////////////////////////////////////

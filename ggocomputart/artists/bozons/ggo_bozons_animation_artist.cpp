@@ -2,7 +2,7 @@
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 #include <ggo_multi_shape_paint.h>
 
 namespace
@@ -32,18 +32,7 @@ void ggo::bozons_animation_artist::init()
   // Create bozons.
   _bozons.clear();
 
-  int bozons_count = 0;
-  switch (get_rendering_type())
-  {
-  case rendering_type::realtime_rendering_android:
-    bozons_count = 8;
-    break;
-  case rendering_type::realtime_rendering_pc:
-    bozons_count = 32;
-    break;
-  }
-
-  for (int i = 0; i < bozons_count; ++i)
+  for (int i = 0; i < 32; ++i)
   {
     bozon new_bozon;
     new_bozon._prv_pos = get_center();
@@ -150,13 +139,6 @@ void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_
   switch (get_rendering_type())
   {
   case rendering_type::realtime_rendering_android:
-    for (const auto & bozon : _bozons)
-    {
-      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(),
-        ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
-        ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
-    }
-    break;
   case rendering_type::realtime_rendering_pc:
     for (const auto & bozon : _bozons)
     {
@@ -164,6 +146,9 @@ void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_
         ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
         ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
     }
+    break;
+  default:
+    GGO_FAIL();
     break;
   }
 }

@@ -2,7 +2,7 @@
 #include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_brush.h>
-#include <ggo_blender.h>
+#include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)

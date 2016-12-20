@@ -2,7 +2,7 @@
 #define __GGO_RLE_IMAGE__
 
 #include <ggo_rle.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 
 namespace ggo
 {
@@ -17,7 +17,7 @@ namespace ggo
     color_t                   get(int x, int y) const;
 
     int                       get_width() const { return _width; }
-    int                       get_height() const { return _rle_lines.template get_size<0>(); }
+    int                       get_height() const { return static_cast<int>(_rle_lines.get_size()); }
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;
@@ -29,7 +29,7 @@ namespace ggo
 
   private:
 
-    mutable ggo::array<std::vector<std::pair<color_t, int>>, 1> _rle_lines;
+    mutable ggo::buffer<std::vector<std::pair<color_t, int>>>   _rle_lines;
     mutable std::vector<std::pair<int, ggo::array<color_t, 1>>> _cache_lines;
             const int                                           _cache_size;
             const int                                           _width;
@@ -48,7 +48,7 @@ namespace ggo
   {
     for (int i = 0; i < height; ++i)
     {
-      _rle_lines(i).push_back(std::make_pair(fill_value, width));
+      _rle_lines[i].push_back(std::make_pair(fill_value, width));
     }
   }
 
@@ -88,14 +88,14 @@ namespace ggo
     // Encode the first cache line if the cache is full.
     if (_cache_lines.size() == _cache_size)
     {
-      _rle_lines(_cache_lines.front().first) = rle_encode(_cache_lines.front().second);
+      _rle_lines[_cache_lines.front().first] = rle_encode(_cache_lines.front().second);
       _cache_lines.erase(_cache_lines.begin());
     }
 
     // Decode the requested line.
     _cache_lines.emplace_back(std::make_pair(y, ggo::array<color_t, 1>(this->_width)));
 
-    rle_decode(_rle_lines(y), _cache_lines.back().second);
+    rle_decode(_rle_lines[y], _cache_lines.back().second);
 
     return _cache_lines.back().second;
   }

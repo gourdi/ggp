@@ -24,6 +24,11 @@ namespace ggo
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
   void paint_shape(void * buffer, int width, int height, int line_step,
     const shape_t & shape, brush_t brush, blend_t blend,
+    const ggo::pixel_rect & clipping, const int scale_factor, const int first_scale);
+
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend,
     const ggo::pixel_rect & clipping);
 
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
@@ -66,13 +71,10 @@ namespace ggo
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
   void paint_shape(void * buffer, int width, int height, int line_step,
     const shape_t & shape, brush_t brush, blend_t blend,
-    const ggo::pixel_rect & clipping)
+    const ggo::pixel_rect & clipping, const int scale_factor, const int first_scale)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using format = pixel_buffer_format_info<pbf>;
-
-    const int scale_factor = 8;
-    const int first_scale = 2;
 
     // Lambda to retrieve pixel color.
     auto read_pixel_lambda = [&](int x, int y)
@@ -108,6 +110,15 @@ namespace ggo
       brush, blend,
       read_pixel_lambda, write_pixel_lambda, paint_block_lambda,
       clipping);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, brush_t brush, blend_t blend,
+    const ggo::pixel_rect & clipping)
+  {
+    paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend, clipping, 8, 2);
   }
 
   /////////////////////////////////////////////////////////////////////

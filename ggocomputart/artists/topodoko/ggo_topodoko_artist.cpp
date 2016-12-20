@@ -53,7 +53,7 @@ namespace
     }
 
     ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(
-      shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), 0.05f *  artist.get_min_size());
+      shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), 0.005f *  artist.get_min_size());
 
     ggo::blit<ggo::y_8u_yu, pbf>(shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), 0, 0);
