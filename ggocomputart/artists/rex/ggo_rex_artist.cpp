@@ -30,30 +30,20 @@ namespace
   struct rex_opened_disc_data
   {
     ggo::pos2f  _center;
-    float       _radius;
-    float       _width;
+    float       _outter_radius;
+    float       _inner_radius;
   };
-
-  //////////////////////////////////////////////////////////////
-  float area_of_triangle(const ggo::vec2f & v1, const ggo::vec2f & v2, const ggo::vec2f & v3)
-  {
-    ggo::vec2f u = v1 - v2;
-    ggo::vec2f v = v1 - v3;
-
-    return 0.5f * std::abs(u.x() * v.y() - u.y() * v.x());
-  }
 
   //////////////////////////////////////////////////////////////
   template <ggo::pixel_buffer_format pbf>
   void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<color_triangle_rgb8u> & color_triangles)
   {
-    static_assert(std::is_same<ggo::pixel_buffer_format_info<pbf>::color_t, ggo::color_8u>::value, "wrong pixel buffer type");
-
     ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       color_triangles.begin(), color_triangles.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
   }
 
   //////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf>
   void render_patterns(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<rex_pattern_triangle> & pattern_triangles)
   {
     for (const auto & pattern_triangle : pattern_triangles)
@@ -71,8 +61,7 @@ namespace
           clipped_disc.add_shape(std::make_shared<ggo::disc_float>(x, y, radius));
           clipped_disc.add_shape(clip_triangle);
 
-          ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(
-            buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+          ggo::paint_shape<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
             clipped_disc, ggo::black_8u());
         }
       }
@@ -80,6 +69,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf>
   void render_clipped_discs(void * buffer, const ggo::bitmap_artist_abc & artist,
     const std::vector<rex_disc_clip_triangle> & discs_clip_triangles,
     const std::vector<rex_opened_disc_data> & opened_discs)
@@ -89,13 +79,9 @@ namespace
 
     for (const auto & opened_disc : opened_discs)
     {
-      ggo::pos2f center = artist.map_fit(opened_disc._center, 0, 1);
-      float radius = artist.map_fit(opened_disc._radius, 0, 1);
-      float width = artist.map_fit(opened_disc._width, 0, 1);
-
       auto circle = std::make_shared<ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE>>();
-      circle->add_shape(std::make_shared<ggo::disc_float>(center, radius + 0.5f * width));
-      circle->add_shape(std::make_shared<ggo::disc_float>(center, radius - 0.5f * width));
+      circle->add_shape(std::make_shared<ggo::disc_float>(opened_disc._center, opened_disc._outter_radius));
+      circle->add_shape(std::make_shared<ggo::disc_float>(opened_disc._center, opened_disc._inner_radius));
 
       circles->add_shape(circle);
     }
@@ -108,13 +94,13 @@ namespace
       clip_triangle.add_shape(std::make_shared<ggo::triangle2d_float>(disc_clip_triangle._v1, disc_clip_triangle._v2, disc_clip_triangle._v3));
       clip_triangle.add_shape(circles);
 
-      ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(
-        buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      ggo::paint_shape<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
         clip_triangle, ggo::black_8u());
     }
   }
 
   //////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf>
   void render_edges(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<ggo::segment_float> & edges)
   {
     std::vector<ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>> shapes;
@@ -125,7 +111,7 @@ namespace
       shapes.emplace_back(segment, ggo::black_8u());
     }
 
-    ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+    ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       shapes.begin(), shapes.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
   }
 }
@@ -261,41 +247,45 @@ void ggo::rex_artist::render_bitmap(void * buffer, const bool & qui) const
       discs_clip_triangles.push_back(clip_triangle);
     }
 
-    ggo::triangle2d_float triangle(*triangle._v1, *triangle._v2, *triangle._v3);
-    color_triangles.emplace_back(triangle, color1, color2, color3, opaque_blender_rgb8u());
+    color_triangles.emplace_back(
+      ggo::triangle2d_float(*triangle._v1, *triangle._v2, *triangle._v3),
+      color1, color2, color3, opaque_blender_rgb8u());
   }
 
   // Create circles.
-  float outter_radius = ggo::sqrt2<float>();
-  float inner_radius = outter_radius - ggo::rand<float>(0.004f, 0.008f);
+  const float diagonal = ggo::distance(float(get_width()), float(get_height())) / 2;
+  float outter_radius = diagonal;
+  float inner_radius = outter_radius - diagonal * ggo::rand<float>(0.002f, 0.004f);
   while (inner_radius > 0)
   {
     rex_opened_disc_data disc;
 
-    disc._center = ggo::pos2f(0.5f, 0.5f);
-    disc._radius = (outter_radius + inner_radius) / 2;
-    disc._width = outter_radius - inner_radius;
+    disc._center = get_center();
+    disc._outter_radius = outter_radius;
+    disc._inner_radius = inner_radius;
 
     opened_discs.push_back(disc);
 
-    outter_radius = inner_radius - ggo::rand<float>(0.004f, 0.008f);
-    inner_radius = outter_radius - ggo::rand<float>(0.001f, 0.002f);
+    outter_radius = inner_radius - diagonal * ggo::rand<float>(0.004f, 0.008f);
+    inner_radius = outter_radius - diagonal * ggo::rand<float>(0.002f, 0.004f);
   }
 
   switch (get_pixel_buffer_format())
   {
   case ggo::rgb_8u_yu:
     render_color_triangles<ggo::rgb_8u_yu>(buffer, *this, color_triangles);
-    render_patterns(buffer, *this, pattern_triangles);
-    render_clipped_discs(buffer, *this, discs_clip_triangles, opened_discs);
-    render_edges(buffer, *this, edges);
+    render_patterns<ggo::rgb_8u_yu>(buffer, *this, pattern_triangles);
+    render_clipped_discs<ggo::rgb_8u_yu>(buffer, *this, discs_clip_triangles, opened_discs);
+    render_edges<ggo::rgb_8u_yu>(buffer, *this, edges);
     break;
   case ggo::bgra_8u_yd:
-    render_color_triangles<bgra_8u_yd>(buffer, *this, color_triangles);
-    render_patterns(buffer, *this, pattern_triangles);
-    render_clipped_discs(buffer, *this, discs_clip_triangles, opened_discs);
-    render_edges(buffer, *this, edges);
+    render_color_triangles<ggo::bgra_8u_yd>(buffer, *this, color_triangles);
+    render_patterns<ggo::bgra_8u_yd>(buffer, *this, pattern_triangles);
+    render_clipped_discs<ggo::bgra_8u_yd>(buffer, *this, discs_clip_triangles, opened_discs);
+    render_edges<ggo::bgra_8u_yd>(buffer, *this, edges);
+    break;
+  default:
+    GGO_FAIL();
     break;
   }
-  
 }

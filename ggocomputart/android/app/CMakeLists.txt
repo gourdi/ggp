@@ -23,6 +23,7 @@ include_directories(
   ${GGP_SOURCE_DIR}/ggokernel/src/math/interpolation
   ${GGP_SOURCE_DIR}/ggokernel/src/math/linear_algebra
   ${GGP_SOURCE_DIR}/ggokernel/src/math/scalar_fields_2d
+  ${GGP_SOURCE_DIR}/ggokernel/src/math/delaunay_triangulation
   ${GGP_SOURCE_DIR}/ggokernel/src/math/sampling/shape_sampling
   ${GGP_SOURCE_DIR}/ggokernel/src/math/sampling/low_discrepancy_sequences
   ${GGP_SOURCE_DIR}/ggokernel/src/math/shapes_2d
