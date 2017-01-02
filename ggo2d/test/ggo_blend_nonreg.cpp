@@ -55,7 +55,6 @@ GGO_TEST(blend, alpha_float_rgb8u)
   GGO_CHECK_EQ(c3.b(), 0xff);
 }
 
-
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, additive_rgb8u)
 {

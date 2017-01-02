@@ -106,7 +106,6 @@
     <ClCompile Include="artists\vortex2\ggo_vortex2_animation_artist.cpp" />
     <ClCompile Include="artists\vortex2\ggo_vortex2_artist.cpp" />
     <ClCompile Include="artists\vortex2\ggo_vortex2_bitmap_artist.cpp" />
-    <ClCompile Include="artists\vortex\ggo_vortex_artist.cpp" />
     <ClCompile Include="artists\worms\ggo_worms_artist.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,7 +202,6 @@
     <ClInclude Include="artists\vortex2\ggo_vortex2_animation_artist.h" />
     <ClInclude Include="artists\vortex2\ggo_vortex2_artist.h" />
     <ClInclude Include="artists\vortex2\ggo_vortex2_bitmap_artist.h" />
-    <ClInclude Include="artists\vortex\ggo_vortex_artist.h" />
     <ClInclude Include="artists\worms\ggo_worms_artist.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
