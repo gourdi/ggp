@@ -1,11 +1,12 @@
 #include "ggo_crystal_artist.h"
 #include <ggo_color.h>
 #include <ggo_buffer.h>
+#include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params)
 {
-  ggo::buffer<float> float_buffer(3 * width * height);
+  ggo::buffer<float> float_buffer(3 * width * height, 0.f);
 
 	for (int j = 0; j < 16 * width * height; ++j)
 	{
@@ -19,8 +20,9 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
 
     for (int x = 0; x < width; ++x)
     {
-      ggo::color_32f c_32f(ptr_in[0], ptr_in[1], ptr_in[2]);
-      ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, ggo::convert_color_to<ggo::color_8u>(c_32f));
+      const ggo::color_32f c_32f(ptr_in[0], ptr_in[1], ptr_in[2]);
+      const ggo::color_8u c_8u(additive_blend(read_pixel<ggo::rgb_8u_yu>(buffer), ggo::convert_color_to<ggo::color_8u>(c_32f)));
+      ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, c_8u);
 
       ptr_in += 3;
       ptr_out = ggo::ptr_offset<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);

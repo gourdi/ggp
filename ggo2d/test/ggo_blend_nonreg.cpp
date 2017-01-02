@@ -54,3 +54,13 @@ GGO_TEST(blend, alpha_float_rgb8u)
   GGO_CHECK_EQ(c3.g(), 0x80);
   GGO_CHECK_EQ(c3.b(), 0xff);
 }
+
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, additive_rgb8u)
+{
+  ggo::color_8u c = additive_blend(ggo::color_8u(uint8_t(0x00), uint8_t(0x80), uint8_t(0xff)), ggo::color_8u(uint8_t(0x80), uint8_t(0x10), uint8_t(0x10)));
+  GGO_CHECK_EQ(c.r(), 0x80);
+  GGO_CHECK_EQ(c.g(), 0x90);
+  GGO_CHECK_EQ(c.b(), 0xff);
+}

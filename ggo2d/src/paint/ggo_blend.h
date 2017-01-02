@@ -27,6 +27,18 @@ namespace ggo
   }
 }
 
+// Additive blending.
+namespace ggo
+{
+  inline ggo::color_8u additive_blend(const ggo::color_8u & bkgd_color, const ggo::color_8u & paint_color)
+  {
+    return ggo::color_8u(
+      uint8_t(std::min<int>(0xff, int(bkgd_color.r()) + int(paint_color.r()))),
+      uint8_t(std::min<int>(0xff, int(bkgd_color.g()) + int(paint_color.g()))),
+      uint8_t(std::min<int>(0xff, int(bkgd_color.b()) + int(paint_color.b()))));
+  }
+}
+
 /////////////////////////////////////////////////////////////////////
 // Structs.
 
@@ -107,15 +119,15 @@ namespace ggo
   template <>
   struct alpha_blender<ggo::color_32f>
   {
-    alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
+    alpha_blender(float opacity) : _weight_bkgd(1.f - opacity), _weight_brush(opacity) { }
 
     ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
     {
-      return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
+      return _weight_bkgd * bkgd_color + _weight_brush * brush_color;
     }
 
-    const float _weight_brush;
     const float _weight_bkgd;
+    const float _weight_brush;
   };
 
   using alpha_blender_y8u = alpha_blender<uint8_t>;
@@ -135,10 +147,7 @@ namespace ggo
   {
     ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const
     {
-      return ggo::color_8u(
-        uint8_t(std::min<int>(0xff, int(bkgd_color.r()) + int(brush_color.r()))),
-        uint8_t(std::min<int>(0xff, int(bkgd_color.g()) + int(brush_color.g()))),
-        uint8_t(std::min<int>(0xff, int(bkgd_color.b()) + int(brush_color.b()))));
+      return additive_blend(bkgd_color, brush_color);
     }
   };
 
