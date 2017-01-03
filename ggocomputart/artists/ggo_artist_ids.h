@@ -18,8 +18,8 @@ namespace ggo
     filling_squares, // 10
     voronoi,
     ikeda,
+    _____AVAILABLE_____,
     vortex,
-    vortex2,
     plastic, //15
     mandelbrot,
     mondrian,
@@ -74,7 +74,7 @@ namespace ggo
     crystal,
     ikeda,
     cumbia,
-    vortex2,
+    vortex,
     circles, // 20
     distorsion,
     toutouyoutou,

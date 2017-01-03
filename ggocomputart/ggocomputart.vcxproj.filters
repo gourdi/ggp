@@ -121,9 +121,6 @@
     <Filter Include="artists\voronoi">
       <UniqueIdentifier>{49638bbb-42b7-454f-977d-ba67355fd3bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="artists\vortex2">
-      <UniqueIdentifier>{9f20bb86-5455-4328-9b3a-98764878e108}</UniqueIdentifier>
-    </Filter>
     <Filter Include="artists\worms">
       <UniqueIdentifier>{3ee5796a-0581-4637-9e40-d5f2d1de0739}</UniqueIdentifier>
     </Filter>
@@ -144,6 +141,9 @@
     </Filter>
     <Filter Include="artists\storni">
       <UniqueIdentifier>{a75e96a5-6908-40d9-9829-5361033df73d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="artists\vortex">
+      <UniqueIdentifier>{9f20bb86-5455-4328-9b3a-98764878e108}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -351,15 +351,6 @@
     <ClCompile Include="artists\voronoi\ggo_voronoi_artist.cpp">
       <Filter>artists\voronoi</Filter>
     </ClCompile>
-    <ClCompile Include="artists\vortex2\ggo_vortex2_animation_artist.cpp">
-      <Filter>artists\vortex2</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\vortex2\ggo_vortex2_artist.cpp">
-      <Filter>artists\vortex2</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\vortex2\ggo_vortex2_bitmap_artist.cpp">
-      <Filter>artists\vortex2</Filter>
-    </ClCompile>
     <ClCompile Include="artists\worms\ggo_worms_artist.cpp">
       <Filter>artists\worms</Filter>
     </ClCompile>
@@ -410,6 +401,15 @@
     </ClCompile>
     <ClCompile Include="artists\duffing\ggo_duffing_realtime_animation_artist.cpp">
       <Filter>artists\duffing</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\vortex\ggo_vortex_animation_artist.cpp">
+      <Filter>artists\vortex</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\vortex\ggo_vortex_artist.cpp">
+      <Filter>artists\vortex</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\vortex\ggo_vortex_bitmap_artist.cpp">
+      <Filter>artists\vortex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -620,15 +620,6 @@
     <ClInclude Include="artists\voronoi\ggo_voronoi_artist.h">
       <Filter>artists\voronoi</Filter>
     </ClInclude>
-    <ClInclude Include="artists\vortex2\ggo_vortex2_animation_artist.h">
-      <Filter>artists\vortex2</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\vortex2\ggo_vortex2_artist.h">
-      <Filter>artists\vortex2</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\vortex2\ggo_vortex2_bitmap_artist.h">
-      <Filter>artists\vortex2</Filter>
-    </ClInclude>
     <ClInclude Include="artists\worms\ggo_worms_artist.h">
       <Filter>artists\worms</Filter>
     </ClInclude>
@@ -694,6 +685,15 @@
     </ClInclude>
     <ClInclude Include="artists\duffing\ggo_duffing_realtime_animation_artist.h">
       <Filter>artists\duffing</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\vortex\ggo_vortex_animation_artist.h">
+      <Filter>artists\vortex</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\vortex\ggo_vortex_artist.h">
+      <Filter>artists\vortex</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\vortex\ggo_vortex_bitmap_artist.h">
+      <Filter>artists\vortex</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

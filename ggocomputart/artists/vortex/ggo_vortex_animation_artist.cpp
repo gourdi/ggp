@@ -1,8 +1,8 @@
-#include "ggo_vortex2_animation_artist.h"
+#include "ggo_vortex_animation_artist.h"
 #include <ggo_interpolation1d.h>
 
 //////////////////////////////////////////////////////////////
-ggo::vortex2_animation_artist::vortex2_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt)
 {
@@ -10,7 +10,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex2_animation_artist::init()
+void ggo::vortex_animation_artist::init()
 {
   const int vortices_count = 20;
 
@@ -30,7 +30,7 @@ void ggo::vortex2_animation_artist::init()
     vortex._speed = ggo::rand<float>(0.004f, 0.008f) * get_max_size();
     vortex._power = ggo::rand<float>(6, 8);
 
-    ggo::vortex2_animation_artist::vortex_path vortex_path;
+    ggo::vortex_animation_artist::vortex_path vortex_path;
     vortex_path._start_pos.get<0>() = ggo::rand<float>() * get_width();
     vortex_path._start_pos.get<1>() = ggo::rand<float>() * get_height();
     vortex_path._end_pos.get<0>() = ggo::rand<float>() * get_width();
@@ -41,7 +41,7 @@ void ggo::vortex2_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::vortex2_animation_artist::update()
+bool ggo::vortex_animation_artist::update()
 {
   const int frames_count = 250;
 
@@ -64,7 +64,7 @@ bool ggo::vortex2_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex2_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
-  ggo::vortex2_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
+  ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
 }

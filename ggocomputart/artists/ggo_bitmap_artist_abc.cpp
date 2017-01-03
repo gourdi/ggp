@@ -11,7 +11,7 @@
 #include "artists/crystal/ggo_crystal_bitmap_artist.h"
 #include "artists/filling_squares/ggo_filling_squares_bitmap_artist.h"
 #include "artists/voronoi/ggo_voronoi_artist.h"
-#include "artists/vortex2/ggo_vortex2_bitmap_artist.h"
+#include "artists/vortex/ggo_vortex_bitmap_artist.h"
 #include "artists/plastic/ggo_plastic_bitmap_artist.h"
 #include "artists/mandelbrot/ggo_mandelbrot_artist.h"
 #include "artists/mondrian/ggo_mondrian_artist.h"
@@ -161,8 +161,8 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
 		return new ggo::filling_squares_bitmap_artist(width, height, line_step, pbf);
 	case ggo::bitmap_artist_id::voronoi:
 		return new ggo::voronoi_artist(width, height, line_step, pbf);
-	case ggo::bitmap_artist_id::vortex2:
-		return new ggo::vortex2_bitmap_artist(width, height, line_step, pbf);
+	case ggo::bitmap_artist_id::vortex:
+		return new ggo::vortex_bitmap_artist(width, height, line_step, pbf);
 	case ggo::bitmap_artist_id::plastic:
 		return new ggo::plastic_bitmap_artist(width, height, line_step, pbf);
 	case ggo::bitmap_artist_id::mandelbrot:

@@ -1,19 +1,19 @@
-#include "ggo_vortex2_bitmap_artist.h"
-#include "ggo_vortex2_artist.h"
+#include "ggo_vortex_bitmap_artist.h"
+#include "ggo_vortex_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::vortex2_bitmap_artist::vortex2_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::vortex_bitmap_artist::vortex_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
 :
 bitmap_artist_abc(width, height, line_step, pbf)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex2_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::vortex_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   const int vortices_count = 20;
 
-	ggo::vortex2_artist::params params;
+	ggo::vortex_artist::params params;
 	params._vortices.resize(vortices_count);
 	params._color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
 	params._color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
@@ -31,7 +31,7 @@ void ggo::vortex2_bitmap_artist::render_bitmap(void * buffer, const bool & quit)
 		vortex._power = ggo::rand<float>(6.f, 8.f);
 	}
 	
-	ggo::vortex2_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, params);
+	ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, params);
 }
 
 

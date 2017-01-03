@@ -1,12 +1,12 @@
-#ifndef __GGO_VORTEX2_ARTIST__
-#define __GGO_VORTEX2_ARTIST__
+#ifndef __GGO_VORTEX_ARTIST__
+#define __GGO_VORTEX_ARTIST__
 
 #include <ggo_bitmap_artist_abc.h>
 #include <ggo_array.h>
 
 namespace ggo
 {
-  class vortex2_artist
+  class vortex_artist
   {
   public:
 
@@ -29,7 +29,7 @@ namespace ggo
       float 					      _split_vert;
     };
 
-    static	void	render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex2_artist::params & params);
+    static	void	render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex_artist::params & params);
   };
 }
 

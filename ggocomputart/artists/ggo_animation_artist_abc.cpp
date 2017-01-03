@@ -16,7 +16,7 @@
 #include "artists/crystal/ggo_crystal_animation_artist.h"
 #include "artists/ikeda/ggo_ikeda_artist.h"
 #include "artists/cumbia/ggo_cumbia_animation_artist.h"
-#include "artists/vortex2/ggo_vortex2_animation_artist.h"
+#include "artists/vortex/ggo_vortex_animation_artist.h"
 #include "artists/circles/ggo_circles_animation_artist.h"
 #include "artists/distorsion/ggo_distorsion_animation_artist.h"
 #include "artists/toutouyoutou/ggo_toutouyoutou_animation_artist.h"
@@ -105,8 +105,8 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
 	case ggo::animation_artist_id::cumbia:
 		artist = new ggo::cumbia_animation_artist(width, height, line_step, pbf, rt);
 		break;
-	case ggo::animation_artist_id::vortex2:
-		artist = new ggo::vortex2_animation_artist(width, height, line_step, pbf, rt);
+	case ggo::animation_artist_id::vortex:
+		artist = new ggo::vortex_animation_artist(width, height, line_step, pbf, rt);
 		break;
   case ggo::animation_artist_id::circles:
 		artist = new ggo::circles_animation_artist(width, height, line_step, pbf, rt);
