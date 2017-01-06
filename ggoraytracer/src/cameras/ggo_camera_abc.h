@@ -11,9 +11,8 @@ namespace ggo
   {
   public:
 
-                                camera_abc(int width, int height);
+                                camera_abc(int width, int height, const ggo::basis3d_float & basis);
 
-    ggo::basis3d_float &        basis() { return _basis; }
     const ggo::basis3d_float &  basis() const { return _basis; }
 
     int                         get_width() const { return _width; }
@@ -21,9 +20,9 @@ namespace ggo
 
   protected:
 
-    ggo::basis3d_float  _basis;
-    int                 _width;
-    int                 _height;
+    const int                 _width;
+    const int                 _height;
+    const ggo::basis3d_float  _basis;
   };
 
   //////////////////////////////////////////////////////////////

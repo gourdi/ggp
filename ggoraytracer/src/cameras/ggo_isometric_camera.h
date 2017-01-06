@@ -12,13 +12,11 @@ namespace ggo
   {
   public:
 
-          isometric_camera(int width, int height);
-
-    void	set_span(float span) { _span = std::max(0.001f, span); }
+          isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span);
 
   protected:
 
-    float _span = 1;
+    const float _span;
   };
 }
 
@@ -29,7 +27,7 @@ namespace ggo
   {
   public:
 
-                      mono_sampling_isometric_camera(int width, int height);
+                      mono_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span);
     
   private:
 
@@ -37,9 +35,9 @@ namespace ggo
     
   private:
     
-    float _offset_x = 0;
-    float _offset_y = 0;
-    float _ratio = 0;
+    const float _offset_x;
+    const float _offset_y;
+    const float _ratio;
   };
 }
 
@@ -50,23 +48,20 @@ namespace ggo
   {
   public:
 
-                                  multi_sampling_isometric_camera(int width, int height);
+                                  multi_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span, float depth_of_field, float depth_of_field_factor);
 
-    void	                        set_depth_of_field_factor(float v) { _depth_of_field_factor = std::max(0.f, v); }
-    void	                        set_depth_of_field(float v) { _depth_of_field = std::max(0.001f, v); }
-    
   private:
 
     std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const override;
     
   private:
 
-    float _depth_of_field;
-    float _depth_of_field_factor;
+    const float _depth_of_field;
+    const float _depth_of_field_factor;
 
-    float _offset_x = 0;
-    float _offset_y = 0;
-    float _ratio = 0;
+    const float _offset_x;
+    const float _offset_y;
+    const float _ratio;
   };
 }
 

@@ -15,12 +15,9 @@ GGO_TEST(test_scene, scene6)
   const int samples_count = 48;
 
   // The camera.
-  ggo::multi_sampling_isometric_camera camera(width, height);
-  camera.basis().set_pos(0, 0, 50);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), 1.5);
-  camera.set_span(3);
-  camera.set_depth_of_field_factor(2);
-  camera.set_depth_of_field(50);
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.5);
+  ggo::multi_sampling_isometric_camera camera(width, height, camera_basis, 3.f, 50.f, 2.f);
 
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));

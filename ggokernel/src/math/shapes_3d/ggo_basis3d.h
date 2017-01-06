@@ -12,6 +12,7 @@ namespace ggo
   public:
 
                           basis3d();
+                          basis3d(const ggo::pos3<T> & pos);
 
     const ggo::pos3<T> &  pos() const { return _pos; }
     const ggo::vec3<T> &  x() const { return _x; }

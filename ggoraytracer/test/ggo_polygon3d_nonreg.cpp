@@ -12,10 +12,9 @@ void test_polygon3d()
   const int height = 400;
   
   // The camera.
-  ggo::mono_sampling_point_camera camera(width, height);
-  camera.basis().set_pos(0, 0, 50);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 2);
-  camera.set_aperture(0.1f);
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 2);
+  ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
   
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));

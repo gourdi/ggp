@@ -15,11 +15,10 @@ GGO_TEST(marching_cubes, test)
   const int height = 512;
   
   // The camera.
-  ggo::antialiasing_point_camera camera(width, height);
-  camera.basis().set_pos(0, 0, 15);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 4);
-  camera.basis().rotate(ggo::ray3d_float::O_Z(), -ggo::pi<float>() / 4);
-  camera.set_aperture(0.1f);
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 15.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 4);
+  camera_basis.rotate(ggo::ray3d_float::O_Z(), -ggo::pi<float>() / 4);
+  ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
   
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));

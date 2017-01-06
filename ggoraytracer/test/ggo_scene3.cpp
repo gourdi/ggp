@@ -15,9 +15,7 @@ GGO_TEST(test_scene, scene3)
   const int height = 480;
 
   // The camera.
-  ggo::mono_sampling_point_camera camera(width, height);
-  camera.basis().set_pos(0.f, 0.f, 20.f);
-  camera.set_aperture(0.1f);
+  ggo::mono_sampling_point_camera camera(width, height, ggo::basis3d_float({ 0.f, 0.f, 20.f }), 0.1f);
   
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));

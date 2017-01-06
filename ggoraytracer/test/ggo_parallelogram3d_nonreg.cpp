@@ -11,9 +11,7 @@ GGO_TEST(parallelogram3d, test)
   const int size = 400;
   
   // The camera.
-  ggo::mono_sampling_isometric_camera camera(size, size);
-  camera.basis().set_pos(0, 0, 50);
-  camera.set_span(20);
+  ggo::mono_sampling_isometric_camera camera(size, size, ggo::basis3d_float({ 0.f, 0.f, 50.f }), 20.f);
   
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));

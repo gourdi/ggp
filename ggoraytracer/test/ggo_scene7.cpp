@@ -16,10 +16,9 @@ GGO_TEST(test_scene, scene7)
   const int samples_count = 192;
 
   // The camera.
-  ggo::multi_sampling_point_camera camera(width, height);
-  camera.basis().set_pos(0, 0, 20);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), 1.5);
-  camera.set_aperture(0.1f);
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 20.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.5);
+  ggo::multi_sampling_point_camera camera(width, height, camera_basis, 0.1f, 20.f, 1.f);
   
   // The scene.
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));

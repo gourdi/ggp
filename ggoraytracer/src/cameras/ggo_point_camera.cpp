@@ -5,10 +5,15 @@
 // ggo_point_camera
 namespace ggo
 {
-  point_camera::point_camera(int width, int height)
+  point_camera::point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture)
   :
-  camera_abc(width, height)
+  camera_abc(width, height, basis),
+  _aperture(aperture)
   {
+    if (aperture <= 0)
+    {
+      throw std::runtime_error("invalid aperture");
+    }
   }
 }
 
@@ -16,16 +21,14 @@ namespace ggo
 // ggo_mono_sampling_point_camera
 namespace ggo
 {
-  mono_sampling_point_camera::mono_sampling_point_camera(int width, int height)
+  mono_sampling_point_camera::mono_sampling_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture)
   :
-  point_camera(width, height)
+  point_camera(width, height, basis, aperture),
+  _center_focus_point(basis.pos() - basis.z()), // Don't forget the camera is looking in the z negative direction.
+  _offset_x(0.5f - 0.5f * height - 0.5f * (width - height)),
+  _offset_y(0.5f - 0.5f * height),
+  _opti(aperture / (0.5f * height))
   {
-    // Don't forget the camera is looking in the z negative direction.
-    _center_focus_point = _basis.pos() - _basis.z();
-
-    _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
-    _offset_y = 0.5f - 0.5f * _height;
-    _opti = _aperture / (0.5f * _height);
   }
 
   //////////////////////////////////////////////////////////////
@@ -50,16 +53,15 @@ namespace ggo
 // ggo_antialiasing_point_camera
 namespace ggo
 {
-  antialiasing_point_camera::antialiasing_point_camera(int width, int height)
+  antialiasing_point_camera::antialiasing_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture)
   :
-  point_camera(width, height)
+  point_camera(width, height, basis, aperture),
+  _center_focus_point(basis.pos() - basis.z()), // Don't forget the camera is looking in the z negative direction.
+  _offset_x(0.5f - 0.5f * height - 0.5f * (width - height)),
+  _offset_y(0.5f - 0.5f * height),
+  _opti(aperture / (0.5f * height))
   {
-    // Don't forget the camera is looking in the z negative direction.
-    _center_focus_point = _basis.pos() - _basis.z();
-
-    _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
-    _offset_y = 0.5f - 0.5f * _height;
-    _opti = _aperture / (0.5f * _height);
+    
   }
 
   //////////////////////////////////////////////////////////////
@@ -138,16 +140,17 @@ namespace ggo
 // ggo_multi_sampling_point_camera
 namespace ggo
 {
-  multi_sampling_point_camera::multi_sampling_point_camera(int width, int height)
+  multi_sampling_point_camera::multi_sampling_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture, float depth_of_field, float depth_of_field_factor)
   :
-  point_camera(width, height)
+  point_camera(width, height, basis, aperture),
+  _depth_of_field(depth_of_field),
+  _depth_of_field_factor(depth_of_field_factor),
+  _center_focus_point(basis.pos() - depth_of_field * basis.z()), // Don't forget the camera is looking in the z negative direction.
+  _offset_x(0.5f - 0.5f * height - 0.5f * (width - height)),
+  _offset_y(0.5f - 0.5f * height),
+  _opti(depth_of_field * aperture / (0.5f * height))
   {
-    // Don't forget the camera is looking in the z negative direction.
-    _center_focus_point = _basis.pos() - _depth_of_field * _basis.z();
 
-    _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
-    _offset_y = 0.5f - 0.5f * _height;
-    _opti = _depth_of_field * _aperture / (0.5f * _height);
   }
 
   //////////////////////////////////////////////////////////////

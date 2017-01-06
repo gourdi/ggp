@@ -15,6 +15,17 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename T>
+  basis3d<T>::basis3d(const ggo::pos3<T> & pos)
+  :
+  _pos(pos),
+  _x(T(1), T(0), T(0)),
+  _y(T(0), T(1), T(0)),
+  _z(T(0), T(0), T(1))
+  {
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename T>
   void basis3d<T>::reset()
   {
     _pos = ggo::pos3<T>(T(0), T(0), T(0));

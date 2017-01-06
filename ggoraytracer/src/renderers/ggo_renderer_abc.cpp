@@ -125,6 +125,11 @@ namespace ggo
 
         for (int x = 0; x < width; ++x)
         {
+          if (x == 200 && y == 200)
+          {
+            int t = 0;
+          }
+
           const ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params);
           
           switch (pbf)

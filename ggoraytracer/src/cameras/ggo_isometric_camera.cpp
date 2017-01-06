@@ -5,9 +5,10 @@
 // ggo_isometric_camera
 namespace ggo
 {
-  isometric_camera::isometric_camera(int width, int height)
+  isometric_camera::isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span)
   :
-  camera_abc(width, height)
+  camera_abc(width, height, basis),
+  _span(span)
   {
   }
 }
@@ -16,13 +17,14 @@ namespace ggo
 // ggo_mono_sampling_isometric_camera
 namespace ggo
 {
-  mono_sampling_isometric_camera::mono_sampling_isometric_camera(int width, int height)
+  mono_sampling_isometric_camera::mono_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span)
   :
-  isometric_camera(width, height)
+  isometric_camera(width, height, basis, span),
+  _offset_x(0.5f - 0.5f * height - 0.5f * (width - height)),
+  _offset_y(0.5f - 0.5f * height),
+  _ratio(span / (0.5f * height))
   {
-    _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
-    _offset_y = 0.5f - 0.5f * _height;
-    _ratio = _span / (0.5f * _height);
+
   }
 
   //////////////////////////////////////////////////////////////
@@ -43,13 +45,16 @@ namespace ggo
 // ggo_multi_sampling_isometric_camera
 namespace ggo
 {
-  multi_sampling_isometric_camera::multi_sampling_isometric_camera(int width, int height)
+  multi_sampling_isometric_camera::multi_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span, float depth_of_field, float depth_of_field_factor)
   :
-  isometric_camera(width, height)
+  isometric_camera(width, height, basis, span),
+  _depth_of_field(depth_of_field),
+  _depth_of_field_factor(depth_of_field_factor),
+  _offset_x(0.5f - 0.5f * height - 0.5f * (width - height)),
+  _offset_y(0.5f - 0.5f * height),
+  _ratio(span / (0.5f * height))
   {
-    _offset_x = 0.5f - 0.5f * _height - 0.5f * (_width - _height);
-    _offset_y = 0.5f - 0.5f * _height;
-    _ratio = _span / (0.5f * _height);
+
   }
 
   //////////////////////////////////////////////////////////////

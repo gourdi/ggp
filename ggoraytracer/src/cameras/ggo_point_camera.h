@@ -12,15 +12,13 @@ namespace ggo
   {
   public:
 
-            point_camera(int width, int height);
+            point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture);
       
-    void    set_aperture(float aperture) { _aperture = std::max(0.001f, aperture); }
     float   get_aperture() const { return _aperture; }
-    float & get_aperture() { return _aperture; }
     
   protected:
     
-    float _aperture = 0.5f;
+    const float _aperture;
   };
 }
 
@@ -31,7 +29,7 @@ namespace ggo
   {
   public:
     
-                      mono_sampling_point_camera(int width, int height);
+                      mono_sampling_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture);
 
   private:
 
@@ -39,10 +37,10 @@ namespace ggo
     
   private:
 
-    float       _offset_x = 0;
-    float       _offset_y = 0;
-    float       _opti = 0;
-    ggo::pos3f  _center_focus_point;
+    const float       _offset_x = 0;
+    const float       _offset_y = 0;
+    const float       _opti = 0;
+    const ggo::pos3f  _center_focus_point;
   };
 }
 
@@ -53,7 +51,7 @@ namespace ggo
   {
   public:
     
-                                      antialiasing_point_camera(int width, int height);
+                                      antialiasing_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture);
 
   private:
 
@@ -62,10 +60,10 @@ namespace ggo
 
   private:
 
-    float       _offset_x = 0;
-    float       _offset_y = 0;
-    float       _opti = 0;
-    ggo::pos3f  _center_focus_point;
+    const float       _offset_x;
+    const float       _offset_y;
+    const float       _opti;
+    const ggo::pos3f  _center_focus_point;
   };
 }
 
@@ -76,10 +74,7 @@ namespace ggo
   {
   public:
     
-          multi_sampling_point_camera(int width, int height);
-                                            
-    void  set_depth_of_field_factor(float v) { _depth_of_field_factor = std::max(0.f, v); }
-    void  set_depth_of_field(float v) { _depth_of_field = std::max(0.001f, v); }
+          multi_sampling_point_camera(int width, int height, const ggo::basis3d_float & basis, float aperture, float depth_of_field, float depth_of_field_factor);
 
     float get_depth_of_field_factor() const { return _depth_of_field_factor; }
     float get_depth_of_field() const { return _depth_of_field; }
@@ -90,13 +85,13 @@ namespace ggo
     
   private:
 
-    float _depth_of_field = 1;
-    float _depth_of_field_factor = 0;
+    const float _depth_of_field;
+    const float _depth_of_field_factor;
     
-    float       _offset_x = 0;
-    float       _offset_y = 0;
-    float       _opti = 0;
-    ggo::pos3f  _center_focus_point;
+    const float       _offset_x;
+    const float       _offset_y;
+    const float       _opti;
+    const ggo::pos3f  _center_focus_point;
   };
 }
 
