@@ -17,13 +17,13 @@ bitmap_artist_abc(width, height, line_step, pbf)
 void ggo::stoa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   // The camera.
+  const ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });
+  const float camera_aperture = 0.1f;
 #ifdef MONO_SAMPLING
-  ggo::mono_sampling_point_camera camera(get_width(), get_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #else
-  ggo::antialiasing_point_camera camera(get_width(), get_height());
+  ggo::antialiasing_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #endif
-  camera.basis().set_pos(0, 0, 40);
-  camera.set_aperture(0.1f);
 
   // Lights.
   float angle1 = ggo::rand<float>(0, ggo::pi<float>());

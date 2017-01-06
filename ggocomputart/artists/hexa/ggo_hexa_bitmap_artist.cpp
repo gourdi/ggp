@@ -21,18 +21,17 @@ bitmap_artist_abc(width, height, line_step, pbf)
 //////////////////////////////////////////////////////////////
 void ggo::hexa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
 {
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 500.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.1f);
+  camera_basis.rotate(ggo::ray3d_float::O_Z(), ggo::rand<float>(-0.2f, 0.2f));
+  const float camera_aperture = 0.15f;
+
   // The camera.
 #ifdef GGO_PREVIEW
-  ggo::mono_sampling_point_camera camera(get_width(), get_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #else
-  ggo::multi_sampling_point_camera camera(get_width(), get_height());
-  camera.set_depth_of_field_factor(3);
-  camera.set_depth_of_field(375);
+  ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture, 375.f, 3.f);
 #endif
-  camera.basis().set_pos(0, 0, 500);
-  camera.basis().rotate(ggo::ray3d_float::O_X(), 1.1f);
-  camera.basis().rotate(ggo::ray3d_float::O_Z(), ggo::rand<float>(-0.2f, 0.2f));
-  camera.set_aperture(0.15f);
 
   // Lights.
   auto lights_pos = ggo::hexa_artist::generate_light_positions();

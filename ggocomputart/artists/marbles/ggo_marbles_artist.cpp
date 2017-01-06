@@ -73,12 +73,9 @@ void ggo::marbles_artist::render_bitmap(void * buffer, const bool & quit) const
   scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
 
 	// Setup the camera.
-	ggo::multi_sampling_point_camera camera(get_width(), get_height());
-	camera.basis().set_pos(0, 0, 10);
-	camera.basis().rotate(ggo::ray3d_float::O_X(), 1.2f);
-	camera.set_aperture(0.2f);
-	camera.set_depth_of_field_factor(ggo::rand<float>(0.10f, 0.15f));
-	camera.set_depth_of_field(ggo::rand<float>(7, 9));
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
+	ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
 
 	// Floor plane.
   auto floor = scene_builder.add_object(std::make_shared<ggo::const_plane3d<float, 0, 0, 1, 0>>(), ggo::white<ggo::color_32f>(), true); // z = 0

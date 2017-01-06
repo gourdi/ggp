@@ -20,15 +20,14 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer, const bool & qui
 
 	ggo::metaballs_artist::params params;
 
+  const float camera_aperture = 0.1f;
+  const ggo::basis3d_float camera_basis({ 0.f, 0.f, 25.f });
+
 #ifdef MONO_SAMPLING
-  ggo::mono_sampling_point_camera camera(get_width(), get_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #else
-  ggo::multi_sampling_point_camera camera(get_width(), get_height());
-  camera.set_depth_of_field_factor(ggo::rand<float>(0.2f, 0.5f));
-  camera.set_depth_of_field(22);
+  ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture, 22.f, ggo::rand<float>(0.2f, 0.5f));
 #endif
-	camera.basis().set_pos(0, 0, 25);
-	camera.set_aperture(0.1f);
 
 	while (params._centers.size() < 200)
 	{

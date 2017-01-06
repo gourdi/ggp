@@ -1,5 +1,6 @@
 #include "ggo_metaballs_animation_artist.h"
 #include <ggo_antialiasing_renderer.h>
+#include <ggo_point_camera.h>
 
 namespace
 {
@@ -9,8 +10,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
-_camera(width, height)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 	
 }
@@ -38,8 +38,7 @@ void ggo::metaballs_animation_artist::init()
 
   float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
   _params._light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
-  _camera.basis().set_pos(0, 0, 25);
-  _camera.set_aperture(0.1f);
+  _camera_basis.set_pos(0, 0, 25);
 }
 
 //////////////////////////////////////////////////////////////
@@ -87,6 +86,7 @@ bool ggo::metaballs_animation_artist::update()
 //////////////////////////////////////////////////////////////
 void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
-  ggo::antialiasing_renderer renderer(_camera);
+  ggo::antialiasing_point_camera camera(get_width(), get_height(), _camera_basis, 0.1f);
+  ggo::antialiasing_renderer renderer(camera);
   ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer, _params);
 }

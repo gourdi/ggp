@@ -123,7 +123,7 @@ ggo::cumbia_artist::~cumbia_artist()
 }
 
 //////////////////////////////////////////////////////////////
-std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo::point_camera & camera, int boxes_count)
+std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count)
 {
   float dimension = ggo::rand<float>(0.2f, 0.5f);
 	float search_ratio = ggo::rand<float>(0, 0.3f);
@@ -185,11 +185,11 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
   auto box_tree_object = scene_builder.add_object(boxes_tree_shape, ggo::white<ggo::color_32f>(), true);
 
 	// The camera.
-	camera.basis().reset();
-	camera.basis().set_pos(0, 0, camera_dist);
-	camera.basis().rotate(ggo::ray3d_float::O_X(), 1.2f);
-	camera.basis().rotate(ggo::ray3d_float::O_Z(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
-	camera.set_aperture(0.3f);
+	camera_basis.reset();
+	camera_basis.set_pos(0, 0, camera_dist);
+	camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
+	camera_basis.rotate(ggo::ray3d_float::O_Z(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+	aperture = 0.3f;
 
 	// The lights.
   float angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
@@ -212,24 +212,22 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::init(ggo::point_camera & camera, int boxes_count)
+void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count)
 {
-  init_common(camera, boxes_count);
+  init_common(camera_basis, aperture, boxes_count);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::init(ggo::multi_sampling_point_camera & camera, int boxes_count)
+void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count)
 {
-  auto leaves = init_common(camera, boxes_count);
+  auto leaves = init_common(camera_basis, aperture, boxes_count);
   
-	float depth_of_field_factor = ggo::rand<float>(0.01f, 0.02f);
-	float depth_of_field = camera_dist;
+	depth_of_field_factor = ggo::rand<float>(0.01f, 0.02f);
+	depth_of_field = camera_dist;
 	for (auto & leaf : leaves)
 	{
-		depth_of_field = std::min(depth_of_field, ggo::distance(leaf->data().get_center(), camera.basis().pos()));
+		depth_of_field = std::min(depth_of_field, ggo::distance(leaf->data().get_center(), camera_basis.pos()));
 	}
-	camera.set_depth_of_field(depth_of_field);	
-	camera.set_depth_of_field_factor(depth_of_field_factor);
   
   std::cout << "depth_of_field: " << depth_of_field << std::endl;
 	std::cout << "depth_of_field_factor: " << depth_of_field_factor << std::endl;

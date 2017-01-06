@@ -20,13 +20,14 @@ namespace ggo
     cumbia_artist();
     ~cumbia_artist();
 
-    void	init(ggo::point_camera & camera, int boxes_count);
-    void	init(ggo::multi_sampling_point_camera & camera, int boxes_count);
+    void	init(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
+    void	init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count);
+
     void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer) const;
 
   private:
 
-    std::vector<ggo::tree<ggo::aabox3d_float> *>  init_common(ggo::point_camera & camera, int boxes_count);
+    std::vector<ggo::tree<ggo::aabox3d_float> *>  init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
 
   private:
 

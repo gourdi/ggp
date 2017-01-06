@@ -3,7 +3,6 @@
 
 #include "ggo_animation_artist_abc.h"
 #include "ggo_cumbia_artist.h"
-#include <ggo_point_camera.h>
 
 namespace ggo
 {
@@ -21,9 +20,10 @@ namespace ggo
 
   private:
 
-    int                             _frame_index;
-    ggo::cumbia_artist	            _artist;
-    ggo::antialiasing_point_camera	_camera;
+    int                 _frame_index;
+    ggo::basis3d_float  _camera_basis;
+    float               _camera_aperture;
+    ggo::cumbia_artist  _artist;
   };
 }
 

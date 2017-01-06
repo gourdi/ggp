@@ -52,22 +52,21 @@ bool ggo::hexa_animation_artist::update()
   return true;
 }
 
-  
 //////////////////////////////////////////////////////////////
 void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   // Update camera.
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, ggo::ease_inout(_frame_index, frames_count, 1.f, 350.f) });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), ggo::ease_inout(_frame_index, frames_count, 0.2f, 1.2f));
+  camera_basis.rotate(ggo::ray3d_float::O_Z(), ggo::ease_inout(_frame_index, frames_count, _camera_rotation_start, _camera_rotation_end));
+  const float camera_aperture = 0.15f;
+
 #ifdef GGO_HEXA_ANTIALIASING
-  ggo::antialiasing_point_camera camera(get_width(), get_height());
+  ggo::antialiasing_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #else
-  ggo::mono_sampling_point_camera camera(get_width(), get_height());
+  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
 #endif
   
-  camera.basis().set_pos(0.f, 0.f, ggo::ease_inout(_frame_index, frames_count, 1.f, 350.f));
-  camera.basis().rotate(ggo::ray3d_float::O_X(), ggo::ease_inout(_frame_index, frames_count, 0.2f, 1.2f));
-  camera.basis().rotate(ggo::ray3d_float::O_Z(), ggo::ease_inout(_frame_index, frames_count, _camera_rotation_start, _camera_rotation_end));
-  camera.set_aperture(0.15f);
-
   // Rendering.
 #ifdef GGO_HEXA_ANTIALIASING
   ggo::antialiasing_renderer renderer(camera);

@@ -9,8 +9,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::cumbia_animation_artist::cumbia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
-_camera(width, height)
+animation_artist_abc(width, height, line_step, pbf, rt)
 {
 	
 }
@@ -19,7 +18,7 @@ _camera(width, height)
 void ggo::cumbia_animation_artist::init()
 {
   _frame_index = -1;
-	_artist.init(_camera, 1 << 15);
+	_artist.init(_camera_basis, _camera_aperture, 1 << 15);
 }
 
 //////////////////////////////////////////////////////////////
@@ -32,7 +31,7 @@ bool ggo::cumbia_animation_artist::update()
     return false;
   }
 
-  _camera.basis().rotate(ggo::ray3d_float::O_Z(), 2 * ggo::pi<float>() / frames_count);
+  _camera_basis.rotate(ggo::ray3d_float::O_Z(), 2 * ggo::pi<float>() / frames_count);
 
   return true;
 }
@@ -40,7 +39,9 @@ bool ggo::cumbia_animation_artist::update()
 //////////////////////////////////////////////////////////////
 void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
-  ggo::antialiasing_renderer renderer(_camera);
+  ggo::antialiasing_point_camera	camera(get_width(), get_height(), _camera_basis, _camera_aperture);
+
+  ggo::antialiasing_renderer renderer(camera);
 
   _artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer);
 }

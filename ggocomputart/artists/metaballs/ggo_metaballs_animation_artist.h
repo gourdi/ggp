@@ -2,7 +2,6 @@
 #define __GGO_METABALLS_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_point_camera.h>
 #include "ggo_metaballs_artist.h"
 
 namespace ggo
@@ -36,7 +35,7 @@ namespace ggo
     int                             _frame_index;
     ggo::metaballs_artist::params   _params;
     std::vector<moving_center>      _centers;
-    ggo::antialiasing_point_camera  _camera;
+    ggo::basis3d_float              _camera_basis;
   };
 }
 

@@ -45,16 +45,17 @@ bool ggo::stoa_animation_artist::update()
 void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
 {
   // The camera.
-#ifdef MONO_SAMPLING
-  ggo::mono_sampling_point_camera camera(get_width(), get_height());
-#else
-  ggo::antialiasing_point_camera camera(get_width(), get_height());
-#endif
-  camera.basis().set_pos(0, 0, 40);
-  camera.set_aperture(0.1f);
+  const float camera_aperture = 0.1f;
 
+  ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });
   float range = ggo::pi<float>() / 6.f;
-  camera.basis().rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(_frame_index, frames_count, -range, range));
+  camera_basis.rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(_frame_index, frames_count, -range, range));
+
+#ifdef MONO_SAMPLING
+  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
+#else
+  ggo::antialiasing_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
+#endif
 
   // Lights.
   float angle1 = ggo::ease_inout(_frame_index, frames_count, _light1_angle_start, _light1_angle_end);
