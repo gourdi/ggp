@@ -2,8 +2,6 @@
 *~
 *.mp4
 *.bmp
-ggocomputart/ggocomputartbitmaps*
-ggocomputart/ggocomputartanim*
 ggoraytracer/main*
 lib
 include
