@@ -319,6 +319,12 @@
       <Filter>math\shapes_2d</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_buffer.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

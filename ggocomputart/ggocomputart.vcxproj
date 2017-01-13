@@ -73,6 +73,7 @@
     <ClCompile Include="artists\julia\ggo_julia_animation_artist.cpp" />
     <ClCompile Include="artists\julia\ggo_julia_artist.cpp" />
     <ClCompile Include="artists\julia\ggo_julia_bitmap_artist.cpp" />
+    <ClCompile Include="artists\kame\ggo_kame_animation_artist.cpp" />
     <ClCompile Include="artists\kanji\ggo_kanji_animation_artist.cpp" />
     <ClCompile Include="artists\kanji\ggo_kanji_artist.cpp" />
     <ClCompile Include="artists\kanji\ggo_kanji_bitmap_artist.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="artists\julia\ggo_julia_animation_artist.h" />
     <ClInclude Include="artists\julia\ggo_julia_artist.h" />
     <ClInclude Include="artists\julia\ggo_julia_bitmap_artist.h" />
+    <ClInclude Include="artists\kame\ggo_kame_animation_artist.h" />
     <ClInclude Include="artists\kanji\ggo_kanji_animation_artist.h" />
     <ClInclude Include="artists\kanji\ggo_kanji_artist.h" />
     <ClInclude Include="artists\kanji\ggo_kanji_bitmap_artist.h" />

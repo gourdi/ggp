@@ -78,6 +78,7 @@ namespace ggo
 #include <ggo_line3d.h>
 #include <ggo_cylinder3d.h>
 #include <ggo_influence_plane3d.h>
+#include <ggo_rectangle3d.h>
 
 #include <ggo_basis3d.imp.h>
 #include <ggo_centered_sphere3d.imp.h>
@@ -93,5 +94,6 @@ namespace ggo
 #include <ggo_line3d.imp.h>
 #include <ggo_cylinder3d.imp.h>
 #include <ggo_influence_plane3d.imp.h>
+#include <ggo_rectangle3d.imp.h>
 
 #endif

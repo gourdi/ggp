@@ -26,6 +26,7 @@
     <ClCompile Include="test\ggo_parallelogram3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_polygon3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_raytracer_nonreg.cpp" />
+    <ClCompile Include="test\ggo_rectangle3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_scene1.cpp" />
     <ClCompile Include="test\ggo_scene2.cpp" />
     <ClCompile Include="test\ggo_scene3.cpp" />

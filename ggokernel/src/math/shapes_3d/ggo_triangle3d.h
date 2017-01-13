@@ -41,7 +41,7 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  typedef triangle3d<float>  triangle3d_float;
+  typedef triangle3d<float>  triangle3d_float ;
   typedef triangle3d<double> triangle3d_double;
 }
 

@@ -83,7 +83,7 @@ namespace ggo
     hexa, // 25
     chryzode,
     stoa,
-    _____AVAILABLE_____,
+    kame,
     rediff,
     entabeni, // 30
     neon,

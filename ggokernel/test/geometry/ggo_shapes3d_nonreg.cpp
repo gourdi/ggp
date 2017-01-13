@@ -842,7 +842,7 @@ GGO_TEST(shapes3d, cylinder3d)
   }
 }
 
-  /////////////////////////////////////////////////////////////////////  
+/////////////////////////////////////////////////////////////////////  
 GGO_TEST(shapes3d, influence_plane3d)
 {
   ggo::influence_plane3d<float> plane({ 0.f, 1.f, 0.f }, 3.f, 1.f);
@@ -864,4 +864,64 @@ GGO_TEST(shapes3d, influence_plane3d)
 
   GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 2.5f, 3.14f }), 0.25f);
   GGO_CHECK_FABS(plane.hypot_to_center({ 2.1f, 3.0f, 3.14f }), 0.0f);
+}
+
+/////////////////////////////////////////////////////////////////////  
+GGO_TEST(shapes3d, rectangle3d)
+{
+  {
+    ggo::rectangle3d<0, 0, 1, float> rect({ 4.f, 2.f, 1.f }, 2.f, 1.f);
+    float dist = 0.f;
+    ggo::ray3d_float normal;
+
+    GGO_CHECK(rect.intersect_ray({ {3.f, 2.f, 2.f},{0.f, 0.f, -1.f} }, dist, normal) == true);
+    GGO_CHECK_FABS(dist, 1.f);
+    GGO_CHECK_FABS(normal.pos().x(), 3.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), 0.f);
+    GGO_CHECK_FABS(normal.dir().z(), 1.f);
+
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 2.f },{ 1.f, 0.f, -1.f } }, dist, normal) == true);
+    GGO_CHECK_FABS(dist, ggo::sqrt2<float>());
+    GGO_CHECK_FABS(normal.pos().x(), 4.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), 0.f);
+    GGO_CHECK_FABS(normal.dir().z(), 1.f);
+
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 0.f },{ 0.f, 0.f, -1.f } }, dist, normal) == false);
+    GGO_CHECK(rect.intersect_ray({ { 1.f, 2.f, 2.f },{ 0.f, 0.f, -1.f } }, dist, normal) == false);
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 0.f },{ 0.f, 0.f, 1.f } }, dist, normal) == false);
+  }
+
+  {
+    ggo::rectangle3d<0, 0, -1, float> rect({ 4.f, 2.f, 1.f }, 2.f, 1.f);
+    float dist = 0.f;
+    ggo::ray3d_float normal;
+
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 0.f },{ 0.f, 0.f, 1.f } }, dist, normal) == true);
+    GGO_CHECK_FABS(dist, 1.f);
+    GGO_CHECK_FABS(normal.pos().x(), 3.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), 0.f);
+    GGO_CHECK_FABS(normal.dir().z(), -1.f);
+
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 0.f },{ 1.f, 0.f, 1.f } }, dist, normal) == true);
+    GGO_CHECK_FABS(dist, ggo::sqrt2<float>());
+    GGO_CHECK_FABS(normal.pos().x(), 4.f);
+    GGO_CHECK_FABS(normal.pos().y(), 2.f);
+    GGO_CHECK_FABS(normal.pos().z(), 1.f);
+    GGO_CHECK_FABS(normal.dir().x(), 0.f);
+    GGO_CHECK_FABS(normal.dir().y(), 0.f);
+    GGO_CHECK_FABS(normal.dir().z(), -1.f);
+
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 2.f },{ 0.f, 0.f, 1.f } }, dist, normal) == false);
+    GGO_CHECK(rect.intersect_ray({ { 1.f, 2.f, 0.f },{ 0.f, 0.f, 1.f } }, dist, normal) == false);
+    GGO_CHECK(rect.intersect_ray({ { 3.f, 2.f, 2.f },{ 0.f, 0.f, -1.f } }, dist, normal) == false);
+  }
 }

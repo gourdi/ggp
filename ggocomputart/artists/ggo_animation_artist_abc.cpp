@@ -30,6 +30,7 @@
 #include "artists/entabeni/ggo_entabeni_animation_artist.h"
 #include "artists/neon/ggo_neon_artist.h"
 #include "artists/storni/ggo_storni_animation_artist.h"
+#include "artists/kame/ggo_kame_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS
@@ -143,6 +144,9 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
     break;
   case ggo::animation_artist_id::storni:
     artist = new ggo::storni_animation_artist(width, height, line_step, pbf, rt);
+    break;
+  case ggo::animation_artist_id::kame:
+    artist = new ggo::kame_animation_artist(width, height, line_step, pbf, rt);
     break;
 	default:
 		GGO_FAIL();

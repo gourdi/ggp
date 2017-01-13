@@ -192,16 +192,27 @@ namespace ggo
     return color_t(v, sample_t(v / 2), sample_t(0));
   }
 
-  inline ggo::color_8u white_8u()    { return ggo::white<ggo::color_8u>(); }
-  inline ggo::color_8u gray_8u()     { return ggo::gray<ggo::color_8u>(); }
-  inline ggo::color_8u black_8u()    { return ggo::black<ggo::color_8u>(); }
-  inline ggo::color_8u red_8u()      { return ggo::red<ggo::color_8u>(); }
-  inline ggo::color_8u green_8u()    { return ggo::green<ggo::color_8u>(); }
-  inline ggo::color_8u blue_8u()     { return ggo::blue<ggo::color_8u>(); }
-  inline ggo::color_8u cyan_8u()     { return ggo::cyan<ggo::color_8u>(); }
-  inline ggo::color_8u magenta_8u()  { return ggo::magenta<ggo::color_8u>(); }
-  inline ggo::color_8u yellow_8u()   { return ggo::yellow<ggo::color_8u>(); }
-  inline ggo::color_8u orange_8u()   { return ggo::orange<ggo::color_8u>(); }
+  inline ggo::color_8u white_8u()     { return ggo::white<ggo::color_8u>(); }
+  inline ggo::color_8u gray_8u()      { return ggo::gray<ggo::color_8u>(); }
+  inline ggo::color_8u black_8u()     { return ggo::black<ggo::color_8u>(); }
+  inline ggo::color_8u red_8u()       { return ggo::red<ggo::color_8u>(); }
+  inline ggo::color_8u green_8u()     { return ggo::green<ggo::color_8u>(); }
+  inline ggo::color_8u blue_8u()      { return ggo::blue<ggo::color_8u>(); }
+  inline ggo::color_8u cyan_8u()      { return ggo::cyan<ggo::color_8u>(); }
+  inline ggo::color_8u magenta_8u()   { return ggo::magenta<ggo::color_8u>(); }
+  inline ggo::color_8u yellow_8u()    { return ggo::yellow<ggo::color_8u>(); }
+  inline ggo::color_8u orange_8u()    { return ggo::orange<ggo::color_8u>(); }
+
+  inline ggo::color_32f white_32f()   { return ggo::white<ggo::color_32f>(); }
+  inline ggo::color_32f gray_32f()    { return ggo::gray<ggo::color_32f>(); }
+  inline ggo::color_32f black_32f()   { return ggo::black<ggo::color_32f>(); }
+  inline ggo::color_32f red_32f()     { return ggo::red<ggo::color_32f>(); }
+  inline ggo::color_32f green_32f()   { return ggo::green<ggo::color_32f>(); }
+  inline ggo::color_32f blue_32f()    { return ggo::blue<ggo::color_32f>(); }
+  inline ggo::color_32f cyan_32f()    { return ggo::cyan<ggo::color_32f>(); }
+  inline ggo::color_32f magenta_32f() { return ggo::magenta<ggo::color_32f>(); }
+  inline ggo::color_32f yellow_32f()  { return ggo::yellow<ggo::color_32f>(); }
+  inline ggo::color_32f orange_32f()  { return ggo::orange<ggo::color_32f>(); }
 }
 
 /////////////////////////////////////////////////////////////////////

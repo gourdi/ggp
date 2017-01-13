@@ -145,6 +145,9 @@
     <Filter Include="artists\vortex">
       <UniqueIdentifier>{9f20bb86-5455-4328-9b3a-98764878e108}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\kame">
+      <UniqueIdentifier>{be707f45-7e43-4e2e-b9af-e90b28cb1929}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -410,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="artists\vortex\ggo_vortex_bitmap_artist.cpp">
       <Filter>artists\vortex</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\kame\ggo_kame_animation_artist.cpp">
+      <Filter>artists\kame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -694,6 +700,9 @@
     </ClInclude>
     <ClInclude Include="artists\vortex\ggo_vortex_bitmap_artist.h">
       <Filter>artists\vortex</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\kame\ggo_kame_animation_artist.h">
+      <Filter>artists\kame</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

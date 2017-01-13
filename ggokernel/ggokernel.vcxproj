@@ -236,6 +236,8 @@
     <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_polygon3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_ray3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_segment3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_shapes3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_sphere3d.h" />
