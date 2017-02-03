@@ -23,7 +23,7 @@ namespace ggo
 
     const ggo::fog_abc *          fog() const { return _fog.get(); }
     const ggo::background3d_abc & background() const { return *_background; }
-    const ggo::color_32f &            ambient_color() const { return _ambient_color; }
+    const ggo::color_32f &        ambient_color() const { return _ambient_color; }
 
   private:
 
