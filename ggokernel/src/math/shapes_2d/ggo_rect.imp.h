@@ -22,14 +22,14 @@ namespace ggo
   template <typename data_t>
   rect<data_t>::rect(const pos2<data_t> & p1, const pos2<data_t> & p2)
   {
-    data_t left    = std::min(p1.x(), p2.x());
-    data_t right   = std::max(p1.x(), p2.x());
-    data_t bottom  = std::min(p1.y(), p2.y());
-    data_t top     = std::max(p1.y(), p2.y());
+    auto horz = std::minmax(p1.x(), p2.x());
+    auto vert = std::minmax(p1.y(), p2.y());
 
-    _rect_data._pos = { left, bottom };
-    _rect_data._width = right - left;
-    _rect_data._height = top - bottom;
+    _rect_data._pos = { horz.first, vert.first };
+    _rect_data._width = horz.second - horz.first;
+    _rect_data._height = vert.second - vert.first;
+    GGO_ASSERT(_rect_data._width >= 0);
+    GGO_ASSERT(_rect_data._height >= 0);
   }
 
   /////////////////////////////////////////////////////////////////////

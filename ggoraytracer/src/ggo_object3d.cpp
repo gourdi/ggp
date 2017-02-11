@@ -35,6 +35,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  void object3d::set_shape(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape)
+  {
+    _shape = shape;
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::color_32f object3d::get_color(const ggo::pos3f & world_pos) const
   {
     if (!_material)

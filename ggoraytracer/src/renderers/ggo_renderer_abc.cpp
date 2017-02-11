@@ -5,19 +5,14 @@
 #include "ggo_indirect_lighting_abc.h"
 #include <ggo_helpers.h>
 #include <ggo_array.h>
-#ifndef GGO_CYGWIN
 #include <thread>
 #include <mutex>
-#endif
 #include <stdlib.h>
 
 namespace
 {
-  int			    global_x;
   int			    global_y;
-#ifndef GGO_CYGWIN
   std::mutex	mutex;
-#endif
   
   //////////////////////////////////////////////////////////////
   void print_line_number(int line)
@@ -29,7 +24,6 @@ namespace
 
 namespace ggo
 {
-#ifndef GGO_CYGWIN
   //////////////////////////////////////////////////////////////
   void renderer_abc::render_thread_func(const ggo::renderer_abc * renderer,
                                         void * buffer,int width, int height, int line_step, ggo::pixel_buffer_format pbf,
@@ -42,21 +36,14 @@ namespace ggo
     {
       mutex.lock();
 
-      int x = global_x;
       int y = global_y;
 
-      ++global_x;
-      
-      if (global_x >= width)
-      { 
-        ++global_y;
-        global_x = 0;
-          
-        if (global_y < height)
-        {
-          print_line_number(global_y + 1);
-        }
+      if (global_y < height)
+      {
+        print_line_number(global_y + 1);
       }
+
+      global_y++;
       
       mutex.unlock();
       
@@ -65,20 +52,22 @@ namespace ggo
         break;
       }
       
-      const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raytrace_params);
-
-      switch (pbf)
+      for (int x = 0; x < width; ++x)
       {
-      case ggo::rgb_8u_yu:
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
-        break;
-      default:
-        GGO_FAIL();
-        break;
+        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raytrace_params);
+
+        switch (pbf)
+        {
+        case ggo::rgb_8u_yu:
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
+          break;
+        default:
+          GGO_FAIL();
+          break;
+        }
       }
     }
   }
-#endif
 
   //////////////////////////////////////////////////////////////
   void renderer_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
@@ -141,10 +130,6 @@ namespace ggo
     }
     else
     {
-#ifdef GGO_CYGWIN
-      std::cerr << "Multi-threading not supported on cygwin" << std::endl;
-#else
-      global_x = 0;
       global_y = 0;
       
       print_line_number(1);
@@ -158,7 +143,6 @@ namespace ggo
       {
         thread.join();
       }
-#endif
     }
 
     std::cout << std::endl;

@@ -16,6 +16,8 @@ namespace ggo
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color);
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material);
 
+   void                         set_shape(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape);
+
     ggo::pos3f                  sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const;
     ggo::ray3d_float            sample_ray(float random_variable1, float random_variable2) const;
 
