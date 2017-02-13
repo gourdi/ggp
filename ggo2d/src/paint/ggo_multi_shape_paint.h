@@ -109,33 +109,9 @@ namespace ggo
       ggo::write_pixel<pbf>(buffer, x, y, height, line_step, c);
     };
 
-    // Lambda that paints a block of pixels without shape sampling.
-    auto paint_block_func = [&](const ggo::pixel_rect & block_rect,
-      typename std::vector<const item_t *>::const_iterator begin_it,
-      typename std::vector<const item_t *>::const_iterator end_it)
-    {
-      for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
-      {
-        void * ptr = get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step);
-        for (int x = block_rect.left(); x <= block_rect.right(); ++x)
-        {
-          color_t pixel_color = read_pixel<pbf>(ptr);
-
-          for (auto it = begin_it; it != end_it; ++it)
-          {
-            const item_t * item = *it;
-            pixel_color = item->blend(x, y, pixel_color, item->brush(x, y));
-          }
-
-          ggo::write_pixel<pbf>(ptr, pixel_color);
-          ptr = ptr_offset<format::pixel_byte_size>(ptr);
-        }
-      }
-    };
-
     paint_multi_scale<smp>(width, height, begin_it, end_it,
       scale_factor, first_scale,
-      read_pixel_func, write_pixel_func, paint_block_func,
+      read_pixel_func, write_pixel_func,
       clipping);
   }
 }

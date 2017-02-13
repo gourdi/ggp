@@ -59,6 +59,11 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void paint_rect_safe(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
+    if (left > right || bottom > top)
+    {
+      return;
+    }
+
     process_rect_safe<pbf>(buffer, width, height, line_step,
       ggo::pixel_rect::from_left_right_bottom_top(left, right, bottom, top),
       [&](void * ptr) { write_pixel<pbf>(ptr, c); });
@@ -88,27 +93,11 @@ namespace ggo
       ggo::write_pixel<pbf>(buffer, x, y, height, line_step, c);
     };
 
-    // Lambda that paints a block of pixels without shape sampling.
-    auto paint_block_lambda = [&](const ggo::pixel_rect & block_rect)
-    {
-      for (int y = block_rect.bottom(); y <= block_rect.top(); ++y)
-      {
-        void * ptr = get_pixel_ptr<pbf>(buffer, block_rect.left(), y, height, line_step);
-        for (int x = block_rect.left(); x <= block_rect.right(); ++x)
-        {
-          const color_t bkgd_color = read_pixel<pbf>(ptr);
-          const color_t pixel_color = blend(x, y, bkgd_color, brush(x, y));
-          ggo::write_pixel<pbf>(ptr, pixel_color);
-          ptr = ptr_offset<format::pixel_byte_size>(ptr);
-        }
-      }
-    };
-
     // Call the multi-scale paint algorithm.
     paint_multi_scale<smp>(width, height, shape,
       scale_factor, first_scale,
       brush, blend,
-      read_pixel_lambda, write_pixel_lambda, paint_block_lambda,
+      read_pixel_lambda, write_pixel_lambda,
       clipping);
   }
 
