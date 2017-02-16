@@ -87,15 +87,14 @@ namespace ggo
 
 namespace ggo
 {
-  template <ggo::pixel_buffer_format pbf, sampling smp, typename iterator_t,
-    typename color_t = typename pixel_buffer_format_info<pbf>::color_t>
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename iterator_t>
   void paint_shapes(void * buffer, int width, int height, int line_step, iterator_t begin_it, iterator_t end_it, const ggo::pixel_rect & clipping)
   {
     const int scale_factor = 8;
     const int first_scale = 2;
 
     using item_t = typename std::iterator_traits<iterator_t>::value_type;
-    using format = pixel_buffer_format_info<pbf>;
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
 
     // Lambda to retrieve pixel color.
     auto read_pixel_func = [&](int x, int y)

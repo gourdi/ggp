@@ -3,6 +3,7 @@
 
 #include "ggo_animation_artist_abc.h"
 #include <ggo_shapes3d.h>
+#include <ggo_random_interpolator_abc.h>
 #include <memory>
 #include <map>
 
@@ -55,12 +56,22 @@ namespace ggo
       }
     };
 
+    class angle_interpolator : public random_interpolator_abc<float, float>
+    {
+      void get_random_data(float & data, float & dt) override
+      {
+        data = ggo::rand<float>(-ggo::pi<float>() / 4, ggo::pi<float>() / 4);
+        dt = ggo::rand<float>(25, 50);
+      }
+    };
+
     struct glow
     {
       ggo::pos2f _pos;
       float _radius;
       float _intensity;
       float _speed;
+      angle_interpolator _angle;
     };
 
     static std::vector<std::unique_ptr<timed_triangle>> split_triangles(const std::vector<std::unique_ptr<timed_triangle>> & triangles, std::vector<std::unique_ptr<timed_vertex>> & vertices);

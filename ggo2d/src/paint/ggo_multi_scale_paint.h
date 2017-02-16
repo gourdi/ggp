@@ -79,22 +79,22 @@ namespace ggo
 
         const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
         write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
-      }
-      else
-      {
-        // Process the sub-blocks.
-        auto paint_subblock = [&](const ggo::pixel_rect & block_rect)
-        {
-          paint_block_single_t<smp>(block_rect,
-            scale_factor, current_scale - 1,
-            shape,
-            brush, blend, 
-            read_pixel, write_pixel);
-        };
 
-        const int subblock_size = ggo::pow(scale_factor, current_scale - 1);
-        process_blocks(block_rect, subblock_size, subblock_size, paint_subblock);
+        return;
       }
+
+      // Recursion.
+      auto paint_subblock = [&](const ggo::pixel_rect & block_rect)
+      {
+        paint_block_single_t<smp>(block_rect,
+          scale_factor, current_scale - 1,
+          shape,
+          brush, blend,
+          read_pixel, write_pixel);
+      };
+
+      const int subblock_size = ggo::pow(scale_factor, current_scale - 1);
+      process_blocks(block_rect, subblock_size, subblock_size, paint_subblock);
       break;
     }
   }

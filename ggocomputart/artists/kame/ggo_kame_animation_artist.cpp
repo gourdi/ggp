@@ -38,7 +38,7 @@ void ggo::kame_animation_artist::init()
       ggo::pos2f(ggo::rand<float>(-width_32f, width_32f), get_height() * ggo::rand<float>(-0.1f, 1.1f)),
       ggo::rand<float>(0.01f, 0.02f) * get_min_size(),
       ggo::rand<float>(128.f, 256.f),
-      ggo::rand<float>(0.01f, 0.02f) * get_min_size() });
+      ggo::rand<float>(0.001f, 0.005f) * get_min_size() });
   }
   for (int i = 0; i < 200; ++i)
   {
@@ -46,7 +46,7 @@ void ggo::kame_animation_artist::init()
       ggo::pos2f(ggo::rand<float>(-width_32f, width_32f), get_height() * ggo::rand<float>(-0.1f, 1.1f)),
       ggo::rand<float>(0.01f, 0.02f) * get_min_size(),
       ggo::rand<float>(128.f, 256.f),
-      ggo::rand<float>(0.01f, 0.02f) * get_min_size() });
+      ggo::rand<float>(0.001f, 0.005f) * get_min_size() });
   }
 
   // Vertices.
@@ -165,11 +165,13 @@ bool ggo::kame_animation_artist::update()
   // Update glows.
   for (auto & glow : _background_glows)
   {
-    glow._pos.x() += glow._speed;
+    float angle = glow._angle.update(1);
+    glow._pos += ggo::from_polar(angle, glow._speed);
   }
   for (auto & glow : _foreground_glows)
   {
-    glow._pos.x() += glow._speed;
+    float angle = glow._angle.update(1);
+    glow._pos += ggo::from_polar(angle, glow._speed);
   }
 
   // Wave equation.
@@ -318,7 +320,6 @@ void ggo::kame_animation_artist::paint_glow_segment(const ggo::pos3f & p1, const
 
   const float radius = 0.01f * get_min_size();
   const float sq_radius = radius * radius;
-  const float normalization = 128.f / sq_radius;
 
   ggo::rect<float> bounding_rect(proj1, proj2);
   bounding_rect.inflate(5.f);
@@ -339,7 +340,7 @@ void ggo::kame_animation_artist::paint_glow_segment(const ggo::pos3f & p1, const
     if (hypot < sq_radius)
     {
       const float dist = std::sqrt(hypot);
-      const ggo::color_32f color = (normalization * ggo::square(dist - radius)) * _color;
+      const ggo::color_32f color = (128.f * ggo::square(1.f - dist / radius)) * _color;
 
       ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
       pixel8u.r() = ggo::to<uint8_t>(pixel8u.r() + color.r());
@@ -373,7 +374,7 @@ void ggo::kame_animation_artist::paint_glow(const glow & glow, void * buffer) co
     if (hypot < sq_radius)
     {
       const float dist = std::sqrt(hypot);
-      const ggo::color_32f color = (glow._intensity * ggo::square(dist - glow._radius) / sq_radius) * _color;
+      const ggo::color_32f color = (glow._intensity * ggo::square(1.f - dist / glow._radius)) * _color;
 
       ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
       pixel8u.r() = ggo::to<uint8_t>(pixel8u.r() + color.r());
