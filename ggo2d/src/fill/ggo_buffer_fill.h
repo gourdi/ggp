@@ -9,6 +9,9 @@
 namespace ggo
 {
   template <pixel_buffer_format pbf>
+  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c);
+
+  template <pixel_buffer_format pbf>
   void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping);
 }
 
@@ -67,11 +70,16 @@ namespace ggo
 // Fill with solid color.
 namespace ggo
 {
-  /////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
   void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping)
   {
     process_rect_safe<pbf>(buffer, width, height, line_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+  }
+
+  template <pixel_buffer_format pbf>
+  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
+  {
+    fill_solid<pbf>(buffer, width, height, line_step, c, ggo::pixel_rect::from_width_height(width, height));
   }
 }
 

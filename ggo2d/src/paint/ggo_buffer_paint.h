@@ -124,8 +124,8 @@ namespace ggo
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
 
-    auto brush = [&c](int x, int y) { return c; };
-    auto blend = [](int x, int y, const color_t & bkgd_color, const color_t & brush_color) { return brush_color; };
+    auto brush = [&c](int, int) { return c; };
+    auto blend = [](int, int, const color_t &, const color_t & brush_color) { return brush_color; };
 
     paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend);
   }

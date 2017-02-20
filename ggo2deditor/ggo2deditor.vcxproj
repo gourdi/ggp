@@ -54,6 +54,9 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ggo2deditor</TargetName>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>.;C:\Qt\5.8\msvc2015_64\include;C:\Qt\5.8\msvc2015_64\include\QtWidgets;C:\Qt\5.8\msvc2015_64\include\QtGui;C:\Qt\5.8\msvc2015_64\include\QtANGLE;C:\Qt\5.8\msvc2015_64\include\QtCore;release;C:\Qt\5.8\msvc2015_64\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -125,7 +128,7 @@
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <OutputFile>$(OutDir)\ggo2deditor.exe</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Link>
     <Midl>

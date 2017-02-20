@@ -107,6 +107,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggocomputartrealtime", "ggo
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggo2deditor", "ggo2deditor\ggo2deditor.vcxproj", "{F9714158-7B90-45EA-9EAB-50B4812D8757}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F611A343-8045-4B3C-961E-42231F9A4124} = {F611A343-8045-4B3C-961E-42231F9A4124}
+		{28E4FCBA-8918-406F-A8CC-ADE4FD341F4F} = {28E4FCBA-8918-406F-A8CC-ADE4FD341F4F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyXML2", "externals\tinyXML2\tinyXML2.vcxproj", "{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "externals", "externals", "{F9BD20C6-8A32-4078-97FF-4062DD6B8761}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -226,8 +234,19 @@ Global
 		{F9714158-7B90-45EA-9EAB-50B4812D8757}.Release|x64.ActiveCfg = Release|x64
 		{F9714158-7B90-45EA-9EAB-50B4812D8757}.Release|x64.Build.0 = Release|x64
 		{F9714158-7B90-45EA-9EAB-50B4812D8757}.Release|x86.ActiveCfg = Release|x64
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x64.ActiveCfg = Debug|x64
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x64.Build.0 = Debug|x64
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x86.ActiveCfg = Debug|Win32
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x86.Build.0 = Debug|Win32
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x64.ActiveCfg = Release|x64
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x64.Build.0 = Release|x64
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x86.ActiveCfg = Release|Win32
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC} = {F9BD20C6-8A32-4078-97FF-4062DD6B8761}
 	EndGlobalSection
 EndGlobal

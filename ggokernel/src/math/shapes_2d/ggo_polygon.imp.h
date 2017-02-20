@@ -119,6 +119,23 @@ namespace ggo
       return false; 
     }
 
+    bool inside = false;
+    for (size_t i = 0, j = _points.size() - 1; i < _points.size(); j = i++)
+    {
+      if ((_points[i].y() > y) == (_points[j].y() > y))
+      {
+        continue;
+      }
+
+      if (x < (_points[j].x() - _points[i].x()) * (y - _points[i].y()) / (_points[j].y() - _points[i].y()) + _points[i].x())
+      {
+        inside = !inside;
+      }
+    }
+     
+    return inside;
+
+#if 0
     data_t angle(0);
     data_t angle1 = atan2(_points.back().y() - y, _points.back().x() - x);
     for (const auto & point : _points)
@@ -132,6 +149,7 @@ namespace ggo
     }
 
     return std::abs(angle) > pi<data_t>();
+#endif
   }
 
   //////////////////////////////////////////////////////////////

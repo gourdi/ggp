@@ -12,11 +12,10 @@ protected:
 
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
+  void mouse
 
   QSize sizeHint() const override;
   QSize minimumSizeHint() const override;
-
-  void resizeImage(QImage * image, const QSize & newSize);
 
 private:
 

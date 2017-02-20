@@ -127,6 +127,8 @@ namespace ggo
 {
   template <typename data_t> using pos2 = vec<data_t, 2, geometry_t>;
   template <typename data_t> using vec2 = vec<data_t, 2, geometry_t>;
+  using pos2i = vec<int, 2, geometry_t>;
+  using vec2i = vec<int, 2, geometry_t>;
   using pos2f = vec<float, 2, geometry_t>;
   using vec2f = vec<float, 2, geometry_t>;
   using pos2d = vec<double, 2, geometry_t>;
