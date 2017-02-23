@@ -20,5 +20,6 @@ ggp.VC.opendb
 *.psess
 *.vsp
 *.ipch
+*.tlog
 ggp.VC.VC.opendb
 ggp.VC.db

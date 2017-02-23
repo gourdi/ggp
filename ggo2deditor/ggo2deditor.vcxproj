@@ -55,7 +55,12 @@
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggononreg\src;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\delaunay_triangulation;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\processing;$(SolutionDir)\ggo2d\src\space_partitionning;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\rle_image;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -79,7 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Qt\5.8\msvc2015_64\lib\qtmain.lib;shell32.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Widgets.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Gui.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ggokernel.lib;ggo2d.lib;C:\Qt\5.8\msvc2015_64\lib\qtmain.lib;shell32.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Widgets.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Gui.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Qt\5.8\msvc2015_64\lib;C:\utils\my_sql\my_sql\lib;C:\utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -120,7 +125,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>C:\Qt\5.8\msvc2015_64\lib\qtmaind.lib;shell32.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Widgetsd.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Guid.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ggokernel.lib;ggo2d.lib;C:\Qt\5.8\msvc2015_64\lib\qtmaind.lib;shell32.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Widgetsd.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Guid.lib;C:\Qt\5.8\msvc2015_64\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Qt\5.8\msvc2015_64\lib;C:\utils\my_sql\my_sql\lib;C:\utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>

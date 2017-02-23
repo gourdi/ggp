@@ -1,25 +1,62 @@
 #include "ggo_canvas.h"
+#include <ggo_buffer_fill.h>
 
 ///////////////////////////////////////////////////////////////////
-void ggo::canvas::push_shape(const dyn_paint_shape<float, ggo::color_8u, ggo::color_8u> & shape)
+ggo::paintable_shape2d_abc<float> * ggo::canvas::disc::create_render_shape(main_direction main_dir, int render_width, int render_height) const
 {
-  _shapes.push_back(shape);
+  const pos2f center = from_canvas_to_render(_disc.center(), main_dir, render_width, render_height);
+  const float radius = from_canvas_to_render(_disc.radius(), main_dir, render_width, render_height);
+
+  return new disc_float(center, radius);
+}
+
+///////////////////////////////////////////////////////////////////
+ggo::disc_float * ggo::canvas::create_disc()
+{
+  ggo::canvas::disc * canvas_disc = new ggo::canvas::disc();
+
+  _shapes.emplace_back(std::unique_ptr<shape_abc>(canvas_disc));
+
+  return &canvas_disc->_disc;
+}
+
+///////////////////////////////////////////////////////////////////
+void ggo::canvas::remove_shape(const ggo::paintable_shape2d_abc<float> * shape)
+{
+  ggo::remove_first_if(_shapes, [&](std::unique_ptr<shape_abc> & canvas_shape) { return canvas_shape->get_shape() == shape; });
 }
 
 /////////////////////////////////////////////////////////////////////
 void ggo::canvas::render(void * buffer, main_direction main_dir, int width, int height, int line_byte_step, pixel_buffer_format pbf) const
 {
- /* const ggo::pixel_rect clipping = ggo::pixel_rect::from_width_height(width, height);
+  const ggo::pixel_rect clipping = ggo::pixel_rect::from_width_height(width, height);
 
+  using shape_t = dyn_paint_shape<float, ggo::color_8u, ggo::color_8u>;
+
+  std::vector<shape_t> mapped_shapes;
+
+  // Map from canvas to render.
+  for (const auto & shape : _shapes)
+  {
+    shape_t mapped_shape;
+    mapped_shape._shape = std::shared_ptr<ggo::paintable_shape2d_abc<float>>(shape->create_render_shape(main_dir, width, height));
+    mapped_shape._brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(ggo::red_8u());
+    mapped_shape._blender = std::make_shared<ggo::overwrite_dyn_blender<ggo::color_8u, ggo::color_8u>>();
+    
+    mapped_shapes.push_back(mapped_shape);
+  }
+
+  // Paint mapped shapes.
   switch (pbf)
   {
   case bgra_8u_yd:
-    paint_shapes<bgra_8u_yd, sampling_4x4>(buffer, width, height, line_byte_step, _shapes.begin(), _shapes.end(), clipping);
+    fill_solid<bgra_8u_yd>(buffer, width, height, line_byte_step, ggo::yellow_8u());
+    paint_shapes<bgra_8u_yd, sampling_4x4>(buffer, width, height, line_byte_step, mapped_shapes.begin(), mapped_shapes.end(), clipping);
     break;
   default:
     GGO_FAIL();
     break;
-  }*/
+  }
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -89,7 +89,7 @@ namespace ggo
   template <typename data_t, typename func, int count>
   struct unary_operation_t<data_t, func, count, count>
   {
-    static void process(data_t * dst, const data_t * src, func f) { }
+    static void process(data_t *, const data_t *, func) { }
   };
 
   template <int count, typename data_t, typename func>
@@ -119,7 +119,7 @@ namespace ggo
   template <typename data_t, typename func, int count>
   struct binary_operation_t<data_t, func, count, count>
   {
-    static void process(data_t * dst, const data_t * src1, const data_t * src2, func f) { }
+    static void process(data_t *, const data_t *, const data_t *, func) { }
   };
 
   template <int count, typename data_t, typename func>

@@ -3,6 +3,7 @@
 
 #include <ggo_pixel_buffer.h>
 #include <ggo_multi_shape_paint.h>
+#include <memory>
 
 namespace ggo
 {
@@ -18,7 +19,9 @@ namespace ggo
 
     void render(void * buffer, main_direction main_dir, int width, int height, int line_byte_step, pixel_buffer_format pbf) const;
 
-    void push_shape(const dyn_paint_shape<float, ggo::color_8u, ggo::color_8u> & shape);
+    disc_float * create_disc();
+
+    void remove_shape(const ggo::paintable_shape2d_abc<float> * shape);
 
     static float      from_canvas_to_render(float dist, main_direction main_dir, int render_width, int render_height);
     static float      from_render_to_canvas(float dist, main_direction main_dir, int render_width, int render_height);
@@ -31,7 +34,25 @@ namespace ggo
 
   private:
 
-    std::vector<dyn_paint_shape<float, ggo::color_8u, ggo::color_8u>> _shapes;
+    class shape_abc
+    {
+    public:
+
+      virtual const ggo::paintable_shape2d_abc<float> * get_shape() const = 0;
+      virtual ggo::paintable_shape2d_abc<float> * create_render_shape(main_direction main_dir, int render_width, int render_height) const = 0;
+    };
+
+    class disc : public shape_abc
+    {
+    public:
+
+      const ggo::paintable_shape2d_abc<float> * get_shape() const override { return &_disc; }
+      ggo::paintable_shape2d_abc<float> * create_render_shape(main_direction main_dir, int render_width, int render_height) const override;
+
+      ggo::disc_float _disc;
+    };
+
+    std::vector<std::unique_ptr<shape_abc>> _shapes;
   };
 }
 
