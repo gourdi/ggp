@@ -2,16 +2,7 @@
 #define __GGO_RENDER_WIDGET__
 
 #include <QtWidgets/qwidget.h>
-#include <ggo_canvas.h>
-
-class ShapeFactory
-{
-public:
-
-  virtual void OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas) = 0;
-  virtual void OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas) = 0;
-  virtual bool OnMouseMove(int x, int y, int width, int height, ggo::canvas & canvas) = 0;
-};
+#include "ShapeFactory.h"
 
 class RenderWidget : public QWidget
 {

@@ -5,64 +5,7 @@
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
 
-class DiscFactory : public ShapeFactory
-{
-private:
-
-  enum State
-  {
-    None,
-    SettingRadius,
-  };
-
-  State _state = None;
-  ggo::disc_float * _disc = nullptr;
-
-  void OnMouseDown(Qt::MouseButton, int, int, int, int, ggo::canvas &) override
-  {
-    // Do nothing.
-  }
-
-  void OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas) override
-  {
-    if (button == Qt::LeftButton)
-    {
-      switch (_state)
-      {
-      case None:
-      {
-        _disc = canvas.create_disc();
-        _disc->center() = ggo::canvas::from_render_pixel_to_canvas({ x, y }, ggo::canvas::main_direction::vertical, width, height);
-
-        _state = SettingRadius;
-        break;
-      }
-      case SettingRadius:
-        if (_disc->radius() <= 0)
-        {
-          canvas.remove_shape(_disc);
-        }
-        _state = None;
-        break;
-      }
-    }
-  }
-
-  bool OnMouseMove(int x, int y, int width, int height, ggo::canvas &) override
-  {
-    switch (_state)
-    {
-    case None:
-      break;
-    case SettingRadius:
-      const ggo::pos2f p = ggo::canvas::from_render_pixel_to_canvas({ x, y }, ggo::canvas::main_direction::vertical, width, height);
-      _disc->set_radius(ggo::distance(_disc->center(), p));
-      return true;
-    }
-
-    return false;
-  }
-};
+#include "DiscFactory.h"
 
 RenderWidget::RenderWidget(QWidget * parent) : QWidget(parent), _shapeFactory(new DiscFactory())
 {

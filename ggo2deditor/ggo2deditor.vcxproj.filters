@@ -27,6 +27,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DiscFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -38,12 +41,18 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\DiscFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <CustomBuild Include="src\MainWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="src\RenderWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <ClInclude Include="src\ShapeFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src">
       <Filter>Header Files</Filter>
     </ClInclude>
