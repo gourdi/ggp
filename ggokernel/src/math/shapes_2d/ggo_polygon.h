@@ -19,6 +19,7 @@ namespace ggo
     using samplable_shape2d_abc<data_t>::is_point_inside;
 
                               polygon2d() {}
+                              polygon2d(std::vector<ggo::pos2<data_t>> points) : _points(std::move(points)) {}
                               polygon2d(int capacity) { _points.reserve(capacity); } 
                               polygon2d(const polygon2d & polygon) = default;      
         
@@ -32,6 +33,11 @@ namespace ggo
     int					              get_points_count() const { return static_cast<int>(_points.size()); }
     ggo::pos2<data_t> &		    get_point(int i) { return _points[i]; }
     const ggo::pos2<data_t> & get_point(int i) const { return _points[i]; }
+
+    const ggo::pos2<data_t> & back() const { return _points.back(); }
+    ggo::pos2<data_t> &       back() { return _points.back(); }
+
+    void                      set_points(std::vector<ggo::pos2<data_t>> points) { _points = std::move(points); }
           
     void				              clear() { _points.clear(); };
           

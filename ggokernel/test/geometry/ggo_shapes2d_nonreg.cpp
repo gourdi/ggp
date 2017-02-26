@@ -174,6 +174,20 @@ GGO_TEST(shapes2d, triangle)
 GGO_TEST(shapes2d, polygon)
 {
   {
+    // Move on contruction.
+    std::vector<ggo::pos2f> points1{ { 0.f, 1.f },{ 2.f, 3.f },{ 4.f, 5.f } };
+    ggo::polygon2d_float polygon(std::move(points1));
+    GGO_CHECK(points1.empty() == true);
+    GGO_CHECK(polygon.get_points_count() == 3);
+
+    // Move on setting points.
+    std::vector<ggo::pos2f> points2{ { 0.f, 1.f },{ 2.f, 3.f } };
+    polygon.set_points(std::move(points2));
+    GGO_CHECK(points2.empty() == true);
+    GGO_CHECK(polygon.get_points_count() == 2);
+  }
+
+  {
     ggo::polygon2d_float polygon;
     ggo::pos2f p1(1.f, 2.f);
     ggo::pos2f p2(3.f, 4.f);
