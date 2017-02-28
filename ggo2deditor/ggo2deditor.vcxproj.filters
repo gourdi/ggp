@@ -33,6 +33,9 @@
     <ClCompile Include="src\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PolygonFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\RenderWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -47,6 +50,9 @@
     <CustomBuild Include="src\MainWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <ClInclude Include="src\PolygonFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <CustomBuild Include="src\RenderWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>

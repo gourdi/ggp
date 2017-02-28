@@ -19,15 +19,19 @@ protected:
   void mousePressEvent(QMouseEvent *eventPress) override;
   void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
   void mouseMoveEvent(QMouseEvent *eventMove) override;
+  void wheelEvent(QWheelEvent *event) override;
 
   QSize sizeHint() const override;
   QSize minimumSizeHint() const override;
+
+  ggo::canvas::view getCanvasView() const;
 
 private:
 
   QImage _image;
   ggo::canvas _canvas;
   std::unique_ptr<ShapeFactory> _shapeFactory;
+  int _zoomIndex;
 };
 
 #endif

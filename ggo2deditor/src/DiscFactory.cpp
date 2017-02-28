@@ -1,13 +1,13 @@
 #include "DiscFactory.h"
 
 //////////////////////////////////////////////////////////////
-void DiscFactory::OnMouseDown(Qt::MouseButton, int, int, int, int, ggo::canvas &)
+void DiscFactory::OnMouseDown(Qt::MouseButton, int, int, int, int, ggo::canvas &, const ggo::canvas::view &)
 {
   // Do nothing.
 }
 
 //////////////////////////////////////////////////////////////
-void DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas)
+void DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view)
 {
   if (button == Qt::LeftButton)
   {
@@ -16,7 +16,7 @@ void DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int width, int
     case None:
     {
       _disc = canvas.create_disc();
-      _disc->center() = ggo::canvas::from_render_pixel_to_canvas({ x, y }, ggo::canvas::main_direction::vertical, width, height);
+      _disc->center() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height);
 
       _state = SettingRadius;
       break;
@@ -33,14 +33,14 @@ void DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int width, int
 }
 
 //////////////////////////////////////////////////////////////
-bool DiscFactory::OnMouseMove(int x, int y, int width, int height, ggo::canvas &)
+bool DiscFactory::OnMouseMove(int x, int y, int width, int height, ggo::canvas &, const ggo::canvas::view & view)
 {
   switch (_state)
   {
   case None:
     break;
   case SettingRadius:
-    const ggo::pos2f p = ggo::canvas::from_render_pixel_to_canvas({ x, y }, ggo::canvas::main_direction::vertical, width, height);
+    const ggo::pos2f p = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height);
     _disc->set_radius(ggo::distance(_disc->center(), p));
     return true;
   }

@@ -34,5 +34,13 @@ INCLUDEPATH = ../ggokernel/src \
               ../ggo2d/src/paint \
               ../ggo2d/src/rle_image
 
-HEADERS = src/MainWindow.h src src/RenderWidget.h src/ShapeFactory.h src/DiscFactory.h
-SOURCES = src/main.cpp src/MainWindow.cpp src/RenderWidget.cpp src/DiscFactory.cpp
+HEADERS = src/MainWindow.h src \
+          src/RenderWidget.h \
+          src/ShapeFactory.h \
+          src/DiscFactory.h \
+          src/PolygonFactory.h
+SOURCES = src/main.cpp \
+          src/MainWindow.cpp \
+          src/RenderWidget.cpp \
+          src/DiscFactory.cpp \
+          src/PolygonFactory.cpp

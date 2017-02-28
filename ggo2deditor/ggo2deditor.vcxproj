@@ -125,7 +125,7 @@
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <OutputFile>$(OutDir)\ggo2deditor.exe</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Link>
     <Midl>
@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="src\DiscFactory.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
+    <ClCompile Include="src\PolygonFactory.cpp" />
     <ClCompile Include="src\RenderWidget.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC src/MainWindow.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_MainWindow.cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="src\PolygonFactory.h" />
     <CustomBuild Include="src\RenderWidget.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">src\RenderWidget.h;release\moc_predefs.h;C:\Qt\5.8\msvc2015_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Qt\5.8\msvc2015_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include release/moc_predefs.h -IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015 -ID:/ggp/ggo2deditor -ID:/ggp/ggokernel/src -ID:/ggp/ggokernel/src/rle -ID:/ggp/ggokernel/src/math -ID:/ggp/ggokernel/src/math/shapes_2d -ID:/ggp/ggokernel/src/math/shapes_3d -ID:/ggp/ggokernel/src/math/marching_algorithms -ID:/ggp/ggokernel/src/math/delaunay_triangulation -ID:/ggp/ggokernel/src/math/signal_proc -ID:/ggp/ggokernel/src/math/linear_algebra -ID:/ggp/ggokernel/src/math/sampling/low_discrepancy_sequences -ID:/ggp/ggokernel/src/math/sampling/shape_sampling -ID:/ggp/ggokernel/src/math/sampling/pixel_sampling -ID:/ggp/ggokernel/src/math/interpolation -ID:/ggp/ggokernel/src/math/scalar_fields_2d -ID:/ggp/ggo2d/src -ID:/ggp/ggo2d/src/fill -ID:/ggp/ggo2d/src/blur -ID:/ggp/ggo2d/src/processing -ID:/ggp/ggo2d/src/space_partitionning -ID:/ggp/ggo2d/src/paint -ID:/ggp/ggo2d/src/rle_image -IC:/Qt/5.8/msvc2015_64/include -IC:/Qt/5.8/msvc2015_64/include/QtWidgets -IC:/Qt/5.8/msvc2015_64/include/QtGui -IC:/Qt/5.8/msvc2015_64/include/QtANGLE -IC:/Qt/5.8/msvc2015_64/include/QtCore -I"C:\Program Files (x86)\Intel\Trace Analyzer and Collector\9.0.3.049\include" src\RenderWidget.h -o release\moc_RenderWidget.cpp</Command>
