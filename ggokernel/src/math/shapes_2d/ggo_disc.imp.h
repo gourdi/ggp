@@ -2,6 +2,14 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
+  disc<data_t>::disc(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) :
+    _center((p1 + p2) / data_t(2)),
+    _radius(ggo::distance(p1, p2) / data_t(2))
+  {
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
   data_t disc<data_t>::dist_to_point(data_t x, data_t y) const
   {
     data_t dy	         = _center.y() - y;

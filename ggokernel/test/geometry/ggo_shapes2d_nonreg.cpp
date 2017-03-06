@@ -185,6 +185,12 @@ GGO_TEST(shapes2d, polygon)
     polygon.set_points(std::move(points2));
     GGO_CHECK(points2.empty() == true);
     GGO_CHECK(polygon.get_points_count() == 2);
+
+    // Copy points.
+    std::vector<ggo::pos2f> points3{ { 0.f, 1.f },{ 2.f, 3.f },{4.f, 5.f} };
+    polygon.set_points(points3);
+    GGO_CHECK(points3.size() == 3);
+    GGO_CHECK(polygon.get_points_count() == 3);
   }
 
   {

@@ -4,13 +4,19 @@
 #include <QtWidgets/qwidget.h>
 #include <ggo_canvas.h>
 
+class ShapeHandler;
+
 class ShapeFactory
 {
 public:
 
-  virtual void OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0;
-  virtual void OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0;
-  virtual bool OnMouseMove(int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0; // Return false not to update the RenderWidget.
+  // Return a non-null pointer once the shape has been creaed.
+  virtual ShapeHandler * OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0;
+
+  // Return a non-null pointer once the shape has been creaed.
+  virtual ShapeHandler * OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0;
+
+  virtual void OnMouseMove(int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) = 0;
 };
 
 #endif

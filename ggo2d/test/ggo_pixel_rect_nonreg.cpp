@@ -67,3 +67,16 @@ GGO_TEST(pixel_rect, clip_width_height)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(pixel_rect, vertical_flip)
+{
+  ggo::pixel_rect r = ggo::pixel_rect::from_left_right_bottom_top(3, 5, 1, 3);
+  r.vertical_flip(6);
+
+  GGO_CHECK_EQ(r.left(), 3);
+  GGO_CHECK_EQ(r.right(), 5);
+  GGO_CHECK_EQ(r.bottom(), 2);
+  GGO_CHECK_EQ(r.top(), 4);
+}
+
+

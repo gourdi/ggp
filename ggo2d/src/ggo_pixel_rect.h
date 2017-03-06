@@ -47,6 +47,8 @@ namespace ggo
 
     template <typename data_t>
     ggo::rect_data<data_t> get_rect_data() const;
+
+    void vertical_flip(int height);
     
   public:
     
@@ -134,6 +136,16 @@ namespace ggo
     _top = std::min(_top, other._top);
 
     return true;
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline void pixel_rect::vertical_flip(int height)
+  {
+    int top    = height - 1 - _bottom;
+    int bottom = height - 1 - _top;
+
+    _bottom = bottom;
+    _top = top;
   }
 
   //////////////////////////////////////////////////////////////

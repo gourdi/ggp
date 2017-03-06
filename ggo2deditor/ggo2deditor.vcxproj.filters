@@ -30,13 +30,22 @@
     <ClCompile Include="src\DiscFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DiscHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PolygonFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PolygonHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\RenderWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShapeHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
@@ -47,16 +56,25 @@
     <ClInclude Include="src\DiscFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DiscHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <CustomBuild Include="src\MainWindow.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <ClInclude Include="src\PolygonFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\PolygonHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <CustomBuild Include="src\RenderWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <ClInclude Include="src\ShapeFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShapeHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src">

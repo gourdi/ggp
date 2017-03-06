@@ -38,9 +38,15 @@ HEADERS = src/MainWindow.h src \
           src/RenderWidget.h \
           src/ShapeFactory.h \
           src/DiscFactory.h \
-          src/PolygonFactory.h
+          src/PolygonFactory.h \
+          src/ShapeHandler.h \
+          src/DiscHandler.h \
+          src/PolygonHandler.h
 SOURCES = src/main.cpp \
           src/MainWindow.cpp \
           src/RenderWidget.cpp \
           src/DiscFactory.cpp \
-          src/PolygonFactory.cpp
+          src/PolygonFactory.cpp \
+          src/ShapeHandler.cpp \
+          src/DiscHandler.cpp \
+          src/PolygonHandler.cpp

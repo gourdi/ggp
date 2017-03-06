@@ -36,9 +36,11 @@ namespace ggo
 
     const ggo::pos2<data_t> & back() const { return _points.back(); }
     ggo::pos2<data_t> &       back() { return _points.back(); }
+    void                      pop_back() { return _points.pop_back(); }
 
     void                      set_points(std::vector<ggo::pos2<data_t>> points) { _points = std::move(points); }
           
+    bool                      empty() const { return _points.empty(); }
     void				              clear() { _points.clear(); };
           
     data_t					          dist_to_segment(const segment<data_t> & segment) const;

@@ -26,12 +26,20 @@ protected:
 
   ggo::canvas::view getCanvasView() const;
 
+public slots:
+
+  void createDisc();
+  void createPolygon();
+
 private:
 
   QImage _image;
   ggo::canvas _canvas;
   std::unique_ptr<ShapeFactory> _shapeFactory;
   int _zoomIndex;
+
+  std::vector<std::unique_ptr<ShapeHandler>> _shapeHandlers;
+  ShapeHandler * _currentShapeHandler = nullptr;
 };
 
 #endif

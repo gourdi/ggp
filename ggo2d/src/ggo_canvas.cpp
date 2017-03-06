@@ -2,7 +2,7 @@
 #include <ggo_buffer_fill.h>
 
 ///////////////////////////////////////////////////////////////////
-ggo::paintable_shape2d_abc<float> * ggo::canvas::disc::create_render_shape(const view & view, int render_width, int render_height) const
+ggo::disc_float * ggo::canvas::disc::create_render_disc(const view & view, int render_width, int render_height) const
 {
   const pos2f center = from_view_to_render(_disc.center(), view, render_width, render_height);
   const float radius = from_view_to_render(_disc.radius(), view._size, view._main_direction, render_width, render_height);
@@ -11,7 +11,22 @@ ggo::paintable_shape2d_abc<float> * ggo::canvas::disc::create_render_shape(const
 }
 
 ///////////////////////////////////////////////////////////////////
-ggo::paintable_shape2d_abc<float> * ggo::canvas::polygon::create_render_shape(const view & view, int render_width, int render_height) const
+void ggo::canvas::disc::set_from_render_points(const ggo::pos2f & p1, const ggo::pos2f & p2, const view & view, int render_width, int render_height)
+{
+  _disc = ggo::disc_float(
+    ggo::canvas::from_render_to_view(p1, view, render_width, render_height),
+    ggo::canvas::from_render_to_view(p2, view, render_width, render_height));
+}
+
+///////////////////////////////////////////////////////////////////
+void ggo::canvas::disc::set_from_render_disc(const ggo::disc_float & disc, const view & view, int render_width, int render_height)
+{
+  _disc.center() = ggo::canvas::from_render_to_view(disc.center(), view, render_width, render_height);
+  _disc.radius() = ggo::canvas::from_render_to_view(disc.radius(), view._size, view._main_direction, render_width, render_height);
+}
+
+///////////////////////////////////////////////////////////////////
+ggo::polygon2d_float * ggo::canvas::polygon::create_render_polygon(const view & view, int render_width, int render_height) const
 {
   const int points_count = _polygon.get_points_count();
 
@@ -25,23 +40,23 @@ ggo::paintable_shape2d_abc<float> * ggo::canvas::polygon::create_render_shape(co
 }
 
 ///////////////////////////////////////////////////////////////////
-ggo::disc_float * ggo::canvas::create_disc()
+ggo::canvas::disc * ggo::canvas::create_disc()
 {
-  ggo::canvas::disc * canvas_disc = new ggo::canvas::disc();
+  ggo::canvas::disc * disc = new ggo::canvas::disc();
 
-  _shapes.emplace_back(std::unique_ptr<shape_abc>(canvas_disc));
+  _shapes.emplace_back(std::unique_ptr<shape_abc>(disc));
 
-  return &canvas_disc->_disc;
+  return disc;
 }
 
 ///////////////////////////////////////////////////////////////////
-ggo::polygon2d_float * ggo::canvas::create_polygon()
+ggo::canvas::polygon * ggo::canvas::create_polygon()
 {
-  ggo::canvas::polygon * canvas_polygon = new ggo::canvas::polygon();
+  ggo::canvas::polygon * polygon = new ggo::canvas::polygon();
 
-  _shapes.emplace_back(std::unique_ptr<shape_abc>(canvas_polygon));
+  _shapes.emplace_back(std::unique_ptr<shape_abc>(polygon));
 
-  return &canvas_polygon->_polygon;
+  return polygon;
 }
 
 ///////////////////////////////////////////////////////////////////

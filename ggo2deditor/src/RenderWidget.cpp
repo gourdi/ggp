@@ -7,16 +7,17 @@
 
 #include "DiscFactory.h"
 #include "PolygonFactory.h"
+#include "ShapeHandler.h"
 
 namespace
 {
   const std::array<float, 13> zoomFactors = { 0.25f, 0.35f, 0.5f, 0.65f, 0.75f, 0.9f, 1.f, 1.1f, 1.35f, 1.50f, 2.f, 2.f, 4.f };
 }
 
-RenderWidget::RenderWidget(QWidget * parent) :
-  QWidget(parent),
-  _shapeFactory(new PolygonFactory()), 
-  _zoomIndex(zoomFactors.size() / 2 + 1)
+RenderWidget::RenderWidget(QWidget * parent)
+:
+QWidget(parent),
+_zoomIndex(int(zoomFactors.size() / 2 + 1))
 {
   setMouseTracking(true);
 }
@@ -25,10 +26,17 @@ void RenderWidget::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
 
+  // First render canvas.
   _canvas.render(_image.bits(), getCanvasView(), size().width(), size().height(), _image.bytesPerLine(), ggo::bgra_8u_yd);
 
   QRect dirtyRect = event->rect();
   painter.drawImage(dirtyRect, _image, dirtyRect);
+
+  // Let the current shape handler paint itself.
+  if (_currentShapeHandler != nullptr)
+  {
+    _currentShapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
+  }
 }
 
 void RenderWidget::resizeEvent(QResizeEvent *event)
@@ -40,20 +48,60 @@ void RenderWidget::resizeEvent(QResizeEvent *event)
 
 void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
 {
-  _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), size().height() - eventPress->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
-  update();
+  if (_currentShapeHandler)
+  {
+    _currentShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), size().height() - eventPress->y() - 1, size().width(), size().height(), getCanvasView());
+  }
+  else if (_shapeFactory)
+  {
+    auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), size().height() - eventPress->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
+
+    if (shapeHandler != nullptr)
+    {
+      _currentShapeHandler = shapeHandler;
+      _shapeHandlers.emplace_back(shapeHandler);
+      _shapeFactory.reset();
+    }
+
+    update();
+  }
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
-  _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), size().height() - releaseEvent->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
-  update();
+  if (_currentShapeHandler)
+  {
+    _currentShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), size().height() - releaseEvent->y() - 1, size().width(), size().height(), getCanvasView());
+  }
+  else if (_shapeFactory)
+  {
+    auto shapeHandler = _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), size().height() - releaseEvent->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
+
+    if (shapeHandler != nullptr)
+    {
+      _currentShapeHandler = shapeHandler;
+      _shapeHandlers.emplace_back(shapeHandler);
+      _shapeFactory.reset();
+    }
+
+    update();
+  }
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
-  if (_shapeFactory->OnMouseMove(eventMove->x(), size().height() - eventMove->y() - 1, size().width(), size().height(), _canvas, getCanvasView()) == true)
+  if (_currentShapeHandler)
   {
+    auto mouveMoveData = _currentShapeHandler->OnMouseMove(eventMove->x(), size().height() - eventMove->y() - 1, size().width(), size().height(), getCanvasView());
+    setCursor(mouveMoveData._cursor);
+    if (mouveMoveData._update_widget == true)
+    {
+      update();
+    }
+  }
+  else if (_shapeFactory)
+  {
+    _shapeFactory->OnMouseMove(eventMove->x(), size().height() - eventMove->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
     update();
   }
 }
@@ -86,4 +134,14 @@ QSize RenderWidget::sizeHint() const
 ggo::canvas::view RenderWidget::getCanvasView() const
 {
   return ggo::canvas::view({ 0.f, 0.f }, zoomFactors[_zoomIndex], ggo::canvas::main_direction::vertical);
+}
+
+void RenderWidget::createDisc()
+{
+  _shapeFactory.reset(new DiscFactory());
+}
+
+void RenderWidget::createPolygon()
+{
+  _shapeFactory.reset(new PolygonFactory());
 }

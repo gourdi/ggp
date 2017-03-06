@@ -26,10 +26,64 @@ namespace ggo
       main_direction  _main_direction;
     };
 
+  ///////////////////////////////////////////////////////////////////
+  // Shapes.
+  public:
+
+    // Shapes interface.
+    class shape_abc
+    {
+    public:
+
+      virtual const ggo::paintable_shape2d_abc<float> * get_shape() const = 0;
+      virtual ggo::paintable_shape2d_abc<float> *       create_render_shape(const view & view, int render_width, int render_height) const = 0;
+    };
+
+    // Disc.
+    class disc : public shape_abc
+    {
+    public:
+
+      const ggo::paintable_shape2d_abc<float> * get_shape() const override { return &_disc; }
+      ggo::paintable_shape2d_abc<float> *       create_render_shape(const view & view, int render_width, int render_height) const override { return create_render_disc(view, render_width, render_height); }
+
+      void  set_from_render_points(const ggo::pos2f & p1, const ggo::pos2f & p2, const view & view, int render_width, int render_height);
+      void  set_from_render_disc(const ggo::disc_float & disc, const view & view, int render_width, int render_height);
+
+      ggo::disc_float &       get_disc() { return _disc; }
+      const ggo::disc_float & get_disc() const { return _disc; }
+      ggo::disc_float *       create_render_disc(const view & view, int render_width, int render_height) const;
+
+    private:
+
+      ggo::disc_float _disc;
+    };
+
+    // Polygon.
+    class polygon : public shape_abc
+    {
+    public:
+
+      const ggo::paintable_shape2d_abc<float> * get_shape() const override { return &_polygon; }
+      ggo::paintable_shape2d_abc<float> *       create_render_shape(const view & view, int render_width, int render_height) const override { return create_render_polygon(view, render_width, render_height); }
+
+      ggo::polygon2d_float &        get_polygon() { return _polygon; }
+      const ggo::polygon2d_float &  get_polygon() const { return _polygon; }
+      ggo::polygon2d_float *        create_render_polygon(const view & view, int render_width, int render_height) const;
+
+    private:
+
+      ggo::polygon2d_float _polygon;
+    };
+
+  ///////////////////////////////////////////////////////////////////
+  // Methods.
+  public:
+
     void render(void * buffer, const view & view, int width, int height, int line_byte_step, pixel_buffer_format pbf) const;
 
-    disc_float * create_disc();
-    polygon2d_float * create_polygon();
+    disc *    create_disc();
+    polygon * create_polygon();
 
     void remove_shape(const ggo::paintable_shape2d_abc<float> * shape);
 
@@ -43,34 +97,6 @@ namespace ggo
     static ggo::pos2f from_render_pixel_to_view(const ggo::pos2i & p, const view & view, int render_width, int render_height);
 
   private:
-
-    class shape_abc
-    {
-    public:
-
-      virtual const ggo::paintable_shape2d_abc<float> * get_shape() const = 0;
-      virtual ggo::paintable_shape2d_abc<float> * create_render_shape(const view & view, int render_width, int render_height) const = 0;
-    };
-
-    class disc : public shape_abc
-    {
-    public:
-
-      const ggo::paintable_shape2d_abc<float> * get_shape() const override { return &_disc; }
-      ggo::paintable_shape2d_abc<float> * create_render_shape(const view & view, int render_width, int render_height) const override;
-
-      ggo::disc_float _disc;
-    };
-
-    class polygon : public shape_abc
-    {
-    public:
-
-      const ggo::paintable_shape2d_abc<float> * get_shape() const override { return &_polygon; }
-      ggo::paintable_shape2d_abc<float> * create_render_shape(const view & view, int render_width, int render_height) const override;
-
-      ggo::polygon2d_float _polygon;
-    };
 
     std::vector<std::unique_ptr<shape_abc>> _shapes;
   };
