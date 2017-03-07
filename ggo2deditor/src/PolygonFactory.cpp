@@ -16,10 +16,10 @@ ShapeHandler * PolygonFactory::OnMouseUp(Qt::MouseButton button, int x, int y, i
     if (_polygon == nullptr)
     {
       _polygon = canvas.create_polygon();
-      _polygon->get_polygon().add_point(ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height));
+      _polygon->get_polygon().add_point(ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true));
     }
 
-    _polygon->get_polygon().add_point(ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height));
+    _polygon->get_polygon().add_point(ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true));
     break;
 
   case Qt::RightButton:
@@ -39,7 +39,7 @@ void PolygonFactory::OnMouseMove(int x, int y, int width, int height, ggo::canva
 {
   if (_polygon != nullptr && _polygon->get_polygon().empty() == false)
   {
-    _polygon->get_polygon().back() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height);
+    _polygon->get_polygon().back() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true);
   }
 }
 

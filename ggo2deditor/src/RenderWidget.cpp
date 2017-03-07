@@ -50,11 +50,11 @@ void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
 {
   if (_currentShapeHandler)
   {
-    _currentShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), size().height() - eventPress->y() - 1, size().width(), size().height(), getCanvasView());
+    _currentShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
   }
   else if (_shapeFactory)
   {
-    auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), size().height() - eventPress->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
+    auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
@@ -71,11 +71,11 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
   if (_currentShapeHandler)
   {
-    _currentShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), size().height() - releaseEvent->y() - 1, size().width(), size().height(), getCanvasView());
+    _currentShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView());
   }
   else if (_shapeFactory)
   {
-    auto shapeHandler = _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), size().height() - releaseEvent->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
+    auto shapeHandler = _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
@@ -92,7 +92,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
   if (_currentShapeHandler)
   {
-    auto mouveMoveData = _currentShapeHandler->OnMouseMove(eventMove->x(), size().height() - eventMove->y() - 1, size().width(), size().height(), getCanvasView());
+    auto mouveMoveData = _currentShapeHandler->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
     setCursor(mouveMoveData._cursor);
     if (mouveMoveData._update_widget == true)
     {
@@ -101,7 +101,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
   }
   else if (_shapeFactory)
   {
-    _shapeFactory->OnMouseMove(eventMove->x(), size().height() - eventMove->y() - 1, size().width(), size().height(), _canvas, getCanvasView());
+    _shapeFactory->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), _canvas, getCanvasView());
     update();
   }
 }

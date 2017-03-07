@@ -3,6 +3,8 @@
 *.mp4
 *.bmp
 ggoraytracer/main*
+ggo2deditor/debug
+ggo2deditor/release
 lib
 include
 *.sdf

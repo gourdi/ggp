@@ -34,6 +34,13 @@ namespace ggo
     ggo::pos2<data_t> &		    get_point(int i) { return _points[i]; }
     const ggo::pos2<data_t> & get_point(int i) const { return _points[i]; }
 
+    const ggo::pos2<data_t> * cbegin() const { return _points.data(); }
+    const ggo::pos2<data_t> * cend() const { return _points.data() + _points.size(); }
+    const ggo::pos2<data_t> * begin() const { return _points.data(); }
+    const ggo::pos2<data_t> * end() const { return _points.data() + _points.size(); }
+    ggo::pos2<data_t> *       begin() { return _points.data(); }
+    ggo::pos2<data_t> *       end() { return _points.data() + _points.size(); }
+
     const ggo::pos2<data_t> & back() const { return _points.back(); }
     ggo::pos2<data_t> &       back() { return _points.back(); }
     void                      pop_back() { return _points.pop_back(); }

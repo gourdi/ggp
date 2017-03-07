@@ -17,7 +17,10 @@ public:
 
 private:
 
+  int HitTest(int x, int y, int width, int height, const ggo::canvas::view & view) const;
+
   ggo::canvas::polygon * _polygon;
+  int _mouse_down_index = -1;
 };
 
 #endif

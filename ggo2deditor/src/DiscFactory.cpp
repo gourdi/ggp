@@ -18,7 +18,7 @@ ShapeHandler * DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int 
     case None:
     {
       _disc = canvas.create_disc();
-      _disc->get_disc().center() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height);
+      _disc->get_disc().center() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true);
 
       _state = SettingRadius;
       return nullptr;
@@ -40,7 +40,7 @@ void DiscFactory::OnMouseMove(int x, int y, int width, int height, ggo::canvas &
   case None:
     break;
   case SettingRadius:
-    const ggo::pos2f p = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height);
+    const ggo::pos2f p = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true);
     _disc->get_disc().set_radius(ggo::distance(_disc->get_disc().center(), p));
     break;
   }

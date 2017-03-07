@@ -2,41 +2,49 @@
 #include <ggo_buffer_fill.h>
 
 ///////////////////////////////////////////////////////////////////
-ggo::disc_float * ggo::canvas::disc::create_render_disc(const view & view, int render_width, int render_height) const
+ggo::disc_float * ggo::canvas::disc::create_render_disc(const view & view, int render_width, int render_height, bool vertical_flip) const
 {
-  const pos2f center = from_view_to_render(_disc.center(), view, render_width, render_height);
+  const pos2f center = from_view_to_render(_disc.center(), view, render_width, render_height, vertical_flip);
   const float radius = from_view_to_render(_disc.radius(), view._size, view._main_direction, render_width, render_height);
 
   return new disc_float(center, radius);
 }
 
 ///////////////////////////////////////////////////////////////////
-void ggo::canvas::disc::set_from_render_points(const ggo::pos2f & p1, const ggo::pos2f & p2, const view & view, int render_width, int render_height)
+void ggo::canvas::disc::set_from_render_points(const ggo::pos2f & p1, const ggo::pos2f & p2, const view & view, int render_width, int render_height, bool vertical_flip)
 {
   _disc = ggo::disc_float(
-    ggo::canvas::from_render_to_view(p1, view, render_width, render_height),
-    ggo::canvas::from_render_to_view(p2, view, render_width, render_height));
+    ggo::canvas::from_render_to_view(p1, view, render_width, render_height, vertical_flip),
+    ggo::canvas::from_render_to_view(p2, view, render_width, render_height, vertical_flip));
 }
 
 ///////////////////////////////////////////////////////////////////
-void ggo::canvas::disc::set_from_render_disc(const ggo::disc_float & disc, const view & view, int render_width, int render_height)
+void ggo::canvas::disc::set_from_render_disc(const ggo::disc_float & disc, const view & view, int render_width, int render_height, bool vertical_flip)
 {
-  _disc.center() = ggo::canvas::from_render_to_view(disc.center(), view, render_width, render_height);
+  _disc.center() = ggo::canvas::from_render_to_view(disc.center(), view, render_width, render_height, vertical_flip);
   _disc.radius() = ggo::canvas::from_render_to_view(disc.radius(), view._size, view._main_direction, render_width, render_height);
 }
 
 ///////////////////////////////////////////////////////////////////
-ggo::polygon2d_float * ggo::canvas::polygon::create_render_polygon(const view & view, int render_width, int render_height) const
+ggo::polygon2d_float * ggo::canvas::polygon::create_render_polygon(const view & view, int render_width, int render_height, bool vertical_flip) const
 {
   const int points_count = _polygon.get_points_count();
 
   std::vector<ggo::pos2f> mapped_points(points_count);
   for (int i = 0; i < points_count; ++i)
   {
-    mapped_points[i] = from_view_to_render(_polygon.get_point(i), view, render_width, render_height);
+    mapped_points[i] = from_view_to_render(_polygon.get_point(i), view, render_width, render_height, vertical_flip);
   }
 
   return new polygon2d_float(mapped_points);
+}
+
+///////////////////////////////////////////////////////////////////
+void ggo::canvas::polygon::update_render_point(int index, const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip)
+{
+  GGO_ASSERT_BTW(index, 0, _polygon.get_points_count() - 1);
+
+  _polygon.get_point(index) = ggo::canvas::from_render_to_view(p, view, render_width, render_height, vertical_flip);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -78,7 +86,7 @@ void ggo::canvas::render(void * buffer, const view & view, int width, int height
   for (const auto & shape : _shapes)
   {
     shape_t mapped_shape;
-    mapped_shape._shape = std::shared_ptr<ggo::paintable_shape2d_abc<float>>(shape->create_render_shape(view, width, height));
+    mapped_shape._shape = std::shared_ptr<ggo::paintable_shape2d_abc<float>>(shape->create_render_shape(view, width, height, false));
     mapped_shape._brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(ggo::red_8u());
     mapped_shape._blender = std::make_shared<ggo::overwrite_dyn_blender<ggo::color_8u, ggo::color_8u>>();
     
@@ -129,7 +137,7 @@ float ggo::canvas::from_render_to_view(float dist, float view_size, main_directi
 }
 
 /////////////////////////////////////////////////////////////////////
-ggo::pos2f ggo::canvas::from_view_to_render(const ggo::pos2f & p, const view & view, int render_width, int render_height)
+ggo::pos2f ggo::canvas::from_view_to_render(const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip)
 {
   switch (view._main_direction)
   {
@@ -138,6 +146,10 @@ ggo::pos2f ggo::canvas::from_view_to_render(const ggo::pos2f & p, const view & v
     float ratio = float(render_width) / float(render_height);
     float x = ggo::map<float>(p.x() - view._center.x(), -ratio * view._size, ratio * view._size, -0.5f, float(render_width) - 0.5f);
     float y = ggo::map<float>(p.y() - view._center.y(), -view._size, view._size, -0.5f, float(render_height) - 0.5f);
+    if (vertical_flip)
+    {
+      y = render_height - y - 1;
+    }
     return pos2f(x, y);
   }
   case main_direction::horizontal:
@@ -145,6 +157,10 @@ ggo::pos2f ggo::canvas::from_view_to_render(const ggo::pos2f & p, const view & v
     float ratio = float(render_height) / float(render_width);
     float x = ggo::map<float>(p.x() - view._center.x(), -view._size, view._size, -0.5f, float(render_width) - 0.5f);
     float y = ggo::map<float>(p.y() - view._center.y(), -ratio * view._size, ratio * view._size, -0.5f, float(render_height) - 0.5f);
+    if (vertical_flip)
+    {
+      y = render_height - y - 1;
+    }
     return pos2f(x, y);
   }
   default:
@@ -154,43 +170,47 @@ ggo::pos2f ggo::canvas::from_view_to_render(const ggo::pos2f & p, const view & v
 }
 
 /////////////////////////////////////////////////////////////////////
-ggo::pos2f ggo::canvas::from_render_to_view(const ggo::pos2f & p, const view & view, int render_width, int render_height)
+ggo::pos2f ggo::canvas::from_render_to_view(const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip)
 {
+  float x = p.x();
+  float y = vertical_flip ? render_height - p.y() - 1 : p.y();
+
   switch (view._main_direction)
   {
   case main_direction::vertical:
   {
     float ratio = float(render_width) / float(render_height);
-    float x = view._center.x() + ggo::map(p.x(), -0.5f, float(render_width) - 0.5f, -ratio * view._size, ratio * view._size);
-    float y = view._center.y() + ggo::map(p.y(), -0.5f, float(render_height) - 0.5f, -view._size, view._size);
-    return pos2f(x, y);
+    x = view._center.x() + ggo::map(x, -0.5f, float(render_width) - 0.5f, -ratio * view._size, ratio * view._size);
+    y = view._center.y() + ggo::map(y, -0.5f, float(render_height) - 0.5f, -view._size, view._size);
+    break;
   }
   case main_direction::horizontal:
   {
     float ratio = float(render_height) / float(render_width);
-    float x = view._center.x() + ggo::map(p.x(), -0.5f, float(render_width) - 0.5f, -view._size, view._size);
-    float y = view._center.y() + ggo::map(p.y(), -0.5f, float(render_height) - 0.5f, -ratio * view._size, ratio * view._size);
-    return pos2f(x, y);
+    x = view._center.x() + ggo::map(p.x(), -0.5f, float(render_width) - 0.5f, -view._size, view._size);
+    y = view._center.y() + ggo::map(p.y(), -0.5f, float(render_height) - 0.5f, -ratio * view._size, ratio * view._size);
+    break;
   }
   default:
     GGO_FAIL();
-    return ggo::pos2f(0.f, 0.f);
+    break;
   }
+  return ggo::pos2f(x, y);
 }
 
 /////////////////////////////////////////////////////////////////////
-ggo::pos2i ggo::canvas::from_view_to_render_pixel(const ggo::pos2f & p, const view & view, int render_width, int render_height)
+ggo::pos2i ggo::canvas::from_view_to_render_pixel(const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip)
 {
-  const ggo::pos2f pf = from_view_to_render(p, view, render_width, render_height);
+  const ggo::pos2f pf = from_view_to_render(p, view, render_width, render_height, vertical_flip);
 
   return ggo::pos2i(ggo::to<int>(pf.x()), ggo::to<int>(pf.y()));
 }
 
 /////////////////////////////////////////////////////////////////////
-ggo::pos2f ggo::canvas::from_render_pixel_to_view(const ggo::pos2i & p, const view & view, int render_width, int render_height)
+ggo::pos2f ggo::canvas::from_render_pixel_to_view(const ggo::pos2i & p, const view & view, int render_width, int render_height, bool vertical_flip)
 {
   const ggo::pos2f pf(ggo::to<float>(p.x()), ggo::to<float>(p.y()));
   
-  return from_render_to_view(pf, view, render_width, render_height);
+  return from_render_to_view(pf, view, render_width, render_height, vertical_flip);
 }
 

@@ -53,19 +53,19 @@ GGO_TEST(canvas, from_render_to_view_position)
     const int render_width = 8;
     const int render_height = 4;
 
-    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), 3.0f);
     GGO_CHECK_FABS(p1.y(), 2.0f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 7.5f, 3.5f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 7.5f, 3.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 7.0f);
     GGO_CHECK_FABS(p2.y(), 4.0f);
 
-    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({0, 0}, view, render_width, render_height);
+    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({0, 0}, view, render_width, render_height, false);
     GGO_CHECK_FABS(p3.x(), 3.25f);
     GGO_CHECK_FABS(p3.y(), 2.25f);
 
-    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 7, 3 }, view, render_width, render_height);
+    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 7, 3 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p4.x(), 6.75f);
     GGO_CHECK_FABS(p4.y(), 3.75f);
   }
@@ -75,19 +75,19 @@ GGO_TEST(canvas, from_render_to_view_position)
     const int render_width = 4;
     const int render_height = 8;
 
-    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), 12.0f);
     GGO_CHECK_FABS(p1.y(), 4.0f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 3.5f, 7.5f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 3.5f, 7.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 20.0f);
     GGO_CHECK_FABS(p2.y(), 20.0f);
 
-    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height);
+    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p3.x(), 13.0f);
     GGO_CHECK_FABS(p3.y(), 5.0f);
 
-    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 3, 7 }, view, render_width, render_height);
+    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 3, 7 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p4.x(), 19.0f);
     GGO_CHECK_FABS(p4.y(), 19.0f);
   }
@@ -97,19 +97,19 @@ GGO_TEST(canvas, from_render_to_view_position)
     const int render_width = 8;
     const int render_height = 4;
 
-    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), 2.0f);
     GGO_CHECK_FABS(p1.y(), 3.0f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 7.5f, 3.5f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 7.5f, 3.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 10.0f);
     GGO_CHECK_FABS(p2.y(), 7.0f);
 
-    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height);
+    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p3.x(), 2.5f);
     GGO_CHECK_FABS(p3.y(), 3.5f);
 
-    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 7, 3 }, view, render_width, render_height);
+    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 7, 3 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p4.x(), 9.5f);
     GGO_CHECK_FABS(p4.y(), 6.5f);
   }
@@ -119,19 +119,19 @@ GGO_TEST(canvas, from_render_to_view_position)
     const int render_width = 4;
     const int render_height = 8;
 
-    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_render_to_view({ -0.5f, -0.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), 12.0f);
     GGO_CHECK_FABS(p1.y(), 4.0f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 3.5f, 7.5f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_render_to_view({ 3.5f, 7.5f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 20.0f);
     GGO_CHECK_FABS(p2.y(), 20.0f);
 
-    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height);
+    const ggo::pos2f p3 = ggo::canvas::from_render_pixel_to_view({ 0, 0 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p3.x(), 13.0f);
     GGO_CHECK_FABS(p3.y(), 5.0f);
 
-    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 3, 7 }, view, render_width, render_height);
+    const ggo::pos2f p4 = ggo::canvas::from_render_pixel_to_view({ 3, 7 }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p4.x(), 19.0f);
     GGO_CHECK_FABS(p4.y(), 19.0f);
   }
@@ -145,19 +145,19 @@ GGO_TEST(canvas, from_view_to_render_position)
     const int render_width = 8;
     const int render_height = 4;
 
-    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 2.0f, 3.0f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 2.0f, 3.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), -0.5f);
     GGO_CHECK_FABS(p1.y(), -0.5f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 10.0f, 7.0f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 10.0f, 7.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 7.5f);
     GGO_CHECK_FABS(p2.y(), 3.5f);
 
-    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 2.9f, 3.9f }, view, render_width, render_height);
+    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 2.9f, 3.9f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p3.x(), 0);
     GGO_CHECK_EQ(p3.y(), 0);
 
-    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 3.1f, 4.1f }, view, render_width, render_height);
+    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 3.1f, 4.1f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p4.x(), 1);
     GGO_CHECK_EQ(p4.y(), 1);
   }
@@ -167,19 +167,19 @@ GGO_TEST(canvas, from_view_to_render_position)
     const int render_width = 4;
     const int render_height = 8;
 
-    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 12.0f, 4.0f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 12.0f, 4.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), -0.5f);
     GGO_CHECK_FABS(p1.y(), -0.5f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 20.0f, 20.0f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 20.0f, 20.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 3.5f);
     GGO_CHECK_FABS(p2.y(), 7.5f);
 
-    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 13.9f, 5.9f }, view, render_width, render_height);
+    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 13.9f, 5.9f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p3.x(), 0);
     GGO_CHECK_EQ(p3.y(), 0);
 
-    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 14.1f, 6.1f }, view, render_width, render_height);
+    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 14.1f, 6.1f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p4.x(), 1);
     GGO_CHECK_EQ(p4.y(), 1);
   }
@@ -189,19 +189,19 @@ GGO_TEST(canvas, from_view_to_render_position)
     const int render_width = 8;
     const int render_height = 4;
 
-    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 2.0f, 3.0f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 2.0f, 3.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), -0.5f);
     GGO_CHECK_FABS(p1.y(), -0.5f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 10.0f, 7.0f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 10.0f, 7.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 7.5f);
     GGO_CHECK_FABS(p2.y(), 3.5f);
 
-    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 2.9f, 3.9f }, view, render_width, render_height);
+    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 2.9f, 3.9f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p3.x(), 0);
     GGO_CHECK_EQ(p3.y(), 0);
 
-    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 9.1f, 6.1f }, view, render_width, render_height);
+    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 9.1f, 6.1f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p4.x(), 7);
     GGO_CHECK_EQ(p4.y(), 3);
   }
@@ -211,19 +211,19 @@ GGO_TEST(canvas, from_view_to_render_position)
     const int render_width = 4;
     const int render_height = 8;
 
-    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 12.0f, 4.0f }, view, render_width, render_height);
+    const ggo::pos2f p1 = ggo::canvas::from_view_to_render({ 12.0f, 4.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p1.x(), -0.5f);
     GGO_CHECK_FABS(p1.y(), -0.5f);
 
-    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 16.0f, 12.0f }, view, render_width, render_height);
+    const ggo::pos2f p2 = ggo::canvas::from_view_to_render({ 16.0f, 12.0f }, view, render_width, render_height, false);
     GGO_CHECK_FABS(p2.x(), 1.5f);
     GGO_CHECK_FABS(p2.y(), 3.5f);
 
-    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 15.9f, 11.9f }, view, render_width, render_height);
+    const ggo::pos2i p3 = ggo::canvas::from_view_to_render_pixel({ 15.9f, 11.9f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p3.x(), 1);
     GGO_CHECK_EQ(p3.y(), 3);
 
-    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 16.1f, 12.1f }, view, render_width, render_height);
+    const ggo::pos2i p4 = ggo::canvas::from_view_to_render_pixel({ 16.1f, 12.1f }, view, render_width, render_height, false);
     GGO_CHECK_EQ(p4.x(), 2);
     GGO_CHECK_EQ(p4.y(), 4);
   }

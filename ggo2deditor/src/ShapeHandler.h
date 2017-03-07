@@ -22,6 +22,15 @@ public:
   virtual bool OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
   virtual MouseMoveData OnMouseMove(int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
 
+protected:
+
+  static QRect GetHandleRect(int x, int y);
+
+  static  bool HitTestHandle(int handle_x, int handle_y, int test_x, int test_y);
+
+  static  void PaintHandle(QPainter & painter, int x, int y);
+  static  void PaintHandle(QPainter & painter, const ggo::pos2f & p);
+
   static constexpr int half_tolerance = 3;
   static constexpr int tolerance = 2 * half_tolerance + 1;
 };
