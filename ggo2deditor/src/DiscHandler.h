@@ -29,14 +29,33 @@ public:
   bool OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view) override;
   MouseMoveData OnMouseMove(int x, int y, int width, int height, const ggo::canvas::view & view) override;
 
+  void SetAnchor(int x, int y, int width, int height, const ggo::canvas::view & view) override;
+  void SetPosition(int x, int y, int width, int height, const ggo::canvas::view & view) override;
+
+  ggo::canvas::shape_abc *        GetShape() override { return _disc; }
+  const ggo::canvas::shape_abc *  GetShape() const override { return _disc; }
+
 private:
 
   Modifier HitTest(int x, int y, int width, int height, const ggo::canvas::view & view) const;
 
   ggo::canvas::disc * _disc;
+
+  // Edition.
   ggo::pos2f _mouse_down_center;
   float _mouse_down_radius;
   Modifier _modifier = Modifier::none;
+
+  // Move.
+  struct DiscAnchor
+  {
+    DiscAnchor(const ggo::disc_float & disc, int x, int y) : _disc(disc), _x(x), _y(y) {}
+
+    ggo::disc_float _disc;
+    int _x;
+    int _y;
+  };
+  std::unique_ptr<DiscAnchor> _disc_anchor;
 };
 
 #endif

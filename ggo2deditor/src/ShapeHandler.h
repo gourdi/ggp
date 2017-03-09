@@ -16,11 +16,23 @@ public:
     bool _update_widget;
   };
 
+  // Draw method.
   virtual void Draw(QPainter & painter, int width, int height, const ggo::canvas::view & view) const = 0;
 
+  // Edition events processing.
   virtual bool OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
   virtual bool OnMouseUp(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
   virtual MouseMoveData OnMouseMove(int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
+
+  // Move method.
+  virtual void SetAnchor(int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
+  virtual void SetPosition(int x, int y, int width, int height, const ggo::canvas::view & view) = 0;
+
+  // Access to the canvas' shape.
+  virtual ggo::canvas::shape_abc *        GetShape() = 0;
+  virtual const ggo::canvas::shape_abc *  GetShape() const = 0;
+
+  bool IsPointInside(float x, float y, int width, int height, const ggo::canvas::view & view) const;
 
 protected:
 

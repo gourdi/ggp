@@ -82,4 +82,23 @@ ShapeHandler::MouseMoveData PolygonHandler::OnMouseMove(int x, int y, int width,
   return mouseMoveData;
 }
 
+/////////////////////////////////////////////////////////////////////
+void PolygonHandler::SetAnchor(int x, int y, int width, int height, const ggo::canvas::view & view)
+{
+  std::unique_ptr<ggo::polygon2d_float> render_polygon(_polygon->create_render_polygon(view, width, height, true));
+
+  _polygon_anchor = std::make_unique<PolygonAnchor>(*render_polygon, x, y);
+}
+
+/////////////////////////////////////////////////////////////////////
+void PolygonHandler::SetPosition(int x, int y, int width, int height, const ggo::canvas::view & view)
+{
+  GGO_ASSERT(_polygon_anchor);
+  if (_polygon_anchor)
+  {
+    ggo::polygon2d_float polygon(_polygon_anchor->_polygon);
+    polygon.move(static_cast<float>(x - _polygon_anchor->_x), static_cast<float>(y - _polygon_anchor->_y));
+    _polygon->set_from_render_polygon(polygon, view, width, height, true);
+  }
+}
 

@@ -35,8 +35,10 @@ namespace ggo
     {
     public:
 
-      virtual const ggo::paintable_shape2d_abc<float> * get_shape() const = 0;
-      virtual ggo::paintable_shape2d_abc<float> *       create_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const = 0;
+      virtual const ggo::paintable_shape2d_abc<float> *   get_shape() const = 0;
+      virtual ggo::paintable_shape2d_abc<float> *         create_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const = 0;
+      
+      std::unique_ptr<ggo::paintable_shape2d_abc<float>>  make_unique_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const;
     };
 
     // Disc.
@@ -68,6 +70,7 @@ namespace ggo
       ggo::paintable_shape2d_abc<float> *       create_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const override { return create_render_polygon(view, render_width, render_height, vertical_flip); }
 
       void  update_render_point(int index, const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip);
+      void  set_from_render_polygon(const ggo::polygon2d_float & polygon, const view & view, int render_width, int render_height, bool vertical_flip);
 
       ggo::polygon2d_float &        get_polygon() { return _polygon; }
       const ggo::polygon2d_float &  get_polygon() const { return _polygon; }

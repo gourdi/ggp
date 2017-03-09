@@ -115,13 +115,16 @@ void DiscHandler::Draw(QPainter & painter, int width, int height, const ggo::can
 /////////////////////////////////////////////////////////////////////
 bool DiscHandler::OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view)
 {
-  _modifier = HitTest(x, y, width, height, view);
-  if (_modifier != Modifier::none)
+  if (button == Qt::LeftButton)
   {
-    _mouse_down_center = ggo::canvas::from_view_to_render(_disc->get_disc().center(), view, width, height, true);
-    _mouse_down_radius = ggo::canvas::from_view_to_render(_disc->get_disc().radius(), view._size, view._main_direction, width, height);
+    _modifier = HitTest(x, y, width, height, view);
+    if (_modifier != Modifier::none)
+    {
+      _mouse_down_center = ggo::canvas::from_view_to_render(_disc->get_disc().center(), view, width, height, true);
+      _mouse_down_radius = ggo::canvas::from_view_to_render(_disc->get_disc().radius(), view._size, view._main_direction, width, height);
 
-    return true; // Consume event.
+      return true; // Consume event.
+    }
   }
 
   return false;
@@ -194,6 +197,27 @@ ShapeHandler::MouseMoveData DiscHandler::OnMouseMove(int x, int y, int width, in
   }
 
   return mouseMoveData;
+}
+
+/////////////////////////////////////////////////////////////////////
+void DiscHandler::SetAnchor(int x, int y, int width, int height, const ggo::canvas::view & view)
+{
+  std::unique_ptr<ggo::disc_float> render_disc(_disc->create_render_disc(view, width, height, true));
+
+  _disc_anchor = std::make_unique<DiscAnchor>(*render_disc, x, y);
+}
+
+/////////////////////////////////////////////////////////////////////
+void DiscHandler::SetPosition(int x, int y, int width, int height, const ggo::canvas::view & view)
+{
+  GGO_ASSERT(_disc_anchor);
+  if (_disc_anchor)
+  {
+    ggo::disc_float disc(_disc_anchor->_disc);
+    disc.center().x() += x - _disc_anchor->_x;
+    disc.center().y() += y - _disc_anchor->_y;
+    _disc->set_from_render_disc(disc, view, width, height, true);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////

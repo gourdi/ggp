@@ -26,6 +26,8 @@ protected:
 
   ggo::canvas::view getCanvasView() const;
 
+  ShapeHandler * hitTest(int x, int y, int width, int height, const ggo::canvas::view & view);
+
 public slots:
 
   void createDisc();
@@ -39,7 +41,8 @@ private:
   int _zoomIndex;
 
   std::vector<std::unique_ptr<ShapeHandler>> _shapeHandlers;
-  ShapeHandler * _currentShapeHandler = nullptr;
+  ShapeHandler * _editShapeHandler = nullptr;
+  ShapeHandler * _moveShapeHandler = nullptr;
 };
 
 #endif

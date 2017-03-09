@@ -31,3 +31,9 @@ void ShapeHandler::PaintHandle(QPainter & painter, const ggo::pos2f & p)
 {
   PaintHandle(painter, ggo::to<int>(p.x()), ggo::to<int>(p.y()));
 }
+
+/////////////////////////////////////////////////////////////////////
+bool ShapeHandler::IsPointInside(float x, float y, int width, int height, const ggo::canvas::view & view) const
+{
+  return GetShape()->make_unique_render_shape(view, width, height, true)->is_point_inside(x, y);
+}

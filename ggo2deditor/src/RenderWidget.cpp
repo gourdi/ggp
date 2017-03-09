@@ -33,9 +33,9 @@ void RenderWidget::paintEvent(QPaintEvent * event)
   painter.drawImage(dirtyRect, _image, dirtyRect);
 
   // Let the current shape handler paint itself.
-  if (_currentShapeHandler != nullptr)
+  if (_editShapeHandler != nullptr)
   {
-    _currentShapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
+    _editShapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
   }
 }
 
@@ -48,62 +48,100 @@ void RenderWidget::resizeEvent(QResizeEvent *event)
 
 void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
 {
-  if (_currentShapeHandler)
-  {
-    _currentShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
-  }
-  else if (_shapeFactory)
+  // First check if a shape is currently built.
+  if (_shapeFactory)
   {
     auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
-      _currentShapeHandler = shapeHandler;
+      _editShapeHandler = shapeHandler;
       _shapeHandlers.emplace_back(shapeHandler);
       _shapeFactory.reset();
     }
 
     update();
+    return;
   }
+
+  // Then check if a shape is currently edited.
+  if (_editShapeHandler != nullptr &&
+      _editShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView()) == true)
+  {
+    return; // Event is consumed.
+  }
+  
+  // Then check if the user clicked on a shape. In any case, if the shape handler did not consume the mouse event, edition is stopped.
+  _editShapeHandler = nullptr;
+  _moveShapeHandler = hitTest(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
+  if (_moveShapeHandler != nullptr)
+  {
+    _moveShapeHandler->SetAnchor(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
+  }
+  update();
 }
 
 void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
-  if (_currentShapeHandler)
-  {
-    _currentShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView());
-  }
-  else if (_shapeFactory)
+  if (_shapeFactory)
   {
     auto shapeHandler = _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
-      _currentShapeHandler = shapeHandler;
+      _editShapeHandler = shapeHandler;
       _shapeHandlers.emplace_back(shapeHandler);
       _shapeFactory.reset();
     }
 
     update();
+    return;
   }
+
+  if (_editShapeHandler != nullptr &&
+      _editShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView()) == true)
+  {
+    return; // Event consumed.
+  }
+
+  // Select the shape (if any) after it has been moved.
+  _editShapeHandler = _moveShapeHandler;
+  _moveShapeHandler = nullptr;
+  update();
 }
 
 void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
-  if (_currentShapeHandler)
+  // A shape is built.
+  if (_shapeFactory)
   {
-    auto mouveMoveData = _currentShapeHandler->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
+    _shapeFactory->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), _canvas, getCanvasView());
+    update();
+    return;
+  }
+
+  // A shape is edited.
+  if (_editShapeHandler != nullptr)
+  {
+    auto mouveMoveData = _editShapeHandler->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
     setCursor(mouveMoveData._cursor);
     if (mouveMoveData._update_widget == true)
     {
       update();
     }
+    return;
   }
-  else if (_shapeFactory)
+
+  // A shape is moved.
+  if (_moveShapeHandler != nullptr)
   {
-    _shapeFactory->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), _canvas, getCanvasView());
+    _moveShapeHandler->SetPosition(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
     update();
+    return;
   }
+
+  // Check if the mouse is on a shape, and if so, set cursor to let the user know he can move the shape.
+  setCursor(hitTest(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView()) != nullptr ? Qt::SizeAllCursor : Qt::ArrowCursor);
 }
 
 void RenderWidget::wheelEvent(QWheelEvent *event)
@@ -145,3 +183,19 @@ void RenderWidget::createPolygon()
 {
   _shapeFactory.reset(new PolygonFactory());
 }
+
+ShapeHandler * RenderWidget::hitTest(int x, int y, int width, int height, const ggo::canvas::view & view)
+{
+  // Reverse loop.
+  for (auto it = _shapeHandlers.rbegin(); it != _shapeHandlers.rend(); ++it)
+  {
+    auto shape = it->get();
+    if (shape->IsPointInside(static_cast<float>(x), static_cast<float>(y), width, height, view) == true)
+    {
+      return shape;
+    }
+  }
+
+  return nullptr;
+}
+
