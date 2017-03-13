@@ -101,9 +101,11 @@ void DiscHandler::Draw(QPainter & painter, int width, int height, const ggo::can
   ggo::pixel_rect rect(render_disc->get_bounding_rect());
 
   painter.setPen(QPen(Qt::black));
+  painter.setBrush(Qt::NoBrush);
   painter.drawRect(rect.left(), rect.bottom(), rect.width(), rect.height());
 
   painter.setPen(QPen(Qt::white, 1, Qt::DotLine));
+  painter.setBrush(Qt::NoBrush);
   painter.drawRect(rect.left(), rect.bottom(), rect.width(), rect.height());
 
   PaintHandle(painter, rect.left(), rect.bottom());
