@@ -1,4 +1,5 @@
 #include "RenderWidget.h"
+#include <QtGui/qguiapplication.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
 
@@ -14,6 +15,7 @@ namespace
   const std::array<float, 13> zoomFactors = { 0.25f, 0.35f, 0.5f, 0.65f, 0.75f, 0.9f, 1.f, 1.1f, 1.35f, 1.50f, 2.f, 2.f, 4.f };
 }
 
+/////////////////////////////////////////////////////////////////////
 RenderWidget::RenderWidget(QWidget * parent)
 :
 QWidget(parent),
@@ -22,6 +24,7 @@ _zoomIndex(int(zoomFactors.size() / 2 + 1))
   setMouseTracking(true);
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
@@ -32,13 +35,18 @@ void RenderWidget::paintEvent(QPaintEvent * event)
   QRect dirtyRect = event->rect();
   painter.drawImage(dirtyRect, _image, dirtyRect);
 
-  // Let the current shape handler paint itself.
-  if (_editShapeHandler != nullptr)
+  // Let the selected and edited shape handlers paint themselves.
+  for (const auto * shapeHandler : _selection)
   {
-    _editShapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
+    shapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
+  }
+  if (_edition != nullptr)
+  {
+    _edition->Draw(painter, size().width(), size().height(), getCanvasView());
   }
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::resizeEvent(QResizeEvent *event)
 {
   _image = QImage(size(), QImage::Format_RGB32);
@@ -46,16 +54,17 @@ void RenderWidget::resizeEvent(QResizeEvent *event)
   QWidget::resizeEvent(event);
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
 {
   // First check if a shape is currently built.
-  if (_shapeFactory)
+  if (_shapeFactory != nullptr)
   {
     auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
-      _editShapeHandler = shapeHandler;
+      _selection = { shapeHandler };
       _shapeHandlers.emplace_back(shapeHandler);
       _shapeFactory.reset();
     }
@@ -64,32 +73,45 @@ void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
     return;
   }
 
-  // Then check if a shape is currently edited.
-  if (_editShapeHandler != nullptr &&
-      _editShapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView()) == true)
+  // Then check for edition.
+  for (auto * shapeHandler : _selection)
   {
-    return; // Event is consumed.
+    if (shapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView()) == true)
+    {
+      _selection = { shapeHandler };
+      _edition = shapeHandler;
+      update();
+      return;
+    }
   }
-  
-  // Then check if the user clicked on a shape. In any case, if the shape handler did not consume the mouse event, edition is stopped.
-  _editShapeHandler = nullptr;
-  _moveShapeHandler = hitTest(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
-  if (_moveShapeHandler != nullptr)
+
+  // Hit shape.
+  _mouseDownShape = hitTest(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
+
+  // Set anchor position.
+  for (auto * shapeHandler : _selection)
   {
-    _moveShapeHandler->SetAnchor(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
+    shapeHandler->SetAnchor(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
   }
-  update();
+  if (_mouseDownShape != nullptr)
+  {
+    _mouseDownShape->SetAnchor(eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView());
+  }
+
+  _hasMouveMoved = false;
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
+  // Shape factory.
   if (_shapeFactory)
   {
     auto shapeHandler = _shapeFactory->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), _canvas, getCanvasView());
 
     if (shapeHandler != nullptr)
     {
-      _editShapeHandler = shapeHandler;
+      _selection = { shapeHandler };
       _shapeHandlers.emplace_back(shapeHandler);
       _shapeFactory.reset();
     }
@@ -98,22 +120,53 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
     return;
   }
 
-  if (_editShapeHandler != nullptr &&
-      _editShapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView()) == true)
+  // Edition.
+  if (_edition != nullptr &&
+      _edition->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView()) == true)
   {
-    return; // Event consumed.
+    update();
+    return;
   }
 
-  // Select the shape (if any) after it has been moved.
-  _editShapeHandler = _moveShapeHandler;
-  _moveShapeHandler = nullptr;
-  update();
+  if (_hasMouveMoved == false)
+  {
+    // The mouse has not moved and the CTRL key is down: update selection.
+    if (qGuiApp->keyboardModifiers() & Qt::ControlModifier)
+    {
+      if (_mouseDownShape != nullptr)
+      {
+        if (ggo::find(_selection, _mouseDownShape) == true)
+        {
+          ggo::remove(_selection, _mouseDownShape);
+        }
+        else
+        {
+          _selection.push_back(_mouseDownShape);
+        }
+      }
+    }
+    // The mouse has not moved and the CTRL key is not down: select clicked shape in any.
+    else
+    {
+      _selection.clear();
+      if (_mouseDownShape != nullptr)
+      {
+        _selection.push_back(_mouseDownShape);
+      }
+    }
+
+    update();
+    return;
+  }
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
+  _hasMouveMoved = true;
+
   // A shape is built.
-  if (_shapeFactory)
+  if (_shapeFactory != nullptr)
   {
     _shapeFactory->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), _canvas, getCanvasView());
     update();
@@ -121,9 +174,9 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
   }
 
   // A shape is edited.
-  if (_editShapeHandler != nullptr)
+  if (_edition != nullptr)
   {
-    auto mouveMoveData = _editShapeHandler->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
+    auto mouveMoveData = _edition->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
     setCursor(mouveMoveData._cursor);
     if (mouveMoveData._update_widget == true)
     {
@@ -132,10 +185,17 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
     return;
   }
 
-  // A shape is moved.
-  if (_moveShapeHandler != nullptr)
+  // Selection is moved.
+  if (eventMove->buttons() == Qt::LeftButton)
   {
-    _moveShapeHandler->SetPosition(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
+    if (_mouseDownShape != nullptr)
+    {
+      ggo::push_once(_selection, _mouseDownShape);
+    }
+    for (auto * shapeHandler : _selection)
+    {
+      shapeHandler->SetPosition(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
+    }
     update();
     return;
   }
@@ -144,6 +204,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
   setCursor(hitTest(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView()) != nullptr ? Qt::SizeAllCursor : Qt::ArrowCursor);
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::wheelEvent(QWheelEvent *event)
 {
   if (event->angleDelta().ry() > 0 && _zoomIndex > 0)
@@ -159,31 +220,39 @@ void RenderWidget::wheelEvent(QWheelEvent *event)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
 QSize RenderWidget::minimumSizeHint() const
 {
   return QSize(200, 100);
 }
 
+/////////////////////////////////////////////////////////////////////
 QSize RenderWidget::sizeHint() const
 {
   return QSize(400, 400);
 }
 
+/////////////////////////////////////////////////////////////////////
 ggo::canvas::view RenderWidget::getCanvasView() const
 {
   return ggo::canvas::view({ 0.f, 0.f }, zoomFactors[_zoomIndex], ggo::canvas::main_direction::vertical);
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::createDisc()
 {
+  _selection.clear();
   _shapeFactory.reset(new DiscFactory());
 }
 
+/////////////////////////////////////////////////////////////////////
 void RenderWidget::createPolygon()
 {
+  _selection.clear();
   _shapeFactory.reset(new PolygonFactory());
 }
 
+/////////////////////////////////////////////////////////////////////
 ShapeHandler * RenderWidget::hitTest(int x, int y, int width, int height, const ggo::canvas::view & view)
 {
   // Reverse loop.

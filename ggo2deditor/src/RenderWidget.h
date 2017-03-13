@@ -41,8 +41,10 @@ private:
   int _zoomIndex;
 
   std::vector<std::unique_ptr<ShapeHandler>> _shapeHandlers;
-  ShapeHandler * _editShapeHandler = nullptr;
-  ShapeHandler * _moveShapeHandler = nullptr;
+  ShapeHandler* _edition = nullptr;
+  ShapeHandler* _mouseDownShape = nullptr;
+  bool _hasMouveMoved = false;
+  std::vector<ShapeHandler*> _selection;
 };
 
 #endif

@@ -283,6 +283,14 @@ namespace ggo
 // Containers.
 namespace ggo
 {
+  template <typename container, typename data_t>
+  void remove(container & c, const data_t & v)
+  {
+    auto new_end = std::remove(c.begin(), c.end(), v);
+
+    c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
+  }
+
   template <typename container, typename predicate>
   void remove_if(container & c, predicate p)
   {
