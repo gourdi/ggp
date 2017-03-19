@@ -16,6 +16,7 @@ ShapeHandler * PolygonFactory::OnMouseUp(Qt::MouseButton button, int x, int y, i
     if (_polygon == nullptr)
     {
       _polygon = canvas.create_polygon();
+      _polygon->_color = _color;
       _polygon->get_polygon().add_point(ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true));
     }
 

@@ -5,6 +5,10 @@
 
 class DiscFactory : public ShapeFactory
 {
+public:
+
+  DiscFactory(const ggo::color_8u & c) : ShapeFactory(c) {}
+
 private:
 
   ShapeHandler * OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, ggo::canvas & canvas, const ggo::canvas::view & view) override;

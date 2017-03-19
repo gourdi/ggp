@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -17,7 +17,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <PlatformToolSet>v140</PlatformToolSet>
+    <PlatformToolSet>v141</PlatformToolSet>
     <OutputDirectory>release\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -26,7 +26,7 @@
     <PrimaryOutput>ggo2deditor</PrimaryOutput>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <PlatformToolSet>v140</PlatformToolSet>
+    <PlatformToolSet>v141</PlatformToolSet>
     <OutputDirectory>debug\</OutputDirectory>
     <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
     <CharacterSet>NotSet</CharacterSet>
@@ -125,7 +125,7 @@
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <OutputFile>$(OutDir)\ggo2deditor.exe</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Link>
     <Midl>
@@ -138,16 +138,26 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CanvasWidget.cpp" />
     <ClCompile Include="src\DiscFactory.cpp" />
     <ClCompile Include="src\DiscHandler.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
     <ClCompile Include="src\PolygonFactory.cpp" />
     <ClCompile Include="src\PolygonHandler.cpp" />
-    <ClCompile Include="src\RenderWidget.cpp" />
     <ClCompile Include="src\ShapeHandler.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="src\CanvasWidget.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">src\CanvasWidget.h;release\moc_predefs.h;C:\Qt\5.8\msvc2015_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Qt\5.8\msvc2015_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include release/moc_predefs.h -IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015 -ID:/ggp/ggo2deditor -ID:/ggp/ggokernel/src -ID:/ggp/ggokernel/src/rle -ID:/ggp/ggokernel/src/math -ID:/ggp/ggokernel/src/math/shapes_2d -ID:/ggp/ggokernel/src/math/shapes_3d -ID:/ggp/ggokernel/src/math/marching_algorithms -ID:/ggp/ggokernel/src/math/delaunay_triangulation -ID:/ggp/ggokernel/src/math/signal_proc -ID:/ggp/ggokernel/src/math/linear_algebra -ID:/ggp/ggokernel/src/math/sampling/low_discrepancy_sequences -ID:/ggp/ggokernel/src/math/sampling/shape_sampling -ID:/ggp/ggokernel/src/math/sampling/pixel_sampling -ID:/ggp/ggokernel/src/math/interpolation -ID:/ggp/ggokernel/src/math/scalar_fields_2d -ID:/ggp/ggo2d/src -ID:/ggp/ggo2d/src/fill -ID:/ggp/ggo2d/src/blur -ID:/ggp/ggo2d/src/processing -ID:/ggp/ggo2d/src/space_partitionning -ID:/ggp/ggo2d/src/paint -ID:/ggp/ggo2d/src/rle_image -IC:/Qt/5.8/msvc2015_64/include -IC:/Qt/5.8/msvc2015_64/include/QtWidgets -IC:/Qt/5.8/msvc2015_64/include/QtGui -IC:/Qt/5.8/msvc2015_64/include/QtANGLE -IC:/Qt/5.8/msvc2015_64/include/QtCore -I"C:\Program Files (x86)\Intel\Trace Analyzer and Collector\9.0.3.049\include" src\CanvasWidget.h -o release\moc_CanvasWidget.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC src/CanvasWidget.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_CanvasWidget.cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">src\CanvasWidget.h;debug\moc_predefs.h;C:\Qt\5.8\msvc2015_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Qt\5.8\msvc2015_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include debug/moc_predefs.h -IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015 -ID:/ggp/ggo2deditor -ID:/ggp/ggokernel/src -ID:/ggp/ggokernel/src/rle -ID:/ggp/ggokernel/src/math -ID:/ggp/ggokernel/src/math/shapes_2d -ID:/ggp/ggokernel/src/math/shapes_3d -ID:/ggp/ggokernel/src/math/marching_algorithms -ID:/ggp/ggokernel/src/math/delaunay_triangulation -ID:/ggp/ggokernel/src/math/signal_proc -ID:/ggp/ggokernel/src/math/linear_algebra -ID:/ggp/ggokernel/src/math/sampling/low_discrepancy_sequences -ID:/ggp/ggokernel/src/math/sampling/shape_sampling -ID:/ggp/ggokernel/src/math/sampling/pixel_sampling -ID:/ggp/ggokernel/src/math/interpolation -ID:/ggp/ggokernel/src/math/scalar_fields_2d -ID:/ggp/ggo2d/src -ID:/ggp/ggo2d/src/fill -ID:/ggp/ggo2d/src/blur -ID:/ggp/ggo2d/src/processing -ID:/ggp/ggo2d/src/space_partitionning -ID:/ggp/ggo2d/src/paint -ID:/ggp/ggo2d/src/rle_image -IC:/Qt/5.8/msvc2015_64/include -IC:/Qt/5.8/msvc2015_64/include/QtWidgets -IC:/Qt/5.8/msvc2015_64/include/QtGui -IC:/Qt/5.8/msvc2015_64/include/QtANGLE -IC:/Qt/5.8/msvc2015_64/include/QtCore -I"C:\Program Files (x86)\Intel\Trace Analyzer and Collector\9.0.3.049\include" src\CanvasWidget.h -o debug\moc_CanvasWidget.cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC src/CanvasWidget.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_CanvasWidget.cpp;%(Outputs)</Outputs>
+    </CustomBuild>
     <ClInclude Include="src\DiscFactory.h" />
     <ClInclude Include="src\DiscHandler.h" />
     <CustomBuild Include="src\MainWindow.h">
@@ -162,31 +172,21 @@
     </CustomBuild>
     <ClInclude Include="src\PolygonFactory.h" />
     <ClInclude Include="src\PolygonHandler.h" />
-    <CustomBuild Include="src\RenderWidget.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">src\RenderWidget.h;release\moc_predefs.h;C:\Qt\5.8\msvc2015_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Qt\5.8\msvc2015_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include release/moc_predefs.h -IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015 -ID:/ggp/ggo2deditor -ID:/ggp/ggokernel/src -ID:/ggp/ggokernel/src/rle -ID:/ggp/ggokernel/src/math -ID:/ggp/ggokernel/src/math/shapes_2d -ID:/ggp/ggokernel/src/math/shapes_3d -ID:/ggp/ggokernel/src/math/marching_algorithms -ID:/ggp/ggokernel/src/math/delaunay_triangulation -ID:/ggp/ggokernel/src/math/signal_proc -ID:/ggp/ggokernel/src/math/linear_algebra -ID:/ggp/ggokernel/src/math/sampling/low_discrepancy_sequences -ID:/ggp/ggokernel/src/math/sampling/shape_sampling -ID:/ggp/ggokernel/src/math/sampling/pixel_sampling -ID:/ggp/ggokernel/src/math/interpolation -ID:/ggp/ggokernel/src/math/scalar_fields_2d -ID:/ggp/ggo2d/src -ID:/ggp/ggo2d/src/fill -ID:/ggp/ggo2d/src/blur -ID:/ggp/ggo2d/src/processing -ID:/ggp/ggo2d/src/space_partitionning -ID:/ggp/ggo2d/src/paint -ID:/ggp/ggo2d/src/rle_image -IC:/Qt/5.8/msvc2015_64/include -IC:/Qt/5.8/msvc2015_64/include/QtWidgets -IC:/Qt/5.8/msvc2015_64/include/QtGui -IC:/Qt/5.8/msvc2015_64/include/QtANGLE -IC:/Qt/5.8/msvc2015_64/include/QtCore -I"C:\Program Files (x86)\Intel\Trace Analyzer and Collector\9.0.3.049\include" src\RenderWidget.h -o release\moc_RenderWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC src/RenderWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_RenderWidget.cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">src\RenderWidget.h;debug\moc_predefs.h;C:\Qt\5.8\msvc2015_64\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Qt\5.8\msvc2015_64\bin\moc.exe  -DUNICODE -DWIN32 -DWIN64 -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB --compiler-flavor=msvc --include debug/moc_predefs.h -IC:/Qt/5.8/msvc2015_64/mkspecs/win32-msvc2015 -ID:/ggp/ggo2deditor -ID:/ggp/ggokernel/src -ID:/ggp/ggokernel/src/rle -ID:/ggp/ggokernel/src/math -ID:/ggp/ggokernel/src/math/shapes_2d -ID:/ggp/ggokernel/src/math/shapes_3d -ID:/ggp/ggokernel/src/math/marching_algorithms -ID:/ggp/ggokernel/src/math/delaunay_triangulation -ID:/ggp/ggokernel/src/math/signal_proc -ID:/ggp/ggokernel/src/math/linear_algebra -ID:/ggp/ggokernel/src/math/sampling/low_discrepancy_sequences -ID:/ggp/ggokernel/src/math/sampling/shape_sampling -ID:/ggp/ggokernel/src/math/sampling/pixel_sampling -ID:/ggp/ggokernel/src/math/interpolation -ID:/ggp/ggokernel/src/math/scalar_fields_2d -ID:/ggp/ggo2d/src -ID:/ggp/ggo2d/src/fill -ID:/ggp/ggo2d/src/blur -ID:/ggp/ggo2d/src/processing -ID:/ggp/ggo2d/src/space_partitionning -ID:/ggp/ggo2d/src/paint -ID:/ggp/ggo2d/src/rle_image -IC:/Qt/5.8/msvc2015_64/include -IC:/Qt/5.8/msvc2015_64/include/QtWidgets -IC:/Qt/5.8/msvc2015_64/include/QtGui -IC:/Qt/5.8/msvc2015_64/include/QtANGLE -IC:/Qt/5.8/msvc2015_64/include/QtCore -I"C:\Program Files (x86)\Intel\Trace Analyzer and Collector\9.0.3.049\include" src\RenderWidget.h -o debug\moc_RenderWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC src/RenderWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_RenderWidget.cpp;%(Outputs)</Outputs>
-    </CustomBuild>
     <ClInclude Include="src\ShapeFactory.h" />
     <ClInclude Include="src\ShapeHandler.h" />
     <ClInclude Include="src" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug\moc_CanvasWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="release\moc_CanvasWidget.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="debug\moc_MainWindow.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="release\moc_MainWindow.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="debug\moc_RenderWidget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="release\moc_RenderWidget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <CustomBuild Include="debug\moc_predefs.h.cbt">

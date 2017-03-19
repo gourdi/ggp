@@ -118,7 +118,7 @@ namespace ggo
   void set(data_t * ptr, const data_t & v, args... a)
   {
     ptr[0] = v;
-    ggo::set(ptr + 1, a...);
+    ggo::set<data_t>(ptr + 1, a...);
   }
 }
 

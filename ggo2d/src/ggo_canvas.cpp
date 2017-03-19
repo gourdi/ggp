@@ -122,7 +122,7 @@ namespace ggo
     {
       shape_t mapped_shape;
       mapped_shape._shape = std::shared_ptr<paintable_shape2d_abc<float>>(shape->create_render_shape(view, width, height, false));
-      mapped_shape._brush = std::make_shared<solid_dyn_brush<color_8u>>(red_8u());
+      mapped_shape._brush = std::make_shared<solid_dyn_brush<color_8u>>(shape->_color);
       mapped_shape._blender = std::make_shared<overwrite_dyn_blender<color_8u, color_8u>>();
 
       mapped_shapes.push_back(mapped_shape);

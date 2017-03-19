@@ -1,7 +1,8 @@
-#include "RenderWidget.h"
+#include "CanvasWidget.h"
 #include <QtGui/qguiapplication.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
+#include <QtWidgets/qcolordialog.h>
 
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
@@ -16,7 +17,7 @@ namespace
 }
 
 /////////////////////////////////////////////////////////////////////
-RenderWidget::RenderWidget(QWidget * parent)
+CanvasWidget::CanvasWidget(QWidget * parent)
 :
 QWidget(parent),
 _zoomIndex(int(zoomFactors.size() / 2 + 1))
@@ -25,7 +26,7 @@ _zoomIndex(int(zoomFactors.size() / 2 + 1))
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::paintEvent(QPaintEvent * event)
+void CanvasWidget::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);
 
@@ -47,7 +48,7 @@ void RenderWidget::paintEvent(QPaintEvent * event)
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::resizeEvent(QResizeEvent *event)
+void CanvasWidget::resizeEvent(QResizeEvent *event)
 {
   _image = QImage(size(), QImage::Format_RGB32);
 
@@ -55,7 +56,7 @@ void RenderWidget::resizeEvent(QResizeEvent *event)
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
+void CanvasWidget::mousePressEvent(QMouseEvent *eventPress)
 {
   // First check if a shape is currently built.
   if (_shapeFactory != nullptr)
@@ -102,7 +103,7 @@ void RenderWidget::mousePressEvent(QMouseEvent *eventPress)
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
+void CanvasWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 {
   // Shape factory.
   if (_shapeFactory)
@@ -111,6 +112,7 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 
     if (shapeHandler != nullptr)
     {
+      shapeHandler->GetShape()->_color = ggo::color_8u(_color);
       _selection = { shapeHandler };
       _shapeHandlers.emplace_back(shapeHandler);
       _shapeFactory.reset();
@@ -161,7 +163,7 @@ void RenderWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
+void CanvasWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
   _hasMouveMoved = true;
 
@@ -205,7 +207,7 @@ void RenderWidget::mouseMoveEvent(QMouseEvent *eventMove)
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::wheelEvent(QWheelEvent *event)
+void CanvasWidget::wheelEvent(QWheelEvent *event)
 {
   if (event->angleDelta().ry() > 0 && _zoomIndex > 0)
   {
@@ -221,39 +223,47 @@ void RenderWidget::wheelEvent(QWheelEvent *event)
 }
 
 /////////////////////////////////////////////////////////////////////
-QSize RenderWidget::minimumSizeHint() const
+QSize CanvasWidget::minimumSizeHint() const
 {
   return QSize(200, 100);
 }
 
 /////////////////////////////////////////////////////////////////////
-QSize RenderWidget::sizeHint() const
+QSize CanvasWidget::sizeHint() const
 {
   return QSize(400, 400);
 }
 
 /////////////////////////////////////////////////////////////////////
-ggo::canvas::view RenderWidget::getCanvasView() const
+ggo::canvas::view CanvasWidget::getCanvasView() const
 {
   return ggo::canvas::view({ 0.f, 0.f }, zoomFactors[_zoomIndex], ggo::canvas::main_direction::vertical);
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::createDisc()
+void CanvasWidget::createDisc()
 {
   _selection.clear();
-  _shapeFactory.reset(new DiscFactory());
+  _shapeFactory.reset(new DiscFactory(_color));
 }
 
 /////////////////////////////////////////////////////////////////////
-void RenderWidget::createPolygon()
+void CanvasWidget::createPolygon()
 {
   _selection.clear();
-  _shapeFactory.reset(new PolygonFactory());
+  _shapeFactory.reset(new PolygonFactory(_color));
 }
 
 /////////////////////////////////////////////////////////////////////
-ShapeHandler * RenderWidget::hitTest(int x, int y, int width, int height, const ggo::canvas::view & view)
+void CanvasWidget::setShapeColor()
+{
+  QColor qcolor(_color.r(), _color.g(), _color.b());
+  qcolor = QColorDialog::getColor(qcolor, this);
+  _color = ggo::color_8u(qcolor.red(), qcolor.green(), qcolor.blue());
+}
+
+/////////////////////////////////////////////////////////////////////
+ShapeHandler * CanvasWidget::hitTest(int x, int y, int width, int height, const ggo::canvas::view & view)
 {
   // Reverse loop.
   for (auto it = _shapeHandlers.rbegin(); it != _shapeHandlers.rend(); ++it)

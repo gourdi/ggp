@@ -2,12 +2,12 @@
 #include <QtWidgets/qgridlayout.h>
 #include <QtWidgets/qmenubar.h>
 #include "MainWindow.h"
-#include "RenderWidget.h"
+#include "CanvasWidget.h"
 
 /////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow()
 :
-_renderWidget(new RenderWidget(this))
+_renderWidget(new CanvasWidget(this))
 {
   setCentralWidget(_renderWidget);
 
@@ -36,20 +36,20 @@ _renderWidget(new RenderWidget(this))
 void MainWindow::createMenus()
 {
   _shapeMenu = menuBar()->addMenu(tr("&Shapes"));
+
   _createDiscAction = new QAction(tr("Create &Disc"), this);
   _createDiscAction->setStatusTip(tr("Create a new disc"));
   _shapeMenu->addAction(_createDiscAction);
-  connect(_createDiscAction, &QAction::triggered, _renderWidget, &RenderWidget::createDisc);
+  connect(_createDiscAction, &QAction::triggered, _renderWidget, &CanvasWidget::createDisc);
 
   _createPolygonAction = new QAction(tr("Create &Polygon"), this);
   _createPolygonAction->setStatusTip(tr("Create a new polygon"));
   _shapeMenu->addAction(_createPolygonAction);
-  connect(_createPolygonAction, &QAction::triggered, _renderWidget, &RenderWidget::createPolygon);
-  //_createPolygonAction;
-  //fileMenu->addAction(newAct);
-  //fileMenu->addAction(openAct);
-  //fileMenu->addAction(saveAct);
-  //fileMenu->addAction(printAct);
-  //fileMenu->addSeparator();
-  //fileMenu->addAction(exitAct);
+  connect(_createPolygonAction, &QAction::triggered, _renderWidget, &CanvasWidget::createPolygon);
+
+  _shapeMenu->addSeparator();
+
+  _selectShapeColorAction = new QAction(tr("Select Color..."), this);
+  _shapeMenu->addAction(_selectShapeColorAction);
+  connect(_selectShapeColorAction, &QAction::triggered, _renderWidget, &CanvasWidget::setShapeColor);
 }

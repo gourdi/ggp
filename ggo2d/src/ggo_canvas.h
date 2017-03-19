@@ -39,6 +39,8 @@ namespace ggo
       virtual ggo::paintable_shape2d_abc<float> *         create_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const = 0;
       
       std::unique_ptr<ggo::paintable_shape2d_abc<float>>  make_unique_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const;
+
+      ggo::color_8u _color;
     };
 
     // Disc.

@@ -18,6 +18,7 @@ ShapeHandler * DiscFactory::OnMouseUp(Qt::MouseButton button, int x, int y, int 
     case None:
     {
       _disc = canvas.create_disc();
+      _disc->_color = _color;
       _disc->get_disc().center() = ggo::canvas::from_render_pixel_to_view({ x, y }, view, width, height, true);
 
       _state = SettingRadius;

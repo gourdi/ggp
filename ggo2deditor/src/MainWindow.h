@@ -1,7 +1,7 @@
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qmenu.h>
 
-class RenderWidget;
+class CanvasWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -17,8 +17,9 @@ private:
 
 private:
 
-  RenderWidget * _renderWidget;
+  CanvasWidget * _renderWidget;
   QMenu * _shapeMenu;
   QAction * _createDiscAction;
   QAction * _createPolygonAction;
+  QAction * _selectShapeColorAction;
 };

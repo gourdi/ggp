@@ -4,13 +4,13 @@
 #include <QtWidgets/qwidget.h>
 #include "ShapeFactory.h"
 
-class RenderWidget : public QWidget
+class CanvasWidget : public QWidget
 {
   Q_OBJECT
 
 public:
 
-  RenderWidget(QWidget * parent);
+  CanvasWidget(QWidget * parent);
 
 protected:
 
@@ -32,6 +32,7 @@ public slots:
 
   void createDisc();
   void createPolygon();
+  void setShapeColor();
 
 private:
 
@@ -45,6 +46,7 @@ private:
   ShapeHandler* _mouseDownShape = nullptr;
   bool _hasMouveMoved = false;
   std::vector<ShapeHandler*> _selection;
+  ggo::color_8u _color;
 };
 
 #endif

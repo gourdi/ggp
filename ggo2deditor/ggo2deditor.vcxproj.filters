@@ -27,6 +27,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CanvasWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\DiscFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,9 +45,6 @@
     <ClCompile Include="src\PolygonHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShapeHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,6 +53,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="src\CanvasWidget.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
     <ClInclude Include="src\DiscFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -68,9 +71,6 @@
     <ClInclude Include="src\PolygonHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <CustomBuild Include="src\RenderWidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <ClInclude Include="src\ShapeFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -82,16 +82,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="debug\moc_CanvasWidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="release\moc_CanvasWidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
     <ClCompile Include="debug\moc_MainWindow.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
     <ClCompile Include="release\moc_MainWindow.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="debug\moc_RenderWidget.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="release\moc_RenderWidget.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
