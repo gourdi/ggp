@@ -94,6 +94,12 @@ namespace
 }
 
 /////////////////////////////////////////////////////////////////////
+void DiscHandler::SetColor(const ggo::color_8u & c)
+{
+  _disc->_color = c;
+}
+
+/////////////////////////////////////////////////////////////////////
 void DiscHandler::Draw(QPainter & painter, int width, int height, const ggo::canvas::view & view) const
 {
   std::unique_ptr<ggo::disc_float> render_disc(_disc->create_render_disc(view, width, height, true));

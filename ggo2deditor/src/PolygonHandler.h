@@ -9,6 +9,8 @@ public:
 
   PolygonHandler(ggo::canvas::polygon * polygon) : _polygon(polygon) {}
 
+  void SetColor(const ggo::color_8u & c) override;
+
   void Draw(QPainter & painter, int width, int height, const ggo::canvas::view & view) const override;
 
   bool OnMouseDown(Qt::MouseButton button, int x, int y, int width, int height, const ggo::canvas::view & view) override;

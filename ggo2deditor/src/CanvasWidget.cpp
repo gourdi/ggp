@@ -260,6 +260,13 @@ void CanvasWidget::setShapeColor()
   QColor qcolor(_color.r(), _color.g(), _color.b());
   qcolor = QColorDialog::getColor(qcolor, this);
   _color = ggo::color_8u(qcolor.red(), qcolor.green(), qcolor.blue());
+
+  for (auto * shape : _selection)
+  {
+    shape->SetColor(_color);
+  }
+
+  update();
 }
 
 /////////////////////////////////////////////////////////////////////

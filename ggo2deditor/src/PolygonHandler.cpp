@@ -1,6 +1,12 @@
 #include "PolygonHandler.h"
 
 /////////////////////////////////////////////////////////////////////
+void PolygonHandler::SetColor(const ggo::color_8u & c)
+{
+  _polygon->_color = c;
+}
+
+/////////////////////////////////////////////////////////////////////
 void PolygonHandler::Draw(QPainter & painter, int width, int height, const ggo::canvas::view & view) const
 {
   std::unique_ptr<ggo::polygon2d_float> polygon(_polygon->create_render_polygon(view, width, height, true));

@@ -16,6 +16,8 @@ public:
     bool _update_widget;
   };
 
+  virtual void SetColor(const ggo::color_8u & c) = 0;
+
   // Draw method.
   virtual void Draw(QPainter & painter, int width, int height, const ggo::canvas::view & view) const = 0;
 
