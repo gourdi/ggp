@@ -32,7 +32,8 @@ INCLUDEPATH = ../ggokernel/src \
               ../ggo2d/src/processing \
               ../ggo2d/src/space_partitionning \
               ../ggo2d/src/paint \
-              ../ggo2d/src/rle_image
+              ../ggo2d/src/rle_image \
+              ../ggo2d/src/canvas
 
 HEADERS = src/MainWindow.h src \
           src/CanvasWidget.h \

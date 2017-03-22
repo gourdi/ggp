@@ -1,5 +1,9 @@
 #include "ggo_canvas.h"
 #include <ggo_buffer_fill.h>
+#include <ggo_string_helpers.h>
+#include <tinyxml2.h>
+#include <exception>
+#include <sstream>
 
 // Shape interface
 namespace ggo
@@ -36,6 +40,25 @@ namespace ggo
   {
     _disc.center() = canvas::from_render_to_view(disc.center(), view, render_width, render_height, vertical_flip);
     _disc.radius() = canvas::from_render_to_view(disc.radius(), view._size, view._main_direction, render_width, render_height);
+  }
+
+  ///////////////////////////////////////////////////////////////////
+  tinyxml2::XMLElement * canvas::disc::create_xml_element(tinyxml2::XMLDocument * document) const
+  {
+    tinyxml2::XMLElement * disc_element = document->NewElement("disc");
+    tinyxml2::XMLElement * radius_element = document->NewElement("radius");
+    tinyxml2::XMLElement * center_element = document->NewElement("center");
+
+    const std::string radius_txt = std::to_string(_disc.radius());
+    const std::string center_txt = std::to_string(_disc.center().x()) + ';' + std::to_string(_disc.center().y());
+
+    radius_element->InsertEndChild(document->NewText(radius_txt.c_str()));
+    center_element->InsertEndChild(document->NewText(center_txt.c_str()));
+
+    disc_element->InsertEndChild(radius_element);
+    disc_element->InsertEndChild(center_element);
+
+    return disc_element;
   }
 }
 
@@ -76,6 +99,21 @@ namespace ggo
     }
 
     _polygon.set_points(std::move(mapped_points));
+  }
+
+  ///////////////////////////////////////////////////////////////////
+  tinyxml2::XMLElement * canvas::polygon::create_xml_element(tinyxml2::XMLDocument * document) const
+  {
+    tinyxml2::XMLElement * polygon_element = document->NewElement("polygon");
+    tinyxml2::XMLElement * points_element = document->NewElement("points");
+
+    auto point2str = [](const ggo::pos2f & p) { return std::to_string(p.x()) + ';' + std::to_string(p.y()); };
+    auto points_txt = ggo::join(_polygon.cbegin(), _polygon.cend(), ";", point2str);
+
+    points_element->InsertEndChild(document->NewText(points_txt.c_str()));
+    polygon_element->InsertEndChild(points_element);
+
+    return polygon_element;
   }
 }
 
@@ -247,6 +285,67 @@ namespace ggo
     const pos2f pf(ggo::to<float>(p.x()), ggo::to<float>(p.y()));
 
     return from_render_to_view(pf, view, render_width, render_height, vertical_flip);
+  }
+}
+
+namespace ggo
+{
+  /////////////////////////////////////////////////////////////////////
+  std::unique_ptr<tinyxml2::XMLDocument> canvas::create_xml_document() const
+  {
+    auto document = std::make_unique<tinyxml2::XMLDocument>();
+
+    tinyxml2::XMLNode * canvas_element = document->InsertEndChild(document->NewElement("canvas"));
+
+    for (const auto & shape : _shapes)
+    {
+      tinyxml2::XMLElement * shape_element = shape->create_xml_element(document.get());
+
+      std::ostringstream oss;
+      oss << '#' << ggo::to_hex(shape->_color);
+      shape_element->SetAttribute("color", oss.str().c_str());
+
+      canvas_element->InsertEndChild(shape_element);
+    }
+
+    return document;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  void canvas::save(const char * filename) const
+  {
+    auto document = create_xml_document();
+
+    tinyxml2::XMLError error = document->SaveFile(filename);
+    if (error != tinyxml2::XML_SUCCESS)
+    {
+      std::ostringstream error_msg;
+      error_msg << "xml error: " << error;
+      throw std::runtime_error(error_msg.str());
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  canvas canvas::load(const char * filename)
+  {
+    return canvas();
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  std::string canvas::to_string() const
+  {
+    auto document = create_xml_document();
+
+    tinyxml2::XMLPrinter printer;
+    document->Print(&printer);
+
+    return printer.CStr();
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  canvas canvas::from_string(const std::string & str)
+  {
+    return canvas();
   }
 }
 

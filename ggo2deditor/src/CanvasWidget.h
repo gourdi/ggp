@@ -1,5 +1,5 @@
-#ifndef __GGO_RENDER_WIDGET__
-#define __GGO_RENDER_WIDGET__
+#ifndef __GGO_CANVAS_WIDGET__
+#define __GGO_CANVAS_WIDGET__
 
 #include <QtWidgets/qwidget.h>
 #include "ShapeFactory.h"

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <ggo_kernel.h>
 #include <ggo_vec.h>
+#include <sstream>
 
 // Aliases.
 namespace ggo
@@ -364,5 +365,44 @@ namespace ggo
     return convert_color_to<color_t>(c);
   }
 }
+
+/////////////////////////////////////////////////////////////////////
+// Strings
+namespace ggo
+{
+  inline std::string to_hex(const ggo::color_8u & c)
+  {
+    auto convert = [](uint8_t v)
+    {
+      switch (v)
+      {
+      case 0x00: return '0';
+      case 0x01: return '1';
+      case 0x02: return '2';
+      case 0x03: return '3';
+      case 0x04: return '4';
+      case 0x05: return '5';
+      case 0x06: return '6';
+      case 0x07: return '7';
+      case 0x08: return '8';
+      case 0x09: return '9';
+      case 0x0A: return 'A';
+      case 0x0B: return 'B';
+      case 0x0C: return 'C';
+      case 0x0D: return 'D';
+      case 0x0E: return 'E';
+      case 0x0F: return 'F';
+      default: GGO_FAIL(); return '\0';
+      }
+    };
+
+    std::ostringstream oss;
+    oss << convert((c.r() & 0xF0) >> 4) << convert(c.r() & 0x0F);
+    oss << convert((c.g() & 0xF0) >> 4) << convert(c.g() & 0x0F);
+    oss << convert((c.b() & 0xF0) >> 4) << convert(c.b() & 0x0F);
+    return oss.str();
+  }
+}
+
 
 #endif

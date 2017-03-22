@@ -5,6 +5,12 @@
 #include <ggo_multi_shape_paint.h>
 #include <memory>
 
+namespace tinyxml2
+{
+  class XMLElement;
+  class XMLDocument;
+}
+
 namespace ggo
 {
   class canvas
@@ -40,6 +46,8 @@ namespace ggo
       
       std::unique_ptr<ggo::paintable_shape2d_abc<float>>  make_unique_render_shape(const view & view, int render_width, int render_height, bool vertical_flip) const;
 
+      virtual tinyxml2::XMLElement *  create_xml_element(tinyxml2::XMLDocument * document) const = 0;
+
       ggo::color_8u _color;
     };
 
@@ -57,6 +65,8 @@ namespace ggo
       ggo::disc_float &       get_disc() { return _disc; }
       const ggo::disc_float & get_disc() const { return _disc; }
       ggo::disc_float *       create_render_disc(const view & view, int render_width, int render_height, bool vertical_flip) const;
+
+      tinyxml2::XMLElement *  create_xml_element(tinyxml2::XMLDocument * document) const override;
 
     private:
 
@@ -78,6 +88,8 @@ namespace ggo
       const ggo::polygon2d_float &  get_polygon() const { return _polygon; }
       ggo::polygon2d_float *        create_render_polygon(const view & view, int render_width, int render_height, bool vertical_flip) const;
 
+      tinyxml2::XMLElement *  create_xml_element(tinyxml2::XMLDocument * document) const override;
+
     private:
 
       ggo::polygon2d_float _polygon;
@@ -87,13 +99,16 @@ namespace ggo
   // Methods.
   public:
 
+    // Rendering.
     void render(void * buffer, const view & view, int width, int height, int line_byte_step, pixel_buffer_format pbf) const;
 
+    // Shapes container.
     disc *    create_disc();
     polygon * create_polygon();
 
     void remove_shape(const ggo::paintable_shape2d_abc<float> * shape);
 
+    // Frame conversion.
     static float      from_view_to_render(float dist, float view_size, main_direction main_dir, int render_width, int render_height);
     static float      from_render_to_view(float dist, float view_size, main_direction main_dir, int render_width, int render_height);
 
@@ -102,6 +117,17 @@ namespace ggo
 
     static ggo::pos2i from_view_to_render_pixel(const ggo::pos2f & p, const view & view, int render_width, int render_height, bool vertical_flip);
     static ggo::pos2f from_render_pixel_to_view(const ggo::pos2i & p, const view & view, int render_width, int render_height, bool vertical_flip);
+
+    // I/O
+            void    save(const char * filename) const;
+    static  canvas  load(const char * filename);
+
+    std::string   to_string() const;
+    static canvas from_string(const std::string & str);
+
+  private:
+
+    std::unique_ptr<tinyxml2::XMLDocument> create_xml_document() const;
 
   private:
 

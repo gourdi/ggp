@@ -4,7 +4,6 @@
     <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
-    <ClInclude Include="src\ggo_helpers.h" />
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
     <ClInclude Include="src\ggo_tree.h" />
@@ -325,6 +324,7 @@
     <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.imp.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_string_helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

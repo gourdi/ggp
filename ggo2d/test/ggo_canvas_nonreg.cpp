@@ -228,3 +228,22 @@ GGO_TEST(canvas, from_view_to_render_position)
     GGO_CHECK_EQ(p4.y(), 4);
   }
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(canvas, io)
+{
+  ggo::canvas canvas;
+
+  auto * disc = canvas.create_disc();
+  disc->_color = ggo::white_8u();
+  disc->get_disc().center() = { 1.f, 2.f };
+  disc->get_disc().radius() = 3.f;
+
+  auto * polygon = canvas.create_polygon();
+  polygon->_color = ggo::red_8u();
+  polygon->get_polygon().add_point({ 1.f, 2.f });
+  polygon->get_polygon().add_point({ 3.f, 4.f });
+  polygon->get_polygon().add_point({ 5.f, 6.f });
+
+  canvas.save("test.xml");
+}
