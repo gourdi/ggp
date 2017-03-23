@@ -245,5 +245,7 @@ GGO_TEST(canvas, io)
   polygon->get_polygon().add_point({ 3.f, 4.f });
   polygon->get_polygon().add_point({ 5.f, 6.f });
 
-  canvas.save("test.xml");
+  std::string xml = canvas.to_string();
+
+  ggo::canvas canvas2(xml);
 }

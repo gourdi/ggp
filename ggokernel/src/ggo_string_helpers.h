@@ -16,7 +16,7 @@ namespace ggo
 
     std::istringstream iss(str);
 
-    iss >> value;
+    iss >> result;
 
     if (iss.fail() || !iss.eof())
     {
@@ -54,6 +54,19 @@ namespace ggo
     auto f = [](const value_t & v) { return v; };
 
     return join(begin, end, delim, f);
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline std::vector<std::string> split(const std::string & s, char delim)
+  {
+    std::istringstream iss(s);
+    std::string item;
+    std::vector<std::string> tokens;
+    while (std::getline(iss, item, delim))
+    {
+      tokens.emplace_back(item);
+    }
+    return tokens;
   }
 
   //////////////////////////////////////////////////////////////

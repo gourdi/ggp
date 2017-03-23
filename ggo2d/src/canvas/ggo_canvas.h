@@ -99,6 +99,9 @@ namespace ggo
   // Methods.
   public:
 
+    canvas() = default;
+    canvas(const std::string & xml);
+
     // Rendering.
     void render(void * buffer, const view & view, int width, int height, int line_byte_step, pixel_buffer_format pbf) const;
 
@@ -123,11 +126,17 @@ namespace ggo
     static  canvas  load(const char * filename);
 
     std::string   to_string() const;
-    static canvas from_string(const std::string & str);
+    void          from_string(const std::string & xml);
 
   private:
 
+    // I/O private functions.
     std::unique_ptr<tinyxml2::XMLDocument> create_xml_document() const;
+    void from_xml_document(const tinyxml2::XMLDocument & document);
+    canvas(const tinyxml2::XMLDocument & document);
+
+    canvas::shape_abc * create_disc(const tinyxml2::XMLElement & shape_element);
+    canvas::shape_abc * create_polygon(const tinyxml2::XMLElement & shape_element);
 
   private:
 

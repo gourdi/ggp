@@ -26,3 +26,15 @@ GGO_TEST(color, linear_curve)
   GGO_CHECK_FABS(c.g(), 0.25f);
   GGO_CHECK_FABS(c.b(), 0.25f);
 }
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(color, hex)
+{
+  ggo::color_8u c(0xF0, 0x42, 0x0F);
+  const std::string s = to_hex(c);
+  GGO_CHECK_EQ(s, "F0420F");
+  
+  ggo::color_8u c2(ggo::from_hex(s));
+  GGO_CHECK_EQ(c, c2);
+}
+

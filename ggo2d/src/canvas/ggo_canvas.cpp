@@ -288,6 +288,7 @@ namespace ggo
   }
 }
 
+// Save.
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
@@ -326,12 +327,6 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  canvas canvas::load(const char * filename)
-  {
-    return canvas();
-  }
-
-  /////////////////////////////////////////////////////////////////////
   std::string canvas::to_string() const
   {
     auto document = create_xml_document();
@@ -341,11 +336,176 @@ namespace ggo
 
     return printer.CStr();
   }
+}
+
+// Load.
+namespace ggo
+{
+  /////////////////////////////////////////////////////////////////////
+  canvas::canvas(const std::string & xml)
+  {
+    from_string(xml);
+  }
 
   /////////////////////////////////////////////////////////////////////
-  canvas canvas::from_string(const std::string & str)
+  canvas::canvas(const tinyxml2::XMLDocument & document)
   {
-    return canvas();
+    from_xml_document(document);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  void canvas::from_string(const std::string & xml)
+  {
+    tinyxml2::XMLDocument document;
+
+    tinyxml2::XMLError error = document.Parse(xml.c_str());
+    if (error != tinyxml2::XML_SUCCESS)
+    {
+      std::ostringstream error_msg;
+      error_msg << "xml error: " << error;
+      throw std::runtime_error(error_msg.str());
+    }
+
+    from_xml_document(document);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  void canvas::from_xml_document(const tinyxml2::XMLDocument & document)
+  {
+    _shapes.clear();
+
+    const tinyxml2::XMLNode * canvas_node = document.FirstChild();
+    if (canvas_node == nullptr)
+    {
+      throw std::runtime_error("missing 'canvas' node");
+    }
+
+    const std::string canvas_value = canvas_node->Value();
+    if (canvas_value != "canvas")
+    {
+      throw std::runtime_error(std::string("invalid root node: ") + canvas_value);
+    }
+
+    const tinyxml2::XMLElement * shape_element = canvas_node->FirstChildElement();
+    while (shape_element != nullptr)
+    {
+      const std::string shape_value = shape_element->Value();
+      shape_abc * new_shape = nullptr;
+
+      // Geometry.
+      if (shape_value == "disc")
+      {
+        new_shape = create_disc(*shape_element);
+      }
+      else if(shape_value == "polygon")
+      {
+        new_shape = create_polygon(*shape_element);
+      }
+      
+      if (new_shape == nullptr)
+      {
+        throw std::runtime_error(std::string("invalid shape value") + shape_value);
+      }
+
+      // Color.
+      const std::string color_text = shape_element->Attribute("color");
+      if (color_text.empty() == true || color_text[0] != '#')
+      {
+        throw std::runtime_error(std::string("empty or invalid color: '") + color_text + "'");
+      }
+      new_shape->_color = ggo::from_hex(color_text);
+
+      shape_element = shape_element->NextSiblingElement();
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  canvas canvas::load(const char * filename)
+  {
+    tinyxml2::XMLDocument document;
+    
+    tinyxml2::XMLError error = document.LoadFile(filename);
+    if (error != tinyxml2::XML_SUCCESS)
+    {
+      std::ostringstream error_msg;
+      error_msg << "xml error: " << error;
+      throw std::runtime_error(error_msg.str());
+    }
+
+    return canvas(document);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  canvas::shape_abc * canvas::create_disc(const tinyxml2::XMLElement & shape_element)
+  {
+    disc * new_disc = create_disc();
+
+    // Radius.
+    {
+      const tinyxml2::XMLElement * radius_element = shape_element.FirstChildElement("radius");
+      if (radius_element == nullptr)
+      {
+        throw std::runtime_error("missing radius");
+      }
+
+      float radius = 0.f;
+      tinyxml2::XMLError error = radius_element->QueryFloatText(&radius);
+      if (error != tinyxml2::XML_SUCCESS || radius < 0.f)
+      {
+        throw std::runtime_error("invalid radius");
+      }
+
+      new_disc->get_disc().set_radius(radius);
+    }
+    
+    // Center.
+    {
+      const tinyxml2::XMLElement * center_element = shape_element.FirstChildElement("center");
+      if (center_element == nullptr)
+      {
+        throw std::runtime_error("missing center");
+      }
+
+      const std::string center_text = center_element->GetText();
+      auto tokens = ggo::split(center_text, ';');
+      if (tokens.size() != 2)
+      {
+        throw std::runtime_error("invalid center");
+      }
+
+      new_disc->get_disc().set_center(ggo::to<float>(tokens[0]), ggo::to<float>(tokens[1]));
+    }
+
+    return new_disc;
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  canvas::shape_abc * canvas::create_polygon(const tinyxml2::XMLElement & shape_element)
+  {
+    polygon * new_polygon = create_polygon();
+
+    const tinyxml2::XMLElement * points_element = shape_element.FirstChildElement("points");
+    if (points_element == nullptr)
+    {
+      throw std::runtime_error("missing points");
+    }
+
+    const std::string points_text = points_element->GetText();
+    auto tokens = ggo::split(points_text, ';');
+    if (is_odd(tokens.size()) == true)
+    {
+      throw std::runtime_error("invalid points");
+    }
+
+    auto it = tokens.cbegin();
+    while (it != tokens.cend())
+    {
+      const float x = ggo::to<float>(*it++);
+      const float y = ggo::to<float>(*it++);
+      new_polygon->get_polygon().add_point(x, y);
+    }
+
+    return new_polygon;
   }
 }
 

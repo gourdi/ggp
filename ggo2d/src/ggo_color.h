@@ -5,6 +5,7 @@
 #include <ggo_kernel.h>
 #include <ggo_vec.h>
 #include <sstream>
+#include <string>
 
 // Aliases.
 namespace ggo
@@ -401,6 +402,44 @@ namespace ggo
     oss << convert((c.g() & 0xF0) >> 4) << convert(c.g() & 0x0F);
     oss << convert((c.b() & 0xF0) >> 4) << convert(c.b() & 0x0F);
     return oss.str();
+  }
+
+  inline ggo::color_8u from_hex(const std::string & s)
+  {
+    if (s.size() != 6)
+    {
+      throw std::runtime_error(std::string("cannot convert string '") + s + "' to color: expecting 6 characeters");
+    }
+
+    auto convert = [](char c)
+    {
+      switch (c)
+      {
+      case '0': return 0x00;
+      case '1': return 0x01;
+      case '2': return 0x02;
+      case '3': return 0x03;
+      case '4': return 0x04;
+      case '5': return 0x05;
+      case '6': return 0x06;
+      case '7': return 0x07;
+      case '8': return 0x08;
+      case '9': return 0x09;
+      case 'A': return 0x0A;
+      case 'B': return 0x0B;
+      case 'C': return 0x0C;
+      case 'D': return 0x0D;
+      case 'E': return 0x0E;
+      case 'F': return 0x0F ;
+      default: throw std::runtime_error(std::string("invalid character in string '") + c + "'");
+      }
+    };
+
+    unsigned char r = (convert(s[0]) << 4) + convert(s[1]);
+    unsigned char g = (convert(s[2]) << 4) + convert(s[3]);
+    unsigned char b = (convert(s[4]) << 4) + convert(s[5]);
+
+    return { r, g, b };
   }
 }
 
