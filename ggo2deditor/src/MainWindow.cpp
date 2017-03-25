@@ -1,15 +1,16 @@
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qgridlayout.h>
 #include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qfiledialog.h>
 #include "MainWindow.h"
 #include "CanvasWidget.h"
 
 /////////////////////////////////////////////////////////////////////
 MainWindow::MainWindow()
 :
-_renderWidget(new CanvasWidget(this))
+_canvasWidget(new CanvasWidget(this))
 {
-  setCentralWidget(_renderWidget);
+  setCentralWidget(_canvasWidget);
 
   createMenus();
 
@@ -35,21 +36,61 @@ _renderWidget(new CanvasWidget(this))
 /////////////////////////////////////////////////////////////////////
 void MainWindow::createMenus()
 {
-  _shapeMenu = menuBar()->addMenu(tr("&Shapes"));
+  {
+    _fileMenu = menuBar()->addMenu(tr("&File"));
 
-  _createDiscAction = new QAction(tr("Create &Disc"), this);
-  _createDiscAction->setStatusTip(tr("Create a new disc"));
-  _shapeMenu->addAction(_createDiscAction);
-  connect(_createDiscAction, &QAction::triggered, _renderWidget, &CanvasWidget::createDisc);
+    _openFileAction = new QAction(tr("Open..."));
+    _openFileAction->setStatusTip(tr("Open a file"));
+    _openFileAction->setShortcut(QKeySequence::Open);
+    _fileMenu->addAction(_openFileAction);
+    //connect(_openFileAction, &QAction::triggered, this, &MainWindow::loadFile);
 
-  _createPolygonAction = new QAction(tr("Create &Polygon"), this);
-  _createPolygonAction->setStatusTip(tr("Create a new polygon"));
-  _shapeMenu->addAction(_createPolygonAction);
-  connect(_createPolygonAction, &QAction::triggered, _renderWidget, &CanvasWidget::createPolygon);
+    _saveFileAction = new QAction(tr("Save"));
+    _saveFileAction->setStatusTip(tr("Save current file"));
+    _saveFileAction->setShortcut(QKeySequence::Save);
+    _fileMenu->addAction(_saveFileAction);
+    connect(_saveFileAction, &QAction::triggered, this, &MainWindow::saveFile);
+  }
 
-  _shapeMenu->addSeparator();
+  {
+    _shapeMenu = menuBar()->addMenu(tr("&Shapes"));
 
-  _selectShapeColorAction = new QAction(tr("Select Color..."), this);
-  _shapeMenu->addAction(_selectShapeColorAction);
-  connect(_selectShapeColorAction, &QAction::triggered, _renderWidget, &CanvasWidget::setShapeColor);
+    _createDiscAction = new QAction(tr("Create &Disc"), this);
+    _createDiscAction->setStatusTip(tr("Create a new disc"));
+    _shapeMenu->addAction(_createDiscAction);
+    connect(_createDiscAction, &QAction::triggered, _canvasWidget, &CanvasWidget::createDisc);
+
+    _createPolygonAction = new QAction(tr("Create &Polygon"), this);
+    _createPolygonAction->setStatusTip(tr("Create a new polygon"));
+    _shapeMenu->addAction(_createPolygonAction);
+    connect(_createPolygonAction, &QAction::triggered, _canvasWidget, &CanvasWidget::createPolygon);
+
+    _shapeMenu->addSeparator();
+
+    _selectShapeColorAction = new QAction(tr("Select Color..."), this);
+    _shapeMenu->addAction(_selectShapeColorAction);
+    connect(_selectShapeColorAction, &QAction::triggered, _canvasWidget, &CanvasWidget::setShapeColor);
+  }
 }
+
+
+/////////////////////////////////////////////////////////////////////
+void MainWindow::saveFile()
+{
+  QString fileName = QFileDialog::getSaveFileName(this,
+    tr("Save Canvas"), "",
+    tr("Canvas file (*.Canvas)"));
+
+  if (fileName.isEmpty() == false)
+  {
+    try
+    {
+      _canvasWidget->SaveCanvas(fileName);
+    }
+    catch (...)
+    {
+
+    }
+  }
+}
+

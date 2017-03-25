@@ -26,6 +26,12 @@ _zoomIndex(int(zoomFactors.size() / 2 + 1))
 }
 
 /////////////////////////////////////////////////////////////////////
+void CanvasWidget::SaveCanvas(const QString & filename) const
+{
+  _canvas.save(filename.toUtf8());
+}
+
+/////////////////////////////////////////////////////////////////////
 void CanvasWidget::paintEvent(QPaintEvent * event)
 {
   QPainter painter(this);

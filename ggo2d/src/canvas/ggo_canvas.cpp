@@ -492,7 +492,7 @@ namespace ggo
 
     const std::string points_text = points_element->GetText();
     auto tokens = ggo::split(points_text, ';');
-    if (is_odd(tokens.size()) == true)
+    if (ggo::is_odd(tokens.size()) == true)
     {
       throw std::runtime_error("invalid points");
     }

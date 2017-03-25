@@ -12,6 +12,8 @@ public:
 
   CanvasWidget(QWidget * parent);
 
+  void SaveCanvas(const QString & filename) const;
+
 protected:
 
   void paintEvent(QPaintEvent *event) override;

@@ -15,9 +15,16 @@ private:
 
   void createMenus();
 
+private slots:
+
+  void saveFile();
+
 private:
 
-  CanvasWidget * _renderWidget;
+  CanvasWidget * _canvasWidget;
+  QMenu * _fileMenu;
+  QAction * _openFileAction;
+  QAction * _saveFileAction;
   QMenu * _shapeMenu;
   QAction * _createDiscAction;
   QAction * _createPolygonAction;

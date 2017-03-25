@@ -10,7 +10,7 @@ CONFIG( debug, debug|release ) {
   # release
   QMAKE_LIBDIR += $$PWD/../x64/Release
 }
-LIBS += ggokernel.lib ggo2d.lib
+LIBS += ggokernel.lib ggo2d.lib tinyXML2.lib
 
 INCLUDEPATH = ../ggokernel/src \
               ../ggokernel/src/rle \
