@@ -4,7 +4,7 @@
 #include <QtWidgets/qwidget.h>
 #include "ShapeFactory.h"
 
-class CanvasWidget : public QWidget
+class CanvasWidget : public QWidget, public ggo::canvas::load_delegate
 {
   Q_OBJECT
 
@@ -12,9 +12,10 @@ public:
 
   CanvasWidget(QWidget * parent);
 
-  void SaveCanvas(const QString & filename) const;
+  void loadCanvas(const QString & filename);
+  void saveCanvas(const QString & filename) const;
 
-protected:
+private:
 
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
@@ -25,6 +26,9 @@ protected:
 
   QSize sizeHint() const override;
   QSize minimumSizeHint() const override;
+
+  void on_create_disc(ggo::canvas::disc * disc) override;
+  void on_create_polygon(ggo::canvas::polygon * polygon) override;
 
   ggo::canvas::view getCanvasView() const;
 
@@ -48,7 +52,7 @@ private:
   ShapeHandler* _mouseDownShape = nullptr;
   bool _hasMouveMoved = false;
   std::vector<ShapeHandler*> _selection;
-  ggo::color_8u _color;
+  ggo::color_8u _color = ggo::black_8u();
 };
 
 #endif

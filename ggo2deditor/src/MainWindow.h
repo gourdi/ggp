@@ -17,6 +17,7 @@ private:
 
 private slots:
 
+  void loadFile();
   void saveFile();
 
 private:

@@ -9,7 +9,8 @@
 
 #include "DiscFactory.h"
 #include "PolygonFactory.h"
-#include "ShapeHandler.h"
+#include "DiscHandler.h"
+#include "PolygonHandler.h"
 
 namespace
 {
@@ -26,7 +27,26 @@ _zoomIndex(int(zoomFactors.size() / 2 + 1))
 }
 
 /////////////////////////////////////////////////////////////////////
-void CanvasWidget::SaveCanvas(const QString & filename) const
+void CanvasWidget::on_create_disc(ggo::canvas::disc * disc)
+{
+  _shapeHandlers.push_back(std::make_unique<DiscHandler>(disc));
+}
+
+/////////////////////////////////////////////////////////////////////
+void CanvasWidget::on_create_polygon(ggo::canvas::polygon * polygon)
+{
+  _shapeHandlers.push_back(std::make_unique<PolygonHandler>(polygon));
+}
+
+/////////////////////////////////////////////////////////////////////
+void CanvasWidget::loadCanvas(const QString & filename)
+{
+  _shapeHandlers.clear();
+  _canvas.load(filename.toUtf8(), this);
+}
+
+/////////////////////////////////////////////////////////////////////
+void CanvasWidget::saveCanvas(const QString & filename) const
 {
   _canvas.save(filename.toUtf8());
 }

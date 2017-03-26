@@ -100,10 +100,12 @@ namespace ggo
   public:
 
     canvas() = default;
-    canvas(const std::string & xml);
 
     // Rendering.
     void render(void * buffer, const view & view, int width, int height, int line_byte_step, pixel_buffer_format pbf) const;
+    
+    const ggo::color_8u & background_color() const { return _background_color; }
+    ggo::color_8u &       background_color()       { return _background_color; }
 
     // Shapes container.
     disc *    create_disc();
@@ -122,24 +124,33 @@ namespace ggo
     static ggo::pos2f from_render_pixel_to_view(const ggo::pos2i & p, const view & view, int render_width, int render_height, bool vertical_flip);
 
     // I/O
-            void    save(const char * filename) const;
-    static  canvas  load(const char * filename);
+    struct load_delegate
+    {
+      virtual void on_create_disc(disc * disc) = 0;
+      virtual void on_create_polygon(polygon * polygon) = 0;
+    };
+
+                  canvas(const std::string & xml, load_delegate * delegate = nullptr);
+
+    void          save(const char * filename) const;
+    void          load(const char * filename, load_delegate * delegate);
 
     std::string   to_string() const;
-    void          from_string(const std::string & xml);
+    void          from_string(const std::string & xml, load_delegate * delegate);
 
   private:
 
     // I/O private functions.
     std::unique_ptr<tinyxml2::XMLDocument> create_xml_document() const;
-    void from_xml_document(const tinyxml2::XMLDocument & document);
-    canvas(const tinyxml2::XMLDocument & document);
+    void from_xml_document(const tinyxml2::XMLDocument & document, load_delegate * delegate);
+    canvas(const tinyxml2::XMLDocument & document, load_delegate * delegate);
 
-    canvas::shape_abc * create_disc(const tinyxml2::XMLElement & shape_element);
-    canvas::shape_abc * create_polygon(const tinyxml2::XMLElement & shape_element);
+    canvas::shape_abc * create_disc(const tinyxml2::XMLElement & shape_element, load_delegate * delegate);
+    canvas::shape_abc * create_polygon(const tinyxml2::XMLElement & shape_element, load_delegate * delegate);
 
   private:
 
+    ggo::color_8u                           _background_color = ggo::white_8u();
     std::vector<std::unique_ptr<shape_abc>> _shapes;
   };
 }

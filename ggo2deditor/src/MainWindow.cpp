@@ -43,7 +43,7 @@ void MainWindow::createMenus()
     _openFileAction->setStatusTip(tr("Open a file"));
     _openFileAction->setShortcut(QKeySequence::Open);
     _fileMenu->addAction(_openFileAction);
-    //connect(_openFileAction, &QAction::triggered, this, &MainWindow::loadFile);
+    connect(_openFileAction, &QAction::triggered, this, &MainWindow::loadFile);
 
     _saveFileAction = new QAction(tr("Save"));
     _saveFileAction->setStatusTip(tr("Save current file"));
@@ -73,6 +73,25 @@ void MainWindow::createMenus()
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+void MainWindow::loadFile()
+{
+  QString fileName = QFileDialog::getOpenFileName(this,
+    tr("Load Canvas"), "",
+    tr("Canvas file (*.Canvas)"));
+
+  if (fileName.isEmpty() == false)
+  {
+    try
+    {
+      _canvasWidget->loadCanvas(fileName);
+    }
+    catch (...)
+    {
+
+    }
+  }
+}
 
 /////////////////////////////////////////////////////////////////////
 void MainWindow::saveFile()
@@ -85,7 +104,7 @@ void MainWindow::saveFile()
   {
     try
     {
-      _canvasWidget->SaveCanvas(fileName);
+      _canvasWidget->saveCanvas(fileName);
     }
     catch (...)
     {

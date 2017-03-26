@@ -170,7 +170,7 @@ namespace ggo
     switch (pbf)
     {
     case bgra_8u_yd:
-      fill_solid<bgra_8u_yd>(buffer, width, height, line_byte_step, yellow_8u());
+      fill_solid<bgra_8u_yd>(buffer, width, height, line_byte_step, _background_color);
       paint_shapes<bgra_8u_yd, sampling_4x4>(buffer, width, height, line_byte_step, mapped_shapes.begin(), mapped_shapes.end(), clipping);
       break;
     default:
@@ -296,7 +296,11 @@ namespace ggo
   {
     auto document = std::make_unique<tinyxml2::XMLDocument>();
 
-    tinyxml2::XMLNode * canvas_element = document->InsertEndChild(document->NewElement("canvas"));
+    auto canvas_element = document->NewElement("canvas");
+
+    std::ostringstream oss;
+    oss << '#' << ggo::to_hex(_background_color);
+    canvas_element->SetAttribute("background_color", oss.str().c_str());
 
     for (const auto & shape : _shapes)
     {
@@ -308,6 +312,8 @@ namespace ggo
 
       canvas_element->InsertEndChild(shape_element);
     }
+
+    document->InsertEndChild(canvas_element);
 
     return document;
   }
@@ -342,19 +348,19 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  canvas::canvas(const std::string & xml)
+  canvas::canvas(const std::string & xml, load_delegate * delegate)
   {
-    from_string(xml);
+    from_string(xml, delegate);
   }
 
   /////////////////////////////////////////////////////////////////////
-  canvas::canvas(const tinyxml2::XMLDocument & document)
+  canvas::canvas(const tinyxml2::XMLDocument & document, load_delegate * delegate)
   {
-    from_xml_document(document);
+    from_xml_document(document, delegate);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void canvas::from_string(const std::string & xml)
+  void canvas::from_string(const std::string & xml, load_delegate * delegate)
   {
     tinyxml2::XMLDocument document;
 
@@ -366,11 +372,11 @@ namespace ggo
       throw std::runtime_error(error_msg.str());
     }
 
-    from_xml_document(document);
+    from_xml_document(document, delegate);
   }
 
   /////////////////////////////////////////////////////////////////////
-  void canvas::from_xml_document(const tinyxml2::XMLDocument & document)
+  void canvas::from_xml_document(const tinyxml2::XMLDocument & document, load_delegate * delegate)
   {
     _shapes.clear();
 
@@ -395,11 +401,11 @@ namespace ggo
       // Geometry.
       if (shape_value == "disc")
       {
-        new_shape = create_disc(*shape_element);
+        new_shape = create_disc(*shape_element, delegate);
       }
       else if(shape_value == "polygon")
       {
-        new_shape = create_polygon(*shape_element);
+        new_shape = create_polygon(*shape_element, delegate);
       }
       
       if (new_shape == nullptr)
@@ -420,7 +426,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  canvas canvas::load(const char * filename)
+  void canvas::load(const char * filename, load_delegate * delegate)
   {
     tinyxml2::XMLDocument document;
     
@@ -432,11 +438,11 @@ namespace ggo
       throw std::runtime_error(error_msg.str());
     }
 
-    return canvas(document);
+    from_xml_document(document, delegate);
   }
 
   /////////////////////////////////////////////////////////////////////
-  canvas::shape_abc * canvas::create_disc(const tinyxml2::XMLElement & shape_element)
+  canvas::shape_abc * canvas::create_disc(const tinyxml2::XMLElement & shape_element, load_delegate * delegate)
   {
     disc * new_disc = create_disc();
 
@@ -476,11 +482,16 @@ namespace ggo
       new_disc->get_disc().set_center(ggo::to<float>(tokens[0]), ggo::to<float>(tokens[1]));
     }
 
+    if (delegate != nullptr)
+    {
+      delegate->on_create_disc(new_disc);
+    }
+
     return new_disc;
   }
 
   /////////////////////////////////////////////////////////////////////
-  canvas::shape_abc * canvas::create_polygon(const tinyxml2::XMLElement & shape_element)
+  canvas::shape_abc * canvas::create_polygon(const tinyxml2::XMLElement & shape_element, load_delegate * delegate)
   {
     polygon * new_polygon = create_polygon();
 
@@ -503,6 +514,11 @@ namespace ggo
       const float x = ggo::to<float>(*it++);
       const float y = ggo::to<float>(*it++);
       new_polygon->get_polygon().add_point(x, y);
+    }
+
+    if (delegate != nullptr)
+    {
+      delegate->on_create_polygon(new_polygon);
     }
 
     return new_polygon;
