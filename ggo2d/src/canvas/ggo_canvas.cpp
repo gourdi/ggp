@@ -297,10 +297,14 @@ namespace ggo
     auto document = std::make_unique<tinyxml2::XMLDocument>();
 
     auto canvas_element = document->NewElement("canvas");
+    document->InsertEndChild(canvas_element);
 
     std::ostringstream oss;
     oss << '#' << ggo::to_hex(_background_color);
     canvas_element->SetAttribute("background_color", oss.str().c_str());
+
+    auto shapes_element = document->NewElement("shapes");
+    canvas_element->InsertEndChild(shapes_element);
 
     for (const auto & shape : _shapes)
     {
@@ -310,10 +314,9 @@ namespace ggo
       oss << '#' << ggo::to_hex(shape->_color);
       shape_element->SetAttribute("color", oss.str().c_str());
 
-      canvas_element->InsertEndChild(shape_element);
+      shapes_element->InsertEndChild(shape_element);
     }
 
-    document->InsertEndChild(canvas_element);
 
     return document;
   }
@@ -392,7 +395,13 @@ namespace ggo
       throw std::runtime_error(std::string("invalid root node: ") + canvas_value);
     }
 
-    const tinyxml2::XMLElement * shape_element = canvas_node->FirstChildElement();
+    const tinyxml2::XMLElement * shapes_element = canvas_node->FirstChildElement("shapes");
+    if (shapes_element == nullptr)
+    {
+      throw std::runtime_error("missing 'shapes' element");
+    }
+
+    const tinyxml2::XMLElement * shape_element = shapes_element->FirstChildElement();
     while (shape_element != nullptr)
     {
       const std::string shape_value = shape_element->Value();
