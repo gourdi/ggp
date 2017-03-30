@@ -73,17 +73,24 @@ ShapeHandler::MouseMoveData PolygonHandler::OnMouseMove(int x, int y, int width,
 {
   MouseMoveData mouseMoveData;
 
-  if (_mouse_down_index >= 0)
+  if (_mouse_down_index >= 0) // Moving a vertex.
   {
     ggo::pos2f render_point(static_cast<float>(x), static_cast<float>(y));
     _polygon->update_render_point(_mouse_down_index, render_point, view, width, height, true);
 
+    mouseMoveData._consume_event = true;
     mouseMoveData._update_widget = true;
+    mouseMoveData._cursor = Qt::SizeAllCursor;
+
   }
-
-  int pointIndex = _mouse_down_index >= 0 ? _mouse_down_index : HitTest(x, y, width, height, view);
-
-  mouseMoveData._cursor = pointIndex >= 0 ? Qt::SizeAllCursor : Qt::ArrowCursor;
+  else // Moving the mouse freely.
+  {
+    if (HitTest(x, y, width, height, view) >= 0)
+    {
+      mouseMoveData._consume_event = true;
+      mouseMoveData._cursor = Qt::SizeAllCursor;
+    }
+  }
 
   return mouseMoveData;
 }

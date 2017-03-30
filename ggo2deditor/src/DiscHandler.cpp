@@ -151,10 +151,12 @@ ShapeHandler::MouseMoveData DiscHandler::OnMouseMove(int x, int y, int width, in
   MouseMoveData mouseMoveData;
 
   // Update disc.
+  mouseMoveData._consume_event = true;
   mouseMoveData._update_widget = true;
   switch (_modifier)
   {
   case Modifier::none:
+    mouseMoveData._consume_event = false;
     mouseMoveData._update_widget = false;
     break;
   case Modifier::bottom:
@@ -176,31 +178,40 @@ ShapeHandler::MouseMoveData DiscHandler::OnMouseMove(int x, int y, int width, in
   switch (cursor_modifier)
   {
   case Modifier::none:
+    mouseMoveData._consume_event = true;
     mouseMoveData._cursor = Qt::ArrowCursor;
     break;
   case Modifier::bottom:
+    mouseMoveData._consume_event = true;
     mouseMoveData._cursor = Qt::SizeVerCursor;
     break;
   case Modifier::top:
+    mouseMoveData._consume_event = true;
     mouseMoveData._cursor = Qt::SizeVerCursor;
     break;
   case Modifier::left:
-     mouseMoveData._cursor = Qt::SizeHorCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeHorCursor;
     break;
   case Modifier::right:
-     mouseMoveData._cursor = Qt::SizeHorCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeHorCursor;
     break;
   case Modifier::bottom_left:
-     mouseMoveData._cursor = Qt::SizeFDiagCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeFDiagCursor;
     break;
   case Modifier::bottom_right:
-     mouseMoveData._cursor = Qt::SizeBDiagCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeBDiagCursor;
     break;
   case Modifier::top_left:
-     mouseMoveData._cursor = Qt::SizeBDiagCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeBDiagCursor;
     break;
   case Modifier::top_right:
-     mouseMoveData._cursor = Qt::SizeFDiagCursor;
+    mouseMoveData._consume_event = true;
+    mouseMoveData._cursor = Qt::SizeFDiagCursor;
     break;
   }
 

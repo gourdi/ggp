@@ -67,10 +67,6 @@ void CanvasWidget::paintEvent(QPaintEvent * event)
   {
     shapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
   }
-  if (_edition != nullptr)
-  {
-    _edition->Draw(painter, size().width(), size().height(), getCanvasView());
-  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -105,8 +101,6 @@ void CanvasWidget::mousePressEvent(QMouseEvent *eventPress)
   {
     if (shapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView()) == true)
     {
-      _selection = { shapeHandler };
-      _edition = shapeHandler;
       update();
       return;
     }
@@ -149,11 +143,13 @@ void CanvasWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
   }
 
   // Edition.
-  if (_edition != nullptr &&
-      _edition->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView()) == true)
+  for (auto * shapeHandler : _selection)
   {
-    update();
-    return;
+    if (shapeHandler->OnMouseUp(releaseEvent->button(), releaseEvent->x(), releaseEvent->y(), size().width(), size().height(), getCanvasView()) == true)
+    {
+      update();
+      return;
+    }
   }
 
   if (_hasMouveMoved == false)
@@ -201,16 +197,20 @@ void CanvasWidget::mouseMoveEvent(QMouseEvent *eventMove)
     return;
   }
 
-  // A shape is edited.
-  if (_edition != nullptr)
+  // Let selected shapes handle the mouse move.
+  for (auto * shapeHandler : _selection)
   {
-    auto mouveMoveData = _edition->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
-    setCursor(mouveMoveData._cursor);
+    auto mouveMoveData = shapeHandler->OnMouseMove(eventMove->x(), eventMove->y(), size().width(), size().height(), getCanvasView());
+    
     if (mouveMoveData._update_widget == true)
     {
       update();
     }
-    return;
+    if (mouveMoveData._consume_event)
+    {
+      setCursor(mouveMoveData._cursor);
+      return;
+    }
   }
 
   // Selection is moved.

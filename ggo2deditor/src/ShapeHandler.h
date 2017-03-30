@@ -12,8 +12,9 @@ public:
 
   struct MouseMoveData
   {
-    QCursor _cursor;
-    bool _update_widget;
+    bool _consume_event = false;
+    bool _update_widget = false;
+    QCursor _cursor = Qt::ArrowCursor;
   };
 
   virtual void SetColor(const ggo::color_8u & c) = 0;
