@@ -23,6 +23,8 @@ private:
   void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
   void mouseMoveEvent(QMouseEvent *eventMove) override;
   void wheelEvent(QWheelEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+  void keyReleaseEvent(QKeyEvent *event) override;
 
   QSize sizeHint() const override;
   QSize minimumSizeHint() const override;
@@ -51,6 +53,8 @@ private:
   ShapeHandler* _mouseDownShape = nullptr;
   bool _hasMouveMoved = false;
   std::vector<ShapeHandler*> _selection;
+  bool _spacePressed = false;
+  bool _scrollCanvas = false;
   ggo::color_8u _color = ggo::black_8u();
 };
 

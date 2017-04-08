@@ -1,4 +1,5 @@
 #include "CanvasWidget.h"
+#include "MainWindow.h"
 #include <QtGui/qguiapplication.h>
 #include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
@@ -67,6 +68,14 @@ void CanvasWidget::paintEvent(QPaintEvent * event)
   {
     shapeHandler->Draw(painter, size().width(), size().height(), getCanvasView());
   }
+
+  // Paint the reference frame [-1, 1] x [-1, 1].
+  const auto p1 = _canvas.from_view_to_render_pixel({ -1.f, -1.f }, getCanvasView(), size().width(), size().height(), true);
+  const auto p2 = _canvas.from_view_to_render_pixel({  1.f,  1.f }, getCanvasView(), size().width(), size().height(), true);
+
+  painter.setPen(QPen(Qt::black, 1, Qt::DotLine));
+  painter.setBrush(Qt::NoBrush);
+  painter.drawRect(p1.x(), p1.y(), p2.x() - p1.x() + 1, p2.y() - p1.y() + 1);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -80,7 +89,9 @@ void CanvasWidget::resizeEvent(QResizeEvent *event)
 /////////////////////////////////////////////////////////////////////
 void CanvasWidget::mousePressEvent(QMouseEvent *eventPress)
 {
-  // First check if a shape is currently built.
+  _scrollCanvas = false;
+
+  // Check if a shape is currently built.
   if (_shapeFactory != nullptr)
   {
     auto shapeHandler = _shapeFactory->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), _canvas, getCanvasView());
@@ -96,7 +107,14 @@ void CanvasWidget::mousePressEvent(QMouseEvent *eventPress)
     return;
   }
 
-  // Then check for edition.
+  // Scroll view.
+  if (_spacePressed == true)
+  {
+    _scrollCanvas = true;
+    return;
+  }
+
+  // Check for edition.
   for (auto * shapeHandler : _selection)
   {
     if (shapeHandler->OnMouseDown(eventPress->button(), eventPress->x(), eventPress->y(), size().width(), size().height(), getCanvasView()) == true)
@@ -188,6 +206,12 @@ void CanvasWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
 void CanvasWidget::mouseMoveEvent(QMouseEvent *eventMove)
 {
   _hasMouveMoved = true;
+
+  // The space bar is pressed, just return.
+  if (_spacePressed == true)
+  {
+    return;
+  }
 
   // A shape is built.
   if (_shapeFactory != nullptr)
@@ -310,4 +334,25 @@ ShapeHandler * CanvasWidget::hitTest(int x, int y, int width, int height, const 
 
   return nullptr;
 }
+
+/////////////////////////////////////////////////////////////////////
+void CanvasWidget::keyPressEvent(QKeyEvent *event)
+{
+  if (event->key() == Qt::Key_Space)
+  {
+    setCursor(Qt::OpenHandCursor);
+    _spacePressed = true;
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+void CanvasWidget::keyReleaseEvent(QKeyEvent *event)
+{
+  if (event->key() == Qt::Key_Space)
+  {
+    setCursor(Qt::ArrowCursor);
+    _spacePressed = false;;
+  }
+}
+
 

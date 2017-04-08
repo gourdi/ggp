@@ -18,9 +18,11 @@ void PolygonHandler::Draw(QPainter & painter, int width, int height, const ggo::
     const ggo::pos2f & p2 = polygon->get_point(j);
 
     painter.setPen(QPen(Qt::black));
+    painter.setBrush(Qt::NoBrush);
     painter.drawLine(ggo::to<int>(p1.x()), ggo::to<int>(p1.y()), ggo::to<int>(p2.x()), ggo::to<int>(p2.y()));
 
     painter.setPen(QPen(Qt::white, 1, Qt::DotLine));
+    painter.setBrush(Qt::NoBrush);
     painter.drawLine(ggo::to<int>(p1.x()), ggo::to<int>(p1.y()), ggo::to<int>(p2.x()), ggo::to<int>(p2.y()));
   }
 
