@@ -101,6 +101,7 @@
     <ClCompile Include="test\signal_proc\ggo_mean_box_filter_nonreg.cpp">
       <Filter>signal_proc</Filter>
     </ClCompile>
+    <ClCompile Include="test\ggo_value_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

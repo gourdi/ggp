@@ -325,6 +325,7 @@
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_string_helpers.h" />
+    <ClInclude Include="src\ggo_value.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

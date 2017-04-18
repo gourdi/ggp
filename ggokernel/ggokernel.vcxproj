@@ -155,6 +155,7 @@
     <ClInclude Include="src\ggo_template_pointer.h" />
     <ClInclude Include="src\ggo_template_variadic.h" />
     <ClInclude Include="src\ggo_tree.h" />
+    <ClInclude Include="src\ggo_value.h" />
     <ClInclude Include="src\ggo_vec.h" />
     <ClInclude Include="src\math\delaunay_triangulation\ggo_delaunay_triangulation.h" />
     <ClInclude Include="src\math\ggo_distance.h" />

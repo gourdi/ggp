@@ -30,6 +30,7 @@
     <ClCompile Include="test\ggo_link_nonreg.cpp" />
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
     <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
+    <ClCompile Include="test\ggo_value_nonreg.cpp" />
     <ClCompile Include="test\ggo_vec_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation2d_nonreg.cpp" />
     <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp" />
@@ -136,6 +137,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>GGO_DEBUG;GGO_WIN;_SCL_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
