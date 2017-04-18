@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggokernel", "ggokernel\ggokernel.vcxproj", "{85BCCE2E-EA7F-4510-AD17-C6B904A76F99}"
 EndProject
@@ -13,7 +13,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggo2d", "ggo2d\ggo2d.vcxproj", "{28E4FCBA-8918-406F-A8CC-ADE4FD341F4F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{45BCDA0B-27ED-4D46-848C-A03C9B839E78} = {45BCDA0B-27ED-4D46-848C-A03C9B839E78}
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC} = {5549A22D-A2AB-4FBA-9901-72111D3EA7AC}
 		{85BCCE2E-EA7F-4510-AD17-C6B904A76F99} = {85BCCE2E-EA7F-4510-AD17-C6B904A76F99}
 	EndProjectSection
 EndProject
@@ -107,10 +106,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggocomputartrealtime", "ggo
 		{F78D77E4-B028-41AD-A808-C2E0E062A68D} = {F78D77E4-B028-41AD-A808-C2E0E062A68D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyXML2", "externals\tinyXML2\tinyXML2.vcxproj", "{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "externals", "externals", "{F9BD20C6-8A32-4078-97FF-4062DD6B8761}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggo2deditor", "ggo2deditor\ggo2deditor.vcxproj", "{48B16F54-FA81-33E6-AFAA-AA458BECD129}"
 	ProjectSection(ProjectDependencies) = postProject
 		{45BCDA0B-27ED-4D46-848C-A03C9B839E78} = {45BCDA0B-27ED-4D46-848C-A03C9B839E78}
@@ -118,6 +113,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggo2deditor", "ggo2deditor\
 		{F611A343-8045-4B3C-961E-42231F9A4124} = {F611A343-8045-4B3C-961E-42231F9A4124}
 		{28E4FCBA-8918-406F-A8CC-ADE4FD341F4F} = {28E4FCBA-8918-406F-A8CC-ADE4FD341F4F}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ggoimageprocessor", "ggoimageprocessing\ggoimageprocessing.vcxproj", "{FAA5B20B-CA87-408C-9838-D64A8142AC01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -231,25 +228,22 @@ Global
 		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x64.Build.0 = Release|x64
 		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x86.ActiveCfg = Release|Win32
 		{D304025F-BC5E-497D-B219-0878F97A6B69}.Release|x86.Build.0 = Release|Win32
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x64.ActiveCfg = Debug|x64
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x64.Build.0 = Debug|x64
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x86.ActiveCfg = Debug|Win32
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Debug|x86.Build.0 = Debug|Win32
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x64.ActiveCfg = Release|x64
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x64.Build.0 = Release|x64
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x86.ActiveCfg = Release|Win32
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC}.Release|x86.Build.0 = Release|Win32
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Debug|x64.ActiveCfg = Debug|x64
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Debug|x64.Build.0 = Debug|x64
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Debug|x86.ActiveCfg = Debug|x64
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Release|x64.ActiveCfg = Release|x64
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Release|x64.Build.0 = Release|x64
 		{48B16F54-FA81-33E6-AFAA-AA458BECD129}.Release|x86.ActiveCfg = Release|x64
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Debug|x64.ActiveCfg = Debug|x64
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Debug|x64.Build.0 = Debug|x64
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Debug|x86.ActiveCfg = Debug|Win32
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Debug|x86.Build.0 = Debug|Win32
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Release|x64.ActiveCfg = Release|x64
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Release|x64.Build.0 = Release|x64
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Release|x86.ActiveCfg = Release|Win32
+		{FAA5B20B-CA87-408C-9838-D64A8142AC01}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5549A22D-A2AB-4FBA-9901-72111D3EA7AC} = {F9BD20C6-8A32-4078-97FF-4062DD6B8761}
 	EndGlobalSection
 EndGlobal

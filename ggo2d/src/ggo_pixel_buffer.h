@@ -10,14 +10,6 @@
 // The sampling is rule is that the pixel (0, 0) represents 
 // the square (-0.5, 0.5) x (-0.5, 0.5).
 
-/////////////////////////////////////////////////////////////////////
-// Coordinates are expressed the following way:
-//
-// ^ y 
-// |
-// |
-// +------> x
-
 // Pixel buffer formats.
 namespace ggo
 {

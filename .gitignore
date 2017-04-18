@@ -2,6 +2,9 @@
 *~
 *.mp4
 *.bmp
+*.a
+*.lib
+*.pdf
 ggoraytracer/main*
 ggo2deditor/debug
 ggo2deditor/release
