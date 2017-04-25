@@ -126,14 +126,14 @@ namespace ggo
   }
 
   template <typename data_t>
-  data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
+  constexpr data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
   {
     v = v % m;
     return v < 0 ? v + m : v;
   }
 
   template <int bit_shift, typename data_t>
-  data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_unsigned<data_t>::value>::type* = 0)
+  constexpr data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_unsigned<data_t>::value>::type* = 0)
   {
     static_assert(bit_shift > 1, "invalid bit shift");
 
@@ -141,7 +141,7 @@ namespace ggo
   }
 
   template <int bit_shift, typename data_t>
-  data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_signed<data_t>::value>::type* = 0)
+  constexpr data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_signed<data_t>::value>::type* = 0)
   {
     static_assert(bit_shift > 1, "invalid bit shift");
 
@@ -156,7 +156,7 @@ namespace ggo
   }
 
   template <typename data_t>
-  data_t round_div(data_t value, data_t div)
+  constexpr data_t round_div(data_t value, data_t div)
   { 
     static_assert(std::is_integral<data_t>::value, "expecting integral type");
 
@@ -179,7 +179,7 @@ namespace ggo
   template <typename data_t>  data_t  square(data_t value)							      { return value * value; };
   template <typename data_t>  data_t  sign(data_t value)							        { return value > data_t(0) ? data_t(1) : data_t(-1); };
   template <typename data_t>  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
-  inline					            int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
+  constexpr inline					  int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
   template <typename data_t>	bool	  is_even(data_t value)						        { return (value & 1) == 0; };
   template <typename data_t>	bool	  is_odd(data_t value)						        { return (value & 1) == 1; };
   inline					            int		  log2(int v)								              { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
@@ -274,9 +274,9 @@ namespace ggo
 // Edges functions.
 namespace ggo
 {
-  inline int loop_index(int i, int w)                   { return pos_mod(i, w); }
-  inline int mirror_index_edge_duplicated(int i, int w) { i = pos_mod(i, 2 * w); return i < w ? i : 2 * w - i - 1; }
-  inline int mirror_index_single_edge(int i, int w)     { i = pos_mod(i, 2 * w - 2) ; return i < w ? i : 2 * w - i- 2; }
+  constexpr inline int loop_index(int i, int w)                   { return pos_mod(i, w); }
+  constexpr inline int mirror_index_edge_duplicated(int i, int w) { i = pos_mod(i, 2 * w); return i < w ? i : 2 * w - i - 1; }
+  constexpr inline int mirror_index_single_edge(int i, int w)     { i = pos_mod(i, 2 * w - 2) ; return i < w ? i : 2 * w - i- 2; }
 }
 
 //////////////////////////////////////////////////////////////

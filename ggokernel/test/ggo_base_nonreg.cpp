@@ -2,64 +2,79 @@
 #include <ggo_kernel.h>
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(base, pad)
+{
+  static_assert(ggo::pad(0, 4) == 4);
+  static_assert(ggo::pad(1, 4) == 4);
+  static_assert(ggo::pad(2, 4) == 4);
+  static_assert(ggo::pad(3, 4) == 4);
+  static_assert(ggo::pad(4, 4) == 4);
+  static_assert(ggo::pad(5, 4) == 8);
+  static_assert(ggo::pad(6, 4) == 8);
+  static_assert(ggo::pad(7, 4) == 8);
+  static_assert(ggo::pad(8, 4) == 8);
+  static_assert(ggo::pad(9, 4) == 12);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, loop_index)
 {
-  GGO_CHECK(ggo::loop_index(-6, 4) == 2);
-  GGO_CHECK(ggo::loop_index(-5, 4) == 3);
-  GGO_CHECK(ggo::loop_index(-4, 4) == 0);
-  GGO_CHECK(ggo::loop_index(-3, 4) == 1);
-  GGO_CHECK(ggo::loop_index(-2, 4) == 2);
-  GGO_CHECK(ggo::loop_index(-1, 4) == 3);
-  GGO_CHECK(ggo::loop_index( 0, 4) == 0);
-  GGO_CHECK(ggo::loop_index( 1, 4) == 1);
-  GGO_CHECK(ggo::loop_index( 2, 4) == 2);
-  GGO_CHECK(ggo::loop_index( 3, 4) == 3);
-  GGO_CHECK(ggo::loop_index( 4, 4) == 0);
-  GGO_CHECK(ggo::loop_index( 5, 4) == 1);
-  GGO_CHECK(ggo::loop_index( 6, 4) == 2);
-  GGO_CHECK(ggo::loop_index( 7, 4) == 3);
-  GGO_CHECK(ggo::loop_index( 8, 4) == 0);
-  GGO_CHECK(ggo::loop_index( 9, 4) == 1);
+  static_assert(ggo::loop_index(-6, 4) == 2);
+  static_assert(ggo::loop_index(-5, 4) == 3);
+  static_assert(ggo::loop_index(-4, 4) == 0);
+  static_assert(ggo::loop_index(-3, 4) == 1);
+  static_assert(ggo::loop_index(-2, 4) == 2);
+  static_assert(ggo::loop_index(-1, 4) == 3);
+  static_assert(ggo::loop_index( 0, 4) == 0);
+  static_assert(ggo::loop_index( 1, 4) == 1);
+  static_assert(ggo::loop_index( 2, 4) == 2);
+  static_assert(ggo::loop_index( 3, 4) == 3);
+  static_assert(ggo::loop_index( 4, 4) == 0);
+  static_assert(ggo::loop_index( 5, 4) == 1);
+  static_assert(ggo::loop_index( 6, 4) == 2);
+  static_assert(ggo::loop_index( 7, 4) == 3);
+  static_assert(ggo::loop_index( 8, 4) == 0);
+  static_assert(ggo::loop_index( 9, 4) == 1);
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, mirror_index)
 {
   // Edge duplicated.
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-6, 4) == 2);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-5, 4) == 3);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-4, 4) == 3);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-3, 4) == 2);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-2, 4) == 1);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(-1, 4) == 0);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(0, 4) == 0);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(1, 4) == 1);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(2, 4) == 2);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(3, 4) == 3);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(4, 4) == 3);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(5, 4) == 2);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(6, 4) == 1);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(7, 4) == 0);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(8, 4) == 0);
-  GGO_CHECK(ggo::mirror_index_edge_duplicated(9, 4) == 1);
+  static_assert(ggo::mirror_index_edge_duplicated(-6, 4) == 2);
+  static_assert(ggo::mirror_index_edge_duplicated(-5, 4) == 3);
+  static_assert(ggo::mirror_index_edge_duplicated(-4, 4) == 3);
+  static_assert(ggo::mirror_index_edge_duplicated(-3, 4) == 2);
+  static_assert(ggo::mirror_index_edge_duplicated(-2, 4) == 1);
+  static_assert(ggo::mirror_index_edge_duplicated(-1, 4) == 0);
+  static_assert(ggo::mirror_index_edge_duplicated(0, 4) == 0);
+  static_assert(ggo::mirror_index_edge_duplicated(1, 4) == 1);
+  static_assert(ggo::mirror_index_edge_duplicated(2, 4) == 2);
+  static_assert(ggo::mirror_index_edge_duplicated(3, 4) == 3);
+  static_assert(ggo::mirror_index_edge_duplicated(4, 4) == 3);
+  static_assert(ggo::mirror_index_edge_duplicated(5, 4) == 2);
+  static_assert(ggo::mirror_index_edge_duplicated(6, 4) == 1);
+  static_assert(ggo::mirror_index_edge_duplicated(7, 4) == 0);
+  static_assert(ggo::mirror_index_edge_duplicated(8, 4) == 0);
+  static_assert(ggo::mirror_index_edge_duplicated(9, 4) == 1);
 
   // Single edge.
-  GGO_CHECK(ggo::mirror_index_single_edge(-6, 5) == 2);
-  GGO_CHECK(ggo::mirror_index_single_edge(-5, 5) == 3);
-  GGO_CHECK(ggo::mirror_index_single_edge(-4, 5) == 4);
-  GGO_CHECK(ggo::mirror_index_single_edge(-3, 5) == 3);
-  GGO_CHECK(ggo::mirror_index_single_edge(-2, 5) == 2);
-  GGO_CHECK(ggo::mirror_index_single_edge(-1, 5) == 1);
-  GGO_CHECK(ggo::mirror_index_single_edge(0, 5) == 0);
-  GGO_CHECK(ggo::mirror_index_single_edge(1, 5) == 1);
-  GGO_CHECK(ggo::mirror_index_single_edge(2, 5) == 2);
-  GGO_CHECK(ggo::mirror_index_single_edge(3, 5) == 3);
-  GGO_CHECK(ggo::mirror_index_single_edge(4, 5) == 4);
-  GGO_CHECK(ggo::mirror_index_single_edge(5, 5) == 3);
-  GGO_CHECK(ggo::mirror_index_single_edge(6, 5) == 2);
-  GGO_CHECK(ggo::mirror_index_single_edge(7, 5) == 1);
-  GGO_CHECK(ggo::mirror_index_single_edge(8, 5) == 0);
-  GGO_CHECK(ggo::mirror_index_single_edge(9, 5) == 1);
+  static_assert(ggo::mirror_index_single_edge(-6, 5) == 2);
+  static_assert(ggo::mirror_index_single_edge(-5, 5) == 3);
+  static_assert(ggo::mirror_index_single_edge(-4, 5) == 4);
+  static_assert(ggo::mirror_index_single_edge(-3, 5) == 3);
+  static_assert(ggo::mirror_index_single_edge(-2, 5) == 2);
+  static_assert(ggo::mirror_index_single_edge(-1, 5) == 1);
+  static_assert(ggo::mirror_index_single_edge(0, 5) == 0);
+  static_assert(ggo::mirror_index_single_edge(1, 5) == 1);
+  static_assert(ggo::mirror_index_single_edge(2, 5) == 2);
+  static_assert(ggo::mirror_index_single_edge(3, 5) == 3);
+  static_assert(ggo::mirror_index_single_edge(4, 5) == 4);
+  static_assert(ggo::mirror_index_single_edge(5, 5) == 3);
+  static_assert(ggo::mirror_index_single_edge(6, 5) == 2);
+  static_assert(ggo::mirror_index_single_edge(7, 5) == 1);
+  static_assert(ggo::mirror_index_single_edge(8, 5) == 0);
+  static_assert(ggo::mirror_index_single_edge(9, 5) == 1);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -240,51 +255,53 @@ GGO_TEST(base, pow)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, fixed_point_div)
 {
-  GGO_CHECK_EQ(ggo::fixed_point_div<4>(128), 8);
-  GGO_CHECK_EQ(ggo::fixed_point_div<4>(-128), -8);
+  static_assert(ggo::fixed_point_div<4>(127) == 8);
+  static_assert(ggo::fixed_point_div<4>(128) == 8);
+  static_assert(ggo::fixed_point_div<4>(129) == 8);
+  static_assert(ggo::fixed_point_div<4>(-128) == -8);
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, round_div)
 {
-  GGO_CHECK_EQ(ggo::round_div(-9, 4), -2);
-  GGO_CHECK_EQ(ggo::round_div(-8, 4), -2);
-  GGO_CHECK_EQ(ggo::round_div(-7, 4), -2);
-  GGO_CHECK_EQ(ggo::round_div(-6, 4), -2);
-  GGO_CHECK_EQ(ggo::round_div(-5, 4), -1);
-  GGO_CHECK_EQ(ggo::round_div(-4, 4), -1);
-  GGO_CHECK_EQ(ggo::round_div(-3, 4), -1);
-  GGO_CHECK_EQ(ggo::round_div(-2, 4), -1);
-  GGO_CHECK_EQ(ggo::round_div(-1, 4), 0);
-  GGO_CHECK_EQ(ggo::round_div(0, 4), 0);
-  GGO_CHECK_EQ(ggo::round_div(1, 4), 0);
-  GGO_CHECK_EQ(ggo::round_div(2, 4), 1);
-  GGO_CHECK_EQ(ggo::round_div(3, 4), 1);
-  GGO_CHECK_EQ(ggo::round_div(4, 4), 1);
-  GGO_CHECK_EQ(ggo::round_div(5, 4), 1);
-  GGO_CHECK_EQ(ggo::round_div(6, 4), 2);
-  GGO_CHECK_EQ(ggo::round_div(7, 4), 2);
-  GGO_CHECK_EQ(ggo::round_div(9, 4), 2);
-  GGO_CHECK_EQ(ggo::round_div(9, 4), 2);
+  static_assert(ggo::round_div(-9, 4) == -2);
+  static_assert(ggo::round_div(-8, 4) == -2);
+  static_assert(ggo::round_div(-7, 4) == -2);
+  static_assert(ggo::round_div(-6, 4) == -2);
+  static_assert(ggo::round_div(-5, 4) == -1);
+  static_assert(ggo::round_div(-4, 4) == -1);
+  static_assert(ggo::round_div(-3, 4) == -1);
+  static_assert(ggo::round_div(-2, 4) == -1);
+  static_assert(ggo::round_div(-1, 4) == 0);
+  static_assert(ggo::round_div(0, 4) == 0);
+  static_assert(ggo::round_div(1, 4) == 0);
+  static_assert(ggo::round_div(2, 4) == 1);
+  static_assert(ggo::round_div(3, 4) == 1);
+  static_assert(ggo::round_div(4, 4) == 1);
+  static_assert(ggo::round_div(5, 4) == 1);
+  static_assert(ggo::round_div(6, 4) == 2);
+  static_assert(ggo::round_div(7, 4) == 2);
+  static_assert(ggo::round_div(9, 4) == 2);
+  static_assert(ggo::round_div(9, 4) == 2);
 
-  GGO_CHECK_EQ(ggo::round_div(-9, -4), 2);
-  GGO_CHECK_EQ(ggo::round_div(-8, -4), 2);
-  GGO_CHECK_EQ(ggo::round_div(-7, -4), 2);
-  GGO_CHECK_EQ(ggo::round_div(-6, -4), 2);
-  GGO_CHECK_EQ(ggo::round_div(-5, -4), 1);
-  GGO_CHECK_EQ(ggo::round_div(-4, -4), 1);
-  GGO_CHECK_EQ(ggo::round_div(-3, -4), 1);
-  GGO_CHECK_EQ(ggo::round_div(-2, -4), 1);
-  GGO_CHECK_EQ(ggo::round_div(-1, -4), 0);
-  GGO_CHECK_EQ(ggo::round_div(0, -4), 0);
-  GGO_CHECK_EQ(ggo::round_div(1, -4), 0);
-  GGO_CHECK_EQ(ggo::round_div(2, -4), -1);
-  GGO_CHECK_EQ(ggo::round_div(3, -4), -1);
-  GGO_CHECK_EQ(ggo::round_div(4, -4), -1);
-  GGO_CHECK_EQ(ggo::round_div(5, -4), -1);
-  GGO_CHECK_EQ(ggo::round_div(6, -4), -2);
-  GGO_CHECK_EQ(ggo::round_div(7, -4), -2);
-  GGO_CHECK_EQ(ggo::round_div(9, -4), -2);
-  GGO_CHECK_EQ(ggo::round_div(9, -4), -2);
+  static_assert(ggo::round_div(-9, -4) == 2);
+  static_assert(ggo::round_div(-8, -4) == 2);
+  static_assert(ggo::round_div(-7, -4) == 2);
+  static_assert(ggo::round_div(-6, -4) == 2);
+  static_assert(ggo::round_div(-5, -4) == 1);
+  static_assert(ggo::round_div(-4, -4) == 1);
+  static_assert(ggo::round_div(-3, -4) == 1);
+  static_assert(ggo::round_div(-2, -4) == 1);
+  static_assert(ggo::round_div(-1, -4) == 0);
+  static_assert(ggo::round_div(0, -4) == 0);
+  static_assert(ggo::round_div(1, -4) == 0);
+  static_assert(ggo::round_div(2, -4) == -1);
+  static_assert(ggo::round_div(3, -4) == -1);
+  static_assert(ggo::round_div(4, -4) == -1);
+  static_assert(ggo::round_div(5, -4) == -1);
+  static_assert(ggo::round_div(6, -4) == -2);
+  static_assert(ggo::round_div(7, -4) == -2);
+  static_assert(ggo::round_div(9, -4) == -2);
+  static_assert(ggo::round_div(9, -4) == -2);
 }
 
