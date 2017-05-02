@@ -25,6 +25,9 @@
     <Filter Include="template">
       <UniqueIdentifier>{66829f86-0c85-4f65-9d28-098a4148959c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{2f6e7f6d-4ce5-418d-a41a-0b29a6a8714e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
@@ -67,7 +70,6 @@
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />
     <ClCompile Include="test\ggo_scalar_field2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_link_nonreg.cpp" />
-    <ClCompile Include="test\ggo_array_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_gaussian_blur_nonreg.cpp">
       <Filter>signal_proc</Filter>
     </ClCompile>
@@ -96,12 +98,26 @@
     <ClCompile Include="test\linear_algebra\ggo_linear_system_nonreg.cpp">
       <Filter>linear_algebra</Filter>
     </ClCompile>
-    <ClCompile Include="test\ggo_buffer_iterator_nonreg.cpp" />
-    <ClCompile Include="test\ggo_circular_buffer_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_mean_box_filter_nonreg.cpp">
       <Filter>signal_proc</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_value_nonreg.cpp" />
+    <ClCompile Include="test\ggo_rect_int_nonreg.cpp" />
+    <ClCompile Include="test\memory\ggo_array_nonreg.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="test\memory\ggo_buffer_iterator_nonreg.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="test\memory\ggo_circular_buffer_nonreg.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ggo_memory_layouts_nonreg.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="test\memory\ggo_memory_nonreg.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

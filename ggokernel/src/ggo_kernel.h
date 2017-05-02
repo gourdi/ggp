@@ -377,6 +377,14 @@ namespace ggo
   template<typename T> constexpr T pi() { return static_cast<T>(3.1415926535897932385); }
   template<typename T> constexpr T inv_sqrt2() { return static_cast<T>(0.707106781186547524); }
   template<typename T> constexpr T sqrt2() { return static_cast<T>(1.414213562373095049); }
+
+  enum class direction
+  {
+    left,
+    right,
+    up,
+    down
+  };
 }
 
 #endif

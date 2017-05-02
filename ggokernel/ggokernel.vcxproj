@@ -72,11 +72,11 @@
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)\src\;$(ProjectDir)\src\math\;$(ProjectDir)\src\math\shapes_2d;$(ProjectDir)\src\math\shapes_3d\;$(ProjectDir)\src\math\linear_algebra\;$(ProjectDir)\src\math\sampling\pixel_sampling\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\math\;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d\;$(SolutionDir)\ggokernel\src\math\linear_algebra\;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling\;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences\;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling\</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -138,15 +138,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ggo_buffer.h" />
-    <ClInclude Include="src\ggo_buffer_access.h" />
-    <ClInclude Include="src\ggo_buffer_iterator.h" />
-    <ClInclude Include="src\ggo_circular_buffer.h" />
     <ClInclude Include="src\ggo_color_stream.h" />
     <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\ggo_log.h" />
+    <ClInclude Include="src\ggo_rect_int.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
-    <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_string_helpers.h" />
@@ -253,6 +249,14 @@
     <ClInclude Include="src\math\signal_proc\ggo_gaussian_blur.h" />
     <ClInclude Include="src\math\signal_proc\ggo_mean_box_filter.h" />
     <ClInclude Include="src\math\signal_proc\ggo_morphology.h" />
+    <ClInclude Include="src\memory\ggo_array.h" />
+    <ClInclude Include="src\memory\ggo_buffer.h" />
+    <ClInclude Include="src\memory\ggo_buffer_access.h" />
+    <ClInclude Include="src\memory\ggo_buffer_iterator.h" />
+    <ClInclude Include="src\memory\ggo_circular_buffer.h" />
+    <ClInclude Include="src\memory\ggo_data_access.h" />
+    <ClInclude Include="src\memory\ggo_memory.h" />
+    <ClInclude Include="src\memory\ggo_memory_layouts.h" />
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test_manager.h" />

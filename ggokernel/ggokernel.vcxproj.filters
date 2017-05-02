@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="src\ggo_array.h" />
     <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_kernel.h" />
@@ -252,7 +251,6 @@
     <ClInclude Include="src\rle\ggo_rle.h">
       <Filter>rle</Filter>
     </ClInclude>
-    <ClInclude Include="src\ggo_buffer_access.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_metaball.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
@@ -306,18 +304,15 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_log.h" />
-    <ClInclude Include="src\ggo_buffer_iterator.h" />
     <ClInclude Include="src\math\signal_proc\ggo_mean_box_filter.h">
       <Filter>math\signal_proc</Filter>
     </ClInclude>
-    <ClInclude Include="src\ggo_circular_buffer.h" />
     <ClInclude Include="src\threading\ggo_signal.h">
       <Filter>threading</Filter>
     </ClInclude>
     <ClInclude Include="src\math\shapes_2d\ggo_rect_data.h">
       <Filter>math\shapes_2d</Filter>
     </ClInclude>
-    <ClInclude Include="src\ggo_buffer.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_rectangle3d.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
@@ -326,6 +321,31 @@
     </ClInclude>
     <ClInclude Include="src\ggo_string_helpers.h" />
     <ClInclude Include="src\ggo_value.h" />
+    <ClInclude Include="src\ggo_rect_int.h" />
+    <ClInclude Include="src\memory\ggo_memory_layouts.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_memory.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_data_access.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_array.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_buffer.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_buffer_access.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_buffer_iterator.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_circular_buffer.h">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -412,6 +432,9 @@
     </Filter>
     <Filter Include="threading">
       <UniqueIdentifier>{2731c668-f22e-4125-94f7-698e365e3dcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{81d7e426-0f1e-41d6-a3fb-44b2089b0f53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

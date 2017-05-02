@@ -8,7 +8,7 @@ GGO_TEST(mean_box_filter, 32f_heaviside)
 {
   std::vector<float> data{ 2.f, 2.f, 2.f, 2.f, 2.f, 2.f };
 
-  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> it(data.data());
+  auto it = ggo::make_iterator(data.data());
 
   auto left   = [&](int x) { GGO_CHECK(x < 0); return 1.f; };
   auto right  = [&](int x) { GGO_CHECK(x >= data.size()); return 1.f; };
@@ -29,7 +29,7 @@ GGO_TEST(mean_box_filter, 32f_ramp)
 {
   std::vector<float> data{ 3.f, 4.f, 5.f, 6.f, 7.f, 8.f };
 
-  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> it(data.data());
+  auto it = ggo::make_iterator(data.data());
 
   auto left = [&](int x) {
     switch (x)
@@ -67,7 +67,7 @@ GGO_TEST(mean_box_filter, 8u_fixed_point)
 {
   std::vector<uint8_t> data{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
-  ggo::buffer_iterator<1, ggo::cast_data_accessor<uint8_t, uint16_t>> it(data.data());
+  auto it = ggo::make_cast_iterator<uint16_t>(data.data());
 
   auto left = [&](int x) -> uint16_t { GGO_CHECK(x < 0); return 0; };
   auto right = [&](int x) -> uint16_t { GGO_CHECK(x >= data.size()); return 0xff; };

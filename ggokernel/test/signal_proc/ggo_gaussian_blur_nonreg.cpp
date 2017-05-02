@@ -67,8 +67,8 @@ GGO_TEST(gaussian_blur, 1d_32f_zero)
   auto kernel = ggo::build_gaussian_kernel<float>(0.8f, 0.01f);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>> input_it(in);
-  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> output_it(out);
+  auto input_it  = ggo::make_const_iterator(in);
+  auto output_it = ggo::make_iterator(out);
 
   auto left   = [&](int x) { return 0.f; };
   auto right  = [&](int x) { return 0.f; };
@@ -93,10 +93,8 @@ GGO_TEST(gaussian_blur, 1d_8u_32f_zero)
   auto kernel = ggo::build_gaussian_kernel<float>(0.8f, 0.01f);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  using accessor = ggo::cast_data_accessor<uint8_t, float>;
-
-  ggo::const_buffer_iterator<1, accessor> input_it(in);
-  ggo::buffer_iterator<1, accessor> output_it(out);
+  auto input_it  = ggo::make_cast_iterator<float>(in);
+  auto output_it = ggo::make_cast_iterator<float>(out);
 
   auto left   = [&](int x) { return 0.f; };
   auto right  = [&](int x) { return 0.f; };
@@ -121,10 +119,8 @@ GGO_TEST(gaussian_blur, 1d_fixed_point_8u_16u_zero)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
-
-  ggo::const_buffer_iterator<1, accessor> input_it(in);
-  ggo::buffer_iterator<1, accessor> output_it(out);
+  auto input_it  = ggo::make_fixed_point_iterator<uint16_t, 8>(in);
+  auto output_it = ggo::make_fixed_point_iterator<uint16_t, 8>(out);
 
   auto left   = [&](int x) { return static_cast<uint16_t>(0); };
   auto right  = [&](int x) { return static_cast<uint16_t>(0); };
@@ -149,10 +145,8 @@ GGO_TEST(gaussian_blur, 1d_fixed_point_8u_16u_mirror)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
-
-  ggo::const_buffer_iterator<1, accessor> input_it(in);
-  ggo::buffer_iterator<1, accessor> output_it(out);
+  auto input_it  = ggo::make_fixed_point_iterator<uint16_t, 8>(in);
+  auto output_it = ggo::make_fixed_point_iterator<uint16_t, 8>(out);
 
   auto left   = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
   auto right  = [&](int x) { return static_cast<uint16_t>(ggo::get1d_mirror(in, x, 9)); };
@@ -184,12 +178,10 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
   auto read = [&](const void * ptr) { return *static_cast<const float *>(ptr); };
   auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float *>(ptr); *ptr_32f = v; };
 
-  using accessor = ggo::data_accessor<float>;
-
   // Horizontal pass.
   {
-    auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<sizeof(float), accessor>(in.data() + 5 * y); };
-    auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<sizeof(float), accessor>(tmp.data() + 5 * y); };
+    auto input_line_iterator  = [&](int y) { return ggo::make_iterator(in.data() + 5 * y); };
+    auto output_line_iterator = [&](int y) { return ggo::make_iterator(tmp.data() + 5 * y); };
 
     auto left   = [&](int x, int y) { return 0.f; };
     auto right  = [&](int x, int y) { return 0.f; };
@@ -199,8 +191,8 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
 
   // Vertical pass.
   {
-    auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, accessor>(tmp.data() + x, 5 * sizeof(float)); };
-    auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, accessor>(out.data() + x, 5 * sizeof(float)); };
+    auto input_column_iterator  = [&](int x) { return ggo::make_stride_iterator(tmp.data() + x, 5); };
+    auto output_column_iterator = [&](int x) { return ggo::make_stride_iterator(out.data() + x, 5); };
 
     auto bottom = [&](int x, int y) { return 0.f; };
     auto top    = [&](int x, int y) { return 0.f; };
@@ -237,8 +229,8 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
 
   // Horizontal pass.
   {
-    auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<1, accessor>(in.data() + 5 * y); };
-    auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<1, accessor>(tmp.data() + 5 * y); };
+    auto input_line_iterator  = [&](int y) { return ggo::typed_buffer_iterator<uint8_t, accessor>(in.data() + 5 * y); };
+    auto output_line_iterator = [&](int y) { return ggo::typed_buffer_iterator<uint8_t, accessor>(tmp.data() + 5 * y); };
 
     auto left = [&](int x, int y) {
       GGO_CHECK(x < 0); 
@@ -255,8 +247,8 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
 
   // Vertical pass.
   {
-    auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, accessor>(tmp.data() + x, 5); };
-    auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, accessor>(out.data() + x, 5); };
+    auto input_column_iterator  = [&](int x) { return ggo::stride_typed_buffer_iterator<uint8_t, accessor>(tmp.data() + x, 5); };
+    auto output_column_iterator = [&](int x) { return ggo::stride_typed_buffer_iterator<uint8_t, accessor>(out.data() + x, 5); };
 
     auto bottom = [&](int x, int y) {
       GGO_CHECK(x >= 0 && x < 5); 

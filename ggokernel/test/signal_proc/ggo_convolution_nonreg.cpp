@@ -1,7 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_convolution.h>
 #include <ggo_buffer_access.h>
-#include <ggo_buffer_iterator.h>
+#include <ggo_memory_layouts.h>
 #include <array>
 
 /////////////////////////////////////////////////////////////////////
@@ -11,8 +11,8 @@ GGO_TEST(convolution1d, float_mirror)
   const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
   float out[7] = { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
 
-  ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>> input_it(in);
-  ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>> output_it(out);
+  auto input_it  = ggo::make_iterator(in);
+  auto output_it = ggo::make_iterator(out);
 
   auto left  = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
   auto right = [&](int x) { return ggo::get1d_mirror(in, x, 7); };
@@ -35,10 +35,8 @@ GGO_TEST(convolution1d, uint8_zero_borders_fixed_point)
   const uint16_t kernel[2] = { 128, 64 };
   uint8_t out[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
-  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
-
-  ggo::const_buffer_iterator<1, accessor> input_it(in);
-  ggo::buffer_iterator<1, accessor> output_it(out);
+  auto input_it  = ggo::make_fixed_point_iterator<uint16_t, 8>(in);
+  auto output_it = ggo::make_fixed_point_iterator<uint16_t, 8>(out);
 
   auto left   = [&](int x) { return static_cast<uint16_t>(0); };
   auto right  = [&](int x) { return static_cast<uint16_t>(0); };
@@ -63,8 +61,8 @@ GGO_TEST(convolution1d, uint8_fixed_value_borders)
 
   using accessor = ggo::cast_data_accessor<uint8_t, float>;
 
-  ggo::const_buffer_iterator<1, accessor> input_it(in);
-  ggo::buffer_iterator<1, accessor> output_it(out);
+  auto input_it  = ggo::make_cast_iterator<float>(in);
+  auto output_it = ggo::make_cast_iterator<float>(out);
 
   auto left   = [&](int x) { return 255.f; };
   auto right  = [&](int x) { return 255.f; };
@@ -94,8 +92,8 @@ GGO_TEST(convolution2d, float_horz)
   auto left  = [&](int x, int y) { GGO_CHECK(x < 0);  GGO_CHECK(y >= 0 && y < 2); return 0.f; };
   auto right = [&](int x, int y) { GGO_CHECK(x >= 7); GGO_CHECK(y >= 0 && y < 2); return 0.f; };
 
-  auto input_line_iterator  = [&](int y) { return ggo::const_buffer_iterator<sizeof(float), ggo::data_accessor<float>>(in + 7 * y); };
-  auto output_line_iterator = [&](int y) { return ggo::buffer_iterator<sizeof(float), ggo::data_accessor<float>>(out + 7 * y); };
+  auto input_line_iterator  = [&](int y) { return ggo::make_iterator(in + 7 * y); };
+  auto output_line_iterator = [&](int y) { return ggo::make_iterator(out + 7 * y); };
 
   ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 7, 2,  kernel, 2);
 
@@ -129,13 +127,11 @@ GGO_TEST(convolution2d, float_vert)
     0.f, 0.f, 0.f };
   const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto bottom = [&](int x, int y) { return ggo::get2d_mirror<float, ggo::y_down>(in, x, y, 3, 3, 3 * sizeof(float)); };
-  auto top    = [&](int x, int y) { return ggo::get2d_mirror<float, ggo::y_down>(in, x, y, 3, 3, 3 * sizeof(float)); };
+  auto bottom = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_typed_memory_access<ggo::direction::down>>(in, x, y, 3, 3, 3 * sizeof(float)); };
+  auto top    = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_typed_memory_access<ggo::direction::down>>(in, x, y, 3, 3, 3 * sizeof(float)); };
 
-  const int offset = -3 * static_cast<int>(sizeof(float));
-
-  auto input_column_iterator  = [&](int x) { return ggo::const_buffer_iterator<0, ggo::data_accessor<float>>(in + 6 + x, offset); };
-  auto output_column_iterator = [&](int x) { return ggo::buffer_iterator<0, ggo::data_accessor<float>>(out + 6 + x, offset); };
+  auto input_column_iterator  = [&](int x) { return ggo::lines_typed_memory_access<ggo::direction::down>::make_vertical_iterator<ggo::base_data_accessor<float>>(in, x, 3, 3 * sizeof(float)); };
+  auto output_column_iterator = [&](int x) { return ggo::lines_typed_memory_access<ggo::direction::down>::make_vertical_iterator<ggo::base_data_accessor<float>>(out, x, 3, 3 * sizeof(float)); };
 
   ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 3, 3, kernel, 2);
 
