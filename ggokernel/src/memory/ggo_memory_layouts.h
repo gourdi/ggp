@@ -13,6 +13,8 @@ namespace ggo
   {
     static_assert(lines_order == direction::up || lines_order == direction::down);
 
+    static constexpr ggo::direction lines_direction = lines_order;
+
     template <typename data_t>
     static data_t * get_y_ptr(data_t * buffer, int y, int height, int line_byte_step)
     {
@@ -28,6 +30,13 @@ namespace ggo
       return get_y_ptr(buffer, y, height, line_byte_step) + x;
     }
 
+    // Builds an iterator that will parse the row 'y' from 0 to positive x coordinate.
+    template <typename data_accessor_t, typename data_t>
+    static auto make_horizontal_iterator(data_t * ptr, int y, int height, int line_byte_step)
+    {
+      return typed_buffer_iterator<data_t, data_accessor_t>(get_y_ptr(ptr, y, height, line_byte_step));
+    }
+
     // Builds an iterator that will move vertically from y = 0.
     template <typename data_accessor_t, typename data_t>
     static auto make_vertical_iterator(data_t * ptr, int x, int height, int line_byte_step)
@@ -36,12 +45,12 @@ namespace ggo
 
       if (lines_order == direction::up)
       {
-        return item_byte_size_typed_buffer_iterator<data_t, data_accessor_t>(ptr, line_byte_step);
+        return item_byte_size_buffer_iterator<data_t, data_accessor_t>(ptr, line_byte_step);
       }
       else
       {
         ptr = ptr_offset(ptr, (height - 1) * line_byte_step);
-        return item_byte_size_typed_buffer_iterator<data_t, data_accessor_t>(ptr, -line_byte_step);
+        return item_byte_size_buffer_iterator<data_t, data_accessor_t>(ptr, -line_byte_step);
       }
     }
   };
@@ -55,6 +64,8 @@ namespace ggo
   {
     static_assert(lines_order == direction::up || lines_order == direction::down);
     static_assert(item_byte_step > 0);
+
+    static constexpr ggo::direction lines_direction = lines_order;
 
     template <typename data_t>
     static data_t * get_y_ptr(data_t * buffer, int y, int height, int line_byte_step)
@@ -70,6 +81,30 @@ namespace ggo
     {
       GGO_ASSERT_BTW(x, 0, line_byte_step / item_byte_step - 1);
       return ptr_offset(get_y_ptr(buffer, y, height, line_byte_step), x * item_byte_step);
+    }
+
+    // Builds an iterator that will parse the row 'y' from 0 to positive x coordinate.
+    template <typename data_accessor_t, typename data_t>
+    static auto make_horizontal_iterator(data_t * ptr, int y, int height, int line_byte_step)
+    {
+      return raw_buffer_iterator<item_byte_step, data_accessor_t>(get_y_ptr(ptr, y, height, line_byte_step), line_byte_step);
+    }
+
+    // Builds an iterator that will parse the column 'x' from 0 to positive y coordinate.
+    template <typename data_accessor_t, typename data_t>
+    static auto make_vertical_iterator(data_t * ptr, int x, int height, int line_byte_step)
+    {
+      ptr = ptr_offset(ptr, x * item_byte_step);
+
+      if (lines_order == direction::up)
+      {
+        return item_byte_size_typed_buffer_iterator<data_t, data_accessor_t>(ptr, line_byte_step);
+      }
+      else
+      {
+        ptr = ptr_offset(ptr, (height - 1) * line_byte_step);
+        return item_byte_size_typed_buffer_iterator<data_t, data_accessor_t>(ptr, -line_byte_step);
+      }
     }
 
     template <typename raw_buffer_t>

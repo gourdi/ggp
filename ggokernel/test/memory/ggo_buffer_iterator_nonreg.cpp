@@ -6,7 +6,7 @@ GGO_TEST(buffer_iterator, stride_iterator_read_only)
 {
   const std::vector<uint8_t> buffer{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-  auto it = ggo::make_stride_iterator(buffer.data(), 3);
+  auto it = ggo::raw_buffer_iterator<2, ggo::base_data_accessor<uint8_t>, const void>(buffer.data());
 
   GGO_CHECK_EQ(it.read(), 0);
   GGO_CHECK_EQ(it.read(1), 3);
@@ -24,7 +24,7 @@ GGO_TEST(buffer_iterator, stride_iterator_read_write)
 {
   std::vector<uint8_t> buffer{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-  auto it = ggo::make_stride_iterator(buffer.data(), 3);
+  auto it = ggo::raw_buffer_iterator<2, ggo::base_data_accessor<uint8_t>, void>(buffer.data());
 
   GGO_CHECK_EQ(it.read(), 0);
   GGO_CHECK_EQ(it.read(1), 3);

@@ -2,7 +2,7 @@
 
 #include <ggo_nonreg.h>
 #include <ggo_gaussian_blur.h>
-#include <ggo_buffer_iterator.h>
+#include <ggo_memory_layouts.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, kernel_floating_point)
@@ -175,27 +175,43 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
   auto kernel = ggo::build_gaussian_kernel<float>(0.8f, 0.01f);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  auto read = [&](const void * ptr) { return *static_cast<const float *>(ptr); };
-  auto write = [&](void * ptr, float v) { float * ptr_32f = static_cast<float *>(ptr); *ptr_32f = v; };
+  using memory_layout = ggo::lines_typed_memory_access<ggo::direction::down>;
+  using data_access   = ggo::base_data_accessor<float>;
 
   // Horizontal pass.
   {
-    auto input_line_iterator  = [&](int y) { return ggo::make_iterator(in.data() + 5 * y); };
-    auto output_line_iterator = [&](int y) { return ggo::make_iterator(tmp.data() + 5 * y); };
+    auto input_line_iterator  = [&](int y) { return memory_layout::make_horizontal_iterator<data_access>(in.data(), y, 5, 5 * sizeof(float)); };
+    auto output_line_iterator = [&](int y) { return memory_layout::make_horizontal_iterator<data_access>(tmp.data(), y, 5, 5 * sizeof(float)); };
 
-    auto left   = [&](int x, int y) { return 0.f; };
-    auto right  = [&](int x, int y) { return 0.f; };
+    auto left = [&](int x, int y) { 
+      GGO_CHECK(x < 0);
+      GGO_CHECK(y >= 0 && y < 5);
+      return 0.f;
+    };
+    auto right = [&](int x, int y) {
+      GGO_CHECK(x >= 5);
+      GGO_CHECK(y >= 0 && y < 5);
+      return 0.f;
+    };
 
     ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 5, 5, kernel.data(), kernel.size());
   }
 
   // Vertical pass.
   {
-    auto input_column_iterator  = [&](int x) { return ggo::make_stride_iterator(tmp.data() + x, 5); };
-    auto output_column_iterator = [&](int x) { return ggo::make_stride_iterator(out.data() + x, 5); };
+    auto input_column_iterator  = [&](int x) { return memory_layout::make_vertical_iterator<data_access>(tmp.data(), x, 5, 5 * sizeof(float)); };
+    auto output_column_iterator = [&](int x) { return memory_layout::make_vertical_iterator<data_access>(out.data(), x, 5, 5 * sizeof(float)); };
 
-    auto bottom = [&](int x, int y) { return 0.f; };
-    auto top    = [&](int x, int y) { return 0.f; };
+    auto bottom = [&](int x, int y) { 
+      GGO_CHECK(x >= 0 && x < 5);
+      GGO_CHECK(y < 0);
+      return 0.f;
+    };
+    auto top = [&](int x, int y) { 
+      GGO_CHECK(x >= 0 && x < 5);
+      GGO_CHECK(y >= 5);
+      return 0.f;
+    };
 
     ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 5, 5, kernel.data(), kernel.size());
   }
@@ -225,12 +241,13 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
   auto kernel = ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(0.8f, 0.01f, 8);
   GGO_CHECK_EQ(kernel.size(), 3);
 
-  using accessor = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
+  using memory_layout = ggo::lines_typed_memory_access<ggo::direction::down>;
+  using data_access   = ggo::fixed_point_data_accessor<uint8_t, uint16_t, 8>;
 
   // Horizontal pass.
   {
-    auto input_line_iterator  = [&](int y) { return ggo::typed_buffer_iterator<uint8_t, accessor>(in.data() + 5 * y); };
-    auto output_line_iterator = [&](int y) { return ggo::typed_buffer_iterator<uint8_t, accessor>(tmp.data() + 5 * y); };
+    auto input_line_iterator  = [&](int y) { return memory_layout::make_horizontal_iterator<data_access>(in.data(),  y, 5, 5 * sizeof(uint8_t)); };
+    auto output_line_iterator = [&](int y) { return memory_layout::make_horizontal_iterator<data_access>(tmp.data(), y, 5, 5 * sizeof(uint8_t)); };
 
     auto left = [&](int x, int y) {
       GGO_CHECK(x < 0); 
@@ -247,8 +264,8 @@ GGO_TEST(gaussian_blur, 2d_8u_16u_zero)
 
   // Vertical pass.
   {
-    auto input_column_iterator  = [&](int x) { return ggo::stride_typed_buffer_iterator<uint8_t, accessor>(tmp.data() + x, 5); };
-    auto output_column_iterator = [&](int x) { return ggo::stride_typed_buffer_iterator<uint8_t, accessor>(out.data() + x, 5); };
+    auto input_column_iterator  = [&](int x) { return memory_layout::make_vertical_iterator<data_access>(tmp.data(), x, 5, 5 * sizeof(uint8_t)); };
+    auto output_column_iterator = [&](int x) { return memory_layout::make_vertical_iterator<data_access>(out.data(), x, 5, 5 * sizeof(uint8_t)); };
 
     auto bottom = [&](int x, int y) {
       GGO_CHECK(x >= 0 && x < 5); 

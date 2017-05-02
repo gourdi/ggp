@@ -1,6 +1,7 @@
 #ifndef __GGO_BUFFER_ITERATOR__
 #define __GGO_BUFFER_ITERATOR__
 
+#include <ggo_memory.h>
 #include <ggo_data_access.h>
 
 /////////////////////////////////////////////////////////////////////
@@ -91,54 +92,20 @@ namespace ggo
 
     data_t * _ptr;
   };
+}
 
+/////////////////////////////////////////////////////////////////////
+// Item byte size buffer iterator.
+namespace ggo
+{
   template <typename data_t, typename accessor_t>
-  class stride_typed_buffer_iterator
+  class item_byte_size_buffer_iterator
   {
   public:
 
     using type = typename accessor_t::type;
 
-    stride_typed_buffer_iterator(data_t * ptr, int stride) : _ptr(ptr), _stride(stride) {}
-
-    typename accessor_t::type read() const {
-      return accessor_t::read(_ptr);
-    }
-    typename accessor_t::type read(const int offset) const {
-      return accessor_t::read(_ptr + _stride * offset);
-    }
-
-    void write(const typename accessor_t::type & v) {
-      accessor_t::write(_ptr, v);
-    }
-    void write(const typename accessor_t::type & v, const int offset) {
-      accessor_t::write(_ptr + _stride * offset, v);
-    }
-
-    void move_nxt() {
-      _ptr += _stride;
-    }
-    void move(const int offset) {
-      _ptr += _stride * offset;
-    }
-
-    bool operator==(const void * ptr) { return _ptr == ptr; }
-    bool operator!=(const void * ptr) { return _ptr != ptr; }
-
-  private:
-
-    data_t * _ptr;
-    const int _stride;
-  };
-
-  template <typename data_t, typename accessor_t>
-  class item_byte_size_typed_buffer_iterator
-  {
-  public:
-
-    using type = typename accessor_t::type;
-
-    item_byte_size_typed_buffer_iterator(data_t * ptr, int item_byte_size) : _ptr(ptr), _item_byte_size(item_byte_size) {}
+    item_byte_size_buffer_iterator(data_t * ptr, int item_byte_size) : _ptr(ptr), _item_byte_size(item_byte_size) {}
 
     typename accessor_t::type read() const {
       return accessor_t::read(_ptr);
@@ -191,24 +158,6 @@ namespace ggo
   auto make_const_iterator(data_t * ptr)
   {
     return typed_buffer_iterator<const data_t, base_data_accessor<data_t>>(ptr);
-  }
-
-  template <typename data_t>
-  auto make_stride_iterator(data_t * ptr, int stride)
-  {
-    return stride_typed_buffer_iterator<data_t, base_data_accessor<data_t>>(ptr, stride);
-  }
-
-  template <typename data_t>
-  auto make_stride_iterator(const data_t * ptr, int stride)
-  {
-    return stride_typed_buffer_iterator<const data_t, base_data_accessor<data_t>>(ptr, stride);
-  }
-
-  template <typename data_t>
-  auto make_stride_const_iterator(data_t * ptr, int stride)
-  {
-    return stride_typed_buffer_iterator<const data_t, base_data_accessor<data_t>>(ptr, stride);
   }
 
   template <typename external_data_t, typename data_t>
