@@ -24,10 +24,8 @@ namespace ggo
     void * output, int output_width, int output_height, int output_line_step,
     int left, int bottom)
   {
-    using format_in = pixel_buffer_format_info<pbf_in>;
-    using format_out = pixel_buffer_format_info<pbf_out>;
-    using color_t_in = typename format_in::color_t;
-    using color_t_out = typename format_out::color_t;
+    using color_t_in = pixel_buffer_format_info<pbf_in>::color_t;
+    using color_t_out = pixel_buffer_format_info<pbf_out>::color_t;
 
     auto blend_func = [](const color_t_out & c_out, const color_t_in & c_in)
     {
@@ -46,6 +44,12 @@ namespace ggo
   {
     using format_in = pixel_buffer_format_info<pbf_in>;
     using format_out = pixel_buffer_format_info<pbf_out>;
+    using memory_layout_in = format_in::memory_layout_t;
+    using memory_layout_out = format_in::memory_layout_t;
+
+    // Blit is implemented for lines memory layout only.
+    static_assert(memory_layout_in::lines_direction == ggo::direction::up || memory_layout_in::lines_direction == ggo::direction::down);
+    static_assert(memory_layout_out::lines_direction == ggo::direction::up || memory_layout_out::lines_direction == ggo::direction::down);
 
     // Nothing to do.
     if (left >= output_width || left + input_width <= 0)
@@ -61,7 +65,7 @@ namespace ggo
     // Clip.
     if (bottom < 0)
     {
-      if (format_in::y_dir == ggo::y_up)
+      if (memory_layout_in::lines_direction == ggo::direction::up)
       {
         input = ggo::ptr_offset(input, -bottom * input_line_step);
       }
@@ -72,7 +76,7 @@ namespace ggo
     const int top = bottom + input_height - 1; // Inclusive, output coordinates.
     if (top >= output_height)
     {
-      if (format_in::y_dir == ggo::y_down)
+      if (memory_layout_in::lines_direction == ggo::direction::down)
       {
         input = ggo::ptr_offset(input, (top - output_height + 1) * input_line_step);
       }

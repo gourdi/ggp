@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <ggo_sampling_paint.h>
-#include <ggo_pixel_rect.h>
+#include <ggo_rect_int.h>
+#include <ggo_coordinates_conversions.h>
 
 /////////////////////////////////////////////////////////////////////
 // Declaration.
@@ -16,7 +17,7 @@ namespace ggo
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
     read_pixel_t read_pixel, write_pixel_t write_pixel,
-    const ggo::pixel_rect & clipping);
+    const ggo::rect_int & clipping);
 
   // Paint multiple shapes.
   template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t>
@@ -24,7 +25,7 @@ namespace ggo
       iterator_t begin_it, iterator_t end_it,
       int scale_factor, int first_scale,
       read_pixel_t read_pixel, write_pixel_t write_pixel,
-      const ggo::pixel_rect & clipping);
+      const ggo::rect_int & clipping);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <sampling smp, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
-  void paint_block_single_t(const ggo::pixel_rect & block_rect,
+  void paint_block_single_t(const ggo::rect_int & block_rect,
     const int scale_factor, const int current_scale,
     const shape_t & shape,
     brush_t brush, blend_t blend,
@@ -44,7 +45,7 @@ namespace ggo
     using real_t = typename shape_t::type;
 
     // Check for shape intersecting the current block.
-    const ggo::rect_data<real_t> block_rect_data = block_rect.get_rect_data<real_t>();
+    const ggo::rect_data<real_t> block_rect_data = from_pixel_to_math<real_t>(block_rect);
 
     const ggo::rect_intersection intersection = shape.get_rect_intersection(block_rect_data);
 
@@ -66,7 +67,7 @@ namespace ggo
     case ggo::rect_intersection::partial_overlap:
     case ggo::rect_intersection::shape_in_rect:
       // The current block is only a pixel => stop the recursion and sample the pixel.
-      if (block_rect.is_one_pixel() == true)
+      if (block_rect.is_one() == true)
       {
         const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
         const auto brush_color = brush(block_rect.left(), block_rect.bottom());
@@ -84,7 +85,7 @@ namespace ggo
       }
 
       // Recursion.
-      auto paint_subblock = [&](const ggo::pixel_rect & block_rect)
+      auto paint_subblock = [&](const ggo::rect_int & block_rect)
       {
         paint_block_single_t<smp>(block_rect,
           scale_factor, current_scale - 1,
@@ -106,7 +107,7 @@ namespace ggo
     int scale_factor, int first_scale,
     brush_t brush, blend_t blend,
     read_pixel_t read_pixel, write_pixel_t write_pixel,
-    const ggo::pixel_rect & clipping)
+    const ggo::rect_int & clipping)
   {
     using real_t = typename shape_t::type;
 
@@ -115,14 +116,14 @@ namespace ggo
 
     // Clip.
     ggo::rect<real_t> shape_bounding_rect(shape_bounding_rect_data);
-    pixel_rect shape_pixel_rect(shape_bounding_rect.data());
+    rect_int shape_pixel_rect = from_math_to_pixel(shape_bounding_rect.data());
     if (shape_pixel_rect.clip(width, height) == false || shape_pixel_rect.clip(clipping) == false)
     {
       return;
     }
 
     // Process blocks.
-    auto process_rect = [&](const ggo::pixel_rect & block_rect)
+    auto process_rect = [&](const ggo::rect_int & block_rect)
     {
       paint_block_single_t<smp>(
         block_rect,
@@ -143,7 +144,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t>
-  void paint_block_multi_t(const ggo::pixel_rect & block_rect,
+  void paint_block_multi_t(const ggo::rect_int & block_rect,
     int scale_factor, int current_scale,
     iterator_t begin_it, iterator_t end_it,
     read_pixel_t read_pixel, write_pixel_t write_pixel)
@@ -155,7 +156,7 @@ namespace ggo
     GGO_ASSERT(current_scale >= 0);
 
     // Check for shapes intersecting the current block.
-    auto block_rect_data = block_rect.get_rect_data<real_t>();
+    auto block_rect_data = from_pixel_to_math<real_t>(block_rect);
 
     bool block_inside_all_shapes = true;
 
@@ -209,7 +210,7 @@ namespace ggo
     }
 
     // The current block is only a pixel: sample shapes.
-    if (block_rect.is_one_pixel() == true)
+    if (block_rect.is_one() == true)
     {
       const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
 
@@ -238,7 +239,7 @@ namespace ggo
     }
 
     // General case: recursion.
-    auto paint_subblock = [&](const ggo::pixel_rect & block_rect)
+    auto paint_subblock = [&](const ggo::rect_int & block_rect)
     {
       paint_block_multi_t<smp>(block_rect,
         scale_factor, current_scale - 1,
@@ -256,19 +257,19 @@ namespace ggo
     iterator_t begin_it, iterator_t end_it,
     int scale_factor, int first_scale,
     read_pixel_t read_pixel, write_pixel_t write_pixel,
-    const ggo::pixel_rect & clipping)
+    const ggo::rect_int & clipping)
   {
     using item_t = typename std::iterator_traits<iterator_t>::value_type;
     using real_t = typename item_t::real_t;
 
     // Clip.
-    ggo::pixel_rect safe_clipping(clipping);
+    ggo::rect_int safe_clipping(clipping);
     if (safe_clipping.clip(width, height) == false)
     {
       return;
     }
 
-    const ggo::rect_data<real_t> clipping_rect_data(safe_clipping.get_rect_data<real_t>());
+    const ggo::rect_data<real_t> clipping_rect_data = from_pixel_to_math<real_t>(safe_clipping);
     ggo::rect_data<real_t> bounding_rect_data;
     bool first = true;
     std::vector<const item_t *> items;
@@ -297,14 +298,14 @@ namespace ggo
       return;
     }
 
-    ggo::pixel_rect bounding_pixel_rect(bounding_rect_data);
+    ggo::rect_int bounding_pixel_rect = from_math_to_pixel(bounding_rect_data);
     if (bounding_pixel_rect.clip(safe_clipping) == false)
     {
       return;
     }
 
     // Process blocks.
-    auto process_block = [&](const ggo::pixel_rect & block_rect)
+    auto process_block = [&](const ggo::rect_int & block_rect)
     {
       paint_block_multi_t<smp>(block_rect,
         scale_factor, first_scale,

@@ -6,7 +6,7 @@
 #include <ggo_perlin_noise_field_2d.h>
 #include <ggo_gaussian_field_2d.h>
 #include <ggo_color.h>
-#include <ggo_pixel_rect.h>
+#include <ggo_rect_int.h>
 
 // Checker.
 namespace ggo
@@ -34,7 +34,7 @@ namespace ggo
 {
   template <typename color_t, typename real_t, typename set_pixel_func_t>
   void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4,
-    const ggo::pixel_rect & clipping, set_pixel_func_t set_pixel_func);
+    const ggo::rect_int & clipping, set_pixel_func_t set_pixel_func);
 }
 
 // Perlin
@@ -130,7 +130,7 @@ namespace ggo
 {
   template <typename color_t, typename real_t, typename set_pixel_func_t>
   void fill_4_colors(int width, int height, const color_t & c1, const color_t & c2, const color_t & c3, const color_t & c4,
-    const ggo::pixel_rect & clipping, set_pixel_func_t set_pixel_func)
+    const ggo::rect_int & clipping, set_pixel_func_t set_pixel_func)
   {
     for (int y = clipping.bottom(); y <= clipping.top(); ++y)
     {

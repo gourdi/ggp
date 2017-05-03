@@ -83,9 +83,15 @@ namespace ggo
     case ggo::rgb_8u_yu:
       write_pixels<ggo::rgb_8u_yu>(ofs, buffer, width, height, line_step);
       break;
+    case ggo::rgb_8u_yd:
+      write_pixels<ggo::rgb_8u_yd>(ofs, buffer, width, height, line_step);
+      break;
     case ggo::bgra_8u_yd:
       write_pixels<ggo::bgra_8u_yd>(ofs, buffer, width, height, line_step);
       break;
+    default:
+      GGO_FAIL();
+      return false;
     }
 
     if (!ofs)

@@ -9,17 +9,17 @@
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c);
+  void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c);
 
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping);
+  void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::rect_int & clipping);
 }
 
 // Checker.
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_checker(void * buffer, int width, int height, int line_step, 
+  void fill_checker(void * buffer, int width, int height, int line_byte_step, 
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2, 
     int tile_size);
@@ -29,26 +29,26 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_4_colors(void * buffer, int width, int height, int line_step,
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2,
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
     const typename pixel_buffer_format_info<pbf>::color_t & c4,
-    const ggo::pixel_rect & clipping);
+    const ggo::rect_int & clipping);
 }
 
 // Curve.
 namespace ggo
 {
   template <pixel_buffer_format pbf, typename curve_t>
-  void fill_color_curve(void * buffer, int width, int height, int line_step, const curve_t & curve);
+  void fill_color_curve(void * buffer, int width, int height, int line_byte_step, const curve_t & curve);
 }
 
 // Perlin
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_perlin(void * buffer, int width, int height, int line_step, 
+  void fill_perlin(void * buffer, int width, int height, int line_byte_step, 
     typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t size,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2);
@@ -58,7 +58,7 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_gaussian(void * buffer, int width, int height, int line_step, 
+  void fill_gaussian(void * buffer, int width, int height, int line_byte_step, 
     typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2);
@@ -71,15 +71,15 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::pixel_rect & clipping)
+  void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::rect_int & clipping)
   {
-    process_rect_safe<pbf>(buffer, width, height, line_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+    process_pixel_buffer<pbf>(buffer, width, height, line_byte_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
   }
 
   template <pixel_buffer_format pbf>
-  void fill_solid(void * buffer, int width, int height, int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
+  void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
   {
-    fill_solid<pbf>(buffer, width, height, line_step, c, ggo::pixel_rect::from_width_height(width, height));
+    fill_solid<pbf>(buffer, width, height, line_byte_step, c, ggo::rect_int::from_width_height(width, height));
   }
 }
 
@@ -87,7 +87,7 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_checker(void * buffer, int width, int height, int line_step,
+  void fill_checker(void * buffer, int width, int height, int line_byte_step,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2,
     int tile_size)
@@ -99,7 +99,7 @@ namespace ggo
     const floating_point_color_t c2_fp = ggo::convert_color_to<floating_point_color_t>(c2);
 
     auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c) {
-      write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+      write_pixel<pbf>(buffer, x, y, height, line_byte_step, ggo::convert_color_to<color_t>(c));
     };
 
     ggo::fill_checker<floating_point_color_t>(width, height, c1_fp, c2_fp, tile_size, write_pixel_func);
@@ -112,12 +112,12 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
-  void fill_4_colors(void * buffer, int width, int height, int line_step,
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2,
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
     const typename pixel_buffer_format_info<pbf>::color_t & c4,
-    const ggo::pixel_rect & clipping)
+    const ggo::rect_int & clipping)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
@@ -131,7 +131,7 @@ namespace ggo
     const floating_point_color_t c4_fp = ggo::convert_color_to<floating_point_color_t>(c4);
 
     auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c) {
-      write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+      write_pixel<pbf>(buffer, x, y, height, line_byte_step, ggo::convert_color_to<color_t>(c));
     };
 
     ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, clipping, write_pixel_func);
@@ -142,7 +142,7 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf, typename curve_t>
-  void fill_color_curve(void * buffer, int width, int height, int line_step, const curve_t & curve)
+  void fill_color_curve(void * buffer, int width, int height, int line_byte_step, const curve_t & curve)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
     using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
@@ -154,7 +154,7 @@ namespace ggo
 
     auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c)
     {
-      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_byte_step, ggo::convert_color_to<color_t>(c));
     };
 
     fill_color_curve<floating_point_color_t, real_t>(width, height, curve, write_pixel_func);
@@ -165,7 +165,7 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_perlin(void * buffer, int width, int height, int line_step,
+  void fill_perlin(void * buffer, int width, int height, int line_byte_step,
     typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t size,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2)
@@ -182,7 +182,7 @@ namespace ggo
 
     auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c)
     {
-      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_byte_step, ggo::convert_color_to<color_t>(c));
     };
 
     fill_perlin(width, height, size, c1_fp, c2_fp, write_pixel_func);
@@ -193,7 +193,7 @@ namespace ggo
 namespace ggo
 {
   template <pixel_buffer_format pbf>
-  void fill_gaussian(void * buffer, int width, int height, int line_step,
+  void fill_gaussian(void * buffer, int width, int height, int line_byte_step,
     typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2)
@@ -210,7 +210,7 @@ namespace ggo
 
     auto write_pixel_func = [&](int x, int y, const floating_point_color_t & c)
     {
-      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, ggo::convert_color_to<color_t>(c));
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_byte_step, ggo::convert_color_to<color_t>(c));
     };
 
     fill_gaussian(width, height, stddev, c1_fp, c2_fp, write_pixel_func);

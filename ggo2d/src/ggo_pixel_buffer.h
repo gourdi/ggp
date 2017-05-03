@@ -1,259 +1,102 @@
 #ifndef __GGO_PIXEL_BUFFER__
 #define __GGO_PIXEL_BUFFER__
 
-#include <stdint.h>
-#include <ggo_buffer_access.h>
-#include <ggo_color.h>
-#include <ggo_pixel_rect.h>
-
-/////////////////////////////////////////////////////////////////////
-// The sampling is rule is that the pixel (0, 0) represents 
-// the square (-0.5, 0.5) x (-0.5, 0.5).
-
-// Pixel buffer formats.
-namespace ggo
-{
-  enum pixel_buffer_format
-  {
-    y_8u_yu,
-    y_8u_yd,
-    y_32f_yu,
-    rgb_8u_yu,
-    rgb_32f_yu,
-    bgra_8u_yd
-  };
-
-  template <pixel_buffer_format pbf>
-  struct pixel_buffer_format_info {};
-
-  template <>
-  struct pixel_buffer_format_info<y_8u_yu>
-  {
-    static const y_direction y_dir = y_up;
-    static const int pixel_byte_size = 1;
-
-    using color_t = uint8_t;
-
-    // Accessor interface.
-    using type = uint8_t;
-    static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
-    static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
-  };
-
-  template <>
-  struct pixel_buffer_format_info<y_8u_yd>
-  {
-    static const y_direction y_dir = y_down;
-    static const int pixel_byte_size = 1;
-
-    using color_t = uint8_t;
-
-    // Accessor interface.
-    using type = uint8_t;
-    static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
-    static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
-  };
-
-  template <>
-  struct pixel_buffer_format_info<y_32f_yu>
-  {
-    static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
-
-    static const y_direction y_dir = y_up;
-    static const int pixel_byte_size = 4;
-
-    using color_t = float;
-
-    // Accessor interface.
-    using type = float;
-    static float read(const void * ptr) { return *static_cast<const float *>(ptr); }
-    static void write(void * ptr, float c) { *static_cast<float *>(ptr) = c; }
-  };
-
-  template <>
-  struct pixel_buffer_format_info<rgb_8u_yu>
-  {
-    static const y_direction y_dir = y_up;
-    static const int pixel_byte_size = 3;
-    static const pixel_buffer_format gray_pbf = y_8u_yu;
-
-    using color_t = ggo::color_8u;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
-
-    static ggo::color_8u read(const void * ptr)
-    {
-      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
-    }
-
-    static void write(void * ptr, const ggo::color_8u & c)
-    {
-      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.r();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.b();
-    }
-  };
-
-  template <>
-  struct pixel_buffer_format_info<rgb_32f_yu>
-  {
-    static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
-
-    static const y_direction y_dir = y_up;
-    static const int pixel_byte_size = 12;
-
-    using color_t = ggo::color_32f;
-
-    // Accessor interface.
-    using type = ggo::color_32f;
-
-    static ggo::color_32f read(const void * ptr)
-    {
-      const float * ptr_32f = static_cast<const float *>(ptr);
-      return ggo::color_32f(ptr_32f[0], ptr_32f[1], ptr_32f[2]);
-    }
-
-    static void write(void * ptr, const ggo::color_32f & c)
-    {
-      float * ptr_32f = static_cast<float *>(ptr);
-      ptr_32f[0] = c.r();
-      ptr_32f[1] = c.g();
-      ptr_32f[2] = c.b();
-    }
-  };
-
-  template <>
-  struct pixel_buffer_format_info<bgra_8u_yd>
-  {
-    static const y_direction y_dir = y_down;
-    static const int pixel_byte_size = 4;
-    static const pixel_buffer_format gray_pbf = y_8u_yd;
-
-    using color_t = ggo::color_8u;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
-
-    static ggo::color_8u read(const void * ptr)
-    {
-      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
-    }
-
-    static void write(void * ptr, const ggo::color_8u & c)
-    {
-      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.b();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.r();
-    }
-  };
-}
+#include <ggo_pixel_buffer_format.h>
+#include <ggo_rect_int.h>
 
 namespace ggo
 {
-  // Pointer to line.
-  template <pixel_buffer_format pbf, typename data_t>
-  data_t * get_line_ptr(data_t * ptr, const int y, const int height, const int line_step)
-  {
-    return get_y_ptr<pixel_buffer_format_info<pbf>::y_dir>(ptr, y, height, line_step);
-  }
-
-  // Pointer to pixel.
-  template <pixel_buffer_format pbf, typename data_t>
-  data_t * get_pixel_ptr(data_t * ptr, const int x, const int y, const int height, const int line_step)
-  {
-    return get_xy_ptr<pixel_buffer_format_info<pbf>::pixel_byte_size, pixel_buffer_format_info<pbf>::y_dir>(ptr, x, y, height, line_step);
-  }
-
-  // Set pixel to pointer.
-  template <pixel_buffer_format pbf>
-  void write_pixel(void * ptr, const typename pixel_buffer_format_info<pbf>::color_t & c)
-  {
-    pixel_buffer_format_info<pbf>::write(ptr, c);
-  }
-
-  // Set pixel to pointer with coordinates.
-  template <pixel_buffer_format pbf>
-  void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
-  {
-    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
-
-    write_pixel<pbf>(ptr, c);
-  }
-
-  // Get pixel from pointer.
-  template <pixel_buffer_format pbf>
-  typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr)
-  {
-    return pixel_buffer_format_info<pbf>::read(ptr);
-  }
-
-  // Get pixel from pointer and coordinates.
-  template <pixel_buffer_format pbf>
-  typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
-  {
-    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
-
-    return read_pixel<pbf>(ptr);
-  }
-}
-
-namespace ggo
-{
-  // Block processing.
   template <pixel_buffer_format pbf, typename func_t>
-  void process_buffer(void * buffer, const int width, const int height, const int line_step, func_t func)
+  void process_pixel_buffer(void * buffer, const int width, const int height, const int line_byte_step, const ggo::rect_int & rect, func_t func)
   {
+    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    constexpr int pixel_byte_size = pixel_buffer_format_info<pbf>::pixel_byte_size;
+
     GGO_ASSERT_PTR(buffer);
-    GGO_ASSERT_GE(line_step, width * pixel_buffer_format_info<pbf>::pixel_byte_size);
+    GGO_ASSERT_GE(line_byte_step, width * pixel_byte_size);
 
-    const int line_byte_size = width * pixel_buffer_format_info<pbf>::pixel_byte_size;
-    uint8_t * ptr = static_cast<uint8_t *>(buffer);
-
-    for (int y = 0; y < height; ++y)
+    auto clipped_buffer = memory_layout::clip(raw_buffer2d(width, height, line_byte_step, buffer), rect);
+    if (clipped_buffer)
     {
-      const uint8_t * line_end = ptr + line_byte_size;
-      for (uint8_t * line = ptr; line != line_end; line += pixel_buffer_format_info<pbf>::pixel_byte_size)
+      for (int y = 0; y < clipped_buffer->_height; ++y)
       {
-        func(static_cast<void*>(line));
+        void * begin = memory_layout::get_y_ptr(clipped_buffer->_buffer, y, clipped_buffer->_height, clipped_buffer->_line_byte_step);
+        void * end = ptr_offset(begin, clipped_buffer->_width * pixel_byte_size);
+        for (void * it = begin; it != end; it = ptr_offset<pixel_byte_size>(it))
+        {
+          func(it);
+        }
       }
-
-      ptr += line_step;
     }
   }
+}
 
-  // Fast rectangle processing: no check on arguments.
-  template <pixel_buffer_format pbf, typename func_t>
-  void process_rect_fast(void * buffer, const int height, const int line_step, const ggo::pixel_rect & rect, func_t func)
+namespace ggo
+{
+  class const_pixel_buffer final
   {
-    using format = pixel_buffer_format_info<pbf>;
+  public:
 
-    if (pixel_buffer_format_info<pbf>::y_dir == y_down)
-    {
-      void * ptr = get_pixel_ptr<pbf>(buffer, rect.left(), rect.top(), height, line_step);
-      ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
-    }
-    else
-    {
-      void * ptr = get_pixel_ptr<pbf>(buffer, rect.left(), rect.bottom(), height, line_step);
-      ggo::process_buffer<pbf>(ptr, rect.right() - rect.left() + 1, rect.top() - rect.bottom() + 1, line_step, func);
-    }
-  }
+    const_pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf);
 
-  // Safe rectangle processing: rectangle is normalized and clamped.
-  template <pixel_buffer_format pbf, typename func_t>
-  void process_rect_safe(void * buffer, const int width, const int height, const int line_step, const ggo::pixel_rect & rect, func_t func)
+    // No copy (default move operations are OK since the object never owns the buffer).
+    const_pixel_buffer(const const_pixel_buffer &) = delete;
+    void operator=(const const_pixel_buffer &) = delete;
+
+    int                 get_width() const { return _width; }
+    int                 get_height() const { return _height; }
+    int                 get_line_byte_step() const { return _line_byte_step; }
+    pixel_buffer_format get_pixel_buffer_format() const { return _pbf; }
+    const void *        get_buffer() const { return _buffer; }
+
+  private:
+
+    const void *        _buffer;
+    int                 _width;
+    int                 _height;
+    int                 _line_byte_step;
+    pixel_buffer_format _pbf;
+  };
+
+  class pixel_buffer final
   {
-    ggo::pixel_rect safe_rect(rect);
-    if (safe_rect.clip(width, height) == true)
+  public:
+
+    enum class contruction_flag
     {
-      process_rect_fast<pbf, func_t>(buffer, height, line_step, safe_rect, func);
-    }
-  }
+      copy_buffer,
+      take_ownership,
+      wrap_buffer
+    };
+
+    pixel_buffer(int width, int height, pixel_buffer_format pbf, int align = 1);
+    pixel_buffer(void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf, contruction_flag flag = contruction_flag::copy_buffer);
+    ~pixel_buffer();
+
+    // Move.
+    pixel_buffer(pixel_buffer && pf);
+    void operator=(pixel_buffer && pf);
+
+    // No copy.
+    pixel_buffer(const pixel_buffer &) = delete;
+    void operator=(const pixel_buffer &) = delete;
+
+    int                 get_width() const { return _width; }
+    int                 get_height() const { return _height; }
+    int                 get_line_byte_step() const { return _line_byte_step; }
+    pixel_buffer_format get_pixel_buffer_format() const { return _pbf; }
+    void *              get_buffer() { return _buffer; }
+    const void *        get_buffer() const { return _buffer; }
+
+  private:
+
+    void *              _buffer;
+    bool                _delete_buffer;
+    int                 _width;
+    int                 _height;
+    int                 _line_byte_step;
+    pixel_buffer_format _pbf;
+  };
 }
 
 #endif

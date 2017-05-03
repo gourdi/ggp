@@ -28,7 +28,7 @@ GGO_TEST(fill, 4colors)
     ggo::yellow<ggo::color_8u>(),
     ggo::blue<ggo::color_8u>(),
     ggo::white<ggo::color_8u>(),
-    ggo::pixel_rect::from_width_height(width, height));
+    ggo::rect_int::from_width_height(width, height));
 
   ggo::save_bmp("fill_4colors.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

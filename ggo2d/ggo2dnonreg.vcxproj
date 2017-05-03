@@ -22,14 +22,14 @@
     <ClCompile Include="test\ggo_blend_nonreg.cpp" />
     <ClCompile Include="test\ggo_blit_nonreg.cpp" />
     <ClCompile Include="test\ggo_canvas_nonreg.cpp" />
+    <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
     <ClCompile Include="test\ggo_color_nonreg.cpp" />
     <ClCompile Include="test\ggo_fill_nonreg.cpp" />
     <ClCompile Include="test\ggo_marching_squares_nonreg.cpp" />
     <ClCompile Include="test\ggo_paint_nonreg.cpp" />
     <ClCompile Include="test\ggo_2d_nonreg.cpp" />
-    <ClCompile Include="test\ggo_buffer_pixel_nonreg.cpp" />
+    <ClCompile Include="test\ggo_pixel_buffer_nonreg.cpp" />
     <ClCompile Include="test\ggo_blur_nonreg.cpp" />
-    <ClCompile Include="test\ggo_pixel_rect_nonreg.cpp" />
     <ClCompile Include="test\ggo_sampling_nonreg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -64,12 +64,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\io;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\io;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\io;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\nonreg;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\marching_algorithms;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\io;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\$(Configuration)</LibraryPath>
   </PropertyGroup>
@@ -91,6 +91,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>GGO_DEBUG;GGO_WIN;_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

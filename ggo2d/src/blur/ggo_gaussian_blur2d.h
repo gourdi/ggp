@@ -3,7 +3,7 @@
 
 #include <ggo_pixel_buffer.h>
 #include <ggo_color.h>
-#include <ggo_buffer_iterator.h>
+#include <ggo_memory_layouts.h>
 #include <ggo_convolution.h>
 #include <ggo_gaussian_blur.h>
 
@@ -93,93 +93,94 @@ namespace ggo
 
   ////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf, typename left_t, typename right_t, typename bottom_t, typename top_t>
-  void gaussian_blur2d(void * buffer, const int width, const int height, const int line_step,
+  void gaussian_blur2d(void * buffer, const int width, const int height, const int line_byte_step,
     const float stddev, left_t left, right_t right, bottom_t bottom, top_t top)
   {
     using format = pixel_buffer_format_info<pbf>;
+    using memory_layout = format::memory_layout_t;
     using gaussian_helper = gaussian_blur2d_helper<typename format::color_t>;
 
-    std::vector<uint8_t> tmp(line_step * height);
+    std::vector<uint8_t> tmp(line_byte_step * height);
 
     auto kernel = gaussian_helper::build_kernel(stddev);
 
     // First horizontal pass.
     {
       auto input_line_iterator = [&](int y) {
-        const void * ptr = ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step);
-        return ggo::const_buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
+        return memory_layout::make_horizontal_const_iterator<gaussian_accessor<pbf>>(buffer, y, height, line_byte_step);
       };
 
       auto output_line_iterator = [&](int y) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), 0, y, height, line_step);
-        return ggo::buffer_iterator<format::pixel_byte_size, gaussian_accessor<pbf>>(ptr);
+        return memory_layout::make_horizontal_iterator<gaussian_accessor<pbf>>(tmp.data(), y, height, line_byte_step);
       };
 
       ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator,
-        [&](int x, int y) { return left(x, y, buffer); }, [&](int x, int y) { return right(x, y, buffer); }, width, height, kernel.data(), kernel.size());
+        [&](int x, int y) { return left(x, y, buffer); },
+        [&](int x, int y) { return right(x, y, buffer); },
+        width, height, kernel.data(), kernel.size());
     }
 
     // Second vertical pass.
     {
       auto input_column_iterator = [&](int x) {
-        const void * ptr = ggo::get_pixel_ptr<pbf>(tmp.data(), x, 0, height, line_step);
-        return ggo::const_buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
+        return memory_layout::make_vertical_const_iterator<gaussian_accessor<pbf>>(tmp.data(), x, height, line_byte_step);
       };
 
       auto output_column_iterator = [&](int x) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_step);
-        return ggo::buffer_iterator<0, gaussian_accessor<pbf>>(ptr, format::y_dir == y_up ? line_step : -line_step);
+        return memory_layout::make_vertical_iterator<gaussian_accessor<pbf>>(buffer, x, height, line_byte_step);
       };
 
       ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator,
-        [&](int x, int y){ return bottom(x, y, tmp.data()); }, [&](int x, int y){ return top(x, y, tmp.data()); }, width, height, kernel.data(), kernel.size());
+        [&](int x, int y){ return bottom(x, y, tmp.data()); },
+        [&](int x, int y){ return top(x, y, tmp.data()); },
+        width, height, kernel.data(), kernel.size());
     }
   }
 
   ////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
-  void gaussian_blur2d_mirror(void * buffer, const int width, const int height, const int line_step, const float stddev)
+  void gaussian_blur2d_mirror(void * buffer, const int width, const int height, const int line_byte_step, const float stddev)
   {
     using format = pixel_buffer_format_info<pbf>;
     using gaussian_helper = gaussian_blur2d_helper<typename format::color_t>;
 
     auto left = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, 0, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, 0, y, height, line_byte_step)));
     };
 
     auto right = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, width - 1, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, width - 1, y, height, line_byte_step)));
     };
 
     auto bottom = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, 0, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, 0, height, line_byte_step)));
     };
 
     auto top = [&](int x, int y, void * buf) {
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, height - 1, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, height - 1, height, line_byte_step)));
     };
 
-    gaussian_blur2d<pbf>(buffer, width, height, line_step, stddev, left, right, bottom, top);
+    gaussian_blur2d<pbf>(buffer, width, height, line_byte_step, stddev, left, right, bottom, top);
   }
 
   ////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
-  void gaussian_blur2d_loop(void * buffer, const int width, const int height, const int line_step, const float stddev)
+  void gaussian_blur2d_loop(void * buffer, const int width, const int height, const int line_byte_step, const float stddev)
   {
     using format = pixel_buffer_format_info<pbf>;
     using gaussian_helper = gaussian_blur2d_helper<typename format::color_t>;
 
     auto horz = [&](int x, int y, void * buf) {
       x = loop_index(x, width);
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_byte_step)));
     };
 
     auto vert = [&](int x, int y, void * buf) {
       y = loop_index(y, height);
-      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_step)));
+      return gaussian_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buf, x, y, height, line_byte_step)));
     };
 
-    gaussian_blur2d<pbf>(buffer, width, height, line_step, stddev, horz, horz, vert, vert);
+    gaussian_blur2d<pbf>(buffer, width, height, line_byte_step, stddev, horz, horz, vert, vert);
   }
 }
 

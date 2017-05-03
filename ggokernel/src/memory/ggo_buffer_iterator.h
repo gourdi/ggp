@@ -13,8 +13,6 @@ namespace ggo
   {
   public:
 
-    static_assert(std::is_same<typename std::remove_const<typename void_t>::type, void>::value == true, "expecting void type");
-
     using type = typename accessor_t::type;
 
     raw_buffer_iterator(void_t * ptr) :

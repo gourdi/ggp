@@ -82,9 +82,10 @@ namespace ggo
 
   ////////////////////////////////////////////////////////////////////
   template <pixel_buffer_format pbf>
-  void mean_box_blur2d(void * buffer, const int width, const int height, const int line_step, const int box_half_size)
+  void mean_box_blur2d(void * buffer, const int width, const int height, const int line_byte_step, const int box_half_size)
   {
     using format = pixel_buffer_format_info<pbf>;
+    using memory_format = format::memory_layout_t;
     using mean_box_helper = mean_box_blur2d_helper<typename format::color_t>;
     using data_accessor = ggo::mean_box_accessor<pbf>;
 
@@ -97,15 +98,14 @@ namespace ggo
     // First horizontal pass.
     {
       auto line_iterator = [&](int y) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step);
-        return ggo::buffer_iterator<format::pixel_byte_size, data_accessor>(ptr);
+        return memory_format::make_horizontal_iterator<data_accessor>(buffer, y, height, line_byte_step);
       };
 
       auto left = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_step)));
+        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_byte_step)));
       };
       auto right = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, width - 1, y, height, line_step)));
+        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, width - 1, y, height, line_byte_step)));
       };
 
       ggo::mean_box_filter_2d_horz(line_iterator, left, right, width, height, divide, box_half_size);
@@ -114,15 +114,14 @@ namespace ggo
     // Second vertical pass.
     {
       auto column_iterator = [&](int x) {
-        void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_step);
-        return ggo::buffer_iterator<0, data_accessor>(ptr, format::y_dir == y_up ? line_step : -line_step);
+        return memory_format::make_vertical_iterator<data_accessor>(buffer, x, height, line_byte_step);
       };
 
       auto bottom = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_step)));
+        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_byte_step)));
       };
       auto top = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, height - 1, height, line_step)));
+        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, height - 1, height, line_byte_step)));
       };
 
       ggo::mean_box_filter_2d_vert(column_iterator, bottom, top, width, height, divide, box_half_size);

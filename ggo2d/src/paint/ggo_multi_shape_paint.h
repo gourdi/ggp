@@ -5,7 +5,7 @@
 #include <ggo_multi_scale_paint.h>
 #include <ggo_sampling_paint.h>
 #include <ggo_pixel_buffer.h>
-#include <ggo_pixel_rect.h>
+#include <ggo_rect_int.h>
 
 namespace ggo
 {
@@ -88,7 +88,7 @@ namespace ggo
 namespace ggo
 {
   template <ggo::pixel_buffer_format pbf, sampling smp, typename iterator_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, iterator_t begin_it, iterator_t end_it, const ggo::pixel_rect & clipping)
+  void paint_shapes(void * buffer, int width, int height, int line_step, iterator_t begin_it, iterator_t end_it, const ggo::rect_int & clipping)
   {
     const int scale_factor = 8;
     const int first_scale = 2;

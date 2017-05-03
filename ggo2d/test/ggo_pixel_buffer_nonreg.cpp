@@ -4,7 +4,7 @@
 #include <ggo_buffer_access.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, y_8u_yu)
+GGO_TEST(pixel_buffer, y_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -30,7 +30,7 @@ GGO_TEST(buffer_pixel, y_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, y_32f_yu)
+GGO_TEST(pixel_buffer, y_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -56,7 +56,7 @@ GGO_TEST(buffer_pixel, y_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, rgb_8u_yu)
+GGO_TEST(pixel_buffer, rgb_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -84,7 +84,7 @@ GGO_TEST(buffer_pixel, rgb_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, rgb_32f_yu)
+GGO_TEST(pixel_buffer, rgb_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -112,7 +112,7 @@ GGO_TEST(buffer_pixel, rgb_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, bgra_8u_yd)
+GGO_TEST(pixel_buffer, bgra_8u_yd)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -140,7 +140,7 @@ GGO_TEST(buffer_pixel, bgra_8u_yd)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(buffer_pixel, accumulator)
+GGO_TEST(pixel_buffer, accumulator)
 {
   {
     ggo::accumulator<uint8_t> acc;
@@ -189,3 +189,11 @@ GGO_TEST(buffer_pixel, accumulator)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(pixel_buffer, move)
+{
+  ggo::pixel_buffer pb1(10, 30, ggo::rgb_8u_yu);
+  ggo::pixel_buffer pb2(10, 20, ggo::rgb_8u_yu);
+
+  pb1 = std::move(pb2);
+}

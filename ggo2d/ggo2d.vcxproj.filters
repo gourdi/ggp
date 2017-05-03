@@ -76,6 +76,8 @@
     <ClInclude Include="src\canvas\ggo_canvas.h">
       <Filter>canvas</Filter>
     </ClInclude>
+    <ClInclude Include="src\ggo_pixel_buffer_format.h" />
+    <ClInclude Include="src\ggo_coordinates_conversions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\io\ggo_bmp.cpp">
@@ -87,5 +89,6 @@
     <ClCompile Include="src\canvas\ggo_canvas.cpp">
       <Filter>canvas</Filter>
     </ClCompile>
+    <ClCompile Include="src\ggo_pixel_buffer.cpp" />
   </ItemGroup>
 </Project>

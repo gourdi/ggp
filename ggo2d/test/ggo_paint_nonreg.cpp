@@ -30,7 +30,7 @@ GGO_TEST(paint, hard_rect_y_8u_yu)
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
 
-  ggo::paint_rect_safe<ggo::y_8u_yu>(buffer.data(), 8, 6, 10, 5, 12, 2, 8, { 99 });
+  ggo::paint_rect<ggo::y_8u_yu>(buffer.data(), 8, 6, 10, 5, 12, 2, 8, { 99 });
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -54,7 +54,7 @@ GGO_TEST(paint, hard_rect_bgra_8u_yd)
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
 
-  ggo::paint_rect_safe<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, -1, 0, -1, 2, { uint8_t(97), uint8_t(98), uint8_t(99) });
+  ggo::paint_rect<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, -1, 0, -1, 2, { uint8_t(97), uint8_t(98), uint8_t(99) });
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -92,7 +92,7 @@ GGO_TEST(paint, hard_rect_rgb_32f_yu)
   fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
   fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
 
-  ggo::paint_rect_safe<ggo::rgb_32f_yu>(buffer.data(), 3, 4, line_step, -1, 1, 2, 5, { 97.f, 98.f, 99.f });
+  ggo::paint_rect<ggo::rgb_32f_yu>(buffer.data(), 3, 4, line_step, -1, 1, 2, 5, { 97.f, 98.f, 99.f });
 
   auto compare_line = [&](float * line, const std::vector<float> & expected)
   {
@@ -239,9 +239,9 @@ GGO_TEST(paint, polygons_rectangles)
   polygons[1]._shape.add_point(90, 90);
 
   std::array<uint8_t, 3 * width * height> buffer_polygons;
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer_polygons.data(), width, height, line_step, ggo::blue_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer_polygons.data(), width, height, line_step, ggo::blue_8u(), ggo::rect_int::from_width_height(width, height));
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_polygons.data(), width, height, line_step,
-    polygons.cbegin(), polygons.cend(), ggo::pixel_rect::from_width_height(width, height));
+    polygons.cbegin(), polygons.cend(), ggo::rect_int::from_width_height(width, height));
 
   ggo::save_bmp("paint_polygons.bmp", buffer_polygons.data(), ggo::rgb_8u_yu, width, height, line_step);
 
@@ -251,9 +251,9 @@ GGO_TEST(paint, polygons_rectangles)
   rectangles[1] = { ggo::rect_float::from_left_right_bottom_top(50, 90, 10, 90), ggo::white<ggo::color_8u>() };
 
   std::array<uint8_t, 3 * width * height> buffer_rectangles;
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::blue_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::blue_8u(), ggo::rect_int::from_width_height(width, height));
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rectangles.data(), width, height, line_step,
-    rectangles.cbegin(), rectangles.cend(), ggo::pixel_rect::from_width_height(width, height));
+    rectangles.cbegin(), rectangles.cend(), ggo::rect_int::from_width_height(width, height));
 
   ggo::save_bmp("paint_rectangles.bmp", buffer_rectangles.data(), ggo::rgb_8u_yu, width, height, line_step);
 
@@ -313,7 +313,7 @@ GGO_TEST(paint, difference)
   shape.add_shape(std::make_shared<ggo::disc_float>(70.f, 70.f, 30.f));
 
   std::array<uint8_t, 3 * width * height> buffer;
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::rect_int::from_width_height(width, height));
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, shape, ggo::yellow<ggo::color_8u>());
 
   ggo::save_bmp("paint_difference.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
@@ -337,9 +337,9 @@ GGO_TEST(paint, color_triangle)
   triangles.emplace_back(triangle2, ggo::green<ggo::color_8u>(), ggo::blue<ggo::color_8u>(), ggo::yellow<ggo::color_8u>(), opaque_blender_rgb8u());
 
   std::array<uint8_t, 3 * width * height> buffer;
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::rect_int::from_width_height(width, height));
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width,
-    triangles.begin(), triangles.end(), ggo::pixel_rect::from_width_height(width, height));
+    triangles.begin(), triangles.end(), ggo::rect_int::from_width_height(width, height));
 
   ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
@@ -365,9 +365,9 @@ GGO_TEST(paint, alpha_color_triangle)
     ggo::green<ggo::color_8u>(), 0.5f);
 
   std::array<uint8_t, 3 * width * height> buffer;
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u(), ggo::rect_int::from_width_height(width, height));
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width,
-    triangles.begin(), triangles.end(), ggo::pixel_rect::from_width_height(width, height));
+    triangles.begin(), triangles.end(), ggo::rect_int::from_width_height(width, height));
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
@@ -434,12 +434,12 @@ GGO_TEST(paint, clipping)
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float(70.f, 40.f, 35.f),
     ggo::make_solid_brush<ggo::color_8u>(ggo::red_8u()), ggo::overwrite_blender<ggo::color_8u>(),
-    ggo::pixel_rect::from_left_right_bottom_top(0, width / 2, 0, height - 1), 8, 2);
+    ggo::rect_int::from_left_right_bottom_top(0, width / 2, 0, height - 1), 8, 2);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float(70.f, 60.f, 35.f),
     ggo::make_solid_brush<ggo::color_8u>(ggo::blue_8u()), ggo::overwrite_blender<ggo::color_8u>(),
-    ggo::pixel_rect::from_left_right_bottom_top(width / 2 + 1, width - 1, 0, height - 1), 8, 2);
+    ggo::rect_int::from_left_right_bottom_top(width / 2 + 1, width - 1, 0, height - 1), 8, 2);
 
   ggo::save_bmp("paint_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

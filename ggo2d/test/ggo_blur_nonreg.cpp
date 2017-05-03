@@ -17,7 +17,7 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void gaussian_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u(), ggo::pixel_rect::from_width_height(width, height));
+    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u(), ggo::rect_int::from_width_height(width, height));
 
     auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
     auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
@@ -85,7 +85,7 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 
   std::vector<uint8_t> buffer(line_step * height);
 
-  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00, ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00, ggo::rect_int::from_width_height(width, height));
 
   auto brush = [](int x, int y) { return 0xff; };
   auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
@@ -117,7 +117,7 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void mean_box_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u(), ggo::pixel_rect::from_width_height(width, height));
+    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u(), ggo::rect_int::from_width_height(width, height));
 
     auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
     auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
@@ -185,7 +185,7 @@ GGO_TEST(blur, mean_box_y_8u_yu)
 
   std::vector<uint8_t> buffer(line_step * height);
 
-  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00, ggo::pixel_rect::from_width_height(width, height));
+  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00, ggo::rect_int::from_width_height(width, height));
 
   auto brush = [](int x, int y) { return 0xff; };
   auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };

@@ -91,7 +91,7 @@ namespace ggo
     shape_bounding_rect.inflate(blur_radius);
 
     // Clip.
-    pixel_rect shape_pixel_rect(shape_bounding_rect.data());
+    rect_int shape_pixel_rect = from_math_to_pixel(shape_bounding_rect.data());
     if (shape_pixel_rect.clip(width, height) == false)
     {
       return;

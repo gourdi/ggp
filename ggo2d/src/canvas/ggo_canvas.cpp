@@ -149,7 +149,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void canvas::render(void * buffer, const view & view, int width, int height, int line_byte_step, pixel_buffer_format pbf) const
   {
-    const pixel_rect clipping = pixel_rect::from_width_height(width, height);
+    const rect_int clipping = rect_int::from_width_height(width, height);
 
     using shape_t = dyn_paint_shape<float, color_8u, color_8u>;
 
@@ -424,11 +424,11 @@ namespace ggo
 
       // Color.
       const std::string color_text = shape_element->Attribute("color");
-      if (color_text.empty() == true || color_text[0] != '#')
+      if (color_text.empty() == true || color_text.size() != 7 || color_text[0] != '#')
       {
         throw std::runtime_error(std::string("empty or invalid color: '") + color_text + "'");
       }
-      new_shape->_color = ggo::from_hex(color_text);
+      new_shape->_color = ggo::from_hex(color_text.substr(1, 6));
 
       shape_element = shape_element->NextSiblingElement();
     }
