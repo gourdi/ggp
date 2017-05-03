@@ -225,21 +225,21 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename functor>
-  auto templatize(pixel_buffer_format pbf)
+  template <typename functor, typename... args>
+  auto templatize(pixel_buffer_format pbf, args&&... a)
   {
     switch (pbf)
     {
     default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
-    case y_8u_yu: return functor::call<y_8u_yu>();
-    case y_8u_yd: return functor::call<y_8u_yd>();
-    case y_16u_yd: return functor::call<y_16u_yd>();
-    case y_32f_yu: return functor::call<y_32f_yu>();
-    case rgb_8u_yu: return functor::call<rgb_8u_yu>();
-    case rgb_8u_yd: return functor::call<rgb_8u_yd>();
-    case bgra_8u_yd: return functor::call<bgra_8u_yd>();
-    case rgb_16u_yd: return functor::call<rgb_16u_yd>();
-    case rgb_32f_yu: return functor::call<rgb_32f_yu>();
+    case y_8u_yu: return functor::call<y_8u_yu>(std::forward<args>(a)...);
+    case y_8u_yd: return functor::call<y_8u_yd>(std::forward<args>(a)...);
+    case y_16u_yd: return functor::call<y_16u_yd>(std::forward<args>(a)...);
+    case y_32f_yu: return functor::call<y_32f_yu>(std::forward<args>(a)...);
+    case rgb_8u_yu: return functor::call<rgb_8u_yu>(std::forward<args>(a)...);
+    case rgb_8u_yd: return functor::call<rgb_8u_yd>(std::forward<args>(a)...);
+    case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
+    case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
+    case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
     }
   }
 }

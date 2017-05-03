@@ -79,7 +79,7 @@ namespace ggo
   template <typename color_out_t, typename color_in_t>
   color_out_t convert_color_to(const color_in_t & c)
   {
-    static_assert(std::is_same<color_in_t, color_out_t>::value, "expecting same color type");
+    static_assert(std::is_same<color_in_t, color_out_t>::value);
     return c;
   }
 
@@ -119,6 +119,38 @@ namespace ggo
   template <> inline uint8_t convert_color_to<uint8_t, float>(const float & c)
   {
     return static_cast<uint8_t>(255.f * ggo::clamp(c, 0.f, 1.f) + 0.5f);
+  }
+
+  // rgb 16u => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_16u>(const color_16u & c)
+  {
+    return ggo::color_8u(c.r() >> 8, c.g() >> 8, c.b() >> 8);
+  }
+
+  // rgb 8u => rgb 16u
+  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::color_8u>(const color_8u & c)
+  {
+    return ggo::color_16u((uint16_t(c.r()) << 8) | c.r(), (uint16_t(c.g()) << 8) | c.g(), (uint16_t(c.b()) << 8) | c.b());
+  }
+
+  // y 16u => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint16_t>(const uint16_t & c)
+  {
+    uint8_t gray = static_cast<uint8_t>(c >> 8);
+
+    return ggo::color_8u(gray, gray, gray);
+  }
+
+  // y 16u => y 8u
+  template <> inline uint8_t convert_color_to<uint8_t, uint16_t>(const uint16_t & c)
+  {
+    return static_cast<uint8_t>(c >> 8);
+  }
+
+  // y 16u => y 8u
+  template <> inline uint16_t convert_color_to<uint16_t, uint8_t>(const uint8_t & c)
+  {
+    return (uint16_t(c) << 8) | c;
   }
 }
 

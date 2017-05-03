@@ -15,6 +15,25 @@ GGO_TEST(color, operators)
 }
 
 ////////////////////////////////////////////////////////////////////
+GGO_TEST(color, conversions)
+{
+  // y 16u => y 8u
+  {
+    GGO_CHECK_EQ(ggo::convert_color_to<uint16_t>(uint8_t(0xff)), 0xffff);
+    GGO_CHECK_EQ(ggo::convert_color_to<uint16_t>(uint8_t(0x80)), 0x8080);
+    GGO_CHECK_EQ(ggo::convert_color_to<uint16_t>(uint8_t(0x00)), 0x0000);
+  }
+
+  // rgb 8u => rgb 16u
+  {
+    ggo::color_16u c = ggo::convert_color_to<ggo::color_16u>(ggo::color_8u(0xff, 0x80, 0x00));
+    GGO_CHECK_EQ(c.r(), 0xffff);
+    GGO_CHECK_EQ(c.g(), 0x8080);
+    GGO_CHECK_EQ(c.b(), 0x0000);
+  }
+}
+
+////////////////////////////////////////////////////////////////////
 GGO_TEST(color, linear_curve)
 {
   ggo::linear_curve<float, ggo::color_32f> curve;
