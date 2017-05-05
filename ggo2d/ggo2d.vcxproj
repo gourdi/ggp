@@ -25,12 +25,10 @@
     <ClCompile Include="src\canvas\ggo_canvas.cpp" />
     <ClInclude Include="src\fill\ggo_buffer_fill.h" />
     <ClInclude Include="src\fill\ggo_fill.h" />
-    <ClInclude Include="src\ggo_coordinates_conversions.h" />
     <ClInclude Include="src\ggo_pixel_buffer.h" />
     <ClInclude Include="src\ggo_color.h" />
     <ClInclude Include="src\ggo_blit.h" />
     <ClInclude Include="src\ggo_pixel_buffer_format.h" />
-    <ClInclude Include="src\ggo_pixel_rect.h" />
     <ClInclude Include="src\io\ggo_bmp.h" />
     <ClCompile Include="src\ggo_pixel_buffer.cpp" />
     <ClCompile Include="src\io\ggo_bmp.cpp" />
