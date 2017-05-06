@@ -104,6 +104,7 @@ namespace ggo
   };
 }
 
+#include <ggo_basis2d.h>
 #include <ggo_rect.h>
 #include <ggo_segment.h>
 #include <ggo_circle.h>
@@ -116,6 +117,7 @@ namespace ggo
 #include <ggo_oriented_box.h>
 #include <ggo_multi_shape.h>
 
+#include <ggo_basis2d.imp.h>
 #include <ggo_rect.imp.h>
 #include <ggo_segment.imp.h>
 #include <ggo_circle.imp.h>

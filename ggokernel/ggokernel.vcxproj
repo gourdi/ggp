@@ -184,6 +184,8 @@
     <ClInclude Include="src\math\scalar_fields_2d\ggo_perlin_noise_field_2d.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_scalar_field_2d_abc.h" />
     <ClInclude Include="src\math\scalar_fields_2d\ggo_shape_field_2d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_basis2d.h" />
+    <ClInclude Include="src\math\shapes_2d\ggo_basis2d.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_circle.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_circle.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_disc.h" />

@@ -9,6 +9,20 @@
   GGO_CHECK(shape.get_rect_intersection(rect_data) == res); }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(shapes2d, basis2d)
+{
+  ggo::basis2d<float> basis({ 2.f, 0.f }, { 1.f, 0.f }, { 0.f, 1.f });
+  basis.rotate({ 1.f, 0.f }, ggo::pi<float>() / 2.f);
+
+  GGO_CHECK_FABS(basis.pos().x(), 1.f);
+  GGO_CHECK_FABS(basis.pos().y(), 1.f);
+  GGO_CHECK_FABS(basis.x().x(), 0.f);
+  GGO_CHECK_FABS(basis.x().y(), 1.f);
+  GGO_CHECK_FABS(basis.y().x(), -1.f);
+  GGO_CHECK_FABS(basis.y().y(), 0.f);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(shapes2d, segment)
 {
   ggo::segment_float segment(1, 1, 5, 3);

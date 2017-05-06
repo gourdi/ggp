@@ -346,6 +346,12 @@
     <ClInclude Include="src\memory\ggo_circular_buffer.h">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_basis2d.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_2d\ggo_basis2d.imp.h">
+      <Filter>math\shapes_2d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
