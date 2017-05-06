@@ -33,44 +33,12 @@ namespace ggo
 
 namespace ggo
 {
-  class const_pixel_buffer final
-  {
-  public:
-
-    const_pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf);
-
-    // No copy (default move operations are OK since the object never owns the buffer).
-    const_pixel_buffer(const const_pixel_buffer &) = delete;
-    void operator=(const const_pixel_buffer &) = delete;
-
-    int                 get_width() const { return _width; }
-    int                 get_height() const { return _height; }
-    int                 get_line_byte_step() const { return _line_byte_step; }
-    pixel_buffer_format get_pixel_buffer_format() const { return _pbf; }
-    const void *        get_buffer() const { return _buffer; }
-
-  private:
-
-    const void *        _buffer;
-    int                 _width;
-    int                 _height;
-    int                 _line_byte_step;
-    pixel_buffer_format _pbf;
-  };
-
   class pixel_buffer final
   {
   public:
 
-    enum class contruction_flag
-    {
-      copy_buffer,
-      take_ownership,
-      wrap_buffer
-    };
-
     pixel_buffer(int width, int height, pixel_buffer_format pbf, int align = 1);
-    pixel_buffer(void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf, contruction_flag flag = contruction_flag::copy_buffer);
+    pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf, int align = 1);
     ~pixel_buffer();
 
     // Move.
@@ -85,13 +53,12 @@ namespace ggo
     int                 get_height() const { return _height; }
     int                 get_line_byte_step() const { return _line_byte_step; }
     pixel_buffer_format get_pixel_buffer_format() const { return _pbf; }
-    void *              get_buffer() { return _buffer; }
-    const void *        get_buffer() const { return _buffer; }
+    void *              data() { return _buffer; }
+    const void *        data() const { return _buffer; }
 
   private:
 
     void *              _buffer;
-    bool                _delete_buffer;
     int                 _width;
     int                 _height;
     int                 _line_byte_step;

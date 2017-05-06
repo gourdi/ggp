@@ -259,6 +259,11 @@ namespace ggo
   {
     return templatize<get_pixel_byte_size_t>(pbf);
   }
+
+  inline int get_line_byte_size(pixel_buffer_format pbf, int width)
+  {
+    return get_pixel_byte_size(pbf) * width;
+  }
 }
 
 namespace ggo
