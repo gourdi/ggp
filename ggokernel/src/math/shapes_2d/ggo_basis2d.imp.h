@@ -55,4 +55,45 @@ namespace ggo
     vec2<data_t> new_y(_y.x() * cos_tmp - _y.y() * sin_tmp, _y.x() * sin_tmp + _y.y() * cos_tmp);
     _y = new_y;
   }
+
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::vec2<data_t> basis2d<data_t>::vector_from_local_to_world(const ggo::vec2<data_t> & v) const
+  {
+    return v.x() * _x + v.y() * _y;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::vec2<data_t> basis2d<data_t>::vector_from_world_to_local(const ggo::vec2<data_t> & v) const
+  {
+    const data_t m[2][2] = {
+      { _x.x(), _y.x() },
+      { _x.y(), _y.y() } };
+    const data_t c[2] = { v.x(), v.y() };
+
+    ggo::vec2<data_t> result;
+
+    if (linsolve2d(m, c, result.data()) == false)
+    {
+      throw std::runtime_error("invalid basis");
+    }
+
+    return result;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::pos2<data_t> basis2d<data_t>::point_from_local_to_world(const ggo::pos2<data_t> & p) const
+  {
+    return vector_from_local_to_world(p) + _pos;
+  }
+  
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::pos2<data_t> basis2d<data_t>::point_from_world_to_local(const ggo::pos2<data_t> & p) const
+  {
+    return vector_from_world_to_local(p - _pos);
+  }
 }

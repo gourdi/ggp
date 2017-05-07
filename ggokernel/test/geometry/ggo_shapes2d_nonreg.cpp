@@ -11,15 +11,31 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shapes2d, basis2d)
 {
-  ggo::basis2d<float> basis({ 2.f, 0.f }, { 1.f, 0.f }, { 0.f, 1.f });
-  basis.rotate({ 1.f, 0.f }, ggo::pi<float>() / 2.f);
+  // Rotation.
+  {
+    ggo::basis2d<float> basis({ 2.f, 0.f }, { 1.f, 0.f }, { 0.f, 1.f });
+    basis.rotate({ 1.f, 0.f }, ggo::pi<float>() / 2.f);
 
-  GGO_CHECK_FABS(basis.pos().x(), 1.f);
-  GGO_CHECK_FABS(basis.pos().y(), 1.f);
-  GGO_CHECK_FABS(basis.x().x(), 0.f);
-  GGO_CHECK_FABS(basis.x().y(), 1.f);
-  GGO_CHECK_FABS(basis.y().x(), -1.f);
-  GGO_CHECK_FABS(basis.y().y(), 0.f);
+    GGO_CHECK_FABS(basis.pos().x(), 1.f);
+    GGO_CHECK_FABS(basis.pos().y(), 1.f);
+    GGO_CHECK_FABS(basis.x().x(), 0.f);
+    GGO_CHECK_FABS(basis.x().y(), 1.f);
+    GGO_CHECK_FABS(basis.y().x(), -1.f);
+    GGO_CHECK_FABS(basis.y().y(), 0.f);
+  }
+
+  // From local to world.
+  {
+    ggo::basis2d<float> basis({ 2.f, 1.f }, { 3.f, 1.f }, { -1.f, 2.f });
+
+    ggo::pos2f p1 = basis.point_from_local_to_world({ 1.f, 2.f });
+    GGO_CHECK_FABS(p1.x(), 3.f);
+    GGO_CHECK_FABS(p1.y(), 6.f);
+
+    ggo::pos2f p2 = basis.point_from_world_to_local({ 3.f, 6.f });
+    GGO_CHECK_FABS(p2.x(), 1.f);
+    GGO_CHECK_FABS(p2.y(), 2.f);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
