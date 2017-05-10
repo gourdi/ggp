@@ -352,6 +352,9 @@
     <ClInclude Include="src\math\shapes_2d\ggo_basis2d.imp.h">
       <Filter>math\shapes_2d</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\ggo_coordinates_conversions.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

@@ -8,6 +8,24 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  int from_math_to_pixel(data_t v)
+  {
+    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+
+    return ggo::to<int>(v)
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t from_pixel_to_math(int v)
+  {
+    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+
+    return ggo::to<data_t>(v);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   ggo::pos2i from_math_to_pixel(const ggo::pos2<data_t> & p)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
