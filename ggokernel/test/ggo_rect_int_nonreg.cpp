@@ -79,4 +79,14 @@ GGO_TEST(rect_int, vertical_flip)
   GGO_CHECK_EQ(r.top(), 4);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(rect_int, is_inside)
+{
+  ggo::rect_int r = ggo::rect_int::from_left_right_bottom_top(3, 5, 1, 3);
+  GGO_CHECK_EQ(r.is_inside({ 3, 1 }), true);
+  GGO_CHECK_EQ(r.is_inside({ 5, 3 }), true);
+  GGO_CHECK_EQ(r.is_inside({ 2, 0 }), false);
+  GGO_CHECK_EQ(r.is_inside({ 6, 4 }), false);
+}
+
 

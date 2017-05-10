@@ -2,6 +2,7 @@
 #define __GGO_PIXEL_INT__
 
 #include <ggo_kernel.h>
+#include <ggo_vec.h>
 
 namespace ggo
 {
@@ -41,8 +42,7 @@ namespace ggo
       }
     }
 
-    //template <typename data_t>
-    //ggo::rect_data<data_t> get_rect_data() const;
+    bool is_inside(const ggo::pos2i & p) const;
 
     void vertical_flip(int height);
     
@@ -145,6 +145,12 @@ namespace ggo
 
     _bottom = bottom;
     _top = top;
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline bool rect_int::is_inside(const ggo::pos2i & p) const
+  {
+    return p.x() >= _left && p.x() <= _right && p.y() >= _bottom && p.y() <= _top;
   }
 
   //////////////////////////////////////////////////////////////
