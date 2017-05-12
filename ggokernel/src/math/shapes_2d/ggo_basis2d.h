@@ -31,6 +31,10 @@ namespace ggo
     const vec2<data_t> &  x() const { return _x; }
     const vec2<data_t> &  y() const { return _y; }
 
+    pos2<data_t> &  pos() { return _pos; }
+    vec2<data_t> &  x() { return _x; }
+    vec2<data_t> &  y() { return _y; }
+
   private:
 
     ggo::pos2<data_t> _pos;

@@ -72,7 +72,7 @@ namespace ggo
     using rgba_t = ggo::vec<real_t, 4, none_t>;
 
     static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
-    static_assert(ggo::color_traits<floating_point_color_t>::_samples_count == 3, "only rgb colors supported");
+    static_assert(ggo::color_traits<floating_point_color_t>::samples_count == 3, "only rgb colors supported");
 
     // For performance reasons, color are expecting to be of a floating point type,
     // even if the class render integer colors.

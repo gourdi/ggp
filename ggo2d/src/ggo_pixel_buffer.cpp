@@ -7,9 +7,9 @@ ggo::pixel_buffer::pixel_buffer(int width, int height, pixel_buffer_format pbf, 
   _line_byte_step = pad(width * get_pixel_byte_size(pbf), align); // For each line to be aligned too.
 
 #ifdef _MSC_VER
-  _buffer = _aligned_malloc(_line_byte_step, align);
+  _buffer = _aligned_malloc(height * _line_byte_step, align);
 #else
-  _buffer = aligned_alloc(align, _line_byte_step);
+  _buffer = aligned_alloc(align, height * _line_byte_step);
 #endif
   _width = width;
   _height = height;
