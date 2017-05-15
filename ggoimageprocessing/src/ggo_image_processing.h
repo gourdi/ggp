@@ -1,5 +1,5 @@
-#ifndef _GGO_PHOTO_PROCESSOR__
-#define _GGO_PHOTO_PROCESSOR__
+#ifndef _GGO_IMAGE_PROCESSING__
+#define _GGO_IMAGE_PROCESSING__
 
 #include <ggo_pixel_buffer.h>
 #include <ggo_shapes2d.h>
@@ -18,6 +18,10 @@ namespace ggo
 
     ggo::pixel_buffer _pixel_buffer;
   };
+
+  ggo::rect_data<float> get_view_pixel_rect(const ggo::basis2d<float> & view_basis, const ggo::pos2i & pixel);
+  
+  ggo::basis2d<float> compute_fit_view_basis(int image_width, int image_height, int view_width, int view_height);
 }
 
 #endif
