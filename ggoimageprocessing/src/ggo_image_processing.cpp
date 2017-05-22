@@ -32,7 +32,7 @@ namespace
         {
           float x_f = ggo::from_pixel_to_math<float>(x);
 
-          const ggo::pos2f image_pos = view_basis.point_from_world_to_local({ x_f, y_f });
+          const ggo::pos2f image_pos = view_basis.point_from_local_to_world({ x_f, y_f });
           const ggo::pos2i image_pixel = ggo::from_math_to_pixel(image_pos);
 
           if (input_rect.is_inside(image_pixel) == true)
@@ -124,5 +124,22 @@ ggo::basis2d<float> ggo::compute_fit_view_basis(int image_width, int image_heigh
 
     return ggo::basis2d<float>(p, x, y);
   }
+}
+
+/////////////////////////////////////////////////////////////////////
+ggo::basis2d<float> ggo::center_basis_view(int image_width, int image_height,
+  int view_width, int view_height,
+  const ggo::basis2d<float> & view_basis,
+  const ggo::pos2f & center)
+{
+  return view_basis;
+}
+
+/////////////////////////////////////////////////////////////////////
+ggo::basis2d<float> ggo::clamp_basis_view(int image_width, int image_height,
+  int view_width, int view_height,
+  const ggo::basis2d<float> & view_basis)
+{
+  return view_basis;
 }
 

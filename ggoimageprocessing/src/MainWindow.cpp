@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include <ggo_load_image.h>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QScreen>
 #include <QFileDialog>
@@ -22,7 +23,7 @@ _imageWidget(new ImageWidget(this))
   QMenu * zoomMenu = menuBar()->addMenu(tr("&Zoom"));
   QAction * zoomInAction = zoomMenu->addAction(tr("Zoom In"), this, &MainWindow::zoomIn);
   QAction * zoomOutAction = zoomMenu->addAction(tr("Zoom Out"), this, &MainWindow::zoomOut);
-  QAction * zoomFitAction = zoomMenu->addAction(tr("zoom Fit"), this, &MainWindow::zoomFit);
+  QAction * zoomFitAction = zoomMenu->addAction(tr("Zoom Fit"), this, &MainWindow::zoomFit);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -34,7 +35,10 @@ void MainWindow::loadFile()
 
   if (fileName.isEmpty() == false)
   {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents(); // Otherwise the cursor does not change.
     _imageWidget->loadImage(fileName);
+    QApplication::restoreOverrideCursor();
   }
 }
 

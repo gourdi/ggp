@@ -22,12 +22,20 @@ private:
 
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
+  void mousePressEvent(QMouseEvent *eventPress) override;
+  void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
+  void mouseMoveEvent(QMouseEvent *eventMove) override;
+  void wheelEvent(QWheelEvent *event) override;
 
 private:
 
   QImage _image;
   std::unique_ptr<ggo::image_processor> _image_processor;
   ggo::basis2d<float> _view_basis;
+
+  bool _is_mouse_down = false;
+  ggo::pos2i _mouse_down_pos;
+  ggo::basis2d<float> _mouse_down_view_basis;
 };
 
 #endif
