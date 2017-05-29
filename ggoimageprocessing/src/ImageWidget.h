@@ -20,6 +20,9 @@ public:
 
 private:
 
+  void zoom(float zoomFactor);
+  void zoom(float zoomFactor, const ggo::pos2f & center);
+
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
   void mousePressEvent(QMouseEvent *eventPress) override;

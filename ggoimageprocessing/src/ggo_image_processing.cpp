@@ -140,6 +140,55 @@ ggo::basis2d<float> ggo::clamp_basis_view(int image_width, int image_height,
   int view_width, int view_height,
   const ggo::basis2d<float> & view_basis)
 {
-  return view_basis;
+  GGO_ASSERT(view_basis.x().x() > 0.f);
+  GGO_ASSERT(view_basis.x().y() == 0.f);
+  GGO_ASSERT(view_basis.y().x() == 0.f);
+  GGO_ASSERT(view_basis.y().y() > 0.f);
+
+  ggo::basis2d<float> clamped_basis(view_basis);
+
+  const ggo::rect<float> image_rect = ggo::rect<float>::from_left_right_bottom_top(-0.5f, image_width - 0.5f, -0.5f, image_height - 0.5f);
+
+  const float view_left   = view_basis.pos().x() - 0.5f * view_basis.x().x();
+  const float view_right  = view_basis.pos().x() + (view_width - 0.5f) * view_basis.x().x();
+  const float view_bottom = view_basis.pos().y() - 0.5f * view_basis.y().y();
+  const float view_top    = view_basis.pos().y() + (view_height - 0.5f) * view_basis.y().y();
+  const ggo::rect<float> view_rect = ggo::rect<float>::from_left_right_bottom_top(view_left, view_right, view_bottom, view_top);
+
+  // Process x-coordinate.
+  if (view_rect.width() < image_rect.width()) // The view fits in the image.
+  {
+    if (view_rect.left() < image_rect.left())
+    {
+      clamped_basis.pos().x() = -0.5f + 0.5f * view_basis.x().x();
+    }
+    if (view_rect.right() > image_rect.right())
+    {
+      clamped_basis.pos().x() = image_width - 0.5f - (view_width - 0.5f) * view_basis.x().x();
+    }
+  }
+  else // The image fits in the view.
+  {
+    clamped_basis.pos().x() = -0.5f - 0.5f * (view_rect.width() - image_rect.width()) + 0.5f * view_basis.x().x();
+  }
+
+  // Process y-coordinate.
+  if (view_rect.height() < image_rect.height()) // The view fits in the image.
+  {
+    if (view_rect.bottom() < image_rect.bottom())
+    {
+      clamped_basis.pos().y() = -0.5f + 0.5f * view_basis.y().y();
+    }
+    if (view_rect.top() > image_rect.top())
+    {
+      clamped_basis.pos().y() = image_height - 0.5f - (view_height - 0.5f) * view_basis.y().y();
+    }
+  }
+  else // The image fits in the view.
+  {
+    clamped_basis.pos().y() = -0.5f - 0.5f * (view_rect.height() - image_rect.height()) + 0.5f * view_basis.y().y();
+  }
+
+  return clamped_basis;
 }
 

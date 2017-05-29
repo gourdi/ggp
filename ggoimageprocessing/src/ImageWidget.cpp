@@ -26,10 +26,22 @@ void ImageWidget::loadImage(const QString & filename)
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::zoomIn()
+void ImageWidget::zoom(float zoomFactor)
 {
-  _view_basis.x() *= 2.f;
-  _view_basis.y() *= 2.f;
+  // Get the  position of the center of the view in the original image.
+  ggo::pos2f center = _view_basis.pos() + (0.5f * _image.width() - 0.5f) * _view_basis.x() + (0.5f * _image.height() - 0.5f) * _view_basis.y();
+
+  zoom(zoomFactor, center);
+}
+
+/////////////////////////////////////////////////////////////////////
+void ImageWidget::zoom(float zoomFactor, const ggo::pos2f & center)
+{
+  _view_basis.x() *= zoomFactor;
+  _view_basis.y() *= zoomFactor;
+
+  // Make it so that that the current view still have the same center than before zooming.
+  _view_basis.pos() = center - (0.5f * _image.width() - 0.5f) * _view_basis.x() - (0.5f * _image.height() - 0.5f) * _view_basis.y();
 
   _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), _image.width(), _image.height(), _view_basis);
 
@@ -37,14 +49,15 @@ void ImageWidget::zoomIn()
 }
 
 /////////////////////////////////////////////////////////////////////
+void ImageWidget::zoomIn()
+{
+  zoom(0.5f);
+}
+
+/////////////////////////////////////////////////////////////////////
 void ImageWidget::zoomOut()
 {
-  _view_basis.x() /= 2.f;
-  _view_basis.y() /= 2.f;
-
-  _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), _image.width(), _image.height(), _view_basis);
-
-  update();
+  zoom(2.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -72,7 +85,20 @@ void ImageWidget::paintEvent(QPaintEvent * event)
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
-  _image = QImage(size(), QImage::Format_RGB32);
+  if (_image_processor)
+  {
+    ggo::pos2f center = _view_basis.pos() + (0.5f * _image.width() - 0.5f) * _view_basis.x() + (0.5f * _image.height() - 0.5f) * _view_basis.y();
+
+    _image = QImage(size(), QImage::Format_RGB32);
+
+    _view_basis.pos() = center - (0.5f * _image.width() - 0.5f) * _view_basis.x() - (0.5f * _image.height() - 0.5f) * _view_basis.y();
+
+    _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), _image.width(), _image.height(), _view_basis);
+  }
+  else
+  {
+    _image = QImage(size(), QImage::Format_RGB32);
+  }
 
   QWidget::resizeEvent(event);
 }
@@ -110,20 +136,19 @@ void ImageWidget::mouseMoveEvent(QMouseEvent * eventMove)
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::wheelEvent(QWheelEvent *event)
 {
+  // Get the  position of the center of the view in the original image.
+  float x = event->pos().x();
+  float y = _image.height() - event->pos().y() - 1.f;
+  ggo::pos2f center = _view_basis.pos() + x * _view_basis.x() + y * _view_basis.y();
+
   if (event->angleDelta().ry() > 0)
   {
-    _view_basis.x() /= 2.f;
-    _view_basis.y() /= 2.f;
-
-    update();
+    zoom(0.5f, center);
   }
 
   if (event->angleDelta().ry() < 0)
   {
-    _view_basis.x() *= 2.f;
-    _view_basis.y() *= 2.f;
-
-    update();
+    zoom(2.0f, center);
   }
 }
 

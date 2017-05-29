@@ -154,6 +154,40 @@ GGO_TEST(image_processing, view_basis)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(image_processing, clamp_view_basis)
+{
+  {
+    auto clamped_basis = ggo::clamp_basis_view(3, 2, 3, 2, ggo::basis2d<float>({ 5.f, 5.f }, { 0.25f, 0.f }, { 0.f, 0.25f }));
+    GGO_CHECK_FABS(clamped_basis.pos().x(), 1.875f);
+    GGO_CHECK_FABS(clamped_basis.pos().y(), 1.125f);
+    GGO_CHECK_FABS(clamped_basis.x().x(), 0.25f);
+    GGO_CHECK_FABS(clamped_basis.x().y(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().x(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().y(), 0.25f);
+  }
+
+  {
+    auto clamped_basis = ggo::clamp_basis_view(3, 2, 3, 2, ggo::basis2d<float>({ -5.f, -5.f }, { 0.25f, 0.f }, { 0.f, 0.25f }));
+    GGO_CHECK_FABS(clamped_basis.pos().x(), -0.375f);
+    GGO_CHECK_FABS(clamped_basis.pos().y(), -0.375f);
+    GGO_CHECK_FABS(clamped_basis.x().x(), 0.25f);
+    GGO_CHECK_FABS(clamped_basis.x().y(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().x(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().y(), 0.25f);
+  }
+
+  {
+    auto clamped_basis = ggo::clamp_basis_view(4, 2, 5, 2, ggo::basis2d<float>({ 0.f, 0.f }, { 2.f, 0.f }, { 0.f, 2.f }));
+    GGO_CHECK_FABS(clamped_basis.pos().x(), -2.5f);
+    GGO_CHECK_FABS(clamped_basis.pos().y(), -0.5f);
+    GGO_CHECK_FABS(clamped_basis.x().x(), 2.0f);
+    GGO_CHECK_FABS(clamped_basis.x().y(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().x(), 0.0f);
+    GGO_CHECK_FABS(clamped_basis.y().y(), 2.0f);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 int main(int argc, char ** argv)
 {
   RUN_ALL_TESTS(argc, argv);
