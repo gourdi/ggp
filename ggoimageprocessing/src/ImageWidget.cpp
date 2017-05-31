@@ -26,6 +26,16 @@ void ImageWidget::loadImage(const QString & filename)
 }
 
 /////////////////////////////////////////////////////////////////////
+ggo::image_view ImageWidget::get_view() const
+{
+  ggo::image_view view;
+  view._basis = _view_basis;
+  view._width = _image.width();
+  view._height = _image.height();
+  return view;
+}
+
+/////////////////////////////////////////////////////////////////////
 void ImageWidget::zoom(float zoomFactor)
 {
   // Get the  position of the center of the view in the original image.
@@ -43,7 +53,7 @@ void ImageWidget::zoom(float zoomFactor, const ggo::pos2f & center)
   // Make it so that that the current view still have the same center than before zooming.
   _view_basis.pos() = center - (0.5f * _image.width() - 0.5f) * _view_basis.x() - (0.5f * _image.height() - 0.5f) * _view_basis.y();
 
-  _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), _image.width(), _image.height(), _view_basis);
+  _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), get_view());
 
   update();
 }
@@ -93,7 +103,7 @@ void ImageWidget::resizeEvent(QResizeEvent *event)
 
     _view_basis.pos() = center - (0.5f * _image.width() - 0.5f) * _view_basis.x() - (0.5f * _image.height() - 0.5f) * _view_basis.y();
 
-    _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), _image.width(), _image.height(), _view_basis);
+    _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), get_view());
   }
   else
   {
@@ -126,8 +136,7 @@ void ImageWidget::mouseMoveEvent(QMouseEvent * eventMove)
     float dy = static_cast<float>(eventMove->pos().y() - (height() - _mouse_down_pos.y() - 1));
     _view_basis.pos() = _mouse_down_view_basis.pos() - dx * _view_basis.x() + dy * _view_basis.y();
 
-    _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(),
-      _image.width(), _image.height(), _view_basis);
+    _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), get_view());
 
     update();
   }

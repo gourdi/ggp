@@ -23,6 +23,8 @@ private:
   void zoom(float zoomFactor);
   void zoom(float zoomFactor, const ggo::pos2f & center);
 
+  ggo::image_view get_view() const;
+
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
   void mousePressEvent(QMouseEvent *eventPress) override;
