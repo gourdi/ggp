@@ -13,9 +13,12 @@ public:
 
   MainWindow();
 
+  void loadFile(const std::string & filename);
+
+
 private slots:
 
-  void loadFile();
+  void load();
   void zoomIn();
   void zoomOut();
   void zoomFit();

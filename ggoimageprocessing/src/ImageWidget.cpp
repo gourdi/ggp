@@ -16,9 +16,9 @@ QWidget(parent)
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::loadImage(const QString & filename)
+void ImageWidget::loadImage(const std::string & filename)
 {
-  _image_processor.reset(new ggo::image_processor(filename.toUtf8()));
+  _image_processor.reset(new ggo::image_processor(filename.c_str()));
 
   _view_basis = ggo::compute_fit_view_basis(_image_processor->width(), _image_processor->height(), _image.width(), _image.height());
 
@@ -38,20 +38,25 @@ ggo::image_view ImageWidget::get_view() const
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::zoom(float zoomFactor)
 {
-  // Get the  position of the center of the view in the original image.
-  ggo::pos2f center = _view_basis.pos() + (0.5f * _image.width() - 0.5f) * _view_basis.x() + (0.5f * _image.height() - 0.5f) * _view_basis.y();
-
-  zoom(zoomFactor, center);
+  // The center of the image remains fixed.
+  zoom(zoomFactor, { _image.width() / 2, _image.height() / 2 });
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::zoom(float zoomFactor, const ggo::pos2f & center)
+void ImageWidget::zoom(float zoomFactor, const ggo::pos2i & fixed_view_point)
 {
+  // The fixed point in image coordinates.
+  ggo::pos2f image_fixed_point = _view_basis.pos() + 
+    static_cast<float>(fixed_view_point.x()) * _view_basis.x() +
+    static_cast<float>(fixed_view_point.y()) * _view_basis.y();
+
   _view_basis.x() *= zoomFactor;
   _view_basis.y() *= zoomFactor;
 
-  // Make it so that that the current view still have the same center than before zooming.
-  _view_basis.pos() = center - (0.5f * _image.width() - 0.5f) * _view_basis.x() - (0.5f * _image.height() - 0.5f) * _view_basis.y();
+  // Make it so that that the current view still have the same fixed than before zooming.
+  _view_basis.pos() = image_fixed_point -
+    static_cast<float>(fixed_view_point.x()) * _view_basis.x() -
+    static_cast<float>(fixed_view_point.y()) * _view_basis.y();
 
   _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), get_view());
 
@@ -61,13 +66,13 @@ void ImageWidget::zoom(float zoomFactor, const ggo::pos2f & center)
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::zoomIn()
 {
-  zoom(0.5f);
+  zoom(0.75f);
 }
 
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::zoomOut()
 {
-  zoom(2.f);
+  zoom(1.5f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -146,18 +151,16 @@ void ImageWidget::mouseMoveEvent(QMouseEvent * eventMove)
 void ImageWidget::wheelEvent(QWheelEvent *event)
 {
   // Get the  position of the center of the view in the original image.
-  float x = event->pos().x();
-  float y = _image.height() - event->pos().y() - 1.f;
-  ggo::pos2f center = _view_basis.pos() + x * _view_basis.x() + y * _view_basis.y();
+  ggo::pos2i view_fixed_point(event->pos().x(), _image.height() - event->pos().y() - 1);
 
   if (event->angleDelta().ry() > 0)
   {
-    zoom(0.5f, center);
+    zoom(0.75f, view_fixed_point);
   }
 
   if (event->angleDelta().ry() < 0)
   {
-    zoom(2.0f, center);
+    zoom(1.5f, view_fixed_point);
   }
 }
 

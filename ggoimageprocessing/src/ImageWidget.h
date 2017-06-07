@@ -13,7 +13,7 @@ public:
 
   ImageWidget(QWidget * parent);
 
-  void loadImage(const QString & filename);
+  void loadImage(const std::string & filename);
   void zoomIn();
   void zoomOut();
   void zoomFit();
@@ -21,7 +21,7 @@ public:
 private:
 
   void zoom(float zoomFactor);
-  void zoom(float zoomFactor, const ggo::pos2f & center);
+  void zoom(float zoomFactor, const ggo::pos2i & fixed_view_point);
 
   ggo::image_view get_view() const;
 

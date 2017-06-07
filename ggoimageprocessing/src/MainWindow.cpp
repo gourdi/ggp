@@ -17,7 +17,7 @@ _imageWidget(new ImageWidget(this))
   resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 
   QMenu * fileMenu = menuBar()->addMenu(tr("&File"));
-  QAction * loadFileAction = fileMenu->addAction(tr("&Open..."), this, &MainWindow::loadFile);
+  QAction * loadFileAction = fileMenu->addAction(tr("&Open..."), this, &MainWindow::load);
   loadFileAction->setShortcut(QKeySequence::Open);
 
   QMenu * zoomMenu = menuBar()->addMenu(tr("&Zoom"));
@@ -27,7 +27,19 @@ _imageWidget(new ImageWidget(this))
 }
 
 /////////////////////////////////////////////////////////////////////
-void MainWindow::loadFile()
+void MainWindow::loadFile(const std::string & filename)
+{
+  if (filename.empty() == false)
+  {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents(); // Otherwise the cursor does not change.
+    _imageWidget->loadImage(filename);
+    QApplication::restoreOverrideCursor();
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+void MainWindow::load()
 {
   QString fileName = QFileDialog::getOpenFileName(this,
     tr("Load Image"), "",
@@ -37,7 +49,7 @@ void MainWindow::loadFile()
   {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QApplication::processEvents(); // Otherwise the cursor does not change.
-    _imageWidget->loadImage(fileName);
+    _imageWidget->loadImage(fileName.toUtf8().data());
     QApplication::restoreOverrideCursor();
   }
 }
