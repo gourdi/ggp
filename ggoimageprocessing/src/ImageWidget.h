@@ -20,10 +20,10 @@ public:
   void zoomOut();
   void zoomFit();
 
-private:
-
   void zoom(float zoomFactor);
   void zoom(float zoomFactor, const ggo::pos2i & fixed_view_point);
+
+private:
 
   ggo::image_view get_view() const;
 

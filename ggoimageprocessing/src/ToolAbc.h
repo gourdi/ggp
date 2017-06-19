@@ -17,6 +17,8 @@ public:
   void mouseMoveEvent(QMouseEvent *event);
   void wheelEvent(QWheelEvent *event);
 
+  ImageWidget & GetImageWidget() { return _imageWidget; }
+
 private:
 
   virtual void doMousePressEvent(const ggo::pos2i & mousePos) = 0;

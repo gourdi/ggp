@@ -5,9 +5,11 @@
 
 class NavigationTool : public ToolAbc
 {
-private:
+public:
 
   NavigationTool(ImageWidget & imageWidget);
+
+private:
 
   void doMousePressEvent(const ggo::pos2i & mousePos) override;
   void doMouseReleaseEvent(const ggo::pos2i & mousePos) override;

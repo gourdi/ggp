@@ -3,7 +3,7 @@
 #include <QPaintEvent>
 
 #include "ImageWidget.h"
-#include "ToolAbc.h"
+#include "NavigationTool.h"
 
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
@@ -19,6 +19,8 @@ QWidget(parent)
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::loadImage(const std::string & filename)
 {
+  _tool.reset(new NavigationTool(*this));
+
   _image_processor.reset(new ggo::image_processor(filename.c_str()));
 
   _view_basis = ggo::compute_fit_view_basis(_image_processor->width(), _image_processor->height(), _image.width(), _image.height());
@@ -170,20 +172,6 @@ void ImageWidget::wheelEvent(QWheelEvent *event)
   if (_tool)
   {
     _tool->wheelEvent(event);
-  }
-
-
-  // Get the  position of the center of the view in the original image.
-  ggo::pos2i view_fixed_point(event->pos().x(), _image.height() - event->pos().y() - 1);
-
-  if (event->angleDelta().ry() > 0)
-  {
-    zoom(0.75f, view_fixed_point);
-  }
-
-  if (event->angleDelta().ry() < 0)
-  {
-    zoom(1.5f, view_fixed_point);
   }
 }
 
