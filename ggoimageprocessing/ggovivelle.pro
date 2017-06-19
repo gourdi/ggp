@@ -38,7 +38,11 @@ INCLUDEPATH = ../ggokernel/src \
               ../ggoimageprocessing/src
 
 HEADERS = src/MainWindow.h \
-          src/ImageWidget.h
+          src/ImageWidget.h \
+          src/ToolAbc.h \
+          src/NavigationTool.h
 SOURCES = src/main.cpp \
           src/MainWindow.cpp \
-          src/ImageWidget.cpp 
+          src/ImageWidget.cpp \
+          src/ToolAbc.cpp \
+          src/NavigationTool.cpp

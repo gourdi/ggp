@@ -3,6 +3,7 @@
 #include <QPaintEvent>
 
 #include "ImageWidget.h"
+#include "ToolAbc.h"
 
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
@@ -119,26 +120,42 @@ void ImageWidget::resizeEvent(QResizeEvent *event)
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::mousePressEvent(QMouseEvent * eventPress)
+void ImageWidget::mousePressEvent(QMouseEvent * event)
 {
+  if (_tool)
+  {
+    _tool->mousePressEvent(event);
+  }
+
   _is_mouse_down = true;
-  _mouse_down_pos = ggo::pos2i(eventPress->pos().x(), height() - eventPress->pos().y() - 1);
+  _mouse_down_pos = ggo::pos2i(event->pos().x(), height() - event->pos().y() - 1);
   _mouse_down_view_basis = _view_basis;
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::mouseReleaseEvent(QMouseEvent *releaseEvent)
+void ImageWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+  if (_tool)
+  {
+    _tool->mousePressEvent(event);
+  }
+
   _is_mouse_down = false;
 }
 
 /////////////////////////////////////////////////////////////////////
-void ImageWidget::mouseMoveEvent(QMouseEvent * eventMove)
+void ImageWidget::mouseMoveEvent(QMouseEvent * event)
 {
+  if (_tool)
+  {
+    _tool->mouseMoveEvent(event);
+  }
+
+
   if (_is_mouse_down == true)
   {
-    float dx = static_cast<float>(eventMove->pos().x() - _mouse_down_pos.x());
-    float dy = static_cast<float>(eventMove->pos().y() - (height() - _mouse_down_pos.y() - 1));
+    float dx = static_cast<float>(event->pos().x() - _mouse_down_pos.x());
+    float dy = static_cast<float>(event->pos().y() - (height() - _mouse_down_pos.y() - 1));
     _view_basis.pos() = _mouse_down_view_basis.pos() - dx * _view_basis.x() + dy * _view_basis.y();
 
     _view_basis = ggo::clamp_basis_view(_image_processor->width(), _image_processor->height(), get_view());
@@ -150,6 +167,12 @@ void ImageWidget::mouseMoveEvent(QMouseEvent * eventMove)
 /////////////////////////////////////////////////////////////////////
 void ImageWidget::wheelEvent(QWheelEvent *event)
 {
+  if (_tool)
+  {
+    _tool->wheelEvent(event);
+  }
+
+
   // Get the  position of the center of the view in the original image.
   ggo::pos2i view_fixed_point(event->pos().x(), _image.height() - event->pos().y() - 1);
 

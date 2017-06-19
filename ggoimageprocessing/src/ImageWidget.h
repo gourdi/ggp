@@ -5,6 +5,8 @@
 #include <memory>
 #include <ggo_image_processing.h>
 
+class ToolAbc;
+
 class ImageWidget : public QWidget
 {
   Q_OBJECT
@@ -27,9 +29,9 @@ private:
 
   void paintEvent(QPaintEvent *event) override;
   void resizeEvent(QResizeEvent *event) override;
-  void mousePressEvent(QMouseEvent *eventPress) override;
-  void mouseReleaseEvent(QMouseEvent *releaseEvent) override;
-  void mouseMoveEvent(QMouseEvent *eventMove) override;
+  void mousePressEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseMoveEvent(QMouseEvent *event) override;
   void wheelEvent(QWheelEvent *event) override;
 
 private:
@@ -37,6 +39,7 @@ private:
   QImage _image;
   std::unique_ptr<ggo::image_processor> _image_processor;
   ggo::basis2d<float> _view_basis;
+  std::unique_ptr<ToolAbc> _tool;
 
   bool _is_mouse_down = false;
   ggo::pos2i _mouse_down_pos;
