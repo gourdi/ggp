@@ -39,6 +39,66 @@ GGO_TEST(shapes2d, basis2d)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(shapes2d, orthogonal_basis2d)
+{
+  // Rotation.
+  {
+    ggo::orthogonal_basis2d<float> basis({ 2.f, 0.f }, { 2.f, 0.f });
+    basis.rotate({ 1.f, 0.f }, ggo::pi<float>() / 2.f);
+
+    GGO_CHECK_FABS(basis.pos().x(), 1.f);
+    GGO_CHECK_FABS(basis.pos().y(), 1.f);
+    GGO_CHECK_FABS(basis.x().x(), 0.f);
+    GGO_CHECK_FABS(basis.x().y(), 2.f);
+    GGO_CHECK_FABS(basis.y().x(), -2.f);
+    GGO_CHECK_FABS(basis.y().y(), 0.f);
+  }
+
+  // From local to world.
+  {
+    ggo::orthogonal_basis2d<float> basis({ 2.f, 1.f }, { 3.f, 1.f });
+
+    ggo::pos2f p1 = basis.point_from_local_to_world({ 1.f, 2.f });
+    GGO_CHECK_FABS(p1.x(), 3.f);
+    GGO_CHECK_FABS(p1.y(), 8.f);
+
+    ggo::pos2f p2 = basis.point_from_world_to_local({ 7.f, 6.f });
+    GGO_CHECK_FABS(p2.x(), 2.f);
+    GGO_CHECK_FABS(p2.y(), 1.f);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(shapes2d, orthonormal_basis2d)
+{
+  // Rotation.
+  {
+    ggo::orthonormal_basis2d<float> basis({ 2.f, 0.f }, { 2.f, 0.f });
+    basis.rotate({ 1.f, 0.f }, ggo::pi<float>() / 2.f);
+
+    GGO_CHECK_FABS(basis.pos().x(), 1.f);
+    GGO_CHECK_FABS(basis.pos().y(), 1.f);
+    GGO_CHECK_FABS(basis.x().x(), 0.f);
+    GGO_CHECK_FABS(basis.x().y(), 1.f);
+    GGO_CHECK_FABS(basis.y().x(), -1.f);
+    GGO_CHECK_FABS(basis.y().y(), 0.f);
+  }
+
+  // From local to world.
+  {
+    ggo::orthonormal_basis2d<float> basis({ 2.f, 1.f }, { 0.f, 1.f });
+
+    ggo::pos2f p1 = basis.point_from_local_to_world({ 3.f, 1.f });
+    GGO_CHECK_FABS(p1.x(), 1.f);
+    GGO_CHECK_FABS(p1.y(), 4.f);
+
+    ggo::pos2f p2 = basis.point_from_world_to_local({ 1.f, 4.f });
+    GGO_CHECK_FABS(p2.x(), 3.0f);
+    GGO_CHECK_FABS(p2.y(), 1.0f);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(shapes2d, segment)
 {
   ggo::segment_float segment(1, 1, 5, 3);
