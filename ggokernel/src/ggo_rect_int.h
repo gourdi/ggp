@@ -45,6 +45,9 @@ namespace ggo
     bool is_inside(const ggo::pos2i & p) const;
 
     void vertical_flip(int height);
+
+    bool operator==(const ggo::rect_int & r) const { return _left == r._left && _bottom == r._bottom && _right == r._right && _top == r._top; }
+    bool operator!=(const ggo::rect_int & r) const { return !this->operator==(r); }
     
   public:
     
@@ -66,6 +69,12 @@ namespace ggo
 {
   template <typename process_block_func>
   void process_blocks(const ggo::rect_int & rect, int block_width, int block_height, process_block_func process_block);
+
+  inline std::ostream & operator<<(std::ostream & os, const ggo::rect_int & r)
+  {
+    os << "left: " << r.left() << ", right: " << r.right() << ", bottom: " << r.bottom() << ", top: " << r.top();
+    return os;
+  }
 }
 
 //////////////////////////////////////////////////////////////
