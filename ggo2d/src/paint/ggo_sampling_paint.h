@@ -24,7 +24,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
-      func(real_t(x), real_t(y));
+      func(real_t(x) + real_t(0.5), real_t(y) + real_t(0.5));
     }
 
     static const int samples_count = 1;
@@ -41,10 +41,10 @@ namespace ggo
       const real_t y_f(static_cast<real_t>(y));
 
       func(x_f + real_t(0.25), y_f + real_t(0.25));
-      func(x_f + real_t(0.25), y_f - real_t(0.25));
+      func(x_f + real_t(0.25), y_f + real_t(0.75));
 
-      func(x_f - real_t(0.25), y_f + real_t(0.25));
-      func(x_f - real_t(0.25), y_f - real_t(0.25));
+      func(x_f + real_t(0.75), y_f + real_t(0.25));
+      func(x_f + real_t(0.75), y_f + real_t(0.75));
     }
 
     static const int samples_count = 4;
@@ -60,25 +60,25 @@ namespace ggo
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
-      func(x_f - real_t(0.375), y_f - real_t(0.375));
-      func(x_f - real_t(0.375), y_f - real_t(0.125));
-      func(x_f - real_t(0.375), y_f + real_t(0.125));
-      func(x_f - real_t(0.375), y_f + real_t(0.375));
-
-      func(x_f - real_t(0.125), y_f - real_t(0.375));
-      func(x_f - real_t(0.125), y_f - real_t(0.125));
-      func(x_f - real_t(0.125), y_f + real_t(0.125));
-      func(x_f - real_t(0.125), y_f + real_t(0.375));
-
-      func(x_f + real_t(0.125), y_f - real_t(0.375));
-      func(x_f + real_t(0.125), y_f - real_t(0.125));
       func(x_f + real_t(0.125), y_f + real_t(0.125));
       func(x_f + real_t(0.125), y_f + real_t(0.375));
+      func(x_f + real_t(0.125), y_f + real_t(0.625));
+      func(x_f + real_t(0.125), y_f + real_t(0.875));
 
-      func(x_f + real_t(0.375), y_f - real_t(0.375));
-      func(x_f + real_t(0.375), y_f - real_t(0.125));
       func(x_f + real_t(0.375), y_f + real_t(0.125));
       func(x_f + real_t(0.375), y_f + real_t(0.375));
+      func(x_f + real_t(0.375), y_f + real_t(0.625));
+      func(x_f + real_t(0.375), y_f + real_t(0.875));
+
+      func(x_f + real_t(0.625), y_f + real_t(0.125));
+      func(x_f + real_t(0.625), y_f + real_t(0.375));
+      func(x_f + real_t(0.625), y_f + real_t(0.625));
+      func(x_f + real_t(0.625), y_f + real_t(0.875));
+
+      func(x_f + real_t(0.875), y_f + real_t(0.125));
+      func(x_f + real_t(0.875), y_f + real_t(0.375));
+      func(x_f + real_t(0.875), y_f + real_t(0.625));
+      func(x_f + real_t(0.875), y_f + real_t(0.875));
     }
 
     static const int samples_count = 16;
@@ -94,9 +94,9 @@ namespace ggo
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
-      for (int offset_y = -7; offset_y <= 7; offset_y += 2)
+      for (int offset_y = 1; offset_y <= 15; offset_y += 2)
       {
-        for (int offset_x = -7; offset_x <= 7; offset_x += 2)
+        for (int offset_x = 1; offset_x <= 15; offset_x += 2)
         {
           func(x_f + offset_x / real_t(16), y_f + offset_y / real_t(16));
         }
@@ -116,9 +116,9 @@ namespace ggo
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
-      for (int offset_y = -15; offset_y <= 15; offset_y += 2)
+      for (int offset_y = 1; offset_y <= 31; offset_y += 2)
       {
-        for (int offset_x = -15; offset_x <= 15; offset_x += 2)
+        for (int offset_x = 1; offset_x <= 31; offset_x += 2)
         {
           func(x_f + offset_x / real_t(32), y_f + offset_y / real_t(32));
         }
