@@ -74,10 +74,10 @@ namespace ggo
     }
 
     // Circle in rectangle?
-    if (_center.x() - left   > _radius &&
-        _center.y() - bottom > _radius &&
-        right - _center.x()  > _radius &&
-        top - _center.y()    > _radius)
+    if (_center.x() - left   >= _radius &&
+        _center.y() - bottom >= _radius &&
+        right - _center.x()  >= _radius &&
+        top - _center.y()    >= _radius)
     {
       return rect_intersection::shape_in_rect;
     }

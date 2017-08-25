@@ -187,6 +187,35 @@ GGO_TEST(paint, shape_y_8u_yu_sampling4x4)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, shape_y_8u_yu_sampling16x16)
+{
+  std::vector<uint8_t> buffer(6 * 6, 0);
+
+  auto brush = [](int x, int y) { return 0xff; };
+  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_16x16>(buffer.data(), 6, 6, 6, ggo::disc_float(3.f, 3.f, 2.5f), brush, blend);
+
+  const std::vector<uint8_t> expected{
+    0x00, 0x13, 0x6f, 0x6f, 0x13, 0x00,
+    0x13, 0xe3, 0xff, 0xff, 0xe3, 0x13,
+    0x6f, 0xff, 0xff, 0xff, 0xff, 0x6f,
+    0x6f, 0xff, 0xff, 0xff, 0xff, 0x6f,
+    0x13, 0xe3, 0xff, 0xff, 0xe3, 0x13,
+    0x00, 0x13, 0x6f, 0x6f, 0x13, 0x00 };
+
+  GGO_CHECK(buffer == expected);
+
+#ifdef GGO_BENCH
+  ggo::chronometer chronometer;
+  for (int i = 0; i < 1000000; ++i)
+  {
+    ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float(2.f, 3.f, 3.f), brush, blend);
+  }
+  std::cout << chronometer.get_display_time(true) << std::endl;
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
 {
   const int width = 80;
