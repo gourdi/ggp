@@ -115,9 +115,6 @@
     <ClCompile Include="test\ggo_memory_layouts_nonreg.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="test\memory\ggo_memory_nonreg.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
   </ItemGroup>
   <ItemGroup>

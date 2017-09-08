@@ -337,9 +337,6 @@
     <ClInclude Include="src\memory\ggo_buffer.h">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="src\memory\ggo_buffer_access.h">
-      <Filter>memory</Filter>
-    </ClInclude>
     <ClInclude Include="src\memory\ggo_buffer_iterator.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -354,6 +351,9 @@
     </ClInclude>
     <ClInclude Include="src\math\ggo_coordinates_conversions.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\memory\ggo_edges_management.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

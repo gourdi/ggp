@@ -1,7 +1,7 @@
 #ifndef __GGO_INTERPOLATION_2D__
 #define __GGO_INTERPOLATION_2D__
 
-#include <ggo_buffer_access.h>
+#include <ggo_edges_management.h>
 #include <ggo_interpolation1d.h>
 #include <ggo_memory_layouts.h>
 
@@ -24,7 +24,7 @@ namespace ggo
   template <typename data_t, typename interpolation_t, ggo::direction lines_memory_order>
   inline data_t bilinear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_typed_memory_access<lines_memory_order>>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_memory_layout<lines_memory_order>>(input, x, y, width, height, line_byte_step); };
 
     return bilinear_interpolation2d<data_t>(in, x, y);
   }
@@ -33,9 +33,9 @@ namespace ggo
   template <ggo::direction lines_memory_order>
   inline uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<ggo::lines_typed_memory_access<lines_memory_order>>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step)); };
 
-    return ggo::to<uint8_t>(bilinear_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(bilinear_interpolation2d<float>(in, x, y));
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -51,9 +51,9 @@ namespace ggo
   template <ggo::direction lines_memory_order>
   inline uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<ggo::lines_typed_memory_access<lines_memory_order>>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step)); };
 
-    return ggo::to<uint8_t>(bicubic_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(bicubic_interpolation2d<float>(in, x, y));
   }
 }
 

@@ -34,7 +34,8 @@ GGO_TEST(interpolation2d, bilinear)
   // Check linear interpolation (ie. on integer x or y coordinate).
   auto float_interpolation = [](const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<ggo::lines_typed_memory_access<ggo::direction::up>>(input, x, y, width, height, width)); };
+    auto get2d = [&](int x, int y) { return static_cast<float>(input[y * width + x]); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror(get2d, x, y, width, height); };
 
     return ggo::bilinear_interpolation2d<float>(in, x, y);
   };
@@ -66,7 +67,8 @@ GGO_TEST(interpolation2d, bicubic)
   // Check mirroring.
   auto float_interpolation = [](const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_mirror<ggo::lines_typed_memory_access<ggo::direction::up>>(input, x, y, width, height, width)); };
+    auto get2d = [&](int x, int y) { return static_cast<float>(input[y * width + x]); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror(get2d, x, y, width, height); };
 
     return ggo::bicubic_interpolation2d<float>(in, x, y);
   };

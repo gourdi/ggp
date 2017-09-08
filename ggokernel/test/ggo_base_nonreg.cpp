@@ -78,145 +78,48 @@ GGO_TEST(base, mirror_index)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(base, type_casting)
+GGO_TEST(base, round_to)
 {
-  // From float.
-  GGO_CHECK_FABS(ggo::to<float>(1.1f), 1.1f);
-  GGO_CHECK_FABS(ggo::to<double>(1.1f), 1.1);
-  
-  GGO_CHECK(ggo::to<int8_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<int8_t>(-312.f) == -128);
-  GGO_CHECK(ggo::to<int8_t>(312.f) == 127);
-  
-  GGO_CHECK(ggo::to<uint8_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<uint8_t>(-1.9f) == 0);
-  GGO_CHECK(ggo::to<uint8_t>(312.f) == 255);
+  static_assert(ggo::round_to<int8_t>(1.1f) == 1);
+  static_assert(ggo::round_to<int8_t>(1.4f) == 1);
+  static_assert(ggo::round_to<int8_t>(1.6f) == 2);
+  static_assert(ggo::round_to<int8_t>(1.9f) == 2);
+  static_assert(ggo::round_to<int8_t>(2.1f) == 2);
+  static_assert(ggo::round_to<int8_t>(-1.1f) == -1);
+  static_assert(ggo::round_to<int8_t>(-1.4f) == -1);
+  static_assert(ggo::round_to<int8_t>(-1.6f) == -2);
+  static_assert(ggo::round_to<int8_t>(-1.9f) == -2);
+  static_assert(ggo::round_to<int8_t>(-2.1f) == -2);
 
-  GGO_CHECK(ggo::to<int16_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<int16_t>(-80000.f) == -32768);
-  GGO_CHECK(ggo::to<int16_t>(80000.f) == 32767);
-  
-  GGO_CHECK(ggo::to<uint16_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<uint16_t>(-80000.f) == 0);
-  GGO_CHECK(ggo::to<uint16_t>(80000.f) == 65535);
-  
-  GGO_CHECK(ggo::to<int32_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<int32_t>(-80000.f) == -80000);
-  GGO_CHECK(ggo::to<int32_t>(80000.f) == 80000);
-  
-  GGO_CHECK(ggo::to<uint32_t>(1.9f) == 2);
-  GGO_CHECK(ggo::to<uint32_t>(-80000.f) == 0);
-  GGO_CHECK(ggo::to<uint32_t>(80000.f) == 80000);
-  
-  GGO_CHECK(ggo::to<int>(-0.9f) == -1);
-  GGO_CHECK(ggo::to<int>(-2.1f) == -2);
-  GGO_CHECK(ggo::to<int>(0.9f) == 1);
-  GGO_CHECK(ggo::to<int>(2.1f) == 2);
-  
-  // From double.
-  GGO_CHECK_FABS(ggo::to<float>(1.1), 1.1f);
-  GGO_CHECK_FABS(ggo::to<double>(1.1), 1.1);
-  
-  GGO_CHECK(ggo::to<int8_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<int8_t>(-312.) == -128);
-  GGO_CHECK(ggo::to<int8_t>(312.) == 127);
-  
-  GGO_CHECK(ggo::to<uint8_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<uint8_t>(-1.9) == 0);
-  GGO_CHECK(ggo::to<uint8_t>(312.) == 255);
-  
-  GGO_CHECK(ggo::to<int16_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<int16_t>(-80000.) == -32768);
-  GGO_CHECK(ggo::to<int16_t>(80000.) == 32767);
-  
-  GGO_CHECK(ggo::to<uint16_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<uint16_t>(-80000.) == 0);
-  GGO_CHECK(ggo::to<uint16_t>(80000.) == 65535);
+  static_assert(ggo::round_to<int32_t>(1.1) == 1);
+  static_assert(ggo::round_to<int32_t>(1.4) == 1);
+  static_assert(ggo::round_to<int32_t>(1.6) == 2);
+  static_assert(ggo::round_to<int32_t>(1.9) == 2);
+  static_assert(ggo::round_to<int32_t>(2.1) == 2);
+  static_assert(ggo::round_to<int32_t>(-1.1) == -1);
+  static_assert(ggo::round_to<int32_t>(-1.4) == -1);
+  static_assert(ggo::round_to<int32_t>(-1.6) == -2);
+  static_assert(ggo::round_to<int32_t>(-1.9) == -2);
+  static_assert(ggo::round_to<int32_t>(-2.1) == -2);
+}
 
-  GGO_CHECK(ggo::to<int32_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<int32_t>(-80000.) == -80000);
-  GGO_CHECK(ggo::to<int32_t>(80000.) == 80000);
-  
-  GGO_CHECK(ggo::to<uint32_t>(1.9) == 2);
-  GGO_CHECK(ggo::to<uint32_t>(-80000.) == 0);
-  GGO_CHECK(ggo::to<uint32_t>(80000.) == 80000);
-  
-  GGO_CHECK(ggo::to<int>(-0.9) == -1);
-  GGO_CHECK(ggo::to<int>(-2.1) == -2);
-  GGO_CHECK(ggo::to<int>(0.9) == 1);
-  GGO_CHECK(ggo::to<int>(2.1) == 2);
-  
-  // From int8_t
-  GGO_CHECK(ggo::to<uint8_t>(int8_t(-15)) == 0);
-  GGO_CHECK(ggo::to<uint8_t>(int8_t(15)) == 15);
-  GGO_CHECK(ggo::to<uint16_t>(int8_t(-15)) == 0);
-  GGO_CHECK(ggo::to<uint16_t>(int8_t(15)) == 15);
-  GGO_CHECK(ggo::to<uint32_t>(int8_t(-15)) == 0);
-  GGO_CHECK(ggo::to<uint32_t>(int8_t(15)) == 15);
-  
-  GGO_CHECK(ggo::to<int8_t>(int8_t(-15)) == -15);
-  GGO_CHECK(ggo::to<int8_t>(int8_t(15)) == 15);
-  GGO_CHECK(ggo::to<int16_t>(int8_t(-15)) == -15);
-  GGO_CHECK(ggo::to<int16_t>(int8_t(15)) == 15);
-  GGO_CHECK(ggo::to<int32_t>(int8_t(-15)) == -15);
-  GGO_CHECK(ggo::to<int32_t>(int8_t(15)) == 15);
-
-  // From int16_t
-  GGO_CHECK(ggo::to<uint8_t>(int16_t(-15000)) == 0);
-  GGO_CHECK(ggo::to<uint8_t>(int16_t(15000)) == 255);
-  GGO_CHECK(ggo::to<uint16_t>(int16_t(-15000)) == 0);
-  GGO_CHECK(ggo::to<uint16_t>(int16_t(15000)) == 15000);
-  GGO_CHECK(ggo::to<uint32_t>(int16_t(-15000)) == 0);
-  GGO_CHECK(ggo::to<uint32_t>(int16_t(15000)) == 15000);
-  
-  GGO_CHECK(ggo::to<int8_t>(int16_t(-15000)) == -128);
-  GGO_CHECK(ggo::to<int8_t>(int16_t(15000)) == 127);
-  GGO_CHECK(ggo::to<int16_t>(int16_t(-15000)) == -15000);
-  GGO_CHECK(ggo::to<int16_t>(int16_t(15000)) == 15000);
-  GGO_CHECK(ggo::to<int32_t>(int16_t(-15000)) == -15000);
-  GGO_CHECK(ggo::to<int32_t>(int16_t(15000)) == 15000);
-  
-  // From int32_t
-  GGO_CHECK(ggo::to<uint8_t>(int32_t(-150000)) == 0);
-  GGO_CHECK(ggo::to<uint8_t>(int32_t(150000)) == 255);
-  GGO_CHECK(ggo::to<uint16_t>(int32_t(-150000)) == 0);
-  GGO_CHECK(ggo::to<uint16_t>(int32_t(150000)) == 65535);
-  GGO_CHECK(ggo::to<uint32_t>(int32_t(-150000)) == 0);
-  GGO_CHECK(ggo::to<uint32_t>(int32_t(150000)) == 150000);
-  
-  GGO_CHECK(ggo::to<int8_t>(int32_t(-150000)) == -128);
-  GGO_CHECK(ggo::to<int8_t>(int32_t(150000)) == 127);
-  GGO_CHECK(ggo::to<int16_t>(int32_t(-150000)) == -32768);
-  GGO_CHECK(ggo::to<int16_t>(int32_t(150000)) == 32767);
-  GGO_CHECK(ggo::to<int32_t>(int32_t(-150000)) == -150000);
-  GGO_CHECK(ggo::to<int32_t>(int32_t(150000)) == 150000);
-  
-  // From uint8_t
-  GGO_CHECK(ggo::to<uint8_t>(uint8_t(255)) == 255);
-  GGO_CHECK(ggo::to<uint16_t>(uint8_t(255)) == 255);
-  GGO_CHECK(ggo::to<uint32_t>(uint8_t(255)) == 255);
-  
-  GGO_CHECK(ggo::to<int8_t>(uint8_t(255)) == 127);
-  GGO_CHECK(ggo::to<int16_t>(uint8_t(255)) == 255);
-  GGO_CHECK(ggo::to<int32_t>(uint8_t(255)) == 255);
-
-  // From uint16_t
-  GGO_CHECK(ggo::to<uint8_t>(uint16_t(65535)) == 255);
-  GGO_CHECK(ggo::to<uint16_t>(uint16_t(65535)) == 65535);
-  GGO_CHECK(ggo::to<uint32_t>(uint16_t(65535)) == 65535);
-  
-  GGO_CHECK(ggo::to<int8_t>(uint16_t(65535)) == 127);
-  GGO_CHECK(ggo::to<int16_t>(uint16_t(65535)) == 32767);
-  GGO_CHECK(ggo::to<int32_t>(uint16_t(65535)) == 65535);
-  
-  // From uint32_t
-  GGO_CHECK(ggo::to<uint8_t>(uint32_t(0xFFFFFFFF)) == 255);
-  GGO_CHECK(ggo::to<uint16_t>(uint32_t(0xFFFFFFFF)) == 65535);
-  GGO_CHECK(ggo::to<uint32_t>(uint32_t(0xFFFFFFFF)) == 0xFFFFFFFF);
-  
-  GGO_CHECK(ggo::to<int8_t>(uint32_t(0xFFFFFFFF)) == 127);
-  GGO_CHECK(ggo::to<int16_t>(uint32_t(0xFFFFFFFF)) == 32767);
-  GGO_CHECK(ggo::to<int32_t>(uint32_t(0xFFFFFFFF)) == std::numeric_limits<int32_t>::max());
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, clamp_and_round)
+{
+  static_assert(ggo::clamp_and_round_to<int8_t>(1.1f) == 1);
+  static_assert(ggo::clamp_and_round_to<int8_t>(1.4f) == 1);
+  static_assert(ggo::clamp_and_round_to<int8_t>(1.6f) == 2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(1.9f) == 2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(2.1f) == 2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(127.1f) == 127);
+  static_assert(ggo::clamp_and_round_to<int8_t>(127.2f) == 127);
+  static_assert(ggo::clamp_and_round_to<int8_t>(127.9f) == 127);
+  static_assert(ggo::clamp_and_round_to<int8_t>(128.1f) == 127);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-1.1f) == -1);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-1.4f) == -1);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-1.6f) == -2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-1.9f) == -2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-2.1f) == -2);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -264,6 +167,22 @@ GGO_TEST(base, fixed_point_div)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, round_div)
 {
+  static_assert(ggo::round_div(0, 5) == 0);
+  static_assert(ggo::round_div(1, 5) == 0);
+  static_assert(ggo::round_div(2, 5) == 0);
+  static_assert(ggo::round_div(3, 5) == 1);
+  static_assert(ggo::round_div(4, 5) == 1);
+  static_assert(ggo::round_div(5, 5) == 1);
+  static_assert(ggo::round_div(6, 5) == 1);
+  static_assert(ggo::round_div(7, 5) == 1);
+  static_assert(ggo::round_div(8, 5) == 2);
+  static_assert(ggo::round_div(9, 5) == 2);
+  static_assert(ggo::round_div(10, 5) == 2);
+  static_assert(ggo::round_div(11, 5) == 2);
+  static_assert(ggo::round_div(12, 5) == 2);
+  static_assert(ggo::round_div(13, 5) == 3);
+  static_assert(ggo::round_div(14, 5) == 3);
+
   static_assert(ggo::round_div(-9, 4) == -2);
   static_assert(ggo::round_div(-8, 4) == -2);
   static_assert(ggo::round_div(-7, 4) == -2);

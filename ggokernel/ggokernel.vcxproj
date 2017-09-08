@@ -89,6 +89,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>GGO_DEBUG;GGO_WIN;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -247,7 +248,7 @@
     <ClInclude Include="src\math\signal_proc\ggo_morphology.h" />
     <ClInclude Include="src\memory\ggo_array.h" />
     <ClInclude Include="src\memory\ggo_buffer.h" />
-    <ClInclude Include="src\memory\ggo_buffer_access.h" />
+    <ClInclude Include="src\memory\ggo_edges_management.h" />
     <ClInclude Include="src\memory\ggo_buffer_iterator.h" />
     <ClInclude Include="src\memory\ggo_circular_buffer.h" />
     <ClInclude Include="src\memory\ggo_data_access.h" />

@@ -83,7 +83,7 @@ namespace ggo
     real_t                      get_length() const
     {
       static_assert(std::is_floating_point<real_t>::value, "invalid type");
-      return std::sqrt(ggo::to<real_t>(get_hypot()));
+      return std::sqrt(static_cast<real_t>(get_hypot()));
     }
 
     void				                normalize();

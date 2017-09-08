@@ -482,6 +482,12 @@ GGO_TEST(shapes2d, disc)
   GGO_CHECK_RECT_INTERSECTION(disc, 10, 12, 21, 22, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(disc, -10, -6, 21, 22, ggo::rect_intersection::disjoints);
   GGO_CHECK_RECT_INTERSECTION(disc, -10, -8, -4, -2, ggo::rect_intersection::disjoints);
+
+  // Basis.
+  auto world_disc = ggo::from_local_to_world(ggo::disc<float>({ 2.f, 1.f }, 2.f), ggo::orthogonal_basis2d<float>({ 3.0f, 1.f }, { 2.0f, 0.f }));
+  GGO_CHECK_FABS(world_disc.center().x(), 7.f);
+  GGO_CHECK_FABS(world_disc.center().y(), 3.f);
+  GGO_CHECK_FABS(world_disc.radius(), 4.f);
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -13,19 +13,11 @@ GGO_TEST(memory_layouts, get_xy_ptr)
     50, 51, 52, 53
   };
 
-  auto * ptr1 = ggo::lines_typed_memory_access<ggo::direction::down>::get_xy_ptr(buffer, 2, 3, 5, 4 * sizeof(int));
-  GGO_CHECK_EQ(*ptr1, 22);
+  auto * ptr1 = ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::get_xy_ptr(buffer, 2, 3, 5, 4 * sizeof(int));
+  GGO_CHECK_EQ(ptr1, buffer + 6);
 
-  auto * ptr2 = ggo::lines_typed_memory_access<ggo::direction::up>::get_xy_ptr(buffer, 2, 3, 5, 4 * sizeof(int));
-  GGO_CHECK_EQ(*ptr2, 42);
-
-  void * raw_buffer = buffer;
-
-  auto * ptr3 = ggo::lines_raw_memory_access<ggo::direction::down, sizeof(int)>::get_xy_ptr(raw_buffer, 2, 3, 5, 4 * sizeof(int));
-  GGO_CHECK_EQ(ptr3, ptr1);
-
-  auto * ptr4 = ggo::lines_raw_memory_access<ggo::direction::up, sizeof(int)>::get_xy_ptr(raw_buffer, 2, 3, 5, 4 * sizeof(int));
-  GGO_CHECK_EQ(ptr4, ptr2);
+  auto * ptr2 = ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::get_xy_ptr(buffer, 2, 3, 5, 4 * sizeof(int));
+  GGO_CHECK_EQ(ptr2, buffer + 14);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -40,7 +32,7 @@ GGO_TEST(memory_layouts, clipping)
   ggo::raw_buffer2d buffer_data(4, 3, 4 * sizeof(int), buffer);
 
   {
-    auto clipped_buffer = ggo::lines_raw_memory_access<ggo::direction::down, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
     GGO_CHECK_EQ(clipped_buffer->_width, 3);
     GGO_CHECK_EQ(clipped_buffer->_height, 1);
     GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
@@ -51,7 +43,7 @@ GGO_TEST(memory_layouts, clipping)
   }
 
   {
-    auto clipped_buffer = ggo::lines_raw_memory_access<ggo::direction::up, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
     GGO_CHECK_EQ(clipped_buffer->_width, 3);
     GGO_CHECK_EQ(clipped_buffer->_height, 1);
     GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
@@ -64,7 +56,7 @@ GGO_TEST(memory_layouts, clipping)
   ggo::raw_const_buffer2d const_buffer_data(4, 3, 4 * sizeof(int), buffer);
 
   {
-    auto clipped_buffer = ggo::lines_raw_memory_access<ggo::direction::down, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
     GGO_CHECK_EQ(clipped_buffer->_width, 3);
     GGO_CHECK_EQ(clipped_buffer->_height, 1);
     GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
@@ -75,7 +67,7 @@ GGO_TEST(memory_layouts, clipping)
   }
 
   {
-    auto clipped_buffer = ggo::lines_raw_memory_access<ggo::direction::up, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
     GGO_CHECK_EQ(clipped_buffer->_width, 3);
     GGO_CHECK_EQ(clipped_buffer->_height, 1);
     GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
@@ -97,7 +89,7 @@ GGO_TEST(memory_layouts, vertical_iterator)
     14.f, 24.f, 34.f, 44.f, 54.f, 64.f };
 
   {
-    auto it_down = ggo::lines_typed_memory_access<ggo::direction::down>::make_vertical_iterator<ggo::base_data_accessor<float>>(buffer.data(), 0, 5, 6 * sizeof(float));
+    auto it_down = ggo::lines_memory_layout<ggo::direction::down, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 0, 5, 6 * sizeof(float));
     GGO_CHECK_FABS(it_down.read(), 14.f);
     GGO_CHECK_FABS(it_down.read(1), 13.f);
     GGO_CHECK_FABS(it_down.read(2), 12.f);
@@ -113,7 +105,7 @@ GGO_TEST(memory_layouts, vertical_iterator)
   }
 
   {
-    auto it_down = ggo::lines_typed_memory_access<ggo::direction::down>::make_vertical_iterator<ggo::base_data_accessor<float>>(buffer.data(), 2, 5, 6 * sizeof(float));
+    auto it_down = ggo::lines_memory_layout<ggo::direction::down, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 2, 5, 6 * sizeof(float));
     GGO_CHECK_FABS(it_down.read(), 34.f);
     GGO_CHECK_FABS(it_down.read(1), 33.f);
     GGO_CHECK_FABS(it_down.read(2), 32.f);
@@ -129,7 +121,7 @@ GGO_TEST(memory_layouts, vertical_iterator)
   }
 
   {
-    auto it_up = ggo::lines_typed_memory_access<ggo::direction::up>::make_vertical_iterator<ggo::base_data_accessor<float>>(buffer.data(), 5, 5, 6 * sizeof(float));
+    auto it_up = ggo::lines_memory_layout<ggo::direction::up, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 5, 5, 6 * sizeof(float));
     GGO_CHECK_FABS(it_up.read(), 60.f);
     GGO_CHECK_FABS(it_up.read(1), 61.f);
     GGO_CHECK_FABS(it_up.read(2), 62.f);

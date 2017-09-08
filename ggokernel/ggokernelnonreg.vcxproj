@@ -42,7 +42,6 @@
     <ClCompile Include="test\linear_algebra\ggo_matrix_nonreg.cpp" />
     <ClCompile Include="test\linear_algebra\ggo_sparse_matrix_nonreg.cpp" />
     <ClCompile Include="test\memory\ggo_array_nonreg.cpp" />
-    <ClCompile Include="test\memory\ggo_memory_nonreg.cpp" />
     <ClCompile Include="test\memory\ggo_buffer_iterator_nonreg.cpp" />
     <ClCompile Include="test\memory\ggo_circular_buffer_nonreg.cpp" />
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />

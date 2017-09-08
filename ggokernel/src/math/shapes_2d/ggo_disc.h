@@ -57,3 +57,9 @@ namespace ggo
   using disc_float  = disc<float>;
   using disc_double = disc<double>;
 }
+
+namespace ggo
+{
+  template <typename data_t, bool orthonormal, bool cross_product_up>
+  ggo::disc<data_t> from_local_to_world(const ggo::disc<data_t> & d, const orthogonal_basis2d<data_t, orthonormal, cross_product_up> & basis);
+}

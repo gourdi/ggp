@@ -1,61 +1,87 @@
 #ifndef __GGO_DATA_ACCESS__
 #define __GGO_DATA_ACCESS__
 
+/////////////////////////////////////////////////////////////////////
+// Basic data access
 namespace ggo
 {
   template <typename data_t>
-  struct base_data_accessor
+  struct base_data_reader
   {
-    using type = data_t;
+    static constexpr int item_byte_step = sizeof(data_t);
+    using output_t = data_t;
 
     // Raw buffer interface.
     static data_t read(const void * ptr) {
       return *static_cast<const data_t *>(ptr);
     }
 
+    // Typed buffer interface.
+    static data_t read(const data_t * ptr) {
+      return *ptr;
+    }
+  };
+
+  template <typename data_t>
+  struct base_data_writer
+  {
+    static constexpr int item_byte_step = sizeof(data_t);
+    using input_t = data_t;
+
+    // Raw buffer interface.
     static void write(void * ptr, const data_t & v) {
       *static_cast<data_t *>(ptr) = v;
     }
 
     // Typed buffer interface.
-    static data_t read(const data_t * ptr) {
-      return *ptr;
-    }
-
     static void write(data_t * ptr, const data_t & v) {
       *ptr = v;
     }
   };
+}
 
-  template <typename internal_data_t, typename external_data_t>
-  struct cast_data_accessor
+/////////////////////////////////////////////////////////////////////
+// Cast data access
+namespace ggo
+{
+  template <typename internal_data_t, typename external_data_t, cast_mode cast>
+  struct cast_data_reader
   {
-    using type = external_data_t;
+    static constexpr int item_byte_step = sizeof(internal_data_t);
+    using output_t = external_data_t;
 
     static external_data_t read(const void * ptr) {
       const internal_data_t * ptr_internal = static_cast<const internal_data_t *>(ptr);
-      return ggo::to<external_data_t>(*ptr_internal);
-    }
-
-    static void write(void * ptr, const external_data_t & v) {
-      internal_data_t * ptr_internal = static_cast<internal_data_t *>(ptr);
-      *ptr_internal = ggo::to<internal_data_t>(v);
+      return cast_to<external_data_t, cast>(*ptr_internal);
     }
   };
 
+  template <typename internal_data_t, typename external_data_t, cast_mode cast>
+  struct cast_data_writer
+  {
+    static constexpr int item_byte_step = sizeof(internal_data_t);
+    using input_t = external_data_t;
+
+    static void write(void * ptr, const external_data_t & v) {
+      internal_data_t * ptr_internal = static_cast<internal_data_t *>(ptr);
+      *ptr_internal = cast_to<internal_data_t, cast>(v);
+    }
+  };
+}
+
+/////////////////////////////////////////////////////////////////////
+// Fixed-point data access
+namespace ggo
+{
   template <typename internal_data_t, typename external_data_t, int bit_shift>
-  struct fixed_point_data_accessor
+  struct fixed_point_data_writer
   {
     static_assert(std::is_unsigned<internal_data_t>::value, "expecting unsigned data type");
     static_assert(std::is_unsigned<external_data_t>::value, "expecting unsigned data type");
     static_assert(sizeof(internal_data_t) < sizeof(external_data_t), "wrong types' sizes");
 
-    using type = external_data_t;
-
-    static external_data_t read(const void * ptr) {
-      const internal_data_t * ptr_internal = static_cast<const internal_data_t *>(ptr);
-      return static_cast<external_data_t>(*ptr_internal);
-    }
+    static constexpr int item_byte_step = sizeof(internal_data_t);
+    using input_t = external_data_t;
 
     static void write(void * ptr, const external_data_t & v) {
       internal_data_t * ptr_internal = static_cast<internal_data_t *>(ptr);

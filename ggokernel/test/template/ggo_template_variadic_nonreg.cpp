@@ -28,18 +28,17 @@ GGO_TEST(template_variadic, min_max)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(template_variadic, sum)
 {
-  int s1 = ggo::sum(1, 2, 3);
-  GGO_CHECK_EQ(s1, 6);
+  constexpr int s1 = ggo::sum(1, 2, 3);
+  static_assert(s1 == 6);
 
   float s2 = ggo::sum(0.1f, 0.2f, 0.3f, 0.4f);
   GGO_CHECK_FABS(s2, 1.f);
 
-  uint8_t v1 = 0xFF;
-  uint8_t v2 = 0xFF;
-  uint8_t v3 = 0xFF;
-  uint8_t v4 = 0xFF;
-  int s3 = ggo::sum_to<int>(v1, v2, v3, v4);
-  GGO_CHECK_EQ(s3, 1020);
+  constexpr uint8_t v1 = 0xFF;
+  constexpr uint8_t v2 = 0xFF;
+  constexpr uint8_t v3 = 0xFF;
+  constexpr uint8_t v4 = 0xFF;
+  static_assert(ggo::sum_to<int>(v1, v2, v3, v4) == 1020);
 }
 
 /////////////////////////////////////////////////////////////////////

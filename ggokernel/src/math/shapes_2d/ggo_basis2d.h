@@ -55,6 +55,9 @@ namespace ggo
     void rotate(data_t angle);
     void rotate(const pos2<data_t> & center, data_t angle);
 
+    data_t from_local_to_world(data_t length) const;
+    data_t from_world_to_local(data_t length) const;
+
     ggo::vec2<data_t> vector_from_local_to_world(const ggo::vec2<data_t> & v) const;
     ggo::vec2<data_t> vector_from_world_to_local(const ggo::vec2<data_t> & v) const;
 

@@ -149,6 +149,20 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, bool orthonormal, bool cross_product_up>
+  data_t orthogonal_basis2d<data_t, orthonormal, cross_product_up>::from_local_to_world(data_t length) const
+  {
+    return orthonormal ? length : length * _x.get_length();
+  }
+  
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, bool orthonormal, bool cross_product_up>
+  data_t orthogonal_basis2d<data_t, orthonormal, cross_product_up>::from_world_to_local(data_t length) const
+  {
+    return orthonormal ? length : length / _x.get_length();
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, bool orthonormal, bool cross_product_up>
   ggo::vec2<data_t> orthogonal_basis2d<data_t, orthonormal, cross_product_up>::vector_from_local_to_world(const ggo::vec2<data_t> & v) const
   {
     return v.x() * _x + v.y() * y();

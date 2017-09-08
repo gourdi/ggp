@@ -158,9 +158,9 @@ namespace ggo
   template <typename data_t>
   constexpr data_t round_div(data_t value, data_t div)
   { 
-    static_assert(std::is_integral<data_t>::value, "expecting integral type");
+    static_assert(std::is_integral<data_t>::value );
 
-    if (std::is_unsigned<data_t>::value == true)
+    if constexpr(std::is_unsigned<data_t>::value == true)
     {
       return (value + div / 2) / div;
     }
@@ -175,99 +175,66 @@ namespace ggo
     }
   };
 
-  template <typename data_t>  data_t  clamp(data_t v, data_t inf, data_t sup) { return v > sup ? sup : (v < inf ? inf : v); };
-  template <typename data_t>  data_t  square(data_t value)							      { return value * value; };
-  template <typename data_t>  data_t  sign(data_t value)							        { return value > data_t(0) ? data_t(1) : data_t(-1); };
-  template <typename data_t>  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
-  constexpr inline					  int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
-  template <typename data_t>	bool	  is_even(data_t value)						        { return (value & 1) == 0; };
-  template <typename data_t>	bool	  is_odd(data_t value)						        { return (value & 1) == 1; };
-  inline					            int		  log2(int v)								              { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
+  template <typename data_t> constexpr  data_t  clamp(data_t v, data_t inf, data_t sup) { return v > sup ? sup : (v < inf ? inf : v); };
+  template <typename data_t> constexpr  data_t  square(data_t value) { return value * value; };
+  template <typename data_t> constexpr  data_t  sign(data_t value) { return value > data_t(0) ? data_t(1) : data_t(-1); };
+  template <typename data_t> constexpr  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
+  constexpr inline					            int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
+  template <typename data_t>constexpr   bool	  is_even(data_t value) { return (value & 1) == 0; };
+  template <typename data_t>constexpr   bool	  is_odd(data_t value)						        { return (value & 1) == 1; };
+  inline					                      int		  log2(int v)								              { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
 }
 
 //////////////////////////////////////////////////////////////
 // Type casting
 namespace ggo
 {
-  namespace hidden
+  enum class cast_mode
   {
-    template <typename out_t, typename in_t>
-    out_t clamp_and_round(in_t v)
+    regular,
+    round,
+    clamp_round
+  };
+
+  template <typename out_t, typename in_t>
+  constexpr out_t round_to(in_t v)
+  {
+    static_assert(std::is_floating_point<in_t>::value);
+    static_assert(std::is_integral<out_t>::value);
+
+    if constexpr(std::is_unsigned<out_t>::value)
     {
-      in_t clamped = clamp(v, static_cast<in_t>(std::numeric_limits<out_t>::min()), static_cast<in_t>(std::numeric_limits<out_t>::max()));
-      return static_cast<out_t>(clamped < 0 ? clamped - in_t(0.5) : clamped + in_t(0.5));
+      return static_cast<out_t>(v + in_t(0.5));
     }
-    
-    template <typename out_t, typename in_t>
-    out_t clamp_min_max(in_t v)
+    else
     {
-      in_t clamped = clamp(v, static_cast<in_t>(std::numeric_limits<out_t>::min()), static_cast<in_t>(std::numeric_limits<out_t>::max()));
-      return static_cast<out_t>(clamped);
-    }
-    
-    template <typename out_t, typename in_t>
-    out_t clamp_max(in_t v)
-    {
-      GGO_ASSERT(v >= 0);
-      in_t clamped = std::min(v, static_cast<in_t>(std::numeric_limits<out_t>::max()));
-      return static_cast<out_t>(clamped);
+      return v > 0 ? static_cast<out_t>(v + in_t(0.5)) : static_cast<out_t>(v - in_t(0.5));
     }
   }
 
-  template <typename out_t, typename in_t>  out_t to(in_t v) { return static_cast<out_t>(v); }
+  template <typename out_t, typename in_t>
+  constexpr out_t clamp_and_round_to(in_t v)
+  {
+    static_assert(std::is_floating_point<in_t>::value);
+    static_assert(std::is_integral<out_t>::value);
 
-  // From float
-  template <> inline int8_t    to(float v) { return hidden::clamp_and_round<int8_t, float>(v); }
-  template <> inline uint8_t   to(float v) { return hidden::clamp_and_round<uint8_t, float>(v); }
-  template <> inline int16_t   to(float v) { return hidden::clamp_and_round<int16_t, float>(v); }
-  template <> inline uint16_t  to(float v) { return hidden::clamp_and_round<uint16_t, float>(v); }
-  template <> inline int32_t   to(float v) { return hidden::clamp_and_round<int32_t, float>(v); }
-  template <> inline uint32_t  to(float v) { return hidden::clamp_and_round<uint32_t, float>(v); }
+    constexpr in_t inf = static_cast<in_t>(std::numeric_limits<out_t>::min());
+    constexpr in_t sup = static_cast<in_t>(std::numeric_limits<out_t>::max());
 
-  // From double
-  template <> inline int8_t    to(double v) { return hidden::clamp_and_round<int8_t, double>(v); }
-  template <> inline uint8_t   to(double v) { return hidden::clamp_and_round<uint8_t, double>(v); }
-  template <> inline int16_t   to(double v) { return hidden::clamp_and_round<int16_t, double>(v); }
-  template <> inline uint16_t  to(double v) { return hidden::clamp_and_round<uint16_t, double>(v); }
-  template <> inline int32_t   to(double v) { return hidden::clamp_and_round<int32_t, double>(v); }
-  template <> inline uint32_t  to(double v) { return hidden::clamp_and_round<uint32_t, double>(v); }
-  
-  // From int8_t
-  template <> inline uint8_t   to(int8_t v) { return v < 0 ? 0 : v; }
-  template <> inline uint16_t  to(int8_t v) { return v < 0 ? 0 : v; }
-  template <> inline uint32_t  to(int8_t v) { return v < 0 ? 0 : v; }
+    return round_to<out_t>(clamp(v, inf, sup));
+  }
 
-  // From int16_t
-  template <> inline int8_t    to(int16_t v) { return hidden::clamp_min_max<int8_t, int16_t>(v); }
-  
-  template <> inline uint8_t   to(int16_t v) { return hidden::clamp_min_max<uint8_t, int16_t>(v); }
-  template <> inline uint16_t  to(int16_t v) { return v < 0 ? 0 : v; }
-  template <> inline uint32_t  to(int16_t v) { return v < 0 ? 0 : v; }
-  
-  // From int32_t
-  template <> inline int8_t    to(int32_t v) { return hidden::clamp_min_max<int8_t, int32_t>(v); }
-  template <> inline int16_t   to(int32_t v) { return hidden::clamp_min_max<int16_t, int32_t>(v); }
-  
-  template <> inline uint8_t   to(int32_t v) { return hidden::clamp_min_max<uint8_t, int32_t>(v); }
-  template <> inline uint16_t  to(int32_t v) { return hidden::clamp_min_max<uint16_t, int32_t>(v); }
-  template <> inline uint32_t  to(int32_t v) { return v < 0 ? 0 : v; }
-  
-  // From uint8_t
-  template <> inline int8_t    to(uint8_t v) { return hidden::clamp_max<int8_t, uint8_t>(v); }
-  
-  // From uint16_t
-  template <> inline int8_t    to(uint16_t v) { return hidden::clamp_max<int8_t, uint16_t>(v); }
-  template <> inline int16_t   to(uint16_t v) { return hidden::clamp_max<int16_t, uint16_t>(v); }
-  
-  template <> inline uint8_t   to(uint16_t v) { return hidden::clamp_max<uint8_t, uint16_t>(v); }
-  
-  // From uint32_t
-  template <> inline int8_t    to(uint32_t v) { return hidden::clamp_max<int8_t, uint32_t>(v); }
-  template <> inline int16_t   to(uint32_t v) { return hidden::clamp_max<int16_t, uint32_t>(v); }
-  template <> inline int32_t   to(uint32_t v) { return hidden::clamp_max<int32_t, uint32_t>(v); }
-  
-  template <> inline uint8_t   to(uint32_t v) { return hidden::clamp_max<uint8_t, uint32_t>(v); }
-  template <> inline uint16_t  to(uint32_t v) { return hidden::clamp_max<uint32_t, uint32_t>(v); }
+  template <typename out_t, cast_mode mode, typename in_t>
+  constexpr out_t cast_to(in_t v)
+  {
+    if constexpr(mode == cast_mode::regular)
+      return static_cast<out_t>(v);
+    else if constexpr(mode == cast_mode::round)
+      return round_to<out_t>(v);
+    else if constexpr(mode == cast_mode::clamp_round)
+      return clamp_and_round_to<out_t>(v);
+    return 0;
+  }
 }
 
 //////////////////////////////////////////////////////////////
