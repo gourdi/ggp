@@ -115,11 +115,17 @@ GGO_TEST(base, clamp_and_round)
   static_assert(ggo::clamp_and_round_to<int8_t>(127.2f) == 127);
   static_assert(ggo::clamp_and_round_to<int8_t>(127.9f) == 127);
   static_assert(ggo::clamp_and_round_to<int8_t>(128.1f) == 127);
+  static_assert(ggo::clamp_and_round_to<int8_t>(999.0f) == 127);
   static_assert(ggo::clamp_and_round_to<int8_t>(-1.1f) == -1);
   static_assert(ggo::clamp_and_round_to<int8_t>(-1.4f) == -1);
   static_assert(ggo::clamp_and_round_to<int8_t>(-1.6f) == -2);
   static_assert(ggo::clamp_and_round_to<int8_t>(-1.9f) == -2);
   static_assert(ggo::clamp_and_round_to<int8_t>(-2.1f) == -2);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-128.1f) == -128);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-128.2f) == -128);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-128.9f) == -128);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-129.1f) == -128);
+  static_assert(ggo::clamp_and_round_to<int8_t>(-999.0f) == -128);
 }
 
 /////////////////////////////////////////////////////////////////////

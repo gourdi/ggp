@@ -125,7 +125,7 @@ GGO_TEST(convolution2d, float_vert)
     0.f, 0.f, 0.f };
   const float kernel[2] = { 1.f / 3.f, 1.f / 3.f };
 
-  auto get2d  = [&](int x, int y) { return in[3 * y + x]; };
+  auto get2d  = [&](int x, int y) { return in[3 * (2 - y) + x]; };
   auto bottom = [&](int x, int y) { return ggo::get2d_mirror(get2d, x, y, 3, 3); };
   auto top    = [&](int x, int y) { return ggo::get2d_mirror(get2d, x, y, 3, 3); };
 
