@@ -62,30 +62,32 @@ namespace ggo
   };
 
   template <typename data_t>
-  data_t rand(data_t inf, data_t sup, typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
+  data_t rand(data_t inf, data_t sup)
   {
-    return std::uniform_real_distribution<data_t>(inf, sup)(get_random_generator());
+    if constexpr(std::is_floating_point<data_t>::value)
+    {
+      return std::uniform_real_distribution<data_t>(inf, sup)(get_random_generator());
+    }
+    else
+    {
+      // We must used 'long long' in order to be able to have uin8_t random number for instance.
+      return static_cast<data_t>(std::uniform_int_distribution<long long>(inf, sup)(get_random_generator()));
+    }
   }
 
   template <typename data_t>
-  data_t rand(data_t inf, data_t sup, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
+  data_t rand()
   {
-    // We must used 'long long' in order to be able to have uin8_t random number for instance.
-    return static_cast<data_t>(std::uniform_int_distribution<long long>(inf, sup)(get_random_generator()));
+    if constexpr(std::is_floating_point<data_t>::value)
+    {
+      return rand<data_t>(0, 1);
+    }
+    else
+    {
+      return rand(std::numeric_limits<data_t>::lowest(), std::numeric_limits<data_t>::max());
+    }
   }
-
-  template <typename data_t>
-  data_t rand(typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
-  {
-    return rand<data_t>(0, 1);
-  }
-
-  template <typename data_t>
-  data_t rand(typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
-  {
-    return rand(std::numeric_limits<data_t>::lowest(), std::numeric_limits<data_t>::max());
-  }
-
+  
   inline bool rand_bool() { return (rand<int>(0, 1) % 2) != 0; }
 }
 
@@ -119,39 +121,47 @@ namespace ggo
   }
 
   template <typename data_t>
-  data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_floating_point<data_t>::value>::type* = 0)
+  constexpr data_t pos_mod(data_t v, data_t m)
   {
-    v = std::fmod(v, m);
-    return v < 0 ? v + m : v;
-  }
-
-  template <typename data_t>
-  constexpr data_t pos_mod(data_t v, data_t m, typename std::enable_if<std::is_integral<data_t>::value>::type* = 0)
-  {
-    v = v % m;
-    return v < 0 ? v + m : v;
+    if constexpr(std::is_floating_point<data_t>::value)
+    {
+      v = std::fmod(v, m);
+      return v < 0 ? v + m : v;
+    }
+    else
+    {
+      if constexpr(std::is_unsigned<data_t>::value)
+      {
+        return v % m;
+      }
+      else
+      {
+        v = v % m;
+        return v < 0 ? v + m : v;
+      }
+    }
   }
 
   template <int bit_shift, typename data_t>
-  constexpr data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_unsigned<data_t>::value>::type* = 0)
+  constexpr data_t fixed_point_div(data_t v)
   {
-    static_assert(bit_shift > 1, "invalid bit shift");
+    static_assert(std::is_integral<data_t>::value);
+    static_assert(bit_shift > 1);
 
-    return (v + (1 << (bit_shift - 1))) >> bit_shift;
-  }
-
-  template <int bit_shift, typename data_t>
-  constexpr data_t fixed_point_div(data_t v, typename std::enable_if<std::is_integral<data_t>::value && std::is_signed<data_t>::value>::type* = 0)
-  {
-    static_assert(bit_shift > 1, "invalid bit shift");
-
-    if (v >= 0)
+    if constexpr(std::is_unsigned<data_t>::value)
     {
       return (v + (1 << (bit_shift - 1))) >> bit_shift;
     }
     else
     {
-      return -((-v + (1 << (bit_shift - 1))) >> bit_shift);
+      if (v >= 0)
+      {
+        return (v + (1 << (bit_shift - 1))) >> bit_shift;
+      }
+      else
+      {
+        return -((-v + (1 << (bit_shift - 1))) >> bit_shift);
+      }
     }
   }
 
