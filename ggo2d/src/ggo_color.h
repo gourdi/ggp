@@ -245,21 +245,21 @@ namespace ggo
   // rgb 32f => y 8u
   template <> inline uint8_t convert_color_to<uint8_t, ggo::color_32f>(const ggo::color_32f & c)
   {
-    return ggo::to<uint8_t>(std::numeric_limits<uint8_t>::max() * clamp((c.r() + c.g() + c.b()) / 3.f, 0.f, 1.f));
+    return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * (c.r() + c.g() + c.b()) / 3.f);
   }
 
   // rgb 32f => rgb 8u
   template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
   {
-    auto conv = [](float v) { return ggo::to<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(v, 0.f, 1.f)); };
+    auto conv = [](float v) { return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * v); };
     return { conv(c.r()), conv(c.g()), conv(c.b()) };
   }
 
   // rgb 32f => y 16u
   template <> inline uint16_t convert_color_to<uint16_t, ggo::color_32f>(const ggo::color_32f & c)
   {
-    float gray = (ggo::clamp(c.r(), 0.f, 1.f) + ggo::clamp(c.g(), 0.f, 1.f) + ggo::clamp(c.b(), 0.f, 1.f)) / 3.f;
-    return ggo::to<uint16_t>(std::numeric_limits<uint16_t>::max() * gray);
+    float gray = (c.r() + c.g() + c.b()) / 3.f;
+    return ggo::clamp_and_round_to<uint16_t>(std::numeric_limits<uint16_t>::max() * gray);
   }
 
   // rgb 32f => y 32f
@@ -271,8 +271,7 @@ namespace ggo
   // rgb 32f => rgb 16u
   template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::color_32f>(const ggo::color_32f & c)
   {
-    auto conv = [](float v) { return ggo::to<uint16_t>(std::numeric_limits<uint16_t>::max() * clamp(v, 0.f, 1.f)); };
-    return ggo::color_16u(conv(c.r()), conv(c.g()), conv(c.b()));
+    return ggo::color_16u(ggo::clamp_and_round_to<uint16_t>(c.r()), ggo::clamp_and_round_to<uint16_t>(c.g()), ggo::clamp_and_round_to<uint16_t>(c.b()));
   }
 }
 

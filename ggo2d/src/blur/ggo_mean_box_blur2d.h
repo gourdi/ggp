@@ -67,7 +67,8 @@ namespace ggo
   {
     using format = pixel_buffer_format_info<pbf>;
     using blur_helper = mean_box_blur2d_helper<typename format::color_t>;
-    using type = typename blur_helper::color_t;
+    using input_t = typename blur_helper::color_t;
+    using output_t = typename blur_helper::color_t;
 
     static typename blur_helper::color_t read(const void * ptr)
     {
@@ -98,7 +99,7 @@ namespace ggo
     // First horizontal pass.
     {
       auto line_iterator = [&](int y) {
-        return memory_format::make_horizontal_iterator<data_accessor>(buffer, y, height, line_byte_step);
+        return memory_format::make_horizontal_read_write_iterator<data_accessor, data_accessor>(buffer, y, height, line_byte_step);
       };
 
       auto left = [&](int x, int y) {
@@ -114,7 +115,7 @@ namespace ggo
     // Second vertical pass.
     {
       auto column_iterator = [&](int x) {
-        return memory_format::make_vertical_iterator<data_accessor>(buffer, x, height, line_byte_step);
+        return memory_format::make_vertical_read_write_iterator<data_accessor, data_accessor>(buffer, x, height, line_byte_step);
       };
 
       auto bottom = [&](int x, int y) {

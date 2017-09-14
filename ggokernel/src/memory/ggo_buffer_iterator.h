@@ -184,6 +184,47 @@ namespace ggo
     void * _ptr;
     const int _item_byte_size;
   };
+
+  template <typename data_reader_t, typename data_writer_t>
+  class dynamic_item_byte_size_buffer_read_write_iterator
+  {
+  public:
+
+    static_assert(std::is_same<typename data_reader_t::output_t, typename data_writer_t::input_t>::value);
+
+    using type = typename data_reader_t::output_t;
+
+    dynamic_item_byte_size_buffer_read_write_iterator(void * ptr, int item_byte_size) : _ptr(ptr), _item_byte_size(item_byte_size) {}
+
+    auto read() const {
+      return data_reader_t::read(_ptr);
+    }
+    auto read(const int offset) const {
+      return data_reader_t::read(ptr_offset(_ptr, offset * _item_byte_size));
+    }
+
+    void write(const typename data_writer_t::input_t & v) {
+      data_writer_t::write(_ptr, v);
+    }
+    void write(const typename data_writer_t::input_t & v, const int offset) {
+      data_writer_t::write(ptr_offset(_ptr, offset * _item_byte_size), v);
+    }
+
+    void move_nxt() {
+      _ptr = ptr_offset(_ptr, _item_byte_size);
+    }
+    void move(const int offset) {
+      _ptr = ptr_offset(_ptr, offset * _item_byte_size);
+    }
+
+    bool operator==(const void * ptr) { return _ptr == ptr; }
+    bool operator!=(const void * ptr) { return _ptr != ptr; }
+
+  private:
+
+    void * _ptr;
+    const int _item_byte_size;
+  };
 }
 
 /////////////////////////////////////////////////////////////////////

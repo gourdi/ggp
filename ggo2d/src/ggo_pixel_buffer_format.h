@@ -34,7 +34,7 @@ namespace ggo
     static const int pixel_byte_size = 1;
 
     using color_t = uint8_t;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::up, 1>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 1>;
 
     // Accessor interface.
     using type = uint8_t;
@@ -48,7 +48,7 @@ namespace ggo
     static const int pixel_byte_size = 1;
 
     using color_t = uint8_t;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::down, 1>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 1>;
 
     // Accessor interface.
     using type = uint8_t;
@@ -62,7 +62,7 @@ namespace ggo
     static const int pixel_byte_size = 2;
 
     using color_t = uint16_t;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::down, 2>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 2>;
 
     // Accessor interface.
     using type = uint16_t;
@@ -78,7 +78,7 @@ namespace ggo
     static const int pixel_byte_size = 4;
 
     using color_t = float;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::up, 4>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 4>;
 
     // Accessor interface.
     using type = float;
@@ -93,7 +93,7 @@ namespace ggo
     static const pixel_buffer_format gray_pbf = y_8u_yu;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::up, 3>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
 
     // Accessor interface.
     using type = ggo::color_8u;
@@ -120,7 +120,7 @@ namespace ggo
     static const pixel_buffer_format gray_pbf = y_8u_yd;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::down, 3>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
 
     // Accessor interface.
     using type = ggo::color_8u;
@@ -148,7 +148,7 @@ namespace ggo
     static const int pixel_byte_size = 12;
 
     using color_t = ggo::color_32f;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::up, 12>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 12>;
 
     // Accessor interface.
     using type = ggo::color_32f;
@@ -175,7 +175,7 @@ namespace ggo
     static const pixel_buffer_format gray_pbf = y_8u_yd;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::down, 4>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
 
     // Accessor interface.
     using type = ggo::color_8u;
@@ -202,7 +202,7 @@ namespace ggo
     static const pixel_buffer_format gray_pbf = y_16u_yd;
 
     using color_t = ggo::color_16u;
-    using memory_layout_t = lines_raw_memory_access<ggo::direction::up, 6>;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 6>;
 
     // Accessor interface.
     using type = ggo::color_16u;
@@ -314,8 +314,16 @@ namespace ggo
 namespace ggo
 {
   // Pointer to line.
-  template <pixel_buffer_format pbf, typename data_t>
-  data_t * get_line_ptr(data_t * ptr, const int y, const int height, const int line_step)
+  template <pixel_buffer_format pbf>
+  void * get_line_ptr(void * ptr, const int y, const int height, const int line_step)
+  {
+    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+
+    return memory_layout::get_y_ptr(ptr, y, height, line_step);
+  }
+
+  template <pixel_buffer_format pbf>
+  const void * get_line_ptr(const void * ptr, const int y, const int height, const int line_step)
   {
     using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
 
@@ -323,8 +331,16 @@ namespace ggo
   }
 
   // Pointer to pixel.
-  template <pixel_buffer_format pbf, typename data_t>
-  data_t * get_pixel_ptr(data_t * ptr, const int x, const int y, const int height, const int line_step)
+  template <pixel_buffer_format pbf>
+  void * get_pixel_ptr(void * ptr, const int x, const int y, const int height, const int line_step)
+  {
+    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+
+    return memory_layout::get_xy_ptr(ptr, x, y, height, line_step);
+  }
+
+  template <pixel_buffer_format pbf>
+  const void * get_pixel_ptr(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
     using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
 

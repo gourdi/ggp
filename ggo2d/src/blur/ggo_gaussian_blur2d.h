@@ -78,7 +78,8 @@ namespace ggo
   {
     using format = pixel_buffer_format_info<pbf>;
     using gauss = gaussian_blur2d_helper<typename format::color_t>;
-    using type = typename gauss::color_t;
+    using input_t = typename gauss::color_t;
+    using output_t = typename gauss::color_t;
 
     static typename gauss::color_t read(const void * ptr)
     {
@@ -107,11 +108,11 @@ namespace ggo
     // First horizontal pass.
     {
       auto input_line_iterator = [&](int y) {
-        return memory_layout::make_horizontal_const_iterator<gaussian_accessor<pbf>>(buffer, y, height, line_byte_step);
+        return memory_layout::make_horizontal_read_only_iterator<gaussian_accessor<pbf>>(buffer, y, height, line_byte_step);
       };
 
       auto output_line_iterator = [&](int y) {
-        return memory_layout::make_horizontal_iterator<gaussian_accessor<pbf>>(tmp.data(), y, height, line_byte_step);
+        return memory_layout::make_horizontal_write_only_iterator<gaussian_accessor<pbf>>(tmp.data(), y, height, line_byte_step);
       };
 
       ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator,
@@ -123,11 +124,11 @@ namespace ggo
     // Second vertical pass.
     {
       auto input_column_iterator = [&](int x) {
-        return memory_layout::make_vertical_const_iterator<gaussian_accessor<pbf>>(tmp.data(), x, height, line_byte_step);
+        return memory_layout::make_vertical_read_only_iterator<gaussian_accessor<pbf>>(tmp.data(), x, height, line_byte_step);
       };
 
       auto output_column_iterator = [&](int x) {
-        return memory_layout::make_vertical_iterator<gaussian_accessor<pbf>>(buffer, x, height, line_byte_step);
+        return memory_layout::make_vertical_write_only_iterator<gaussian_accessor<pbf>>(buffer, x, height, line_byte_step);
       };
 
       ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator,

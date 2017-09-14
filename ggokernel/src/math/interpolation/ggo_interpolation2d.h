@@ -24,7 +24,7 @@ namespace ggo
   template <typename data_t, typename interpolation_t, ggo::direction lines_memory_order>
   inline data_t bilinear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_memory_layout<lines_memory_order>>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step); };
 
     return bilinear_interpolation2d<data_t>(in, x, y);
   }

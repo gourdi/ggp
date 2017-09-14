@@ -11,14 +11,8 @@ namespace ggo
     static constexpr int item_byte_step = sizeof(data_t);
     using output_t = data_t;
 
-    // Raw buffer interface.
     static data_t read(const void * ptr) {
       return *static_cast<const data_t *>(ptr);
-    }
-
-    // Typed buffer interface.
-    static data_t read(const data_t * ptr) {
-      return *ptr;
     }
   };
 
@@ -28,14 +22,8 @@ namespace ggo
     static constexpr int item_byte_step = sizeof(data_t);
     using input_t = data_t;
 
-    // Raw buffer interface.
     static void write(void * ptr, const data_t & v) {
       *static_cast<data_t *>(ptr) = v;
-    }
-
-    // Typed buffer interface.
-    static void write(data_t * ptr, const data_t & v) {
-      *ptr = v;
     }
   };
 }

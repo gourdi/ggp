@@ -2,7 +2,6 @@
 #define __GGO_BLIT__
 
 #include <ggo_pixel_buffer.h>
-#include <ggo_buffer_access.h>
 
 namespace ggo
 {

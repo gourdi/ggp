@@ -204,15 +204,6 @@ GGO_TEST(paint, shape_y_8u_yu_sampling16x16)
     0x00, 0x13, 0x6f, 0x6f, 0x13, 0x00 };
 
   GGO_CHECK(buffer == expected);
-
-#ifdef GGO_BENCH
-  ggo::chronometer chronometer;
-  for (int i = 0; i < 1000000; ++i)
-  {
-    ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float(2.f, 3.f, 3.f), brush, blend);
-  }
-  std::cout << chronometer.get_display_time(true) << std::endl;
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////

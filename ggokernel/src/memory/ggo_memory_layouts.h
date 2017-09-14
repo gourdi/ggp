@@ -50,6 +50,13 @@ namespace ggo
       return static_item_byte_step_buffer_write_only_iterator<item_byte_step, data_writer_t>(get_y_ptr(ptr, y, height, line_byte_step));
     }
 
+    // Builds an input/output iterator that will parse the row 'y' from 0 to positive x coordinate.
+    template <typename data_reader_t, typename data_writer_t>
+    static auto make_horizontal_read_write_iterator(void * ptr, int y, int height, int line_byte_step)
+    {
+      return static_item_byte_step_buffer_read_write_iterator<item_byte_step, data_reader_t, data_writer_t>(get_y_ptr(ptr, y, height, line_byte_step));
+    }
+
     // Builds an input iterator that will parse the column 'x' from 0 to positive y coordinate.
     template <typename data_reader_t>
     static auto make_vertical_read_only_iterator(const void * ptr, int x, int height, int line_byte_step)
@@ -81,6 +88,23 @@ namespace ggo
       {
         ptr = ptr_offset(ptr, (height - 1) * line_byte_step);
         return dynamic_item_byte_size_buffer_write_only_iterator<data_writer_t>(ptr, -line_byte_step);
+      }
+    }
+
+    // Builds an output iterator that will parse the column 'x' from 0 to positive y coordinate.
+    template <typename data_reader_t, typename data_writer_t>
+    static auto make_vertical_read_write_iterator(void * ptr, int x, int height, int line_byte_step)
+    {
+      ptr = ptr_offset(ptr, x * item_byte_step);
+
+      if constexpr(lines_order == direction::up)
+      {
+        return dynamic_item_byte_size_buffer_read_write_iterator<data_reader_t, data_writer_t>(ptr, line_byte_step);
+      }
+      else
+      {
+        ptr = ptr_offset(ptr, (height - 1) * line_byte_step);
+        return dynamic_item_byte_size_buffer_read_write_iterator<data_reader_t, data_writer_t>(ptr, -line_byte_step);
       }
     }
 

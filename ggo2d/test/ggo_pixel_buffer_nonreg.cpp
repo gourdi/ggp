@@ -1,7 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
-#include <ggo_buffer_access.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(pixel_buffer, y_8u_yu)

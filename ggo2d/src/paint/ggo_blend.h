@@ -62,7 +62,7 @@ namespace ggo
   struct alpha_blender<uint8_t>
   {
     alpha_blender(float opacity) :
-      _weight_brush(ggo::to<uint32_t>(0x10000 * opacity)),
+      _weight_brush(ggo::round_to<uint32_t>(0x10000 * opacity)),
       _weight_bkgd(0x10000 - _weight_brush)
     {
     }
@@ -98,7 +98,7 @@ namespace ggo
   struct alpha_blender<ggo::color_8u>
   {
     alpha_blender(float opacity) :
-      _weight_brush(ggo::to<uint32_t>(0x10000 * opacity)),
+      _weight_brush(ggo::round_to<uint32_t>(0x10000 * opacity)),
       _weight_bkgd(0x10000 - _weight_brush)
     {
     }     

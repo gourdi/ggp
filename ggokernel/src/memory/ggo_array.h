@@ -6,7 +6,7 @@
 namespace ggo
 {
   template <typename data_t, int n_dims>
-  class array
+  class array final
   {
   public:
 
@@ -145,7 +145,7 @@ namespace ggo
     data_t *  end() { return _buffer + get_count(); }
     const data_t *  end() const { return _buffer + get_count(); }
 
-    // Fill the array with a giben value.
+    // Fill the array with a given value.
     void fill(const data_t & v)
     {
       std::fill(_buffer, _buffer + ggo::multiply_all<n_dims>(_dimensions), v);
