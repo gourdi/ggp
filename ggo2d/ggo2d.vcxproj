@@ -13,8 +13,6 @@
   <ItemGroup>
     <ClInclude Include="src\blur\ggo_mean_box_blur2d.h" />
     <ClInclude Include="src\blur\ggo_gaussian_blur2d.h" />
-    <ClInclude Include="src\canvas\ggo_canvas.h" />
-    <ClCompile Include="src\canvas\ggo_canvas.cpp" />
     <ClInclude Include="src\fill\ggo_buffer_fill.h" />
     <ClInclude Include="src\fill\ggo_fill.h" />
     <ClInclude Include="src\ggo_pixel_buffer.h" />

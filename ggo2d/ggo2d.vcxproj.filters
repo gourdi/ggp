@@ -16,9 +16,6 @@
     <Filter Include="rle_image">
       <UniqueIdentifier>{1dcca2f9-3116-4236-83ac-aed35219eb05}</UniqueIdentifier>
     </Filter>
-    <Filter Include="canvas">
-      <UniqueIdentifier>{8cd758cf-26fc-404a-8ce0-62206ee364e6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\io\ggo_bmp.h">
@@ -72,9 +69,6 @@
     <ClInclude Include="src\paint\ggo_blend.h">
       <Filter>paint</Filter>
     </ClInclude>
-    <ClInclude Include="src\canvas\ggo_canvas.h">
-      <Filter>canvas</Filter>
-    </ClInclude>
     <ClInclude Include="src\ggo_pixel_buffer_format.h" />
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +77,6 @@
     </ClCompile>
     <ClCompile Include="src\paint\ggo_sampling_paint.h">
       <Filter>paint</Filter>
-    </ClCompile>
-    <ClCompile Include="src\canvas\ggo_canvas.cpp">
-      <Filter>canvas</Filter>
     </ClCompile>
     <ClCompile Include="src\ggo_pixel_buffer.cpp" />
   </ItemGroup>

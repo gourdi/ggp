@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="test\ggo_blend_nonreg.cpp" />
     <ClCompile Include="test\ggo_blit_nonreg.cpp" />
-    <ClCompile Include="test\ggo_canvas_nonreg.cpp" />
     <ClCompile Include="test\ggo_color_nonreg.cpp" />
     <ClCompile Include="test\ggo_fill_nonreg.cpp" />
     <ClCompile Include="test\ggo_marching_squares_nonreg.cpp" />

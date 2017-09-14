@@ -1,1 +1,0 @@
-c:\Qt\5.8\msvc2015_64\bin\qmake.exe -tp vc ggo2deditor.pro
