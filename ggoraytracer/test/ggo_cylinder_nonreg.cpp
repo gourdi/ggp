@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_object3d.h>
@@ -27,7 +27,7 @@ GGO_TEST(cylinder, ray_outside)
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * width * height);
+  ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("cylinder_outside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
@@ -52,7 +52,7 @@ GGO_TEST(cylinder, ray_inside)
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * width * height);
+  ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("cylinder_inside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

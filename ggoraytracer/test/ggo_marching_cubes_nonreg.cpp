@@ -1,7 +1,7 @@
 #include <array>
 #include <ggo_nonreg.h>
 #include <ggo_marching_cubes.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_object3d.h>
 #include <ggo_point_camera.h>
@@ -43,7 +43,7 @@ GGO_TEST(marching_cubes, test)
   
   // Rendering.
   ggo::antialiasing_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * width * height);
+  ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("marching_cubes.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

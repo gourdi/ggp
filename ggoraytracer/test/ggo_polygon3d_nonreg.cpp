@@ -1,5 +1,5 @@
 #include <iostream>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_mono_sampling_renderer.h>
@@ -30,7 +30,7 @@ void test_polygon3d()
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * width * height);
+  ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("sphere3d.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

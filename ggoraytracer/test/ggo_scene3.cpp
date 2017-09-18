@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_shapes2d.h>
 #include <ggo_point_camera.h>
@@ -38,7 +38,7 @@ GGO_TEST(test_scene, scene3)
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_uint8 buffer(3 * width * height);
+  ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
 
   // Overlay, to check that basis::project is working as expected.

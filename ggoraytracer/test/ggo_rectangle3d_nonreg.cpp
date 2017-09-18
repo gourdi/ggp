@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_background3d_color.h>
@@ -39,7 +39,7 @@ GGO_TEST(rectangle3d, test)
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, 56);
-  ggo::array_uint8 buffer(3 * size * size);
+  ggo::buffer buffer(3 * size * size);
   renderer.render(buffer.data(), size, size, 3 * size, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("rectangle3d.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
 }

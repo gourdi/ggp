@@ -3,7 +3,6 @@
 #include "ggo_camera_abc.h"
 #include "ggo_object3d.h"
 #include "ggo_indirect_lighting_abc.h"
-#include <ggo_helpers.h>
 #include <ggo_array.h>
 #include <thread>
 #include <mutex>
@@ -95,10 +94,10 @@ namespace ggo
     }
     if (env_str != nullptr)
     {
-      int value = 0;
-      if (ggo::str2val(env_str, value) == true)
+      auto value = str_to<int>(env_str);
+      if (value)
       {
-        threads_count = value;
+        threads_count = *value;
       }
     }
     

@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_array.h>
+#include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_object3d.h>
@@ -34,8 +34,8 @@ GGO_TEST(bidirectional_lighting, test)
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_coun);
-  ggo::array_uint8 buffer(3 * width * height);
-  
+  ggo::buffer buffer(3 * width * height);
+
   // Without indirect lighting.
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("bidirectional_lighting_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
