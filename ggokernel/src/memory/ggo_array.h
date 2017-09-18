@@ -16,7 +16,7 @@ namespace ggo
       _buffer = nullptr;
     }
 
-    // Constructor to specidy the dimensions, and optionnaly a fill value.
+    // Constructor to specify the dimensions, and optionnaly a fill value.
     template <typename... args>
     array(args... a)
     {
@@ -39,6 +39,29 @@ namespace ggo
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
+    }
+
+    // Coefs constructors.
+    template <typename coefs_t, size_t n>
+    array(coefs_t const (&coefs)[n])
+    {
+      static_assert(n_dims == 1);
+      _dimensions[0] = n;
+      _buffer = new data_t[n];
+      ggo::copy<n>(_buffer, coefs);
+    }
+
+    template <typename coefs_t, size_t n1, size_t n2>
+    array(coefs_t const (&coefs)[n1][n2])
+    {
+      static_assert(n_dims == 2);
+      _dimensions[0] = n2;
+      _dimensions[1] = n1;
+      _buffer = new data_t[n1 * n2];
+      for (int n = 0; n < n1; ++n)
+      {
+        ggo::copy<n2>(_buffer + n * n2, coefs[n]);
+      }
     }
 
     // Destructor.
@@ -67,8 +90,26 @@ namespace ggo
     template <int dim>
     int get_size() const
     {
-      static_assert(dim >= 0 && dim < n_dims, "invalid dimension");
+      static_assert(dim >= 0 && dim < n_dims);
       return _dimensions[dim];
+    }
+
+    int get_size() const
+    {
+      static_assert(n_dims == 1);
+      return _dimensions[0];
+    }
+
+    int get_width() const
+    {
+      static_assert(n_dims == 2);
+      return _dimensions[0];
+    }
+
+    int get_height() const
+    {
+      static_assert(n_dims == 2);
+      return _dimensions[1];
     }
 
     // Returns the full number of elements inside the array.
@@ -85,6 +126,22 @@ namespace ggo
 
       delete[] _buffer;
       array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, a...);
+    }
+
+    // Comparison.
+    bool operator==(const array<data_t, n_dims> & rhs) const
+    {
+      if (compare<n_dims>(_dimensions, rhs._dimensions) == false)
+      {
+        return false;
+      }
+
+      return std::equal(_buffer, _buffer + get_count(), rhs._buffer);
+    }
+
+    bool operator!=(const array<data_t, n_dims> & rhs) const
+    {
+      return !this->operator==(rhs);
     }
 
     // Direct access to the buffer.
@@ -242,6 +299,16 @@ namespace ggo
     int       _dimensions[n_dims];
     data_t *  _buffer;
   };
+}
+
+namespace ggo
+{
+  template <typename data_t, int n_dims>
+  std::ostream & operator<<(std::ostream & os, const ggo::array<data_t, n_dims> & a)
+  {
+    // Do nothing for now.
+    return os;
+  }
 }
 
 //////////////////////////////////////////////////////////////

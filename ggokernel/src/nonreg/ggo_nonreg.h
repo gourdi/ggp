@@ -29,6 +29,13 @@
                                 << " [=" << eval1 << "] != " << #v2 << " [=" << eval2 << "]" << std::endl;\
                               } }
 
+#define GGO_CHECK_NE(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
+                              if (eval1 == eval2) { \
+                                ++_failed_count; \
+                                std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << ": " << #v1 \
+                                << " [=" << eval1 << "] == " << #v2 << " [=" << eval2 << "]" << std::endl;\
+                              } }
+
 #define GGO_CHECK_FABS(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
                                 if (std::fabs(eval1 - eval2) > 0.0001) { \
                                   ++_failed_count; \

@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <exception>
 #include <numeric>
+#include <optional>
 
 //////////////////////////////////////////////////////////////
 // Debug.
@@ -362,6 +363,50 @@ namespace ggo
     up,
     down
   };
+}
+
+//////////////////////////////////////////////////////////////
+// String to value
+template <typename data_t>
+std::optional<data_t> str_to(const std::string & str)
+{
+  return {};
+}
+
+template <> inline
+std::optional<bool> str_to(const std::string & str)
+{
+  if (str == "true")
+  {
+    return true;
+  }
+  if (str == "false")
+  {
+    return false;
+  }
+  return {};
+}
+
+template <> inline
+std::optional<int> str_to(const std::string & str)
+{
+  std::optional<int> val;
+  try
+  {
+    val = stoi(str);
+  }
+  catch (...)
+  {
+
+  }
+  return val;
+}
+
+//////////////////////////////////////////////////////////////
+// Literals
+inline constexpr uint8_t operator "" _u8(unsigned long long v) noexcept
+{
+  return static_cast<uint8_t>(v);
 }
 
 #endif

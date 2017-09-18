@@ -76,33 +76,33 @@ namespace ggo
   }
 
   // Unary operation: a destination pointer and a source pointer.
-  template <typename data_t, typename func, int index, int count>
+  template <typename dst_t, typename src_t, typename func, int index, int count>
   struct unary_operation_t
   {
-    static void process(data_t * dst, const data_t * src, func f)
+    static void process(dst_t * dst, const src_t * src, func f)
     {
       f(dst[index], src[index]);
-      ggo::unary_operation_t<data_t, func, index + 1, count>::process(dst, src, f);
+      ggo::unary_operation_t<dst_t, src_t, func, index + 1, count>::process(dst, src, f);
     }
   };
 
-  template <typename data_t, typename func, int count>
-  struct unary_operation_t<data_t, func, count, count>
+  template <typename dst_t, typename src_t, typename func, int count>
+  struct unary_operation_t<dst_t, src_t, func, count, count>
   {
-    static void process(data_t *, const data_t *, func) { }
+    static void process(dst_t *, const src_t *, func) { }
   };
 
-  template <int count, typename data_t, typename func>
-  void unary_operation(data_t * dst, const data_t * src, func f)
+  template <int count, typename dst_t, typename src_t, typename func>
+  void unary_operation(dst_t * dst, const src_t * src, func f)
   {
-    unary_operation_t<data_t, func, 0, count>::process(dst, src, f);
+    unary_operation_t<dst_t, src_t, func, 0, count>::process(dst, src, f);
   }
 
   // Copy a buffer.
-  template <int count, typename data_t>
-  void copy(data_t * dst, const data_t * src)
+  template <int count, typename dst_t, typename src_t>
+  void copy(dst_t * dst, const src_t * src)
   {
-    ggo::unary_operation<count>(dst, src, [](data_t & dst, const data_t & src) { dst = src; });
+    ggo::unary_operation<count>(dst, src, [](dst_t & dst, const src_t & src) { dst = src; });
   }
 
   // Binary operation: a destination pointer and 2 source pointers.

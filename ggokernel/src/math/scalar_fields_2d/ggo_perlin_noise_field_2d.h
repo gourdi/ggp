@@ -3,7 +3,7 @@
 
 #include <ggo_scalar_field_2d_abc.h>
 #include <ggo_interpolation2d.h>
-#include <ggo_buffer.h>
+#include <ggo_array.h>
 
 namespace ggo
 {
@@ -30,10 +30,10 @@ namespace ggo
 
     private:
       
-      data_t              _scale;
-      data_t              _angle;
-      int                 _noise_size;
-      ggo::buffer<data_t> _noise;
+      data_t                _scale;
+      data_t                _angle;
+      int                   _noise_size;
+      ggo::array<data_t, 1> _noise;
     };
     
     std::vector<octave> _octaves;
