@@ -19,14 +19,14 @@ namespace ggo
 
   private:
 
-    int                 _frame_index;
-    float               _hue;
-    std::vector<float>  _feed_map;
-    std::vector<float>  _kill_map;
-    float               _food_stddev;
-    float               _life_stddev;
-    std::vector<float>  _food;
-    std::vector<float>  _life;
+    int                   _frame_index;
+    float                 _hue;
+    ggo::array<float, 2>  _feed_map;
+    ggo::array<float, 2>  _kill_map;
+    float                 _food_stddev;
+    float                 _life_stddev;
+    ggo::array<float, 2>  _food;
+    ggo::array<float, 2>  _life;
   };
 }
 

@@ -7,17 +7,17 @@
 ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
 animation_artist_abc(width, height, line_step, pbf, rt),
-_feed_map(width * height),
-_kill_map(width * height),
-_food(width * height),
-_life(width * height)
+_feed_map(width, height),
+_kill_map(width, height),
+_food(width, height),
+_life(width, height)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::rediff_animation_artist::init()
-{
+{ 
   _frame_index = -1;
 
   _hue = ggo::rand<float>();
@@ -30,13 +30,16 @@ void ggo::rediff_animation_artist::init()
   float kill_rate1 = ggo::rand<float>(0.05f, 0.07f);
   float kill_rate2 = ggo::rand<float>(0.05f, 0.07f);
 
-  for_each_pixel([&](int x, int y)
+  for (int y = 0; y < get_height(); ++y)
   {
-    float dist = ggo::distance(get_center(), ggo::pos2f(static_cast<float>(x), static_cast<float>(y))) / get_min_size();
+    for (int x = 0; x < get_width(); ++x)
+    {
+      float dist = ggo::distance(get_center(), ggo::pos2f(static_cast<float>(x), static_cast<float>(y))) / get_min_size();
 
-    set2d(_feed_map.data(), x, y, ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2));
-    set2d(_kill_map.data(), x, y, ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2));
-  });
+      _feed_map(x, y) = ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2);
+      _kill_map(x, y) = ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2);
+    }
+  }
 
   std::fill(_food.begin(), _food.end(), 1.0f);
   std::fill(_life.begin(), _life.end(), 0.0f);
@@ -59,8 +62,8 @@ bool ggo::rediff_animation_artist::update()
     return false;
   }
 
-  std::vector<float> diffused_food;
-  std::vector<float> diffused_life;
+  ggo::array<float, 2> diffused_food;
+  ggo::array<float, 2> diffused_life;
 
   for (int i = 0; i < 16; ++i)
   {
@@ -69,17 +72,20 @@ bool ggo::rediff_animation_artist::update()
     ggo::gaussian_blur2d_loop<ggo::y_32f_yu>(_food.data(), get_width(), get_height(), sizeof(float) * get_width(), _food_stddev);
     ggo::gaussian_blur2d_loop<ggo::y_32f_yu>(_life.data(), get_width(), get_height(), sizeof(float) * get_width(), _life_stddev);
 
-    for_each_pixel([&](int x, int y)
+    for (int y = 0; y < get_height(); ++y)
     {
-      const float feed_rate = get2d(_feed_map.data(), x, y);
-      const float kill_rate = get2d(_kill_map.data(), x, y);
-      const float reaction = get2d(_food.data(), x, y) * ggo::square(get2d(_life.data(), x, y));
-      const float food = get2d(diffused_food.data(), x, y) - reaction + feed_rate * (1.f - get2d(_food.data(), x, y));
-      const float life = get2d(diffused_life.data(), x, y) + reaction - (kill_rate + feed_rate) * get2d(_life.data(), x, y);
+      for (int x = 0; x < get_width(); ++x)
+      {
+        const float feed_rate = _feed_map(x, y);
+        const float kill_rate = _kill_map(x, y);
+        const float reaction = _food(x, y) * ggo::square(_life(x, y));
+        const float food = diffused_food(x, y) - reaction + feed_rate * (1.f - _food(x, y));
+        const float life = diffused_life(x, y) + reaction - (kill_rate + feed_rate) * _life(x, y);
 
-      set2d(_food.data(), x, y, food);
-      set2d(_life.data(), x, y, life);
-    });
+        _food(x, y) = food;
+        _life(x, y) = life;
+      }
+    }
   }
 
   return true;
@@ -119,27 +125,30 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::rect_i
   ggo::vec3f light_dir(0.f, -0.05f, -1.f);
   light_dir.normalize();
 
-  for_each_pixel([&](int x, int y)
+  for (int y = 0; y < get_height(); ++y)
   {
-    // Compute the normal by computing 4 point around the current pixel.
-    ggo::pos3f p_bl(0.f, 0.f, 0.45f * get2d(_life.data(), x, y) + 0.2f * (get2d_loop(_life.data(), x - 1, y) + get2d_loop(_life.data(), x, y - 1)) + 0.15f * get2d_loop(_life.data(), x - 1, y - 1)); // Bottom left
-    ggo::pos3f p_tr(1.f, 1.f, 0.45f * get2d(_life.data(), x, y) + 0.2f * (get2d_loop(_life.data(), x + 1, y) + get2d_loop(_life.data(), x, y + 1)) + 0.15f * get2d_loop(_life.data(), x + 1, y + 1)); // Top right
-    ggo::vec3f v1(p_tr - p_bl);
+    for (int x = 0; x < get_width(); ++x)
+    {
+      // Compute the normal by computing 4 point around the current pixel.
+      ggo::pos3f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x - 1, y - 1)); // Bottom left
+      ggo::pos3f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x + 1, y + 1)); // Top right
+      ggo::vec3f v1(p_tr - p_bl);
 
-    ggo::pos3f p_tl(0.f, 1.f, 0.45f * get2d(_life.data(), x, y) + 0.2f * (get2d_loop(_life.data(), x - 1, y) + get2d_loop(_life.data(), x, y + 1)) + 0.15f * get2d_loop(_life.data(), x - 1, y + 1)); // Top left.
-    ggo::pos3f p_br(1.f, 0.f, 0.45f * get2d(_life.data(), x, y) + 0.2f * (get2d_loop(_life.data(), x + 1, y) + get2d_loop(_life.data(), x, y - 1)) + 0.15f * get2d_loop(_life.data(), x + 1, y - 1)); // Bottom right.
-    ggo::vec3f v2(p_tl - p_br);
+      ggo::pos3f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x - 1, y + 1)); // Top left.
+      ggo::pos3f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x + 1, y - 1)); // Bottom right.
+      ggo::vec3f v2(p_tl - p_br);
 
-    ggo::vec3f normal = ggo::cross(v1, v2);
-    float dot = -ggo::dot(normal.get_normalized(), light_dir);
+      ggo::vec3f normal = ggo::cross(v1, v2);
+      float dot = -ggo::dot(normal.get_normalized(), light_dir);
 
-    // Apply lighting.
-    float sat = sat_map.evaluate(get2d(_life.data(), x, y));
-    float val = val_map.evaluate(get2d(_life.data(), x, y));
+      // Apply lighting.
+      float sat = sat_map.evaluate(_life(x, y));
+      float val = val_map.evaluate(_life(x, y));
 
-    ggo::color_32f pixel = ggo::from_hsv<ggo::color_32f>(_hue, sat, val);
-    pixel += 0.8f * std::pow(dot, 1200.f) * ggo::white<ggo::color_32f>();
+      ggo::color_32f pixel = ggo::from_hsv<ggo::color_32f>(_hue, sat, val);
+      pixel += 0.8f * std::pow(dot, 1200.f) * ggo::white<ggo::color_32f>();
 
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), ggo::convert_color_to<ggo::color_8u>(pixel));
-  });
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), ggo::convert_color_to<ggo::color_8u>(pixel));
+    }
+  }
 }

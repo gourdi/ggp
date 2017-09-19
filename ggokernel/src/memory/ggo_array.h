@@ -41,7 +41,7 @@ namespace ggo
       rhs._buffer = nullptr;
     }
 
-    // Coefs constructors.
+    // Coefs constructors (only 1d and 2d).
     template <typename coefs_t, size_t n>
     array(coefs_t const (&coefs)[n])
     {
@@ -51,16 +51,16 @@ namespace ggo
       ggo::copy<n>(_buffer, coefs);
     }
 
-    template <typename coefs_t, size_t n1, size_t n2>
-    array(coefs_t const (&coefs)[n1][n2])
+    template <typename coefs_t, size_t h, size_t w>
+    array(coefs_t const (&coefs)[h][w])
     {
       static_assert(n_dims == 2);
-      _dimensions[0] = n2;
-      _dimensions[1] = n1;
-      _buffer = new data_t[n1 * n2];
-      for (int n = 0; n < n1; ++n)
+      _dimensions[0] = w;
+      _dimensions[1] = h;
+      _buffer = new data_t[h * w];
+      for (int row = 0; row < h; ++row)
       {
-        ggo::copy<n2>(_buffer + n * n2, coefs[n]);
+        ggo::copy<w>(_buffer + row * w, coefs[row]);
       }
     }
 
@@ -70,8 +70,18 @@ namespace ggo
       delete[] _buffer;
     }
 
-    // Deleted copy for now.
-    array<data_t, n_dims> & operator=(const array<data_t, n_dims> & rhs) = delete;
+    // Copy operator=.
+    array<data_t, n_dims> & operator=(const array<data_t, n_dims> & rhs)
+    {
+      delete[] _buffer;
+
+      int count = rhs.get_count();
+      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+      _buffer = new data_t[count];
+      std::copy(rhs._buffer, rhs._buffer + count, _buffer);
+
+      return *this;
+    }
 
     // Move operator=.
     array<data_t, n_dims> & operator=(array<data_t, n_dims> && rhs)
