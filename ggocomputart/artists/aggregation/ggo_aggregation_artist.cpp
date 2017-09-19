@@ -17,8 +17,8 @@ artist(width, height)
 
   // Create grid.
   const float cell_size = 0.1f * std::min(width, height);
-  int grid_size_x = ggo::to<int>(width / cell_size);
-  int grid_size_y = ggo::to<int>(height / cell_size);
+  int grid_size_x = ggo::round_to<int>(width / cell_size);
+  int grid_size_y = ggo::round_to<int>(height / cell_size);
 
   _grid.resize(grid_size_x, grid_size_y);
 
@@ -143,8 +143,8 @@ void ggo::aggregation_artist::render(void * buffer, int line_step, ggo::pixel_bu
 //////////////////////////////////////////////////////////////
 int ggo::aggregation_artist::get_final_points_count() const
 {
-  const float width = ggo::to<float>(get_width());
-  const float height = ggo::to<float>(get_height());
+  const float width = static_cast<float>(get_width());
+  const float height = static_cast<float>(get_height());
   float ratio = std::max(width / height, height / width);
-  return ggo::to<int>(150000.f * ratio);
+  return ggo::round_to<int>(150000.f * ratio);
 }

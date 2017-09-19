@@ -2,7 +2,6 @@
 #define __GGO_RLE_IMAGE__
 
 #include <ggo_rle.h>
-#include <ggo_buffer.h>
 
 namespace ggo
 {
@@ -17,7 +16,7 @@ namespace ggo
     color_t                   get(int x, int y) const;
 
     int                       get_width() const { return _width; }
-    int                       get_height() const { return static_cast<int>(_rle_lines.get_size()); }
+    int                       get_height() const { return static_cast<int>(_rle_lines.size()); }
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;
@@ -29,7 +28,7 @@ namespace ggo
 
   private:
 
-    mutable ggo::buffer<std::vector<std::pair<color_t, int>>>   _rle_lines;
+    mutable std::vector<std::vector<std::pair<color_t, int>>>   _rle_lines;
     mutable std::vector<std::pair<int, ggo::array<color_t, 1>>> _cache_lines;
             const int                                           _cache_size;
             const int                                           _width;

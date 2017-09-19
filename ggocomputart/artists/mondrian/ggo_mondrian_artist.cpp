@@ -70,7 +70,7 @@ void ggo::mondrian_artist::render_bitmap(void * buffer, const bool & quit) const
 	
 	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     ggo::from_hsv<ggo::color_8u>(base_hue, base_sat, 1),
-    ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_width_height(get_width(), get_height()));
 	
 	for (int i = 0; i < 200000; ++i)
 	{

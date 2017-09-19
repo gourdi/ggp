@@ -20,10 +20,10 @@ void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer, const bool & qui
 	for (int i = 0; i < frame_index; ++i)
 	{
     artist.update();
-		artist.render_frame(nullptr, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+		artist.render_frame(nullptr, ggo::rect_int::from_width_height(get_width(), get_height()));
 	}
 
   artist.update();
-  artist.render_frame(buffer, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+  artist.render_frame(buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
 }
 

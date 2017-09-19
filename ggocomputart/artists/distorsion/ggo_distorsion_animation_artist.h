@@ -15,9 +15,9 @@ namespace ggo
 
     void  init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
-    void  render_frame(int frame_index, void * buffer, const ggo::pixel_rect & clipping) const;
+    void  render_frame(int frame_index, void * buffer, const ggo::rect_int & clipping) const;
     void  render_last_frame(void * buffer) const;
 
     struct colored_stripe

@@ -183,7 +183,7 @@ namespace
   {
     ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       ggo::white_8u(),
-      ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
 
     auto triangles = compute_triangles();
 
@@ -228,7 +228,7 @@ namespace
       shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
     }
     ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      shadows.begin(), shadows.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      shadows.begin(), shadows.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
 
     float stddev = 0.01f * artist.get_min_size();
     ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
@@ -265,7 +265,7 @@ namespace
 
     ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       shapes.begin(), shapes.end(),
-      ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
   }
 }
 

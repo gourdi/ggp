@@ -3,7 +3,6 @@
 
 #include "ggo_animation_artist_abc.h"
 #include <ggo_random_interpolator_abc.h>
-#include <ggo_pixel_rect.h>
 #include <memory>
 #include <array>
 
@@ -63,7 +62,7 @@ namespace ggo
 
     void init() override;
     bool update() override;
-    void render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
+    void render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
     ggo::color_8u get_color() const;
 

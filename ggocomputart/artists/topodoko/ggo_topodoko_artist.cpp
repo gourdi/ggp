@@ -23,7 +23,7 @@ namespace
     const ggo::color_8u bkgd_color4 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
 
     ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4, ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4, ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
 
     std::cout << "Rendering shadow" << std::endl;
 

@@ -1,8 +1,6 @@
 #ifndef __GGO_MORPHOLOGY__
 #define __GGO_MORPHOLOGY__
 
-#include <ggo_buffer_access.h>
-
 namespace ggo
 {
   template <typename getter, typename setter, typename predicate>

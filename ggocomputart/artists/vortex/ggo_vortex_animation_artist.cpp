@@ -64,7 +64,7 @@ bool ggo::vortex_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
 }

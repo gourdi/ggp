@@ -2,7 +2,6 @@
 #define __GGO_ARTIST_ABC__
 
 #include <ggo_kernel.h>
-#include <ggo_buffer_access.h>
 #include <ggo_pixel_buffer.h>
 #include <ggo_shapes2d.h>
 #include <ggo_ease.h>
@@ -75,19 +74,19 @@ namespace ggo
     template <typename data_t>
     const data_t & get2d(const data_t * buffer, int x, int y) const
     {
-      return ggo::get2d(buffer, x, y, get_height(), sizeof(data_t) * get_width());
+      return buffer[y * get_height() + x];
     }
 
     template <typename data_t>
     const data_t & get2d_loop(const data_t * buffer, int x, int y) const
     {
-      return ggo::get2d_loop(buffer, x, y, get_width(), get_height(), sizeof(data_t) * get_width());
+      return ggo::get2d_loop<ggo::direction::up>(buffer, x, y, get_width(), get_height(), sizeof(data_t) * get_width());
     }
 
     template <typename data_t>
     void set2d(data_t * buffer, int x, int y, const data_t & v) const
     {
-      return ggo::set2d(buffer, x, y, get_height(), sizeof(data_t) * get_width(), v);
+      buffer[y * get_height() + x] = v;
     }
 
   private:

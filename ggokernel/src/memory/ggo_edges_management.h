@@ -49,17 +49,29 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // Helper with a typed buffer.
   template <ggo::direction lines_order, typename data_t>
-  data_t get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
+  const data_t & get2d_loop(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
   {
     using memory_layout = lines_memory_layout<lines_order, sizeof(data_t)>;
 
-    auto get2d = [&](int x, int y)
-    {
-      auto ptr = static_cast<const data_t *>(memory_layout::get_xy_ptr(buffer, x, y, height, line_bytes_step));
-      return *ptr;
-    };
+    x = loop_index(x, width);
+    y = loop_index(y, height);
 
-    return get2d_mirror(get2d, x, y, width, height);
+    auto ptr = static_cast<const data_t *>(memory_layout::get_xy_ptr(buffer, x, y, height, line_bytes_step));
+    return *ptr;
+  }
+
+  //////////////////////////////////////////////////////////////
+  // Helper with a typed buffer.
+  template <ggo::direction lines_order, typename data_t>
+  const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
+  {
+    using memory_layout = lines_memory_layout<lines_order, sizeof(data_t)>;
+
+    x = mirror_index_edge_duplicated(x, width);
+    y = mirror_index_edge_duplicated(y, height);
+
+    auto ptr = static_cast<const data_t *>(memory_layout::get_xy_ptr(buffer, x, y, height, line_bytes_step));
+    return *ptr;
   }
 }
 

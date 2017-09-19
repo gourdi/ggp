@@ -21,11 +21,11 @@ namespace ggo
 
   // Paint multiple shapes.
   template <sampling smp, typename iterator_t, typename read_pixel_t, typename write_pixel_t>
-    void paint_multi_scale(int width, int height,
-      iterator_t begin_it, iterator_t end_it,
-      int scale_factor, int first_scale,
-      read_pixel_t read_pixel, write_pixel_t write_pixel,
-      const ggo::rect_int & clipping);
+  void paint_multi_scale(int width, int height,
+    iterator_t begin_it, iterator_t end_it,
+    int scale_factor, int first_scale,
+    read_pixel_t read_pixel, write_pixel_t write_pixel,
+    const ggo::rect_int & clipping);
 }
 
 /////////////////////////////////////////////////////////////////////

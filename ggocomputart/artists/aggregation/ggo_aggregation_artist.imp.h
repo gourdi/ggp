@@ -6,7 +6,7 @@
 template <ggo::pixel_buffer_format pbf>
 void ggo::aggregation_artist::render(void * buffer, int line_step) const
 {
-  ggo::fill_solid<pbf>(buffer, get_width(), get_height(), line_step, _background_color, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+  ggo::fill_solid<pbf>(buffer, get_width(), get_height(), line_step, _background_color, ggo::rect_int::from_width_height(get_width(), get_height()));
 
   {
     std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;
@@ -19,10 +19,10 @@ void ggo::aggregation_artist::render(void * buffer, int line_step) const
       }
     }
 
-    ggo::fill_solid<pbf>(buffer, get_width(), get_height(), line_step, _background_color, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::fill_solid<pbf>(buffer, get_width(), get_height(), line_step, _background_color, ggo::rect_int::from_width_height(get_width(), get_height()));
 
     ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
-      shapes.begin(), shapes.end(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
+      shapes.begin(), shapes.end(), ggo::rect_int::from_width_height(get_width(), get_height()));
   }
 
   float stddev = 0.001f * get_min_size();
@@ -44,6 +44,6 @@ void ggo::aggregation_artist::render(void * buffer, int line_step) const
 
     ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
       shapes.begin(), shapes.end(),
-      ggo::pixel_rect::from_width_height(get_width(), get_height()));
+      ggo::rect_int::from_width_height(get_width(), get_height()));
   }
 }

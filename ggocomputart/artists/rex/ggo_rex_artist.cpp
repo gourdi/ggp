@@ -39,7 +39,7 @@ namespace
   void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<color_triangle_rgb8u> & color_triangles)
   {
     ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      color_triangles.begin(), color_triangles.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      color_triangles.begin(), color_triangles.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
   }
 
   //////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ namespace
     }
 
     ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      shapes.begin(), shapes.end(), ggo::pixel_rect::from_width_height(artist.get_width(), artist.get_height()));
+      shapes.begin(), shapes.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
   }
 }
 

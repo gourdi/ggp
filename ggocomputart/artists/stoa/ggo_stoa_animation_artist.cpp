@@ -42,7 +42,7 @@ bool ggo::stoa_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // The camera.
   const float camera_aperture = 0.1f;

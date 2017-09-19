@@ -62,8 +62,8 @@ void ggo::ifs_artist::render(void * buffer, int line_step, ggo::pixel_buffer_for
 			ggo::pos2f render_point(cos2 * point.x() - sin2 * point.z(), sin2 * point.x() + cos2 * point.z());
 			render_point = map_fit(render_point, -2, 2);
 
-			int x_i = ggo::to<int>(render_point.x());
-			int y_i = ggo::to<int>(render_point.y());
+			int x_i = ggo::round_to<int>(render_point.x());
+			int y_i = ggo::round_to<int>(render_point.y());
 			int index = y_i * get_width() + x_i;
 
 			if ((x_i >= 0) && (x_i < get_width()) &&

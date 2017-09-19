@@ -140,7 +140,7 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
 	while (done == false)
 	{
 		// Pick up a leaf.
-    int sup = ggo::to<int>(search_ratio * (static_cast<int>(leaves.size()) - 1));
+    int sup = ggo::round_to<int>(search_ratio * (static_cast<int>(leaves.size()) - 1));
 		int index = ggo::rand<int>(0, sup);
 		ggo::tree<ggo::aabox3d_float> * leaf = leaves[index];
 		leaves.erase(leaves.begin() + index);

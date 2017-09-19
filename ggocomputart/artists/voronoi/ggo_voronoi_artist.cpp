@@ -172,8 +172,8 @@ namespace
     {
       voronoi_node node;
       node._parent_node = &voronoi_tree;
-      node._position.get<0>() = ggo::rand<float>(0.f, ggo::to<float>(width));
-      node._position.get<1>() = ggo::rand<float>(0.f, ggo::to<float>(height));
+      node._position.get<0>() = ggo::rand<float>(0.f, static_cast<float>(width));
+      node._position.get<1>() = ggo::rand<float>(0.f, static_cast<float>(height));
       node._color = ggo::black<ggo::color_8u>();
 
       voronoi_tree.create_leaf(node);
@@ -183,7 +183,7 @@ namespace
     std::map<ggo::tree<voronoi_node> *, std::vector<ggo::pos2f>> subpoints;
     for (int i = 0; i < 1024; ++i)
     {
-      ggo::pos2f point(ggo::rand<float>(0.f, ggo::to<float>(width)), ggo::rand<float>(0.f, ggo::to<float>(height)));
+      ggo::pos2f point(ggo::rand<float>(0.f, static_cast<float>(width)), ggo::rand<float>(0.f, static_cast<float>(height)));
 
       auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.get<0>(), point.get<1>());
 
@@ -220,10 +220,10 @@ namespace
     {
       for (int x = 0; x < voronoi_map.get_size<0>(); x += scale_factor)
       {
-        const auto left_bottom = find_voronoi_leaf(voronoi_tree, ggo::to<float>(x), ggo::to<float>(y));
-        const auto left_top = find_voronoi_leaf(voronoi_tree, ggo::to<float>(x), ggo::to<float>(y + scale_factor - 1));
-        const auto right_bottom = find_voronoi_leaf(voronoi_tree, ggo::to<float>(x + scale_factor - 1), ggo::to<float>(y));
-        const auto right_top = find_voronoi_leaf(voronoi_tree, ggo::to<float>(x + scale_factor - 1), ggo::to<float>(y + scale_factor - 1));
+        const auto left_bottom = find_voronoi_leaf(voronoi_tree, static_cast<float>(x), static_cast<float>(y));
+        const auto left_top = find_voronoi_leaf(voronoi_tree, static_cast<float>(x), static_cast<float>(y + scale_factor - 1));
+        const auto right_bottom = find_voronoi_leaf(voronoi_tree, static_cast<float>(x + scale_factor - 1), static_cast<float>(y));
+        const auto right_top = find_voronoi_leaf(voronoi_tree, static_cast<float>(x + scale_factor - 1), static_cast<float>(y + scale_factor - 1));
 
         if (left_bottom == left_top && left_top == right_bottom && right_bottom == right_top)
         {
@@ -241,7 +241,7 @@ namespace
           {
             for (int sub_x = x; sub_x < x + scale_factor; ++sub_x)
             {
-              voronoi_map(sub_x, sub_y) = find_voronoi_leaf(voronoi_tree, ggo::to<float>(sub_x), ggo::to<float>(sub_y));
+              voronoi_map(sub_x, sub_y) = find_voronoi_leaf(voronoi_tree, static_cast<float>(sub_x), static_cast<float>(sub_y));
             }
           }
         }

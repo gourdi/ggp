@@ -176,7 +176,7 @@ namespace ggo
 
     void  init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
     static  std::shared_ptr<particle>   create_particle(float focus_dist, int width, int height);
   };

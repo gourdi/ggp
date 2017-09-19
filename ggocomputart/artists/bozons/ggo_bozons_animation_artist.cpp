@@ -126,7 +126,7 @@ bool ggo::bozons_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

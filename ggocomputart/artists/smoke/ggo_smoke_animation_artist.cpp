@@ -2,6 +2,8 @@
 #include <ggo_kernel.h>
 #include <ggo_buffer_fill.h>
 
+#if 0
+
 //////////////////////////////////////////////////////////////
 ggo::smoke_animation_artist::loop_array2d::loop_array2d(int size_x, int size_y)
 :
@@ -45,10 +47,15 @@ double ggo::smoke_animation_artist::loop_array2d::loop_value(int x, int y) const
 	return this->operator()(x, y);
 }
 
+#endif
+
 //////////////////////////////////////////////////////////////
 ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, pbf, rt)
+
+#if 0
+,
 _velocity_x1(width + 1, height),
 _velocity_x2(width + 1, height),
 _velocity_y1(width, height + 1),
@@ -57,12 +64,14 @@ _density1(width, height),
 _density2(width, height),
 _bkgd_buffer(3 * width * height),
 _sources(4)
+#endif
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::smoke_animation_artist::init()
 {
+#if 0
   ++_frame_index;
 
   _velocity_x_cur = &_velocity_x1;
@@ -137,11 +146,13 @@ void ggo::smoke_animation_artist::init()
 
   ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_buffer.data(), get_width(), get_height(), get_line_step(),
     color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+#endif
 }
 
 //////////////////////////////////////////////////////////////
 bool ggo::smoke_animation_artist::update()
 {
+#if 0
   const int frames_count = 600;
 
   if (_frame_index > frames_count)
@@ -279,13 +290,15 @@ bool ggo::smoke_animation_artist::update()
   }
 
   std::swap(_density_cur, _density_tmp);
+#endif
 
   return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
+#if 0
 	// Draw the density.
   for_each_pixel([&](int x, int y)
   {
@@ -297,4 +310,5 @@ void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::pixel_r
     c_8u.b() = ggo::to<uint8_t>(density * 255 * _smoke_color.b() + (1 - density) * c_8u.b());
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
   });
+#endif
 }

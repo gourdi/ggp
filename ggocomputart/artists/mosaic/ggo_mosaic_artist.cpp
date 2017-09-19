@@ -89,7 +89,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 void ggo::mosaic_artist::render_bitmap(void * buffer, const bool & quit) const
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-    ggo::black_8u(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::black_8u(), ggo::rect_int::from_width_height(get_width(), get_height()));
 	
 	// Create the seeds.
 	ggo::polygon2d_float	seed1;
@@ -228,7 +228,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer, const bool & quit) const
 			std::cout << "S " << scale << ' ' << failures_count << ' ' << failures_max << ' ' << seeds.size() << std::endl;
 			
 			failures_count = 0;
-			failures_max = ggo::to<int>(2000.f * get_min_size() / scale);
+			failures_max = ggo::round_to<int>(2000.f * get_min_size() / scale);
 			scale *= 0.999f;
 		}
 		else
@@ -241,7 +241,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer, const bool & quit) const
 			std::cout << "F " << scale << ' ' << failures_count << ' ' << failures_max << ' ' << seeds.size() << std::endl;
 			
 			failures_count = 0;
-			failures_max = ggo::to<int>(2000.f * get_min_size() / scale);
+			failures_max = ggo::round_to<int>(2000.f * get_min_size() / scale);
 			scale *= 0.995f;
 		}
 	}
@@ -257,7 +257,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer, const bool & quit) const
 		for (int x = 0; x < get_width(); ++x)
 		{
 			float dx = static_cast<float>(x - get_width()) / 2;
-			int val = ggo::to<uint8_t>(92 * std::exp(-(dx * dx + dy * dy ) / variance));
+			int val = ggo::round_to<uint8_t>(92 * std::exp(-(dx * dx + dy * dy ) / variance));
 
       ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
 

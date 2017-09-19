@@ -117,7 +117,7 @@ bool ggo::dupecheck_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Background.
   if (buffer != nullptr)
@@ -133,7 +133,7 @@ void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::pix
         float dpos = pos - y / float(get_height());
         v_f -= bkgd_color._val * std::exp(-(dpos * dpos) * bkgd_color._var);
       }
-      uint8_t v = std::max(0, ggo::to<int>(255 * v_f));
+      uint8_t v = std::max(0, ggo::round_to<int>(255 * v_f));
 
       for (int x = 0; x < get_width(); ++x)
       {

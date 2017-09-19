@@ -52,7 +52,7 @@ bool ggo::chryzode_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::chryzode_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   chryzode_artist artist(get_width(), get_height());
 

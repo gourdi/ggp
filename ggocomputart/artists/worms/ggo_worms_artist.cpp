@@ -16,7 +16,7 @@ void ggo::worms_artist::render_bitmap(void * buffer, const bool & quit) const
   const int counter_max = 1500;
 
 	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-    ggo::white_8u(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::white_8u(), ggo::rect_int::from_width_height(get_width(), get_height()));
 
 	float hue1 = ggo::rand<float>();
 	float hue2 = ggo::rand<float>();
@@ -33,7 +33,7 @@ void ggo::worms_artist::render_bitmap(void * buffer, const bool & quit) const
 		// Build the spline.
 		for (int i = 0; i < 10; ++i)
 		{
-      int sprite_size = ggo::to<int>(0.1f * get_min_size());
+      int sprite_size = ggo::round_to<int>(0.1f * get_min_size());
       int pos_x = ggo::rand<int>(0, get_width());
       int pos_y = ggo::rand<int>(0, get_height());
         

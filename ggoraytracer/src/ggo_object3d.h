@@ -7,6 +7,12 @@
 
 namespace ggo
 {
+  enum class shading
+  {
+    simple_color,
+    raytracing
+  };
+
   class object3d
   {
   public:
@@ -16,7 +22,7 @@ namespace ggo
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color);
                                 object3d(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material);
 
-   void                         set_shape(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape);
+    void                        set_shape(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape);
 
     ggo::pos3f                  sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const;
     ggo::ray3d_float            sample_ray(float random_variable1, float random_variable2) const;
@@ -63,6 +69,9 @@ namespace ggo
     void                        set_phong_shininess(float phong_shininess) { _phong_shininess = phong_shininess; }
     float                       get_phong_shininess() const { return _phong_shininess; }
 
+    void                        set_shading(shading s) { _shading = s; }
+    shading                     get_shading() const { return _shading; }
+
   private:
 
     ggo::basis3d_float                                        _basis;
@@ -77,6 +86,7 @@ namespace ggo
     ggo::color_32f                                            _emissive_color = ggo::black<ggo::color_32f>();
     std::shared_ptr<const ggo::raytracable_shape3d_abc_float> _shape;
     std::shared_ptr<const ggo::material_abc>                  _material;
+    shading                                                   _shading = shading::raytracing;
   };
 
   std::shared_ptr<ggo::object3d>  create_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);

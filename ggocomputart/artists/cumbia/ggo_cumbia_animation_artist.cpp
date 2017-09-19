@@ -37,7 +37,7 @@ bool ggo::cumbia_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::antialiasing_point_camera	camera(get_width(), get_height(), _camera_basis, _camera_aperture);
 

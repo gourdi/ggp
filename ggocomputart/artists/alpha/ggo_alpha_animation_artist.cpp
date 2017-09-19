@@ -117,7 +117,7 @@ bool ggo::alpha_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer != nullptr)
   {
@@ -184,7 +184,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
   ggo::array_float freq(oscillo_size, 0.f), spat(oscillo_size, 0.f);
   for (int i = 0; i < _threshold; ++i)
   {
-    freq(i) = ggo::to<float>(ggo::rand<int>(-1, 1));
+    freq(i) = static_cast<float>(ggo::rand<int>(-1, 1));
   }
   ggo::dct(freq.data(), spat.data(), oscillo_size);
 

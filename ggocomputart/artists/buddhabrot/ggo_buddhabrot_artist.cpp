@@ -109,8 +109,8 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 	
 			point = map_fit(point, -1, 1);
 
-			int x = ggo::to<int>(point.get<0>());
-			int y = ggo::to<int>(point.get<1>());
+			int x = ggo::round_to<int>(point.get<0>());
+			int y = ggo::round_to<int>(point.get<1>());
 			if ((x >= 0) && (x < get_width()) &&
 		    	(y >= 0) && (y < get_height()))
 			{
@@ -123,7 +123,7 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 //////////////////////////////////////////////////////////////
 void ggo::buddhabrot_artist::render_bitmap(void * buffer, const bool & quit) const
 {
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), ggo::pixel_rect::from_width_height(get_width(), get_height()));
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), ggo::rect_int::from_width_height(get_width(), get_height()));
 
   ggo::array<int, 2> accumulation_r(get_width(), get_height());
   ggo::array<int, 2> accumulation_g(get_width(), get_height());
@@ -140,7 +140,7 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer, const bool & quit) con
 	escape_thresholds[2] = 10000 - escape_thresholds[1] - escape_thresholds[0];
 	
 	int indexes[3] = {0, 1, 2};
-	std::random_shuffle(indexes, indexes + 3);
+  std::shuffle(indexes, indexes + 3, std::default_random_engine());
 	
 	int escape_threshold_r = escape_thresholds[indexes[0]];
 	int escape_threshold_g = escape_thresholds[indexes[1]];

@@ -25,7 +25,7 @@ bool ggo::kanji_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::kanji_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

@@ -17,7 +17,7 @@ void ggo::crystal_bitmap_artist::render_bitmap(void * buffer, const bool & quit)
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
-    ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_width_height(get_width(), get_height()));
 
 	ggo::crystal_artist::params params;
 	ggo::crystal_artist::randomize_params(params);

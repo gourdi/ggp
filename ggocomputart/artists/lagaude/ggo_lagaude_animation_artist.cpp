@@ -83,7 +83,7 @@ bool ggo::lagaude_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Render background.
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
@@ -252,6 +252,6 @@ void ggo::lagaude_animation_artist::dust::render(void * buffer, int width, int h
   opened_disc.add_shapes(disc1, disc2);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, width, height, 3 * width, opened_disc, ggo::color_8u(ggo::to<uint8_t>(255.f * _val)));
+    buffer, width, height, 3 * width, opened_disc, ggo::color_8u(ggo::round_to<uint8_t>(255.f * _val)));
 }
 

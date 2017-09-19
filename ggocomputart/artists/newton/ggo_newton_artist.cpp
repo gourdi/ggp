@@ -64,7 +64,7 @@ void ggo::newton_artist::init()
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
 
   ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
-    color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    color1, color2, color3, color4, ggo::rect_int::from_width_height(get_width(), get_height()));
 
   std::unique_ptr<uint8_t> perlin_buffer(new uint8_t[get_width() * get_height()]);
   ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.get(), get_width(), get_height(), get_width(),
@@ -78,9 +78,9 @@ void ggo::newton_artist::init()
     {
       float val = *(perlin_buffer.get() + y * get_width() + x) / 255.f;
 
-      ptr[3 * x + 0] = ggo::to<uint8_t>(val * ptr[3 * x + 0]);
-      ptr[3 * x + 1] = ggo::to<uint8_t>(val * ptr[3 * x + 1]);
-      ptr[3 * x + 2] = ggo::to<uint8_t>(val * ptr[3 * x + 2]);
+      ptr[3 * x + 0] = ggo::round_to<uint8_t>(val * ptr[3 * x + 0]);
+      ptr[3 * x + 1] = ggo::round_to<uint8_t>(val * ptr[3 * x + 1]);
+      ptr[3 * x + 2] = ggo::round_to<uint8_t>(val * ptr[3 * x + 2]);
     }
   }
 }
@@ -126,7 +126,7 @@ bool ggo::newton_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::newton_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::newton_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   memcpy(buffer, _background.get(), get_width() * get_line_step());
 

@@ -66,8 +66,8 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
 			else if (particle.y() > height) { particle.y() -= height; }
 
 			// Render the particle.
-			int render_x = ggo::to<int>(particle.x());
-			int render_y = ggo::to<int>(particle.y());
+			int render_x = ggo::round_to<int>(particle.x());
+			int render_y = ggo::round_to<int>(particle.y());
 
 			if ((render_x >= 0) && (render_x < width) &&
 				  (render_y >= 0) && (render_y < height))

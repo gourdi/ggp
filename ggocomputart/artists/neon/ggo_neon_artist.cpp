@@ -9,7 +9,7 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <ggo::pixel_buffer_format pbf>
-  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::pixel_rect & clipping)
+  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping)
   {
     const float radius = 0.01f * artist.get_min_size();
 
@@ -84,7 +84,7 @@ bool ggo::neon_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::neon_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {
@@ -114,7 +114,7 @@ void ggo::neon_artist::render_frame(void * buffer, const ggo::pixel_rect & clipp
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::pixel_rect & clipping) const
+void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping) const
 {
   switch (get_pixel_buffer_format())
   {

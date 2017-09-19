@@ -6,7 +6,7 @@
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf>
-void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::rect_int & clipping) const
 {
   const int clipping_width_byte_size = clipping.width() * ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
@@ -20,7 +20,7 @@ void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::pix
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
-void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect_int & clipping)
 {
   constexpr ggo::pixel_buffer_format gray_pbf = ggo::pixel_buffer_format_info<pbf>::gray_pbf;
 
@@ -72,7 +72,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::pixe
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
-void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rect_int & clipping) const
 {
   const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(_hue + 0.5f, 1.f, 1.f);
   const float direction_length = 0.03f * std::sqrt(float(get_width() * get_height()));
@@ -115,7 +115,7 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::pix
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_buffer_format pbf>
-void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::pixel_rect & clipping, int frame_index) const
+void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const
 {
   const float obstacle_hypot = get_obstacle_hypot();
   const float obstacle_hypot_inv = 1.f / obstacle_hypot;
@@ -128,7 +128,7 @@ void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::pix
       obstacle.x() - obstacle_hypot, obstacle.x() + obstacle_hypot,
       obstacle.y() - obstacle_hypot, obstacle.y() + obstacle_hypot);
 
-    ggo::pixel_rect obstacle_pixel_rect(obstacle_rect);
+    ggo::rect_int obstacle_pixel_rect = from_math_to_pixel_exclusive(obstacle_rect);
     obstacle_pixel_rect.clip(get_width(), get_height());
 
     if (obstacle_pixel_rect.clip(clipping) == true)

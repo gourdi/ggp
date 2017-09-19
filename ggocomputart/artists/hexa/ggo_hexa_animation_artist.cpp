@@ -53,7 +53,7 @@ bool ggo::hexa_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Update camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, ggo::ease_inout(_frame_index, frames_count, 1.f, 350.f) });

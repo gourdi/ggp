@@ -1,5 +1,4 @@
 #include "ggo_rediff_animation_artist.h"
-#include <ggo_buffer_access.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>
@@ -33,7 +32,7 @@ void ggo::rediff_animation_artist::init()
 
   for_each_pixel([&](int x, int y)
   {
-    float dist = ggo::distance(get_center(), ggo::pos2f(ggo::to<float>(x), ggo::to<float>(y))) / get_min_size();
+    float dist = ggo::distance(get_center(), ggo::pos2f(static_cast<float>(x), static_cast<float>(y))) / get_min_size();
 
     set2d(_feed_map.data(), x, y, ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2));
     set2d(_kill_map.data(), x, y, ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2));
@@ -87,7 +86,7 @@ bool ggo::rediff_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer == nullptr)
   {

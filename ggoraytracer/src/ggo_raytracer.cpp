@@ -112,10 +112,17 @@ namespace
     }
     GGO_ASSERT_FLOAT_EQ(local_normal.dir().get_length(), 1.f);
     GGO_ASSERT_FLOAT_EQ(world_normal.dir().get_length(), 1.f);
-
-    // Let's go.
-    float reflection_factor = hit_object->get_reflection_factor();
+    
     ggo::color_32f hit_color(hit_object->get_color(local_normal.pos()));
+
+    // Handle the simple color shading.
+    if (hit_object->get_shading() == ggo::shading::simple_color)
+    {
+      return scene.fog() ? scene.fog()->process_segment(safe_ray.pos(), world_normal.pos(), hit_color) : hit_color;
+    }
+
+    // Let's go : do the recursion.
+    float reflection_factor = hit_object->get_reflection_factor();
     ggo::color_32f output_color(ggo::black<ggo::color_32f>());
 
     auto filtered_lights = filter_lights(scene, raycaster, world_normal, hit_object, sample_light_func);

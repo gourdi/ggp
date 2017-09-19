@@ -52,7 +52,7 @@ bool ggo::duffing_realtime_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   auto contract = [](int v) -> int
   {

@@ -43,9 +43,9 @@ void ggo::rah_animation_artist::fog::paint(void * buffer, int width, int height,
       float dx2 = ggo::square(x - _position.x());
       float value = 1 - std::exp(-(dx2 + dy2) / sigma);
       
-      ptr[0] = ggo::to<int>(alpha * value * 255 + (1 - alpha) * ptr[0]);
-      ptr[1] = ggo::to<int>(alpha * value * 255 + (1 - alpha) * ptr[1]);
-      ptr[2] = ggo::to<int>(alpha * value * 255 + (1 - alpha) * ptr[2]);
+      ptr[0] = ggo::round_to<int>(alpha * value * 255 + (1 - alpha) * ptr[0]);
+      ptr[1] = ggo::round_to<int>(alpha * value * 255 + (1 - alpha) * ptr[1]);
+      ptr[2] = ggo::round_to<int>(alpha * value * 255 + (1 - alpha) * ptr[2]);
       
       ptr += 3;
     }
@@ -140,11 +140,11 @@ bool ggo::rah_animation_artist::particle::is_alive(int width, int height, float 
   int min_size = std::min(width, height);
 
   float delta = disc_radius(min_size) + blur_radius(min_size, focus_dist);
-  int left    = ggo::to<int>(_pos.x() - delta);
-  int right   = ggo::to<int>(_pos.x() + delta);
-  int bottom  = ggo::to<int>(_pos.y() - delta);
-  int top     = ggo::to<int>(_pos.y() + delta);
-  ggo::pixel_rect pixel_rect = ggo::pixel_rect::from_left_right_bottom_top(left, right, bottom, top);
+  int left    = ggo::round_to<int>(_pos.x() - delta);
+  int right   = ggo::round_to<int>(_pos.x() + delta);
+  int bottom  = ggo::round_to<int>(_pos.y() - delta);
+  int top     = ggo::round_to<int>(_pos.y() + delta);
+  ggo::rect_int pixel_rect = ggo::rect_int::from_left_right_bottom_top(left, right, bottom, top);
   
   return pixel_rect.left() < width;
 }
@@ -415,7 +415,7 @@ bool ggo::rah_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Paint background.
   if (buffer != nullptr)

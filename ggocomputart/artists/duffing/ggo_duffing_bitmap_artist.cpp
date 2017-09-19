@@ -53,7 +53,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer, const bool & quit)
 	const ggo::color_32f color4 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
 	
 	ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-    color1, color2, color3, color4, ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    color1, color2, color3, color4, ggo::rect_int::from_width_height(get_width(), get_height()));
 
 	// Render the shadow points.
 	std::cout << "Rendering the shadow" << std::endl;

@@ -81,7 +81,7 @@ _transforms(32)
 //////////////////////////////////////////////////////////////
 void ggo::distorsion_animation_artist::render_last_frame(void * buffer) const
 {
-  render_frame(frames_count, buffer, ggo::pixel_rect::from_left_right_bottom_top(0, get_width() - 1, 0, get_height() - 1));
+  render_frame(frames_count, buffer, ggo::rect_int::from_left_right_bottom_top(0, get_width() - 1, 0, get_height() - 1));
 }
 
 //////////////////////////////////////////////////////////////
@@ -139,13 +139,13 @@ bool ggo::distorsion_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   render_frame(_frame_index, buffer, clipping);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(int frame_index, void * buffer, const ggo::pixel_rect & clipping) const
+void ggo::distorsion_animation_artist::render_frame(int frame_index, void * buffer, const ggo::rect_int & clipping) const
 {
   std::vector<fixed_transform> transforms;
   for (auto & transform : _transforms)

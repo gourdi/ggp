@@ -14,10 +14,11 @@ namespace ggo
 
     void  init() override;
     bool  update() override;
-    void  render_frame(void * buffer, const ggo::pixel_rect & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
   private:
 
+#if 0
     class loop_array2d : public ggo::array<double, 2>
     {
     public:
@@ -57,6 +58,7 @@ namespace ggo
     ggo::array<fluid_source, 1> _sources;
     ggo::array<uint8_t, 1>			_bkgd_buffer;
     ggo::color_8u      	        _smoke_color;
+#endif
   };
 }
 

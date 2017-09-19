@@ -84,7 +84,7 @@ bool ggo::metaballs_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::antialiasing_point_camera camera(get_width(), get_height(), _camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);

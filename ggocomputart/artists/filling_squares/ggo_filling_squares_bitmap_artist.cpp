@@ -20,7 +20,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer, const bool
 	
 	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>()),
-    ggo::pixel_rect::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_width_height(get_width(), get_height()));
 
 	for (const auto & multi_square : multi_squares)
 	{

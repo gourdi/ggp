@@ -4,7 +4,6 @@
 #include <ggo_artist.h>
 #include <ggo_artist_ids.h>
 #include <ggo_array.h>
-#include <ggo_pixel_rect.h>
 #include <ggo_pixel_buffer.h>
 #include <mutex>
 
@@ -25,7 +24,7 @@ namespace ggo
 
     virtual void init() = 0;
     virtual bool update() = 0;
-    virtual void render_frame(void * buffer, const ggo::pixel_rect & clipping) = 0;
+    virtual void render_frame(void * buffer, const ggo::rect_int & clipping) = 0;
 
     int                       get_line_step() const { return _line_step; }
     ggo::pixel_buffer_format  get_pixel_buffer_format() const { return _pbf; }

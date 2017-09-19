@@ -265,7 +265,7 @@ std::vector<std::unique_ptr<ggo::kame_animation_artist::timed_triangle>> ggo::ka
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::pixel_rect & clipping)
+void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
 
@@ -324,7 +324,7 @@ void ggo::kame_animation_artist::paint_glow_segment(const ggo::pos3f & p1, const
   ggo::rect<float> bounding_rect(proj1, proj2);
   bounding_rect.inflate(5.f);
 
-  ggo::pixel_rect pixel_rect(bounding_rect.data());
+  ggo::rect_int pixel_rect = from_math_to_pixel_exclusive(bounding_rect.data());
   if (pixel_rect.clip(get_width(), get_height()) == false)
   {
     return;
@@ -343,9 +343,9 @@ void ggo::kame_animation_artist::paint_glow_segment(const ggo::pos3f & p1, const
       const ggo::color_32f color = (128.f * ggo::square(1.f - dist / radius)) * _color;
 
       ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
-      pixel8u.r() = ggo::to<uint8_t>(pixel8u.r() + color.r());
-      pixel8u.g() = ggo::to<uint8_t>(pixel8u.g() + color.g());
-      pixel8u.b() = ggo::to<uint8_t>(pixel8u.b() + color.b());
+      pixel8u.r() = ggo::round_to<uint8_t>(pixel8u.r() + color.r());
+      pixel8u.g() = ggo::round_to<uint8_t>(pixel8u.g() + color.g());
+      pixel8u.b() = ggo::round_to<uint8_t>(pixel8u.b() + color.b());
 
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), pixel8u);
     }
@@ -360,7 +360,7 @@ void ggo::kame_animation_artist::paint_glow(const glow & glow, void * buffer) co
   ggo::rect<float> bounding_rect(glow._pos, glow._pos);
   bounding_rect.inflate(glow._radius);
 
-  ggo::pixel_rect pixel_rect(bounding_rect.data());
+  ggo::rect_int pixel_rect = from_math_to_pixel_exclusive(bounding_rect.data());
   if (pixel_rect.clip(get_width(), get_height()) == false)
   {
     return;
@@ -377,9 +377,9 @@ void ggo::kame_animation_artist::paint_glow(const glow & glow, void * buffer) co
       const ggo::color_32f color = (glow._intensity * ggo::square(1.f - dist / glow._radius)) * _color;
 
       ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
-      pixel8u.r() = ggo::to<uint8_t>(pixel8u.r() + color.r());
-      pixel8u.g() = ggo::to<uint8_t>(pixel8u.g() + color.g());
-      pixel8u.b() = ggo::to<uint8_t>(pixel8u.b() + color.b());
+      pixel8u.r() = ggo::round_to<uint8_t>(pixel8u.r() + color.r());
+      pixel8u.g() = ggo::round_to<uint8_t>(pixel8u.g() + color.g());
+      pixel8u.b() = ggo::round_to<uint8_t>(pixel8u.b() + color.b());
 
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), pixel8u);
     }

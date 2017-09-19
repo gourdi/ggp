@@ -1,12 +1,12 @@
 #include "ggo_crystal_artist.h"
 #include <ggo_color.h>
-#include <ggo_buffer.h>
+#include <ggo_array.h>
 #include <ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params)
 {
-  ggo::buffer<float> float_buffer(3 * width * height, 0.f);
+  ggo::array<float, 1> float_buffer(3 * width * height, 0.f);
 
 	for (int j = 0; j < 16 * width * height; ++j)
 	{
@@ -48,8 +48,8 @@ void ggo::crystal_artist::render_transform(float * buffer, int width, int height
 
 		// Render point.
 		ggo::pos2f render_pt = ggo::artist::map_fit(pt, -5, 5, width, height);
-		int x = ggo::to<int>(render_pt.x());
-		int y = ggo::to<int>(render_pt.y());
+		int x = ggo::round_to<int>(render_pt.x());
+		int y = ggo::round_to<int>(render_pt.y());
 
 		if ((x >= 0) && (x < width) &&
 			  (y >= 0) && (y < height))
