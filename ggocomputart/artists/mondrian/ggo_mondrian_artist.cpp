@@ -22,7 +22,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::mondrian_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::mondrian_artist::render_bitmap(void * buffer) const
 {
 	float	base_hue = ggo::rand<float>();
   float	base_sat = ggo::rand<float>();

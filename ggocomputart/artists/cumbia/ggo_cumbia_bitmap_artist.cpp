@@ -11,7 +11,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer) const
 {
   ggo::basis3d_float camera_basis;
   float aperture = 0.f;

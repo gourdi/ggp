@@ -188,7 +188,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::trees_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::trees_artist::render_bitmap(void * buffer) const
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     ggo::black_8u(), ggo::rect_int::from_width_height(get_width(), get_height()));

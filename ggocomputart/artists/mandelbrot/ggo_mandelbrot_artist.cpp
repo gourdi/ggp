@@ -156,7 +156,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 	
 //////////////////////////////////////////////////////////////
-void ggo::mandelbrot_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 {
 	auto palette = setup_palette();
 

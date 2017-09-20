@@ -65,7 +65,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::marbles_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::marbles_artist::render_bitmap(void * buffer) const
 {
   ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
 

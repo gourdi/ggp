@@ -15,7 +15,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <ggo::pixel_buffer_format pbf>
-  void render_t(void * buffer, const ggo::topodoko_artist & artist, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares, const bool & quit)
+  void render_t(void * buffer, const ggo::topodoko_artist & artist, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares)
   {
     const ggo::color_8u bkgd_color1 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
     const ggo::color_8u bkgd_color2 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
@@ -43,11 +43,6 @@ namespace
         square.add_point(point);
       }
 
-      if (quit == true)
-      {
-        return;
-      }
-
       ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
         shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), square, uint8_t(0x40f));
     }
@@ -71,11 +66,6 @@ namespace
         square.add_point(point);
       }
 
-      if (quit == true)
-      {
-        return;
-      }
-
       ggo::paint_shape<pbf, ggo::sampling_16x16>(
         buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), square, ggo::convert_color_to<ggo::color_8u>(color_square._color));
     }
@@ -91,7 +81,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::topodoko_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::topodoko_artist::render_bitmap(void * buffer) const
 {
 	float hue1 = ggo::rand<float>();
 	float hue2 = std::fmod(hue1 + ggo::rand<float>(0.25f, 0.75f), 1.f);
@@ -144,11 +134,6 @@ void ggo::topodoko_artist::render_bitmap(void * buffer, const bool & quit) const
 					{
 						color_squares.push_back(color_square);
 					}
-
-          if (quit == true)
-          {
-            return;
-          }
 				}
 			}
 		}
@@ -157,10 +142,10 @@ void ggo::topodoko_artist::render_bitmap(void * buffer, const bool & quit) const
   switch (get_pixel_buffer_format())
   {
   case ggo::rgb_8u_yu:
-    render_t<ggo::rgb_8u_yu>(buffer, *this, hue1, hue2, square_size, color_squares, quit);
+    render_t<ggo::rgb_8u_yu>(buffer, *this, hue1, hue2, square_size, color_squares);
     break;
   case ggo::bgra_8u_yd:
-    render_t<ggo::bgra_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares, quit);
+    render_t<ggo::bgra_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares);
     break;
     default:
       GGO_FAIL();

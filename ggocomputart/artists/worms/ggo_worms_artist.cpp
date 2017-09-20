@@ -11,7 +11,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::worms_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::worms_artist::render_bitmap(void * buffer) const
 {
   const int counter_max = 1500;
 

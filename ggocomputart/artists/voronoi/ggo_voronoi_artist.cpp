@@ -306,7 +306,7 @@ ggo::bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::voronoi_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::voronoi_artist::render_bitmap(void * buffer) const
 {
   int scale_factor = 4;
 

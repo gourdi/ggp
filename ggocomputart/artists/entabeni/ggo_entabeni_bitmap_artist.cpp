@@ -10,7 +10,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::entabeni_bitmap_artist::render_bitmap(void * buffer) const
 {
   auto grid = ggo::entabeni::create_grid(true, false);
   auto color_map = ggo::entabeni::create_color_map();

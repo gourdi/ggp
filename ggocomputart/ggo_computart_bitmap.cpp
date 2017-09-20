@@ -1,5 +1,5 @@
 #include "ggo_bitmap_artist_abc.h"
-#include <ggo_helpers.h>
+#include <ggo_kernel.h>
 #include <ggo_bmp.h>
 #include <ggo_chronometer.h>
 #include <ggo_array.h>
@@ -89,17 +89,17 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 		
 		if (i == 1)
 		{
-			int artist_id = -1;
+      auto artist_id = ggo::str_to<int>(arg);
 
-			if ((ggo::str2val(arg, artist_id) == false) || (artist_id < 0))
+			if (!artist_id)
 			{
 				std::cerr << "Error : invalid artist id argument" << std::endl;
 				return false;
 			}
-			params._artist_id = static_cast<ggo::bitmap_artist_id>(artist_id);
+			params._artist_id = static_cast<ggo::bitmap_artist_id>(*artist_id);
 		}
 		else
-		if (arg.compare("-d") == 0)
+		if (arg == "-d")
 		{
 			++i;
 			if (i >= argc)
@@ -111,7 +111,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 			params._output_directory = argv[i];
 		}
 		else
-		if (arg.compare("-r") == 0)
+		if (arg == "-r")
 		{
 			++i;
 			if (i >= argc)
@@ -119,11 +119,13 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-			if ((ggo::str2val(argv[i], params._from) == false) || (params._from < 0))
+      auto frame_from = ggo::str_to<int>(argv[i]);
+			if (!frame_from || *frame_from < 0)
 			{
 				std::cerr << "Error : invalid range argument" << std::endl;
 				return false;
 			}
+      params._from = *frame_from;
 			
 			++i;
 			if (i >= argc)
@@ -131,14 +133,16 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-			if ((ggo::str2val(argv[i], params._to) == false) || (params._to < params._from))
-			{
+      auto frame_to = ggo::str_to<int>(argv[i]);
+      if (!frame_to || *frame_to < 0)
+        {
 				std::cerr << "Error : invalid range argument" << std::endl;
 				return false;
 			}
+      params._to = *frame_to;
 		}
 		else
-		if (arg.compare("-s") == 0)
+		if (arg == "-s")
 		{
 			++i;
 			if (i >= argc)
@@ -146,11 +150,13 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing width parameter" << std::endl;
 				return false;
 			}
-			if ((ggo::str2val(argv[i], params._width) == false) || (params._width <= 0))
+      auto width = ggo::str_to<int>(argv[i]);
+			if (!width || *width <= 0)
 			{
 				std::cerr << "Error : invalid width argument" << std::endl;
 				return false;
 			}
+      params._width = *width;
 
 			++i;
 			if (i >= argc)
@@ -158,14 +164,16 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing height parameter" << std::endl;
 				return false;
 			}
-			if ((ggo::str2val(argv[i], params._height) == false) || (params._height <= 0))
-			{
+      auto height = ggo::str_to<int>(argv[i]);
+      if (!height || *height <= 0)
+      {
 				std::cerr << "Error : invalid height argument" << std::endl;
 				return false;
 			}
+      params._height = *height;
 		}
     else
-		if (arg.compare("-t") == 0)
+		if (arg == "-t")
 		{
 			++i;
 			if (i >= argc)
@@ -173,11 +181,13 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing threads count parameter" << std::endl;
 				return false;
 			}
-			if ((ggo::str2val(argv[i], params._threads_count) == false) || (params._threads_count <= 0))
+      auto threads_count = ggo::str_to<int>(argv[i]);
+			if (!threads_count || *threads_count <= 0)
 			{
 				std::cerr << "Error : invalid threads count argument" << std::endl;
 				return false;
 			}
+      params._threads_count = *threads_count;
 		}
 		else
 		{
@@ -220,7 +230,7 @@ void render_images(const ggo_params & params, int thread_id)
 
 		ggo::chronometer chronometer;
     buffer.fill(0);
-		artist->render_bitmap(buffer.data(), false);
+		artist->render_bitmap(buffer.data());
     ggo_logger(thread_id, filename.str()) << "Image rendered in " << chronometer.get_display_time();
 
 		if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, 3 * params._width) == false)

@@ -15,7 +15,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cells_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::cells_artist::render_bitmap(void * buffer) const
 {
   const int cells_count = 250;
   

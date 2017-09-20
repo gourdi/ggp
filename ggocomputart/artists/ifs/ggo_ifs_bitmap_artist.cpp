@@ -11,7 +11,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::ifs_bitmap_artist::render_bitmap(void * buffer) const
 {
   ggo::ifs_artist artist(get_width(), get_height());
 

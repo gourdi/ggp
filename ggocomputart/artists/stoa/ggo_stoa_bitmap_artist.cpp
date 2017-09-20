@@ -14,7 +14,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
 {
   // The camera.
   const ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });

@@ -10,7 +10,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer) const
 {
 	const int frame_index = 100;
 	

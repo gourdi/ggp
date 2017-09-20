@@ -19,7 +19,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 {
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 500.f });
   camera_basis.rotate(ggo::ray3d_float::O_X(), 1.1f);

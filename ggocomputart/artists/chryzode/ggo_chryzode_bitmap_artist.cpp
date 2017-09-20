@@ -10,7 +10,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
 {
   chryzode_artist artist(get_width(), get_height());
 

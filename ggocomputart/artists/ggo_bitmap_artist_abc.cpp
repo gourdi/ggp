@@ -54,7 +54,7 @@ namespace ggo
                                     int frames_count = 0,
                                     bool render_last_frame_only = false);
 
-    void	render_bitmap(void * buffer, const bool & qui) const override;
+    void	render_bitmap(void * buffer) const override;
 
   private:
 
@@ -81,7 +81,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer, const bool & qui) const
+void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 {
 	std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
     _artist_id, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering));

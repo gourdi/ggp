@@ -10,7 +10,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_bitmap_artist::render_bitmap(void * buffer, const bool & quit) const
+void ggo::julia_bitmap_artist::render_bitmap(void * buffer) const
 {	
 	ggo::julia_artist	artist(get_width(), get_height());
 	

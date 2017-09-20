@@ -367,39 +367,42 @@ namespace ggo
 
 //////////////////////////////////////////////////////////////
 // String to value
-template <typename data_t>
-std::optional<data_t> str_to(const std::string & str)
+namespace ggo
 {
-  return {};
-}
+  template <typename data_t>
+  std::optional<data_t> str_to(const std::string & str)
+  {
+    return {};
+  }
 
-template <> inline
-std::optional<bool> str_to(const std::string & str)
-{
-  if (str == "true")
+  template <> inline
+    std::optional<bool> str_to(const std::string & str)
   {
-    return true;
+    if (str == "true")
+    {
+      return true;
+    }
+    if (str == "false")
+    {
+      return false;
+    }
+    return {};
   }
-  if (str == "false")
-  {
-    return false;
-  }
-  return {};
-}
 
-template <> inline
-std::optional<int> str_to(const std::string & str)
-{
-  std::optional<int> val;
-  try
+  template <> inline
+    std::optional<int> str_to(const std::string & str)
   {
-    val = stoi(str);
-  }
-  catch (...)
-  {
+    std::optional<int> val;
+    try
+    {
+      val = stoi(str);
+    }
+    catch (...)
+    {
 
+    }
+    return val;
   }
-  return val;
 }
 
 //////////////////////////////////////////////////////////////
