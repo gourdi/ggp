@@ -13,7 +13,8 @@ namespace ggo
 
     ggo::color_32f  render_pixel(int x, int y,
                                  const ggo::scene & scene,
-                                 const ggo::raytrace_params & raytrace_params) const override;
+                                 const ggo::raycaster_abc & raycaster,
+                                 int depth) const override;
     
     const ggo::antialiasing_camera_abc & _camera;
   };
@@ -21,16 +22,19 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::color_32f antialiasing_render_task::render_pixel(int x, int y,
                                                         const ggo::scene & scene,
-                                                        const ggo::raytrace_params & raytrace_params) const
+                                                        const ggo::raycaster_abc & raycaster,
+                                                        int depth) const
   {
     std::array<ggo::color_32f, 4> colors;
     
     auto first_pass_rays = _camera.get_first_pass_rays(x, y);
+
+    ggo::raytracer raytracer(scene, raycaster);
     
-    colors[0] = ggo::raytracer::process(first_pass_rays[0], scene, raytrace_params);
-    colors[1] = ggo::raytracer::process(first_pass_rays[1], scene, raytrace_params);
-    colors[2] = ggo::raytracer::process(first_pass_rays[2], scene, raytrace_params);
-    colors[3] = ggo::raytracer::process(first_pass_rays[3], scene, raytrace_params);
+    colors[0] = raytracer.process(first_pass_rays[0], depth, 0.f, 0.f);
+    colors[1] = raytracer.process(first_pass_rays[1], depth, 0.f, 0.f);
+    colors[2] = raytracer.process(first_pass_rays[2], depth, 0.f, 0.f);
+    colors[3] = raytracer.process(first_pass_rays[3], depth, 0.f, 0.f);
     
     float sum_r = colors[0].r() + colors[1].r() + colors[2].r() + colors[3].r();
     float sum_g = colors[0].g() + colors[1].g() + colors[2].g() + colors[3].g();
@@ -52,18 +56,18 @@ namespace ggo
     auto second_pass_rays = _camera.get_second_pass_rays(x, y);
     
     ggo::color_32f result(sum_r, sum_g, sum_b);
-    result += ggo::raytracer::process(second_pass_rays[0], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[1], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[2], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[3], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[4], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[5], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[6], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[7], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[8], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[9], scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[10],scene, raytrace_params);
-    result += ggo::raytracer::process(second_pass_rays[11],scene, raytrace_params);
+    result += raytracer.process(second_pass_rays[0],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[1],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[2],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[3],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[4],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[5],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[6],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[7],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[8],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[9],  depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[10], depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[11], depth, 0.f, 0.f);
 
     return result / 16.f;
   };

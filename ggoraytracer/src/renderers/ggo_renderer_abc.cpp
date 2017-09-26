@@ -1,9 +1,8 @@
 #include "ggo_renderer_abc.h"
 #include "ggo_raytracer.h"
 #include "ggo_camera_abc.h"
-#include "ggo_object3d.h"
-#include "ggo_indirect_lighting_abc.h"
 #include <ggo_array.h>
+#include <ggo_brute_force_raycaster.h>
 #include <thread>
 #include <mutex>
 #include <stdlib.h>
@@ -27,7 +26,8 @@ namespace ggo
   void renderer_abc::render_thread_func(const ggo::renderer_abc * renderer,
                                         void * buffer,int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                                         const ggo::scene * scene,
-                                        const ggo::raytrace_params * raytrace_params)
+                                        const ggo::raycaster_abc * raycaster,
+                                        int depth)
   {
     auto render_task = renderer->create_render_task(*scene);
       
@@ -53,7 +53,7 @@ namespace ggo
       
       for (int x = 0; x < width; ++x)
       {
-        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raytrace_params);
+        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raycaster, depth);
 
         switch (pbf)
         {
@@ -70,20 +70,19 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   void renderer_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
-                            const ggo::scene_builder & scene_builder,
-                            const ggo::raytrace_params & raytrace_params)
-  {
-    auto scene = scene_builder.build_scene();
-
-    render(buffer, width, height, line_step, pbf, scene, raytrace_params);
-  }
-
-  //////////////////////////////////////////////////////////////
-  void renderer_abc::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
                             const ggo::scene & scene,
                             const ggo::raytrace_params & raytrace_params)
   {
     std::cout << scene.lights().size() << " light(s) in the scene." << std::endl;
+
+    // Create brute force raycaster if none is provided.
+    std::unique_ptr<ggo::brute_force_raycaster> brute_force_raycaster;
+    const ggo::raycaster_abc * raycaster = raytrace_params._raycaster;
+    if (raycaster == nullptr)
+    {
+      brute_force_raycaster.reset(new ggo::brute_force_raycaster(scene.objects()));
+      raycaster = brute_force_raycaster.get();
+    }
 
     int threads_count = raytrace_params._threads_count;
 
@@ -113,7 +112,7 @@ namespace ggo
 
         for (int x = 0; x < width; ++x)
         {
-          const ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params);
+          const ggo::color_32f color = render_task->render_pixel(x, y, scene, *raycaster, raytrace_params._depth);
           
           switch (pbf)
           {
@@ -136,7 +135,7 @@ namespace ggo
       std::vector<std::thread> threads;
       for (int i = 0; i < threads_count; ++i)
       {
-        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, line_step, pbf, &scene, &raytrace_params));
+        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, line_step, pbf, &scene, raycaster, raytrace_params._depth));
       }
       for (auto & thread : threads)
       {

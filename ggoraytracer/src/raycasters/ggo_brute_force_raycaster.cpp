@@ -1,16 +1,17 @@
 #include "ggo_brute_force_raycaster.h"
+#include <ggo_object3d_abc.h>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  const ggo::object3d * brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                        float & dist,
-                                                        ggo::ray3d_float & local_normal,
-                                                        ggo::ray3d_float & world_normal,
-                                                        const ggo::object3d * exclude_object1,
-                                                        const ggo::object3d * exclude_object2) const
+  const ggo::object3d_abc * brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
+                                                            float & dist,
+                                                            ggo::ray3d_float & local_normal,
+                                                            ggo::ray3d_float & world_normal,
+                                                            const ggo::object3d_abc * exclude_object1,
+                                                            const ggo::object3d_abc * exclude_object2) const
   {
-    const ggo::object3d * hit_object = nullptr;
+    const ggo::object3d_abc * hit_object = nullptr;
     dist = std::numeric_limits<float>::max();
 
     for (const auto & object : _objects)
@@ -20,15 +21,14 @@ namespace ggo
         continue;
       }
 
-      float dist_cur = 0;
-      ggo::ray3d_float local_normal_cur, world_normal_cur;
+      auto intersection = object->intersect_ray(ray);
 
-      if ((object->intersect_ray(ray, dist_cur, local_normal_cur, world_normal_cur) == true) && (dist_cur < dist))
+      if (intersection && intersection->_dist < dist)
       {
         hit_object = object.get();
-        dist = dist_cur;
-        local_normal = local_normal_cur;
-        world_normal = world_normal_cur;
+        dist = intersection->_dist;
+        local_normal = intersection->_local_normal;
+        world_normal = intersection->_world_normal;
       }
     }
 
@@ -38,8 +38,8 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   bool brute_force_raycaster::check_visibility(const ggo::ray3d_float & ray,
                                                float dist_max,
-                                               const ggo::object3d * exclude_object1,
-                                               const ggo::object3d * exclude_object2) const
+                                               const ggo::object3d_abc * exclude_object1,
+                                               const ggo::object3d_abc * exclude_object2) const
   {
     for (const auto & object : _objects)
     {
@@ -48,10 +48,9 @@ namespace ggo
         continue;
       }
 
-      float dist = 0;
-      ggo::ray3d_float local_normal, world_normal;
+      auto intersection = object->intersect_ray(ray);
 
-      if ((object->intersect_ray(ray, dist, local_normal, world_normal) == true) && (dist < dist_max))
+      if (intersection && intersection->_dist < dist_max)
       {
         return true;
       }

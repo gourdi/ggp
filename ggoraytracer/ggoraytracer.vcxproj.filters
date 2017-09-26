@@ -19,6 +19,12 @@
     <Filter Include="renderers">
       <UniqueIdentifier>{6b7fa60e-4217-459a-917a-dc769db9a867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="objects3d">
+      <UniqueIdentifier>{1a160bff-3db4-411b-85d3-4325007324c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="global_lighting">
+      <UniqueIdentifier>{ab7d4500-f668-4ec3-8d7e-d0d5550f8b82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backgrounds\ggo_background3d_abc.h">
@@ -60,9 +66,6 @@
     <ClInclude Include="src\renderers\ggo_antialiasing_renderer.h">
       <Filter>renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h">
-      <Filter>renderers</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderers\ggo_mono_sampling_renderer.h">
       <Filter>renderers</Filter>
     </ClInclude>
@@ -70,19 +73,39 @@
       <Filter>renderers</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_raytracer_global.h" />
-    <ClInclude Include="src\ggo_object3d.h" />
     <ClInclude Include="src\ggo_raytracer.h" />
     <ClInclude Include="src\ggo_scene.h" />
     <ClInclude Include="src\materials\ggo_material_abc.h">
       <Filter>materials</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_bidirectional_lighting.h">
-      <Filter>renderers</Filter>
+    <ClInclude Include="src\objects3d\ggo_glow.h">
+      <Filter>objects3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_indirect_lighting_abc.h">
-      <Filter>renderers</Filter>
+    <ClInclude Include="src\objects3d\ggo_object3d_abc.h">
+      <Filter>objects3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderers\ggo_photon_mapping.h">
+    <ClInclude Include="src\objects3d\ggo_simple_color_object3d.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_diffuse_object3d.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_shape_light.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_shape_light.imp.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global_lighting\ggo_bidirectional_lighting.h">
+      <Filter>global_lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global_lighting\ggo_global_lighting_abc.h">
+      <Filter>global_lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\global_lighting\ggo_photon_mapping.h">
+      <Filter>global_lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h">
       <Filter>renderers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,25 +137,36 @@
     <ClCompile Include="src\renderers\ggo_antialiasing_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp">
-      <Filter>renderers</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderers\ggo_mono_sampling_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
     <ClCompile Include="src\renderers\ggo_renderer_abc.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\ggo_object3d.cpp" />
     <ClCompile Include="src\ggo_raytracer.cpp" />
     <ClCompile Include="src\ggo_scene.cpp" />
     <ClCompile Include="src\raycasters\ggo_brute_force_raycaster.cpp">
       <Filter>raycasters</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderers\ggo_bidirectional_lighting.cpp">
-      <Filter>renderers</Filter>
+    <ClCompile Include="src\objects3d\ggo_glow.cpp">
+      <Filter>objects3d</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderers\ggo_photon_mapping.cpp">
+    <ClCompile Include="src\objects3d\ggo_object3d_abc.imp.h">
+      <Filter>objects3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects3d\ggo_simple_color_object3d.imp.h">
+      <Filter>objects3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objects3d\ggo_diffuse_object3d.imp.h">
+      <Filter>objects3d</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global_lighting\ggo_bidirectional_lighting.cpp">
+      <Filter>global_lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\global_lighting\ggo_photon_mapping.cpp">
+      <Filter>global_lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
   </ItemGroup>

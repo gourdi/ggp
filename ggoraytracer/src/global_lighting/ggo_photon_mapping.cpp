@@ -5,11 +5,12 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  photon_mapping::photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d>> & lights,
+  photon_mapping::photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & lights,
                                  const std::vector<ggo::pos3f> & target_samples,
-                                 const ggo::object3d & object,
+                                 const ggo::object3d_abc & object,
                                  const ggo::raycaster_abc & raycaster)
   {
+#if 0
     using color_point = ggo::kdtree<ggo::color_32f, 3>::data_point;
 
     std::vector<color_point> photons;
@@ -94,16 +95,20 @@ namespace ggo
     }
 
     _tree.reset(new ggo::kdtree<ggo::color_32f, 3>(photons));
+#endif
   }
 
   //////////////////////////////////////////////////////////////
   ggo::color_32f photon_mapping::process(const ggo::ray3d_float & ray,
                                          const ggo::ray3d_float & world_normal,
-                                         const ggo::object3d & hit_object,
+                                         const ggo::object3d_abc & hit_object,
                                          const ggo::color_32f & hit_color,
                                          float random_variable1,
                                          float random_variable2) const
   {
+    return ggo::black_32f();
+
+#if 0
     const float radius = 0.1f;
 
     ggo::color_32f output_color(ggo::black<ggo::color_32f>());
@@ -120,5 +125,6 @@ namespace ggo
     output_color /= ggo::pi<float>() * ggo::square(radius);
 
     return output_color;
+#endif
   }
 }

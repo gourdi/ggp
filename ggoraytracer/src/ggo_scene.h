@@ -1,66 +1,49 @@
 #ifndef __GGO_SCENE__
 #define __GGO_SCENE__
 
-#include <ggo_object3d.h>
 #include <ggo_fog_abc.h>
 #include <ggo_background3d_abc.h>
+#include <ggo_diffuse_object3d.h>
 #include <memory>
 
 namespace ggo
 {
-  class scene
+  class scene final
   {
   public:
 
-    scene() = default;
-    scene(const std::vector<std::shared_ptr<const ggo::object3d>> & objects,
-          std::shared_ptr<const ggo::background3d_abc> background,
-          const ggo::color_32f & ambient_color,
-          std::shared_ptr<const ggo::fog_abc> fog);
+          scene(std::shared_ptr<const ggo::background3d_abc> background);
 
-    const std::vector<std::shared_ptr<const ggo::object3d>> & objects() const { return _objects; }
-    const std::vector<std::shared_ptr<const ggo::object3d>> & lights() const { return _lights; }
+    void  add_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & center);
 
-    const ggo::fog_abc *          fog() const { return _fog.get(); }
-    const ggo::background3d_abc & background() const { return *_background; }
-    const ggo::color_32f &        ambient_color() const { return _ambient_color; }
+    template <uint32_t flags, typename shape_t, typename material_t>
+    ggo::diffuse_object3d<flags, shape_t, material_t> & add_diffuse_object(const shape_t & shape, const material_t & material)
+    {
+      using object_t = diffuse_object3d<flags, shape_t, material_t>;
 
-  private:
+      auto object = std::make_shared<object_t>(shape, material);
 
-    std::vector<std::shared_ptr<const ggo::object3d>>	_objects;
-    std::vector<std::shared_ptr<const ggo::object3d>> _lights;
-    std::shared_ptr<const ggo::background3d_abc>      _background;
-    ggo::color_32f                                    _ambient_color;
-    std::shared_ptr<const ggo::fog_abc>               _fog;
-  };
-}
+      _objects.push_back(object);
 
-namespace ggo
-{
-  class scene_builder
-  {
-  public:
+      return *object;
+    }
 
-                                    scene_builder(std::shared_ptr<const ggo::background3d_abc> background);
+    void  set_fog(std::shared_ptr<const ggo::fog_abc> fog) { _fog = fog; }
+    void  set_ambient_color(const ggo::color_32f & ambient_color) { _ambient_color = ambient_color; }
 
-    std::shared_ptr<ggo::object3d>  add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
-    std::shared_ptr<ggo::object3d>  add_sphere_light(const ggo::color_32f & color, float radius, const ggo::pos3f & pos);
+    const auto *  fog() const { return _fog.get(); }
+    const auto &  background() const { return *_background; }
 
-    void                            add_object(std::shared_ptr<ggo::object3d> object, bool discard_basis);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, const ggo::color_32f & color, bool discard_basis);
-    std::shared_ptr<ggo::object3d>  add_object(std::shared_ptr<const ggo::raytracable_shape3d_abc_float> shape, std::shared_ptr<const ggo::material_abc> material, bool discard_basis);
-
-    void                            set_fog(std::shared_ptr<const ggo::fog_abc> fog) { _fog = fog; }
-    void                            set_ambient_color(const ggo::color_32f & ambient_color) { _ambient_color = ambient_color; }
-
-    scene                           build_scene() const { return ggo::scene(_objects, _background, _ambient_color, _fog); }
+    const auto &  lights() const { return _lights; }
+    const auto &  objects() const { return _objects; }
 
   private:
 
-    std::vector<std::shared_ptr<const ggo::object3d>> _objects;
-    std::shared_ptr<const ggo::background3d_abc>      _background;
-    ggo::color_32f                                    _ambient_color = ggo::black<ggo::color_32f>();
-    std::shared_ptr<const ggo::fog_abc>               _fog;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _objects;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _lights;
+    std::shared_ptr<const ggo::background3d_abc>          _background;
+    ggo::color_32f                                        _ambient_color = ggo::black<ggo::color_32f>();
+    std::shared_ptr<const ggo::fog_abc>                   _fog;
   };
 }
 

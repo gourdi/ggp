@@ -1,14 +1,14 @@
 #ifndef __GGO_BIDIRECTIONAL_LIGHTING__
 #define __GGO_BIDIRECTIONAL_LIGHTING__
 
-#include <ggo_indirect_lighting_abc.h>
+#include <ggo_global_lighting_abc.h>
 
 namespace ggo
 {
   class multi_sampling_camera_abc;
   class raycaster_abc;
   
-  class bidirectional_lighting : public indirect_lighting_abc
+  class bidirectional_lighting : public global_lighting_abc
   {
   public:
   
@@ -16,7 +16,7 @@ namespace ggo
     
     ggo::color_32f  process(const ggo::ray3d_float & ray,
                             const ggo::ray3d_float & world_normal,
-                            const ggo::object3d & hit_object,
+                            const ggo::object3d_abc & hit_object,
                             const ggo::color_32f & hit_color,
                             float random_variable1,
                             float random_variable2) const override;
@@ -25,7 +25,6 @@ namespace ggo
   
     const ggo::raycaster_abc &  _raycaster;
     const ggo::scene &          _scene;
-    
   };
 }
 

@@ -16,13 +16,13 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::color_32f bidirectional_lighting::process(const ggo::ray3d_float & ray,
                                                  const ggo::ray3d_float & world_normal,
-                                                 const ggo::object3d & hit_object,
+                                                 const ggo::object3d_abc & hit_object,
                                                  const ggo::color_32f & hit_color,
                                                  float random_variable1,
                                                  float random_variable2) const
   {
-    ggo::color_32f result(ggo::black<ggo::color_32f>());
-
+    ggo::color_32f result = ggo::black_32f();
+#if 0
     for (const auto & light : _scene.lights())
     {
       ggo::color_32f current_light_color(ggo::black<ggo::color_32f>());
@@ -75,6 +75,7 @@ namespace ggo
 
       result += path_color;
     }
+#endif
 
     return result;
   }

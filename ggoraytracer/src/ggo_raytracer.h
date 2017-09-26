@@ -1,30 +1,35 @@
 #ifndef __GGO_RAYTRACER__
 #define __GGO_RAYTRACER__
 
-#include <ggo_raytracer_global.h>
-#include <ggo_object3d.h>
-#include <ggo_scene.h>
-#include <memory>
-
 // Height is the "reference" dimension, ie. if width and height are not the same,
 // computations are made according to the height value.
 
+#include <ggo_shapes3d.h>
+#include <ggo_color.h>
+#include <ggo_raytracer_global.h>
+
 namespace ggo
 {
+  class scene;
+  class object3d_abc;
+
   class raytracer
   {
   public:
 
-    static ggo::color_32f process(const ggo::ray3d_float & ray,
-                                  const ggo::scene & scene,
-                                  const ggo::raytrace_params & raytrace_params);
+    raytracer(const ggo::scene & scene, const ggo::raycaster_abc & raycaster);
 
-    static ggo::color_32f process(const ggo::ray3d_float & ray,
-                                  const ggo::scene & scene,
-                                  const ggo::raytrace_params & raytrace_params,
-                                  float random_variable1,
-                                  float random_variable2);
+    ggo::color_32f process(const ggo::ray3d_float & ray, int depth, float random_variable1, float random_variable2) const;
 
+    std::vector<light_sample> filter_lights(const ggo::ray3d_float & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const;
+
+  private:
+
+    const ggo::scene &          _scene;
+    const ggo::raycaster_abc &  _raycaster;
+
+
+#if 0
     //////////////////////////////////////////////////////////////
     // Transmission/reflection.
 
@@ -46,6 +51,7 @@ namespace ggo
                                            const ggo::ray3d_float & ray,
                                            const ggo::ray3d_float & world_normal,
                                            const ggo::ray3d_float & ray_to_light);
+#endif
   };
 }
 

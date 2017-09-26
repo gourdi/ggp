@@ -11,9 +11,11 @@ namespace
     
     ggo::color_32f  render_pixel(int x, int y,
                                  const ggo::scene & scene,
-                                 const ggo::raytrace_params & raytrace_params) const override
+                                 const ggo::raycaster_abc & raycaster,
+                                 int depth) const override
     {
-      return ggo::raytracer::process(_camera.get_ray(x, y), scene, raytrace_params);
+      ggo::raytracer raytracer(scene, raycaster);
+      return raytracer.process(_camera.get_ray(x, y), depth, 0.f, 0.f);
     }
 
   public:

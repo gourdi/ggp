@@ -7,6 +7,7 @@
 
 namespace ggo
 {
+
   enum class shading
   {
     simple_color,
