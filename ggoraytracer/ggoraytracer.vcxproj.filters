@@ -93,9 +93,6 @@
     <ClInclude Include="src\objects3d\ggo_shape_light.h">
       <Filter>objects3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\objects3d\ggo_shape_light.imp.h">
-      <Filter>objects3d</Filter>
-    </ClInclude>
     <ClInclude Include="src\global_lighting\ggo_bidirectional_lighting.h">
       <Filter>global_lighting</Filter>
     </ClInclude>
@@ -149,15 +146,6 @@
       <Filter>raycasters</Filter>
     </ClCompile>
     <ClCompile Include="src\objects3d\ggo_glow.cpp">
-      <Filter>objects3d</Filter>
-    </ClCompile>
-    <ClCompile Include="src\objects3d\ggo_object3d_abc.imp.h">
-      <Filter>objects3d</Filter>
-    </ClCompile>
-    <ClCompile Include="src\objects3d\ggo_simple_color_object3d.imp.h">
-      <Filter>objects3d</Filter>
-    </ClCompile>
-    <ClCompile Include="src\objects3d\ggo_diffuse_object3d.imp.h">
       <Filter>objects3d</Filter>
     </ClCompile>
     <ClCompile Include="src\global_lighting\ggo_bidirectional_lighting.cpp">
