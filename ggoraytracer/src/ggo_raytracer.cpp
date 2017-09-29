@@ -216,7 +216,14 @@ namespace ggo
     GGO_ASSERT_FLOAT_EQ(intersection._local_normal.dir().get_length(), 1.f);
     GGO_ASSERT_FLOAT_EQ(intersection._world_normal.dir().get_length(), 1.f);
 
-    return hit_object->process_ray(ray, intersection, *this, depth - 1, random_variable1, random_variable2);
+    ggo::color_32f output_color = hit_object->process_ray(ray, intersection, *this, depth - 1, random_variable1, random_variable2);
+
+    if (_scene.fog())
+    {
+      output_color = _scene.fog()->process_segment(ray.pos(), intersection._world_normal.pos(), output_color);
+    }
+
+    return output_color;
 
 #if 0
     ggo::color_32f hit_color(hit_object->get_color(local_normal.pos()));

@@ -11,6 +11,7 @@
 
 GGO_TEST(test_scene, scene3)
 {
+#if 0
   const int width = 640;
   const int height = 480;
 
@@ -48,4 +49,5 @@ GGO_TEST(test_scene, scene3)
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, ggo::disc_float(proj2, 5.f), ggo::red<ggo::color_8u>());
 
   ggo::save_bmp("scene3.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

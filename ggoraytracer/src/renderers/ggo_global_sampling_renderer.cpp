@@ -1,4 +1,5 @@
 #include "ggo_global_sampling_renderer.h"
+#include <ggo_kernel.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_raytracer.h>
 
@@ -35,9 +36,11 @@ namespace ggo
     ggo::color_32f color(ggo::black<ggo::color_32f>());
     ggo::raytracer raytracer(scene, raycaster);
     
+    auto uniform_samples2d = best_candidate_table.data() + ggo::rand(size_t(0), best_candidate_table.size() / 2);
+
     for (int sample = 0; sample < _samples_count; ++sample)
     {
-      color += raytracer.process(camera_rays[sample], depth, ggo::best_candidate_table[sample].get<0>(), ggo::best_candidate_table[sample].get<1>());
+      color += raytracer.process(camera_rays[sample], depth, uniform_samples2d[sample].get<0>(), uniform_samples2d[sample].get<1>());
     }
     
     return color / static_cast<float>(_samples_count);

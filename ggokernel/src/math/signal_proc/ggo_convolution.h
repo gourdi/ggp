@@ -1,6 +1,8 @@
 #ifndef __GGO_CONVOLUTION__
 #define __GGO_CONVOLUTION__
 
+#include <ggo_kernel.h>
+
 /////////////////////////////////////////////////////////////////////
 // 1D
 namespace ggo

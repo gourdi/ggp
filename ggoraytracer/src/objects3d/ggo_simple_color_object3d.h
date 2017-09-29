@@ -1,19 +1,21 @@
 #ifndef __GGO_SIMPLE_COLOR_OBJECT3D__
 #define __GGO_SIMPLE_COLOR_OBJECT3D__
 
-#include <ggo_object3d_abc.h>
-#include <ggo_material_abc.h>
-
-#if 0
+#include <ggo_shape_object3d.h>
 
 namespace ggo
 {
   template <uint32_t flags, typename shape_t, typename material_t>
-  class simple_color_object3d : public shape_object3d<discard_basis>
+  class simple_color_object3d : public shape_object3d_abc<discard_basis, shape_t>
   {
+  public:
+
+    simple_color_object3d(const shape_t & shape, const material_t & material) : shape_object3d_abc<flags, shape_t>(shape), _material(material) {}
+
   private:
 
-    ggo::color_32f  process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const std::function<ggo::color_32f(ggo::ray3d_float)> & raytrace) const override;
+    ggo::color_32f  get_emissive_color() const override;
+    ggo::color_32f  process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
 
   private:
 
@@ -21,8 +23,21 @@ namespace ggo
   };
 }
 
-#include <ggo_simple_color_object3d.imp.h>
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t, typename material_t>
+  ggo::color_32f simple_color_object3d<flags, shape_t, material_t>::get_emissive_color() const
+  {
+    return ggo::black_32f();
+  }
 
-#endif
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t, typename material_t>
+  ggo::color_32f simple_color_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
+  {
+    return _material.get_color(ray.pos());
+  }
+}
 
 #endif

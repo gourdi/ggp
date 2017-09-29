@@ -10,6 +10,7 @@
 
 GGO_TEST(test_scene, scene6)
 {
+#if 0
   const int width = 480;
   const int height = 240;
   const int samples_count = 48;
@@ -37,4 +38,5 @@ GGO_TEST(test_scene, scene6)
   ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("scene6.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

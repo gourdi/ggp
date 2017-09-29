@@ -10,6 +10,7 @@
 
 GGO_TEST(caustics, test)
 {
+#if 0
   const int width = 480;
   const int height = 480;
   const int direct_lighting_samples_coun = 96;
@@ -62,4 +63,5 @@ GGO_TEST(caustics, test)
 
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, raytrace_params);
   ggo::save_bmp("caustics_on.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

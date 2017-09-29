@@ -11,6 +11,7 @@
 
 GGO_TEST(test_scene, scene4)
 {
+#if 0
   const int width = 400;
   const int height = 400;
 
@@ -40,4 +41,5 @@ GGO_TEST(test_scene, scene4)
   ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("scene4.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

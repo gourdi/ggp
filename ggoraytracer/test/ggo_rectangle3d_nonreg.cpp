@@ -8,6 +8,7 @@
 
 GGO_TEST(rectangle3d, test)
 {
+#if 0
   const int size = 400;
 
   // The camera.
@@ -42,4 +43,5 @@ GGO_TEST(rectangle3d, test)
   ggo::buffer buffer(3 * size * size);
   renderer.render(buffer.data(), size, size, 3 * size, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("rectangle3d.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
+#endif
 }

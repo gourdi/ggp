@@ -8,6 +8,7 @@
 
 void test_polygon3d()
 {
+#if 0
   const int width = 400;
   const int height = 400;
   
@@ -33,4 +34,5 @@ void test_polygon3d()
   ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("sphere3d.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

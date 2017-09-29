@@ -9,6 +9,7 @@
 
 GGO_TEST(cylinder, ray_outside)
 {
+#if 0
   const int width = 480;
   const int height = 480;
 
@@ -55,6 +56,7 @@ GGO_TEST(cylinder, ray_inside)
   ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("cylinder_inside.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }
 
 

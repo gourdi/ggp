@@ -1,6 +1,8 @@
 #ifndef __GGO_SHAPE_LIGHT__
 #define __GGO_SHAPE_LIGHT__
 
+#include <ggo_reflection_object3d_abc.h>
+
 namespace ggo
 {
   template <uint32_t flags, typename shape_t>
@@ -20,6 +22,8 @@ namespace ggo
     ggo::color_32f  _color;
   };
 }
+
+// Implementation.
 
 namespace ggo
 {

@@ -11,6 +11,7 @@
 
 GGO_TEST(marching_cubes, test)
 {
+#if 0
   const int width = 512;
   const int height = 512;
   
@@ -46,4 +47,5 @@ GGO_TEST(marching_cubes, test)
   ggo::buffer buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
   ggo::save_bmp("marching_cubes.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }

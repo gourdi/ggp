@@ -105,6 +105,15 @@
     <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h">
       <Filter>renderers</Filter>
     </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_reflection_object3d_abc.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_shape_object3d.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_point_light.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cameras\ggo_camera_abc.cpp">

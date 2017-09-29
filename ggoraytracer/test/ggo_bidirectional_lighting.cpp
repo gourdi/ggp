@@ -11,6 +11,7 @@
 
 GGO_TEST(bidirectional_lighting, test)
 {
+#if 0
   const int width = 480;
   const int height = 480;
   const int direct_lighting_samples_coun = 96;
@@ -49,5 +50,6 @@ GGO_TEST(bidirectional_lighting, test)
   
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, raytrace_params);
   ggo::save_bmp("bidirectional_lighting_on.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+#endif
 }
 
