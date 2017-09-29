@@ -68,7 +68,7 @@ namespace ggo
     data_t hypot3 = ggo::hypot(_center, p3);
     data_t hypot4 = ggo::hypot(_center, p4);
 
-    if (hypot1 < hypot && hypot2 < hypot && hypot3 < hypot && hypot4 < hypot)
+    if (hypot1 <= hypot && hypot2 <= hypot && hypot3 <= hypot && hypot4 <= hypot)
     {
       return rect_intersection::rect_in_shape;
     }
