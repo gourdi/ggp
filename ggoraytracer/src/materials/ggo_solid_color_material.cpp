@@ -28,3 +28,31 @@ namespace ggo
     _color = color;
   }
 }
+
+namespace ggo
+{
+  solid_color_material  white_material()
+  {
+    return solid_color_material(white_32f());
+  }
+
+  solid_color_material  red_material()
+  {
+    return solid_color_material(red_32f());
+  }
+
+  solid_color_material  green_material()
+  {
+    return solid_color_material(green_32f());
+  }
+
+  solid_color_material  blue_material()
+  {
+    return solid_color_material(blue_32f());
+  }
+
+  solid_color_material  yellow_material()
+  {
+    return solid_color_material(yellow_32f());
+  }
+}

@@ -20,9 +20,7 @@ GGO_TEST(test_scene, scene5)
   for (int i = -2; i <= 4; ++i)
   {
     ggo::sphere3d_float sphere({ static_cast<float>(i), 2.f * static_cast<float>(i), 0.f }, 0.5f);
-    scene.add_diffuse_object
-      <ggo::discard_basis | ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness, ggo::sphere3d_float, ggo::solid_color_material>(
-        sphere, ggo::red_32f());
+    scene.add_diffuse_object<ggo::discard_all>(sphere, ggo::red_material());
   }
 
   // Rendering.

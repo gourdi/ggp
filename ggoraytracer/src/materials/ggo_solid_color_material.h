@@ -22,4 +22,13 @@ namespace ggo
   };
 }
 
+namespace ggo
+{
+  solid_color_material  white_material();
+  solid_color_material  red_material();
+  solid_color_material  green_material();
+  solid_color_material  blue_material();
+  solid_color_material  yellow_material();
+}
+
 #endif

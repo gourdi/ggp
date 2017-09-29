@@ -31,7 +31,7 @@ namespace ggo
   constexpr uint32_t discard_roughness = 1 << 1;
   constexpr uint32_t discard_phong = 1 << 2;
   constexpr uint32_t discard_reflection = 1 << 3;
-  constexpr uint32_t dicard_all = 0xffffffff;
+  constexpr uint32_t discard_all = 0xffffffff;
 
   //////////////////////////////////////////////////////////////
   // Abstract base class.

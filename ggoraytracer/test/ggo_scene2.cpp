@@ -20,20 +20,9 @@ GGO_TEST(test_scene, scene2)
   scene.add_point_light(ggo::white_32f(), ggo::pos3f(-20.f, -20.f, 200.f));
 
   // The objects.
-  ggo::sphere3d<float> sphere1({ -1.f, 0.f, 0.f }, 1.f);
-  scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection |ggo::discard_phong, ggo::sphere3d_float, ggo::solid_color_material>
-    (sphere1, ggo::white_32f());
-
-  ggo::sphere3d<float> sphere2({ 1.f, 0.f, 0.f }, 1.f);
-  scene.add_simple_color_object
-    <ggo::discard_basis, ggo::sphere3d_float, ggo::solid_color_material>
-    (sphere2, ggo::white_32f());
-
-  ggo::plane3d<float> plane({ 0.f, 0.f, 1.f }, -1.f);
-  scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection | ggo::discard_phong, ggo::plane3d<float>, ggo::solid_color_material>
-    (plane, ggo::white_32f());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::sphere3d_float({ -1.f, 0.f, 0.f }, 1.f), ggo::white_material());
+  scene.add_simple_color_object<ggo::discard_basis>(ggo::sphere3d<float>({ 1.f, 0.f, 0.f }, 1.f), ggo::white_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), ggo::white_material());
   
   // Rendering.
   const int width = 400;

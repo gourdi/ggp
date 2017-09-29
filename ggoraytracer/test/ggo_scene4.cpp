@@ -21,15 +21,8 @@ GGO_TEST(test_scene, scene4)
   scene.add_point_light(ggo::white_32f(), { -20.f, -20.f, 200.f });
 
   // Objects.
-  ggo::sphere3d<float> sphere({ 0.f, 0.f, 0.f }, 1.f);
-  scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness, ggo::sphere3d_float, ggo::solid_color_material>(
-      sphere, ggo::red_32f());
-  
-  ggo::aabox3d_float aabox3d(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f);
-  scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness, ggo::aabox3d_float, ggo::solid_color_material>(
-      aabox3d, ggo::white_32f());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::sphere3d<float>({ 0.f, 0.f, 0.f }, 1.f), ggo::red_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::aabox3d_float(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f), ggo::white_material());
 
   // Rendering.
   const int width = 400;

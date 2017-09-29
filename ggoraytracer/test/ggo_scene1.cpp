@@ -17,24 +17,18 @@ GGO_TEST(test_scene, scene1)
 
   // Objects.
   ggo::sphere3d_float sphere({ -2.f, 0.f, 0.f }, 1.f);
-  auto & sphere_object = scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection, ggo::sphere3d_float, ggo::solid_color_material>
-    (sphere, ggo::red_32f());
+  auto & sphere_object = scene.add_diffuse_object<ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection>(sphere, ggo::red_material());
   sphere_object.set_phong(4, 250);
   
   ggo::aabox3d_float box_shape(-0.7f, 0.7f, -0.8f, 0.8f, -0.9f, 0.9f);
-  auto & box_object = scene.add_diffuse_object
-    <ggo::discard_roughness | ggo::discard_phong | ggo::discard_reflection, ggo::aabox3d_float, ggo::solid_color_material>
-    (box_shape, ggo::green_32f());
+  auto & box_object = scene.add_diffuse_object<ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness>(box_shape, ggo::green_material());
   box_object.basis().rotate(ggo::ray3d_float::O_X(), 0.1f);
   box_object.basis().rotate(ggo::ray3d_float::O_Y(), 0.2f);
   box_object.basis().rotate(ggo::ray3d_float::O_Z(), 0.3f);
   box_object.basis().move(2, 0, 1);
 
   ggo::plane3d_float plane({ 0.f, 0.f, 1.f }, -1.f);
-  scene.add_diffuse_object
-    <ggo::discard_basis | ggo::discard_roughness | ggo::discard_phong | ggo::discard_reflection, ggo::plane3d_float, ggo::solid_color_material>
-    (plane, ggo::white_32f());
+  scene.add_diffuse_object<ggo::discard_all>(plane, ggo::white_material());
 
   // Rendering.
   const int width = 640;
