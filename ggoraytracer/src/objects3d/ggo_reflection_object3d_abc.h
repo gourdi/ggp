@@ -12,14 +12,19 @@ namespace ggo
   {
   public:
 
+    void set_reflection_factor(float reflection_factor) { _reflection_factor = reflection_factor; }
+    void set_roughness(float roughness) { _roughness = roughness;  }
+
     void set_phong(float phong_factor, float phong_shininess) { _phong_factor = phong_factor; _phong_shininess = phong_shininess; }
 
   protected:
 
     reflection_object3d_abc(const shape_t & shape) : shape_object3d_abc<flags, shape_t>(shape) {};
 
-    ggo::color_32f  compute_reflection_color() const;
-    ggo::color_32f  compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
+    ggo::ray3d_float  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float random_variable1, float random_variable2) const;
+
+    ggo::color_32f    compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const;
+    ggo::color_32f    compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
 
   private:
 
@@ -36,20 +41,48 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f reflection_object3d_abc<flags, shape_t>::compute_reflection_color() const
+  ggo::ray3d_float reflection_object3d_abc<flags, shape_t>::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float random_variable1, float random_variable2) const
   {
-#if 0
-    // Handle self-intersection.
-    ggo::ray3d_float safe_ray(ray);
-    const ggo::object3d * exclude_object = nullptr;
-    if (previous_hit_object != nullptr)
+    ggo::pos3f reflected_dir(ray.dir() - 2 * ggo::dot(normal.dir(), ray.dir()) * normal.dir());
+    GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+    GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
+
+    if (flags & discard_roughness)
     {
-      exclude_object = previous_hit_object->handle_self_intersection(safe_ray, false);
+      return ggo::ray3d_float(normal.pos(), reflected_dir, false);
     }
-#endif
+    else
+    {
+      // Glossy materials.
+      if (_roughness > 0)
+      {
+        reflected_dir = ggo::hemisphere_sampling(reflected_dir, random_variable1, random_variable2, _roughness * ggo::pi<float>() / 2);
 
+        // Handle the case when the reflected ray goes inside the hit object.
+        float dot = ggo::dot(normal.dir(), reflected_dir);
+        if (dot < 0)
+        {
+          reflected_dir -= 2.f * dot * normal.dir();
+        }
+      }
 
-    return ggo::black_32f();
+      GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+      GGO_ASSERT_GE(ggo::dot(reflected_dir, normal.dir()), -0.001f);
+
+      return ggo::ray3d_float(normal.pos(), reflected_dir, false);
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t>
+  ggo::color_32f reflection_object3d_abc<flags, shape_t>::compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
+  {
+    ggo::ray3d_float reflection_ray = get_reflected_ray(ray, normal, random_variable1, random_variable2);
+    const object3d_abc * exclude_object = handle_self_intersection(reflection_ray);
+
+    ggo::color_32f reflection_color = raytracer.process(reflection_ray, depth - 1, random_variable1, random_variable2, exclude_object);
+
+    return _reflection_factor * reflection_color;
   }
 
   //////////////////////////////////////////////////////////////

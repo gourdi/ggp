@@ -12,7 +12,8 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   raytracer::raytracer(const ggo::scene & scene, const ggo::raycaster_abc & raycaster)
-    : _scene(scene), _raycaster(raycaster)
+  :
+  _scene(scene), _raycaster(raycaster)
   {
   }
 
@@ -41,7 +42,7 @@ namespace ggo
       ggo::ray3d_float ray_to_light = ggo::ray3d_float(world_normal.pos(), dir_to_light);
 
       // Handle self-intersection properly.
-      const ggo::object3d_abc * exclude_object = hit_object->handle_self_intersection(ray_to_light, false);
+      const ggo::object3d_abc * exclude_object = hit_object->handle_self_intersection(ray_to_light);
 
       // Check if there is another object between the light and the hit object.
       float dist_to_light = ggo::distance(world_normal.pos(), light_pos);
@@ -192,7 +193,8 @@ namespace ggo
   ggo::color_32f raytracer::process(const ggo::ray3d_float & ray,
                                     int depth,
                                     float random_variable1,
-                                    float random_variable2) const
+                                    float random_variable2,
+                                    const ggo::object3d_abc * exclude_object) const
   {
     if (depth < 0)
     {
@@ -200,7 +202,7 @@ namespace ggo
     }
 
     ggo::intersection_data intersection;
-    const ggo::object3d_abc * hit_object = _raycaster.hit_test(ray, intersection._dist, intersection._local_normal, intersection._world_normal);
+    const ggo::object3d_abc * hit_object = _raycaster.hit_test(ray, intersection._dist, intersection._local_normal, intersection._world_normal, exclude_object);
     if (hit_object == nullptr)
     {
       ggo::color_32f color = _scene.background().get_color(ray);
@@ -216,7 +218,7 @@ namespace ggo
     GGO_ASSERT_FLOAT_EQ(intersection._local_normal.dir().get_length(), 1.f);
     GGO_ASSERT_FLOAT_EQ(intersection._world_normal.dir().get_length(), 1.f);
 
-    ggo::color_32f output_color = hit_object->process_ray(ray, intersection, *this, depth - 1, random_variable1, random_variable2);
+    ggo::color_32f output_color = hit_object->process_ray(ray, intersection, *this, depth, random_variable1, random_variable2);
 
     if (_scene.fog())
     {

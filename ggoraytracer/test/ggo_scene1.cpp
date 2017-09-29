@@ -10,7 +10,7 @@
 GGO_TEST(test_scene, scene1)
 { 
   // The scene.
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
 
   // Light.
   scene.add_point_light(ggo::white_32f(), { -20.f, -20.f, 50.f });

@@ -58,7 +58,7 @@ namespace ggo
 
     if constexpr(!(flags & discard_reflection))
     {
-      output_color += compute_reflection_color();
+      output_color += compute_reflection_color(ray, intersection._world_normal, raytracer, depth, random_variable1, random_variable2);
     }
 
     if constexpr(!(flags & discard_phong))

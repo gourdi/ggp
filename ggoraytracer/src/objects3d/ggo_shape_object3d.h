@@ -16,9 +16,9 @@ namespace ggo
 
     ggo::basis3d_float &  basis() { return _basis; }
 
-  private:
+  protected:
 
-    const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray, bool inside) const override;
+    const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const override;
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
     ggo::pos3f                        sample_shape(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
 
@@ -63,9 +63,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  const object3d_abc * shape_object3d_abc<flags, shape_t>::handle_self_intersection(ggo::ray3d_float & ray, bool inside) const
+  const object3d_abc * shape_object3d_abc<flags, shape_t>::handle_self_intersection(ggo::ray3d_float & ray) const
   {
-    if (inside == false && _shape.is_convex() == true)
+    if (_shape.is_convex() == true)
     {
       return this;
     }
