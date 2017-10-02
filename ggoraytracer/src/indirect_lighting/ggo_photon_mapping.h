@@ -1,7 +1,7 @@
 #ifndef __GGO_PHOTON_MAPPING__
 #define __GGO_PHOTON_MAPPING__
 
-#include <ggo_global_lighting_abc.h>
+#include <ggo_indirect_lighting_abc.h>
 #include <ggo_kdtree.h>
 #include <ggo_raycaster_abc.h>
 #include <ggo_camera_abc.h>
@@ -9,7 +9,7 @@
 
 namespace ggo
 {
-  class photon_mapping : public global_lighting_abc
+  class photon_mapping : public indirect_lighting_abc
   {
   public:
 

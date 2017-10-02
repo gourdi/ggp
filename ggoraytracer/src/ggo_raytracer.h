@@ -12,12 +12,14 @@ namespace ggo
 {
   class scene;
   class object3d_abc;
+  class indirect_lighting_abc;
+  class raycaster_abc;
 
   class raytracer
   {
   public:
 
-    raytracer(const ggo::scene & scene, const ggo::raycaster_abc & raycaster);
+    raytracer(const ggo::scene & scene, const ggo::raycaster_abc & raycaster, const ggo::indirect_lighting_abc * indirect_lighting);
 
     ggo::color_32f process(const ggo::ray3d_float & ray, int depth, float random_variable1, float random_variable2, const ggo::object3d_abc * exclude_object = nullptr) const;
 
@@ -25,33 +27,9 @@ namespace ggo
 
   private:
 
-    const ggo::scene &          _scene;
-    const ggo::raycaster_abc &  _raycaster;
-
-
-#if 0
-    //////////////////////////////////////////////////////////////
-    // Transmission/reflection.
-
-    // Returns 'false' in case the ray is below the incidence angle and gets reflected.
-    static bool transmit_ray(ggo::ray3d_float & ray, const ggo::ray3d_float & world_normal, float current_density, float next_density);
-
-    static float compute_reflection_factor(const ggo::ray3d_float& ray, const ggo::ray3d_float& world_normal, float current_density, float next_density);
-
-    //////////////////////////////////////////////////////////////
-    // Shadings.
-    static ggo::color_32f diffuse_shading(const ggo::color_32f & object_color,
-                                          const ggo::color_32f & light_color,
-                                          const ggo::ray3d_float & world_normal,
-                                          const ggo::ray3d_float & ray_to_light);
-
-    static ggo::color_32f specular_shading(float phong_factor,
-                                           float phong_shininess,
-                                           const ggo::color_32f & light_color,
-                                           const ggo::ray3d_float & ray,
-                                           const ggo::ray3d_float & world_normal,
-                                           const ggo::ray3d_float & ray_to_light);
-#endif
+    const ggo::scene &                  _scene;
+    const ggo::raycaster_abc &          _raycaster;
+    const ggo::indirect_lighting_abc *  _indirect_lighting = nullptr;
   };
 }
 

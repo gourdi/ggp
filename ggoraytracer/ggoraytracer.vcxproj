@@ -26,8 +26,8 @@
     <ClCompile Include="src\fog\ggo_z_fog.cpp" />
     <ClCompile Include="src\ggo_raytracer.cpp" />
     <ClCompile Include="src\ggo_scene.cpp" />
-    <ClCompile Include="src\global_lighting\ggo_bidirectional_lighting.cpp" />
-    <ClCompile Include="src\global_lighting\ggo_photon_mapping.cpp" />
+    <ClCompile Include="src\indirect_lighting\ggo_bidirectional_lighting.cpp" />
+    <ClCompile Include="src\indirect_lighting\ggo_photon_mapping.cpp" />
     <ClCompile Include="src\materials\ggo_checker_material.cpp" />
     <ClCompile Include="src\materials\ggo_solid_color_material.cpp" />
     <ClCompile Include="src\objects3d\ggo_glow.cpp" />
@@ -50,9 +50,9 @@
     <ClInclude Include="src\ggo_raytracer.h" />
     <ClInclude Include="src\ggo_raytracer_global.h" />
     <ClInclude Include="src\ggo_scene.h" />
-    <ClInclude Include="src\global_lighting\ggo_bidirectional_lighting.h" />
-    <ClInclude Include="src\global_lighting\ggo_global_lighting_abc.h" />
-    <ClInclude Include="src\global_lighting\ggo_photon_mapping.h" />
+    <ClInclude Include="src\indirect_lighting\ggo_bidirectional_lighting.h" />
+    <ClInclude Include="src\indirect_lighting\ggo_indirect_lighting_abc.h" />
+    <ClInclude Include="src\indirect_lighting\ggo_photon_mapping.h" />
     <ClInclude Include="src\materials\ggo_checker_material.h" />
     <ClInclude Include="src\materials\ggo_material_abc.h" />
     <ClInclude Include="src\materials\ggo_solid_color_material.h" />
@@ -128,7 +128,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\global_lighting;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\indirect_lighting;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

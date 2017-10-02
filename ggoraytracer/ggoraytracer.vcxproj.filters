@@ -22,7 +22,7 @@
     <Filter Include="objects3d">
       <UniqueIdentifier>{1a160bff-3db4-411b-85d3-4325007324c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="global_lighting">
+    <Filter Include="indirect_lighting">
       <UniqueIdentifier>{ab7d4500-f668-4ec3-8d7e-d0d5550f8b82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -93,15 +93,6 @@
     <ClInclude Include="src\objects3d\ggo_shape_light.h">
       <Filter>objects3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\global_lighting\ggo_bidirectional_lighting.h">
-      <Filter>global_lighting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\global_lighting\ggo_global_lighting_abc.h">
-      <Filter>global_lighting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\global_lighting\ggo_photon_mapping.h">
-      <Filter>global_lighting</Filter>
-    </ClInclude>
     <ClInclude Include="src\renderers\ggo_global_sampling_renderer.h">
       <Filter>renderers</Filter>
     </ClInclude>
@@ -116,6 +107,15 @@
     </ClInclude>
     <ClInclude Include="src\objects3d\ggo_transparent_object3d.h">
       <Filter>objects3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\indirect_lighting\ggo_bidirectional_lighting.h">
+      <Filter>indirect_lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\indirect_lighting\ggo_indirect_lighting_abc.h">
+      <Filter>indirect_lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\indirect_lighting\ggo_photon_mapping.h">
+      <Filter>indirect_lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,14 +160,14 @@
     <ClCompile Include="src\objects3d\ggo_glow.cpp">
       <Filter>objects3d</Filter>
     </ClCompile>
-    <ClCompile Include="src\global_lighting\ggo_bidirectional_lighting.cpp">
-      <Filter>global_lighting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\global_lighting\ggo_photon_mapping.cpp">
-      <Filter>global_lighting</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp">
       <Filter>renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\indirect_lighting\ggo_bidirectional_lighting.cpp">
+      <Filter>indirect_lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\indirect_lighting\ggo_photon_mapping.cpp">
+      <Filter>indirect_lighting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

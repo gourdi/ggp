@@ -1,12 +1,12 @@
-#ifndef __GGO_GLOBAL_LIGHTING_ABC__
-#define __GGO_GLOBAL_LIGHTING_ABC__
+#ifndef __GGO_INDIRECT_LIGHTING_ABC__
+#define __GGO_INDIRECT_LIGHTING_ABC__
 
 #include <memory>
 #include <ggo_scene.h>
 
 namespace ggo
 {
-  class global_lighting_abc
+  class indirect_lighting_abc
   {
   public:
 

@@ -43,9 +43,11 @@ namespace ggo
     object3d_abc(const object3d_abc &) = delete;
     void operator=(const object3d_abc &) = delete;
 
+    virtual ggo::color_32f                    get_color(const ggo::pos3f & pos) const = 0;
     virtual ggo::color_32f                    get_emissive_color() const = 0;
     virtual const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const = 0;
-    virtual ggo::pos3f                        sample_shape(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const = 0;
+    virtual ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const = 0;
+    virtual ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const = 0;
     virtual std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const = 0;
     virtual ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const = 0;
   };

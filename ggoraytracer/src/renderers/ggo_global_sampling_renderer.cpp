@@ -16,6 +16,7 @@ namespace ggo
       ggo::color_32f  render_pixel(int x, int y,
                                    const ggo::scene & scene,
                                    const ggo::raycaster_abc & raycaster,
+                                   const ggo::indirect_lighting_abc * indirect_lighting,
                                    int depth) const override;
 
       int                                     _samples_count;
@@ -26,6 +27,7 @@ namespace ggo
   ggo::color_32f global_sampling_render_task::render_pixel(int x, int y,
                                                            const ggo::scene & scene,
                                                            const ggo::raycaster_abc & raycaster,
+                                                           const ggo::indirect_lighting_abc * indirect_lighting,
                                                            int depth) const
   {
     // Get camera rays (which are already shuffled).
@@ -34,7 +36,7 @@ namespace ggo
 
     // Proceed.
     ggo::color_32f color(ggo::black<ggo::color_32f>());
-    ggo::raytracer raytracer(scene, raycaster);
+    ggo::raytracer raytracer(scene, raycaster, indirect_lighting);
     
     auto uniform_samples2d = best_candidate_table.data() + ggo::rand(size_t(0), best_candidate_table.size() / 2);
 

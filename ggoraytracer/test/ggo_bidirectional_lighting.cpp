@@ -11,38 +11,37 @@
 
 GGO_TEST(bidirectional_lighting, test)
 {
-#if 0
   const int width = 480;
   const int height = 480;
-  const int direct_lighting_samples_coun = 96;
+  const int direct_lighting_samples_count = 96;
   
   // The camera.
   ggo::multi_sampling_point_camera camera(width, height, ggo::basis3d_float({ 0.f, 0.f, 2.5f }), 0.5f, 2.5f, 0.01f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
   
   // Light.
-  scene_builder.add_sphere_light(ggo::color_32f(0.9f), 0.2f, ggo::pos3f(0.f, 0.75f, 0.f));
+  scene.add_sphere_light(ggo::color_32f(0.9f), { 0.f, 0.75f, 0.f }, 0.2f);
 
   // Objects.
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 1.f, 0.f, 0.f), -1.f), ggo::red<ggo::color_32f>(), true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f(-1.f, 0.f, 0.f), -1.f), ggo::green<ggo::color_32f>(), true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 0.f, 1.f), -1.f), ggo::white<ggo::color_32f>(), true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, 1.f, 0.f), -1.f), ggo::white<ggo::color_32f>(), true);
-  scene_builder.add_object(std::make_shared<ggo::plane3d<float>>(ggo::vec3f( 0.f, -1.f, 0.f), -1.f), ggo::white<ggo::color_32f>(), true);
-  scene_builder.add_object(std::make_shared<ggo::sphere3d<float>>(ggo::pos3f(0.f, -0.6f, 0.f), 0.4f), ggo::white<ggo::color_32f>(), true);
+  constexpr uint32_t flags = ggo::discard_all;
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 1.f,  0.f, 0.f}, -1.f), ggo::red_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({-1.f,  0.f, 0.f}, -1.f), ggo::green_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f,  0.f, 1.f}, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f,  1.f, 0.f}, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f, -1.f, 0.f }, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f, -0.6f, 0.f }, 0.4f), ggo::white_material());
 
   // Rendering.
-  ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_coun);
+  ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_count);
   ggo::buffer buffer(3 * width * height);
 
   // Without indirect lighting.
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("bidirectional_lighting_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   
   // With indirect lighting.
-  ggo::scene scene = scene_builder.build_scene();
   ggo::brute_force_raycaster raycaster(scene.objects());
   ggo::bidirectional_lighting indirect_lighting(raycaster, scene);
   ggo::raytrace_params raytrace_params;
@@ -50,6 +49,5 @@ GGO_TEST(bidirectional_lighting, test)
   
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, raytrace_params);
   ggo::save_bmp("bidirectional_lighting_on.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
-#endif
 }
 

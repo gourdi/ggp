@@ -22,7 +22,7 @@ namespace ggo
                                                  float random_variable2) const
   {
     ggo::color_32f result = ggo::black_32f();
-#if 0
+
     for (const auto & light : _scene.lights())
     {
       ggo::color_32f current_light_color(ggo::black<ggo::color_32f>());
@@ -39,8 +39,8 @@ namespace ggo
 
       // Handle self-intersection
       ggo::ray3d_float camera_world_normal(world_normal);
-      auto exclude_light_object = light_hit_object->handle_self_intersection(light_world_normal, false);
-      auto exclude_camera_object = hit_object.handle_self_intersection(camera_world_normal, false);
+      auto exclude_light_object = light_hit_object->handle_self_intersection(light_world_normal);
+      auto exclude_camera_object = hit_object.handle_self_intersection(camera_world_normal);
 
       // Create a ray from camera hit object to light hit object that will close the path.
       ggo::vec3f diff(light_world_normal.pos() - camera_world_normal.pos());
@@ -75,7 +75,6 @@ namespace ggo
 
       result += path_color;
     }
-#endif
 
     return result;
   }

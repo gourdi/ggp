@@ -14,6 +14,7 @@ namespace ggo
     ggo::color_32f  render_pixel(int x, int y,
                                  const ggo::scene & scene,
                                  const ggo::raycaster_abc & raycaster,
+                                 const ggo::indirect_lighting_abc * indirect_lighting,
                                  int depth) const override;
     
     const ggo::antialiasing_camera_abc & _camera;
@@ -23,13 +24,14 @@ namespace ggo
   ggo::color_32f antialiasing_render_task::render_pixel(int x, int y,
                                                         const ggo::scene & scene,
                                                         const ggo::raycaster_abc & raycaster,
+                                                        const ggo::indirect_lighting_abc * indirect_lighting,
                                                         int depth) const
   {
     std::array<ggo::color_32f, 4> colors;
     
     auto first_pass_rays = _camera.get_first_pass_rays(x, y);
 
-    ggo::raytracer raytracer(scene, raycaster);
+    ggo::raytracer raytracer(scene, raycaster, indirect_lighting);
     
     colors[0] = raytracer.process(first_pass_rays[0], depth, 0.f, 0.f);
     colors[1] = raytracer.process(first_pass_rays[1], depth, 0.f, 0.f);

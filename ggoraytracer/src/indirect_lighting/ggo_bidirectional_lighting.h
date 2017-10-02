@@ -1,14 +1,14 @@
 #ifndef __GGO_BIDIRECTIONAL_LIGHTING__
 #define __GGO_BIDIRECTIONAL_LIGHTING__
 
-#include <ggo_global_lighting_abc.h>
+#include <ggo_indirect_lighting_abc.h>
 
 namespace ggo
 {
   class multi_sampling_camera_abc;
   class raycaster_abc;
   
-  class bidirectional_lighting : public global_lighting_abc
+  class bidirectional_lighting : public indirect_lighting_abc
   {
   public:
   

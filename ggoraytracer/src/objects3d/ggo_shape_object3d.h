@@ -20,7 +20,8 @@ namespace ggo
 
     const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const override;
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
-    ggo::pos3f                        sample_shape(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
+    ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
+    ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
 
   protected:
 
@@ -76,7 +77,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::pos3f shape_object3d_abc<flags, shape_t>::sample_shape(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
+  ggo::pos3f shape_object3d_abc<flags, shape_t>::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
   {
     if constexpr(flags & discard_basis)
     {
@@ -88,6 +89,20 @@ namespace ggo
 
       return _basis.point_from_local_to_world(point);
     }
+  }
+
+  //////////////////////////////////////////////////////////////.
+  template <uint32_t flags, typename shape_t>
+  ggo::ray3d_float shape_object3d_abc<flags, shape_t>::sample_ray(float random_variable1, float random_variable2) const
+  {
+    ggo::ray3d_float ray = _shape.sample_ray(random_variable1, random_variable2);
+
+    if constexpr(!(flags & discard_basis))
+    {
+      _basis.ray_from_local_to_world(ray);
+    }
+
+    return ray;
   }
 }
 
