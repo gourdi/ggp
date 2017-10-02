@@ -114,6 +114,9 @@
     <ClInclude Include="src\objects3d\ggo_point_light.h">
       <Filter>objects3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\objects3d\ggo_transparent_object3d.h">
+      <Filter>objects3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cameras\ggo_camera_abc.cpp">

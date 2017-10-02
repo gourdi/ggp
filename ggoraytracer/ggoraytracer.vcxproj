@@ -64,6 +64,7 @@
     <ClInclude Include="src\objects3d\ggo_shape_light.h" />
     <ClInclude Include="src\objects3d\ggo_shape_object3d.h" />
     <ClInclude Include="src\objects3d\ggo_simple_color_object3d.h" />
+    <ClInclude Include="src\objects3d\ggo_transparent_object3d.h" />
     <ClInclude Include="src\raycasters\ggo_brute_force_raycaster.h" />
     <ClInclude Include="src\raycasters\ggo_raycaster_abc.h" />
     <ClInclude Include="src\renderers\ggo_antialiasing_renderer.h" />

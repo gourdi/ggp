@@ -22,7 +22,7 @@ namespace ggo
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
     ggo::pos3f                        sample_shape(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
 
-  private:
+  protected:
 
     shape_t             _shape;
     ggo::basis3d_float  _basis;

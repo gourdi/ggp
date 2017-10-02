@@ -4,6 +4,7 @@
 #include <ggo_fog_abc.h>
 #include <ggo_background3d_abc.h>
 #include <ggo_diffuse_object3d.h>
+#include <ggo_transparent_object3d.h>
 #include <ggo_simple_color_object3d.h>
 #include <memory>
 
@@ -36,6 +37,18 @@ namespace ggo
       using object_t = diffuse_object3d<flags, shape_t, material_t>;
 
       auto object = std::make_shared<object_t>(shape, material);
+
+      _objects.push_back(object);
+
+      return *object;
+    }
+
+    template <uint32_t flags, typename shape_t>
+    ggo::transparent_object3d<flags, shape_t> & add_transparent_object(const shape_t & shape, const ggo::color_32f & color, float density)
+    {
+      using object_t = transparent_object3d<flags, shape_t>;
+
+      auto object = std::make_shared<object_t>(shape, color, density);
 
       _objects.push_back(object);
 

@@ -4,11 +4,10 @@
 #include <ggo_point_camera.h>
 #include <ggo_mono_sampling_renderer.h>
 #include <ggo_background3d_color.h>
-#include <ggo_object3d.h>
+#include <ggo_solid_color_material.h>
 
 void test_polygon3d()
 {
-#if 0
   const int width = 400;
   const int height = 400;
   
@@ -18,21 +17,19 @@ void test_polygon3d()
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
   
   // The scene.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black_32f()));
 
   // Light.  
-  scene_builder.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(0.f, 0.f, 50.f));
-  scene_builder.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(50.f, 0.f, 0.f));
+  scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 50.f });
+  scene.add_point_light(ggo::white_32f(), { 50.f, 0.f, 0.f });
 
   // Objects.
   auto sphere = ggo::polygon3d_float::create_sphere(2, 16, 8);
-  auto polygon = std::make_shared<ggo::polygon3d_float>(sphere);
-  scene_builder.add_object(polygon, ggo::red<ggo::color_32f>(), false);
+  scene.add_diffuse_object<ggo::discard_all>(sphere, ggo::red_material());
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::buffer buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene_builder);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("sphere3d.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
-#endif
 }
