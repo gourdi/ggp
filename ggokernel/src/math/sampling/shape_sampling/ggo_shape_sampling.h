@@ -76,7 +76,7 @@ namespace ggo
     
     sample = b.first * sample.x() + b.second * sample.y() + main_dir * sample.z();
     GGO_ASSERT_GE(ggo::dot(sample, main_dir), 0);
-    GGO_ASSERT(sample.is_normalized(T(0.001)));
+    GGO_ASSERT(sample.is_normalized(data_t(0.001)));
 
     return sample;
   }

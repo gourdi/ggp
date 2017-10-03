@@ -21,6 +21,7 @@ namespace ggo
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const  override;
     ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
   private:
 
@@ -34,49 +35,56 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::color_32f point_light::get_color(const ggo::pos3f & pos) const
+  inline ggo::color_32f point_light::get_color(const ggo::pos3f & pos) const
   {
     GGO_FAIL();
     return _color;
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f point_light::get_emissive_color() const
+  inline ggo::color_32f point_light::get_emissive_color() const
   {
     return _color;
   }
 
   //////////////////////////////////////////////////////////////
-  const object3d_abc * point_light::handle_self_intersection(ggo::ray3d_float & ray) const
+  inline const object3d_abc * point_light::handle_self_intersection(ggo::ray3d_float & ray) const
   {
     GGO_FAIL();
     return nullptr;
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::pos3f point_light::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
+  inline ggo::pos3f point_light::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
   {
     return _pos;
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::ray3d_float point_light::sample_ray(float random_variable1, float random_variable2) const
+  inline ggo::ray3d_float point_light::sample_ray(float random_variable1, float random_variable2) const
   {
     return ggo::ray3d_float(_pos, sphere_uniform_sampling<float>(), false);
   }
 
   //////////////////////////////////////////////////////////////
-  std::optional<intersection_data> point_light::intersect_ray(const ggo::ray3d_float & ray) const
+  inline std::optional<intersection_data> point_light::intersect_ray(const ggo::ray3d_float & ray) const
   {
     GGO_FAIL();
     return {};
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f point_light::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
+  inline ggo::color_32f point_light::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
   {
     GGO_FAIL();
     return ggo::black_32f();
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline transmission_data point_light::compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const
+  {
+    GGO_FAIL();
+    return transmission_data(transmission_type::internal_error);
   }
 }
 

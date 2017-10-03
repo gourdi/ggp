@@ -7,9 +7,9 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   bidirectional_lighting::bidirectional_lighting(const ggo::raycaster_abc & raycaster, const ggo::scene & scene)
-    :
-    _raycaster(raycaster),
-    _scene(scene)
+  :
+  _raycaster(raycaster),
+  _scene(scene)
   {
   }
 

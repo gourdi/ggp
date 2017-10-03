@@ -34,8 +34,25 @@ namespace ggo
     ggo::ray3d_float _local_normal;
     ggo::ray3d_float _world_normal;
   };
+
+  //////////////////////////////////////////////////////////////
+  enum class transmission_type
+  {
+    internal_error,
+    full_reflection,
+    partial_transmission,
+    out_of_recursion
+  };
+
+  //////////////////////////////////////////////////////////////
+  struct transmission_data
+  {
+    transmission_data(transmission_type type) : _type(type) {}
+    transmission_data(const ggo::ray3d_float & transmitted_ray) : _type(transmission_type::partial_transmission), _ray(transmitted_ray) {}
+
+    transmission_type _type;
+    ggo::ray3d_float  _ray;
+  };
 }
-
-
 
 #endif

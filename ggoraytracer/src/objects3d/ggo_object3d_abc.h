@@ -50,6 +50,7 @@ namespace ggo
     virtual ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const = 0;
     virtual std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const = 0;
     virtual ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const = 0;
+    virtual transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const = 0;
   };
 }
 

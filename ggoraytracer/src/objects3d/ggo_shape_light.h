@@ -14,9 +14,10 @@ namespace ggo
 
   private:
 
-    ggo::color_32f ggo::object3d_abc::get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f get_emissive_color() const override { return _color; }
-    ggo::color_32f process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
+    ggo::color_32f    get_emissive_color() const override { return _color; }
+    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
   private:
 
@@ -64,6 +65,14 @@ namespace ggo
     }
 
     return output_color;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t>
+  transmission_data shape_light<flags, shape_t>::compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const
+  {
+    GGO_FAIL();
+    return transmission_data(transmission_type::internal_error);
   }
 }
 

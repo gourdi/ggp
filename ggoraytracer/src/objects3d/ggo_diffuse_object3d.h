@@ -14,9 +14,10 @@ namespace ggo
 
   private:
 
-    ggo::color_32f  get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f  get_emissive_color() const override { return ggo::black_32f(); }
-    ggo::color_32f  process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
+    ggo::color_32f    get_emissive_color() const override { return ggo::black_32f(); }
+    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
     ggo::color_32f  compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
 
@@ -82,6 +83,14 @@ namespace ggo
     }
 
     return output_color;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t, typename material_t>
+  transmission_data diffuse_object3d<flags, shape_t, material_t>::compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const
+  {
+    GGO_FAIL();
+    return transmission_data(transmission_type::internal_error);
   }
 }
 #endif

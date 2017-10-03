@@ -5,11 +5,12 @@
 #include <ggo_raytracer.h>
 #include <ggo_transparent_object3d.h>
 #include <ggo_global_sampling_renderer.h>
+#include <ggo_global_sampling_renderer.h> 
 #include <ggo_solid_color_material.h>
 #include <ggo_checker_material.h>
 #include <ggo_background3d_color.h>
 
-GGO_TEST(test_scene, transmission)
+GGO_TEST(transmission, test)
 {
   const int width = 600;
   const int height = 400;
