@@ -209,7 +209,7 @@ namespace ggo
   template <uint32_t flags, typename shape_t>
   ggo::color_32f transparent_object3d<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
   {
-    auto light_samples = raytracer.filter_lights(intersection._world_normal, this, random_variable1, random_variable2);
+    auto light_samples = raytracer.sample_lights(intersection._world_normal, this, random_variable1, random_variable2);
 
     ggo::color_32f output_color = compute_transmitted_color(ray, intersection, raytracer, depth, random_variable1, random_variable2);
 

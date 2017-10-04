@@ -8,6 +8,7 @@
 #include <ggo_simple_color_object3d.h>
 #include <ggo_point_light.h>
 #include <ggo_shape_light.h>
+#include <ggo_glow.h>
 #include <memory>
 
 namespace ggo
@@ -18,6 +19,7 @@ namespace ggo
 
     scene(std::shared_ptr<const ggo::background3d_abc> background);
 
+    glow &        add_glow(const ggo::pos3f & pos, float opacity, const ggo::color_32f & color, float _inner_radius, float outter_radius);
     point_light & add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
 
     template <uint32_t flags, typename shape_t>
@@ -27,7 +29,8 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, color);
 
-      _objects.push_back(object);
+      _visible_objects.push_back(object);
+      _casting_shadows_objects.push_back(object);
       _lights.push_back(object);
 
       return *object;
@@ -50,7 +53,8 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, material);
 
-      _objects.push_back(object);
+      _visible_objects.push_back(object);
+      _casting_shadows_objects.push_back(object);
 
       return *object;
     }
@@ -62,7 +66,8 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, material);
 
-      _objects.push_back(object);
+      _visible_objects.push_back(object);
+      _casting_shadows_objects.push_back(object);
 
       return *object;
     }
@@ -74,7 +79,8 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, color, density);
 
-      _objects.push_back(object);
+      _visible_objects.push_back(object);
+      _casting_shadows_objects.push_back(object);
 
       return *object;
     }
@@ -86,11 +92,13 @@ namespace ggo
     const auto &  background() const { return *_background; }
 
     const auto &  lights() const { return _lights; }
-    const auto &  objects() const { return _objects; }
+    const auto &  visible_objects() const { return _visible_objects; }
+    const auto &  casting_shadows_objects() const { return _casting_shadows_objects; }
 
   private:
 
-    std::vector<std::shared_ptr<const ggo::object3d_abc>> _objects;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _visible_objects;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _casting_shadows_objects;
     std::vector<std::shared_ptr<const ggo::object3d_abc>> _lights;
     std::shared_ptr<const ggo::background3d_abc>          _background;
     ggo::color_32f                                        _ambient_color = ggo::black<ggo::color_32f>();

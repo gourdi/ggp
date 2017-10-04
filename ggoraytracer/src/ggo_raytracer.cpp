@@ -18,7 +18,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::vector<light_sample> raytracer::filter_lights(const ggo::ray3d_float & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const
+  std::vector<light_sample> raytracer::sample_lights(const ggo::ray3d_float & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const
   {
     std::vector<light_sample> result;
 

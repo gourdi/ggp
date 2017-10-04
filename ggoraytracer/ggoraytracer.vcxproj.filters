@@ -157,9 +157,6 @@
     <ClCompile Include="src\raycasters\ggo_brute_force_raycaster.cpp">
       <Filter>raycasters</Filter>
     </ClCompile>
-    <ClCompile Include="src\objects3d\ggo_glow.cpp">
-      <Filter>objects3d</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderers\ggo_global_sampling_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>

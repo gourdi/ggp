@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="test\ggo_bidirectional_lighting.cpp" />
     <ClCompile Include="test\ggo_caustics_nonreg.cpp" />
+    <ClCompile Include="test\ggo_glow_nonreg.cpp" />
     <ClCompile Include="test\ggo_marching_cubes_nonreg.cpp" />
     <ClCompile Include="test\ggo_metaball_nonreg.cpp" />
     <ClCompile Include="test\ggo_parallelogram3d_nonreg.cpp" />

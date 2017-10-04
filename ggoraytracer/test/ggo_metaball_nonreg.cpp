@@ -16,7 +16,7 @@ GGO_TEST(test_scene, metaball)
   ggo::mono_sampling_point_camera camera(width, height, ggo::basis3d_float({ 0.0f, 0.0f, 15.f }), 0.1f);
 
   // The scene.
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::red_32f()));
 
   // Light.
   scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 2.f });

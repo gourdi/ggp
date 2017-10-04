@@ -1,5 +1,6 @@
 #include "ggo_brute_force_raycaster.h"
 #include <ggo_object3d_abc.h>
+#include <ggo_scene.h>
 
 namespace ggo
 {
@@ -14,7 +15,7 @@ namespace ggo
     const ggo::object3d_abc * hit_object = nullptr;
     dist = std::numeric_limits<float>::max();
 
-    for (const auto & object : _objects)
+    for (const auto & object : _scene.visible_objects())
     {
       if (object.get() == exclude_object1 || object.get() == exclude_object2)
       {
@@ -41,7 +42,7 @@ namespace ggo
                                                const ggo::object3d_abc * exclude_object1,
                                                const ggo::object3d_abc * exclude_object2) const
   {
-    for (const auto & object : _objects)
+    for (const auto & object : _scene.casting_shadows_objects())
     {
       if (object.get() == exclude_object1 || object.get() == exclude_object2)
       {

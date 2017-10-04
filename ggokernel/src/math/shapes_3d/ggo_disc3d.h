@@ -5,7 +5,7 @@ namespace ggo
   {
   public:
   
-                        disc3d(const ggo::ray3d<data_t> & ray, data_t radius) : _ray(ray), _radius(radius) {}
+                              disc3d(const ggo::ray3d<data_t> & ray, data_t radius) : _ray(ray), _radius(radius) {}
     
     const ggo::ray3d<data_t>  ray() const { return _ray; }
     data_t                    radius() const { return _radius; }

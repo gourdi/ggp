@@ -81,7 +81,7 @@ namespace ggo
     const ggo::raycaster_abc * raycaster = raytrace_params._raycaster;
     if (raycaster == nullptr)
     {
-      brute_force_raycaster.reset(new ggo::brute_force_raycaster(scene.objects()));
+      brute_force_raycaster.reset(new ggo::brute_force_raycaster(scene));
       raycaster = brute_force_raycaster.get();
     }
 

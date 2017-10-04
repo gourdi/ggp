@@ -30,7 +30,6 @@
     <ClCompile Include="src\indirect_lighting\ggo_photon_mapping.cpp" />
     <ClCompile Include="src\materials\ggo_checker_material.cpp" />
     <ClCompile Include="src\materials\ggo_solid_color_material.cpp" />
-    <ClCompile Include="src\objects3d\ggo_glow.cpp" />
     <ClCompile Include="src\raycasters\ggo_brute_force_raycaster.cpp" />
     <ClCompile Include="src\raycasters\ggo_raycaster_abc.cpp" />
     <ClCompile Include="src\renderers\ggo_antialiasing_renderer.cpp" />

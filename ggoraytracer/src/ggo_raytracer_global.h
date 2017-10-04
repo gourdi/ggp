@@ -30,6 +30,13 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct intersection_data
   {
+    intersection_data() = default;
+    intersection_data(float dist, const ggo::ray3d_float & local_normal, const ggo::ray3d_float & world_normal)
+    :
+    _dist(dist), _local_normal(local_normal), _world_normal(world_normal)
+    {
+    }
+
     float _dist;
     ggo::ray3d_float _local_normal;
     ggo::ray3d_float _world_normal;

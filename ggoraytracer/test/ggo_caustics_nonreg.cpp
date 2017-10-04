@@ -6,7 +6,6 @@
 #include <ggo_object3d_abc.h>
 #include <ggo_background3d_color.h>
 #include <ggo_global_sampling_renderer.h>
-#include <ggo_mono_sampling_renderer.h>
 #include <ggo_brute_force_raycaster.h>
 #include <ggo_photon_mapping.h>
 #include <ggo_solid_color_material.h>
@@ -22,7 +21,6 @@ GGO_TEST(caustics, test)
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 5.f });
   camera_basis.rotate(ggo::ray3d_float::O_X(), 0.8f);
   ggo::multi_sampling_point_camera camera(width, height, camera_basis, 0.5f, 2.5f, 0.01f);
-  //ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.5f);
 
   // The scene.
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
@@ -36,12 +34,11 @@ GGO_TEST(caustics, test)
   sphere.set_phong(5.0f, 100.f);
 
   // Rendering.
-  //ggo::mono_sampling_renderer renderer(camera);
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_count);
   ggo::buffer buffer(3 * width * height);
 
   // Without indirect lighting.
-  //renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("caustics_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 
   // With indirect lighting.
@@ -54,7 +51,7 @@ GGO_TEST(caustics, test)
 
     target_samples.push_back({ x, y, z });
   }
-  ggo::brute_force_raycaster raycaster(scene.objects());
+  ggo::brute_force_raycaster raycaster(scene);
   ggo::photon_mapping photon_mapping({ &light }, target_samples, sphere, raycaster);
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &photon_mapping;
