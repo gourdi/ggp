@@ -5,25 +5,25 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  photon_mapping::photon_mapping(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & lights,
+  photon_mapping::photon_mapping(const std::vector<const ggo::object3d_abc *> & lights,
                                  const std::vector<ggo::pos3f> & target_samples,
                                  const ggo::object3d_abc & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-#if 0
     using color_point = ggo::kdtree<ggo::color_32f, 3>::data_point;
 
+    
     std::vector<color_point> photons;
 
-    for (const auto light : lights)
+    for (const auto * light : lights)
     {
       std::vector<color_point> current_light_photons;
 
       for (int i = 0; i < target_samples.size(); ++i)
       {
         // Build a ray from the light to the object.
-        float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<0>();
-        float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].get<1>();
+        float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].x();
+        float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].y();
 
         ggo::pos3f target_sample = target_samples[i];
         ggo::pos3f light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
@@ -31,57 +31,35 @@ namespace ggo
         ggo::ray3d_float ray(light_sample, target_sample - light_sample);
 
         // Check if the built ray hits the object.
-        ggo::ray3d_float local_normal, world_normal;
-        float dist = -1.f;
-        if (object.intersect_ray(ray, dist, local_normal, world_normal) == false)
+        auto intersection = object.intersect_ray(ray);
+        if (!intersection)
         {
           continue;
         }
 
         // Check visibility between the light and the object.
-        if (raycaster.check_visibility(ray, dist, light.get(), &object) == true)
+        if (raycaster.check_visibility(ray, intersection->_dist, light, &object) == true)
         {
           continue;
         }
 
-        // Check if the ray goes into the object or if the is full reflection.
-        if (ggo::raytracer::transmit_ray(ray, world_normal, 1.f, object.get_density()) == false)
-        {
-          // TODO reflected photons should be stored too.
-          continue;
-        }
-
-        // Let the ray get outside the object.
-        bool transmission = false;
-        for (int depth = 0; depth < 3; ++depth) // Allow 3 internal reflections.
-        {
-          // Intersect the ray with the current object.
-          if (object.intersect_ray(ray, dist, local_normal, world_normal) == false)
-          {
-            // Should never happen, but with rounding error...
-            transmission = false;
-            break;
-          }
-
-          // Check if the ray gets out the object.
-          if (ggo::raytracer::transmit_ray(ray, world_normal, object.get_density(), 1.0f) == true)
-          {
-            transmission = true;
-            break;
-          }
-        }
-        if (transmission == false)
+        // Transmit the ray through the object.
+        int depth = 3;
+        auto transmission = object.compute_transmission(ray, intersection->_world_normal, depth);
+        if (transmission._type != transmission_type::partial_transmission)
         {
           continue;
         }
 
         // OK we have the ray that passed through the transparent object. We now cast it to the scene.
-        auto hit_object = raycaster.hit_test(ray, dist, local_normal, world_normal, &object);
+        auto hit_object = raycaster.hit_test(transmission._ray, intersection->_dist, intersection->_local_normal, intersection->_world_normal, &object);
         if (hit_object != nullptr)
         {
-          ggo::color_32f photon_color = -ggo::dot(world_normal.dir(), ray.dir()) * (light->get_emissive_color() * hit_object->get_color(world_normal.pos()));
-          ggo::pos3f photon_pos = ray.pos() + dist * ray.dir();
-          current_light_photons.push_back({ { photon_pos.get<0>(), photon_pos.get<1>(), photon_pos.get<2>() }, photon_color });
+          const float intensity = ggo::dot(intersection->_world_normal.dir(), transmission._ray.dir());
+          GGO_ASSERT_LE(intensity, 0.001f);
+          ggo::color_32f photon_color = -intensity * (light->get_emissive_color() * hit_object->get_color(intersection->_world_normal.pos()));
+          ggo::pos3f photon_pos = transmission._ray.pos() + intersection->_dist * transmission._ray.dir();
+          current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
         }
       }
 
@@ -95,7 +73,6 @@ namespace ggo
     }
 
     _tree.reset(new ggo::kdtree<ggo::color_32f, 3>(photons));
-#endif
   }
 
   //////////////////////////////////////////////////////////////
@@ -106,9 +83,6 @@ namespace ggo
                                          float random_variable1,
                                          float random_variable2) const
   {
-    return ggo::black_32f();
-
-#if 0
     const float radius = 0.1f;
 
     ggo::color_32f output_color(ggo::black<ggo::color_32f>());
@@ -125,6 +99,5 @@ namespace ggo
     output_color /= ggo::pi<float>() * ggo::square(radius);
 
     return output_color;
-#endif
   }
 }
