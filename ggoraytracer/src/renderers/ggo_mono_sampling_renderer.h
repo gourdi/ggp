@@ -1,8 +1,7 @@
 #ifndef __GGO_MONO_RENDERER__
 #define __GGO_MONO_RENDERER__
 
-#include "ggo_renderer_abc.h"
-#include <ggo_object3d.h>
+#include <ggo_renderer_abc.h>
 #include <ggo_camera_abc.h>
 
 // A single ray in casted per pixel. Assumes all lights are point lights.

@@ -1,8 +1,8 @@
 #include "ggo_metaballs_artist.h"
 #include <iostream>
 #include <algorithm>
-#include <ggo_object3d.h>
 #include <ggo_background3d_color.h>
+#include <ggo_solid_color_material.h>
 
 //#define GGO_METABALLS_DEBUG
 
@@ -27,21 +27,21 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, 
 	std::cout << "Threshold: " << metaball._threshold << std::endl;
 #endif
 
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(params._background_color));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(params._background_color));
 
-  auto metaball = std::make_shared<ggo::metaball<float>>(params._threshold);
+  ggo::metaball<float> metaball(params._threshold);
   for (const auto & center : params._centers)
   {
     std::shared_ptr<ggo::influence_shape3d_abc<float>> shape(new ggo::sphere3d_float(center, 0.7f));
-    metaball->add_influence_data(shape, 1.0f);
+    metaball.add_influence_data(shape, 1.0f);
   }
-  auto object = scene_builder.add_object(metaball, params._background_color, true);
-  object->set_phong_factor(params._phong_factor);
-  object->set_phong_shininess(params._phong_shininess);
+  constexpr uint32_t flags = ggo::discard_reflection | ggo::discard_basis | ggo::discard_roughness;
+  auto & object = scene.add_diffuse_object<flags>(metaball, ggo::solid_color_material(params._background_color));
+  object.set_phong(params._phong_factor, params._phong_shininess);
 
-	scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light1);
-  scene_builder.add_sphere_light(ggo::color_32f(0.8f), 0.1f, params._light2);
+	scene.add_sphere_light(ggo::color_32f(0.8f), params._light1, 0.1f);
+  scene.add_sphere_light(ggo::color_32f(0.8f), params._light2, 0.1f);
 
-  renderer.render(buffer, width, height, line_step, pbf, scene_builder);
+  renderer.render(buffer, width, height, line_step, pbf, scene);
 }
 

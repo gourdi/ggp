@@ -1,6 +1,5 @@
 #include "ggo_raytracer.h"
 #include <ggo_shape_sampling.h>
-#include <ggo_object3d.h>
 #include <ggo_fog_abc.h>
 #include <ggo_material_abc.h>
 #include <ggo_brute_force_raycaster.h>

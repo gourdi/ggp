@@ -1,6 +1,6 @@
 #include "ggo_cumbia_artist.h"
-#include <ggo_object3d.h>
 #include <ggo_renderer_abc.h>
+#include <ggo_solid_color_material.h>
 
 namespace
 {
@@ -110,30 +110,16 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cumbia_artist::cumbia_artist()
-:
-_boxes_tree(nullptr)
-{
-}
-
-//////////////////////////////////////////////////////////////
-ggo::cumbia_artist::~cumbia_artist()
-{
-	delete _boxes_tree;
-}
-
-//////////////////////////////////////////////////////////////
 std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count)
 {
   float dimension = ggo::rand<float>(0.2f, 0.5f);
 	float search_ratio = ggo::rand<float>(0, 0.3f);
 	float reflection_factor = ggo::rand<float>(0.2f, 0.4f);
 	
-	delete _boxes_tree;
-	_boxes_tree = new ggo::tree<ggo::aabox3d_float>(ggo::aabox3d_float(-1, 1, -1, 1, -1, 1));
+	_boxes_tree.reset(new ggo::tree<ggo::aabox3d_float>(ggo::aabox3d_float(-1, 1, -1, 1, -1, 1)));
 
 	std::vector<ggo::tree<ggo::aabox3d_float> *> leaves;
-	leaves.push_back(_boxes_tree);
+	leaves.push_back(_boxes_tree.get());
 
 	// Create boxes tree.
 	bool done = false;
@@ -179,10 +165,9 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
 	}
 
 	// Set up the raytracer, and add the current tree.
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::color_32f(ggo::rand<float>(0.25f, 0.75f))));
+  _scene.reset(new ggo::scene(std::make_shared<ggo::background3d_color>(ggo::color_32f(ggo::rand<float>(0.25f, 0.75f)))));
 
-	auto boxes_tree_shape = std::make_shared<ggo_boxes_tree_shape>(_boxes_tree);
-  auto box_tree_object = scene_builder.add_object(boxes_tree_shape, ggo::white<ggo::color_32f>(), true);
+  _scene->add_diffuse_object<ggo::discard_all>(ggo_boxes_tree_shape(_boxes_tree.get()), ggo::white_material());
 
 	// The camera.
 	camera_basis.reset();
@@ -198,12 +183,10 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
   ggo::pos3f light_pos3 { camera_dist * std::cos(angle_offset - 2 * ggo::pi<float>() / 3), camera_dist * std::sin(angle_offset - 2 * ggo::pi<float>() / 3), 0.f };
   ggo::pos3f light_pos4 { 0.f, 0.f, camera_dist };
 
-	scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), 0.1f, light_pos1);
-  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), 0.1f, light_pos2);
-  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), 0.1f, light_pos3);
-  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), 0.1f, light_pos4);
-
-  _scene = scene_builder.build_scene();
+  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos1, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos2, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos3, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos4, 0.1f);
 
 	std::cout << "dimension: " << dimension << std::endl;
 	std::cout << "search_ratio: " << search_ratio << std::endl;
@@ -239,6 +222,6 @@ void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int
 	ggo::raytrace_params raytrace_params;
 	raytrace_params._depth = 2;
 
-	renderer.render(buffer, width, height, line_step, pbf, _scene, raytrace_params);
+	renderer.render(buffer, width, height, line_step, pbf, *_scene, raytrace_params);
 }
 

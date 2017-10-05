@@ -1,8 +1,7 @@
 #ifndef _GGO_GLOBAL_SAMPLING_RENDERER__
 #define _GGO_GLOBAL_SAMPLING_RENDERER__
 
-#include "ggo_renderer_abc.h"
-#include <ggo_object3d.h>
+#include <ggo_renderer_abc.h>
 #include <ggo_camera_abc.h>
 
 namespace ggo

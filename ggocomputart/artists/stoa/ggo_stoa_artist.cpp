@@ -3,8 +3,8 @@
 #include <ggo_background3d_color.h>
 #include <ggo_raytracer_global.h>
 #include <ggo_point_camera.h>
+#include <ggo_solid_color_material.h>
 #include <ggo_marching_cubes.h>
-#include <ggo_object3d.h>
 
 namespace
 {
@@ -94,14 +94,14 @@ _octree({ get_bounding_box(face_objects), face_objects })
 
     for (const auto & face_object : tree.data()._face_objects)
     {
-      if (compare_face(*face_object._face, center, le, le, le)) { nodes[0]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, le, le, ge)) { nodes[1]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, le, ge, le)) { nodes[2]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, le, ge, ge)) { nodes[3]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, ge, le, le)) { nodes[4]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, ge, le, ge)) { nodes[5]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, ge, ge, le)) { nodes[6]._face_objects.push_back(face_object); }
-      if (compare_face(*face_object._face, center, ge, ge, ge)) { nodes[7]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, le, le, le)) { nodes[0]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, le, le, ge)) { nodes[1]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, le, ge, le)) { nodes[2]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, le, ge, ge)) { nodes[3]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, ge, le, le)) { nodes[4]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, ge, le, ge)) { nodes[5]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, ge, ge, le)) { nodes[6]._face_objects.push_back(face_object); }
+      if (compare_face(face_object._face, center, ge, ge, ge)) { nodes[7]._face_objects.push_back(face_object); }
     }
 
     for (auto & node : nodes)
@@ -122,14 +122,14 @@ _octree({ get_bounding_box(face_objects), face_objects })
 }
 
 //////////////////////////////////////////////////////////////
-const ggo::object3d * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                            float & dist,
-                                                            ggo::ray3d_float & local_normal,
-                                                            ggo::ray3d_float & world_normal,
-                                                            const ggo::object3d * exclude_object1,
-                                                            const ggo::object3d * exclude_object2) const
+const ggo::object3d_abc * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_float & ray,
+                                                                float & dist,
+                                                                ggo::ray3d_float & local_normal,
+                                                                ggo::ray3d_float & world_normal,
+                                                                const ggo::object3d_abc * exclude_object1,
+                                                                const ggo::object3d_abc * exclude_object2) const
 {
-  const ggo::object3d * hit_object = nullptr;
+  const ggo::object3d_abc * hit_object = nullptr;
   std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
 
   dist = std::numeric_limits<float>::max();
@@ -148,7 +148,7 @@ const ggo::object3d * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_flo
         {
           float dist_cur = 0.f;
           ggo::ray3d_float normal_cur;
-          if (face_object._face->intersect_ray(ray, dist_cur, normal_cur) == true &&
+          if (face_object._face.intersect_ray(ray, dist_cur, normal_cur) == true &&
               dist_cur < dist &&
               exclude_object1 != face_object._object.get() &&
               exclude_object2 != face_object._object.get())
@@ -177,8 +177,8 @@ const ggo::object3d * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_flo
 //////////////////////////////////////////////////////////////
 bool ggo::stoa_artist::raycaster::check_visibility(const ggo::ray3d_float & ray,
                                                    float dist_max,
-                                                   const ggo::object3d * exclude_object1,
-                                                   const ggo::object3d * exclude_object2) const
+                                                   const ggo::object3d_abc * exclude_object1,
+                                                   const ggo::object3d_abc * exclude_object2) const
 {
   std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
 
@@ -196,7 +196,7 @@ bool ggo::stoa_artist::raycaster::check_visibility(const ggo::ray3d_float & ray,
         {
           float dist = 0.f;
           ggo::ray3d_float normal_cur;
-          if (face_object._face->intersect_ray(ray, dist, normal_cur) == true &&
+          if (face_object._face.intersect_ray(ray, dist, normal_cur) == true &&
               dist < dist_max &&
               exclude_object1 != face_object._object.get() &&
               exclude_object2 != face_object._object.get())
@@ -226,9 +226,9 @@ ggo::aabox3d_float ggo::stoa_artist::raycaster::get_bounding_box(const std::vect
 
   for (const auto & face_object : face_objects)
   {
-    bounding_box.merge_with(face_object._face->v1()._pos);
-    bounding_box.merge_with(face_object._face->v2()._pos);
-    bounding_box.merge_with(face_object._face->v3()._pos);
+    bounding_box.merge_with(face_object._face.v1()._pos);
+    bounding_box.merge_with(face_object._face.v2()._pos);
+    bounding_box.merge_with(face_object._face.v3()._pos);
   }
 
   return bounding_box;
@@ -283,10 +283,12 @@ ggo::stoa_artist::stoa_artist(int steps)
       auto v2 = compute_vertex(density_func, triangle.v2());
       auto v3 = compute_vertex(density_func, triangle.v3());
 
-      auto face_ptr = std::make_shared<ggo::face3d<float, true>>(v1, v2, v3);
-      auto object_ptr = std::make_shared<ggo::object3d>(face_ptr, ggo::white<ggo::color_32f>());
+      ggo::face3d<float, true> face(v1, v2, v3);
 
-      ggo::stoa_artist::face_object face_object{ object_ptr, face_ptr };
+      using object_t = ggo::diffuse_object3d<ggo::discard_all, ggo::face3d<float, true>, ggo::solid_color_material>;
+      auto object = std::make_shared<object_t>(face, ggo::white_material());
+
+      ggo::stoa_artist::face_object face_object{ object, face };
 
       face_objects.push_back(face_object);
     }
@@ -297,17 +299,17 @@ ggo::stoa_artist::stoa_artist(int steps)
 
 //////////////////////////////////////////////////////////////
 void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, float hue,
-                              const ggo::pos3f& light_pos1, const ggo::pos3f& light_pos2,
-                              ggo::renderer_abc& renderer) const
+                              const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
+                              ggo::renderer_abc & renderer) const
 {
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::color_32f>(hue, 1.f, 1.f)));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::color_32f>(hue, 1.f, 1.f)));
 
   // Lights.
-  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.8f), 1, light_pos1);
-  scene_builder.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), 1, light_pos2);
+  scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.8f), light_pos1, 1);
+  scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), light_pos2, 1);
 
   // Rendering.
   ggo::raytrace_params params;
   params._raycaster = _raycaster.get();
-  renderer.render(buffer, width, height, line_step, pbf, scene_builder, params);
+  renderer.render(buffer, width, height, line_step, pbf, scene, params);
 }

@@ -1,11 +1,11 @@
 #include "ggo_marbles_artist.h"
 #include <ggo_scene.h>
-#include <ggo_object3d.h>
 #include <ggo_global_sampling_renderer.h>
 #include <ggo_point_camera.h>
 #include <ggo_linear_fog.h>
 #include <ggo_material_abc.h>
 #include <ggo_background3d_color.h>
+#include <ggo_solid_color_material.h>
 #include <iostream>
 #include <algorithm>
 
@@ -67,10 +67,10 @@ bitmap_artist_abc(width, height, line_step, pbf)
 //////////////////////////////////////////////////////////////
 void ggo::marbles_artist::render_bitmap(void * buffer) const
 {
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
 
   // The fog.
-  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
+  scene.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
 
 	// Setup the camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });
@@ -78,9 +78,10 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
 	ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
 
 	// Floor plane.
-  auto floor = scene_builder.add_object(std::make_shared<ggo::const_plane3d<float, 0, 0, 1, 0>>(), ggo::white<ggo::color_32f>(), true); // z = 0
-  floor->set_reflection_factor(0.5f);
-  floor->set_roughness(0.1f);
+  constexpr uint32_t flags = ggo::discard_basis | ggo::discard_phong;
+  auto & floor = scene.add_diffuse_object<flags>(ggo::const_plane3d<float, 0, 0, 1, 0>(), ggo::white_material()); // z = 0
+  floor.set_reflection_factor(0.5f);
+  floor.set_roughness(0.1f);
 
 	// Create the spheres.
 	std::vector<ggo::sphere3d_float> spheres;
@@ -116,21 +117,19 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
         (ggo::dot(dir_to_center, camera.basis().z()) < -0.98) && // In the axis of the camera
         (ggo::dot(dir_to_center, camera.basis().y()) < 0.1))     // Center of the sphere is low in the output picture.
     {
-      scene_builder.add_sphere_light(ggo::white<ggo::color_32f>(), sphere.radius(), sphere.center());
+      scene.add_sphere_light(ggo::white_32f(), sphere.center(), sphere.radius());
       ++lights_count;
     }
     else
     {
-      auto shape = std::make_shared<ggo::centered_sphere3d_float>(sphere.radius());
-      auto material = std::make_shared<my_material>(sphere.radius());
-      auto object = scene_builder.add_object(shape, material, false);
+      const uint32_t flags = ggo::discard_reflection | ggo::discard_roughness;
+      auto & object = scene.add_diffuse_object<flags>(ggo::centered_sphere3d_float(sphere.radius()), my_material(sphere.radius()));
 
-      object->set_phong_factor(ggo::rand<float>(3, 5));
-      object->set_phong_shininess(ggo::rand<float>(250, 500));
-      object->basis().rotate_x(ggo::rand<float>(0, 2 * ggo::pi<float>()));
-      object->basis().rotate_y(ggo::rand<float>(0, 2 * ggo::pi<float>()));
-      object->basis().rotate_z(ggo::rand<float>(0, 2 * ggo::pi<float>()));
-      object->basis().pos() = sphere.center();
+      object.set_phong(ggo::rand<float>(3, 5), ggo::rand<float>(250, 500));
+      object.basis().rotate_x(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      object.basis().rotate_y(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      object.basis().rotate_z(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      object.basis().pos() = sphere.center();
     }
 	}
 
@@ -138,6 +137,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene_builder, raytrace_params);
+	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene, raytrace_params);
 }
 

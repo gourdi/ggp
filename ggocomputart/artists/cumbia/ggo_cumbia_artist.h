@@ -4,7 +4,6 @@
 #include <ggo_artist.h>
 #include <ggo_tree.h>
 #include <ggo_background3d_color.h>
-#include <ggo_object3d.h>
 #include <ggo_scene.h>
 #include <ggo_point_camera.h>
 
@@ -17,8 +16,7 @@ namespace ggo
   {
   public:
 
-    cumbia_artist();
-    ~cumbia_artist();
+    cumbia_artist() = default;
 
     void	init(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
     void	init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count);
@@ -31,9 +29,8 @@ namespace ggo
 
   private:
 
-    ggo::tree<ggo::aabox3d_float> *	_boxes_tree;
-    ggo::scene                      _scene;
-    ggo::background3d_color			    _background3d;
+    std::unique_ptr<ggo::tree<ggo::aabox3d_float>>  _boxes_tree;
+    std::unique_ptr<ggo::scene>                     _scene;
   };
 }
 

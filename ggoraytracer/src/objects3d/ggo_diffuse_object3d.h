@@ -53,10 +53,10 @@ namespace ggo
 
     for (const auto & light_sample : light_samples)
     {
-      GGO_ASSERT_BTW(intersection._world_normal.pos().get<0>() - light_sample._ray_to_light.pos().get<0>(), -0.01, 0.01);
-      GGO_ASSERT_BTW(intersection._world_normal.pos().get<1>() - light_sample._ray_to_light.pos().get<1>(), -0.01, 0.01);
-      GGO_ASSERT_BTW(intersection._world_normal.pos().get<2>() - light_sample._ray_to_light.pos().get<2>(), -0.01, 0.01);
-      GGO_ASSERT_GE(ggo::dot(world_normal.dir(), light_sample._ray_to_light.dir()), -0.01);
+      GGO_ASSERT_BTW(intersection._world_normal.pos().x() - light_sample._ray_to_light.pos().x(), -0.01, 0.01);
+      GGO_ASSERT_BTW(intersection._world_normal.pos().y() - light_sample._ray_to_light.pos().y(), -0.01, 0.01);
+      GGO_ASSERT_BTW(intersection._world_normal.pos().z() - light_sample._ray_to_light.pos().z(), -0.01, 0.01);
+      GGO_ASSERT_GE(ggo::dot(intersection._world_normal.dir(), light_sample._ray_to_light.dir()), -0.01);
 
       output_color += ggo::dot(intersection._world_normal.dir(), light_sample._ray_to_light.dir()) * diffuse_color * light_sample._color;
     }
