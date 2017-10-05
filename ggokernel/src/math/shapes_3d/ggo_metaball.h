@@ -7,13 +7,12 @@ namespace ggo
   {
   public:
 
-                    metaball(data_t threshold);
+          metaball(data_t threshold);
 
-    void            add_influence_data(std::shared_ptr<influence_shape3d_abc<data_t>> shape, data_t potential);
+    void  add_influence_data(std::shared_ptr<influence_shape3d_abc<data_t>> shape, data_t potential);
 
-    bool	          intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
-    bool	          is_convex() const override { return false; }
-    std::ostream &  operator<<(std::ostream & os) const override { os << "metaball"; return os; }
+    bool  intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
+    bool  is_convex() const override { return false; }
 
   public:
 

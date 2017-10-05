@@ -128,12 +128,4 @@ namespace ggo
 
     return polygon3d<T>(vertices, faces);
   }
-
-  //////////////////////////////////////////////////////////////
-  template <typename T>
-  std::ostream & polygon3d<T>::operator<<(std::ostream & os) const
-  {
-    os << "polygon3d";
-    return os;
-  }
 }

@@ -16,8 +16,6 @@ namespace ggo
        
     T &             radius() { return _radius; }
     const T &       radius() const { return _radius; }
-    
-    std::ostream &  operator<<(std::ostream & os) const override;
 
   private:
 
@@ -31,3 +29,13 @@ namespace ggo
   using centered_sphere3d_double = centered_sphere3d<double>;
   using centered_sphere3d_float  = centered_sphere3d<float>;
 }
+
+//////////////////////////////////////////////////////////////
+namespace ggo
+{
+  template <typename data_t>
+  std::ostream &  operator<<(std::ostream & os, const centered_sphere3d<data_t> & s);
+}
+
+
+

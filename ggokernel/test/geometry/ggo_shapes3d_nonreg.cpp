@@ -429,7 +429,27 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   GGO_CHECK_FABS(box.y_min(), -10); 
   GGO_CHECK_FABS(box.y_max(), 20); 
   GGO_CHECK_FABS(box.z_min(), 2); 
-  GGO_CHECK_FABS(box.z_max(), 5); 
+  GGO_CHECK_FABS(box.z_max(), 5);
+
+  // Intersection.
+  const std::vector<std::tuple<ggo::aabox3d_float, ggo::aabox3d_float, bool>> intersect_tests{
+    { { 0, 1, 1, 2, 2, 3 },{ 2, 3, 3, 4, 4, 5 }, false },
+    { { 2, 3, 3, 4, 4, 5 },{ 0, 1, 1, 2, 2, 3 }, false },
+    { { 0, 1, 0, 1, 0, 1 },{ 0, 1, 0, 1, 2, 3 }, false },
+    { { 0, 1, 0, 1, 0, 1 },{ 0, 1, 2, 3, 0, 1 }, false },
+    { { 0, 1, 0, 1, 0, 1 },{ 2, 3, 0, 1, 0, 1 }, false },
+    { { 0, 1, 0, 1, 2, 3 },{ 0, 1, 0, 1, 0, 1 }, false },
+    { { 0, 1, 2, 3, 0, 1 },{ 0, 1, 0, 1, 0, 1 }, false },
+    { { 2, 3, 0, 1, 0, 1 },{ 0, 1, 0, 1, 0, 1 }, false },
+    { { 0, 2, 0, 2, 0, 2 },{ 1, 3, 1, 3, 1, 3 }, true },
+    { { 0, 2, 0, 2, 0, 2 },{ 1, 3, 1, 3, 1, 3 }, true },
+    { { 1, 2, 1, 2, 1, 2 },{ 0, 3, 0, 3, 0, 3 }, true },
+    { { 0, 3, 0, 3, 0, 3 },{ 1, 2, 1, 2, 1, 2 }, true },
+  };
+  for (const auto & test : intersect_tests)
+  {
+    GGO_CHECK(ggo::intersect(std::get<0>(test), std::get<1>(test)) == std::get<2>(test));
+  }
 }
 
 /////////////////////////////////////////////////////////////////////

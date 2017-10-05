@@ -44,10 +44,10 @@ namespace ggo
   }
     
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  std::ostream & parallelogram3d<T>::operator<<(std::ostream & os) const
+  template <typename data_t>
+  std::ostream &  operator<<(std::ostream & os, const parallelogram3d<data_t> & parallelogram)
   {
-    os << "parallelogram3d (" << _pos << ", " << _v1 << ", " << _v2 << ")";
+    os << "(pos=" << parallelogram.pos() << ", v1=" << parallelogram.v1() << ", v2=" << parallelogram.v2() << ")";
     return os;
   }
 }

@@ -39,9 +39,9 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::ostream & disc3d<data_t>::operator<<(std::ostream & os) const
+  std::ostream & operator<<(std::ostream & os, const disc3d<data_t> & disc)
   {
-    os << "disc3d " << _ray;
+    os << "(ray=" << disc.ray() << ", radius=" << disc.radius() << ")";
     return os;
   }
 }

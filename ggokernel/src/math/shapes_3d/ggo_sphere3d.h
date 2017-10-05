@@ -25,7 +25,6 @@ namespace ggo
     
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }
-    std::ostream &            operator<<(std::ostream & os) const override;
 
     ggo::pos3<data_t> &       center() { return _center; }
     const ggo::pos3<data_t> & center() const { return _center; }
@@ -60,4 +59,7 @@ namespace ggo
   {
     return std::max<data_t>(0, ggo::distance(sphere1.center(), sphere2.center()) - sphere1.radius() - sphere2.radius());
   }
+
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::sphere3d<data_t> & sphere);
 }

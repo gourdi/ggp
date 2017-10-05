@@ -70,10 +70,10 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  std::ostream & centered_sphere3d<T>::operator<<(std::ostream & os) const
+  template <typename data_t>
+  std::ostream &  operator<<(std::ostream & os, const centered_sphere3d<data_t> & s)
   {
-    os << "sphere3d (" << _radius << ")";
+    os << "(radius=" << s.radius() << ")";
     return os;
   }
 }

@@ -51,8 +51,6 @@ namespace ggo
 
     virtual ggo::pos3<data_t>   sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::pos3<data_t>(data_t(0), data_t(0), data_t(0)); }
     virtual ggo::ray3d<data_t>  sample_ray(data_t random_variable1, data_t random_variable2) const { return ggo::ray3d<data_t>(); }
-
-    virtual std::ostream &      operator<<(std::ostream & os) const = 0;
   };
 }
 

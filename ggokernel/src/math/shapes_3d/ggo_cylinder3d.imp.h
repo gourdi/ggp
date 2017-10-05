@@ -131,9 +131,9 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::ostream & cylinder3d<data_t>::operator<<(std::ostream & os) const
+  std::ostream & operator<<(std::ostream & os, const cylinder3d<data_t> & cylinder)
   {
-    os << "cylinder (" << _pos << ", " << _dir << ", " << _radius << ")";
+    os << "(pos=" << cylinder.pos() << ", dir=" << cylinder.dir() << ", radius=" << cylinder.radius() << ")";
     return os;
   }
 }

@@ -27,8 +27,6 @@ namespace ggo
     ggo::pos3<T>          get_center() const;
 
     T					            area() const;
-    
-    std::ostream &        operator<<(std::ostream & os) const override;
 
   private:
 
@@ -44,6 +42,14 @@ namespace ggo
   typedef triangle3d<float>  triangle3d_float ;
   typedef triangle3d<double> triangle3d_double;
 }
+
+//////////////////////////////////////////////////////////////
+namespace ggo
+{
+  template <typename data_t, bool double_sided>
+  std::ostream & operator<<(std::ostream & os, const triangle3d<data_t, double_sided> & t);
+}
+
 
 
 

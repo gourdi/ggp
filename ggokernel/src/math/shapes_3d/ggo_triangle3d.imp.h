@@ -162,10 +162,10 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  std::ostream & triangle3d<T, double_sided>::operator<<(std::ostream & os) const
+  template <typename data_t, bool double_sided>
+  std::ostream & operator<<(std::ostream & os, const triangle3d<data_t, double_sided> & t)
   {
-    os << "triangle3d (" <<_v1 << ", " << _v2 << ", " << _v3 << ")";
+    os << "(v1=" << t.v1() << ", v2=" << t.v2() << ", v3=" << t.v3() << ")";
 	  return os;
   }
 }

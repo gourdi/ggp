@@ -12,7 +12,6 @@ namespace ggo
     
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }
-    std::ostream &            operator<<(std::ostream & os) const override;
 
   private:
   
@@ -26,4 +25,11 @@ namespace ggo
 {
   using disc3d_double = disc3d<double>;
   using disc3d_float  = disc3d<float>;
+}
+
+//////////////////////////////////////////////////////////////
+namespace ggo
+{
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const disc3d<data_t> & disc);
 }

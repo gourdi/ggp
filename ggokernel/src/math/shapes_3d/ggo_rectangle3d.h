@@ -13,8 +13,6 @@ namespace ggo
     bool intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool is_convex() const override { return true; }
 
-    std::ostream & operator<<(std::ostream & os) const override { return os; }
-
   private:
 
     bool intersect_ray_x(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const;

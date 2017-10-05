@@ -25,9 +25,9 @@ namespace ggo
   
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::ostream & plane3d<data_t>::operator<<(std::ostream & os) const
+  std::ostream & operator<<(std::ostream & os, const plane3d<data_t> & plane)
   {
-    os << "plane3d (" << _normal << ", " << _dist_to_origin << ")";
+    os << "(normal=" << plane.normal() << ", dist_to_origin=" << plane.dist_to_origin() << ")";
     return os;
   }
 }
@@ -59,9 +59,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, int normal_x, int normal_y, int normal_z, int dist_to_origin>
-  std::ostream & const_plane3d<data_t, normal_x, normal_y, normal_z, dist_to_origin>::operator<<(std::ostream & os) const
+  std::ostream & operator<<(std::ostream & os, const const_plane3d<data_t, normal_x, normal_y, normal_z, dist_to_origin> & plane)
   {
-    os << "const_plane3d (" << normal_x << ", " << normal_y << ", " << normal_z << ", " << dist_to_origin << ")";
+    os << "(normal=(" << normal_x << ", " << normal_y << ", " << normal_z << "), dist_to_torigin=" << dist_to_origin << ")";
     return os;
   }
 }
