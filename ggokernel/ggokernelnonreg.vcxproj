@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp" />
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
     <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
@@ -45,6 +44,18 @@
     <ClCompile Include="test\memory\ggo_circular_buffer_nonreg.cpp" />
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_basis2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_circle2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_disc2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_extended_segment2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_half_plane2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_multi_shape2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_oriented_box2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_rectangle2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_rect_data_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_segment2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_polygon2d_nonreg.cpp" />
+    <ClCompile Include="test\shapes2d\ggo_triangle2d_nonreg.cpp" />
     <ClCompile Include="test\shapes3d\ggo_axis_aligned_box3d_nonreg.cpp" />
     <ClCompile Include="test\shapes3d\ggo_basis3d_nonreg.cpp" />
     <ClCompile Include="test\shapes3d\ggo_centered_sphere3d_nonreg.cpp" />

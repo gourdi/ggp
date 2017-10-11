@@ -295,9 +295,9 @@ namespace
       ggo::segment<T> s12(*(it_triangle->_v1), *(it_triangle->_v2));
       ggo::segment<T> s23(*(it_triangle->_v2), *(it_triangle->_v3));
       ggo::segment<T> s13(*(it_triangle->_v1), *(it_triangle->_v3));
-      T d12 = s12.dist_to_point(new_vertex->x(), new_vertex->y());
-      T d23 = s23.dist_to_point(new_vertex->x(), new_vertex->y());
-      T d13 = s13.dist_to_point(new_vertex->x(), new_vertex->y());
+      T d12 = s12.dist_to_point(*new_vertex);
+      T d23 = s23.dist_to_point(*new_vertex);
+      T d13 = s13.dist_to_point(*new_vertex);
 
       ggo::edge<T> current_edge(nullptr, nullptr);
       ggo::edge<T> edge1(nullptr, nullptr);
@@ -383,7 +383,7 @@ namespace
       triangle.add_point(*v2);
       triangle.add_point(*v3);
 
-      if (triangle.is_point_inside(new_vertex->x(), new_vertex->y()) == true)
+      if (triangle.is_point_inside(*new_vertex) == true)
       {
         // Add new triangles.
         ggo::delaunay_triangle<T> triangle1(it_triangle->_v1, it_triangle->_v2, new_vertex);

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="geometry">
-      <UniqueIdentifier>{635fd782-a7f2-4626-88bb-daf5816b96ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="interpolation">
       <UniqueIdentifier>{2ee0da41-c37f-4396-bfdf-80eefbf71027}</UniqueIdentifier>
     </Filter>
@@ -31,11 +28,11 @@
     <Filter Include="shapes3d">
       <UniqueIdentifier>{1266490f-a6e9-49ad-8204-f544d7a6b55d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shapes2d">
+      <UniqueIdentifier>{7674f96b-c12a-4f1d-b309-413cb552ac39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
-      <Filter>geometry</Filter>
-    </ClCompile>
     <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp">
       <Filter>interpolation</Filter>
     </ClCompile>
@@ -154,6 +151,42 @@
     </ClCompile>
     <ClCompile Include="test\shapes3d\ggo_rectangle3d_nonreg.cpp">
       <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_basis2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_segment2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_polygon2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_triangle2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_circle2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_disc2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_rect_data_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_rectangle2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_extended_segment2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_multi_shape2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_half_plane2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes2d\ggo_oriented_box2d_nonreg.cpp">
+      <Filter>shapes2d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

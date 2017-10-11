@@ -34,14 +34,12 @@ namespace ggo
     void				              set_center(const ggo::pos2<data_t> & center) { _center = center; }
     void				              set_center(data_t x, data_t y) { _center.template get<0>() = x; _center.template get<1>() = y; }
            
-    bool				              segment_intersect_border(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
-           
     // Interfaces.
     ggo::pos2<data_t>         get_center() const override { return _center; }
-    void				              move(data_t dx, data_t dy) override { _center.move(dx, dy); }
+    void				              move(const ggo::vec2<data_t> & m) override { _center += m; }
     void				              rotate(data_t angle, const ggo::pos2<data_t> & center) override { _center = ggo::rotate(_center, center, angle); }
-    data_t                    dist_to_point(data_t x, data_t y) const override;
-    bool	                    is_point_inside(data_t x, data_t y) const override;
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;
+    bool	                    is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t>         get_bounding_rect() const override;
     rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 

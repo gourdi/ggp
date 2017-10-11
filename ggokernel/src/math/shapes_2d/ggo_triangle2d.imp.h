@@ -2,28 +2,24 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////////
   template <typename data_t>
-  void triangle2d<data_t>::move(data_t dx, data_t dy)
+  void triangle2d<data_t>::move(const ggo::vec2<data_t> & m)
   {
-    _v1.x() += dx;
-    _v1.y() += dy;
-    _v2.x() += dx;
-    _v2.y() += dy;
-    _v3.x() += dx;
-    _v3.y() += dy;
+    _v1 += m;
+    _v2 += m;
+    _v3 += m;
   }
   
   //////////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool triangle2d<data_t>::is_point_inside(data_t x, data_t y) const
+  bool triangle2d<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    ggo::pos2<data_t> p(x, y);
     ggo::vec2<data_t> d(p - _v1);
     ggo::vec2<data_t> d2(_v2 - _v1);
     ggo::vec2<data_t> d3(_v3 - _v1);
     
     data_t m[2][2] = {
-      {d2.x(), d3.x()},
-      {d2.y(), d3.y()}};
+      { d2.x(), d3.x() },
+      { d2.y(), d3.y() } };
     data_t c[2] = {d.x(), d.y()};
     data_t s[2] = {0, 0};
     
@@ -73,10 +69,10 @@ namespace ggo
       return rect_intersection::shape_in_rect;
     }
     
-    if (is_point_inside(left, top) && 
-        is_point_inside(right, top) &&
-        is_point_inside(right, bottom) &&
-        is_point_inside(left, bottom))
+    if (is_point_inside({ left, top }) &&
+        is_point_inside({ right, top }) &&
+        is_point_inside({ right, bottom }) &&
+        is_point_inside({ left, bottom }))
     {
       return rect_intersection::rect_in_shape;
     }

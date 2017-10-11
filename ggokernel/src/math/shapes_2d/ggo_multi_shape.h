@@ -16,43 +16,43 @@ namespace ggo
     DIFFERENCE
   };
 
-  template <typename T, boolean_mode mode = boolean_mode::UNION>
-  class multi_shape final : public paintable_shape2d_abc<T>
+  template <typename data_t, boolean_mode mode = boolean_mode::UNION>
+  class multi_shape final : public paintable_shape2d_abc<data_t>
   {
   public:
 
-    using type = T;
+    using type = data_t;
 
                       multi_shape() {}
           
-    void              add_shape(std::shared_ptr<paintable_shape2d_abc<T>> shape) { _shapes.push_back(shape); }  
+    void              add_shape(std::shared_ptr<paintable_shape2d_abc<data_t>> shape) { _shapes.push_back(shape); }
     
     template<typename First, typename... Rest>
     void              add_shapes(const First & shape, Rest... rest) { add_shape(shape); add_shapes(rest...); }  
     void              add_shapes() { }
           
     // Interfaces.
-    bool	            is_point_inside(T x, T y) const override;
-    rect_data<T>      get_bounding_rect() const override;
-    rect_intersection get_rect_intersection(const rect_data<T> & rect_data) const override;
+    bool	            is_point_inside(const ggo::pos2<data_t> & p) const override;
+    rect_data<data_t> get_bounding_rect() const override;
+    rect_intersection get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 
   private:
 
-    bool	            is_point_inside_union(T x, T y) const;
-    bool	            is_point_inside_intersection(T x, T y) const;
-    bool	            is_point_inside_difference(T x, T y) const;
+    bool	            is_point_inside_union(const ggo::pos2<data_t> & p) const;
+    bool	            is_point_inside_intersection(const ggo::pos2<data_t> & p) const;
+    bool	            is_point_inside_difference(const ggo::pos2<data_t> & p) const;
 
-    rect_data<T>      get_bounding_rect_union() const;
-    rect_data<T>      get_bounding_rect_intersection() const;
-    rect_data<T>      get_bounding_rect_difference() const;
+    rect_data<data_t> get_bounding_rect_union() const;
+    rect_data<data_t> get_bounding_rect_intersection() const;
+    rect_data<data_t> get_bounding_rect_difference() const;
 
-    rect_intersection get_rect_intersection_union(const rect_data<T> & rect_data) const;
-    rect_intersection get_rect_intersection_intersection(const rect_data<T> & rect_data) const;
-    rect_intersection get_rect_intersection_difference(const rect_data<T> & rect_data) const;
+    rect_intersection get_rect_intersection_union(const rect_data<data_t> & rect_data) const;
+    rect_intersection get_rect_intersection_intersection(const rect_data<data_t> & rect_data) const;
+    rect_intersection get_rect_intersection_difference(const rect_data<data_t> & rect_data) const;
 
   private:
 
-    std::vector<std::shared_ptr<paintable_shape2d_abc<T>>> _shapes;
+    std::vector<std::shared_ptr<paintable_shape2d_abc<data_t>>> _shapes;
   };
 }
 

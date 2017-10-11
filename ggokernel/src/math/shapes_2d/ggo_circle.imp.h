@@ -13,14 +13,14 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::vector<ggo::pos2<data_t>> circle<data_t>::intersect_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
+  std::vector<ggo::pos2<data_t>> circle<data_t>::get_segment_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    return intersect_line(p1, p2, true);
+    return get_line_intersection(p1, p2, true);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::vector<ggo::pos2<data_t>> circle<data_t>::intersect_line(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, bool between_points_only) const
+  std::vector<ggo::pos2<data_t>> circle<data_t>::get_line_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, bool between_points_only) const
   {
     ggo::pos2<data_t> dir = p2 - p1;
     data_t dx = p1.x() - _center.x();
@@ -51,10 +51,10 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool circle<data_t>::intersect_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
+  bool circle<data_t>::test_segment_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    bool p1_inside = is_point_inside(x_from, y_from);
-    bool p2_inside = is_point_inside(x_to, y_to);
+    bool p1_inside = is_point_inside(p1);
+    bool p2_inside = is_point_inside(p2);
     
     if (p1_inside == true && p2_inside == true)
     {
@@ -74,7 +74,7 @@ namespace ggo
     GGO_ASSERT(p1_inside == false);
     GGO_ASSERT(p2_inside == false);
     
-    data_t hypot = ggo::segment<data_t>(x_from, y_from, x_to, y_to).hypot_to_point(_center);
+    data_t hypot = ggo::segment<data_t>(p1, p2).hypot_to_point(_center);
     return hypot < _radius * _radius;
   }
 }

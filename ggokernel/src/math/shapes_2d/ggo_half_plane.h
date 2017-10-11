@@ -18,8 +18,8 @@ namespace ggo
                               // The normal points towards the outside of the half-plane.
                               half_plane(const ggo::pos2<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
 
-    bool                      is_point_inside(data_t x, data_t y) const override;
-    data_t                    dist_to_point(data_t x, data_t y) const override;
+    bool                      is_point_inside(const ggo::pos2<data_t> & p) const override;
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;
 
     const ggo::pos2<data_t> & normal() const { return _normal; }
     float                     dist_to_origin() const { return _dist_to_origin; }

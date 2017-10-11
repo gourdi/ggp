@@ -10,9 +10,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool extended_segment<data_t>::is_point_inside(data_t x, data_t y) const
+  bool extended_segment<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    return ggo::segment<data_t>(_p1, _p2).dist_to_point(x, y) < _width;
+    return ggo::segment<data_t>(_p1, _p2).dist_to_point(p) < _width;
   }
 
   //////////////////////////////////////////////////////////////
@@ -36,17 +36,17 @@ namespace ggo
     data_t right   = left + rect_data._width;
     data_t top     = bottom + rect_data._height;
 
-    ggo::segment<data_t> s1(left,  bottom, left,  top);    // Left rectangle edge.
-    ggo::segment<data_t> s2(right, bottom, right, top);    // Right rectangle edge.
-    ggo::segment<data_t> s3(left,  bottom, right, bottom); // Bottom rectangle edge.
-    ggo::segment<data_t> s4(left,  top,    right, top);    // data_top rectangle edge.
+    ggo::segment<data_t> s1({ left,  bottom }, { left, top });      // Left rectangle edge.
+    ggo::segment<data_t> s2({ right, bottom }, { right, top });     // Right rectangle edge.
+    ggo::segment<data_t> s3({ left,  bottom }, { right, bottom });  // Bottom rectangle edge.
+    ggo::segment<data_t> s4({ left,  top }, { right, top });        // data_top rectangle edge.
     ggo::segment<data_t> s(_p1, _p2);
 
     // Rectangle in shape.
-    if (is_point_inside(left,  bottom) == true &&
-        is_point_inside(right, bottom) == true &&
-        is_point_inside(left,  top)    == true &&
-        is_point_inside(right, top)    == true)
+    if (is_point_inside({ left,  bottom }) == true &&
+        is_point_inside({ right, bottom }) == true &&
+        is_point_inside({ left,  top }) == true &&
+        is_point_inside({ right, top }) == true)
     {
       return rect_intersection::rect_in_shape;
     }
@@ -78,9 +78,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t extended_segment<data_t>::dist_to_point(data_t x, data_t y) const 
+  data_t extended_segment<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
   {
-    data_t hypot = ggo::segment<data_t>(_p1, _p2).hypot_to_point(x, y);
+    data_t hypot = ggo::segment<data_t>(_p1, _p2).hypot_to_point(p);
 
     if (hypot < _width * _width)
     {

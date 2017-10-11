@@ -61,4 +61,11 @@ inline bool find_segment(const std::vector<ggo::segment_float> & v, const ggo::s
   return false;
 }
 
+/////////////////////////////////////////////////////////////////////
+#define GGO_CHECK_RECT_INTERSECTION(shape, left, right, bottom, top, res) \
+  { ggo::rect_data<float> rect_data {{static_cast<float>(left), static_cast<float>(bottom)}, \
+                                      static_cast<float>(right - left), \
+                                      static_cast<float>(top - bottom)}; \
+  GGO_CHECK(shape.get_rect_intersection(rect_data) == res); }
+
 #endif

@@ -16,16 +16,15 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t segment<data_t>::hypot_to_point(data_t x, data_t y) const
+  data_t segment<data_t>::hypot_to_point(const ggo::pos2<data_t> & p) const
   {
-    ggo::pos2<data_t> p(x, y);
     ggo::pos2<data_t> v1(_p2 - _p1);
     ggo::pos2<data_t> v2(p - _p1);
     data_t hypot = ggo::dot(v1, v1);
 
     if (hypot < data_t(0.001))
     {
-      return ggo::hypot(x, y, _p1.x(), _p1.y());
+      return ggo::hypot(p, _p1);
     }
     else
     {
@@ -50,57 +49,27 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t segment<data_t>::dist_to_point(data_t x, data_t y) const
-  {
-    return std::sqrt(hypot_to_point(x, y));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t segment<data_t>::hypot_to_segment(data_t x_p1, data_t y_p1, data_t x_p2, data_t y_p2) const
+  data_t segment<data_t>::hypot_to_segment(const segment<data_t> & segment) const
   {
     ggo::pos2<data_t> intersect;
-    if (intersect_segment(segment<data_t>(x_p1, y_p1, x_p2, y_p2), intersect)  == true)
+    if (intersect_segment(segment, intersect)  == true)
     {
       return 0;		
     }
 
-    segment<data_t> segment(x_p1, y_p1, x_p2, y_p2);
-
-    data_t d1 = hypot_to_point(segment.p1().x(), segment.p1().y());
-    data_t d2 = hypot_to_point(segment.p2().x(), segment.p2().y());
-    data_t d3 = segment.hypot_to_point(p1().x(), p1().y());
-    data_t d4 = segment.hypot_to_point(p2().x(), p2().y());
+    data_t d1 = hypot_to_point(segment.p1());
+    data_t d2 = hypot_to_point(segment.p2());
+    data_t d3 = segment.hypot_to_point(p1());
+    data_t d4 = segment.hypot_to_point(p2());
 
     return std::min(std::min(d1, d2), std::min(d3, d4));
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t segment<data_t>::hypot_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
-  {
-    return hypot_to_segment(p1.x(), p1.y(), p2.x(), p2.y());
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t segment<data_t>::hypot_to_segment(const segment<data_t> & segment) const
-  {
-    return hypot_to_segment(segment.p1(), segment.p2());
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t segment<data_t>::dist_to_segment(data_t x_p1, data_t y_p1, data_t x_p2, data_t y_p2) const
-  {
-    return std::sqrt(hypot_to_segment(x_p1, y_p1, x_p2, y_p2));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
   data_t segment<data_t>::dist_to_segment(const segment<data_t> & segment) const
   {
-    return dist_to_segment(segment.p1().x(), segment.p1().y(), segment.p2().x(), segment.p2().y());
+    return std::sqrt(hypot_to_segment(segment));
   }
 
   /////////////////////////////////////////////////////////////////////

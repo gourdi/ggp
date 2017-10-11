@@ -16,7 +16,6 @@ namespace ggo
 
                               segment() {};
                               segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) : _p1(p1), _p2(p2) {};
-                              segment(data_t x1, data_t y1, data_t x2, data_t y2) : _p1(x1, y1), _p2(x2, y2) {};
 
     const ggo::pos2<data_t> & p1() const { return _p1; };
     const ggo::pos2<data_t> & p2() const { return _p2; };
@@ -27,14 +26,9 @@ namespace ggo
     data_t					          get_hypot() const;
     data_t					          get_length() const;
   
-    data_t                    hypot_to_point(data_t x, data_t y) const;
-    data_t                    hypot_to_point(const ggo::pos2<data_t> & p) const { return hypot_to_point(p.x(), p.y()); };
-    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const { return dist_to_point(p.x(), p.y()); };
+    data_t                    hypot_to_point(const ggo::pos2<data_t> & p) const;
   
-    data_t                    hypot_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
-    data_t                    hypot_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
     data_t                    hypot_to_segment(const segment<data_t> & segment) const;
-    data_t                    dist_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
     data_t                    dist_to_segment(const segment<data_t> & segment) const;
   
     bool				              same_side(data_t x1, data_t y1, data_t x2, data_t y2) const;
@@ -47,9 +41,9 @@ namespace ggo
     void				              get_line(data_t & a, data_t & b, data_t & c) const;
 
     // Interfaces.
-    void	                    move(data_t dx, data_t dy) override { _p1.move(dx, dy); _p2.move(dx, dy); };
+    void	                    move(const ggo::vec2<data_t> & m) override { _p1 += m; _p2 += m; };
     void	                    rotate(data_t angle, const ggo::pos2<data_t> & center) override { _p1 = ggo::rotate(_p1, center, angle); _p2 = ggo::rotate(_p2, center, angle); };
-    data_t                    dist_to_point(data_t x, data_t y) const override;
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override { return std::sqrt(hypot_to_point(p)); }
 
   private:
 

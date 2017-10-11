@@ -29,10 +29,10 @@ namespace ggo
     ggo::pos2<data_t> &       p2() { return _p2; }
           
     // Interfaces.        
-    void				              move(data_t dx, data_t dy) override { _p1.move(dx, dy); _p2.move(dx, dy); }
+    void				              move(const ggo::vec2<data_t> & m) override { _p1 += m; _p2 += m; }
     void				              rotate(data_t angle, const ggo::pos2<data_t> & center) override { _p1 = ggo::rotate(_p1,center, angle); _p2 = ggo::rotate(_p2, center, angle); }
-    data_t                    dist_to_point(data_t x, data_t y) const override;
-    bool	                    is_point_inside(data_t x, data_t y) const override;
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;
+    bool	                    is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t>         get_bounding_rect() const override;
     rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 

@@ -29,10 +29,10 @@ namespace ggo
     std::vector<ggo::pos2<data_t>>  get_points() const;
 
     // Interfaces.
-    void                            move(data_t dx, data_t dy) override { _pos.move(dx, dy); }
+    void                            move(const ggo::vec2<data_t> & m) override { _pos += m; }
     void                            rotate(data_t angle, const ggo::pos2<data_t> & center) override;
     ggo::pos2<data_t>               get_center() const override { return _pos; }
-    bool                            is_point_inside(data_t x, data_t y) const override;
+    bool                            is_point_inside(const ggo::pos2<data_t> & p) const override;
 
   private:
 

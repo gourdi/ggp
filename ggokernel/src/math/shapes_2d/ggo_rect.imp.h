@@ -52,9 +52,9 @@ namespace ggo
   
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool rect<data_t>::is_point_inside(data_t x, data_t y) const
+  bool rect<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    return (x >= left() && x <= right() && y >= bottom() && y <= top());
+    return (p.x() >= left() && p.x() <= right() && p.y() >= bottom() && p.y() <= top());
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -73,9 +73,9 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t rect<data_t>::dist_to_point(data_t x, data_t y) const
+  data_t rect<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
   {
-    if (is_point_inside(x, y) == true)
+    if (is_point_inside(p) == true)
     {
       return 0;
     }
@@ -85,10 +85,10 @@ namespace ggo
     ggo::pos2<data_t> p3(right(), top());
     ggo::pos2<data_t> p4(right(), bottom());
 
-    data_t d1 = ggo::segment<data_t>(p1, p2).dist_to_point(x, y);
-    data_t d2 = ggo::segment<data_t>(p2, p3).dist_to_point(x, y);
-    data_t d3 = ggo::segment<data_t>(p3, p4).dist_to_point(x, y);
-    data_t d4 = ggo::segment<data_t>(p4, p1).dist_to_point(x, y);
+    data_t d1 = ggo::segment<data_t>(p1, p2).dist_to_point(p);
+    data_t d2 = ggo::segment<data_t>(p2, p3).dist_to_point(p);
+    data_t d3 = ggo::segment<data_t>(p3, p4).dist_to_point(p);
+    data_t d4 = ggo::segment<data_t>(p4, p1).dist_to_point(p);
 
     return std::min(std::min(d1, d2), std::min(d3, d4));
   }

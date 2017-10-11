@@ -23,21 +23,21 @@ namespace ggo
         T y1 = center.y() - y;
         T y2 = center.y() + y;
 
-        if (shape.is_point_inside(x1, y1) == true)
+        if (shape.is_point_inside({ x1, y1 }) == true)
         {
-          samples.push_back(ggo::pos2<T>(x1, y1));
+          samples.push_back({ x1, y1 });
         }
-        if (shape.is_point_inside(x1, y2) == true)
+        if (shape.is_point_inside({ x1, y2 }) == true)
         {
-          samples.push_back(ggo::pos2<T>(x1, y2));
+          samples.push_back({ x1, y2 });
         }
-        if (shape.is_point_inside(x2, y1) == true)
+        if (shape.is_point_inside({ x2, y1 }) == true)
         {
-          samples.push_back(ggo::pos2<T>(x2, y1));
+          samples.push_back({ x2, y1 });
         }
-        if (shape.is_point_inside(x2, y2) == true)
+        if (shape.is_point_inside({ x2, y2 }) == true)
         {
-          samples.push_back(ggo::pos2<T>(x2, y2));
+          samples.push_back({ x2, y2 });
         }
       }
     }

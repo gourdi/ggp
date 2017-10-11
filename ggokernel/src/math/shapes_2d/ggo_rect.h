@@ -48,9 +48,9 @@ namespace ggo
     void              extend(const ggo::pos2f & p);
   
     // Interfaces.  
-    void				      move(data_t dx, data_t dy) override { _rect_data._pos.move(dx, dy); }
-    data_t            dist_to_point(data_t x, data_t y) const override;
-    bool	            is_point_inside(data_t x, data_t y) const override;
+    void				      move(const ggo::vec2<data_t> & m) override { _rect_data._pos += m; }
+    data_t            dist_to_point(const ggo::pos2<data_t> & p) const override;
+    bool	            is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t> get_bounding_rect() const override { return _rect_data; }
     rect_intersection get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 

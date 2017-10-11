@@ -12,7 +12,7 @@ namespace ggo
 
     T evaluate(T x, T y) const override
     {
-      return _shape.is_point_inside(x, y) ? _height : 0;
+      return _shape.is_point_inside({ x, y }) ? _height : 0;
     }
 
     T                   _height = 1;

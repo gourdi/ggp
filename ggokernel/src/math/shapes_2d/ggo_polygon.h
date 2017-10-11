@@ -52,14 +52,12 @@ namespace ggo
           
     data_t					          dist_to_segment(const segment<data_t> & segment) const;
     data_t					          dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
-    data_t					          dist_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
-    data_t					          dist_to_point(const ggo::pos2<data_t> p) const { return dist_to_point(p.x(), p.y()); };
           
     // Interfaces.        
-    void	                    move(data_t dx, data_t dy) override;
+    void	                    move(const ggo::pos2<data_t> & m) override;
     void	                    rotate(data_t angle, const ggo::pos2<data_t> & center) override;
-    data_t                    dist_to_point(data_t x, data_t y) const override;
-    bool	                    is_point_inside(data_t x, data_t y) const override;
+    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;
+    bool	                    is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t>         get_bounding_rect() const override;
     rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 

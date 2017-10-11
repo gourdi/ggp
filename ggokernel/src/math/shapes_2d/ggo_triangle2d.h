@@ -20,8 +20,8 @@ namespace ggo
                               triangle2d(ggo::pos2<data_t> v1, ggo::pos2<data_t> v2, ggo::pos2<data_t> v3) : _v1(v1), _v2(v2), _v3(v3) {}
 
     // Interfaces.
-    void	                    move(data_t dx, data_t dy) override;
-    bool	                    is_point_inside(data_t x, data_t y) const override;
+    void	                    move(const ggo::vec2<data_t> & m) override;
+    bool	                    is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t>         get_bounding_rect() const override;
     rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 

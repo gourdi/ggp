@@ -22,9 +22,9 @@ namespace ggo
     data_t &					              radius() { return _radius; }
     const data_t &			            radius() const { return _radius; }
                      
-    std::vector<ggo::pos2<data_t>>  intersect_line(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, bool between_points_only) const;
-    std::vector<ggo::pos2<data_t>>  intersect_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
-    bool                            intersect_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const;
+    std::vector<ggo::pos2<data_t>>  get_line_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, bool between_points_only) const;
+    std::vector<ggo::pos2<data_t>>  get_segment_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
+    bool                            test_segment_intersection(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const;
 
     bool                            is_point_inside(const ggo::pos2<data_t> & p) const { return is_point_inside(p.x(), p.y()); }
     bool                            is_point_inside(data_t x, data_t y) const;

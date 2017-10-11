@@ -10,12 +10,11 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t disc<data_t>::dist_to_point(data_t x, data_t y) const
+  data_t disc<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
   {
-    data_t dy	         = _center.y() - y;
-    data_t dx	         = _center.x() - x;
-    data_t hypot	     = dx * dx + dy * dy;
-    data_t sqrd_radius = _radius * _radius;
+    ggo::vec2<data_t> diff  = _center - p;
+    data_t hypot	          = diff.get_hypot();
+    data_t sqrd_radius      = _radius * _radius;
 
     if (hypot > sqrd_radius)
     {
@@ -38,11 +37,10 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool disc<data_t>::is_point_inside(data_t x, data_t y) const
+  bool disc<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    data_t dx 	  = _center.x() - x;
-    data_t dy 	  = _center.y() - y;
-    data_t hypot	= dx * dx + dy * dy;
+    vec2<data_t> diff = _center - p;
+    data_t hypot	    = diff.get_hypot();
 
     return hypot <= _radius * _radius;
   }
@@ -83,22 +81,16 @@ namespace ggo
     }
 
     // Partial overlap?
-    if (segment_intersect_border(left, bottom, left, top) == true ||
-        segment_intersect_border(right, bottom, right, top) == true ||
-        segment_intersect_border(left, bottom, right, bottom) == true ||
-        segment_intersect_border(left, top, right, top) == true)
+    ggo::circle<data_t> circle(_center, _radius);
+    if (circle.test_segment_intersection({ left, bottom }, { left, top }) == true ||
+        circle.test_segment_intersection({ right, bottom }, { right, top }) == true ||
+        circle.test_segment_intersection({ left, bottom }, { right, bottom }) == true ||
+        circle.test_segment_intersection({ left, top }, { right, top }) == true)
     {
       return rect_intersection::partial_overlap;
     }
 
     return rect_intersection::disjoints;
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  bool disc<data_t>::segment_intersect_border(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
-  {
-    return ggo::circle<data_t>(_center, _radius).intersect_segment(x_from, y_from, x_to, y_to);
   }
 }
 

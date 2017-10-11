@@ -48,7 +48,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_point(data_t x, data_t y) const
+  data_t polygon2d<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
   {
     switch (_points.size())
     {
@@ -56,21 +56,21 @@ namespace ggo
       GGO_FAIL();
       return -1;
     case 1:
-      return ggo::distance(x, y, _points.front().x(), _points.front().y());
+      return ggo::distance(p, _points.front());
     }
 
-    if (is_point_inside(x, y) == true)
+    if (is_point_inside(p) == true)
     {
       return 0;	
     }
 
     // First point to last point edge.
-    data_t hypot = ggo::segment<data_t>(_points.front(), _points.back()).hypot_to_point(x, y);
+    data_t hypot = ggo::segment<data_t>(_points.front(), _points.back()).hypot_to_point(p);
 
     // Other edges.
     for (auto it = _points.begin(); it + 1 != _points.end(); ++it)
     {
-      hypot = std::min(hypot, ggo::segment<data_t>(*it, *(it + 1)).hypot_to_point(x, y));
+      hypot = std::min(hypot, ggo::segment<data_t>(*it, *(it + 1)).hypot_to_point(p));
     }
 
     return std::sqrt(hypot);
@@ -112,7 +112,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool polygon2d<data_t>::is_point_inside(data_t x, data_t y) const
+  bool polygon2d<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
     if (_points.size() <= 2)
     {
@@ -122,12 +122,12 @@ namespace ggo
     bool inside = false;
     for (size_t i = 0, j = _points.size() - 1; i < _points.size(); j = i++)
     {
-      if ((_points[i].y() > y) == (_points[j].y() > y))
+      if ((_points[i].y() > p.y()) == (_points[j].y() > p.y()))
       {
         continue;
       }
 
-      if (x < (_points[j].x() - _points[i].x()) * (y - _points[i].y()) / (_points[j].y() - _points[i].y()) + _points[i].x())
+      if (p.x() < (_points[j].x() - _points[i].x()) * (p.y() - _points[i].y()) / (_points[j].y() - _points[i].y()) + _points[i].x())
       {
         inside = !inside;
       }
@@ -154,10 +154,15 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_segment(data_t x_from, data_t y_from, data_t x_to, data_t y_to) const
+  data_t polygon2d<data_t>::dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
   {
-    ggo::segment<data_t> segment(x_from, y_from, x_to, y_to);
+    return dist_to_segment({ p1, p2 });
+  }
 
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t polygon2d<data_t>::dist_to_segment(const ggo::segment<data_t> & segment) const
+  {
     switch (_points.size())
     {
     case 0:
@@ -167,7 +172,7 @@ namespace ggo
       return segment.dist_to_point(_points[0]);
     }
 
-    if (is_point_inside(x_from, y_from) == true || is_point_inside(x_to, y_to) == true) 
+    if (is_point_inside(segment.p1()) == true || is_point_inside(segment.p2()) == true)
     {
       return 0;
     }
@@ -190,20 +195,6 @@ namespace ggo
     }
 
     return std::sqrt(hypot);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
-  {
-    return dist_to_segment(p1.x(), p1.y(), p2.x(), p2.y());
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_segment(const ggo::segment<data_t> & segment) const
-  {
-    return dist_to_segment(segment.from(), segment.to());
   }
 
   //////////////////////////////////////////////////////////////
@@ -252,7 +243,7 @@ namespace ggo
     // Check if the rect in inside the polygon. Since there is no border
     // intersection, we just need to check that a point of the rectangle 
     // is inside the polygon.
-    if (is_point_inside(left, bottom) == true)
+    if (is_point_inside({ left, bottom }) == true)
     {
       return ggo::rect_intersection::rect_in_shape;
     }
@@ -262,12 +253,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void polygon2d<data_t>::move(data_t dx, data_t dy)
+  void polygon2d<data_t>::move(const ggo::vec2<data_t> & m)
   {
     for (auto & point : _points)
     {
-      point.x() += dx;
-      point.y() += dy;
+      point += m;
     }
   }
 
