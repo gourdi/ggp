@@ -133,24 +133,7 @@ namespace ggo
   template <typename data_t>
   std::optional<axis_aligned_box3d_data<data_t>> cylinder3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
-    ggo::pos3<data_t> world_pos = basis.point_from_local_to_world(_pos);
-    ggo::vec3<data_t> world_dir = basis.vector_from_local_to_world(_dir);
-
-    ggo::pos3<data_t> p1 = world_pos + world_dir;
-    ggo::pos3<data_t> p2 = world_pos - world_dir;
-
-    const ggo::vec3<data_t> x(data_t(1), data_t(0), data_t(0));
-    const ggo::vec3<data_t> y(data_t(0), data_t(1), data_t(0));
-    const ggo::vec3<data_t> z(data_t(0), data_t(0), data_t(1));
-
-    // Suboptimal bounding box: does not match the tighest box, but it is OK anyway.
-    return axis_aligned_box3d_data<data_t>::from({
-      p1 + _radius * x, p1 - _radius * x,
-      p1 + _radius * y, p1 - _radius * y,
-      p1 + _radius * z, p1 - _radius * z,
-      p2 + _radius * x, p2 - _radius * x,
-      p2 + _radius * y, p2 - _radius * y,
-      p2 + _radius * z, p2 - _radius * z });
+    return {};
   }
 
   //////////////////////////////////////////////////////////////

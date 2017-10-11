@@ -28,12 +28,12 @@
     <Filter Include="memory">
       <UniqueIdentifier>{2f6e7f6d-4ce5-418d-a41a-0b29a6a8714e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shapes3d">
+      <UniqueIdentifier>{1266490f-a6e9-49ad-8204-f544d7a6b55d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp">
-      <Filter>geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="test\interpolation\ggo_interpolation3d_nonreg.cpp">
@@ -116,6 +116,45 @@
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_axis_aligned_box3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_basis3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_centered_sphere3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_cylinder3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_disc3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_line3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_metaball_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_parallelogram3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_plane3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_polygon3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_sphere3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_triangle3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_rectangle3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\ggo_kernel_nonreg.h" />

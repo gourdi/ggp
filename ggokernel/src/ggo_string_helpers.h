@@ -70,12 +70,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template<typename T>
-  std::string bin_dump(T value)
+  template<typename data_t>
+  std::string bin_dump(data_t value)
   {
     std::string	text;
 
-    for (int i = 0; i < 8 * sizeof(T); ++i)
+    for (int i = 0; i < 8 * sizeof(data_t); ++i)
     {
       text += (value >> i) & 1 ? '1' : '0';
     }

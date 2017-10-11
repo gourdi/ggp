@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\geometry\ggo_shapes2d_nonreg.cpp" />
-    <ClCompile Include="test\geometry\ggo_shapes3d_nonreg.cpp" />
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
     <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
@@ -46,6 +45,19 @@
     <ClCompile Include="test\memory\ggo_circular_buffer_nonreg.cpp" />
     <ClCompile Include="test\rle\ggo_rle_nonreg.cpp" />
     <ClCompile Include="test\sampling\ggo_sampling_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_axis_aligned_box3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_basis3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_centered_sphere3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_cylinder3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_disc3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_line3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_metaball_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_parallelogram3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_plane3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_polygon3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_rectangle3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_sphere3d_nonreg.cpp" />
+    <ClCompile Include="test\shapes3d\ggo_triangle3d_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_convolution_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_dct_nonreg.cpp" />
     <ClCompile Include="test\signal_proc\ggo_downscaling_nonreg.cpp" />

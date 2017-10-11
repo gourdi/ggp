@@ -72,7 +72,10 @@ namespace ggo
   template <typename data_t, bool double_sided>
   std::optional<axis_aligned_box3d_data<data_t>> triangle3d<data_t, double_sided>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
-    return axis_aligned_box3d_data<data_t>::from({ _v1, _v2, _v3 });
+    return axis_aligned_box3d_data<data_t>::from({
+      basis.point_from_local_to_world(_v1),
+      basis.point_from_local_to_world(_v2),
+      basis.point_from_local_to_world(_v3) });
   }
 
   //////////////////////////////////////////////////////////////
