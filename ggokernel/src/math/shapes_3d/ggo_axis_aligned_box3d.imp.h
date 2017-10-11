@@ -28,9 +28,9 @@ namespace ggo
   template <typename data_t>
   ggo::pos3<data_t> axis_aligned_box3d<data_t>::get_center() const
   {
-    data_t x = T(0.5) * (_x_min + _x_max);
-    data_t y = T(0.5) * (_y_min + _y_max);
-    data_t z = T(0.5) * (_z_min + _z_max);
+    data_t x = data_t(0.5) * (_x_min + _x_max);
+    data_t y = data_t(0.5) * (_y_min + _y_max);
+    data_t z = data_t(0.5) * (_z_min + _z_max);
 
     return ggo::pos3<data_t>(x, y, z);
   }
@@ -252,6 +252,21 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  std::optional<axis_aligned_box3d_data<data_t>> axis_aligned_box3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  {
+    return axis_aligned_box3d_data<data_t>::from({ 
+      basis.point_from_local_to_world({ _x_min, _y_min, _z_min }),
+      basis.point_from_local_to_world({ _x_min, _y_min, _z_max }),
+      basis.point_from_local_to_world({ _x_min, _y_max, _z_min }),
+      basis.point_from_local_to_world({ _x_min, _y_max, _z_max }),
+      basis.point_from_local_to_world({ _x_max, _y_min, _z_min }),
+      basis.point_from_local_to_world({ _x_max, _y_min, _z_max }),
+      basis.point_from_local_to_world({ _x_max, _y_max, _z_min }),
+      basis.point_from_local_to_world({ _x_max, _y_max, _z_max }) });
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   void axis_aligned_box3d<data_t>::get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const
   {
     bounding_sphere.center().x() = T(0.5) * (_x_min + _x_max);
@@ -299,7 +314,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool intersect(const axis_aligned_box3d<data_t> & b1, const axis_aligned_box3d<data_t> & b2)
+  bool test_intersection(const axis_aligned_box3d<data_t> & b1, const axis_aligned_box3d<data_t> & b2)
   {
     auto intersect1d = [](data_t inf1, data_t sup1, data_t inf2, data_t sup2)
     {

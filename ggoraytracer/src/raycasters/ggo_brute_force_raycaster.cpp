@@ -5,6 +5,29 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
+  brute_force_raycaster::brute_force_raycaster(const scene & scene)
+  {
+    for (const auto & object : scene.visible_objects())
+    {
+      _visible_objects.push_back(object.get());
+    }
+
+    for (const auto & object : scene.casting_shadows_objects())
+    {
+      _casting_shadows_objects.push_back(object.get());
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  brute_force_raycaster::brute_force_raycaster(std::vector<const ggo::object3d_abc *> visible_objects, std::vector<const ggo::object3d_abc *> casting_shadows_objects)
+  :
+  _visible_objects(std::move(visible_objects)),
+  _casting_shadows_objects(std::move(casting_shadows_objects))
+  {
+
+  }
+
+  //////////////////////////////////////////////////////////////
   const ggo::object3d_abc * brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
                                                             float & dist,
                                                             ggo::ray3d_float & local_normal,

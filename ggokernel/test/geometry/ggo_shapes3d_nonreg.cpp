@@ -448,7 +448,7 @@ GGO_TEST(shapes3d, axis_aligned_box3d)
   };
   for (const auto & test : intersect_tests)
   {
-    GGO_CHECK(ggo::intersect(std::get<0>(test), std::get<1>(test)) == std::get<2>(test));
+    GGO_CHECK(ggo::test_intersection(std::get<0>(test), std::get<1>(test)) == std::get<2>(test));
   }
 }
 

@@ -6,13 +6,15 @@ namespace ggo
   {
   public:
 
-          plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+                              plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+
+    const ggo::vec3<data_t> & normal() const { return _normal; }
+    data_t                    dist_to_origin() const { return _dist_to_origin; }
 
     bool  intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool  is_convex() const override { return true; }
 
-    const ggo::vec3<data_t> & normal() const { return _normal; }
-    data_t                    dist_to_origin() const { return _dist_to_origin; }
+    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override { return {}; }
 
   private:
 
@@ -35,6 +37,8 @@ namespace ggo
 
     bool  intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool  is_convex() const override { return true; }
+
+    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override { return {}; }
   };
 }
 

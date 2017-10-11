@@ -1,8 +1,8 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  face3d<T, double_sided>::face3d(const vertex<T> & v1, const vertex<T> & v2, const vertex<T> & v3)
+  template <typename data_t, bool double_sided>
+  face3d<data_t, double_sided>::face3d(const vertex<data_t> & v1, const vertex<data_t> & v2, const vertex<data_t> & v3)
     :
     _v1(v1), _v2(v2), _v3(v3)
   {
@@ -24,8 +24,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  bool face3d<T, double_sided>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
+  template <typename data_t, bool double_sided>
+  bool face3d<data_t, double_sided>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     GGO_ASSERT_FLOAT_EQ(ray.dir().get_length(), 1.f);
 
@@ -35,26 +35,26 @@ namespace ggo
     // s0*(v2-v1)+s1*(v3-v1)-s2*ray_dir=ray_pos,
     // which is a 3 equations with 3 unknowns (s0, s1 and s2) linear system.
 
-    T m02 = -ray.dir().template get<0>(); 
-    T m12 = -ray.dir().template get<1>();
-    T m22 = -ray.dir().template get<2>();
+    data_t m02 = -ray.dir().template get<0>(); 
+    data_t m12 = -ray.dir().template get<1>();
+    data_t m22 = -ray.dir().template get<2>();
 
-    T det = _m00m11subm10m01 * m22 + _m20m01subm00m21 * m12 + _m10m21subm11m20 * m02;
+    data_t det = _m00m11subm10m01 * m22 + _m20m01subm00m21 * m12 + _m10m21subm11m20 * m02;
     if (det == 0)
     {
       return false;
     }
 
-    T c0 = ray.pos().template get<0>() - _v1._pos.template get<0>();
-    T c1 = ray.pos().template get<1>() - _v1._pos.template get<1>();
-    T c2 = ray.pos().template get<2>() - _v1._pos.template get<2>();
+    data_t c0 = ray.pos().template get<0>() - _v1._pos.template get<0>();
+    data_t c1 = ray.pos().template get<1>() - _v1._pos.template get<1>();
+    data_t c2 = ray.pos().template get<2>() - _v1._pos.template get<2>();
 
-    T t1 = c1 *  m22 - c2 *  m12;
-    T t2 = c1 * _m21 - c2 * _m11;
-    T t3 = c2 * _m10 - c1 * _m20;
+    data_t t1 = c1 *  m22 - c2 *  m12;
+    data_t t2 = c1 * _m21 - c2 * _m11;
+    data_t t3 = c2 * _m10 - c1 * _m20;
 
-    T inv_det = 1 / det;
-    T s2 = (c0 * _m10m21subm11m20 - _m00 * t2 - _m01 * t3) * inv_det;
+    data_t inv_det = 1 / det;
+    data_t s2 = (c0 * _m10m21subm11m20 - _m00 * t2 - _m01 * t3) * inv_det;
 
     // If s2 is negative, this means that the intersection point is
     // on the wrong side of the ray line.
@@ -64,13 +64,13 @@ namespace ggo
     }
 
     // We also have to make sure the intersection point is inside the face.
-    T s0 = (c0 * (_m11 *  m22 - m12 * _m21) - _m01 * t1 + m02 * t2) * inv_det;
+    data_t s0 = (c0 * (_m11 *  m22 - m12 * _m21) - _m01 * t1 + m02 * t2) * inv_det;
     if (s0 < 0)
     {
       return false;
     }
 
-    T s1 = (c0 * (m12 * _m20 - _m10 *  m22) + _m00 * t1 + m02 * t3) * inv_det;
+    data_t s1 = (c0 * (m12 * _m20 - _m10 *  m22) + _m00 * t1 + m02 * t3) * inv_det;
     if (s1 < 0 || s0 + s1 > 1)
     {
       return false;
@@ -97,12 +97,13 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template<typename T, bool double_sided>
-  std::ostream & face3d<T, double_sided>::operator<<(std::ostream & os) const
+  template<typename data_t, bool double_sided>
+  std::ostream & operator<<(std::ostream & os, const face3d<data_t, double_sided> & face)
   {
-    os << "(" << _v1._pos << ", " << _v1._normal << "), ";
-    os << "(" << _v2._pos << ", " << _v2._normal << "), ";
-    os << "(" << _v3._pos << ", " << _v3._normal << ")";
+    os << "(";
+    os << "v1=(pos=" << face.v1()._pos << ", normal=" << face.v1()._normal << "), ";
+    os << "v2=(pos=" << face.v2()._pos << ", normal=" << face.v2()._normal << "), ";
+    os << "v3=(pos=" << face.v3()._pos << ", normal=" << face.v3()._normal << "))";
     return os;
   }
 }

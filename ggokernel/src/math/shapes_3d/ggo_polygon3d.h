@@ -5,8 +5,8 @@
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  template <typename T>
-  class polygon3d : public raytracable_shape3d_abc<T>
+  template <typename data_t>
+  class polygon3d : public raytracable_shape3d_abc<data_t>
   {
   public:
 
@@ -22,18 +22,20 @@ namespace ggo
   public:
 
                     polygon3d() {};
-                    polygon3d(const std::vector<vertex<T>> & vertices, const std::vector<face> & faces);
+                    polygon3d(const std::vector<vertex<data_t>> & vertices, const std::vector<face> & faces);
         
-    bool            intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const override;
+    bool            intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool            is_convex() const override { return false; } // To be improved...
 
+    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
+
     // Factories.
-    static  polygon3d<T>  create_sphere(T radius, int horz_steps, int vert_steps);
+    static  polygon3d<data_t>  create_sphere(data_t radius, int horz_steps, int vert_steps);
 
   private:
 
-    std::vector<vertex<T>>  _vertices;
-    std::vector<face>       _faces;
+    std::vector<vertex<data_t>> _vertices;
+    std::vector<face>           _faces;
   };
 }
 

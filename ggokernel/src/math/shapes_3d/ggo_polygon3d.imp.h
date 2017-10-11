@@ -1,8 +1,8 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  polygon3d<T>::polygon3d(const std::vector<vertex<T>> & vertices, const std::vector<face> & faces)
+  template <typename data_t>
+  polygon3d<data_t>::polygon3d(const std::vector<vertex<data_t>> & vertices, const std::vector<face> & faces)
   :
   _vertices(vertices),
   _faces(faces)
@@ -10,23 +10,23 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  bool polygon3d<T>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
+  template <typename data_t>
+  bool polygon3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     const face * hit_face = nullptr;
 
-    dist = std::numeric_limits<T>::max();
+    dist = std::numeric_limits<data_t>::max();
 
     // Parse all the faces.
     for (const auto & face : _faces)
     {
-      const ggo::pos3<T> &      v1 = _vertices[face._v1]._pos;
-      const ggo::pos3<T> &      v2 = _vertices[face._v2]._pos;
-      const ggo::pos3<T> &      v3 = _vertices[face._v3]._pos;
-      ggo::triangle3d<T, false> triangle(v1, v2, v3);
+      const ggo::pos3<data_t> &      v1 = _vertices[face._v1]._pos;
+      const ggo::pos3<data_t> &      v2 = _vertices[face._v2]._pos;
+      const ggo::pos3<data_t> &      v3 = _vertices[face._v3]._pos;
+      ggo::triangle3d<data_t, false> triangle(v1, v2, v3);
 
-      T dist_cur = 0;
-      ggo::ray3d<T> normal_cur;
+      data_t dist_cur = 0;
+      ggo::ray3d<data_t> normal_cur;
           
       if ((triangle.intersect_ray(ray, dist_cur, normal_cur) == true) && (dist_cur < dist))
       {
@@ -42,15 +42,16 @@ namespace ggo
     }
     
     // Interpolate the normal smoothly.
-    const ggo::pos3<T> & v1 = _vertices[hit_face->_v1]._pos;
-    const ggo::pos3<T> & v2 = _vertices[hit_face->_v2]._pos;
-    const ggo::pos3<T> & v3 = _vertices[hit_face->_v3]._pos;
+    const ggo::pos3<data_t> & v1 = _vertices[hit_face->_v1]._pos;
+    const ggo::pos3<data_t> & v2 = _vertices[hit_face->_v2]._pos;
+    const ggo::pos3<data_t> & v3 = _vertices[hit_face->_v3]._pos;
     
-    const T m[3][3] = {{v1.x(), v2.x(), v3.x()}, 
-                       {v1.y(), v2.y(), v3.y()}, 
-                       {v1.z(), v2.z(), v3.z()}};
-    const T c[3] = {normal.pos().x(), normal.pos().y(), normal.pos().z()};
-    T s[3] = {0, 0, 0};
+    const data_t m[3][3] = { 
+      { v1.x(), v2.x(), v3.x() },
+      { v1.y(), v2.y(), v3.y() },
+      { v1.z(), v2.z(), v3.z() } };
+    const data_t c[3] = {normal.pos().x(), normal.pos().y(), normal.pos().z()};
+    data_t s[3] = { 0, 0, 0 };
     
     if (linsolve3d(m, c, s) == false)
     {
@@ -68,19 +69,55 @@ namespace ggo
 
     return true;
   }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::optional<axis_aligned_box3d_data<data_t>> polygon3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  {
+    if (_vertices.empty() == true)
+    {
+      return {};
+    }
+
+    auto it = _vertices.begin();
+
+    ggo::pos3<data_t> world_vertex = basis.point_from_local_to_world(it->_pos);
+    data_t x_min = world_vertex.x();
+    data_t x_max = world_vertex.x();
+    data_t y_min = world_vertex.y();
+    data_t y_max = world_vertex.y();
+    data_t z_min = world_vertex.z();
+    data_t z_max = world_vertex.z();
+
+    ++it;
+
+    for (; it != _vertices.end(); ++it)
+    {
+      world_vertex = basis.point_from_local_to_world(it->_pos);
+
+      x_min = std::min(x_min, world_vertex.x());
+      x_max = std::max(x_max, world_vertex.x());
+      y_min = std::min(y_min, world_vertex.y());
+      y_max = std::max(y_max, world_vertex.y());
+      z_min = std::min(z_min, world_vertex.z());
+      z_max = std::max(z_max, world_vertex.z());
+    }
+
+    return axis_aligned_box3d_data<data_t>(x_min, x_max, y_min, y_max, z_min, z_max);
+  }
   
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  polygon3d<T> polygon3d<T>::create_sphere(T radius, int horz_steps, int vert_steps)
+  template <typename data_t>
+  polygon3d<data_t> polygon3d<data_t>::create_sphere(data_t radius, int horz_steps, int vert_steps)
   {
     // The vertices.
-    std::vector<ggo::vertex<T>> vertices;
+    std::vector<ggo::vertex<data_t>> vertices;
     
-    vertices.emplace_back(ggo::pos3<T>(T(0), T(0), radius), ggo::vec3<T>(T(0), T(0), T(1))); // North pole.
+    vertices.emplace_back(ggo::pos3<data_t>(0, 0, radius), ggo::vec3<T>(0, 0, 1)); // North pole.
 
     for (int phi_step = 1; phi_step < vert_steps - 1; ++phi_step)
     {
-      T phi = pi<T>() * phi_step / (vert_steps - 1);
+      T phi = pi<data_t>() * phi_step / (vert_steps - 1);
       T cos_phi = std::cos(phi);
       T sin_phi = std::sin(phi);
       
@@ -96,7 +133,7 @@ namespace ggo
       }
     }
     
-    vertices.emplace_back(ggo::pos3<T>(T(0), T(0), -radius), ggo::vec3<T>(T(0), T(0), T(-1))); // South pole.
+    vertices.emplace_back(ggo::pos3<data_t>(0, 0, -radius), ggo::vec3<data_t>(0, 0, -1)); // South pole.
 
     // The faces.
     std::vector<ggo::polygon3d<T>::face> faces;

@@ -1,10 +1,10 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  bool triangle3d<T, double_sided>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
+  template <typename data_t, bool double_sided>
+  bool triangle3d<data_t, double_sided>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
-    T	m[3][3], c[3], s[3];
+    data_t m[3][3], c[3], s[3];
 
     // If P is the intersection point, we have P=v1+k1*(v2-v1)+k2*(v3*-v1) since
     // P is inside the face place. We also have P=ray_pos+k3*ray_dir. This leads to:
@@ -69,54 +69,61 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  void triangle3d<T, double_sided>::get_bounding_sphere(ggo::sphere3d<T> & bounding_sphere) const
+  template <typename data_t, bool double_sided>
+  std::optional<axis_aligned_box3d_data<data_t>> triangle3d<data_t, double_sided>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
-    ggo::vec3<T> v12(_v2 - _v1);
-    ggo::vec3<T> v13(_v3 - _v1);
-    T dot1212 = ggo::dot(v12, v12);
-    T dot1313 = ggo::dot(v13, v13);
-    T dot1213 = ggo::dot(v12, v13);
+    return axis_aligned_box3d_data<data_t>::from({ _v1, _v2, _v3 });
+  }
 
-    T d = 2 * (dot1212 * dot1313 - dot1213 * dot1213);
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, bool double_sided>
+  void triangle3d<data_t, double_sided>::get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const
+  {
+    ggo::vec3<data_t> v12(_v2 - _v1);
+    ggo::vec3<data_t> v13(_v3 - _v1);
+    data_t dot1212 = ggo::dot(v12, v12);
+    data_t dot1313 = ggo::dot(v13, v13);
+    data_t dot1213 = ggo::dot(v12, v13);
+
+    data_t d = 2 * (dot1212 * dot1313 - dot1213 * dot1213);
 
     if (std::fabs(d) <= T(0.0001))
     {
       // The 3 vertices of the triangle are in fact aligned.
-      T min_x = std::min(_v1.x(), std::min(_v2.x(), _v3.x()));
-      T min_y = std::min(_v1.y(), std::min(_v2.y(), _v3.y()));
-      T min_z = std::min(_v1.z(), std::min(_v2.z(), _v3.z()));
+      data_t min_x = std::min(_v1.x(), std::min(_v2.x(), _v3.x()));
+      data_t min_y = std::min(_v1.y(), std::min(_v2.y(), _v3.y()));
+      data_t min_z = std::min(_v1.z(), std::min(_v2.z(), _v3.z()));
 
-      T max_x = std::max(_v1.x(), std::max(_v2.x(), _v3.x()));
-      T max_y = std::max(_v1.y(), std::max(_v2.y(), _v3.y()));
-      T max_z = std::max(_v1.z(), std::max(_v2.z(), _v3.z()));
+      data_t max_x = std::max(_v1.x(), std::max(_v2.x(), _v3.x()));
+      data_t max_y = std::max(_v1.y(), std::max(_v2.y(), _v3.y()));
+      data_t max_z = std::max(_v1.z(), std::max(_v2.z(), _v3.z()));
 
-      ggo::pos3<T> v_min(min_x, min_y, min_z);
-      ggo::pos3<T> v_max(max_x, max_y, max_z);
+      ggo::pos3<data_t> v_min(min_x, min_y, min_z);
+      ggo::pos3<data_t> v_max(max_x, max_y, max_z);
 
-      bounding_sphere.center() = T(0.5) * (v_min + v_max);
-      bounding_sphere.radius() = T(0.5) * ggo_distance(v_min, v_max);
+      bounding_sphere.center() = data_t(0.5) * (v_min + v_max);
+      bounding_sphere.radius() = data_t(0.5) * ggo_distance(v_min, v_max);
     }
     else
     {
       // s controls height over 13, t over 12, (1-s-t) over 23.
-      T s = (dot1212 * dot1313 - dot1313 * dot1213) / d;
-      T t = (dot1313 * dot1212 - dot1212 * dot1213) / d;
+      data_t s = (dot1212 * dot1313 - dot1313 * dot1213) / d;
+      data_t t = (dot1313 * dot1212 - dot1212 * dot1213) / d;
 
       if (s <= 0)
       {
-        bounding_sphere.center() = T(0.5) * (_v1 + _v3);
-        bounding_sphere.radius() = T(0.5) * std::sqrt(dot1313);
+        bounding_sphere.center() = data_t(0.5) * (_v1 + _v3);
+        bounding_sphere.radius() = data_t(0.5) * std::sqrt(dot1313);
       }
       else if (t <= 0)
       {
-        bounding_sphere.center() = T(0.5) * (_v1 + _v2);
-        bounding_sphere.radius() = T(0.5) * std::sqrt(dot1212);
+        bounding_sphere.center() = data_t(0.5) * (_v1 + _v2);
+        bounding_sphere.radius() = data_t(0.5) * std::sqrt(dot1212);
       }
       else if (s + t >= 1)
       {
-        bounding_sphere.center() = T(0.5) * (_v2 + _v3);
-        bounding_sphere.radius() = T(0.5) * ggo_distance(_v2, _v3);
+        bounding_sphere.center() = data_t(0.5) * (_v2 + _v3);
+        bounding_sphere.radius() = data_t(0.5) * ggo_distance(_v2, _v3);
       }
       else
       {
@@ -129,12 +136,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  ggo::vec3<T> triangle3d<T, double_sided>::get_normal() const
+  template <typename data_t, bool double_sided>
+  ggo::vec3<data_t> triangle3d<data_t, double_sided>::get_normal() const
   {
-    ggo::vec3<T>	edge1(_v2 - _v1);
-    ggo::vec3<T>	edge2(_v3 - _v1);
-    ggo::vec3<T>	normal(ggo::cross(edge1, edge2));
+    ggo::vec3<data_t>	edge1(_v2 - _v1);
+    ggo::vec3<data_t>	edge2(_v3 - _v1);
+    ggo::vec3<data_t>	normal(ggo::cross(edge1, edge2));
 
     normal.normalize();
 
@@ -142,21 +149,21 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  ggo::pos3<T> triangle3d<T, double_sided>::get_center() const
+  template <typename data_t, bool double_sided>
+  ggo::pos3<data_t> triangle3d<data_t, double_sided>::get_center() const
   {
     T x = _v1.x() + _v2.x() + _v3.x();
     T y = _v1.y() + _v2.y() + _v3.y();
     T z = _v1.z() + _v2.z() + _v3.z();
 
-    return ggo::pos3<T>(x/3, y/3, z/3);
+    return ggo::pos3<data_t>(x/3, y/3, z/3);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T, bool double_sided>
-  T triangle3d<T, double_sided>::area() const
+  template <typename data_t, bool double_sided>
+  data_t triangle3d<data_t, double_sided>::area() const
   {
-    ggo::vec3<T> cross = ggo::cross(ggo::vec3<T>(_v3 - _v1), ggo::vec3<T>(_v2 - _v1));
+    ggo::vec3<data_t> cross = ggo::cross(ggo::vec3<data_t>(_v3 - _v1), ggo::vec3<data_t>(_v2 - _v1));
 
     return cross.get_length() / 2;
   }

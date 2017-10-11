@@ -10,11 +10,10 @@ namespace
   {
   public:
 
-    ggo_boxes_tree_shape(ggo::tree<ggo::aabox3d_float> * tree) : _tree(tree) {}
+          ggo_boxes_tree_shape(ggo::tree<ggo::aabox3d_float> * tree) : _tree(tree) {}
 
-    bool            intersect_ray(const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal) const override;
-    bool            is_convex() const override { return false; }
-    std::ostream &  operator<<(std::ostream & os) const override { os << "cumbia"; return os; }
+    bool  intersect_ray(const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal) const override;
+    bool  is_convex() const override { return false; }
 
     ggo::tree<ggo::aabox3d_float> * _tree;
   };

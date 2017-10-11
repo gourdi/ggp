@@ -29,6 +29,8 @@ namespace ggo
     bool              intersect_ray(const ggo::ray3d<data_t> & ray) const; // Fast intersection test.
     bool              intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool              is_convex() const override { return true; }
+
+    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
   
     void              get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const;
 
@@ -55,7 +57,7 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t>
-  bool intersect(const axis_aligned_box3d<data_t> & b1, const axis_aligned_box3d<data_t> & b2);
+  bool test_intersection(const axis_aligned_box3d<data_t> & b1, const axis_aligned_box3d<data_t> & b2);
 
   template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const axis_aligned_box3d<data_t> & box);

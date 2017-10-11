@@ -2,7 +2,6 @@
 #include <ggo_buffer.h>
 #include <ggo_bmp.h>
 #include <ggo_isometric_camera.h>
-#include <ggo_object3d.h>
 #include <ggo_raytracer.h>
 #include <ggo_global_sampling_renderer.h>
 #include <ggo_solid_color_material.h>

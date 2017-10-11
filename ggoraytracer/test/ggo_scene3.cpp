@@ -4,7 +4,6 @@
 #include <ggo_shapes2d.h>
 #include <ggo_point_camera.h>
 #include <ggo_buffer_paint.h>
-#include <ggo_object3d.h>
 #include <ggo_mono_sampling_renderer.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_background3d_color.h>

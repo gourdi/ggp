@@ -142,6 +142,22 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  std::optional<axis_aligned_box3d_data<data_t>> sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  {
+    const ggo::vec3<data_t> x(data_t(1), data_t(0), data_t(0));
+    const ggo::vec3<data_t> y(data_t(0), data_t(1), data_t(0));
+    const ggo::vec3<data_t> z(data_t(0), data_t(0), data_t(1));
+
+    ggo::vec3<data_t> world_center = basis.point_from_local_to_world(_center);
+
+    return axis_aligned_box3d_data<data_t>::from({
+      world_center - _radius * x, world_center + _radius * x,
+      world_center - _radius * y, world_center + _radius * y,
+      world_center - _radius * z, world_center + _radius * z });
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const ggo::sphere3d<data_t> & sphere)
   {
     os << "(center=" << sphere.center() << ", radius=" << sphere.radius() <<")";

@@ -4,7 +4,6 @@
 #include <ggo_perlin_noise_field_2d.h>
 #include <ggo_gaussian_field_2d.h>
 #include <ggo_best_match.h>
-#include <ggo_object3d.h>
 #include <ggo_renderer_abc.h>
 #include <ggo_raycaster_abc.h>
 #include <ggo_linear_fog.h>
@@ -154,9 +153,9 @@ namespace
     hexa & operator=(const hexa & hexa) = delete;
 
     hexa(float x, float y, float height,
-      ggo::scene_builder & scene_builder,
-      std::shared_ptr<const ggo::material_abc> material_top,
-      std::shared_ptr<const ggo::material_abc> material_side)
+      ggo::scene & scene,
+      const ggo::color_32f & color_top,
+      const ggo::color_32f & color_side)
     {
       const float hexa_height = 15;
       float z_inf = height - hexa_height;
@@ -176,7 +175,7 @@ namespace
 
         create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
           ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-          ggo::pos3f(x, y, z_sup), scene_builder, material_top);
+          ggo::pos3f(x, y, z_sup), scene, color_top);
 
         /*  create_rectangle(ggo::pos2f(x + std::cos(angle1), y + std::sin(angle1)),
                            ggo::pos2f(x + std::cos(angle2), y + std::sin(angle2)),
@@ -184,21 +183,21 @@ namespace
 
         create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
           ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
+          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
 
         create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_inf),
           ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene_builder, material_side);
+          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
       }
 
       _brute_force_raycaster.reset(new ggo::brute_force_raycaster(_objects));
     }
 
-    const ggo::object3d * intersect_ray(const ggo::ray3d_float & ray,
+    const ggo::object3d_abc * intersect_ray(const ggo::ray3d_float & ray,
       float & dist,
       ggo::ray3d_float & normal,
-      const ggo::object3d * exclude_object1,
-      const ggo::object3d * exclude_object2) const
+      const ggo::object3d_abc * exclude_object1,
+      const ggo::object3d_abc * exclude_object2) const
     {
       if (_bounding_box.intersect_ray(ray) == false)
       {
@@ -213,11 +212,11 @@ namespace
   private:
 
     void create_triangle(const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3,
-      ggo::scene_builder & scene_builder,
-      std::shared_ptr<const ggo::material_abc> material)
+      ggo::scene & scene,
+      const ggo::color_32f & color)
     {
       auto triangle = std::make_shared<ggo::triangle3d<float, true>>(v1, v2, v3);
-      auto object = scene_builder.add_object(triangle, material, true);
+      auto object = scene.add_object(triangle, material, true);
 
       _objects.push_back(object);
 
@@ -231,15 +230,14 @@ namespace
     void create_rectangle(const ggo::pos2f & p1,
       const ggo::pos2f & p2,
       float z_inf, float z_sup,
-      ggo::scene_builder & scene_builder,
+      ggo::scene & scene,
       std::shared_ptr<const ggo::material_abc> material)
     {
       ggo::pos3f center(0.5f * (p1.get<0>() + p2.get<0>()), 0.5f * (p1.get<1>() + p2.get<1>()), 0.5f * (z_inf + z_sup));
       ggo::vec3f v1(0.5f * (p2.get<0>() - p1.get<0>()), 0.5f * (p2.get<1>() - p1.get<1>()), 0.f);
       ggo::vec3f v2(0.f, 0.f, 0.5f * (z_sup - z_inf));
 
-      auto rectangle = std::make_shared<ggo::parallelogram3d<float>>(center, v1, v2);
-      auto object = scene_builder.add_object(rectangle, material, true);
+      auto object = scene.add_diffuse_object<ggo::discard_all>(parallelogram3d_float(center, v1, v2), material);
 
       _objects.push_back(object);
 
@@ -252,9 +250,9 @@ namespace
 
   private:
 
-    std::vector<std::shared_ptr<const ggo::object3d>> _objects;
-    ggo::axis_aligned_box3d<float>                    _bounding_box;
-    std::unique_ptr<ggo::brute_force_raycaster>       _brute_force_raycaster;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _objects;
+    ggo::axis_aligned_box3d<float>                        _bounding_box;
+    std::unique_ptr<ggo::brute_force_raycaster>           _brute_force_raycaster;
   };
 }
 

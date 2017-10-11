@@ -11,7 +11,9 @@ namespace ggo
   {
   public:
 
-    brute_force_raycaster(const scene & scene) : _scene(scene) {}
+    brute_force_raycaster(const scene & scene);
+    brute_force_raycaster(std::vector<const ggo::object3d_abc *> visible_objects, std::vector<const ggo::object3d_abc *> casting_shadows_objects);
+    brute_force_raycaster(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & visible_objects, const std::vector<std::shared_ptr<const ggo::object3d_abc>> & casting_shadows_objects);
 
     const ggo::object3d_abc * hit_test(const ggo::ray3d_float & ray,
                                        float & dist,
@@ -27,7 +29,8 @@ namespace ggo
 
   private:
 
-    const scene & _scene;
+    std::vector<const ggo::object3d_abc *> _visible_objects;
+    std::vector<const ggo::object3d_abc *> _casting_shadows_objects;
   };
 }
 

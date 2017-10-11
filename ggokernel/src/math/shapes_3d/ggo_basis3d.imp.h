@@ -3,111 +3,111 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  basis3d<T>::basis3d()
+  template <typename data_t>
+  basis3d<data_t>::basis3d()
   :
-  _pos(T(0), T(0), T(0)),
-  _x(T(1), T(0), T(0)),
-  _y(T(0), T(1), T(0)),
-  _z(T(0), T(0), T(1))
+  _pos(data_t(0), data_t(0), data_t(0)),
+  _x(data_t(1), data_t(0), data_t(0)),
+  _y(data_t(0), data_t(1), data_t(0)),
+  _z(data_t(0), data_t(0), data_t(1))
   {
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  basis3d<T>::basis3d(const ggo::pos3<T> & pos)
+  template <typename data_t>
+  basis3d<data_t>::basis3d(const ggo::pos3<data_t> & pos)
   :
   _pos(pos),
-  _x(T(1), T(0), T(0)),
-  _y(T(0), T(1), T(0)),
-  _z(T(0), T(0), T(1))
+  _x(data_t(1), data_t(0), data_t(0)),
+  _y(data_t(0), data_t(1), data_t(0)),
+  _z(data_t(0), data_t(0), data_t(1))
   {
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::reset()
+  template <typename data_t>
+  void basis3d<data_t>::reset()
   {
-    _pos = ggo::pos3<T>(T(0), T(0), T(0));
-    _x = ggo::vec3<T>(T(1), T(0), T(0));
-    _y = ggo::vec3<T>(T(0), T(1), T(0));
-    _z = ggo::vec3<T>(T(0), T(0), T(1));
+    _pos = ggo::pos3<data_t>(data_t(0), data_t(0), data_t(0));
+    _x = ggo::vec3<data_t>(data_t(1), data_t(0), data_t(0));
+    _y = ggo::vec3<data_t>(data_t(0), data_t(1), data_t(0));
+    _z = ggo::vec3<data_t>(data_t(0), data_t(0), data_t(1));
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::rotate_x(T angle)
+  template <typename data_t>
+  void basis3d<data_t>::rotate_x(data_t angle)
   {
-    ggo::vec3<T>	y(_y);
-    ggo::vec3<T>	z(_z);
-    T			cos_a = cos(angle);
-    T			sin_a = sin(angle);
+    ggo::vec3<data_t>	y(_y);
+    ggo::vec3<data_t>	z(_z);
+    data_t cos_a = cos(angle);
+    data_t sin_a = sin(angle);
 
-    _y = ggo::vec3<T>(
+    _y = ggo::vec3<data_t>(
         y.x()*cos_a + z.x()*sin_a,
         y.y()*cos_a + z.y()*sin_a,
         y.z()*cos_a + z.z()*sin_a);
 
-    _z = ggo::vec3<T>(
+    _z = ggo::vec3<data_t>(
         -y.x()*sin_a + z.x()*cos_a,
         -y.y()*sin_a + z.y()*cos_a,
         -y.z()*sin_a + z.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::rotate_y(T angle)
+  template <typename data_t>
+  void basis3d<data_t>::rotate_y(data_t angle)
   {
-    ggo::vec3<T>	x(_x);
-    ggo::vec3<T>	z(_z);
-    T			cos_a = cos(angle);
-    T			sin_a = sin(angle);
+    ggo::vec3<data_t>	x(_x);
+    ggo::vec3<data_t>	z(_z);
+    data_t cos_a = cos(angle);
+    data_t sin_a = sin(angle);
 
-    _x = ggo::vec3<T>(
+    _x = ggo::vec3<data_t>(
         x.x()*cos_a + z.x()*sin_a,
         x.y()*cos_a + z.y()*sin_a,
         x.z()*cos_a + z.z()*sin_a);
 
-    _z = ggo::vec3<T>(
+    _z = ggo::vec3<data_t>(
         -x.x()*sin_a + z.x()*cos_a,
         -x.y()*sin_a + z.y()*cos_a,
         -x.z()*sin_a + z.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::rotate_z(T angle)
+  template <typename data_t>
+  void basis3d<data_t>::rotate_z(data_t angle)
   {
-    ggo::vec3<T>	x(_x);
-    ggo::vec3<T>	y(_y);
-    T			cos_a = cos(angle);
-    T			sin_a = sin(angle);
+    ggo::vec3<data_t>	x(_x);
+    ggo::vec3<data_t>	y(_y);
+    data_t cos_a = cos(angle);
+    data_t sin_a = sin(angle);
 
-    _x = ggo::vec3<T>(
+    _x = ggo::vec3<data_t>(
         x.x()*cos_a + y.x()*sin_a,
         x.y()*cos_a + y.y()*sin_a,
         x.z()*cos_a + y.z()*sin_a);
 
-    _y = ggo::vec3<T>(
+    _y = ggo::vec3<data_t>(
         -x.x()*sin_a + y.x()*cos_a,
         -x.y()*sin_a + y.y()*cos_a,
         -x.z()*sin_a + y.z()*cos_a);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::reset_rotation()
+  template <typename data_t>
+  void basis3d<data_t>::reset_rotation()
   {
-    _x = ggo::vec3<T>(1, 0, 0);
-    _y = ggo::vec3<T>(0, 1, 0);
-    _z = ggo::vec3<T>(0, 0, 1);
+    _x = ggo::vec3<data_t>(1, 0, 0);
+    _y = ggo::vec3<data_t>(0, 1, 0);
+    _z = ggo::vec3<data_t>(0, 0, 1);
   }
 
   //////////////////////////////////////////////////////////////
   // The argument is in local coordinates and the result is 
   // in world coordinates.
-  template <typename T>
-  ggo::pos3<T> basis3d<T>::point_from_local_to_world(const ggo::pos3<T> & point) const
+  template <typename data_t>
+  ggo::pos3<data_t> basis3d<data_t>::point_from_local_to_world(const ggo::pos3<data_t> & point) const
   {
     return vector_from_local_to_world(point) + _pos;
   }
@@ -115,8 +115,8 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // The argument is in world coordinates and the result is 
   // in local coordinates.
-  template <typename T>
-  ggo::pos3<T> basis3d<T>::point_from_world_to_local(const ggo::pos3<T> & point) const
+  template <typename data_t>
+  ggo::pos3<data_t> basis3d<data_t>::point_from_world_to_local(const ggo::pos3<data_t> & point) const
   {
     return vector_from_world_to_local(point - _pos);
   }
@@ -124,10 +124,10 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // The argument is in local coordinates and the result is 
   // in world coordinates.
-  template <typename T>
-  ggo::vec3<T> basis3d<T>::vector_from_local_to_world(const ggo::vec3<T> & vector) const
+  template <typename data_t>
+  ggo::vec3<data_t> basis3d<data_t>::vector_from_local_to_world(const ggo::vec3<data_t> & vector) const
   {
-    ggo::vec3<T>	result;
+    ggo::vec3<data_t>	result;
 
     result.x() = _x.x()*vector.x() + _y.x()*vector.y() + _z.x()*vector.z();
     result.y() = _x.y()*vector.x() + _y.y()*vector.y() + _z.y()*vector.z();
@@ -139,10 +139,10 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // The argument is in world coordinates and the result is 
   // in local coordinates.
-  template <typename T>
-  ggo::vec3<T> basis3d<T>::vector_from_world_to_local(const ggo::vec3<T> & vector) const
+  template <typename data_t>
+  ggo::vec3<data_t> basis3d<data_t>::vector_from_world_to_local(const ggo::vec3<data_t> & vector) const
   {
-    ggo::vec3<T>	result;
+    ggo::vec3<data_t>	result;
 
     result.x() = _x.x()*vector.x() + _x.y()*vector.y() + _x.z()*vector.z();
     result.y() = _y.x()*vector.x() + _y.y()*vector.y() + _y.z()*vector.z();
@@ -154,26 +154,26 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // The argument is in local coordinates and the result is 
   // in world coordinates.
-  template <typename T>
-  ggo::ray3d<T> basis3d<T>::ray_from_local_to_world(const ggo::ray3d<T> & ray) const
+  template <typename data_t>
+  ggo::ray3d<data_t> basis3d<data_t>::ray_from_local_to_world(const ggo::ray3d<data_t> & ray) const
   {
-    return ggo::ray3d<T>(point_from_local_to_world(ray.pos()), vector_from_local_to_world(ray.dir()), false);
+    return ggo::ray3d<data_t>(point_from_local_to_world(ray.pos()), vector_from_local_to_world(ray.dir()), false);
   }
 
   //////////////////////////////////////////////////////////////
   // The argument is in world coordinates and the result is 
   // in local coordinates.
-  template <typename T>
-  ggo::ray3d<T> basis3d<T>::ray_from_world_to_local(const ggo::ray3d<T> & ray) const
+  template <typename data_t>
+  ggo::ray3d<data_t> basis3d<data_t>::ray_from_world_to_local(const ggo::ray3d<data_t> & ray) const
   {
-    return ggo::ray3d<T>(point_from_world_to_local(ray.pos()), vector_from_world_to_local(ray.dir()), false);
+    return ggo::ray3d<data_t>(point_from_world_to_local(ray.pos()), vector_from_world_to_local(ray.dir()), false);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::rotate(const ggo::vec3<T> & axis, T angle)
+  template <typename data_t>
+  void basis3d<data_t>::rotate(const ggo::vec3<data_t> & axis, data_t angle)
   {
-    T	m[3][3];
+    data_t	m[3][3];
 
     ggo::fill_rotation_matrix(axis, angle, m);
 
@@ -183,10 +183,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::rotate(const ggo::ray3d<T> & axis, T angle)
+  template <typename data_t>
+  void basis3d<data_t>::rotate(const ggo::ray3d<data_t> & axis, data_t angle)
   {
-    T	m[3][3];
+    data_t	m[3][3];
 
     ggo::fill_rotation_matrix(axis.dir(), angle, m);
 
@@ -202,8 +202,8 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  void basis3d<T>::look_at(const ggo::pos3<T> & at)
+  template <typename data_t>
+  void basis3d<data_t>::look_at(const ggo::pos3<data_t> & at)
   {
     _z = _pos - at;
     _z.normalize();
@@ -213,10 +213,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::pos2<T> basis3d<T>::project(const ggo::pos3<T> & p, T aperture, int screen_width, int screen_height) const
+  template <typename data_t>
+  ggo::pos2<data_t> basis3d<data_t>::project(const ggo::pos3<data_t> & p, data_t aperture, int screen_width, int screen_height) const
   {
-    ggo::vec3<T> diff(p - _pos);
+    ggo::vec3<data_t> diff(p - _pos);
 
     // Origin unoptimized code.
     // T dot_z = -ggo::dot(diff, _z); 
@@ -224,10 +224,10 @@ namespace ggo
     // T x = T(0.5) * screen_height + T(0.5) * screen_height * ggo::dot(diff, _x) / (dot_z * aperture) + T(0.5) * (screen_width - screen_height);
 
     // Optimized code.
-    T den = -1 / (ggo::dot(diff, _z) * aperture); // The minus sign is here because the camera is looking is the negative z-axis.
-    ggo::pos2<T> proj(1 + ggo::dot(diff, _x) * den, 1 + ggo::dot(diff, _y) * den);
-    proj *= static_cast<T>(screen_height);
-    proj.x() += static_cast<T>(screen_width - screen_height);
+    data_t den = -1 / (ggo::dot(diff, _z) * aperture); // The minus sign is here because the camera is looking is the negative z-axis.
+    ggo::pos2<data_t> proj(1 + ggo::dot(diff, _x) * den, 1 + ggo::dot(diff, _y) * den);
+    proj *= static_cast<data_t>(screen_height);
+    proj.x() += static_cast<data_t>(screen_width - screen_height);
     proj /= 2;
     
     return proj;

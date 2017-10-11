@@ -276,7 +276,7 @@ namespace ggo
     for (auto it = begin_it; it != end_it; ++it)
     {
       const ggo::rect_data<real_t> cur_rect_data = it->get_bounding_rect();
-      if (ggo::rect_data_intersect(cur_rect_data, clipping_rect_data) == true)
+      if (ggo::test_intersection(cur_rect_data, clipping_rect_data) == true)
       {
         const auto & item = *it;
         items.push_back(&item);

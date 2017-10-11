@@ -5,21 +5,21 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // Solve the equation (x-center_x)^2+(y-center_y)^2+(z-center_z)^2=r^2
   // injecting the ray into the equation.
-  template <typename T>
-  bool centered_sphere3d<T>::intersect_ray(const ggo::ray3d<T> & ray, T & dist, ggo::ray3d<T> & normal) const
+  template <typename data_t>
+  bool centered_sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     // Build the quadratic and solve it.
-    const ggo::vec3<T> & dir = ray.dir();
-    const ggo::pos3<T> & diff = ray.pos();
+    const ggo::vec3<data_t> & dir = ray.dir();
+    const ggo::pos3<data_t> & diff = ray.pos();
     
     // Hint 1: deg2 is dot(dir, dir) which is 1
     // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
     // the multiplication simplifies the computations
-    T deg1 = ggo::dot(dir, diff); 
-    T deg0 = ggo::dot(diff, diff) - _radius * _radius;
+    data_t deg1 = ggo::dot(dir, diff); 
+    data_t deg0 = ggo::dot(diff, diff) - _radius * _radius;
     
     // Solve it.
-    T d = deg1 * deg1 - deg0;
+    data_t d = deg1 * deg1 - deg0;
     if (d < 0)
     {
       return false;
@@ -49,24 +49,38 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::pos3<T> centered_sphere3d<T>::sample_point(const ggo::pos3<T> & target_pos, T random_variable1, T random_variable2) const
+  template <typename data_t>
+  ggo::pos3<data_t> centered_sphere3d<data_t>::sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const
   {
-    ggo::vec3<T> dir(target_pos);
+    ggo::vec3<data_t> dir(target_pos);
     dir.normalize();
 
     return _radius * ggo::hemisphere_sampling(dir, random_variable1, random_variable2);
   }
 
 
-   //////////////////////////////////////////////////////////////
-  template <typename T>
-  ggo::ray3d<T> centered_sphere3d<T>::sample_ray(T random_variable1, T random_variable2) const
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::ray3d<data_t> centered_sphere3d<data_t>::sample_ray(data_t random_variable1, data_t random_variable2) const
   {
-    ggo::pos3<T> sphere_sample = ggo::sphere_sampling(random_variable1, random_variable2);
-    ggo::pos3<T> hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, random_variable1, random_variable2);
+    ggo::pos3<data_t> sphere_sample = ggo::sphere_sampling(random_variable1, random_variable2);
+    ggo::pos3<data_t> hemisphere_sample = ggo::hemisphere_sampling(sphere_sample, random_variable1, random_variable2);
 
-    return ggo::ray3d<T>(_radius * sphere_sample, hemisphere_sample, false);
+    return ggo::ray3d<data_t>(_radius * sphere_sample, hemisphere_sample, false);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::optional<axis_aligned_box3d_data<data_t>> centered_sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  {
+    const ggo::vec3<data_t> x(data_t(1), data_t(0), data_t(0));
+    const ggo::vec3<data_t> y(data_t(0), data_t(1), data_t(0));
+    const ggo::vec3<data_t> z(data_t(0), data_t(0), data_t(1));
+
+    return axis_aligned_box3d_data<data_t>::from({
+      basis.pos() - _radius * x, basis.pos() + _radius * x,
+      basis.pos() - _radius * y, basis.pos() + _radius * y,
+      basis.pos() - _radius * z, basis.pos() + _radius * z });
   }
   
   //////////////////////////////////////////////////////////////
