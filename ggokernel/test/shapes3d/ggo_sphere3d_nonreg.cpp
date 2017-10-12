@@ -9,7 +9,7 @@ GGO_TEST(sphere3d, merge)
     ggo::sphere3d_float sphere1(ggo::pos3f(1.f, 2.f, 3.f), 10.f);
     ggo::sphere3d_float sphere2(ggo::pos3f(3.f, 2.f, 1.f), 1.f);
 
-    ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
+    ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
     GGO_CHECK_FABS(sphere3.center().x(), sphere1.center().x());
     GGO_CHECK_FABS(sphere3.center().y(), sphere1.center().y());
@@ -22,7 +22,7 @@ GGO_TEST(sphere3d, merge)
     ggo::sphere3d_float sphere1(ggo::pos3f(10.f, 10.f, 10.f), 1.f);
     ggo::sphere3d_float sphere2(ggo::pos3f(5.f, 6.f, 7.f), 100.f);
 
-    ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
+    ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
     GGO_CHECK_FABS(sphere3.center().x(), sphere2.center().x());
     GGO_CHECK_FABS(sphere3.center().y(), sphere2.center().y());
@@ -35,7 +35,7 @@ GGO_TEST(sphere3d, merge)
     ggo::sphere3d_float sphere1(ggo::pos3f(-3.f, 0.f, 0.f), 2.f);
     ggo::sphere3d_float sphere2(ggo::pos3f(3.f, 0.f, 0.f), 1.f);
 
-    ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
+    ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
     GGO_CHECK_FABS(sphere3.center().x(), -0.5);
     GGO_CHECK_FABS(sphere3.center().y(), 0);
@@ -48,7 +48,7 @@ GGO_TEST(sphere3d, merge)
     ggo::sphere3d_float sphere1(ggo::pos3f(0.f, 2.f, 0.f), 1.f);
     ggo::sphere3d_float sphere2(ggo::pos3f(0.f, -1.f, 0.f), 3.f);
 
-    ggo::sphere3d_float sphere3 = ggo::sphere3d_float::merge(sphere1, sphere2);
+    ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
     GGO_CHECK_FABS(sphere3.center().x(), 0);
     GGO_CHECK_FABS(sphere3.center().y(), -0.5);

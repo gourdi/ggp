@@ -28,7 +28,7 @@ namespace ggo
   }
 
   template <typename data_t>
-  rect_data<data_t> rect_data_union(const rect_data<data_t> & rect1, const rect_data<data_t> & rect2)
+  rect_data<data_t> get_union(const rect_data<data_t> & rect1, const rect_data<data_t> & rect2)
   {
     data_t left1 = rect1._pos.x();
     data_t bottom1 = rect1._pos.y();

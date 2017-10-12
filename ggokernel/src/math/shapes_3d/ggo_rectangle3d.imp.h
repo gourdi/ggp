@@ -113,14 +113,14 @@ bool ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::intersect_ray_z(con
 
 //////////////////////////////////////////////////////////////
 template <int normal_x, int normal_y, int normal_z, typename data_t>
-std::optional<ggo::axis_aligned_box3d_data<data_t>> ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+std::optional<ggo::box3d_data<data_t>> ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
 {
   if constexpr(normal_x == 1 || normal_x == -1)
   {
     const vec3<data_t> normal1{ data_t(0), data_t(1), data_t(0) };
     const vec3<data_t> normal2{ data_t(0), data_t(0), data_t(1) };
 
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       basis.point_from_local_to_world(_center - _size1 * normal1),
       basis.point_from_local_to_world(_center + _size1 * normal1),
       basis.point_from_local_to_world(_center - _size2 * normal2),
@@ -146,7 +146,7 @@ std::optional<ggo::axis_aligned_box3d_data<data_t>> ggo::rectangle3d<normal_x, n
     const vec3<data_t> normal1{ data_t(1), data_t(0), data_t(0) };
     const vec3<data_t> normal2{ data_t(0), data_t(1), data_t(0) };
 
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       basis.point_from_local_to_world(_center - _size1 * normal1),
       basis.point_from_local_to_world(_center + _size1 * normal1),
       basis.point_from_local_to_world(_center - _size2 * normal2),

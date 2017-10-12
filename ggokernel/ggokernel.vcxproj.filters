@@ -204,12 +204,6 @@
     <ClInclude Include="src\math\shapes_3d\ggo_triangle3d.imp.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.h">
-      <Filter>math\shapes_3d</Filter>
-    </ClInclude>
-    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.imp.h">
-      <Filter>math\shapes_3d</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\shapes_3d\ggo_face3d.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
@@ -354,6 +348,15 @@
     </ClInclude>
     <ClInclude Include="src\memory\ggo_edges_management.h">
       <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d.imp.h">
+      <Filter>math\shapes_3d</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d_data.h">
+      <Filter>math\shapes_3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

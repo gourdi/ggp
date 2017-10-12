@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(axis_aligned_box3d, ray_intersection)
 {
-  ggo::aabox3d_float box(-1, 1, -1, 2, 2, 5);
+  ggo::box3d_float box(-1, 1, -1, 2, 2, 5);
 
   ggo::ray3d_float normal;
   float dist = 0;
@@ -151,11 +151,10 @@ GGO_TEST(axis_aligned_box3d, ray_intersection)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(axis_aligned_box3d, merge)
+GGO_TEST(axis_aligned_box3d, get_union)
 {
-  ggo::aabox3d_float box(-1, 1, -1, 2, 2, 5);
+  auto box = ggo::get_union(ggo::box3d_float(-1, 1, -1, 2, 2, 5), ggo::box3d_float(-3, -2, -10, 20, 3, 4));
 
-  box.merge_with(ggo::aabox3d_float(-3, -2, -10, 20, 3, 4));
   GGO_CHECK_FABS(box.x_min(), -3);
   GGO_CHECK_FABS(box.x_max(), 1);
   GGO_CHECK_FABS(box.y_min(), -10);
@@ -167,7 +166,7 @@ GGO_TEST(axis_aligned_box3d, merge)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(axis_aligned_box3d, intersection)
 {
-  const std::vector<std::tuple<ggo::aabox3d_float, ggo::aabox3d_float, bool>> intersect_tests{
+  const std::vector<std::tuple<ggo::box3d_float, ggo::box3d_float, bool>> intersect_tests{
     { { 0, 1, 1, 2, 2, 3 },{ 2, 3, 3, 4, 4, 5 }, false },
     { { 2, 3, 3, 4, 4, 5 },{ 0, 1, 1, 2, 2, 3 }, false },
     { { 0, 1, 0, 1, 0, 1 },{ 0, 1, 0, 1, 2, 3 }, false },

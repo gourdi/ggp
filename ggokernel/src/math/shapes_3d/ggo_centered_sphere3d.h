@@ -17,7 +17,7 @@ namespace ggo
     ggo::pos3<data_t>   sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const override;
     ggo::ray3d<data_t>  sample_ray(data_t random_variable1, data_t random_variable2) const override;
 
-    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
+    std::optional<box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
 
   private:
 

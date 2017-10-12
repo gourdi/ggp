@@ -47,14 +47,14 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> parallelogram3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> parallelogram3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     const ggo::pos3<data_t> p1 = _pos + _v1;
     const ggo::pos3<data_t> p2 = _pos - _v1;
     const ggo::pos3<data_t> p3 = _pos + _v2;
     const ggo::pos3<data_t> p4 = _pos - _v2;
 
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       basis.point_from_local_to_world(p1),
       basis.point_from_local_to_world(p2),
       basis.point_from_local_to_world(p3),

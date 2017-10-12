@@ -3,7 +3,8 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rect_data, rect_data_union)
 {
-  auto rect = ggo::rect_data_union(ggo::rect_data<float>{ {1.f, -1.f}, 2.f, 3.f },
+  auto rect = ggo::get_union(
+    ggo::rect_data<float>{ {1.f, -1.f}, 2.f, 3.f },
     ggo::rect_data<float>{ {2.f, 1.f}, 2.f, 2.f });
 
   GGO_CHECK_FABS(rect._pos.x(), 1);

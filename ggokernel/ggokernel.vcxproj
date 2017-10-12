@@ -205,10 +205,11 @@
     <ClInclude Include="src\math\shapes_2d\ggo_spline.imp.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.h" />
     <ClInclude Include="src\math\shapes_2d\ggo_triangle2d.imp.h" />
-    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.h" />
-    <ClInclude Include="src\math\shapes_3d\ggo_axis_aligned_box3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_basis3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_basis3d.imp.h" />
+    <ClInclude Include="src\math\shapes_3d\ggo_box3d_data.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_centered_sphere3d.imp.h" />
     <ClInclude Include="src\math\shapes_3d\ggo_cylinder3d.h" />

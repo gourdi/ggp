@@ -60,7 +60,7 @@ namespace ggo
       normal.set_dir(_center - normal.pos());
       return true;
     }
-    
+
     return false;
   }
 
@@ -112,37 +112,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  sphere3d<data_t> sphere3d<data_t>::merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2)
-  {
-    data_t hypot = ggo::hypot(sphere1.center(), sphere2.center());
-    data_t squared_radius1 = ggo::square(sphere1.radius());
-    data_t squared_radius2 = ggo::square(sphere2.radius());
-      
-    // Sphere1 inside sphere2?
-    if (hypot + squared_radius1 < squared_radius2)
-    {
-      return sphere2;
-    }
-      
-    // Sphere2 inside sphere1?
-    if (hypot + squared_radius2 < squared_radius1)
-    {
-      return sphere1;
-    }
-      
-    ggo::vec3<data_t> diff(sphere2.center() - sphere1.center());
-    diff /= diff.get_length(); // Normalize.
-      
-    ggo::pos3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
-    ggo::pos3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
-    ggo::vec3<data_t> diff2(p2 - p1);
-      
-    return sphere3d((p1 + p2) / data_t(2), diff2.get_length() / data_t(2));
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     const ggo::vec3<data_t> x(data_t(1), data_t(0), data_t(0));
     const ggo::vec3<data_t> y(data_t(0), data_t(1), data_t(0));
@@ -150,10 +120,43 @@ namespace ggo
 
     ggo::vec3<data_t> world_center = basis.point_from_local_to_world(_center);
 
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       world_center - _radius * x, world_center + _radius * x,
       world_center - _radius * y, world_center + _radius * y,
       world_center - _radius * z, world_center + _radius * z });
+  }
+}
+
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  sphere3d<data_t> get_union(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2)
+  {
+    data_t hypot = ggo::hypot(sphere1.center(), sphere2.center());
+    data_t squared_radius1 = ggo::square(sphere1.radius());
+    data_t squared_radius2 = ggo::square(sphere2.radius());
+
+    // Sphere1 inside sphere2?
+    if (hypot + squared_radius1 < squared_radius2)
+    {
+      return sphere2;
+    }
+
+    // Sphere2 inside sphere1?
+    if (hypot + squared_radius2 < squared_radius1)
+    {
+      return sphere1;
+    }
+
+    ggo::vec3<data_t> diff(sphere2.center() - sphere1.center());
+    diff /= diff.get_length(); // Normalize.
+
+    ggo::pos3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
+    ggo::pos3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
+    ggo::vec3<data_t> diff2(p2 - p1);
+
+    return sphere3d<data_t>((p1 + p2) / data_t(2), diff2.get_length() / data_t(2));
   }
 
   //////////////////////////////////////////////////////////////

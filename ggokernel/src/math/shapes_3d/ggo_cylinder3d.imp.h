@@ -131,7 +131,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> cylinder3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> cylinder3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     return {};
   }

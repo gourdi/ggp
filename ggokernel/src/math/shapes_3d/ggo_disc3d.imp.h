@@ -39,7 +39,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> disc3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> disc3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     ggo::pos3<data_t> world_center = basis.point_from_local_to_world(_ray.pos());
 
@@ -48,7 +48,7 @@ namespace ggo
     const ggo::vec3<data_t> z(data_t(0), data_t(0), data_t(1));
 
     // Suboptimal bounding box: does not match the tighest box, but it is OK anyway.
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       world_center + _radius * x, world_center - _radius * x,
       world_center + _radius * y, world_center - _radius * y,
       world_center + _radius * z, world_center - _radius * z });

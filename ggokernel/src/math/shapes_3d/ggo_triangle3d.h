@@ -20,7 +20,7 @@ namespace ggo
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }
 
-    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
+    std::optional<box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
   
     void                      get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const;
   

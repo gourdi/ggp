@@ -26,7 +26,7 @@ namespace ggo
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool                      is_convex() const override { return true; }
 
-    std::optional<axis_aligned_box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
+    std::optional<box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
 
     ggo::pos3<data_t> &       center() { return _center; }
     const ggo::pos3<data_t> & center() const { return _center; }
@@ -37,8 +37,6 @@ namespace ggo
     bool                      is_point_inside(data_t x, data_t y, data_t z) const;
     bool                      is_point_inside(const ggo::pos3<data_t> & p) const;
   
-    static  sphere3d<data_t>  merge(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2);
-
   private:
 
     ggo::pos3<data_t> _center;
@@ -61,6 +59,9 @@ namespace ggo
   {
     return std::max<data_t>(0, ggo::distance(sphere1.center(), sphere2.center()) - sphere1.radius() - sphere2.radius());
   }
+
+  template <typename data_t>
+  sphere3d<data_t> get_union(const sphere3d<data_t> & sphere1, const sphere3d<data_t> & sphere2);
 
   template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const ggo::sphere3d<data_t> & sphere);

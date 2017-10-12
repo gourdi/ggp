@@ -71,13 +71,13 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> centered_sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> centered_sphere3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     const ggo::vec3<data_t> x(data_t(1), data_t(0), data_t(0));
     const ggo::vec3<data_t> y(data_t(0), data_t(1), data_t(0));
     const ggo::vec3<data_t> z(data_t(0), data_t(0), data_t(1));
 
-    return axis_aligned_box3d_data<data_t>::from({
+    return box3d_data<data_t>::from({
       basis.pos() - _radius * x, basis.pos() + _radius * x,
       basis.pos() - _radius * y, basis.pos() + _radius * y,
       basis.pos() - _radius * z, basis.pos() + _radius * z });

@@ -72,7 +72,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<axis_aligned_box3d_data<data_t>> polygon3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  std::optional<box3d_data<data_t>> polygon3d<data_t>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
   {
     if (_vertices.empty() == true)
     {
@@ -103,7 +103,7 @@ namespace ggo
       z_max = std::max(z_max, world_vertex.z());
     }
 
-    return axis_aligned_box3d_data<data_t>(x_min, x_max, y_min, y_max, z_min, z_max);
+    return box3d_data<data_t>(x_min, x_max, y_min, y_max, z_min, z_max);
   }
   
   //////////////////////////////////////////////////////////////

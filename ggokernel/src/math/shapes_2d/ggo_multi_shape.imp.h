@@ -108,7 +108,7 @@ namespace ggo
     while (it != _shapes.end())
     {
       auto shape_ptr = *it;
-      rect = rect_data_union(rect, shape_ptr->get_bounding_rect());
+      rect = get_union(rect, shape_ptr->get_bounding_rect());
 
       it++;
     }
