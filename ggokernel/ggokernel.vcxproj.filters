@@ -5,7 +5,6 @@
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_kernel.h" />
     <ClInclude Include="src\ggo_link.h" />
-    <ClInclude Include="src\ggo_tree.h" />
     <ClInclude Include="src\math\ggo_harmonic_curve.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -241,7 +240,6 @@
       <Filter>math\signal_proc</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
-    <ClInclude Include="src\ggo_kdtree.h" />
     <ClInclude Include="src\rle\ggo_rle.h">
       <Filter>rle</Filter>
     </ClInclude>
@@ -358,6 +356,16 @@
     <ClInclude Include="src\math\shapes_3d\ggo_box3d_data.h">
       <Filter>math\shapes_3d</Filter>
     </ClInclude>
+    <ClInclude Include="src\trees\ggo_octree.h">
+      <Filter>trees</Filter>
+    </ClInclude>
+    <ClInclude Include="src\trees\ggo_kdtree.h">
+      <Filter>trees</Filter>
+    </ClInclude>
+    <ClInclude Include="src\trees\ggo_tree.h">
+      <Filter>trees</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ggo_container_helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
@@ -447,6 +455,9 @@
     </Filter>
     <Filter Include="memory">
       <UniqueIdentifier>{81d7e426-0f1e-41d6-a3fb-44b2089b0f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="trees">
+      <UniqueIdentifier>{ccdfa8b3-c206-4c90-9f9e-1ef3b946d3ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

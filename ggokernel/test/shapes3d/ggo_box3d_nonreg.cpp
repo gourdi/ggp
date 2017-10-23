@@ -2,7 +2,7 @@
 #include <ggo_shapes3d.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(axis_aligned_box3d, ray_intersection)
+GGO_TEST(box3d, ray_intersection)
 {
   ggo::box3d_float box(-1, 1, -1, 2, 2, 5);
 
@@ -151,7 +151,7 @@ GGO_TEST(axis_aligned_box3d, ray_intersection)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(axis_aligned_box3d, get_union)
+GGO_TEST(box3d, get_union)
 {
   auto box = ggo::get_union(ggo::box3d_float(-1, 1, -1, 2, 2, 5), ggo::box3d_float(-3, -2, -10, 20, 3, 4));
 
@@ -164,7 +164,7 @@ GGO_TEST(axis_aligned_box3d, get_union)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(axis_aligned_box3d, intersection)
+GGO_TEST(box3d, intersection)
 {
   const std::vector<std::tuple<ggo::box3d_float, ggo::box3d_float, bool>> intersect_tests{
     { { 0, 1, 1, 2, 2, 3 },{ 2, 3, 3, 4, 4, 5 }, false },

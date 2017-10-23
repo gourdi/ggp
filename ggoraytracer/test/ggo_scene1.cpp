@@ -20,7 +20,7 @@ GGO_TEST(test_scene, scene1)
   auto & sphere_object = scene.add_diffuse_object<ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection>(sphere, ggo::red_material());
   sphere_object.set_phong(4, 250);
   
-  ggo::aabox3d_float box_shape(-0.7f, 0.7f, -0.8f, 0.8f, -0.9f, 0.9f);
+  ggo::box3d_float box_shape(-0.7f, 0.7f, -0.8f, 0.8f, -0.9f, 0.9f);
   auto & box_object = scene.add_diffuse_object<ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness>(box_shape, ggo::green_material());
   box_object.basis().rotate(ggo::ray3d_float::O_X(), 0.1f);
   box_object.basis().rotate(ggo::ray3d_float::O_Y(), 0.2f);

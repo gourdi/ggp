@@ -152,6 +152,32 @@ GGO_TEST(base, remove_first_if)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(base, remove_duplicates)
+{
+  {
+    std::vector<int> v;
+    ggo::remove_duplicates(v);
+    GGO_CHECK(v.empty() == true);
+  }
+
+  {
+    std::vector<int> v{ 1, 2, 3 };
+    ggo::remove_duplicates(v);
+    GGO_CHECK_EQ(v[0], 1);
+    GGO_CHECK_EQ(v[1], 2);
+    GGO_CHECK_EQ(v[2], 3);
+  }
+
+  {
+    std::vector<int> v{ 1, 2, 3, 3, 1, 2, 3, 2, 3, 3, 2, 1, 1 ,2, 2, 1, 3, 2 };
+    ggo::remove_duplicates(v);
+    GGO_CHECK_EQ(v[0], 1);
+    GGO_CHECK_EQ(v[1], 2);
+    GGO_CHECK_EQ(v[2], 3);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, pow)
 {
   GGO_CHECK_EQ(ggo::pow(4, 0), 1);
@@ -229,4 +255,27 @@ GGO_TEST(base, round_div)
   static_assert(ggo::round_div(9, -4) == -2);
   static_assert(ggo::round_div(9, -4) == -2);
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, adaptor)
+{
+  std::vector<int> v{ 1, 2, 3, 4 };
+
+  auto adaptor = ggo::make_adaptor(v, [](int c) { return 2 * c; });
+
+  std::vector<int> v2;
+  for (const auto & k : adaptor)
+  {
+    printf("%d\n", k);
+    v2.push_back(k);
+  }
+
+  GGO_CHECK_EQ(v2[0], 2);
+  GGO_CHECK_EQ(v2[1], 4);
+  GGO_CHECK_EQ(v2[2], 6);
+  GGO_CHECK_EQ(v2[3], 8);
+}
+
+
+
 

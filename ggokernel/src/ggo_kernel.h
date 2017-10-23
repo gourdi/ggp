@@ -257,87 +257,9 @@ namespace ggo
   constexpr inline int mirror_index_single_edge(int i, int w)     { i = pos_mod(i, 2 * w - 2) ; return i < w ? i : 2 * w - i- 2; }
 }
 
-//////////////////////////////////////////////////////////////
-// Containers.
-namespace ggo
-{
-  template <typename container, typename data_t>
-  void remove(container & c, const data_t & v)
-  {
-    auto new_end = std::remove(c.begin(), c.end(), v);
-
-    c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
-  }
-
-  template <typename container, typename predicate>
-  void remove_if(container & c, predicate p)
-  {
-    auto new_end = std::remove_if(c.begin(), c.end(), p);
-
-    c.erase(new_end, c.end()); // Because std::remove_if does not remove, it just moves actually.
-  }
-
-  template <typename container, typename predicate>
-  void remove_first_if(container & c, predicate p)
-  {
-    for (auto it = c.begin(); it != c.end(); ++it)
-    {
-      if (p(*it) == true)
-      {
-        c.erase(it);
-        return;
-      }
-    }
-  }
-
-  template <typename container>
-  void shuffle(container & c)
-  {
-    std::shuffle(c.begin(), c.end(), get_random_generator());
-  }
-  
-  template <typename container, typename predicate>
-  void sort(container & c, predicate p)
-  {
-    std::sort(c.begin(), c.end(), p);
-  }
-
-  template <typename container, typename predicate>
-  bool find_if(const container & c, predicate p)
-  {
-    return std::find_if(c.begin(), c.end(), p) != c.end();
-  }
-
-  template <typename container, typename data_t>
-  bool find(const container & c, const data_t & v)
-  {
-    return std::find(c.begin(), c.end(), v) != c.end();
-  }
-
-  template <typename container, typename data_t>
-  void push_once(container & c, const data_t & v)
-  {
-    if (std::find(c.begin(), c.end(), v) == c.end())
-    {
-      c.push_back(v);
-    }
-  }
-
-  template <typename container, typename data_t>
-  void fill(container & c, const data_t & v)
-  {
-    std::fill(c.begin(), c.end(), v);
-  }
-
-  template <typename container, typename func_t, typename data_t>
-  data_t accumulate(container & c, func_t f, data_t init)
-  {
-    return std::accumulate(c.begin(), c.end(), init, f);
-  }
-}
-
 #include <ggo_template_variadic.h>
 #include <ggo_template_pointer.h>
+#include <ggo_container_helpers.h>
 
 //////////////////////////////////////////////////////////////
 // Exceptions.

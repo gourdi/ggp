@@ -46,6 +46,8 @@ namespace ggo
   {
   public:
 
+    using type = data_t;
+
     virtual                    ~raytracable_shape3d_abc() {}
 
     virtual bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const = 0;

@@ -75,7 +75,7 @@ namespace ggo
         ggo::accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
         ggo::sampler<smp>::template sample_pixel<typename shape_t::type>(block_rect.left(), block_rect.bottom(), [&](real_t x_f, real_t y_f)
         {
-          acc.add(shape.is_point_inside(x_f, y_f) ? blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color) : bkgd_color);
+          acc.add(shape.is_point_inside({ x_f, y_f }) ? blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color) : bkgd_color);
         });
 
         const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
@@ -222,7 +222,7 @@ namespace ggo
         for (auto it = current_block_layers.begin(); it != current_block_layers.end(); ++it)
         {
           const item_t * item = *it;
-          if (item->is_point_inside(x_f, y_f) == true)
+          if (item->is_point_inside({ x_f, y_f }) == true)
           {
             const auto brush_color = item->brush(block_rect.left(), block_rect.bottom());
             sample_color = item->blend(block_rect.left(), block_rect.bottom(), sample_color, brush_color);
@@ -288,7 +288,7 @@ namespace ggo
         }
         else
         {
-          bounding_rect_data = ggo::rect_data_union(bounding_rect_data, cur_rect_data);
+          bounding_rect_data = ggo::get_union(bounding_rect_data, cur_rect_data);
         }
       }
     }

@@ -22,6 +22,7 @@ namespace ggo
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
     ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
     transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override { GGO_FAIL(); return transmission_data(transmission_type::internal_error); }
+    std::optional<box3d_data_float>   get_bounding_box() const override;
 
   private:
 
@@ -72,6 +73,12 @@ namespace ggo
 
     // Glow does not consume raytracing recursion.  
     return opacity * _color + (1 - opacity) * raytracer.process(output_ray, depth, random_variable1, random_variable2, this);
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline std::optional<box3d_data_float> glow::get_bounding_box() const
+  {
+    return sphere3d_float(_pos, _outter_radius).get_bounding_box(ggo::basis3d_float());
   }
 }
 

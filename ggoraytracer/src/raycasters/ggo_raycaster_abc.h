@@ -1,8 +1,9 @@
 #ifndef __GGO_RAYCASTER_ABC__
 #define __GGO_RAYCASTER_ABC__
 
-#include <vector>
+#include <optional>
 #include <ggo_shapes3d.h>
+#include <ggo_raytracer_global.h>
 
 // Important note : a raycaster MUST be thread safe.
 
@@ -16,17 +17,14 @@ namespace ggo
 
     virtual ~raycaster_abc() {}
     
-    virtual	const ggo::object3d_abc * hit_test(const ggo::ray3d_float & ray,
-                                               float & dist,
-                                               ggo::ray3d_float & local_normal,
-                                               ggo::ray3d_float & world_normal,
-                                               const ggo::object3d_abc * exclude_object1 = nullptr,
-                                               const ggo::object3d_abc * exclude_object2 = nullptr) const = 0;
+    virtual	std::optional<hit_data> hit_test(const ggo::ray3d_float & ray,
+                                             const ggo::object3d_abc * exclude_object1 = nullptr,
+                                             const ggo::object3d_abc * exclude_object2 = nullptr) const = 0;
           
-    virtual	bool                  check_visibility(const ggo::ray3d_float & ray,
-                                                   float dist_max,
-                                                   const ggo::object3d_abc * exclude_object1 = nullptr,
-                                                   const ggo::object3d_abc * exclude_object2 = nullptr) const = 0;
+    virtual	bool                    check_visibility(const ggo::ray3d_float & ray,
+                                                     float dist_max,
+                                                     const ggo::object3d_abc * exclude_object1 = nullptr,
+                                                     const ggo::object3d_abc * exclude_object2 = nullptr) const = 0;
   };
 }
 

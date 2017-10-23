@@ -35,7 +35,7 @@ GGO_TEST(transmission, test)
     scene.add_transparent_object<ggo::discard_basis>(ggo::sphere3d_float({ 2.f * static_cast<float>(i), 0.f, 0.f }, 1.f), ggo::white_32f(), *densities_it++);
   }
 
-  scene.add_diffuse_object<ggo::discard_basis>(ggo::aabox3d_float(-6.f, 6.f, 5.f, 5.5f, -1.f, -0.5f), ggo::red_material());
+  scene.add_diffuse_object<ggo::discard_basis>(ggo::box3d_float(-6.f, 6.f, 5.f, 5.5f, -1.f, -0.5f), ggo::red_material());
 
   ggo::checker_xy_material checker_material(ggo::white_32f(), ggo::gray_32f(), 0.5f);
   scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);

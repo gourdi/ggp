@@ -21,7 +21,7 @@ GGO_TEST(test_scene, scene4)
 
   // Objects.
   scene.add_diffuse_object<ggo::discard_all>(ggo::sphere3d<float>({ 0.f, 0.f, 0.f }, 1.f), ggo::red_material());
-  scene.add_diffuse_object<ggo::discard_all>(ggo::aabox3d_float(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f), ggo::white_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::box3d_float(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f), ggo::white_material());
 
   // Rendering.
   const int width = 400;

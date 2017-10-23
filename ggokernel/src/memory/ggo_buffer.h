@@ -58,6 +58,10 @@ namespace ggo
     void *        data()        { return _buffer; }
     const void *  data() const  { return _buffer; }
 
+    // Comparison.
+    bool operator==(const buffer & other) const { return std::equal(_buffer, _buffer + _size, other._buffer, other._buffer + other._size); };
+    bool operator!=(const buffer & other) const { return !operator==(other); };
+
   private:
 
     uint8_t * _buffer;

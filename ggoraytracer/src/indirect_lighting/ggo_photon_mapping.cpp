@@ -32,7 +32,7 @@ namespace ggo
 
         // Check if the built ray hits the object.
         auto intersection = object.intersect_ray(ray);
-        if (!intersection)
+        if (intersection.has_value() == false)
         {
           continue;
         }
@@ -52,13 +52,13 @@ namespace ggo
         }
 
         // OK we have the ray that passed through the transparent object. We now cast it to the scene.
-        auto hit_object = raycaster.hit_test(transmission._ray, intersection->_dist, intersection->_local_normal, intersection->_world_normal, &object);
-        if (hit_object != nullptr)
+        auto hit = raycaster.hit_test(transmission._ray, &object);
+        if (hit.has_value() == true)
         {
-          const float intensity = ggo::dot(intersection->_world_normal.dir(), transmission._ray.dir());
+          const float intensity = ggo::dot(hit->_intersection._world_normal.dir(), transmission._ray.dir());
           GGO_ASSERT_LE(intensity, 0.001f);
-          ggo::color_32f photon_color = -intensity * (light->get_emissive_color() * hit_object->get_color(intersection->_world_normal.pos()));
-          ggo::pos3f photon_pos = transmission._ray.pos() + intersection->_dist * transmission._ray.dir();
+          ggo::color_32f photon_color = -intensity * (light->get_emissive_color() * hit->_object->get_color(hit->_intersection._world_normal.pos()));
+          ggo::pos3f photon_pos = transmission._ray.pos() + hit->_intersection._dist * transmission._ray.dir();
           current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
         }
       }

@@ -6,14 +6,15 @@ namespace ggo
   {
   public:
 
-                            face3d(const vertex<data_t> & v1, const vertex<data_t> & v2, const vertex<data_t> & v3);
+                                      face3d(const vertex<data_t> & v1, const vertex<data_t> & v2, const vertex<data_t> & v3);
 
-    const vertex<data_t> &  v1() const { return _v1; }
-    const vertex<data_t> &  v2() const { return _v2; }
-    const vertex<data_t> &  v3() const { return _v3; }
+    const vertex<data_t> &            v1() const { return _v1; }
+    const vertex<data_t> &            v2() const { return _v2; }
+    const vertex<data_t> &            v3() const { return _v3; }
 
-    bool                    intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
-    bool                    is_convex() const override { return true; }
+    bool                              intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
+    bool                              is_convex() const override { return true; }
+    std::optional<box3d_data<data_t>> get_bounding_box(const ggo::basis3d<data_t> & basis) const override;
 
   private:
 

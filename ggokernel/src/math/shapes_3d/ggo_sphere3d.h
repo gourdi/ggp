@@ -36,6 +36,9 @@ namespace ggo
     
     bool                      is_point_inside(data_t x, data_t y, data_t z) const;
     bool                      is_point_inside(const ggo::pos3<data_t> & p) const;
+
+    bool                      operator==(const ggo::sphere3d<data_t> & s) const { return _center == s._center && _radius == s._radius; }
+    bool                      operator!=(const ggo::sphere3d<data_t> & s) const { return !operator==(s); }
   
   private:
 

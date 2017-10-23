@@ -111,7 +111,7 @@ namespace ggo
         const real_t sample_x = x_fp + sample.x();
         const real_t sample_y = y_fp + sample.y();
 
-        if (shape.is_point_inside(sample_x, sample_y) == true)
+        if (shape.is_point_inside({ sample_x, sample_y }) == true)
         {
           ++count;
         }

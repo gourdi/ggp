@@ -78,7 +78,7 @@ namespace ggo
     
     rect_data<real_t> get_bounding_rect() const { return _shape.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<real_t> & rect_data) const { return _shape.get_rect_intersection(rect_data); }
-    bool              is_point_inside(real_t x_f, real_t y_f) const { return _shape.is_point_inside(x_f, y_f); }
+    bool              is_point_inside(const ggo::pos2<real_t> & p) const { return _shape.is_point_inside(p); }
 
     color_t brush(int x, int y) const { return _color; }
     color_t blend(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const { return brush_color; }

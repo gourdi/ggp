@@ -63,6 +63,22 @@ namespace ggo
       return { x_min, x_max, y_min, y_max, z_min, z_max };
     }
 
+    bool operator==(const box3d_data<data_t> & other) const
+    {
+      return 
+        _x_min == other._x_min &&
+        _x_max == other._x_max &&
+        _y_min == other._y_min &&
+        _y_max == other._y_max &&
+        _z_min == other._z_min &&
+        _z_max == other._z_max;
+    }
+
+    bool operator!=(const box3d_data<data_t> & other) const
+    {
+      return !operator==(other);
+    }
+
     data_t	_x_min;
     data_t	_x_max;
     data_t	_y_min;
@@ -74,6 +90,26 @@ namespace ggo
 
 namespace ggo
 {
+  using box3d_data_float  = box3d_data<float>;
+  using box3d_data_double = box3d_data<double>;
+}
+
+// Global functions.
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const box3d_data<data_t> & box)
+  {
+    os << "(x_min=" << box._x_min;
+    os << ", x_max=" << box._x_max;
+    os << ", y_min=" << box._y_min;
+    os << ", y_max=" << box._y_max;
+    os << ", z_min=" << box._z_min;
+    os << ", z_max=" << box._z_max << ")";
+    return os;
+  }
+
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   box3d_data<data_t> get_union(const box3d_data<data_t> & b1, const box3d_data<data_t> & b2)
@@ -113,12 +149,5 @@ namespace ggo
       intersect1d(b1._x_min, b1._x_max, b2._x_min, b2._x_max) &&
       intersect1d(b1._y_min, b1._y_max, b2._y_min, b2._y_max) &&
       intersect1d(b1._z_min, b1._z_max, b2._z_min, b2._z_max);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, typename it, typename get_shape_func>
-  box3d_data<data_t> get_bounding_box(it begin, it end, get_shape_func get_shape)
-  {
-
   }
 }

@@ -22,6 +22,7 @@ namespace ggo
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
     ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
+    std::optional<box3d_data_float>   get_bounding_box() const;
 
   protected:
 
@@ -38,28 +39,26 @@ namespace ggo
   template <uint32_t flags, typename shape_t>
   std::optional<intersection_data> shape_object3d_abc<flags, shape_t>::intersect_ray(const ggo::ray3d_float & ray) const
   {
-    intersection_data intersection;
-
     if constexpr(flags & discard_basis)
     {
-      if (_shape.intersect_ray(ray, intersection._dist, intersection._local_normal) == false)
+      float dist = 0.f;
+      ggo::ray3d_float normal;
+      if (_shape.intersect_ray(ray, dist, normal) == true)
       {
-        return {};
+        return intersection_data(dist, normal, normal);
       }
-
-      intersection._world_normal = intersection._local_normal;
     }
     else
     {
-      if (_shape.intersect_ray(_basis.ray_from_world_to_local(ray), intersection._dist, intersection._local_normal) == false)
+      float dist = 0.f;
+      ggo::ray3d_float local_normal;
+      if (_shape.intersect_ray(_basis.ray_from_world_to_local(ray), dist, local_normal) == true)
       {
-        return {};
+        return intersection_data(dist, local_normal, _basis.ray_from_local_to_world(local_normal));
       }
-
-      intersection._world_normal = _basis.ray_from_local_to_world(intersection._local_normal);
     }
 
-    return intersection;
+    return {};
   }
 
   //////////////////////////////////////////////////////////////
@@ -103,6 +102,20 @@ namespace ggo
     }
 
     return ray;
+  }
+
+  //////////////////////////////////////////////////////////////.
+  template <uint32_t flags, typename shape_t>
+  std::optional<box3d_data_float> shape_object3d_abc<flags, shape_t>::get_bounding_box() const
+  {
+    if constexpr(flags & discard_basis)
+    {
+      return _shape.get_bounding_box(basis3d_float());
+    }
+    else
+    {
+      return _shape.get_bounding_box(_basis);
+    }
   }
 }
 

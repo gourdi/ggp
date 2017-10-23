@@ -37,7 +37,7 @@ namespace ggo
     // Geometry.
     rect_data<real_t> get_bounding_rect() const { return _triangle.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<real_t> & rect_data) const { return _triangle.get_rect_intersection(rect_data); }
-    bool              is_point_inside(real_t x_f, real_t y_f) const { return _triangle.is_point_inside(x_f, y_f); }
+    bool              is_point_inside(const ggo::pos2<real_t> & p) const { return _triangle.is_point_inside(p); }
 
     // Brush.
     color_t brush(int x, int y) const
@@ -104,7 +104,7 @@ namespace ggo
     // Geometry.
     rect_data<real_t> get_bounding_rect() const { return _triangle.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<real_t> & rect_data) const { return _triangle.get_rect_intersection(rect_data); }
-    bool              is_point_inside(real_t x_f, real_t y_f) const { return _triangle.is_point_inside(x_f, y_f); }
+    bool              is_point_inside(const ggo::pos2<real_t> & p) const { return _triangle.is_point_inside(p); }
 
     // Brush.
     rgba_t brush(int x, int y) const

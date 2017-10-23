@@ -113,30 +113,30 @@ namespace ggo
     // The vertices.
     std::vector<ggo::vertex<data_t>> vertices;
     
-    vertices.emplace_back(ggo::pos3<data_t>(0, 0, radius), ggo::vec3<T>(0, 0, 1)); // North pole.
+    vertices.emplace_back(ggo::pos3<data_t>(data_t(0), data_t(0), radius), ggo::vec3<data_t>(data_t(0), data_t(0), data_t(1))); // North pole.
 
     for (int phi_step = 1; phi_step < vert_steps - 1; ++phi_step)
     {
-      T phi = pi<data_t>() * phi_step / (vert_steps - 1);
-      T cos_phi = std::cos(phi);
-      T sin_phi = std::sin(phi);
+      data_t phi = pi<data_t>() * phi_step / (vert_steps - 1);
+      data_t cos_phi = std::cos(phi);
+      data_t sin_phi = std::sin(phi);
       
       for (int theta_step = 0; theta_step < horz_steps; ++theta_step)
       {
-        T theta = 2 * pi<T>() * theta_step / horz_steps;
-        T x = sin_phi * std::cos(theta);
-        T y = sin_phi * std::sin(theta);
-        T z = cos_phi;
+        data_t theta = 2 * pi<data_t>() * theta_step / horz_steps;
+        data_t x = sin_phi * std::cos(theta);
+        data_t y = sin_phi * std::sin(theta);
+        data_t z = cos_phi;
         
-        ggo::vec3<T> p(x, y, z);
+        ggo::vec3<data_t> p(x, y, z);
         vertices.emplace_back(radius * p, p);
       }
     }
     
-    vertices.emplace_back(ggo::pos3<data_t>(0, 0, -radius), ggo::vec3<data_t>(0, 0, -1)); // South pole.
+    vertices.emplace_back(ggo::pos3<data_t>(data_t(0), data_t(0), -radius), ggo::vec3<data_t>(data_t(0), data_t(0), data_t(-1))); // South pole.
 
     // The faces.
-    std::vector<ggo::polygon3d<T>::face> faces;
+    std::vector<ggo::polygon3d<data_t>::face> faces;
     
     for (int i = 0; i < horz_steps; ++i) // Faces connected to the North pole.
     {
@@ -163,6 +163,6 @@ namespace ggo
       faces.emplace_back(static_cast<int>(vertices.size()) - 1, offset + i, offset + ((i + 1) % horz_steps));
     }
 
-    return polygon3d<T>(vertices, faces);
+    return polygon3d<data_t>(vertices, faces);
   }
 }

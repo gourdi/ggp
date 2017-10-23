@@ -22,6 +22,7 @@ namespace ggo
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const  override;
     ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
     transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
+    std::optional<box3d_data_float>   get_bounding_box() const override;
 
   private:
 
@@ -85,6 +86,13 @@ namespace ggo
   {
     GGO_FAIL();
     return transmission_data(transmission_type::internal_error);
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline std::optional<box3d_data_float> point_light::get_bounding_box() const
+  {
+    GGO_FAIL();
+    return {};
   }
 }
 

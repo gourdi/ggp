@@ -28,19 +28,17 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  const ggo::object3d_abc * brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                            float & dist,
-                                                            ggo::ray3d_float & local_normal,
-                                                            ggo::ray3d_float & world_normal,
-                                                            const ggo::object3d_abc * exclude_object1,
-                                                            const ggo::object3d_abc * exclude_object2) const
+  std::optional<hit_data> brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
+                                                          const ggo::object3d_abc * exclude_object1,
+                                                          const ggo::object3d_abc * exclude_object2) const
   {
     const ggo::object3d_abc * hit_object = nullptr;
-    dist = std::numeric_limits<float>::max();
+    float dist = std::numeric_limits<float>::max();
+    ggo::ray3d_float local_normal, world_normal;
 
-    for (const auto & object : _scene.visible_objects())
+    for (const auto * object : _visible_objects)
     {
-      if (object.get() == exclude_object1 || object.get() == exclude_object2)
+      if (object == exclude_object1 || object == exclude_object2)
       {
         continue;
       }
@@ -49,14 +47,14 @@ namespace ggo
 
       if (intersection && intersection->_dist < dist)
       {
-        hit_object = object.get();
+        hit_object = object;
         dist = intersection->_dist;
         local_normal = intersection->_local_normal;
         world_normal = intersection->_world_normal;
       }
     }
 
-    return hit_object;
+    return hit_object ? hit_data(hit_object, dist, local_normal, world_normal) : std::optional<hit_data>();
   }
 
   //////////////////////////////////////////////////////////////
@@ -65,9 +63,9 @@ namespace ggo
                                                const ggo::object3d_abc * exclude_object1,
                                                const ggo::object3d_abc * exclude_object2) const
   {
-    for (const auto & object : _scene.casting_shadows_objects())
+    for (const auto * object : _casting_shadows_objects)
     {
-      if (object.get() == exclude_object1 || object.get() == exclude_object2)
+      if (object == exclude_object1 || object == exclude_object2)
       {
         continue;
       }

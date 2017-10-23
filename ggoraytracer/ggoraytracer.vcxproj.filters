@@ -117,6 +117,9 @@
     <ClInclude Include="src\indirect_lighting\ggo_photon_mapping.h">
       <Filter>indirect_lighting</Filter>
     </ClInclude>
+    <ClInclude Include="src\raycasters\ggo_octree_raycaster.h">
+      <Filter>raycasters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cameras\ggo_camera_abc.cpp">
@@ -140,9 +143,6 @@
     <ClCompile Include="src\materials\ggo_solid_color_material.cpp">
       <Filter>materials</Filter>
     </ClCompile>
-    <ClCompile Include="src\raycasters\ggo_raycaster_abc.cpp">
-      <Filter>raycasters</Filter>
-    </ClCompile>
     <ClCompile Include="src\renderers\ggo_antialiasing_renderer.cpp">
       <Filter>renderers</Filter>
     </ClCompile>
@@ -165,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="src\indirect_lighting\ggo_photon_mapping.cpp">
       <Filter>indirect_lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\raycasters\ggo_octree_raycaster.cpp">
+      <Filter>raycasters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

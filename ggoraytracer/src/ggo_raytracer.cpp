@@ -75,9 +75,8 @@ namespace ggo
       return ggo::black<ggo::color_32f>();
     }
 
-    ggo::intersection_data intersection;
-    const ggo::object3d_abc * hit_object = _raycaster.hit_test(ray, intersection._dist, intersection._local_normal, intersection._world_normal, exclude_object);
-    if (hit_object == nullptr)
+    auto hit = _raycaster.hit_test(ray, exclude_object);
+    if (hit.has_value() == false)
     {
       ggo::color_32f color = _scene.background().get_color(ray);
 
@@ -89,19 +88,19 @@ namespace ggo
       return color;
     }
 
-    GGO_ASSERT_FLOAT_EQ(intersection._local_normal.dir().get_length(), 1.f);
-    GGO_ASSERT_FLOAT_EQ(intersection._world_normal.dir().get_length(), 1.f);
+    GGO_ASSERT_FLOAT_EQ(hit->_intersection._local_normal.dir().get_length(), 1.f);
+    GGO_ASSERT_FLOAT_EQ(hit->_intersection._world_normal.dir().get_length(), 1.f);
 
-    ggo::color_32f output_color = hit_object->process_ray(ray, intersection, *this, depth, random_variable1, random_variable2);
+    ggo::color_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, random_variable1, random_variable2);
 
     if (_scene.fog())
     {
-      output_color = _scene.fog()->process_segment(ray.pos(), intersection._world_normal.pos(), output_color);
+      output_color = _scene.fog()->process_segment(ray.pos(), hit->_intersection._world_normal.pos(), output_color);
     }
 
     if (_indirect_lighting != nullptr)
     {
-      output_color += _indirect_lighting->process(ray, intersection._world_normal, *hit_object, output_color, random_variable1, random_variable2);
+      output_color += _indirect_lighting->process(ray, hit->_intersection._world_normal, *hit->_object, output_color, random_variable1, random_variable2);
     }
 
     return output_color;

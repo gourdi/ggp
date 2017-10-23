@@ -35,7 +35,7 @@ namespace ggo
     // s0*(v2-v1)+s1*(v3-v1)-s2*ray_dir=ray_pos,
     // which is a 3 equations with 3 unknowns (s0, s1 and s2) linear system.
 
-    data_t m02 = -ray.dir().template get<0>(); 
+    data_t m02 = -ray.dir().template get<0>();
     data_t m12 = -ray.dir().template get<1>();
     data_t m22 = -ray.dir().template get<2>();
 
@@ -96,6 +96,21 @@ namespace ggo
     return true;
   }
 
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, bool double_sided>
+  std::optional<box3d_data<data_t>> face3d<data_t, double_sided>::get_bounding_box(const ggo::basis3d<data_t> & basis) const
+  {
+    return box3d_data<data_t>::from({
+      basis.point_from_local_to_world(_v1._pos),
+      basis.point_from_local_to_world(_v2._pos),
+      basis.point_from_local_to_world(_v3._pos)
+    });
+  }
+}
+
+namespace ggo
+{
   //////////////////////////////////////////////////////////////
   template<typename data_t, bool double_sided>
   std::ostream & operator<<(std::ostream & os, const face3d<data_t, double_sided> & face)

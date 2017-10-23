@@ -113,9 +113,6 @@
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
-    <ClCompile Include="test\shapes3d\ggo_axis_aligned_box3d_nonreg.cpp">
-      <Filter>shapes3d</Filter>
-    </ClCompile>
     <ClCompile Include="test\shapes3d\ggo_basis3d_nonreg.cpp">
       <Filter>shapes3d</Filter>
     </ClCompile>
@@ -187,6 +184,12 @@
     </ClCompile>
     <ClCompile Include="test\shapes2d\ggo_oriented_box2d_nonreg.cpp">
       <Filter>shapes2d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\shapes3d\ggo_box3d_nonreg.cpp">
+      <Filter>shapes3d</Filter>
+    </ClCompile>
+    <ClCompile Include="test\trees\ggo_octree_nonreg.cpp">
+      <Filter>trees</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

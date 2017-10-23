@@ -307,12 +307,7 @@ namespace ggo
   template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const box3d<data_t> & box)
   {
-    os << "(x_min=" << box.x_min();
-    os << ", x_max=" << box.x_max();
-    os << ", y_min=" << box.y_min();
-    os << ", y_max=" << box.y_max();
-    os << ", z_min=" << box.z_min();
-    os << ", z_max=" << box.z_max() << ")";
+    os << box.data();
     return os;
   }
 }

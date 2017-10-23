@@ -1,13 +1,14 @@
 #ifndef __GGO_RAYTRACER_GLOBAL__
 #define __GGO_RAYTRACER_GLOBAL__
 
-#include <ggo_raycaster_abc.h>
 #include <ggo_color.h>
 #include <ggo_shapes3d.h>
 
 namespace ggo
 {
   class indirect_lighting_abc;
+  class raycaster_abc;
+  class object3d_abc;
 
   //////////////////////////////////////////////////////////////
   struct raytrace_params
@@ -30,16 +31,36 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct intersection_data
   {
-    intersection_data() = default;
     intersection_data(float dist, const ggo::ray3d_float & local_normal, const ggo::ray3d_float & world_normal)
-    :
-    _dist(dist), _local_normal(local_normal), _world_normal(world_normal)
+      :
+      _dist(dist), _local_normal(local_normal), _world_normal(world_normal)
     {
     }
 
     float _dist;
     ggo::ray3d_float _local_normal;
     ggo::ray3d_float _world_normal;
+  };
+
+  //////////////////////////////////////////////////////////////
+  struct hit_data
+  {
+    hit_data(const object3d_abc * object, float dist, const ggo::ray3d_float & local_normal, const ggo::ray3d_float & world_normal)
+      :
+      _object(object),
+      _intersection(dist, local_normal, world_normal)
+    {
+    }
+
+    hit_data(const object3d_abc * object, const intersection_data & intersection)
+      :
+      _object(object),
+      _intersection(intersection)
+    {
+    }
+
+    const object3d_abc *  _object;
+    intersection_data     _intersection;
   };
 
   //////////////////////////////////////////////////////////////
