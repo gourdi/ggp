@@ -4,12 +4,14 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  cylinder3d<data_t>::cylinder3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t radius)
-  :
-  _pos(pos),
-  _dir(dir.get_normalized()),
-  _radius(radius)
+  cylinder3d<data_t>::cylinder3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t size, data_t radius)
+    :
+    _pos(pos),
+    _dir(dir.get_normalized()),
+    _size(size),
+    _radius(radius)
   {
+    GGO_ASSERT_GE(size, data_t(0));
     GGO_ASSERT_GE(radius, data_t(0));
   }
 
@@ -89,44 +91,55 @@ namespace ggo
     {
       return false;
     }
-    
+
     if (dist_inf < 0) // The ray's origin is inside of the cylinder.
     {
       dist = dist_sup;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::vec3<data_t> diff = normal.pos() - _pos;
-      ggo::pos3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
+      auto dot = ggo::dot(normal.pos() - _pos, _dir);
+      if (dot > _size || dot < -_size)
+      {
+        return false;
+      }
+
+      ggo::pos3<data_t> proj = _pos + dot * _dir;
       normal.set_dir(proj - normal.pos());
+
+      return true;
     }
     else // The ray's origin is outside of the cylinder.
     {
       dist = dist_inf;
       normal.pos() = ray.pos() + dist * ray.dir();
 
-      ggo::vec3<data_t> diff = normal.pos() - _pos;
-      ggo::pos3<data_t> proj = _pos + ggo::dot(diff, _dir) * _dir;
-      normal.set_dir(normal.pos() - proj);
+      auto dot = ggo::dot(normal.pos() - _pos, _dir);
+      if (dot < _size && dot > -_size) 
+      {
+        ggo::pos3<data_t> proj = _pos + dot * _dir;
+        normal.set_dir(normal.pos() - proj);
+
+        return true;
+      }
+
+      // The 'front' intersection is outside of the cylinder, try the 'back' one.
+      dist = dist_sup;
+      normal.pos() = ray.pos() + dist * ray.dir();
+
+      dot = ggo::dot(normal.pos() - _pos, _dir);
+      if (dot < _size && dot > -_size)
+      {
+        ggo::pos3<data_t> proj = _pos + dot * _dir;
+        normal.set_dir(proj - normal.pos());
+
+        return true;
+      }
+
+      return false;
     }
 
-    return true;
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  std::vector<data_t> cylinder3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
-  {
-    std::vector<data_t> intersections;
-
-    data_t dist_inf = 0;
-    data_t dist_sup = 0;
-    if (intersect_line(ggo::line3d<data_t>(ray), dist_inf, dist_sup) == true && dist_inf > 0)
-    {
-      intersections.push_back(dist_inf);
-      intersections.push_back(dist_sup);
-    }
-
-    return intersections;
+    GGO_FAIL();
+    return false;
   }
 
   //////////////////////////////////////////////////////////////
@@ -135,7 +148,10 @@ namespace ggo
   {
     return {};
   }
+}
 
+namespace ggo
+{
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const cylinder3d<data_t> & cylinder)

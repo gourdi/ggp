@@ -16,7 +16,6 @@ GGO_TEST(octree, test)
 
   // Light.
   scene.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(100.f, -100.f, 200.f));
- // scene.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(-100.f, -100.f, 200.f));
 
   // Objects.
   constexpr uint32_t discard_flags = ggo::discard_basis | ggo::discard_phong | ggo::discard_roughness;
@@ -40,7 +39,7 @@ GGO_TEST(octree, test)
   
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
   camera_basis.rotate(ggo::ray3d_float::O_X(), 0.75f);
-  camera_basis.rotate(ggo::ray3d_float::O_Z(), 0.2f);
+  camera_basis.rotate(ggo::ray3d_float::O_Z(), 0.5f);
 
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
   ggo::mono_sampling_renderer renderer(camera);

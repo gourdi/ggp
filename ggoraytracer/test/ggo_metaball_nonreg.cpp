@@ -23,10 +23,8 @@ GGO_TEST(test_scene, metaball)
   // Objects.
   ggo::metaball<float> metaball(0.5f);
   std::shared_ptr<ggo::influence_shape3d_abc<float>> sphere(new ggo::sphere3d<float>({ -0.6f, 0.0f, 0.0f }, 1.0f));
-  std::shared_ptr<ggo::influence_shape3d_abc<float>> cylinder(new ggo::cylinder3d<float>({ 0.6f, 0.0f, 0.0f }, { 0.f, 1.f, 0.f }, 1.0f));
   std::shared_ptr<ggo::influence_shape3d_abc<float>> plane(new ggo::influence_plane3d<float>({ 0.f, 1.0f, 0.0f }, 1.5f, 1.0f));
   metaball.add_influence_data(sphere, 1.0f);
-  metaball.add_influence_data(cylinder, 1.0f);
   metaball.add_influence_data(plane, 1.0f);
   scene.add_diffuse_object<ggo::discard_all>(metaball, ggo::white_material());
 

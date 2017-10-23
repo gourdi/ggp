@@ -4,8 +4,8 @@
 /////////////////////////////////////////////////////////////////////  
 GGO_TEST(cylinder3d, ray_intersection)
 {
-  ggo::cylinder3d<float> cylinder({ 2.f, 4.f, 0.f }, { 0.f, 0.f, 1.f }, 2.f);
-  ggo::ray3d<float> ray({ 2.f, 1.f, 0.f }, { 0.f, 1.f, 0.f });
+  ggo::cylinder3d_float cylinder({ 2.f, 4.f, 0.f }, { 0.f, 0.f, 1.f }, 10.f, 2.f);
+  ggo::ray3d_float ray({ 2.f, 1.f, 0.f }, { 0.f, 1.f, 0.f });
 
   float dist_inf = 0.f;
   float dist_sup = 0.f;
