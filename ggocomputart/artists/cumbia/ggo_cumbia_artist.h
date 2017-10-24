@@ -25,12 +25,12 @@ namespace ggo
 
   private:
 
-    std::vector<ggo::tree<ggo::aabox3d_float> *>  init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
+    std::vector<ggo::tree<ggo::box3d_float> *>  init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
 
   private:
 
-    std::unique_ptr<ggo::tree<ggo::aabox3d_float>>  _boxes_tree;
-    std::unique_ptr<ggo::scene>                     _scene;
+    std::unique_ptr<ggo::tree<ggo::box3d_float>>  _boxes_tree;
+    std::unique_ptr<ggo::scene>                   _scene;
   };
 }
 

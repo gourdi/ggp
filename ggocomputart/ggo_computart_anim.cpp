@@ -2,7 +2,6 @@
 #include <ggo_array.h>
 #include <ggo_chronometer.h>
 #include <ggo_bmp.h>
-#include <ggo_helpers.h>
 #include <sstream>
 #include <iostream>
 
@@ -32,14 +31,14 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 
     if (i == 1)
     {
-      int artist_id = -1;
+      auto artist_id = ggo::str_to<int>(arg);
 
-      if ((ggo::str2val(arg, artist_id) == false) || (artist_id < 0))
+      if (artist_id.has_value() == false || *artist_id < 0)
       {
         std::cerr << "Error : invalid artist id argument" << std::endl;
         return false;
       }
-      params._artist_id = static_cast<ggo::animation_artist_id>(artist_id);
+      params._artist_id = static_cast<ggo::animation_artist_id>(*artist_id);
     }
     else
       if (arg.compare("-d") == 0)
@@ -62,11 +61,13 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
             std::cout << "Error : missing width parameter" << std::endl;
             return false;
           }
-          if ((ggo::str2val(argv[i], params._width) == false) || (params._width <= 0))
+          auto width = ggo::str_to<int>(argv[i]);
+          if (width.has_value() == false || *width <= 0)
           {
             std::cout << "Error : invalid width argument" << std::endl;
             return false;
           }
+          params._width = *width;
 
           ++i;
           if (i >= argc)
@@ -74,11 +75,13 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
             std::cout << "Error : missing height parameter" << std::endl;
             return false;
           }
-          if ((ggo::str2val(argv[i], params._height) == false) || (params._height <= 0))
+          auto height = ggo::str_to<int>(argv[i]);
+          if (height.has_value() == false || *height <= 0)
           {
             std::cout << "Error : invalid height argument" << std::endl;
             return false;
           }
+          params._height = *height;
         }
         else
         {
@@ -126,7 +129,7 @@ int main(int argc, char ** argv)
       break;
     }
 
-    artist->render_frame(buffer.data(), ggo::pixel_rect::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
+    artist->render_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
 
     std::ostringstream filename;
     if (params._output_directory.length() > 0)

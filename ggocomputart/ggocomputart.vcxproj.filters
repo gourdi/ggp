@@ -148,6 +148,9 @@
     <Filter Include="artists\kame">
       <UniqueIdentifier>{be707f45-7e43-4e2e-b9af-e90b28cb1929}</UniqueIdentifier>
     </Filter>
+    <Filter Include="artists\demeco">
+      <UniqueIdentifier>{30085472-646a-43df-92b3-fe71b08e4f7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\ggo_animate_abc.cpp">
@@ -251,15 +254,6 @@
     </ClCompile>
     <ClCompile Include="artists\flower\ggo_flower_artist.cpp">
       <Filter>artists\flower</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\hexa\ggo_hexa_animation_artist.cpp">
-      <Filter>artists\hexa</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\hexa\ggo_hexa_artist.cpp">
-      <Filter>artists\hexa</Filter>
-    </ClCompile>
-    <ClCompile Include="artists\hexa\ggo_hexa_bitmap_artist.cpp">
-      <Filter>artists\hexa</Filter>
     </ClCompile>
     <ClCompile Include="artists\ifs\ggo_ifs_animation_artist.cpp">
       <Filter>artists\ifs</Filter>
@@ -417,6 +411,18 @@
     <ClCompile Include="artists\kame\ggo_kame_animation_artist.cpp">
       <Filter>artists\kame</Filter>
     </ClCompile>
+    <ClCompile Include="artists\demeco\ggo_demeco_bitmap_artist.cpp">
+      <Filter>artists\demeco</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\hexa\ggo_hexa_animation_artist.cpp">
+      <Filter>artists\hexa</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\hexa\ggo_hexa_artist.cpp">
+      <Filter>artists\hexa</Filter>
+    </ClCompile>
+    <ClCompile Include="artists\hexa\ggo_hexa_bitmap_artist.cpp">
+      <Filter>artists\hexa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\ggo_animate_abc.h">
@@ -523,15 +529,6 @@
     </ClInclude>
     <ClInclude Include="artists\flower\ggo_flower_artist.h">
       <Filter>artists\flower</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\hexa\ggo_hexa_animation_artist.h">
-      <Filter>artists\hexa</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\hexa\ggo_hexa_artist.h">
-      <Filter>artists\hexa</Filter>
-    </ClInclude>
-    <ClInclude Include="artists\hexa\ggo_hexa_bitmap_artist.h">
-      <Filter>artists\hexa</Filter>
     </ClInclude>
     <ClInclude Include="artists\ifs\ggo_ifs_animation_artist.h">
       <Filter>artists\ifs</Filter>
@@ -703,6 +700,18 @@
     </ClInclude>
     <ClInclude Include="artists\kame\ggo_kame_animation_artist.h">
       <Filter>artists\kame</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\demeco\ggo_demeco_bitmap_artist.h">
+      <Filter>artists\demeco</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\hexa\ggo_hexa_animation_artist.h">
+      <Filter>artists\hexa</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\hexa\ggo_hexa_artist.h">
+      <Filter>artists\hexa</Filter>
+    </ClInclude>
+    <ClInclude Include="artists\hexa\ggo_hexa_bitmap_artist.h">
+      <Filter>artists\hexa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 #include <ggo_raytracer_global.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_background3d_color.h>
-#include <ggo_brute_force_raycaster.h>
+#include <ggo_octree_raycaster.h>
 #include <sstream>
 #include <map>
 
@@ -144,245 +144,37 @@ namespace
 // HEXA
 namespace
 {
-  class hexa
+  void create_hexa(float x, float y, float height, ggo::scene & scene, const ggo::color_32f & color_top, const ggo::color_32f & color_side)
   {
-  public:
-
-    hexa() = delete;
-    hexa(const hexa & hexa) = delete;
-    hexa & operator=(const hexa & hexa) = delete;
-
-    hexa(float x, float y, float height,
-      ggo::scene & scene,
-      const ggo::color_32f & color_top,
-      const ggo::color_32f & color_side)
+    auto create_triangle = [](const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3, ggo::scene & scene, const ggo::color_32f & color)
     {
-      const float hexa_height = 15;
-      float z_inf = height - hexa_height;
-      float z_sup = height;
+      ggo::triangle3d<float, true> triangle(v1, v2, v3);
+      constexpr uint32_t flags = ggo::discard_all;
+      const auto & object = scene.add_diffuse_object<flags, ggo::triangle3d<float, true>, ggo::solid_color_material>(triangle, ggo::solid_color_material(color));
+    };
 
-      _bounding_box.x_min() = x;
-      _bounding_box.x_max() = x;
-      _bounding_box.y_min() = y;
-      _bounding_box.y_max() = y;
-      _bounding_box.z_min() = z_inf;
-      _bounding_box.z_max() = z_sup;
+    const float hexa_height = 15;
+    float z_inf = height - hexa_height;
+    float z_sup = height;
 
-      for (int i = 0; i < 6; ++i)
-      {
-        float angle1 = i * ggo::pi<float>() / 3;
-        float angle2 = (i + 1) * ggo::pi<float>() / 3;
-
-        create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-          ggo::pos3f(x, y, z_sup), scene, color_top);
-
-        /*  create_rectangle(ggo::pos2f(x + std::cos(angle1), y + std::sin(angle1)),
-                           ggo::pos2f(x + std::cos(angle2), y + std::sin(angle2)),
-                           z_inf, z_sup, scene, material_side);*/
-
-        create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
-
-        create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_inf),
-          ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
-          ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
-      }
-
-      _brute_force_raycaster.reset(new ggo::brute_force_raycaster(_objects));
-    }
-
-    const ggo::object3d_abc * intersect_ray(const ggo::ray3d_float & ray,
-      float & dist,
-      ggo::ray3d_float & normal,
-      const ggo::object3d_abc * exclude_object1,
-      const ggo::object3d_abc * exclude_object2) const
+    for (int i = 0; i < 6; ++i)
     {
-      if (_bounding_box.intersect_ray(ray) == false)
-      {
-        return nullptr;
-      }
+      float angle1 = i * ggo::pi<float>() / 3;
+      float angle2 = (i + 1) * ggo::pi<float>() / 3;
 
-      return _brute_force_raycaster->hit_test(ray, dist, normal, normal, exclude_object1, exclude_object2);
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+        ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
+        ggo::pos3f(x, y, z_sup), scene, color_top);
+
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+        ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_sup),
+        ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
+
+      create_triangle(ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_inf),
+        ggo::pos3f(x + std::cos(angle1), y + std::sin(angle1), z_sup),
+        ggo::pos3f(x + std::cos(angle2), y + std::sin(angle2), z_inf), scene, color_side);
     }
-
-    const ggo::axis_aligned_box3d<float> & bounding_box() const { return _bounding_box; }
-
-  private:
-
-    void create_triangle(const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3,
-      ggo::scene & scene,
-      const ggo::color_32f & color)
-    {
-      auto triangle = std::make_shared<ggo::triangle3d<float, true>>(v1, v2, v3);
-      auto object = scene.add_object(triangle, material, true);
-
-      _objects.push_back(object);
-
-      // Update the bounding box too.
-      _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), v1.get<0>(), v2.get<0>(), v3.get<0>());
-      _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), v1.get<0>(), v2.get<0>(), v3.get<0>());
-      _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), v1.get<1>(), v2.get<1>(), v3.get<1>());
-      _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), v1.get<1>(), v2.get<1>(), v3.get<1>());
-    }
-
-    void create_rectangle(const ggo::pos2f & p1,
-      const ggo::pos2f & p2,
-      float z_inf, float z_sup,
-      ggo::scene & scene,
-      std::shared_ptr<const ggo::material_abc> material)
-    {
-      ggo::pos3f center(0.5f * (p1.get<0>() + p2.get<0>()), 0.5f * (p1.get<1>() + p2.get<1>()), 0.5f * (z_inf + z_sup));
-      ggo::vec3f v1(0.5f * (p2.get<0>() - p1.get<0>()), 0.5f * (p2.get<1>() - p1.get<1>()), 0.f);
-      ggo::vec3f v2(0.f, 0.f, 0.5f * (z_sup - z_inf));
-
-      auto object = scene.add_diffuse_object<ggo::discard_all>(parallelogram3d_float(center, v1, v2), material);
-
-      _objects.push_back(object);
-
-      // Update the bounding box too.
-      _bounding_box.x_min() = ggo::min(_bounding_box.x_min(), p1.get<0>(), p2.get<0>());
-      _bounding_box.x_max() = ggo::max(_bounding_box.x_max(), p1.get<0>(), p2.get<0>());
-      _bounding_box.y_min() = ggo::min(_bounding_box.y_min(), p1.get<1>(), p2.get<1>());
-      _bounding_box.y_max() = ggo::max(_bounding_box.y_max(), p1.get<1>(), p2.get<1>());
-    }
-
-  private:
-
-    std::vector<std::shared_ptr<const ggo::object3d_abc>> _objects;
-    ggo::axis_aligned_box3d<float>                        _bounding_box;
-    std::unique_ptr<ggo::brute_force_raycaster>           _brute_force_raycaster;
-  };
-}
-
-//////////////////////////////////////////////////////////////
-// HEXA GROUP
-namespace
-{
-  class hexa_group
-  {
-  public:
-
-    hexa_group(const std::vector<std::shared_ptr<hexa>> & hexas)
-    {
-      GGO_ASSERT(hexas.empty() == false);
-
-      _hexas = hexas;
-
-      // Merge bounding boxes.
-      _bounding_box = _hexas.front()->bounding_box();
-      for (const auto & hexa : _hexas)
-      {
-        _bounding_box.merge_with(hexa->bounding_box());
-      }
-    }
-
-    const ggo::object3d * intersect_ray(const ggo::ray3d_float & ray,
-      float & dist,
-      ggo::ray3d_float & normal,
-      const ggo::object3d * exclude_object1,
-      const ggo::object3d * exclude_object2) const
-    {
-      if (_bounding_box.intersect_ray(ray) == false)
-      {
-        return nullptr;
-      }
-
-      const ggo::object3d * hit_object = nullptr;
-      dist = std::numeric_limits<float>::max();
-
-      for (const auto & hexa : _hexas)
-      {
-        GGO_ASSERT(hexa);
-
-        float dist_cur = 0;
-        ggo::ray3d_float normal_cur;
-
-        const ggo::object3d * hit_object_tmp = hexa->intersect_ray(ray, dist_cur, normal_cur, exclude_object1, exclude_object2);
-        if ((hit_object_tmp != nullptr) && (dist_cur < dist))
-        {
-          dist = dist_cur;
-          hit_object = hit_object_tmp;
-          normal = normal_cur;
-        }
-      }
-
-      return hit_object;
-    }
-
-  private:
-
-    std::vector<std::shared_ptr<hexa>>  _hexas;
-    ggo::axis_aligned_box3d<float>      _bounding_box;
-  };
-}
-
-//////////////////////////////////////////////////////////////
-// HEXA RAYCASTER
-namespace
-{
-  class hexa_raycaster : public ggo::raycaster_abc
-  {
-  public:
-
-    hexa_raycaster(const std::vector<std::shared_ptr<hexa_group>> & hexa_groups) : _hexa_groups(hexa_groups) {}
-
-  private:
-
-    bool check_visibility(const ggo::ray3d_float & ray,
-      float dist_max,
-      const ggo::object3d * exclude_object1,
-      const ggo::object3d * exclude_object2) const override
-    {
-      ggo::ray3d_float normal_tmp;
-
-      for (const auto & hexa_group : _hexa_groups)
-      {
-        float dist = 0;
-
-        if ((hexa_group->intersect_ray(ray, dist, normal_tmp, exclude_object1, exclude_object2) != nullptr) && (dist < dist_max))
-        {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    const ggo::object3d * hit_test(const ggo::ray3d_float & ray,
-      float & dist,
-      ggo::ray3d_float & local_normal,
-      ggo::ray3d_float & world_normal,
-      const ggo::object3d * exclude_object1,
-      const ggo::object3d * exclude_object2) const override
-    {
-      const ggo::object3d * hit_object = nullptr;
-      ggo::ray3d_float normal_tmp;
-
-      dist = std::numeric_limits<float>::max();
-
-      for (const auto & hexa_group : _hexa_groups)
-      {
-        float dist_cur = 0;
-        const ggo::object3d * hit_object_tmp = hexa_group->intersect_ray(ray, dist_cur, normal_tmp, exclude_object1, exclude_object2);
-
-        if ((hit_object_tmp != nullptr) && (dist_cur < dist))
-        {
-          dist = dist_cur;
-          hit_object = hit_object_tmp;
-          local_normal = normal_tmp;
-          world_normal = normal_tmp;
-        }
-      }
-
-      return hit_object;
-    }
-
-  private:
-
-    const std::vector<std::shared_ptr<hexa_group>> &  _hexa_groups;
-  };
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -435,12 +227,8 @@ std::vector<ggo::hexa_artist::hexa_info> ggo::hexa_artist::generate_hexa_infos()
       float y2 = (2 * y + 1) * std::sqrt(3.f) / 2;
       float height2 = scalar_field.evaluate(x2, y2);
 
-      std::ostringstream oss;
-      oss << ((x + 1000) / 4) << ':' << ((y + 1000) / 4);
-      const std::string key(oss.str());
-      
-      hexas_infos.push_back({x1, y1, height1, key});
-      hexas_infos.push_back({x2, y2, height2, key});
+      hexas_infos.push_back({x1, y1, height1});
+      hexas_infos.push_back({x2, y2, height2});
     }
   }
   
@@ -455,42 +243,29 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
                               const ggo::color_32f & fog_color,
                               ggo::renderer_abc & renderer)
 {
-  ggo::scene_builder scene_builder(std::make_shared<ggo::background3d_color>(fog_color));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(fog_color));
 
   // Objects.
-  std::map<std::string, std::vector<std::shared_ptr<hexa>>> hexa_groups_map;
-  
-  auto material_top = std::make_shared<ggo::solid_color_material>(color_top);
-  auto material_side = std::make_shared<ggo::solid_color_material>(color_side);
-
   for (const auto & hexa_info : hexa_infos)
   {
-    auto new_hexa = std::make_shared<hexa>(hexa_info._x, hexa_info._y, hexa_info._height, scene_builder, material_top, material_side);
-
-    hexa_groups_map[hexa_info._key].push_back(new_hexa);
-  }
-
-  std::vector<std::shared_ptr<hexa_group>> hexa_groups;
-  for (auto it = hexa_groups_map.begin(); it != hexa_groups_map.end(); ++it)
-  {
-    hexa_groups.push_back(std::make_shared<hexa_group>(it->second));
+    create_hexa(hexa_info._x, hexa_info._y, hexa_info._height, scene, color_top, color_side);
   }
 
   // Add lights to scene.
   for (const auto & light_pos : lights_pos)
   {
-    scene_builder.add_sphere_light(ggo::white<ggo::color_32f>(), 100.f, light_pos);
+    scene.add_sphere_light(ggo::white<ggo::color_32f>(), light_pos, 100.f);
   }
 
   // Fog and ambient color.
-  scene_builder.set_fog(std::make_shared<ggo::linear_fog>(fog_color, 1000.f));
-  scene_builder.set_ambient_color(ggo::color_32f(0.1f));
+  scene.set_fog(std::make_shared<ggo::linear_fog>(fog_color, 1000.f));
+  scene.set_ambient_color(ggo::color_32f(0.1f));
 
   // Raytracer parameters.
-  hexa_raycaster raycaster(hexa_groups);
+  ggo::octree_raycaster raycaster(scene);
   ggo::raytrace_params raytrace_params;
   raytrace_params._raycaster = &raycaster;
 
   // Rendering.
-  renderer.render(buffer, width, height, line_step, pbf, scene_builder, raytrace_params);
+  renderer.render(buffer, width, height, line_step, pbf, scene, raytrace_params);
 }

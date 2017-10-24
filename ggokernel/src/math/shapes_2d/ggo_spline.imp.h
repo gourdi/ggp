@@ -60,11 +60,11 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  void spline<data_t>::move(data_t dx, data_t dy)
+  void spline<data_t>::move(const ggo::vec2<data_t> & m)
   {
     for (auto & point : _control_points)
     {
-      point.move(dx, dy);
+      point += m;
     }
   }
 

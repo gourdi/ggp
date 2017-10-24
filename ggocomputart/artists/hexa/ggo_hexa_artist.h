@@ -19,10 +19,9 @@ namespace ggo
 
     struct hexa_info
     {
-      float       _x;
-      float       _y;
-      float       _height;
-      std::string _key;
+      float _x;
+      float _y;
+      float _height;
     };
 
     static  std::pair<ggo::color_32f, ggo::color_32f> generate_colors();

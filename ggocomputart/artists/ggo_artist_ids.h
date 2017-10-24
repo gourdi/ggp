@@ -18,7 +18,7 @@ namespace ggo
     filling_squares, // 10
     voronoi,
     ikeda,
-    _____AVAILABLE_____,
+    demeco,
     vortex,
     plastic, //15
     mandelbrot,

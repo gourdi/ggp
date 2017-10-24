@@ -36,6 +36,7 @@
 #include "artists/rediff/ggo_rediff_animation_artist.h"
 #include "artists/entabeni/ggo_entabeni_bitmap_artist.h"
 #include "artists/cabrel/ggo_cabrel_bitmap_artist.h"
+#include "artists/demeco/ggo_demeco_bitmap_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS WRAPPER
@@ -207,6 +208,8 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::entabeni_bitmap_artist(width, height, line_step, pbf);
   case ggo::bitmap_artist_id::cabrel:
     return new ggo::cabrel_bitmap_artist(width, height, line_step, pbf);
+  case ggo::bitmap_artist_id::demeco:
+    return new ggo::demeco_bitmap_artist(width, height, line_step, pbf);
 
   // animation artists.
 	case ggo::bitmap_artist_id::smoke:

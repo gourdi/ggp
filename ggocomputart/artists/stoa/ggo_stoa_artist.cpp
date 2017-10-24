@@ -5,6 +5,7 @@
 #include <ggo_point_camera.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_marching_cubes.h>
+#include <ggo_octree_raycaster.h>
 
 namespace
 {
@@ -78,166 +79,6 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-// RAYCASTER
-ggo::stoa_artist::raycaster::raycaster(const std::vector<ggo::stoa_artist::face_object> & face_objects)
-:
-_octree({ get_bounding_box(face_objects), face_objects })
-{
-  auto recursion = [](ggo::tree<raycaster::node> & tree)
-  {
-    ggo::pos3f center = tree.data()._bounding_box.get_center();
-
-    std::array<raycaster::node, 8> nodes;
-
-    std::less_equal<float> le;
-    std::greater_equal<float> ge;
-
-    for (const auto & face_object : tree.data()._face_objects)
-    {
-      if (compare_face(face_object._face, center, le, le, le)) { nodes[0]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, le, le, ge)) { nodes[1]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, le, ge, le)) { nodes[2]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, le, ge, ge)) { nodes[3]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, ge, le, le)) { nodes[4]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, ge, le, ge)) { nodes[5]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, ge, ge, le)) { nodes[6]._face_objects.push_back(face_object); }
-      if (compare_face(face_object._face, center, ge, ge, ge)) { nodes[7]._face_objects.push_back(face_object); }
-    }
-
-    for (auto & node : nodes)
-    {
-      if (node._face_objects.empty() == false)
-      {
-        node._bounding_box = get_bounding_box(node._face_objects);
-        tree.create_leaf(node);
-      }
-    }
-
-    tree.data()._face_objects.clear();
-  };
-
-  _octree.visit_leaves(recursion);
-  _octree.visit_leaves(recursion);
-  _octree.visit_leaves(recursion);
-}
-
-//////////////////////////////////////////////////////////////
-const ggo::object3d_abc * ggo::stoa_artist::raycaster::hit_test(const ggo::ray3d_float & ray,
-                                                                float & dist,
-                                                                ggo::ray3d_float & local_normal,
-                                                                ggo::ray3d_float & world_normal,
-                                                                const ggo::object3d_abc * exclude_object1,
-                                                                const ggo::object3d_abc * exclude_object2) const
-{
-  const ggo::object3d_abc * hit_object = nullptr;
-  std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
-
-  dist = std::numeric_limits<float>::max();
-
-  while (trees.empty() == false)
-  {
-    std::vector<const ggo::tree<raycaster::node> *> sub_trees;
-
-    for (const auto * tree : trees)
-    {
-      // Fast reject.
-      if (tree->data()._bounding_box.is_point_inside(ray.pos()) == true || tree->data()._bounding_box.intersect_ray(ray) == true)
-      {
-        // Check for intersection.
-        for (const auto & face_object : tree->data()._face_objects)
-        {
-          float dist_cur = 0.f;
-          ggo::ray3d_float normal_cur;
-          if (face_object._face.intersect_ray(ray, dist_cur, normal_cur) == true &&
-              dist_cur < dist &&
-              exclude_object1 != face_object._object.get() &&
-              exclude_object2 != face_object._object.get())
-          {
-            dist = dist_cur;
-            local_normal = normal_cur;
-            world_normal = normal_cur;
-            hit_object = face_object._object.get();
-          }
-        }
-
-        // Recursion.
-        for (const auto & subtree : tree->subtrees())
-        {
-          sub_trees.push_back(&subtree);
-        }
-      }
-    }
-
-    trees = sub_trees;
-  }
-
-  return hit_object;
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::stoa_artist::raycaster::check_visibility(const ggo::ray3d_float & ray,
-                                                   float dist_max,
-                                                   const ggo::object3d_abc * exclude_object1,
-                                                   const ggo::object3d_abc * exclude_object2) const
-{
-  std::vector<const ggo::tree<raycaster::node> *> trees{ &_octree };
-
-  while (trees.empty() == false)
-  {
-    std::vector<const ggo::tree<raycaster::node> *> sub_trees;
-
-    for (const auto * tree : trees)
-    {
-      // Fast reject.
-      if (tree->data()._bounding_box.is_point_inside(ray.pos()) == true || tree->data()._bounding_box.intersect_ray(ray) == true)
-      {
-        // Check for intersection.
-        for (const auto & face_object : tree->data()._face_objects)
-        {
-          float dist = 0.f;
-          ggo::ray3d_float normal_cur;
-          if (face_object._face.intersect_ray(ray, dist, normal_cur) == true &&
-              dist < dist_max &&
-              exclude_object1 != face_object._object.get() &&
-              exclude_object2 != face_object._object.get())
-          {
-            return true;
-          }
-        }
-
-        // Recursion.
-        for (const auto & subtree : tree->subtrees())
-        {
-          sub_trees.push_back(&subtree);
-        }
-      }
-    }
-
-    trees = sub_trees;
-  }
-
-  return false;
-}
-
-//////////////////////////////////////////////////////////////
-ggo::aabox3d_float ggo::stoa_artist::raycaster::get_bounding_box(const std::vector<ggo::stoa_artist::face_object> & face_objects)
-{
-  ggo::aabox3d_float bounding_box(0.f, 0.f, 0.f, 0.f, 0.f, 0.f);
-
-  for (const auto & face_object : face_objects)
-  {
-    bounding_box.merge_with(face_object._face.v1()._pos);
-    bounding_box.merge_with(face_object._face.v2()._pos);
-    bounding_box.merge_with(face_object._face.v3()._pos);
-  }
-
-  return bounding_box;
-}
-
-//////////////////////////////////////////////////////////////
-// ARTIST
-
-//////////////////////////////////////////////////////////////
 ggo::stoa_artist::stoa_artist(int steps)
 {
   // Objects.
@@ -273,8 +114,6 @@ ggo::stoa_artist::stoa_artist(int steps)
   const float range = 3.2f;
   auto cells = ggo::marching_cubes(density_func, ggo::pos3f(-range, -range, -range), steps, 2 * range / steps);
 
-  std::vector<ggo::stoa_artist::face_object> face_objects;
-
   for (const auto & cell : cells)
   {
     for (const auto & triangle : cell._triangles)
@@ -283,18 +122,9 @@ ggo::stoa_artist::stoa_artist(int steps)
       auto v2 = compute_vertex(density_func, triangle.v2());
       auto v3 = compute_vertex(density_func, triangle.v3());
 
-      ggo::face3d<float, true> face(v1, v2, v3);
-
-      using object_t = ggo::diffuse_object3d<ggo::discard_all, ggo::face3d<float, true>, ggo::solid_color_material>;
-      auto object = std::make_shared<object_t>(face, ggo::white_material());
-
-      ggo::stoa_artist::face_object face_object{ object, face };
-
-      face_objects.push_back(face_object);
+      _faces.emplace_back(v1, v2, v3);
     }
   }
-
-  _raycaster.reset(new ggo::stoa_artist::raycaster(face_objects));
 }
 
 //////////////////////////////////////////////////////////////
@@ -304,12 +134,20 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
 {
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::color_32f>(hue, 1.f, 1.f)));
 
+  // Faces.
+  for (const auto & face : _faces)
+  {
+    scene.add_diffuse_object<ggo::discard_all, ggo::face3d<float, true>, ggo::solid_color_material>(face, ggo::white_material());
+  }
+
   // Lights.
   scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.8f), light_pos1, 1);
   scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), light_pos2, 1);
 
   // Rendering.
+  ggo::octree_raycaster raycaster(scene);
+
   ggo::raytrace_params params;
-  params._raycaster = _raycaster.get();
+  params._raycaster = &raycaster;
   renderer.render(buffer, width, height, line_step, pbf, scene, params);
 }

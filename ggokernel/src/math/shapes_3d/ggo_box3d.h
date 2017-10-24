@@ -37,10 +37,10 @@ namespace ggo
   
     void              get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const;
 
-    ggo::pos3<data_t> get_center() const { _data.get_center(); }
-    data_t			      get_size_x() const { _data.get_size_x(); }
-    data_t			      get_size_y() const { _data.get_size_y(); }
-    data_t			      get_size_z() const { _data.get_size_z(); }
+    ggo::pos3<data_t> get_center() const { return _data.get_center(); }
+    data_t			      get_size_x() const { return _data.get_size_x(); }
+    data_t			      get_size_y() const { return _data.get_size_y(); }
+    data_t			      get_size_z() const { return _data.get_size_z(); }
 
   private:
 

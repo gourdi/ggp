@@ -10,21 +10,22 @@ namespace
   {
   public:
 
-          ggo_boxes_tree_shape(ggo::tree<ggo::aabox3d_float> * tree) : _tree(tree) {}
+          ggo_boxes_tree_shape(ggo::tree<ggo::box3d_float> * tree) : _tree(tree) {}
 
-    bool  intersect_ray(const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal) const override;
-    bool  is_convex() const override { return false; }
+    bool                                  intersect_ray(const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal) const override;
+    bool                                  is_convex() const override { return false; }
+    std::optional<ggo::box3d_data_float>  get_bounding_box(const ggo::basis3d_float & basis) const override { return {}; }
 
-    ggo::tree<ggo::aabox3d_float> * _tree;
+    ggo::tree<ggo::box3d_float> * _tree;
   };
 }
 
 namespace
 {
   //////////////////////////////////////////////////////////////
-  bool tree_intersect_ray(const ggo::tree<ggo::aabox3d_float> & tree, const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal)
+  bool tree_intersect_ray(const ggo::tree<ggo::box3d_float> & tree, const ggo::ray3d<float> & ray, float & dist, ggo::ray3d<float> & normal)
   {
-    const ggo::aabox3d_float & box = tree.data();
+    const ggo::box3d_float & box = tree.data();
     bool intersect = box.intersect_ray(ray, dist, normal);
     
     if (intersect == false)
@@ -66,7 +67,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void split_box27(const ggo::aabox3d_float & box, std::vector<ggo::aabox3d_float> & boxes)
+  void split_box27(const ggo::box3d_float & box, std::vector<ggo::box3d_float> & boxes)
   {
     float x1 = ggo::rand<float>(box.x_min() + 2 / 9.f * box.get_size_x(), box.x_min() + 4 / 9.f * box.get_size_x());
     float y1 = ggo::rand<float>(box.y_min() + 2 / 9.f * box.get_size_y(), box.y_min() + 4 / 9.f * box.get_size_y());
@@ -76,48 +77,48 @@ namespace
     float y2 = ggo::rand<float>(box.y_min() + 5 / 9.f * box.get_size_y(), box.y_min() + 7 / 9.f * box.get_size_y());
     float z2 = ggo::rand<float>(box.z_min() + 5 / 9.f * box.get_size_z(), box.z_min() + 7 / 9.f * box.get_size_z());
 
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, box.y_min(), y1, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, box.y_min(), y1, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, box.y_min(), y1, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y1, y2, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y1, y2, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y1, y2, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y2, box.y_max(), box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y2, box.y_max(), z1, z2));
-    boxes.push_back(ggo::aabox3d_float(box.x_min(), x1, y2, box.y_max(), z2, box.z_max()));
+    boxes.emplace_back(box.x_min(), x1, box.y_min(), y1, box.z_min(), z1);
+    boxes.emplace_back(box.x_min(), x1, box.y_min(), y1, z1, z2);
+    boxes.emplace_back(box.x_min(), x1, box.y_min(), y1, z2, box.z_max());
+    boxes.emplace_back(box.x_min(), x1, y1, y2, box.z_min(), z1);
+    boxes.emplace_back(box.x_min(), x1, y1, y2, z1, z2);
+    boxes.emplace_back(box.x_min(), x1, y1, y2, z2, box.z_max());
+    boxes.emplace_back(box.x_min(), x1, y2, box.y_max(), box.z_min(), z1);
+    boxes.emplace_back(box.x_min(), x1, y2, box.y_max(), z1, z2);
+    boxes.emplace_back(box.x_min(), x1, y2, box.y_max(), z2, box.z_max());
 
-    boxes.push_back(ggo::aabox3d_float(x1, x2, box.y_min(), y1, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, box.y_min(), y1, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, box.y_min(), y1, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y1, y2, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y1, y2, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y1, y2, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y2, box.y_max(), box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y2, box.y_max(), z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x1, x2, y2, box.y_max(), z2, box.z_max()));
+    boxes.emplace_back(x1, x2, box.y_min(), y1, box.z_min(), z1);
+    boxes.emplace_back(x1, x2, box.y_min(), y1, z1, z2);
+    boxes.emplace_back(x1, x2, box.y_min(), y1, z2, box.z_max());
+    boxes.emplace_back(x1, x2, y1, y2, box.z_min(), z1);
+    boxes.emplace_back(x1, x2, y1, y2, z1, z2);
+    boxes.emplace_back(x1, x2, y1, y2, z2, box.z_max());
+    boxes.emplace_back(x1, x2, y2, box.y_max(), box.z_min(), z1);
+    boxes.emplace_back(x1, x2, y2, box.y_max(), z1, z2);
+    boxes.emplace_back(x1, x2, y2, box.y_max(), z2, box.z_max());
 
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), box.y_min(), y1, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), box.y_min(), y1, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), box.y_min(), y1, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y1, y2, box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y1, y2, z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y1, y2, z2, box.z_max()));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y2, box.y_max(), box.z_min(), z1));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y2, box.y_max(), z1, z2));
-    boxes.push_back(ggo::aabox3d_float(x2, box.x_max(), y2, box.y_max(), z2, box.z_max()));
+    boxes.emplace_back(x2, box.x_max(), box.y_min(), y1, box.z_min(), z1);
+    boxes.emplace_back(x2, box.x_max(), box.y_min(), y1, z1, z2);
+    boxes.emplace_back(x2, box.x_max(), box.y_min(), y1, z2, box.z_max());
+    boxes.emplace_back(x2, box.x_max(), y1, y2, box.z_min(), z1);
+    boxes.emplace_back(x2, box.x_max(), y1, y2, z1, z2);
+    boxes.emplace_back(x2, box.x_max(), y1, y2, z2, box.z_max());
+    boxes.emplace_back(x2, box.x_max(), y2, box.y_max(), box.z_min(), z1);
+    boxes.emplace_back(x2, box.x_max(), y2, box.y_max(), z1, z2);
+    boxes.emplace_back(x2, box.x_max(), y2, box.y_max(), z2, box.z_max());
   }
 }
 
 //////////////////////////////////////////////////////////////
-std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count)
+std::vector<ggo::tree<ggo::box3d_float> *> ggo::cumbia_artist::init_common(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count)
 {
   float dimension = ggo::rand<float>(0.2f, 0.5f);
 	float search_ratio = ggo::rand<float>(0, 0.3f);
 	float reflection_factor = ggo::rand<float>(0.2f, 0.4f);
 	
-	_boxes_tree.reset(new ggo::tree<ggo::aabox3d_float>(ggo::aabox3d_float(-1, 1, -1, 1, -1, 1)));
+	_boxes_tree.reset(new ggo::tree<ggo::box3d_float>(ggo::box3d_float(-1, 1, -1, 1, -1, 1)));
 
-	std::vector<ggo::tree<ggo::aabox3d_float> *> leaves;
+	std::vector<ggo::tree<ggo::box3d_float> *> leaves;
 	leaves.push_back(_boxes_tree.get());
 
 	// Create boxes tree.
@@ -127,25 +128,25 @@ std::vector<ggo::tree<ggo::aabox3d_float> *> ggo::cumbia_artist::init_common(ggo
 		// Pick up a leaf.
     int sup = ggo::round_to<int>(search_ratio * (static_cast<int>(leaves.size()) - 1));
 		int index = ggo::rand<int>(0, sup);
-		ggo::tree<ggo::aabox3d_float> * leaf = leaves[index];
+		ggo::tree<ggo::box3d_float> * leaf = leaves[index];
 		leaves.erase(leaves.begin() + index);
 
 		// Split it.
-		std::vector<ggo::aabox3d_float> new_boxes;
+		std::vector<ggo::box3d_float> new_boxes;
 		split_box27(leaf->data(), new_boxes);
 
 		// Insert new boxes in the tree, and in the leaves' list.
-		for (ggo::aabox3d_float & new_box : new_boxes)
+		for (ggo::box3d_float & new_box : new_boxes)
 		{
 			float d = new_box.get_center().get_length();
 			if (d < dimension + ggo::rand<float>())
 			{
-				std::vector<ggo::tree<ggo::aabox3d_float> *>::iterator insert_it;
+				std::vector<ggo::tree<ggo::box3d_float> *>::iterator insert_it;
 
 				float size_max1 = std::max(new_box.get_size_x(), std::max(new_box.get_size_y(), new_box.get_size_z()));
 				for (insert_it = leaves.begin(); insert_it != leaves.end(); ++insert_it)
 				{
-					const ggo::aabox3d_float & box2 = (*insert_it)->data();
+					const ggo::box3d_float & box2 = (*insert_it)->data();
 					float size_max2 = std::max(box2.get_size_x(), std::max(box2.get_size_y(), box2.get_size_z()));
 					if (size_max1 >= size_max2)
 					{

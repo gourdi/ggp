@@ -36,7 +36,7 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
   float translation = ggo::ease_in(frame_index, fade_in_anim_duration, 1.f, 0.f);
   float dx = 10 * (pos.x() - width / 2);
   float dy = 10 * (pos.y() - height / 2);
-  square.move(pos.x() + translation * dx, pos.y() + translation * dy);
+  square.move({ pos.x() + translation * dx, pos.y() + translation * dy });
 
   // Painting.
   float opacity = ggo::ease_in(frame_index, fade_in_anim_duration, 0.f, 1.f);

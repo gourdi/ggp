@@ -25,7 +25,7 @@ namespace ggo
     
     std::vector<ggo::pos2<data_t>>	evaluate(int steps) const;
 
-    void	                	        move(data_t dx, data_t dy) override;
+    void	                	        move(const ggo::vec2<data_t> & m) override;
     void	                	        rotate(data_t angle, const ggo::pos2<data_t> & center) override;
 
   private:

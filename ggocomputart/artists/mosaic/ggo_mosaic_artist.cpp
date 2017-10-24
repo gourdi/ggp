@@ -47,7 +47,7 @@ namespace
     for (int i = 0; i < polygon1.get_points_count(); ++i)
     {
       const ggo::pos2f & p1 = polygon1.get_point(i);
-      if (polygon2.is_point_inside(p1.get<0>(), p1.get<1>()) == false)
+      if (polygon2.is_point_inside(p1) == false)
       {
         all_points_inside = false;
         break;
@@ -62,7 +62,7 @@ namespace
     for (int i = 0; i < polygon2.get_points_count(); ++i)
     {
       const ggo::pos2f & p2 = polygon2.get_point(i);
-      if (polygon1.is_point_inside(p2.get<0>(), p2.get<1>()) == false)
+      if (polygon1.is_point_inside(p2) == false)
       {
         all_points_inside = false;
         break;
@@ -201,7 +201,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 						std::vector<ggo::pos2f> & points = seeds[i1]._points;
 						for (int i2 = static_cast<int>(points.size()) - 1; i2 >= 0; --i2)
 						{
-							if (polygon.is_point_inside(points[i2].get<0>(), points[i2].get<1>()) == true)
+							if (polygon.is_point_inside(points[i2]) == true)
 							{
 								points.erase(points.begin() + i2);
 							}
