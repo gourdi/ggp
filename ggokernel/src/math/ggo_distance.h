@@ -65,6 +65,18 @@ namespace ggo
   {
     return distance(pos1[0], pos1[1], pos2[0], pos2[1]);
   }
+
+  template <typename data_t>
+  data_t hypot(const ggo::pos2<data_t> & pos1, const ggo::pos2<data_t> & pos2)
+  {
+    return hypot(pos1.x(), pos1.y(), pos2.x(), pos2.y());
+  }
+
+  template <typename data_t>
+  data_t distance(const ggo::pos2<data_t> & pos1, const ggo::pos2<data_t> & pos2)
+  {
+    return std::sqrt(hypot(pos1, pos2));
+  }
 }
 
 //////////////////////////////////////////////////////////////

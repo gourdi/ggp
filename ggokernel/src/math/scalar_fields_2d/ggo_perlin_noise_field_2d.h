@@ -54,7 +54,7 @@ namespace ggo
   {
     for (auto & noise_value : _noise)
     {
-      noise_value = ggo::rand<data_t>(0, amplitude);
+      noise_value = ggo::rand<data_t>(-amplitude, amplitude);
     }
   }
 
