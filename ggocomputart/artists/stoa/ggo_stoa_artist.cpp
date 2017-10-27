@@ -53,7 +53,7 @@ namespace
       y += _offset_y;
       z += _offset_z;
 
-      return _amplitude * ggo::bilinear_interpolation3d(_noise3d.data(), 16, 16, 16, _scale * x, _scale * y, _scale * z);
+      return _amplitude * ggo::linear_interpolation3d(_noise3d.data(), 16, 16, 16, _scale * x, _scale * y, _scale * z);
     }
 
     std::array<float, 16 * 16 * 16> _noise3d;

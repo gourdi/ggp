@@ -9,40 +9,40 @@ namespace ggo
 {
   class invalid_points_number_exception : public std::exception { };
 
-  template <typename T_X, typename T_Y>
+  template <typename t_x, typename t_y>
   class curve_abc
   {
   public:
 
-    using coord_t = T_X;
-    using data_t = T_Y;
+    using coord_t = t_x;
+    using data_t = t_y;
 
     void		                      reset();
-    void		                      push_point(T_X x, T_Y y);
+    void		                      push_point(t_x x, t_y y);
 
-    const std::pair<T_X, T_Y> &   back() const { return _points.back(); }
+    const std::pair<t_x, t_y> &   back() const { return _points.back(); }
 
-    virtual	T_Y	                  evaluate(T_X x) const = 0;
+    virtual	t_y	                  evaluate(t_x x) const = 0;
 
   protected:
 
-    std::vector<std::pair<T_X, T_Y>>	_points;
+    std::vector<std::pair<t_x, t_y>>	_points;
   };
 
-  template <typename T_X, typename T_Y>
-  class linear_curve : public curve_abc<T_X, T_Y>
+  template <typename t_x, typename t_y>
+  class linear_curve : public curve_abc<t_x, t_y>
   {
   public:
 
-    T_Y evaluate(T_X x) const override;
+    t_y evaluate(t_x x) const override;
   };
 
-  template <typename T_X, typename T_Y>
-  class cubic_curve : public curve_abc<T_X, T_Y>
+  template <typename t_x, typename t_y>
+  class cubic_curve : public curve_abc<t_x, t_y>
   {
   public:
 
-    T_Y evaluate(T_X x) const override;
+    t_y evaluate(t_x x) const override;
   };
 }
 
@@ -61,15 +61,15 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T_X, typename T_Y>
-  void curve_abc<T_X, T_Y>::reset()
+  template <typename t_x, typename t_y>
+  void curve_abc<t_x, t_y>::reset()
   {
     _points.clear();
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T_X, typename T_Y>
-  void curve_abc<T_X, T_Y>::push_point(T_X x, T_Y y)
+  template <typename t_x, typename t_y>
+  void curve_abc<t_x, t_y>::push_point(t_x x, t_y y)
   {
     auto it = _points.begin();
     
@@ -85,8 +85,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T_X, typename T_Y>
-  T_Y linear_curve<T_X, T_Y>::evaluate(T_X x) const
+  template <typename t_x, typename t_y>
+  t_y linear_curve<t_x, t_y>::evaluate(t_x x) const
   {
     if (this->_points.size() < 2)
     {
@@ -126,8 +126,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename T_X, typename T_Y>
-  T_Y cubic_curve<T_X, T_Y>::evaluate(T_X x) const
+  template <typename t_x, typename t_y>
+  t_y cubic_curve<t_x, t_y>::evaluate(t_x x) const
   {
     if (this->_points.size() < 4)
     {

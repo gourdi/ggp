@@ -10,10 +10,10 @@
 namespace ggo
 {
   template <typename data_t, typename getter, typename interpolation_t>
-  data_t bilinear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
+  data_t linear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
 
   template <typename data_t, typename getter, typename interpolation_t>
-  data_t bicubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
+  data_t cubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -22,38 +22,38 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, typename interpolation_t, ggo::direction lines_memory_order>
-  inline data_t bilinear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
+  inline data_t linear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
     auto in = [&](int x, int y) { return ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step); };
 
-    return bilinear_interpolation2d<data_t>(in, x, y);
+    return linear_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::direction lines_memory_order>
-  inline uint8_t bilinear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
+  inline uint8_t linear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
     auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step)); };
 
-    return ggo::round_to<uint8_t>(bilinear_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(linear_interpolation2d<float>(in, x, y));
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, typename interpolation_t, ggo::direction lines_memory_order>
-  inline data_t bicubic_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
+  inline data_t cubic_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
     auto in = [&](int x, int y) { return ggo::get2d_mirror<ggo::lines_typed_memory_access<lines_memory_order>>(input, x, y, width, height, line_byte_step); };
 
-    return bicubic_interpolation2d<data_t>(in, x, y);
+    return cubic_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::direction lines_memory_order>
-  inline uint8_t bicubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
+  inline uint8_t cubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
     auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_memory_order>(input, x, y, width, height, line_byte_step)); };
 
-    return ggo::round_to<uint8_t>(bicubic_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(cubic_interpolation2d<float>(in, x, y));
   }
 }
 
@@ -63,7 +63,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, typename getter, typename interpolation_t>
-  data_t bilinear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
+  data_t linear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
   {
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
@@ -94,7 +94,7 @@ namespace ggo
   
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, typename getter, typename interpolation_t>
-  data_t bicubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
+  data_t cubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
   {
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
