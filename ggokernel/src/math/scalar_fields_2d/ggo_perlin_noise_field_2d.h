@@ -7,7 +7,7 @@
 
 namespace ggo
 {
-  template <typename data_t = float>
+  template <typename data_t = float, bool positive_only = true>
   class perlin_noise_field2d : public scalar_field_2d_abc<data_t>
   {
   public:
@@ -44,8 +44,8 @@ namespace ggo
 // Implementation
 namespace ggo
 {
-  template <typename data_t>
-  perlin_noise_field2d<data_t>::octave::octave(data_t scale, data_t amplitude, data_t angle, int noise_size)
+  template <typename data_t, bool positive_only>
+  perlin_noise_field2d<data_t, positive_only>::octave::octave(data_t scale, data_t amplitude, data_t angle, int noise_size)
   :
   _scale(scale),
   _angle(angle),
@@ -54,12 +54,12 @@ namespace ggo
   {
     for (auto & noise_value : _noise)
     {
-      noise_value = ggo::rand<data_t>(-amplitude, amplitude);
+      noise_value = ggo::rand<data_t>(positive_only ? data_t(0) : -amplitude, amplitude);
     }
   }
 
-  template <typename data_t>
-  data_t perlin_noise_field2d<data_t>::octave::evaluate(data_t x, data_t y) const
+  template <typename data_t, bool positive_only>
+  data_t perlin_noise_field2d<data_t, positive_only>::octave::evaluate(data_t x, data_t y) const
   {
     x /= _scale;
     y /= _scale;
@@ -74,8 +74,8 @@ namespace ggo
       _noise.data(), _noise_size, _noise_size, _noise_size * sizeof(data_t), x, y);
   }
       
-  template <typename data_t>
-  data_t perlin_noise_field2d<data_t>::octave::get(int x, int y) const
+  template <typename data_t, bool positive_only>
+  data_t perlin_noise_field2d<data_t, positive_only>::octave::get(int x, int y) const
   {
     x = ggo::pos_mod(x, _noise_size);
     y = ggo::pos_mod(y, _noise_size);
@@ -83,14 +83,14 @@ namespace ggo
     return _noise(y * _noise_size + x);
   }
 
-  template <typename data_t>
-  void perlin_noise_field2d<data_t>::add_octave(data_t scale, data_t amplitude, data_t angle, int noise_size)
+  template <typename data_t, bool positive_only>
+  void perlin_noise_field2d<data_t, positive_only>::add_octave(data_t scale, data_t amplitude, data_t angle, int noise_size)
   {
     _octaves.emplace_back(scale, amplitude, angle, noise_size);
   }
 
-  template <typename data_t>
-  data_t perlin_noise_field2d<data_t>::evaluate(data_t x, data_t y) const
+  template <typename data_t, bool positive_only>
+  data_t perlin_noise_field2d<data_t, positive_only>::evaluate(data_t x, data_t y) const
   {
     data_t result(0);
     for (const auto & octave : _octaves)

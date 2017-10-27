@@ -1,39 +1,48 @@
 #ifndef __GGO_HEXA_ARTIST__
 #define __GGO_HEXA_ARTIST__
 
-#include <ggo_scalar_field_2d_abc.h>
 #include <ggo_vec.h>
+#include <ggo_random_interpolator_abc.h>
+#include <ggo_shapes3d.h>
 #include <ggo_color.h>
-#include <ggo_pixel_buffer.h>
-#include <memory>
+#include <ggo_pixel_buffer_format.h>
 #include <vector>
 
 namespace ggo
 {
-  class object3d;
   class renderer_abc;
 
   class hexa_artist
   {
   public:
 
-    struct hexa_info
+                  hexa_artist(bool enable_roughness);
+
+    basis3d_float generate_camera_basis(float progress) const;
+
+    void          render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+                         float progress, ggo::renderer_abc & renderer);
+
+  public:
+
+    struct sinusoid
     {
-      float _x;
-      float _y;
-      float _height;
+      float _wave_length;
+      float _amplitude;
+      float _angle;
+      float _phase_inf;
+      float _phase_sup;
     };
 
-    static  std::pair<ggo::color_32f, ggo::color_32f> generate_colors();
-    static  std::vector<ggo::pos3f>                   generate_light_positions();
-    static  std::vector<hexa_info>                    generate_hexa_infos();
+  private:
 
-    static  void                                      render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
-                                                             const std::vector<hexa_info> & hexa_infos,
-                                                             const ggo::color_32f & color_top, const ggo::color_32f & color_side,
-                                                             const std::vector<ggo::pos3f> & lights_pos,
-                                                             const ggo::color_32f & fog_color,
-                                                             ggo::renderer_abc & renderer);
+    bool                  _enable_roughness;
+    std::vector<sinusoid> _sinusoids;
+    ggo::color_32f        _side_color;
+    ggo::color_32f        _top_color;
+    ggo::color_32f        _back_color;
+    float                 _camera_angle_start;
+    float                 _camera_angle_end;
   };
 }
 

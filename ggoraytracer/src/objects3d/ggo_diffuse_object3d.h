@@ -19,7 +19,7 @@ namespace ggo
     ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
-    ggo::color_32f  compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
+    ggo::color_32f    compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
 
   private:
 

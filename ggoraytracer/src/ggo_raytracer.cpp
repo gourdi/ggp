@@ -54,7 +54,7 @@ namespace ggo
       ggo::color_32f light_color = light->get_emissive_color();
       if (_scene.fog() != nullptr)
       {
-        light_color = _scene.fog()->process_segment(light_pos, world_normal.pos(), light_color);
+        light_color = _scene.fog()->process_light_segment(light_pos, world_normal.pos(), light_color);
       }
 
       result.emplace_back(ray_to_light, light_color);

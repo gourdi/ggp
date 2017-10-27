@@ -70,7 +70,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
 
   // The fog.
-  scene.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 25.f));
+  scene.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 0.f, 25.f));
 
 	// Setup the camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });

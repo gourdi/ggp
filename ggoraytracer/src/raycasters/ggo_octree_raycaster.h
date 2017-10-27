@@ -13,7 +13,7 @@ namespace ggo
   {
   public:
 
-    octree_raycaster(const scene & scene);
+    octree_raycaster(const scene & scene, int depth = 3);
 
     std::optional<hit_data> hit_test(const ggo::ray3d_float & ray,
                                      const ggo::object3d_abc * exclude_object1,

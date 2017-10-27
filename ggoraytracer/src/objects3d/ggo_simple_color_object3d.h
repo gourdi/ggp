@@ -6,7 +6,7 @@
 namespace ggo
 {
   template <uint32_t flags, typename shape_t, typename material_t>
-  class simple_color_object3d : public shape_object3d_abc<discard_basis, shape_t>
+  class simple_color_object3d : public shape_object3d_abc<flags, shape_t>
   {
   public:
 

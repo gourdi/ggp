@@ -24,14 +24,8 @@ namespace ggo
 
   private:
 
-    int                                       _frame_index;
-    ggo::color_32f                            _color_top;
-    ggo::color_32f                            _color_side;
-    float                                     _camera_rotation_start;
-    float                                     _camera_rotation_end;
-    std::vector<ggo::pos3f>                   _lights_pos;
-    ggo::color_32f                            _fog_color;
-    std::vector<ggo::hexa_artist::hexa_info>  _hexa_infos;
+    int                               _frame_index;
+    std::unique_ptr<ggo::hexa_artist> _artist;
   };
 }
 

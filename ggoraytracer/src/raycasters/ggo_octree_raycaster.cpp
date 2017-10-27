@@ -6,7 +6,7 @@
 
 namespace
 {
-  std::pair<std::vector<const ggo::object3d_abc *>, const ggo::octree_raycaster::octree_t *> build_octree(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & shapes)
+  std::pair<std::vector<const ggo::object3d_abc *>, const ggo::octree_raycaster::octree_t *> build_octree(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & shapes, int depth)
   {
     std::vector<const ggo::object3d_abc *> unbounded_shapes;
     std::map<const ggo::object3d_abc *, ggo::box3d_data_float> bounded_shapes;
@@ -39,8 +39,6 @@ namespace
     // The octree constructor expects interators on "const ggo::object3d_abc *".
     auto adaptor = ggo::make_adaptor(bounded_shapes, [](const auto & it) { return it.first; });
 
-    constexpr int depth = 3;
-
     return { unbounded_shapes, new ggo::octree_raycaster::octree_t(adaptor.begin(), adaptor.end(), get_bounding_box, depth) };
   }
 }
@@ -48,10 +46,10 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  octree_raycaster::octree_raycaster(const scene & scene)
+  octree_raycaster::octree_raycaster(const scene & scene, int depth)
   {
-    auto visible = build_octree(scene.visible_objects());
-    auto casting_shadows = build_octree(scene.casting_shadows_objects());
+    auto visible = build_octree(scene.visible_objects(), depth);
+    auto casting_shadows = build_octree(scene.casting_shadows_objects(), depth);
 
     _visible_objects_tree.reset(visible.second);
     _casting_shadows_objects_tree.reset(casting_shadows.second);
