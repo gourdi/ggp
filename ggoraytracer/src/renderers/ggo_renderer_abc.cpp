@@ -100,8 +100,6 @@ namespace ggo
         threads_count = *value;
       }
     }
-
-    threads_count = 6;
     
     std::cout << "Rendering threads count: " << threads_count << std::endl;
 
