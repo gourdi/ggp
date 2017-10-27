@@ -21,7 +21,7 @@ namespace ggo
     basis3d_float generate_camera_basis(float progress) const;
 
     void          render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
-                         float progress, ggo::renderer_abc & renderer);
+                         float progress, ggo::renderer_abc & renderer) const;
 
   public:
 

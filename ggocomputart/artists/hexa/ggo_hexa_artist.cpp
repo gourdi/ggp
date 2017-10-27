@@ -145,7 +145,7 @@ _enable_roughness(enable_roughness)
 
 //////////////////////////////////////////////////////////////
 void ggo::hexa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
-                              float progress, ggo::renderer_abc & renderer)
+                              float progress, ggo::renderer_abc & renderer) const
 {
 
   ggo::scene scene(std::make_shared<ggo::background3d_color>(_back_color));
