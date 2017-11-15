@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <iterator>
+#include <vector>
 
 namespace ggo
 {

@@ -13,10 +13,12 @@ namespace ggo
 
     circular_buffer(int size) : _buffer(size) {}
 
-    void push(const data_t & v) {
+    void push(const data_t & v)
+    {
       _buffer[_push_index] = v;
       ++_push_index;
-      if (_push_index == _buffer.size()) {
+      if (_push_index == _buffer.size())
+      {
         _push_index = 0;
       }
 #ifdef GGO_DEBUG
@@ -25,14 +27,16 @@ namespace ggo
 #endif
     }
 
-    data_t pop() {
+    data_t pop()
+    {
 #ifdef GGO_DEBUG
       --_size;
       GGO_ASSERT(_size >= 0);
 #endif
       auto v = _buffer[_pop_index];
       ++_pop_index;
-      if (_pop_index == _buffer.size()) {
+      if (_pop_index == _buffer.size())
+      {
         _pop_index = 0;
       }
       return v;
