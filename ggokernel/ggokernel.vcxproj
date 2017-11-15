@@ -91,7 +91,6 @@
     <ClInclude Include="src\ggo_log.h" />
     <ClInclude Include="src\ggo_rect_int.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
-    <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_string_helpers.h" />
     <ClInclude Include="src\ggo_kernel.h" />
