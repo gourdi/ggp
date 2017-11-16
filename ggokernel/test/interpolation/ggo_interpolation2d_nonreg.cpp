@@ -39,11 +39,11 @@ GGO_TEST(interpolation2d, bilinear)
 
     return ggo::linear_interpolation2d<float>(in, x, y);
   };
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, 0.f, 0.25f), 0.25f);
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, 2.f, 0.75f), 2.75f);
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, -1.f, -3.5f), 0.5f);
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, -1.5f, -3.5f), 1.25f);
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, 0.5f, 0.5f), 1.25f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, 0.f, 0.25f), 0.25f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, 2.f, 0.75f), 2.75f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, -1.f, -3.5f), 0.5f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, -1.5f, -3.5f), 1.25f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, 0.5f, 0.5f), 1.25f);
 }
 
 /////////////////////////////////////////////////////////////////////  
@@ -73,6 +73,6 @@ GGO_TEST(interpolation2d, bicubic)
     return ggo::cubic_interpolation2d<float>(in, x, y);
   };
 
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, -1, -1), 0.f);
-  GGO_CHECK_FABS(float_interpolation(data.data(), 3, 2, 3, 2), 3.f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, -1, -1), 0.f);
+  GGO_CHECK_FLOAT_EQ(float_interpolation(data.data(), 3, 2, 3, 2), 3.f);
 }

@@ -19,7 +19,7 @@ GGO_TEST(gaussian_blur, kernel_floating_point)
   for (const auto & stddev_threshold : stddev_thresholds)
   {
     auto kernel = ggo::build_gaussian_kernel(stddev_threshold.first, stddev_threshold.second);
-    GGO_CHECK_FABS(compute_norm(kernel), 1.f);
+    GGO_CHECK_FLOAT_EQ(compute_norm(kernel), 1.f);
   }
 }
 
@@ -76,13 +76,13 @@ GGO_TEST(gaussian_blur, 1d_32f_zero)
 
   ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel.data(), kernel.size());
 
-  GGO_CHECK_FABS(out[0], 0.f);
-  GGO_CHECK_FABS(out[1], 0.0219296496f);
-  GGO_CHECK_FABS(out[2], 0.228512138f);
-  GGO_CHECK_FABS(out[3], 0.499116361f);
-  GGO_CHECK_FABS(out[4], 0.228512138f);
-  GGO_CHECK_FABS(out[5], 0.0219296496f);
-  GGO_CHECK_FABS(out[6], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[0], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[1], 0.0219296496f);
+  GGO_CHECK_FLOAT_EQ(out[2], 0.228512138f);
+  GGO_CHECK_FLOAT_EQ(out[3], 0.499116361f);
+  GGO_CHECK_FLOAT_EQ(out[4], 0.228512138f);
+  GGO_CHECK_FLOAT_EQ(out[5], 0.0219296496f);
+  GGO_CHECK_FLOAT_EQ(out[6], 0.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -229,7 +229,7 @@ GGO_TEST(gaussian_blur, 2d_32f_zero)
 
   for (size_t i = 0; i < out.size(); ++i)
   {
-    GGO_CHECK_FABS(out[i], ref[i]);
+    GGO_CHECK_FLOAT_EQ(out[i], ref[i]);
   }
 }
 

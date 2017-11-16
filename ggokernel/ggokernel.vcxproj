@@ -225,7 +225,6 @@
     <ClCompile Include="src\math\marching_algorithms\ggo_marching_squares.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_dct.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
     <ClCompile Include="src\nonreg\ggo_unit_test.cpp" />

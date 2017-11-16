@@ -9,11 +9,11 @@ GGO_TEST(harmonic_surface, harmonic_surface)
   
   harmonic_surface.push_harmonic({1.f, 1.f}, 100, 1, 0);
   
-  GGO_CHECK_FABS(harmonic_surface.evaluate(0, 0), 1);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(100 / std::sqrt(2.f), 100 / std::sqrt(2.f)), 1);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(100 * std::sqrt(2.f), 0), 1);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(0, 100 * std::sqrt(2.f)), 1);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(0, 75 * std::sqrt(2.f)), 0);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(0, 50 * std::sqrt(2.f)), -1);
-  GGO_CHECK_FABS(harmonic_surface.evaluate(0, 25 * std::sqrt(2.f)), 0);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(0, 0), 1);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(100 / std::sqrt(2.f), 100 / std::sqrt(2.f)), 1);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(100 * std::sqrt(2.f), 0), 1);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(0, 100 * std::sqrt(2.f)), 1);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(0, 75 * std::sqrt(2.f)), 0);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(0, 50 * std::sqrt(2.f)), -1);
+  GGO_CHECK_FLOAT_EQ(harmonic_surface.evaluate(0, 25 * std::sqrt(2.f)), 0);
 }

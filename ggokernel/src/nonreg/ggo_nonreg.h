@@ -19,7 +19,7 @@
 
 #define GGO_CHECK(cond) {if (!((cond))) { \
                           ++_failed_count; \
-                          std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << "\n"; \
+                          std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << ": " << #cond << std::endl; \
                         } }
 
 #define GGO_CHECK_EQ(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
@@ -36,11 +36,11 @@
                                 << " [=" << eval1 << "] == " << #v2 << " [=" << eval2 << "]" << std::endl;\
                               } }
 
-#define GGO_CHECK_FABS(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
-                                if (std::fabs(eval1 - eval2) > 0.0001) { \
-                                  ++_failed_count; \
-                                  std::cout << ggo::red_color << "** TEST FAILED ** (" << __FILE__ << ':' << __LINE__ << ggo::default_color << ") " << \
-                                  eval1 << " != " << eval2 << std::endl; \
-                                } }
+#define GGO_CHECK_FLOAT_EQ(v1, v2) {auto eval1 = (v1); auto eval2 = (v2); \
+                                    if (std::fabs(eval1 - eval2) > 0.0001) { \
+                                      ++_failed_count; \
+                                      std::cout << ggo::red_color << "** TEST FAILED ** " << __FILE__ << ':' << __LINE__ << ggo::default_color << ": " << #v1 \
+                                      << " [=" << eval1 << "] != " << #v2 << " [=" << eval2 << "]" << std::endl;\
+                                    } }
 
 #endif

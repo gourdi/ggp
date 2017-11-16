@@ -9,8 +9,8 @@ GGO_TEST(sampling, range_and_count)
     int count = 0;
     ggo::sampler<ggo::sampling_1>::sample_pixel<float>(1, 2, [&](float x_f, float y_f)
     {
-      GGO_CHECK_FABS(x_f, 1.5f);
-      GGO_CHECK_FABS(y_f, 2.5f);
+      GGO_CHECK_FLOAT_EQ(x_f, 1.5f);
+      GGO_CHECK_FLOAT_EQ(y_f, 2.5f);
       ++count;
     });
     GGO_CHECK_EQ(count, ggo::sampler<ggo::sampling_1>::samples_count);

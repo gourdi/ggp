@@ -368,9 +368,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_dct.cpp">
-      <Filter>math\signal_proc</Filter>
-    </ClCompile>
     <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp">
       <Filter>math\signal_proc</Filter>
     </ClCompile>

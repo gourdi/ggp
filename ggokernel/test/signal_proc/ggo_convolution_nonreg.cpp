@@ -19,13 +19,13 @@ GGO_TEST(convolution1d, float_mirror)
 
   ggo::apply_symetric_kernel_1d(input_it, output_it, left, right, 7, kernel, 2);
 
-  GGO_CHECK_FABS(out[0], 0.f);
-  GGO_CHECK_FABS(out[1], 1.f / 3.f);
-  GGO_CHECK_FABS(out[2], 1.f / 3.f);
-  GGO_CHECK_FABS(out[3], 1.f / 3.f);
-  GGO_CHECK_FABS(out[4], 0.f);
-  GGO_CHECK_FABS(out[5], 1.f / 3.f);
-  GGO_CHECK_FABS(out[6], 2.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[0], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[1], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[2], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[3], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[4], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[5], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[6], 2.f / 3.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -95,21 +95,21 @@ GGO_TEST(convolution2d, float_horz)
 
   ggo::apply_symetric_kernel_2d_horz(input_line_iterator, output_line_iterator, left, right, 7, 2,  kernel, 2);
 
-  GGO_CHECK_FABS(out[0], 1.f / 3.f);
-  GGO_CHECK_FABS(out[1], 1.f / 3.f);
-  GGO_CHECK_FABS(out[2], 0.f);
-  GGO_CHECK_FABS(out[3], 0.f);
-  GGO_CHECK_FABS(out[4], 0.f);
-  GGO_CHECK_FABS(out[5], 0.f);
-  GGO_CHECK_FABS(out[6], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[0], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[1], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[2], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[3], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[4], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[5], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[6], 0.f);
 
-  GGO_CHECK_FABS(out[7], 0.f);
-  GGO_CHECK_FABS(out[8], 1.f / 3.f);
-  GGO_CHECK_FABS(out[9], 1.f / 3.f);
-  GGO_CHECK_FABS(out[10], 1.f / 3.f);
-  GGO_CHECK_FABS(out[11], 0.f);
-  GGO_CHECK_FABS(out[12], 1.f / 3.f);
-  GGO_CHECK_FABS(out[13], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[7], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[8], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[9], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[10], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[11], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[12], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[13], 1.f / 3.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -134,16 +134,16 @@ GGO_TEST(convolution2d, float_vert)
 
   ggo::apply_symetric_kernel_2d_vert(input_column_iterator, output_column_iterator, bottom, top, 3, 3, kernel, 2);
 
-  GGO_CHECK_FABS(out[0], 0.f);
-  GGO_CHECK_FABS(out[3], 0.f);
-  GGO_CHECK_FABS(out[6], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[0], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[3], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[6], 0.f);
 
-  GGO_CHECK_FABS(out[1], 1.f / 3.f);
-  GGO_CHECK_FABS(out[4], 1.f / 3.f);
-  GGO_CHECK_FABS(out[7], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[1], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[4], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[7], 1.f / 3.f);
 
-  GGO_CHECK_FABS(out[2], 2.f / 3.f);
-  GGO_CHECK_FABS(out[5], 1.f / 3.f);
-  GGO_CHECK_FABS(out[8], 0.f);
+  GGO_CHECK_FLOAT_EQ(out[2], 2.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[5], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(out[8], 0.f);
 }
 

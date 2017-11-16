@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(linear_algebra2d, determinant)
 {
-  GGO_CHECK_FABS(ggo::determinant(2, -5, -1, 2), -1);
+  GGO_CHECK_FLOAT_EQ(ggo::determinant(2, -5, -1, 2), -1);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -15,6 +15,6 @@ GGO_TEST(linear_algebra2d, solve)
   float s[2] = {0, 0};
   
   GGO_CHECK(ggo::linsolve2d(m, c, s) == true);
-  GGO_CHECK_FABS(s[0], 1);
-  GGO_CHECK_FABS(s[1], -2);
+  GGO_CHECK_FLOAT_EQ(s[0], 1);
+  GGO_CHECK_FLOAT_EQ(s[1], -2);
 }

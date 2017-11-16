@@ -113,12 +113,12 @@ GGO_TEST(ggo_array, construction_and_fill)
     GGO_CHECK_EQ(a.get_size<0>(), 2);
     GGO_CHECK_EQ(a.get_size<1>(), 3);
     GGO_CHECK_EQ(a.get_count(), 6);
-    GGO_CHECK_FABS(a(0, 0), 1.f);
-    GGO_CHECK_FABS(a(1, 0), 1.f);
-    GGO_CHECK_FABS(a(0, 1), 1.f);
-    GGO_CHECK_FABS(a(1, 1), 1.f);
-    GGO_CHECK_FABS(a(0, 2), 1.f);
-    GGO_CHECK_FABS(a(1, 2), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(0, 0), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(1, 0), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(0, 1), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(1, 1), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(0, 2), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(1, 2), 1.f);
   }
 }
 

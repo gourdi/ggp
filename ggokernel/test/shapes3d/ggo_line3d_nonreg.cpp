@@ -17,8 +17,8 @@ GGO_TEST(line3d, find_closest_lines_points)
     float dist2 = 0.f;
     GGO_CHECK(ggo::find_closest_lines_points({ orig1, dir1 }, { orig2, dir2 }, dist1, dist2) == true);
 
-    GGO_CHECK_FABS(dist1, 5.f);
-    GGO_CHECK_FABS(dist2, -1.f);
+    GGO_CHECK_FLOAT_EQ(dist1, 5.f);
+    GGO_CHECK_FLOAT_EQ(dist2, -1.f);
   }
 
   {
@@ -30,13 +30,13 @@ GGO_TEST(line3d, find_closest_lines_points)
     ggo::pos3f p1, p2;
     GGO_CHECK(ggo::find_closest_lines_points(ggo::line3d<float>(orig1, dir1), ggo::line3d<float>(orig2, dir2), p1, p2) == true);
 
-    GGO_CHECK_FABS(p1.x(), 1.f);
-    GGO_CHECK_FABS(p1.y(), 2.f);
-    GGO_CHECK_FABS(p1.z(), 0.f);
+    GGO_CHECK_FLOAT_EQ(p1.x(), 1.f);
+    GGO_CHECK_FLOAT_EQ(p1.y(), 2.f);
+    GGO_CHECK_FLOAT_EQ(p1.z(), 0.f);
 
-    GGO_CHECK_FABS(p2.x(), 1.f);
-    GGO_CHECK_FABS(p2.y(), 2.f);
-    GGO_CHECK_FABS(p2.z(), 1.f);
+    GGO_CHECK_FLOAT_EQ(p2.x(), 1.f);
+    GGO_CHECK_FLOAT_EQ(p2.y(), 2.f);
+    GGO_CHECK_FLOAT_EQ(p2.z(), 1.f);
   }
 }
 
@@ -44,5 +44,5 @@ GGO_TEST(line3d, find_closest_lines_points)
 GGO_TEST(line3d, hypot)
 {
   const ggo::line3d<float> line({ 2.f, 1.f, 4.f }, { 0.f, 0.f, 1.f }, false);
-  GGO_CHECK_FABS(ggo::hypot(line, ggo::pos3f(4.f, 1.f, 1.f)), 4.f);
+  GGO_CHECK_FLOAT_EQ(ggo::hypot(line, ggo::pos3f(4.f, 1.f, 1.f)), 4.f);
 }

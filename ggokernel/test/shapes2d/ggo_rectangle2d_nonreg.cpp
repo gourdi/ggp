@@ -4,10 +4,10 @@
 GGO_TEST(rectangle, construction)
 {
   ggo::rect_float rect(ggo::rect_data<float>{ {1.f, 2.f}, 3.f, 4.f });
-  GGO_CHECK_FABS(rect.left(), 1);
-  GGO_CHECK_FABS(rect.bottom(), 2);
-  GGO_CHECK_FABS(rect.width(), 3);
-  GGO_CHECK_FABS(rect.height(), 4);
+  GGO_CHECK_FLOAT_EQ(rect.left(), 1);
+  GGO_CHECK_FLOAT_EQ(rect.bottom(), 2);
+  GGO_CHECK_FLOAT_EQ(rect.width(), 3);
+  GGO_CHECK_FLOAT_EQ(rect.height(), 4);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -31,15 +31,15 @@ GGO_TEST(rectangle, dist_to_point)
 {
   ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
-  GGO_CHECK_FABS(rect.dist_to_point({ 4, 2 }), 0);
-  GGO_CHECK_FABS(rect.dist_to_point({ 0, 2 }), 3);
-  GGO_CHECK_FABS(rect.dist_to_point({ 2, 4 }), std::sqrt(2));
-  GGO_CHECK_FABS(rect.dist_to_point({ 4, 4 }), 1);
-  GGO_CHECK_FABS(rect.dist_to_point({ 7, 4 }), std::sqrt(2));
-  GGO_CHECK_FABS(rect.dist_to_point({ 7, 2 }), 1);
-  GGO_CHECK_FABS(rect.dist_to_point({ 7, 0 }), std::sqrt(2));
-  GGO_CHECK_FABS(rect.dist_to_point({ 4, -1 }), 2);
-  GGO_CHECK_FABS(rect.dist_to_point({ 2, 0 }), std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 4, 2 }), 0);
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 0, 2 }), 3);
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 2, 4 }), std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 4, 4 }), 1);
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 7, 4 }), std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 7, 2 }), 1);
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 7, 0 }), std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 4, -1 }), 2);
+  GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 2, 0 }), std::sqrt(2));
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -85,10 +85,10 @@ GGO_TEST(rectangle, extend)
     ggo::rect_float extended_rect(rect);
     extended_rect.extend(p);
 
-    GGO_CHECK_FABS(extended_rect.left(), expected_rect.left());
-    GGO_CHECK_FABS(extended_rect.bottom(), expected_rect.bottom());
-    GGO_CHECK_FABS(extended_rect.width(), expected_rect.width());
-    GGO_CHECK_FABS(extended_rect.height(), expected_rect.height());
+    GGO_CHECK_FLOAT_EQ(extended_rect.left(), expected_rect.left());
+    GGO_CHECK_FLOAT_EQ(extended_rect.bottom(), expected_rect.bottom());
+    GGO_CHECK_FLOAT_EQ(extended_rect.width(), expected_rect.width());
+    GGO_CHECK_FLOAT_EQ(extended_rect.height(), expected_rect.height());
   };
   check_extend(rect, { 4.f, 2.f }, rect);
   check_extend(rect, { 1.f, 4.f }, ggo::rect_float::from_left_right_bottom_top(1.f, 6.f, 1.f, 4.f));

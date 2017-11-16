@@ -9,9 +9,9 @@ GGO_TEST(color, operators)
   ggo::color_32f c2(0.01f, 0.1f, 0.01f);
   
   auto c3 = c1 + c2;
-  GGO_CHECK_FABS(c3.r(), 0.26f);
-  GGO_CHECK_FABS(c3.g(), 0.6f);
-  GGO_CHECK_FABS(c3.b(), 0.76f);
+  GGO_CHECK_FLOAT_EQ(c3.r(), 0.26f);
+  GGO_CHECK_FLOAT_EQ(c3.g(), 0.6f);
+  GGO_CHECK_FLOAT_EQ(c3.b(), 0.76f);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -41,9 +41,9 @@ GGO_TEST(color, linear_curve)
   curve.push_point(1, ggo::color_32f(0.f, 1.f, 1.f));
   ggo::color_32f c = curve.evaluate(0.25f);
 
-  GGO_CHECK_FABS(c.r(), 0.75f);
-  GGO_CHECK_FABS(c.g(), 0.25f);
-  GGO_CHECK_FABS(c.b(), 0.25f);
+  GGO_CHECK_FLOAT_EQ(c.r(), 0.75f);
+  GGO_CHECK_FLOAT_EQ(c.g(), 0.25f);
+  GGO_CHECK_FLOAT_EQ(c.b(), 0.25f);
 }
 
 ////////////////////////////////////////////////////////////////////

@@ -16,15 +16,15 @@ GGO_TEST(sparse_matrix, sparse_matrix)
 	//m1.set(2, 0, 3);
 	//m1.set(2, 2, 9);
 	//m1.set(1, 0, 2);
-	//GGO_CHECK_FABS(m1.get(0, 0), 1);
-	//GGO_CHECK_FABS(m1.get(1, 0), 2);
-	//GGO_CHECK_FABS(m1.get(2, 0), 3);
-	//GGO_CHECK_FABS(m1.get(0, 1), 4);
-	//GGO_CHECK_FABS(m1.get(1, 1), 5);
-	//GGO_CHECK_FABS(m1.get(2, 1), 6);
-	//GGO_CHECK_FABS(m1.get(0, 2), 7);
-	//GGO_CHECK_FABS(m1.get(1, 2), 8);
-	//GGO_CHECK_FABS(m1.get(2, 2), 9);
+	//GGO_CHECK_FLOAT_EQ(m1.get(0, 0), 1);
+	//GGO_CHECK_FLOAT_EQ(m1.get(1, 0), 2);
+	//GGO_CHECK_FLOAT_EQ(m1.get(2, 0), 3);
+	//GGO_CHECK_FLOAT_EQ(m1.get(0, 1), 4);
+	//GGO_CHECK_FLOAT_EQ(m1.get(1, 1), 5);
+	//GGO_CHECK_FLOAT_EQ(m1.get(2, 1), 6);
+	//GGO_CHECK_FLOAT_EQ(m1.get(0, 2), 7);
+	//GGO_CHECK_FLOAT_EQ(m1.get(1, 2), 8);
+	//GGO_CHECK_FLOAT_EQ(m1.get(2, 2), 9);
 	//
 	//ggo::sparse_matrix<float> m2(3);
 	//m2.set(0, 0, 2);

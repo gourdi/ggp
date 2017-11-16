@@ -8,10 +8,10 @@ GGO_TEST(multi_shape, shape_union)
 
   // Bounding rectangle.
   ggo::rect_float rect = multi_shape.get_bounding_rect();
-  GGO_CHECK_FABS(rect.left(), -1);
-  GGO_CHECK_FABS(rect.right(), 7);
-  GGO_CHECK_FABS(rect.bottom(), -2);
-  GGO_CHECK_FABS(rect.top(), 5);
+  GGO_CHECK_FLOAT_EQ(rect.left(), -1);
+  GGO_CHECK_FLOAT_EQ(rect.right(), 7);
+  GGO_CHECK_FLOAT_EQ(rect.bottom(), -2);
+  GGO_CHECK_FLOAT_EQ(rect.top(), 5);
 
   // Point inside.
   GGO_CHECK(multi_shape.is_point_inside({ 0, 0 }) == true);
@@ -35,10 +35,10 @@ GGO_TEST(multi_shape, shape_intersection)
 
   // Bounding rectangle.
   ggo::rect_float rect = multi_shape.get_bounding_rect();
-  GGO_CHECK_FABS(rect.left(), 1);
-  GGO_CHECK_FABS(rect.right(), 5);
-  GGO_CHECK_FABS(rect.bottom(), 1);
-  GGO_CHECK_FABS(rect.top(), 4);
+  GGO_CHECK_FLOAT_EQ(rect.left(), 1);
+  GGO_CHECK_FLOAT_EQ(rect.right(), 5);
+  GGO_CHECK_FLOAT_EQ(rect.bottom(), 1);
+  GGO_CHECK_FLOAT_EQ(rect.top(), 4);
 
   // Point inside.
   GGO_CHECK(multi_shape.is_point_inside({ 0, 0 }) == false);
@@ -67,10 +67,10 @@ GGO_TEST(multi_shape, shape_difference)
 
   // Bounding rectangle.
   ggo::rect_float rect = multi_shape.get_bounding_rect();
-  GGO_CHECK_FABS(rect.left(), 2);
-  GGO_CHECK_FABS(rect.right(), 9);
-  GGO_CHECK_FABS(rect.bottom(), 1);
-  GGO_CHECK_FABS(rect.top(), 8);
+  GGO_CHECK_FLOAT_EQ(rect.left(), 2);
+  GGO_CHECK_FLOAT_EQ(rect.right(), 9);
+  GGO_CHECK_FLOAT_EQ(rect.bottom(), 1);
+  GGO_CHECK_FLOAT_EQ(rect.top(), 8);
 
   // Point inside.
   GGO_CHECK(multi_shape.is_point_inside({ 0, 0 }) == false);

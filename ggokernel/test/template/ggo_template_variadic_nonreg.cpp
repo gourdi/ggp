@@ -32,7 +32,7 @@ GGO_TEST(template_variadic, sum)
   static_assert(s1 == 6);
 
   float s2 = ggo::sum(0.1f, 0.2f, 0.3f, 0.4f);
-  GGO_CHECK_FABS(s2, 1.f);
+  GGO_CHECK_FLOAT_EQ(s2, 1.f);
 
   constexpr uint8_t v1 = 0xFF;
   constexpr uint8_t v2 = 0xFF;
@@ -45,10 +45,10 @@ GGO_TEST(template_variadic, sum)
 GGO_TEST(template_variadic, average)
 {
   float a1 = ggo::average(1.f, 2.f, 3.f);
-  GGO_CHECK_FABS(a1, 2.f);
+  GGO_CHECK_FLOAT_EQ(a1, 2.f);
 
   float a2 = ggo::average(1.f, 2.f);
-  GGO_CHECK_FABS(a2, 1.5f);
+  GGO_CHECK_FLOAT_EQ(a2, 1.5f);
 
   uint8_t v1 = 1;
   uint8_t v2 = 1;

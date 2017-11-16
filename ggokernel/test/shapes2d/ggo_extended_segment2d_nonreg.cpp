@@ -7,20 +7,20 @@ GGO_TEST(extended_segment, get_bounding_rect)
     ggo::extended_segment_float extended_segment(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
 
     ggo::rect_float rect = extended_segment.get_bounding_rect();
-    GGO_CHECK_FABS(rect.left(), 1);
-    GGO_CHECK_FABS(rect.right(), 7);
-    GGO_CHECK_FABS(rect.top(), 3);
-    GGO_CHECK_FABS(rect.bottom(), 0);
+    GGO_CHECK_FLOAT_EQ(rect.left(), 1);
+    GGO_CHECK_FLOAT_EQ(rect.right(), 7);
+    GGO_CHECK_FLOAT_EQ(rect.top(), 3);
+    GGO_CHECK_FLOAT_EQ(rect.bottom(), 0);
   }
 
   {
     ggo::extended_segment_float extended_segment(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
 
     ggo::rect_float rect = extended_segment.get_bounding_rect();
-    GGO_CHECK_FABS(rect.left(), 3 - std::sqrt(2));
-    GGO_CHECK_FABS(rect.right(), 6 + std::sqrt(2));
-    GGO_CHECK_FABS(rect.top(), 5 + std::sqrt(2));
-    GGO_CHECK_FABS(rect.bottom(), 2 - std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(rect.left(), 3 - std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(rect.right(), 6 + std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(rect.top(), 5 + std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(rect.bottom(), 2 - std::sqrt(2));
   }
 }
 
@@ -60,24 +60,24 @@ GGO_TEST(extended_segment, dist_to_point)
   {
     ggo::extended_segment_float extended_segment(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
 
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 1.2f, 1 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 4, 2 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 6.5, 2 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ -1, 1 }), 2);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 2, -2 }), 2);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 1, 2 }), std::sqrt(2) - 1);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 1.2f, 1 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 4, 2 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 6.5, 2 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ -1, 1 }), 2);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 2, -2 }), 2);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 1, 2 }), std::sqrt(2) - 1);
   }
 
   {
     ggo::extended_segment_float extended_segment(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
 
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 2, 2 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 5, 3 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 7, 5 }), 0);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 1, 0 }), std::sqrt(2));
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 6, 1 }), std::sqrt(2));
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 3, 5 }), std::sqrt(2) / 2);
-    GGO_CHECK_FABS(extended_segment.dist_to_point({ 8, 5 }), 2 - std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 2, 2 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 5, 3 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 7, 5 }), 0);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 1, 0 }), std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 6, 1 }), std::sqrt(2));
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 3, 5 }), std::sqrt(2) / 2);
+    GGO_CHECK_FLOAT_EQ(extended_segment.dist_to_point({ 8, 5 }), 2 - std::sqrt(2));
   }
 }
 

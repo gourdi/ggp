@@ -9,12 +9,12 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
     float dist = 0;
     ggo::ray3d_float normal;
 
-    GGO_CHECK_FABS(triangle.area(), 1);
+    GGO_CHECK_FLOAT_EQ(triangle.area(), 1);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == true);
-    GGO_CHECK_FABS(dist, 5);
-    GGO_CHECK_FABS(normal.pos().x(), 1.5);
-    GGO_CHECK_FABS(normal.pos().y(), 2.5);
+    GGO_CHECK_FLOAT_EQ(dist, 5);
+    GGO_CHECK_FLOAT_EQ(normal.pos().x(), 1.5);
+    GGO_CHECK_FLOAT_EQ(normal.pos().y(), 2.5);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == false);
 
@@ -29,13 +29,13 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == false);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == true);
-    GGO_CHECK_FABS(dist, 3);
-    GGO_CHECK_FABS(normal.pos().x(), 1.5);
-    GGO_CHECK_FABS(normal.pos().y(), 2.5);
-    GGO_CHECK_FABS(normal.pos().z(), 5);
-    GGO_CHECK_FABS(normal.dir().x(), 0);
-    GGO_CHECK_FABS(normal.dir().y(), 0);
-    GGO_CHECK_FABS(normal.dir().z(), -1);
+    GGO_CHECK_FLOAT_EQ(dist, 3);
+    GGO_CHECK_FLOAT_EQ(normal.pos().x(), 1.5);
+    GGO_CHECK_FLOAT_EQ(normal.pos().y(), 2.5);
+    GGO_CHECK_FLOAT_EQ(normal.pos().z(), 5);
+    GGO_CHECK_FLOAT_EQ(normal.dir().x(), 0);
+    GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
+    GGO_CHECK_FLOAT_EQ(normal.dir().z(), -1);
 
     GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 3.5, 6, 0, 0, -1), dist, normal) == false);
   }
@@ -51,10 +51,10 @@ GGO_TEST(triangle3d, double_sided_ray_intersection)
   auto aabb = triangle.get_bounding_box(basis);
   GGO_CHECK(aabb.has_value() == true);
 
-  GGO_CHECK_FABS(aabb->_x_min, -4.0f);
-  GGO_CHECK_FABS(aabb->_x_max, -2.0f);
-  GGO_CHECK_FABS(aabb->_y_min, 1.0f);
-  GGO_CHECK_FABS(aabb->_y_max, 2.0f);
-  GGO_CHECK_FABS(aabb->_z_min, 6.0f);
-  GGO_CHECK_FABS(aabb->_z_max, 7.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_x_min, -4.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_x_max, -2.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_y_min, 1.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_y_max, 2.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_z_min, 6.0f);
+  GGO_CHECK_FLOAT_EQ(aabb->_z_max, 7.0f);
 }

@@ -90,49 +90,49 @@ GGO_TEST(memory_layouts, vertical_iterator)
 
   {
     auto it_down = ggo::lines_memory_layout<ggo::direction::down, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 0, 5, 6 * sizeof(float));
-    GGO_CHECK_FABS(it_down.read(), 14.f);
-    GGO_CHECK_FABS(it_down.read(1), 13.f);
-    GGO_CHECK_FABS(it_down.read(2), 12.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 14.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 13.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(2), 12.f);
 
     it_down.move_nxt();
-    GGO_CHECK_FABS(it_down.read(), 13.f);
-    GGO_CHECK_FABS(it_down.read(1), 12.f);
-    GGO_CHECK_FABS(it_down.read(2), 11.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 13.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 12.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(2), 11.f);
 
     it_down.move(2);
-    GGO_CHECK_FABS(it_down.read(), 11.f);
-    GGO_CHECK_FABS(it_down.read(1), 10.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 11.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 10.f);
   }
 
   {
     auto it_down = ggo::lines_memory_layout<ggo::direction::down, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 2, 5, 6 * sizeof(float));
-    GGO_CHECK_FABS(it_down.read(), 34.f);
-    GGO_CHECK_FABS(it_down.read(1), 33.f);
-    GGO_CHECK_FABS(it_down.read(2), 32.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 34.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 33.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(2), 32.f);
 
     it_down.move_nxt();
-    GGO_CHECK_FABS(it_down.read(), 33.f);
-    GGO_CHECK_FABS(it_down.read(1), 32.f);
-    GGO_CHECK_FABS(it_down.read(2), 31.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 33.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 32.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(2), 31.f);
 
     it_down.move(2);
-    GGO_CHECK_FABS(it_down.read(), 31.f);
-    GGO_CHECK_FABS(it_down.read(1), 30.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(), 31.f);
+    GGO_CHECK_FLOAT_EQ(it_down.read(1), 30.f);
   }
 
   {
     auto it_up = ggo::lines_memory_layout<ggo::direction::up, sizeof(float)>::make_vertical_read_only_iterator<ggo::base_data_reader<float>>(buffer.data(), 5, 5, 6 * sizeof(float));
-    GGO_CHECK_FABS(it_up.read(), 60.f);
-    GGO_CHECK_FABS(it_up.read(1), 61.f);
-    GGO_CHECK_FABS(it_up.read(2), 62.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(), 60.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(1), 61.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(2), 62.f);
 
     it_up.move_nxt();
-    GGO_CHECK_FABS(it_up.read(), 61.f);
-    GGO_CHECK_FABS(it_up.read(1), 62.f);
-    GGO_CHECK_FABS(it_up.read(2), 63.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(), 61.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(1), 62.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(2), 63.f);
 
     it_up.move(2);
-    GGO_CHECK_FABS(it_up.read(), 63.f);
-    GGO_CHECK_FABS(it_up.read(1), 64.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(), 63.f);
+    GGO_CHECK_FLOAT_EQ(it_up.read(1), 64.f);
   }
 }

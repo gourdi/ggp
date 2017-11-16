@@ -171,6 +171,6 @@ GGO_TEST(matrix, matrix_rotation)
 
   v = m * v;
 
-  GGO_CHECK_FABS(v.get<0>(), 0.f);
-  GGO_CHECK_FABS(v.get<1>(), 1.f);
+  GGO_CHECK_FLOAT_EQ(v.get<0>(), 0.f);
+  GGO_CHECK_FLOAT_EQ(v.get<1>(), 1.f);
 }

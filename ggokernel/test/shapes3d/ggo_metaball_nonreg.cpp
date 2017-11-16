@@ -12,10 +12,10 @@ GGO_TEST(shapes3d, metaball)
   ggo::ray3d_float normal;
   ggo::ray3d_float ray({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, false);
   GGO_CHECK(metaball.intersect_ray(ray, dist, normal) == true);
-  GGO_CHECK_FABS(normal.pos().x(), dist);
-  GGO_CHECK_FABS(normal.pos().y(), 0.f);
-  GGO_CHECK_FABS(normal.pos().z(), 0.f);
-  GGO_CHECK_FABS(normal.dir().x(), -1.f);
-  GGO_CHECK_FABS(normal.dir().y(), 0.f);
-  GGO_CHECK_FABS(normal.dir().z(), 0.f);
+  GGO_CHECK_FLOAT_EQ(normal.pos().x(), dist);
+  GGO_CHECK_FLOAT_EQ(normal.pos().y(), 0.f);
+  GGO_CHECK_FLOAT_EQ(normal.pos().z(), 0.f);
+  GGO_CHECK_FLOAT_EQ(normal.dir().x(), -1.f);
+  GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0.f);
+  GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0.f);
 }

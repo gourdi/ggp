@@ -13,8 +13,8 @@ GGO_TEST(linear_system, gauss_seidel_2x2)
 
     ggo::gauss_seidel(a, b, s, 20);
 
-    GGO_CHECK_FABS(s[0], 0.8122f);
-    GGO_CHECK_FABS(s[1], -0.6650f);
+    GGO_CHECK_FLOAT_EQ(s[0], 0.8122f);
+    GGO_CHECK_FLOAT_EQ(s[1], -0.6650f);
   }
 
   // ggo::matrix and ggo::vec (size is known at compile time).
@@ -29,8 +29,8 @@ GGO_TEST(linear_system, gauss_seidel_2x2)
 
     ggo::gauss_seidel(a, b, s, 20);
 
-    GGO_CHECK_FABS(s.get<0>(), 0.8122f);
-    GGO_CHECK_FABS(s.get<1>(), -0.6650f);
+    GGO_CHECK_FLOAT_EQ(s.get<0>(), 0.8122f);
+    GGO_CHECK_FLOAT_EQ(s.get<1>(), -0.6650f);
   }
 
   // ggo::array (size is unknown at compile time).
@@ -49,8 +49,8 @@ GGO_TEST(linear_system, gauss_seidel_2x2)
 
     ggo::gauss_seidel(a, b, s, 20);
 
-    GGO_CHECK_FABS(s(0), 0.8122f);
-    GGO_CHECK_FABS(s(1), -0.6650f);
+    GGO_CHECK_FLOAT_EQ(s(0), 0.8122f);
+    GGO_CHECK_FLOAT_EQ(s(1), -0.6650f);
   }
 }
 
@@ -71,6 +71,6 @@ GGO_TEST(linear_system, conjugate_gradient_2x2)
 
   ggo::conjugate_gradient(a, b, s, 2);
 
-  GGO_CHECK_FABS(s(0, 0), 1.f / 11.f);
-  GGO_CHECK_FABS(s(1, 0), 7.f / 11.f);
+  GGO_CHECK_FLOAT_EQ(s(0, 0), 1.f / 11.f);
+  GGO_CHECK_FLOAT_EQ(s(1, 0), 7.f / 11.f);
 }
