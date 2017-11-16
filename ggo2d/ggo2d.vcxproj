@@ -28,7 +28,7 @@
     <ClInclude Include="src\paint\ggo_buffer_paint.h" />
     <ClInclude Include="src\paint\ggo_gradient_brush.h" />
     <ClInclude Include="src\paint\ggo_hard_paint.h" />
-    <ClInclude Include="src\paint\ggo_multi_shape_paint.h" />
+    <ClInclude Include="src\paint\ggo_paint_shape.h" />
     <ClInclude Include="src\paint\ggo_seed_paint.h" />
     <ClInclude Include="src\paint\ggo_multi_scale_paint.h" />
     <ClInclude Include="src\paint\ggo_color_triangle.h" />

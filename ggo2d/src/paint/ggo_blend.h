@@ -42,24 +42,36 @@ namespace ggo
 /////////////////////////////////////////////////////////////////////
 // Structs.
 
+// Base class.
+namespace ggo
+{
+  template <typename color_t, typename brush_color_t>
+  struct blender_abc
+  {
+    virtual color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
+  };
+}
+
 // Overwrite blending.
 namespace ggo
 {
-  template <typename color_t>
-  struct overwrite_blender
+  template <typename color_t, typename brush_color_t = color_t>
+  struct overwrite_blender : public blender_abc<color_t, brush_color_t>
   {
-    const color_t & operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const { return brush_color; }
+    color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const override { return ggo::convert_color_to<color_t>(brush_color); }
   };
 }
 
 // Alpha blending.
 namespace ggo
 {  
-  template <typename color_t>
-  struct alpha_blender { };
+  template <typename color_t, typename brush_color_t>
+  struct alpha_blender
+  {
+  };
 
   template <>
-  struct alpha_blender<uint8_t>
+  struct alpha_blender<uint8_t, uint8_t> : public blender_abc<uint8_t, uint8_t>
   {
     alpha_blender(float opacity) :
       _weight_brush(ggo::round_to<uint32_t>(0x10000 * opacity)),
@@ -67,7 +79,7 @@ namespace ggo
     {
     }
 
-    uint8_t operator()(int x, int y, const uint8_t & bkgd_color, const uint8_t & brush_color) const
+    uint8_t operator()(int x, int y, const uint8_t & bkgd_color, const uint8_t & brush_color) const override
     {
       const uint32_t bkgd_color_32u(static_cast<uint32_t>(bkgd_color));
       const uint32_t brush_color_32u(static_cast<uint32_t>(brush_color));
@@ -81,11 +93,11 @@ namespace ggo
   };
 
   template <>
-  struct alpha_blender<float>
+  struct alpha_blender<float, float> : public blender_abc<float, float>
   {
     alpha_blender(float opacity) : _weight_brush(opacity), _weight_bkgd(1.f - opacity) { }
 
-    float operator()(int x, int y, const float & bkgd_color, const float & brush_color) const
+    float operator()(int x, int y, const float & bkgd_color, const float & brush_color) const override
     {
       return _weight_brush * brush_color + _weight_bkgd * bkgd_color;
     }
@@ -95,7 +107,7 @@ namespace ggo
   };
 
   template <>
-  struct alpha_blender<ggo::color_8u>
+  struct alpha_blender<ggo::color_8u, ggo::color_8u> : public blender_abc<ggo::color_8u, ggo::color_8u>
   {
     alpha_blender(float opacity) :
       _weight_brush(ggo::round_to<uint32_t>(0x10000 * opacity)),
@@ -103,7 +115,7 @@ namespace ggo
     {
     }     
 
-    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const
+    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const override
     {
       const ggo::color_32u bkgd_color_32u(static_cast<uint32_t>(bkgd_color.r()), static_cast<uint32_t>(bkgd_color.g()), static_cast<uint32_t>(bkgd_color.b()));
       const ggo::color_32u brush_color_32u(static_cast<uint32_t>(brush_color.r()), static_cast<uint32_t>(brush_color.g()), static_cast<uint32_t>(brush_color.b()));
@@ -117,11 +129,11 @@ namespace ggo
   };
 
   template <>
-  struct alpha_blender<ggo::color_32f>
+  struct alpha_blender<ggo::color_32f, ggo::color_32f> : public blender_abc<ggo::color_32f, ggo::color_32f>
   {
     alpha_blender(float opacity) : _weight_bkgd(1.f - opacity), _weight_brush(opacity) { }
 
-    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
+    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const override
     {
       return _weight_bkgd * bkgd_color + _weight_brush * brush_color;
     }
@@ -130,10 +142,10 @@ namespace ggo
     const float _weight_brush;
   };
 
-  using alpha_blender_y8u = alpha_blender<uint8_t>;
-  using alpha_blender_y32f = alpha_blender<float>;
-  using alpha_blender_rgb8u = alpha_blender<ggo::color_8u>;
-  using alpha_blender_rgb32f = alpha_blender<ggo::color_32f>;
+  using alpha_blender_y8u = alpha_blender<uint8_t, uint8_t>;
+  using alpha_blender_y32f = alpha_blender<float, float>;
+  using alpha_blender_rgb8u = alpha_blender<ggo::color_8u, ggo::color_8u>;
+  using alpha_blender_rgb32f = alpha_blender<ggo::color_32f, ggo::color_32f>;
 }
 
 // Additive blending.
@@ -143,18 +155,18 @@ namespace ggo
   struct additive_blender { };
 
   template <>
-  struct additive_blender<ggo::color_8u>
+  struct additive_blender<ggo::color_8u> : public blender_abc<ggo::color_8u, ggo::color_8u>
   {
-    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const
+    ggo::color_8u operator()(int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color) const override
     {
       return additive_blend(bkgd_color, brush_color);
     }
   };
 
   template <>
-  struct additive_blender<ggo::color_32f>
+  struct additive_blender<ggo::color_32f> : public blender_abc<ggo::color_32f, ggo::color_32f>
   {
-    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const
+    ggo::color_32f operator()(int x, int y, const ggo::color_32f & bkgd_color, const ggo::color_32f & brush_color) const override
     {
       return brush_color + bkgd_color;
     }

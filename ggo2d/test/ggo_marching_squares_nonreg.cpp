@@ -1,7 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_marching_squares.h>
 #include <ggo_color.h>
-#include <ggo_multi_shape_paint.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ GGO_TEST(marching_squares, circle)
   const int size = 400;
   const ggo::pos2f offset(0.5f * size, 0.5f * size);
 
-  using color_segment = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>;
+  using color_segment = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u, ggo::color_8u>;
   std::vector<color_segment> segments;
   for (const auto & cell : cells)
   {
@@ -28,8 +28,8 @@ GGO_TEST(marching_squares, circle)
   }
 
   std::vector<uint8_t> buffer(3 * size * size, 0);
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size,
-    segments.begin(), segments.end(), ggo::rect_int::from_width_height(size, size));
+
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, segments);
 
   ggo::save_bmp("marching_squares.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
 }
