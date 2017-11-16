@@ -35,9 +35,9 @@ GGO_TEST(blend, alpha_rgb8u)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_float_rgb8u)
 {
-  ggo::alpha_blender<ggo::color_8u> blender_opaque(1.f);
-  ggo::alpha_blender<ggo::color_8u> blender_transparent(0.f);
-  ggo::alpha_blender<ggo::color_8u> blender_half(0.5f);
+  ggo::alpha_blender_rgb8u blender_opaque(1.f);
+  ggo::alpha_blender_rgb8u blender_transparent(0.f);
+  ggo::alpha_blender_rgb8u blender_half(0.5f);
 
   ggo::color_8u c1 = blender_opaque(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
   GGO_CHECK_EQ(c1.r(), 0x00);

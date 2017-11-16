@@ -44,6 +44,22 @@ namespace ggo
     
     return true;
   }
+
+  template <typename real_t, typename value_t, bool clip = true>
+  value_t triangular_interpolation(const ggo::pos2<real_t> & p0, const value_t & v0,
+    const ggo::pos2<real_t> & p1, const value_t & v1,
+    const ggo::pos2<real_t> & p2, const value_t & v2,
+    const ggo::pos2<real_t> & p)
+  {
+    value_t result;
+
+    if (triangular_interpolation<real_t, value_t, clip>(p0, v0, p1, v1, p2, v2, p, result) == false)
+    {
+      throw std::runtime_error("failed computing triangular interpolation");
+    }
+
+    return result;
+  }
 }
 
 #endif

@@ -100,20 +100,22 @@ namespace ggo
     }
 
     // Geometry only.
-    const data_t & x() const  { static_assert(vtype == geometry_t, ""); return _coords[0]; }
-          data_t & x()        { static_assert(vtype == geometry_t, ""); return _coords[0]; }
-    const data_t & y() const  { static_assert(vtype == geometry_t, ""); return _coords[1]; }
-          data_t & y()        { static_assert(vtype == geometry_t, ""); return _coords[1]; }
-    const data_t & z() const  { static_assert(vtype == geometry_t && n_dims == 3, ""); return _coords[2]; }
-          data_t & z()        { static_assert(vtype == geometry_t && n_dims == 3, ""); return _coords[2]; }
+    const data_t & x() const  { static_assert(vtype == geometry_t); return _coords[0]; }
+          data_t & x()        { static_assert(vtype == geometry_t); return _coords[0]; }
+    const data_t & y() const  { static_assert(vtype == geometry_t); return _coords[1]; }
+          data_t & y()        { static_assert(vtype == geometry_t); return _coords[1]; }
+    const data_t & z() const  { static_assert(vtype == geometry_t && n_dims == 3); return _coords[2]; }
+          data_t & z()        { static_assert(vtype == geometry_t && n_dims == 3); return _coords[2]; }
 
     // Color only.
-    const data_t & r() const  { static_assert(vtype == color_t, ""); return _coords[0]; }
-          data_t & r()        { static_assert(vtype == color_t, ""); return _coords[0]; }
-    const data_t & g() const  { static_assert(vtype == color_t, ""); return _coords[1]; }
-          data_t & g()        { static_assert(vtype == color_t, ""); return _coords[1]; }
-    const data_t & b() const  { static_assert(vtype == color_t, ""); return _coords[2]; }
-          data_t & b()        { static_assert(vtype == color_t, ""); return _coords[2]; }
+    const data_t & r() const  { static_assert(vtype == color_t); return _coords[0]; }
+          data_t & r()        { static_assert(vtype == color_t); return _coords[0]; }
+    const data_t & g() const  { static_assert(vtype == color_t); return _coords[1]; }
+          data_t & g()        { static_assert(vtype == color_t); return _coords[1]; }
+    const data_t & b() const  { static_assert(vtype == color_t); return _coords[2]; }
+          data_t & b()        { static_assert(vtype == color_t); return _coords[2]; }
+    const data_t & a() const  { static_assert(vtype == color_t && n_dims == 4); return _coords[3]; }
+          data_t & a()        { static_assert(vtype == color_t && n_dims == 4); return _coords[3]; }
 
   private:
 
@@ -142,6 +144,7 @@ namespace ggo
   using vec3d = vec<double, 3, geometry_t>;
 
   template <typename data_t> using color = vec<data_t, 3, color_t>;
+  template <typename data_t> using alpha_color = vec<data_t, 4, color_t>;
 }
 
 //////////////////////////////////////////////////////////////////

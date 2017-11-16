@@ -16,12 +16,12 @@ namespace ggo
     DIFFERENCE
   };
 
-  template <typename data_t, boolean_mode mode = boolean_mode::UNION>
-  class multi_shape final : public paintable_shape2d_abc<data_t>
+  template <typename data_type, boolean_mode mode = boolean_mode::UNION>
+  class multi_shape final : public paintable_shape2d_abc<data_type>
   {
   public:
 
-    using type = data_t;
+    using data_t = data_type;
 
                       multi_shape() {}
           
