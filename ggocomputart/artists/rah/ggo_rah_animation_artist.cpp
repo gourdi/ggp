@@ -1,6 +1,5 @@
 #include "ggo_rah_animation_artist.h"
 #include <ggo_buffer_fill.h>
-#include <ggo_multi_shape_paint.h>
 #include <ggo_blur_paint.h>
 
 namespace

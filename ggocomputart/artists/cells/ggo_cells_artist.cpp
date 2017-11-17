@@ -5,6 +5,7 @@
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_seed_paint.h>
 #include <ggo_sampling_paint.h>
+#include <ggo_color.h>
 
 //////////////////////////////////////////////////////////////
 ggo::cells_artist::cells_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)

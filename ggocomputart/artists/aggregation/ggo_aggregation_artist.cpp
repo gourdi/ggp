@@ -1,6 +1,6 @@
 #include "ggo_aggregation_artist.h"
 #include <ggo_gaussian_blur.h>
-#include <ggo_multi_shape_paint.h>
+#include <ggo_color.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_gaussian_blur2d.h>
 
@@ -13,7 +13,7 @@ artist(width, height)
   _threshold_hypot = _threshold_dist * _threshold_dist;
 
   float hue = ggo::rand<float>();
-  _background_color = from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.25f), ggo::rand<float>(0.25f, 0.75f));
+  _background_color = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.25f), ggo::rand<float>(0.25f, 0.75f));
 
   // Create grid.
   const float cell_size = 0.1f * std::min(width, height);

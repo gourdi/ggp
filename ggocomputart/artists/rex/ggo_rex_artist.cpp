@@ -3,7 +3,6 @@
 #include <ggo_link.h>
 #include <ggo_array.h>
 #include <ggo_buffer_paint.h>
-#include <ggo_multi_shape_paint.h>
 #include <ggo_color_triangle.h>
 #include <ggo_blend.h>
 #include <map>
@@ -12,8 +11,7 @@ namespace
 {  
   using rex_edge = ggo::link<const ggo::pos2f *>;
 
-  using opaque_blender_rgb8u = ggo::overwrite_blender<ggo::color_8u>;
-  using color_triangle_rgb8u = ggo::color_triangle<opaque_blender_rgb8u, ggo::color_8u>;
+  using color_triangle_rgb8u = ggo::solid_color_triangle<float, ggo::color_8u>;
 
   struct rex_pattern_triangle
   {
@@ -38,8 +36,7 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<color_triangle_rgb8u> & color_triangles)
   {
-    ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      color_triangles.begin(), color_triangles.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
+    ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), color_triangles);
   }
 
   //////////////////////////////////////////////////////////////
@@ -111,8 +108,7 @@ namespace
       shapes.emplace_back(segment, ggo::black_8u());
     }
 
-    ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      shapes.begin(), shapes.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
+    ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes);
   }
 }
 
@@ -249,7 +245,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
 
     color_triangles.emplace_back(
       ggo::triangle2d_float(*triangle._v1, *triangle._v2, *triangle._v3),
-      color1, color2, color3, opaque_blender_rgb8u());
+      color1, color2, color3);
   }
 
   // Create circles.

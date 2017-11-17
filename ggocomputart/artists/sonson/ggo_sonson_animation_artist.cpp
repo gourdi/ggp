@@ -457,7 +457,7 @@ void ggo::sonson_animation_artist::line::render(void * buffer, int width, int he
     auto blend = [&](int x, int y, const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color)
     {
       const float opacity = opacity_brush(x, y);
-      const ggo::alpha_blender<ggo::color_8u> blender(opacity);
+      const ggo::alpha_blender<ggo::color_8u, ggo::color_8u> blender(opacity);
       return blender(x, y, bkgd_color, brush_color);
     };
 

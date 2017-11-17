@@ -139,6 +139,8 @@ namespace ggo
     auto begin() const { return iterator(_container.begin(), _func); }
     auto end() const { return iterator(_container.end(), _func); }
 
+    bool empty() const { return _container.empty(); }
+
   private:
 
     const container_t & _container;

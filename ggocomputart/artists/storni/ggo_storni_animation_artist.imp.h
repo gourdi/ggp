@@ -1,5 +1,4 @@
 #include <ggo_buffer_paint.h>
-#include <ggo_multi_shape_paint.h>
 #include <ggo_blit.h>
 #include <ggo_brush.h>
 #include <ggo_blend.h>
@@ -43,7 +42,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect
   {
     ggo::paint_shape<gray_pbf, smp>(_stornis_buffer.data(), get_width(), get_height(), get_width(),
       ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius),
-      ggo::solid_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
+      ggo::solid_color_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
 
   // Blend. 
@@ -78,20 +77,6 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rec
   const float direction_length = 0.03f * std::sqrt(float(get_width() * get_height()));
   const float border_size = 0.001f * std::sqrt(float(get_width() * get_height()));
 
-  auto border_brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(ggo::white_8u());
-  auto fill_brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(color);
-  auto blender = std::make_shared<ggo::overwrite_dyn_blender<ggo::color_8u, ggo::color_8u>>();
-
-  std::array<ggo::dyn_paint_shape<float, ggo::color_8u, ggo::color_8u>, 4> shapes;
-  shapes[0]._blender = blender;
-  shapes[0]._brush = fill_brush;
-  shapes[1]._blender = blender;
-  shapes[1]._brush = border_brush;
-  shapes[2]._blender = blender;
-  shapes[2]._brush = border_brush;
-  shapes[3]._blender = blender;
-  shapes[3]._brush = border_brush;
-
   for (const auto & predator : _predators)
   {
     if (predator._vel.x() != 0.f || predator._vel.y() != 0.f)
@@ -103,12 +88,15 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rec
       const ggo::vec2f v2{ predator._pos - direction + 0.5f * ggo::vec2f(direction.y(), -direction.x()) };
       const ggo::vec2f v3{ predator._pos - direction + 0.5f * ggo::vec2f(-direction.y(), direction.x()) };
 
-      shapes[0]._shape = std::make_shared<ggo::triangle2d_float>(v1, v2, v3);
-      shapes[1]._shape = std::make_shared<ggo::extended_segment_float>(v1, v2, border_size);
-      shapes[2]._shape = std::make_shared<ggo::extended_segment_float>(v2, v3, border_size);
-      shapes[3]._shape = std::make_shared<ggo::extended_segment_float>(v3, v1, border_size);
+      ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u> triangle({ v1, v2, v3 }, color);
+      ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u> border1({ v1, v2, border_size }, ggo::white_8u());
+      ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u> border2({ v2, v3, border_size }, ggo::white_8u());
+      ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u> border3({ v3, v1, border_size }, ggo::white_8u());
 
-      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), shapes.cbegin(), shapes.cend(), clipping);
+      const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u, ggo::color_8u> *> paint_shapes{
+        &triangle, &border1, &border2, &border3 };
+
+      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), paint_shapes, clipping);
     }
   }
 }

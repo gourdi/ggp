@@ -4,38 +4,9 @@
 #include <ggo_shapes2d.h>
 #include <ggo_coordinates_conversions.h>
 #include <ggo_color.h>
+#include <ggo_blend.h>
 #include <ggo_paint_shape.h>
 #include <ggo_triangle_interpolation.h>
-
-namespace ggo
-{
-  template <typename color_t, typename floating_point_t>
-  struct brush_color_traits {};
-
-  template <>
-  struct brush_color_traits<uint8_t, float>
-  {
-    using brush_color_t = float;
-  };
-
-  template <>
-  struct brush_color_traits<float, float>
-  {
-    using brush_color_t = float;
-  };
-
-  template <>
-  struct brush_color_traits<ggo::color_8u, float>
-  {
-    using brush_color_t = ggo::color_32f;
-  };
-
-  template <>
-  struct brush_color_traits<ggo::color_32f, float>
-  {
-    using brush_color_t = ggo::color_32f;
-  };
-}
 
 namespace ggo
 {
@@ -77,13 +48,13 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t, typename color_t>
+  template <typename data_t, typename color_t, typename blender_t = ggo::overwrite_blender<color_t, typename floating_point_color_traits<color_t, data_t>::floating_point_color_t>>
   struct solid_color_triangle : public color_triangle_abc<
     data_t,
     color_t,
-    typename brush_color_traits<color_t, data_t>::brush_color_t>
+    typename floating_point_color_traits<color_t, data_t>::floating_point_color_t>
   {
-    using brush_color_t = typename brush_color_traits<color_t, data_t>::brush_color_t;
+    using brush_color_t = typename floating_point_color_traits<color_t, data_t>::floating_point_color_t;
 
     solid_color_triangle(const ggo::triangle2d<data_t> & triangle,
       const brush_color_t & color1, const brush_color_t & color2, const brush_color_t & color3)
@@ -94,8 +65,10 @@ namespace ggo
     // Blend.
     color_t blend(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const override
     { 
-      return ggo::convert_color_to<color_t>(brush_color);
+      return _blender(x, y, bkgd_color, brush_color);
     }
+
+    blender_t _blender;
   };
 }
 
@@ -105,9 +78,9 @@ namespace ggo
   struct alpha_color_triangle : public color_triangle_abc<
     data_t,
     color_t,
-    typename ggo::color_traits<typename ggo::brush_color_traits<color_t, data_t>::brush_color_t>::alpha_color_t>
+    typename ggo::color_traits<typename ggo::floating_point_color_traits<color_t, data_t>::floating_point_color_t>::alpha_color_t>
   {
-    using brush_color_t = typename ggo::color_traits<typename ggo::brush_color_traits<color_t, data_t>::brush_color_t>::alpha_color_t;
+    using brush_color_t = typename ggo::color_traits<typename ggo::floating_point_color_traits<color_t, data_t>::floating_point_color_t>::alpha_color_t;
     using brush_sample_t = typename ggo::color_traits<brush_color_t>::sample_t;
 
     static_assert(ggo::color_traits<brush_color_t>::has_alpha == true);

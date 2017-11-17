@@ -1,8 +1,9 @@
 #include "ggo_cabrel_bitmap_artist.h"
 #include <ggo_shape_sampling.h>
-#include <ggo_multi_shape_paint.h>
 #include <ggo_buffer_fill.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_gaussian_blur2d.h>
+#include <ggo_color_triangle.h>
 
 namespace
 {
@@ -227,35 +228,28 @@ namespace
 
       shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
     }
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      shadows.begin(), shadows.end(), ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
+    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shadows);
 
     float stddev = 0.01f * artist.get_min_size();
     ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
 
     // Paint the triangles.
-    std::vector<ggo::dyn_paint_shape<float, ggo::color_8u, ggo::color_8u>> shapes;
+    using paint_shape_t = ggo::paint_shape_abc<float, ggo::color_8u, ggo::color_8u>;
+    std::vector<std::unique_ptr<paint_shape_t>> shapes;
 
-    auto black_brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(ggo::black<ggo::color_8u>());
-    auto blender = std::make_shared<ggo::overwrite_dyn_blender<ggo::color_8u, ggo::color_8u>>();
+    float border_size = 0.00025f * artist.get_min_size();
 
     for (const auto & triangle : triangles)
     {
-      ggo::dyn_paint_shape<float, ggo::color_8u, ggo::color_8u> paint_triangle;
-      paint_triangle._shape = std::make_shared<ggo::triangle2d_float>(triangle);
-      paint_triangle._brush = std::make_shared<ggo::solid_dyn_brush<ggo::color_8u>>(ggo::color_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
-      paint_triangle._blender = blender;
+      using paint_triangle_t = ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u>;
+      auto paint_triangle = std::make_unique<paint_triangle_t>(triangle, ggo::color_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
+      shapes.push_back(std::move(paint_triangle));
 
-      shapes.push_back(paint_triangle);
-
-      auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2) {
-
-        ggo::dyn_paint_shape<float, ggo::color_8u, ggo::color_8u> segment;
-        segment._shape = std::make_shared<ggo::extended_segment_float>(p1, p2, 0.00025f * artist.get_min_size());
-        segment._brush = black_brush;
-        segment._blender = blender;
-
-        shapes.push_back(segment);
+      auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2)
+      {
+        using paint_extended_segment_t = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>;
+        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::extended_segment_float(p1, p2, border_size), ggo::black_8u());
+        shapes.push_back(std::move(paint_extented_segment));
       };
 
       create_segment(triangle.v1(), triangle.v2());
@@ -263,8 +257,9 @@ namespace
       create_segment(triangle.v3(), triangle.v1());
     }
 
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      shapes.begin(), shapes.end(),
+    ggo::paint_shapes<pbf, ggo::sampling_4x4>(
+      buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      ggo::make_adaptor(shapes, [](const auto & paint_shape) { return paint_shape.get(); }),
       ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
   }
 }

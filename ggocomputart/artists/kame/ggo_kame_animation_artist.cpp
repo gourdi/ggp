@@ -1,7 +1,8 @@
 #include "ggo_kame_animation_artist.h"
 #include <ggo_link.h>
 #include <ggo_buffer_fill.h>
-#include <ggo_multi_shape_paint.h>
+#include <ggo_buffer_paint.h>
+#include <ggo_color.h>
 
 namespace
 {
@@ -269,8 +270,6 @@ void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
 
-  std::vector<ggo::dyn_paint_shape<float, ggo::color_8u, ggo::color_8u>> shapes;
-
   const float size = 0.001f * get_min_size();
 
   std::vector<ggo::link<const pos3f *>> edges;
@@ -299,7 +298,7 @@ void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int
     paint_glow(glow, buffer);
   }
 
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(), triangles.begin(), triangles.end(), clipping);
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(), triangles, clipping);
 
   for (const auto & edge : edges)
   {

@@ -3,7 +3,6 @@
 #include <ggo_buffer_paint.h>
 #include <ggo_brush.h>
 #include <ggo_blend.h>
-#include <ggo_multi_shape_paint.h>
 
 namespace
 {
@@ -144,7 +143,7 @@ void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::rect_i
     {
       ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
         ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
-        ggo::solid_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
+        ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
     }
     break;
   default:

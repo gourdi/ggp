@@ -20,9 +20,9 @@ namespace ggo
     const ggo::rect_int & clipping);
 
   // Paint multiple shapes.
-  template <sampling smp, typename data_t, typename color_t, typename brush_color_t, typename get_next_paint_shape_t, typename read_pixel_t, typename write_pixel_t>
+  template <sampling smp, typename paint_shapes_range_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
-    get_next_paint_shape_t get_next_paint_shape,
+    const paint_shapes_range_t & paint_shapes_range,
     int scale_factor, int first_scale,
     read_pixel_t read_pixel, write_pixel_t write_pixel,
     const ggo::rect_int & clipping);
@@ -66,6 +66,7 @@ namespace ggo
 
     case ggo::rect_intersection::partial_overlap:
     case ggo::rect_intersection::shape_in_rect:
+    case ggo::rect_intersection::unknown:
       // The current block is only a pixel => stop the recursion and sample the pixel.
       if (block_rect.is_one() == true)
       {
@@ -245,26 +246,35 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename data_t, typename color_t, typename brush_color_t, typename get_next_paint_shape_t, typename read_pixel_t, typename write_pixel_t>
+  template <sampling smp, typename paint_shapes_range_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
-    get_next_paint_shape_t get_next_paint_shape,
+    const paint_shapes_range_t & paint_shapes_range,
     int scale_factor, int first_scale,
     read_pixel_t read_pixel, write_pixel_t write_pixel,
     const ggo::rect_int & clipping)
   {
     // Clip.
     ggo::rect_int safe_clipping(clipping);
-    if (safe_clipping.clip(width, height) == false)
+    if (safe_clipping.clip(width, height) == false || paint_shapes_range.empty() == true)
     {
       return;
     }
 
+    auto it = paint_shapes_range.begin();
+    const auto * paint_shape = *it;
+
+    using paint_shape_t = typename std::remove_pointer<typename std::remove_const<decltype(paint_shape)>::type>::type;
+    using data_t = typename paint_shape_t::data_t;
+
     const ggo::rect_data<data_t> clipping_rect_data = from_pixel_to_math<data_t>(safe_clipping);
     ggo::rect_data<data_t> bounding_rect_data;
     bool first = true;
-    std::vector<const paint_shape_abc<data_t, color_t, brush_color_t> *> paint_shapes;
-    while (const paint_shape_abc<data_t, color_t, brush_color_t> * paint_shape = get_next_paint_shape())
+
+    std::vector<const paint_shape_t *> paint_shapes;
+    for (; it != paint_shapes_range.end(); ++it)
     {
+      const paint_shape_t * paint_shape = *it;
+
       const ggo::rect_data<data_t> cur_rect_data = paint_shape->get_bounding_rect();
       if (ggo::test_intersection(cur_rect_data, clipping_rect_data) == true)
       {

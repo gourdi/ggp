@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <ggo_vec.h>
+#include <ggo_coordinates_conversions.h>
 
 namespace ggo
 {

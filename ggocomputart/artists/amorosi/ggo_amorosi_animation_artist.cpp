@@ -1,7 +1,7 @@
 #include "ggo_amorosi_animation_artist.h"
-#include <ggo_multi_shape_paint.h>
 #include <ggo_color_triangle.h>
 #include <ggo_buffer_fill.h>
+#include <ggo_buffer_paint.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::random_angle_interpolator::get_random_data(float & data, float & dt)
@@ -18,7 +18,7 @@ void ggo::amorosi_animation_artist::random_width_interpolator::get_random_data(f
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::curve::curve(int width, int height, const ggo::color_8u & color)
+ggo::amorosi_animation_artist::curve::curve(int width, int height, const ggo::color_32f & color)
 :
 artist(width, height),
 _lines_count(ggo::rand<int>(3, 10)),
@@ -122,21 +122,21 @@ void ggo::amorosi_animation_artist::curve::update()
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const
 {
-  std::vector<ggo::alpha_color_triangle<ggo::color_8u>> triangles;
+  using paint_shape_t = ggo::alpha_color_triangle<float, ggo::color_8u>;
+
+  std::vector<paint_shape_t> triangles;
   
   for (const auto & triangle : _triangles)
   {
     ggo::triangle2d_float shape(triangle[0]._pos, triangle[1]._pos, triangle[2]._pos);
 
-    triangles.emplace_back(shape,
-      _color, triangle[0]._opacity,
-      _color, triangle[1]._opacity, 
-      _color, triangle[2]._opacity);
+    triangles.emplace_back(shape, 
+      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[0]._opacity),
+      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[1]._opacity),
+      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[2]._opacity));
   }
   
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, get_width(), get_height(), line_step,
-    triangles.begin(), triangles.end(), ggo::rect_int::from_width_height(get_width(), get_height()));
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step, triangles);
 }
 
 //////////////////////////////////////////////////////////////
@@ -155,16 +155,16 @@ void ggo::amorosi_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-ggo::color_8u ggo::amorosi_animation_artist::get_color() const
+ggo::color_32f ggo::amorosi_animation_artist::get_color() const
 {
   float rnd = ggo::rand<float>();
   if (rnd < 0.5)
   {
-    return from_hsv<ggo::color_8u>(_hue, 1, 1);
+    return from_hsv<ggo::color_32f>(_hue, 1, 1);
   }
   else
   {
-    return ggo::white<ggo::color_8u>();
+    return ggo::white<ggo::color_32f>();
   }
 }
 
