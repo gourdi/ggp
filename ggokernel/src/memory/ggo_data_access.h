@@ -1,6 +1,8 @@
 #ifndef __GGO_DATA_ACCESS__
 #define __GGO_DATA_ACCESS__
 
+#include <ggo_kernel.h>
+
 /////////////////////////////////////////////////////////////////////
 // Basic data access
 namespace ggo

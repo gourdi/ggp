@@ -29,49 +29,61 @@ GGO_TEST(memory_layouts, clipping)
     30, 31, 32, 33
   };
 
-  ggo::raw_buffer2d buffer_data(4, 3, 4 * sizeof(int), buffer);
-
   {
-    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
-    GGO_CHECK_EQ(clipped_buffer->_width, 3);
-    GGO_CHECK_EQ(clipped_buffer->_height, 1);
-    GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
-    int * ptr = static_cast<int *>(clipped_buffer->_buffer);
+    int width = 4;
+    int height = 3;
+    int line_byte_step = 4 * sizeof(int);
+    void * clipped_buffer = buffer;
+    ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(clipped_buffer, width, height, line_byte_step, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    GGO_CHECK_EQ(width, 3);
+    GGO_CHECK_EQ(height, 1);
+    GGO_CHECK_EQ(line_byte_step, 4 * sizeof(int));
+    int * ptr = static_cast<int *>(clipped_buffer);
     GGO_CHECK_EQ(ptr[0], 11);
     GGO_CHECK_EQ(ptr[1], 12);
     GGO_CHECK_EQ(ptr[2], 13);
   }
 
   {
-    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
-    GGO_CHECK_EQ(clipped_buffer->_width, 3);
-    GGO_CHECK_EQ(clipped_buffer->_height, 1);
-    GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
-    int * ptr = static_cast<int *>(clipped_buffer->_buffer);
+    int width = 4;
+    int height = 3;
+    int line_byte_step = 4 * sizeof(int);
+    void * clipped_buffer = buffer;
+    ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(clipped_buffer, width, height, line_byte_step, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    GGO_CHECK_EQ(width, 3);
+    GGO_CHECK_EQ(height, 1);
+    GGO_CHECK_EQ(line_byte_step, 4 * sizeof(int));
+    int * ptr = static_cast<int *>(clipped_buffer);
     GGO_CHECK_EQ(ptr[0], 31);
     GGO_CHECK_EQ(ptr[1], 32);
     GGO_CHECK_EQ(ptr[2], 33);
   }
 
-  ggo::raw_const_buffer2d const_buffer_data(4, 3, 4 * sizeof(int), buffer);
-
   {
-    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
-    GGO_CHECK_EQ(clipped_buffer->_width, 3);
-    GGO_CHECK_EQ(clipped_buffer->_height, 1);
-    GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
-    const int * ptr = static_cast<const int *>(clipped_buffer->_buffer);
+    int width = 4;
+    int height = 3;
+    int line_byte_step = 4 * sizeof(int);
+    const void * clipped_buffer = buffer;
+    ggo::lines_memory_layout<ggo::direction::down, sizeof(int)>::clip(clipped_buffer, width, height, line_byte_step, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    GGO_CHECK_EQ(width, 3);
+    GGO_CHECK_EQ(height, 1);
+    GGO_CHECK_EQ(line_byte_step, 4 * sizeof(int));
+    const int * ptr = static_cast<const int *>(clipped_buffer);
     GGO_CHECK_EQ(ptr[0], 11);
     GGO_CHECK_EQ(ptr[1], 12);
     GGO_CHECK_EQ(ptr[2], 13);
   }
 
   {
-    auto clipped_buffer = ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(const_buffer_data, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
-    GGO_CHECK_EQ(clipped_buffer->_width, 3);
-    GGO_CHECK_EQ(clipped_buffer->_height, 1);
-    GGO_CHECK_EQ(clipped_buffer->_line_byte_step, 4 * sizeof(int));
-    const int * ptr = static_cast<const int *>(clipped_buffer->_buffer);
+    int width = 4;
+    int height = 3;
+    int line_byte_step = 4 * sizeof(int);
+    const void * clipped_buffer = buffer;
+    ggo::lines_memory_layout<ggo::direction::up, sizeof(int)>::clip(clipped_buffer, width, height, line_byte_step, ggo::rect_int::from_left_right_bottom_top(1, 5, 2, 5));
+    GGO_CHECK_EQ(width, 3);
+    GGO_CHECK_EQ(height, 1);
+    GGO_CHECK_EQ(line_byte_step, 4 * sizeof(int));
+    const int * ptr = static_cast<const int *>(clipped_buffer);
     GGO_CHECK_EQ(ptr[0], 31);
     GGO_CHECK_EQ(ptr[1], 32);
     GGO_CHECK_EQ(ptr[2], 33);

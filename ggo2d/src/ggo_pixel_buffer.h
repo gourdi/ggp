@@ -7,7 +7,7 @@
 namespace ggo
 {
   template <pixel_buffer_format pbf, typename func_t>
-  void process_pixel_buffer(void * buffer, const int width, const int height, const int line_byte_step, const ggo::rect_int & rect, func_t func)
+  void process_pixel_buffer(void * buffer, int width, int height, int line_byte_step, const ggo::rect_int & rect, func_t func)
   {
     using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
     constexpr int pixel_byte_size = pixel_buffer_format_info<pbf>::pixel_byte_size;
@@ -15,13 +15,12 @@ namespace ggo
     GGO_ASSERT_PTR(buffer);
     GGO_ASSERT_GE(line_byte_step, width * pixel_byte_size);
 
-    auto clipped_buffer = memory_layout::clip(raw_buffer2d(width, height, line_byte_step, buffer), rect);
-    if (clipped_buffer)
+    if (memory_layout::clip(buffer, width, height, line_byte_step, rect))
     {
-      for (int y = 0; y < clipped_buffer->_height; ++y)
+      for (int y = 0; y < height; ++y)
       {
-        void * begin = memory_layout::get_y_ptr(clipped_buffer->_buffer, y, clipped_buffer->_height, clipped_buffer->_line_byte_step);
-        void * end = ptr_offset(begin, clipped_buffer->_width * pixel_byte_size);
+        void * begin = memory_layout::get_y_ptr(buffer, y, height, line_byte_step);
+        void * end = ptr_offset(begin, width * pixel_byte_size);
         for (void * it = begin; it != end; it = ptr_offset<pixel_byte_size>(it))
         {
           func(it);

@@ -3,6 +3,7 @@
 
 #include <ggo_kernel.h>
 #include <ggo_memory.h>
+#include <ggo_rect_int.h>
 #include <ggo_buffer_iterator.h>
 
 namespace ggo
@@ -108,18 +109,22 @@ namespace ggo
       }
     }
 
-    template <typename raw_buffer_t>
-    static std::optional<raw_buffer_t> clip(const raw_buffer_t & buffer, const ggo::rect_int & clipping)
+    template <typename void_t>
+    static bool clip(void_t * & buffer, int & width, int & height, int line_byte_step, const ggo::rect_int & clipping)
     {
-      ggo::rect_int rect = ggo::rect_int::from_width_height(buffer._width, buffer._height);
+      static_assert(std::is_same<void_t, void>::value || std::is_same<void_t, const void>::value);
+
+      ggo::rect_int rect = ggo::rect_int::from_width_height(width, height);
       if (rect.clip(clipping) == false)
       {
-        return {};
+        return false;
       }
 
-      auto ptr = get_xy_ptr(buffer._buffer, rect.left(), lines_order == direction::up ? rect.bottom() : rect.top(), buffer._height, buffer._line_byte_step);
+      buffer = get_xy_ptr(buffer, rect.left(), lines_order == direction::up ? rect.bottom() : rect.top(), height, line_byte_step);
+      width = rect.width();
+      height = rect.height();
 
-      return raw_buffer_t(rect.width(), rect.height(), buffer._line_byte_step, ptr);
+      return true;
     }
   };
 }
