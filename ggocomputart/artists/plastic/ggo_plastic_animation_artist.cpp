@@ -36,7 +36,7 @@ void ggo::plastic_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::plastic_animation_artist::update()
+bool ggo::plastic_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -54,7 +54,7 @@ bool ggo::plastic_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::plastic_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   std::vector<ggo::plastic_artist::params> bitmap_params;
   for (auto & anim_params : _params)

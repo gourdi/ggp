@@ -23,7 +23,7 @@ void ggo::julia_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::julia_animation_artist::update()
+bool ggo::julia_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -36,7 +36,7 @@ bool ggo::julia_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::julia_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   float angle = ggo::ease_inout(_frame_index, frames_count, _angle, _angle + ggo::pi<float>() / 8);
 

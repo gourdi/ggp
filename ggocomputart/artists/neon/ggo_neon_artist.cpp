@@ -50,7 +50,7 @@ void ggo::neon_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::neon_artist::update()
+bool ggo::neon_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -84,7 +84,7 @@ bool ggo::neon_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::neon_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

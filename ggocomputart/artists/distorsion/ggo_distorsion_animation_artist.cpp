@@ -126,7 +126,7 @@ void ggo::distorsion_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::distorsion_animation_artist::update()
+bool ggo::distorsion_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -139,7 +139,7 @@ bool ggo::distorsion_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::distorsion_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   render_frame(_frame_index, buffer, clipping);
 }

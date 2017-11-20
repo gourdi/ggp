@@ -52,7 +52,7 @@ void ggo::dupecheck_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::dupecheck_animation_artist::update()
+bool ggo::dupecheck_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -117,7 +117,7 @@ bool ggo::dupecheck_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::dupecheck_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Background.
   if (buffer != nullptr)

@@ -86,7 +86,7 @@ void ggo::newton_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::newton_artist::update()
+bool ggo::newton_artist::prepare_frame()
 {
   // Remove some strings at random.
   if ((_frame_index < 300) && (ggo::rand<int>(0, 50) == 0))
@@ -126,7 +126,7 @@ bool ggo::newton_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::newton_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::newton_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   memcpy(buffer, _background.get(), get_width() * get_line_step());
 

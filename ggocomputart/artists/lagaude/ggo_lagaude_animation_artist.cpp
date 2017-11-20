@@ -52,7 +52,7 @@ void ggo::lagaude_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::update()
+bool ggo::lagaude_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -83,7 +83,7 @@ bool ggo::lagaude_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::lagaude_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Render background.
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);

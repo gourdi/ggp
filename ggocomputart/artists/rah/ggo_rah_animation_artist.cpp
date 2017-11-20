@@ -374,7 +374,7 @@ void ggo::rah_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::rah_animation_artist::update()
+bool ggo::rah_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -414,7 +414,7 @@ bool ggo::rah_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::rah_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Paint background.
   if (buffer != nullptr)

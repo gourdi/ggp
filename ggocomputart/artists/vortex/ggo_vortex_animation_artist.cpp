@@ -41,7 +41,7 @@ void ggo::vortex_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::vortex_animation_artist::update()
+bool ggo::vortex_animation_artist::prepare_frame()
 {
   const int frames_count = 250;
 
@@ -64,7 +64,7 @@ bool ggo::vortex_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::vortex_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
 }

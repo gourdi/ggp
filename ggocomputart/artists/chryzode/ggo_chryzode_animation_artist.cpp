@@ -38,7 +38,7 @@ void ggo::chryzode_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::chryzode_animation_artist::update()
+bool ggo::chryzode_animation_artist::prepare_frame()
 {
   ++_frame_index;
   
@@ -52,7 +52,7 @@ bool ggo::chryzode_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::chryzode_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   chryzode_artist artist(get_width(), get_height());
 

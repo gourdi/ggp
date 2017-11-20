@@ -150,7 +150,7 @@ void ggo::smoke_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::smoke_animation_artist::update()
+bool ggo::smoke_animation_artist::prepare_frame()
 {
 #if 0
   const int frames_count = 600;
@@ -296,7 +296,7 @@ bool ggo::smoke_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::smoke_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
 #if 0
 	// Draw the density.

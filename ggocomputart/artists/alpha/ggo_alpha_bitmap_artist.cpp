@@ -16,7 +16,7 @@ void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
 
   int frame_index = 0;
 
-  while (artist.update() == true)
+  while (artist.prepare_frame() == true)
   {
     if (artist.get_items_count() >= 3)
     {
@@ -27,9 +27,9 @@ void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
   int timer = ggo::rand<int>(5, 10);
   for (int i = 0; i < timer; ++i)
   {
-    artist.update();
-    artist.render_frame(nullptr, ggo::rect_int::from_width_height(get_width(), get_height()));
+    artist.prepare_frame();
+    artist.process_frame(nullptr, ggo::rect_int::from_width_height(get_width(), get_height()));
   }
 
-  artist.render_frame(buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
+  artist.process_frame(buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
 }

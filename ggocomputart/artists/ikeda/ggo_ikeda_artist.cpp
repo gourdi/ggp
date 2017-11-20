@@ -54,7 +54,7 @@ void ggo::ikeda_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::ikeda_artist::update()
+bool ggo::ikeda_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -67,7 +67,7 @@ bool ggo::ikeda_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ikeda_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::ikeda_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
 	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3],
