@@ -9,14 +9,6 @@
 #include <ggo_paint_shape.h>
 #include <ggo_multi_scale_paint.h>
 
-// Hard rectangles.
-namespace ggo
-{
-  // No checks are performed, parameters are expected to be valid ones.
-  template <pixel_buffer_format pbf>
-  void paint_rect(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c);
-}
-
 // Paint single shape.
 namespace ggo
 {
@@ -54,19 +46,6 @@ namespace ggo
 
 //////////////////////////////////////////////////////////////
 // Implementation.
-
-// Hard rectangles.
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf>
-  void paint_rect(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
-  {
-    process_pixel_buffer<pbf>(buffer, width, height, line_step,
-      ggo::rect_int::from_left_right_bottom_top(left, right, bottom, top),
-      [&](void * ptr) { write_pixel<pbf>(ptr, c); });
-  }
-}
 
 // Paint single shape.
 namespace ggo

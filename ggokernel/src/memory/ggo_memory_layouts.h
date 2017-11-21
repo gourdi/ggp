@@ -108,24 +108,6 @@ namespace ggo
         return dynamic_item_byte_size_buffer_read_write_iterator<data_reader_t, data_writer_t>(ptr, -line_byte_step);
       }
     }
-
-    template <typename void_t>
-    static bool clip(void_t * & buffer, int & width, int & height, int line_byte_step, const ggo::rect_int & clipping)
-    {
-      static_assert(std::is_same<void_t, void>::value || std::is_same<void_t, const void>::value);
-
-      ggo::rect_int rect = ggo::rect_int::from_width_height(width, height);
-      if (rect.clip(clipping) == false)
-      {
-        return false;
-      }
-
-      buffer = get_xy_ptr(buffer, rect.left(), lines_order == direction::up ? rect.bottom() : rect.top(), height, line_byte_step);
-      width = rect.width();
-      height = rect.height();
-
-      return true;
-    }
   };
 }
 

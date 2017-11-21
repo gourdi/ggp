@@ -26,9 +26,9 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
   case ggo::bgra_8u_yd:
     ggo::fill_color_curve<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
     break;
-    default:
-      GGO_FAIL();
-      break;
+  default:
+    GGO_FAIL();
+    break;
   }
 
   const int bubbles_count = 100;
@@ -55,9 +55,9 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
     bubble.set_center(ggo::rand<float>(-0.1f, 1.1f) * get_width(), -0.1f * get_height());
 
     // Move the bubble up.
-    while (bubble.get_center().get<1>() < get_height() + bubble.get_radius())
+    while (bubble.get_center().y() < get_height() + bubble.get_radius())
     {
-      bubble.center().get<0>() += dx + amplitude * std::sin(wavelength * bubble.center().get<1>());
+      bubble.center().get<0>() += dx + amplitude * std::sin(wavelength * bubble.center().y());
       bubble.center().get<1>() += dy;
       
       auto brush = [&](int x, int y) { return curve.evaluate(bubble.center().get<0>()); };
@@ -72,7 +72,7 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
         paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
         break;
       case ggo::bgra_8u_yd:
-        paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
+        paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
         break;
       default:
         GGO_FAIL();

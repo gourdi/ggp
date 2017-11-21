@@ -73,7 +73,23 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::rect_int & clipping)
   {
-    process_pixel_buffer<pbf>(buffer, width, height, line_byte_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    constexpr int pixel_byte_size = pixel_buffer_format_info<pbf>::pixel_byte_size;
+
+    ggo::rect_int rect = ggo::rect_int::from_width_height(width, height);
+    if (rect.clip(clipping) == true)
+    {
+      for (int y = rect.bottom(); y <= rect.top(); ++y)
+      {
+        void * begin = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
+        void * end = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
+
+        for (void * it = begin; it != end; it = ptr_offset<pixel_byte_size>(it))
+        {
+          write_pixel<pbf>(it, c);
+        }
+      }
+    }
   }
 
   template <pixel_buffer_format pbf>
@@ -105,7 +121,6 @@ namespace ggo
     ggo::fill_checker<floating_point_color_t>(width, height, c1_fp, c2_fp, tile_size, write_pixel_func);
   }
 }
-
 
 // 4 colors.
 namespace ggo
@@ -216,6 +231,5 @@ namespace ggo
     fill_gaussian(width, height, stddev, c1_fp, c2_fp, write_pixel_func);
   }
 }
-
 
 #endif

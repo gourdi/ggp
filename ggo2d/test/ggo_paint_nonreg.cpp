@@ -19,7 +19,7 @@
 //#define GGO_BENCH
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, hard_rect_y_8u_yu)
+GGO_TEST(paint, fill_solid_y_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -29,7 +29,7 @@ GGO_TEST(paint, hard_rect_y_8u_yu)
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
 
-  ggo::paint_rect<ggo::y_8u_yu>(buffer.data(), 8, 6, 10, 5, 12, 2, 8, { 99 });
+  ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), 8, 6, 10, 99, ggo::rect_int::from_left_right_bottom_top(5, 12, 2, 8));
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -43,7 +43,7 @@ GGO_TEST(paint, hard_rect_y_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, hard_rect_bgra_8u_yd)
+GGO_TEST(paint, fill_solid_bgra_8u_yd)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -53,7 +53,7 @@ GGO_TEST(paint, hard_rect_bgra_8u_yd)
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
 
-  ggo::paint_rect<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, -1, 0, -1, 2, { uint8_t(97), uint8_t(98), uint8_t(99) });
+  ggo::fill_solid<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, { uint8_t(97), uint8_t(98), uint8_t(99) }, ggo::rect_int::from_left_right_bottom_top(-1, 0, -1, 2));
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -67,7 +67,7 @@ GGO_TEST(paint, hard_rect_bgra_8u_yd)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, hard_rect_rgb_32f_yu)
+GGO_TEST(paint, fill_solid_rgb_32f_yu)
 {
   const int line_step = 10 * sizeof(float) + 1; // 1 extra byte per line.
   std::vector<uint8_t> buffer(4 * line_step, 0);
@@ -91,7 +91,7 @@ GGO_TEST(paint, hard_rect_rgb_32f_yu)
   fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
   fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
 
-  ggo::paint_rect<ggo::rgb_32f_yu>(buffer.data(), 3, 4, line_step, -1, 1, 2, 5, { 97.f, 98.f, 99.f });
+  ggo::fill_solid<ggo::rgb_32f_yu>(buffer.data(), 3, 4, line_step, { 97.f, 98.f, 99.f }, ggo::rect_int::from_left_right_bottom_top(-1, 1, 2, 5));
 
   auto compare_line = [&](float * line, const std::vector<float> & expected)
   {
