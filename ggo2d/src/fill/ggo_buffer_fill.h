@@ -81,12 +81,12 @@ namespace ggo
     {
       for (int y = rect.bottom(); y <= rect.top(); ++y)
       {
-        void * begin = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
+        void * ptr = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
         void * end = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
 
-        for (void * it = begin; it != end; it = ptr_offset<pixel_byte_size>(it))
+        for (; ptr != end; ptr = ptr_offset<pixel_byte_size>(ptr))
         {
-          write_pixel<pbf>(it, c);
+          write_pixel<pbf>(ptr, c);
         }
       }
     }

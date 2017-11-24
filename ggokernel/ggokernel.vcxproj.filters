@@ -316,9 +316,6 @@
     <ClInclude Include="src\memory\ggo_memory_layouts.h">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="src\memory\ggo_memory.h">
-      <Filter>memory</Filter>
-    </ClInclude>
     <ClInclude Include="src\memory\ggo_data_access.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -365,6 +362,9 @@
       <Filter>trees</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_container_helpers.h" />
+    <ClInclude Include="src\memory\ggo_ptr_offset.h">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ggo_kernel.cpp" />

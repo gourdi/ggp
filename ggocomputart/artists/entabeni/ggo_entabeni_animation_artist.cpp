@@ -44,13 +44,16 @@ bool ggo::entabeni_animation_artist::prepare_frame()
 void ggo::entabeni_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Interpolate grid.
-  ggo::array<float, 2> grid(_grid_start.get_size<0>(), _grid_start.get_size<1>());
+  ggo::array<float, 2> grid(_grid_start.get_width(), _grid_start.get_height());
   float t = static_cast<float>(_frame_index) / static_cast<float>(frames_count);
-  auto interpolate = [&](int x, int y)
+
+  for (int y = 0; y < grid.get_height(); ++y)
   {
-    grid(x, y) = (1.f - t) * _grid_start(x, y) + t * _grid_end(x, y);
-  };
-  ggo::for_each(grid, interpolate);
+    for (int x = 0; x < grid.get_width(); ++x)
+    {
+      grid(x, y) = (1.f - t) * _grid_start(x, y) + t * _grid_end(x, y);
+    }
+  }
 
   // Paint the grid.
   ggo::entabeni::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), grid, _color_map, _z, _angle);

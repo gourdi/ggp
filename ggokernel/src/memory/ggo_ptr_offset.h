@@ -1,5 +1,5 @@
-#ifndef __GGO_MEMORY__
-#define __GGO_MEMORY__
+#ifndef __GGO_PTR_OFFSET__
+#define __GGO_PTR_OFFSET__
 
 //////////////////////////////////////////////////////////////
 // Pointer offset.

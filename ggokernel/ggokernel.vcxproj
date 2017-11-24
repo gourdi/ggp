@@ -205,7 +205,7 @@
     <ClInclude Include="src\memory\ggo_buffer_iterator.h" />
     <ClInclude Include="src\memory\ggo_circular_buffer.h" />
     <ClInclude Include="src\memory\ggo_data_access.h" />
-    <ClInclude Include="src\memory\ggo_memory.h" />
+    <ClInclude Include="src\memory\ggo_ptr_offset.h" />
     <ClInclude Include="src\memory\ggo_memory_layouts.h" />
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />

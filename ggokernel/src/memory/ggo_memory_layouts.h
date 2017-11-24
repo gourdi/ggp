@@ -2,7 +2,7 @@
 #define __GGO_MEMORY_LAYOUTS__
 
 #include <ggo_kernel.h>
-#include <ggo_memory.h>
+#include <ggo_ptr_offset.h>
 #include <ggo_rect_int.h>
 #include <ggo_buffer_iterator.h>
 

@@ -22,14 +22,17 @@ artist(width, height)
 
   _grid.resize(grid_size_x, grid_size_y);
 
-  for_each(_grid, [&](int x, int y)
+  for (int y = 0; y < _grid.get_height(); ++y)
   {
-    float left = x * cell_size - _threshold_dist;
-    float right = (x + 1) * cell_size + _threshold_dist;
-    float bottom = y * cell_size - _threshold_dist;
-    float top = (y + 1) * cell_size + _threshold_dist;
-    _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
-  });
+    for (int x = 0; x < _grid.get_width(); ++x)
+    {
+      float left = x * cell_size - _threshold_dist;
+      float right = (x + 1) * cell_size + _threshold_dist;
+      float bottom = y * cell_size - _threshold_dist;
+      float top = (y + 1) * cell_size + _threshold_dist;
+      _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
+    }
+  }
 
   // Create seeds.
   for (int i = 0; i < 5; ++i)

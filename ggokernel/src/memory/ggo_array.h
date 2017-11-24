@@ -339,22 +339,5 @@ namespace ggo
   using array_double  = array<double, 1>;
 }
 
-//////////////////////////////////////////////////////////////
-// For each
-namespace ggo
-{
-  template <typename data_t, typename func_t>
-  void for_each(const ggo::array<data_t, 2> & a, func_t f)
-  {
-    for (int y = 0; y < a.template get_size<1>(); ++y)
-    {
-      for (int x = 0; x < a.template get_size<0>(); ++x)
-      {
-        f(x, y);
-      }
-    }
-  }
-}
-
 #endif
 

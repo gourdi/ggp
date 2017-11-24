@@ -402,5 +402,4 @@ GGO_TEST(ggo_array, comparison)
 
   b = ggo::array<int, 2>(2, 2, 0);
   GGO_CHECK_NE(a, b);
-
 }

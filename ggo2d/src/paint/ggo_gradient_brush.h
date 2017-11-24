@@ -2,13 +2,13 @@
 #define __GGO_RGB_GRADIENT_BRUSH__
 
 #include <ggo_ease.h>
-#include <ggo_color.h>
+#include <ggo_brush.h>
 
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
   template <typename color_t>
-  struct gradient_brush
+  struct gradient_brush : public brush_abc<color_t>
   {
     using floating_point_color_t = typename color_traits<color_t>::floating_point_color_t;
     using data_t = typename color_traits<floating_point_color_t>::sample_t;
@@ -17,7 +17,7 @@ namespace ggo
     
             gradient_brush(const color_t & c1, const ggo::pos2<data_t> & p1, const color_t & c2, const ggo::pos2<data_t> & p2);
 
-    color_t operator()(int x, int y) const;
+    color_t operator()(int x, int y) const override;
 
     const floating_point_color_t _color1;
     const floating_point_color_t _color2;
