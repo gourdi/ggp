@@ -185,18 +185,18 @@ GGO_TEST(ggo_array, loop_access)
     a(0) = 1;
     a(1) = 2;
     a(2) = 3;
-    GGO_CHECK_EQ(a.get_loop(-4), 3);
-    GGO_CHECK_EQ(a.get_loop(-3), 1);
-    GGO_CHECK_EQ(a.get_loop(-2), 2);
-    GGO_CHECK_EQ(a.get_loop(-1), 3);
-    GGO_CHECK_EQ(a.get_loop( 0), 1);
-    GGO_CHECK_EQ(a.get_loop( 1), 2);
-    GGO_CHECK_EQ(a.get_loop( 2), 3);
-    GGO_CHECK_EQ(a.get_loop( 3), 1);
-    GGO_CHECK_EQ(a.get_loop( 4), 2);
-    GGO_CHECK_EQ(a.get_loop( 5), 3);
-    GGO_CHECK_EQ(a.get_loop( 6), 1);
-    GGO_CHECK_EQ(a.get_loop( 7), 2);
+    GGO_CHECK_EQ(a.at_loop(-4), 3);
+    GGO_CHECK_EQ(a.at_loop(-3), 1);
+    GGO_CHECK_EQ(a.at_loop(-2), 2);
+    GGO_CHECK_EQ(a.at_loop(-1), 3);
+    GGO_CHECK_EQ(a.at_loop( 0), 1);
+    GGO_CHECK_EQ(a.at_loop( 1), 2);
+    GGO_CHECK_EQ(a.at_loop( 2), 3);
+    GGO_CHECK_EQ(a.at_loop( 3), 1);
+    GGO_CHECK_EQ(a.at_loop( 4), 2);
+    GGO_CHECK_EQ(a.at_loop( 5), 3);
+    GGO_CHECK_EQ(a.at_loop( 6), 1);
+    GGO_CHECK_EQ(a.at_loop( 7), 2);
   }
 
   {
@@ -207,29 +207,29 @@ GGO_TEST(ggo_array, loop_access)
     a(0, 1) = 4;
     a(1, 1) = 5;
     a(2, 1) = 6;
-    GGO_CHECK_EQ(a.get_loop(-1, -1), 6);
-    GGO_CHECK_EQ(a.get_loop( 0, -1), 4);
-    GGO_CHECK_EQ(a.get_loop( 1, -1), 5);
-    GGO_CHECK_EQ(a.get_loop( 2, -1), 6);
-    GGO_CHECK_EQ(a.get_loop( 3, -1), 4);
+    GGO_CHECK_EQ(a.at_loop(-1, -1), 6);
+    GGO_CHECK_EQ(a.at_loop( 0, -1), 4);
+    GGO_CHECK_EQ(a.at_loop( 1, -1), 5);
+    GGO_CHECK_EQ(a.at_loop( 2, -1), 6);
+    GGO_CHECK_EQ(a.at_loop( 3, -1), 4);
 
-    GGO_CHECK_EQ(a.get_loop(-1, 0), 3);
-    GGO_CHECK_EQ(a.get_loop( 0, 0), 1);
-    GGO_CHECK_EQ(a.get_loop( 1, 0), 2);
-    GGO_CHECK_EQ(a.get_loop( 2, 0), 3);
-    GGO_CHECK_EQ(a.get_loop( 3, 0), 1);
+    GGO_CHECK_EQ(a.at_loop(-1, 0), 3);
+    GGO_CHECK_EQ(a.at_loop( 0, 0), 1);
+    GGO_CHECK_EQ(a.at_loop( 1, 0), 2);
+    GGO_CHECK_EQ(a.at_loop( 2, 0), 3);
+    GGO_CHECK_EQ(a.at_loop( 3, 0), 1);
 
-    GGO_CHECK_EQ(a.get_loop(-1, 1), 6);
-    GGO_CHECK_EQ(a.get_loop( 0, 1), 4);
-    GGO_CHECK_EQ(a.get_loop( 1, 1), 5);
-    GGO_CHECK_EQ(a.get_loop( 2, 1), 6);
-    GGO_CHECK_EQ(a.get_loop( 3, 1), 4);
+    GGO_CHECK_EQ(a.at_loop(-1, 1), 6);
+    GGO_CHECK_EQ(a.at_loop( 0, 1), 4);
+    GGO_CHECK_EQ(a.at_loop( 1, 1), 5);
+    GGO_CHECK_EQ(a.at_loop( 2, 1), 6);
+    GGO_CHECK_EQ(a.at_loop( 3, 1), 4);
 
-    GGO_CHECK_EQ(a.get_loop(-1, 2), 3);
-    GGO_CHECK_EQ(a.get_loop( 0, 2), 1);
-    GGO_CHECK_EQ(a.get_loop( 1, 2), 2);
-    GGO_CHECK_EQ(a.get_loop( 2, 2), 3);
-    GGO_CHECK_EQ(a.get_loop( 3, 2), 1);
+    GGO_CHECK_EQ(a.at_loop(-1, 2), 3);
+    GGO_CHECK_EQ(a.at_loop( 0, 2), 1);
+    GGO_CHECK_EQ(a.at_loop( 1, 2), 2);
+    GGO_CHECK_EQ(a.at_loop( 2, 2), 3);
+    GGO_CHECK_EQ(a.at_loop( 3, 2), 1);
   }
 }
 
@@ -241,18 +241,18 @@ GGO_TEST(ggo_array, loop_mirror)
     a(0) = 1;
     a(1) = 2;
     a(2) = 3;
-    GGO_CHECK_EQ(a.get_mirror(-4), 3);
-    GGO_CHECK_EQ(a.get_mirror(-3), 3);
-    GGO_CHECK_EQ(a.get_mirror(-2), 2);
-    GGO_CHECK_EQ(a.get_mirror(-1), 1);
-    GGO_CHECK_EQ(a.get_mirror(0), 1);
-    GGO_CHECK_EQ(a.get_mirror(1), 2);
-    GGO_CHECK_EQ(a.get_mirror(2), 3);
-    GGO_CHECK_EQ(a.get_mirror(3), 3);
-    GGO_CHECK_EQ(a.get_mirror(4), 2);
-    GGO_CHECK_EQ(a.get_mirror(5), 1);
-    GGO_CHECK_EQ(a.get_mirror(6), 1);
-    GGO_CHECK_EQ(a.get_mirror(7), 2);
+    GGO_CHECK_EQ(a.at_mirror(-4), 3);
+    GGO_CHECK_EQ(a.at_mirror(-3), 3);
+    GGO_CHECK_EQ(a.at_mirror(-2), 2);
+    GGO_CHECK_EQ(a.at_mirror(-1), 1);
+    GGO_CHECK_EQ(a.at_mirror(0), 1);
+    GGO_CHECK_EQ(a.at_mirror(1), 2);
+    GGO_CHECK_EQ(a.at_mirror(2), 3);
+    GGO_CHECK_EQ(a.at_mirror(3), 3);
+    GGO_CHECK_EQ(a.at_mirror(4), 2);
+    GGO_CHECK_EQ(a.at_mirror(5), 1);
+    GGO_CHECK_EQ(a.at_mirror(6), 1);
+    GGO_CHECK_EQ(a.at_mirror(7), 2);
   }
 
   {
@@ -263,29 +263,29 @@ GGO_TEST(ggo_array, loop_mirror)
     a(0, 1) = 4;
     a(1, 1) = 5;
     a(2, 1) = 6;
-    GGO_CHECK_EQ(a.get_mirror(-1, -1), 1);
-    GGO_CHECK_EQ(a.get_mirror(0, -1), 1);
-    GGO_CHECK_EQ(a.get_mirror(1, -1), 2);
-    GGO_CHECK_EQ(a.get_mirror(2, -1), 3);
-    GGO_CHECK_EQ(a.get_mirror(3, -1), 3);
+    GGO_CHECK_EQ(a.at_mirror(-1, -1), 1);
+    GGO_CHECK_EQ(a.at_mirror(0, -1), 1);
+    GGO_CHECK_EQ(a.at_mirror(1, -1), 2);
+    GGO_CHECK_EQ(a.at_mirror(2, -1), 3);
+    GGO_CHECK_EQ(a.at_mirror(3, -1), 3);
 
-    GGO_CHECK_EQ(a.get_mirror(-1, 0), 1);
-    GGO_CHECK_EQ(a.get_mirror(0, 0), 1);
-    GGO_CHECK_EQ(a.get_mirror(1, 0), 2);
-    GGO_CHECK_EQ(a.get_mirror(2, 0), 3);
-    GGO_CHECK_EQ(a.get_mirror(3, 0), 3);
+    GGO_CHECK_EQ(a.at_mirror(-1, 0), 1);
+    GGO_CHECK_EQ(a.at_mirror(0, 0), 1);
+    GGO_CHECK_EQ(a.at_mirror(1, 0), 2);
+    GGO_CHECK_EQ(a.at_mirror(2, 0), 3);
+    GGO_CHECK_EQ(a.at_mirror(3, 0), 3);
 
-    GGO_CHECK_EQ(a.get_mirror(-1, 1), 4);
-    GGO_CHECK_EQ(a.get_mirror(0, 1), 4);
-    GGO_CHECK_EQ(a.get_mirror(1, 1), 5);
-    GGO_CHECK_EQ(a.get_mirror(2, 1), 6);
-    GGO_CHECK_EQ(a.get_mirror(3, 1), 6);
+    GGO_CHECK_EQ(a.at_mirror(-1, 1), 4);
+    GGO_CHECK_EQ(a.at_mirror(0, 1), 4);
+    GGO_CHECK_EQ(a.at_mirror(1, 1), 5);
+    GGO_CHECK_EQ(a.at_mirror(2, 1), 6);
+    GGO_CHECK_EQ(a.at_mirror(3, 1), 6);
 
-    GGO_CHECK_EQ(a.get_mirror(-1, 2), 4);
-    GGO_CHECK_EQ(a.get_mirror(0, 2), 4);
-    GGO_CHECK_EQ(a.get_mirror(1, 2), 5);
-    GGO_CHECK_EQ(a.get_mirror(2, 2), 6);
-    GGO_CHECK_EQ(a.get_mirror(3, 2), 6);
+    GGO_CHECK_EQ(a.at_mirror(-1, 2), 4);
+    GGO_CHECK_EQ(a.at_mirror(0, 2), 4);
+    GGO_CHECK_EQ(a.at_mirror(1, 2), 5);
+    GGO_CHECK_EQ(a.at_mirror(2, 2), 6);
+    GGO_CHECK_EQ(a.at_mirror(3, 2), 6);
   }
 }
 

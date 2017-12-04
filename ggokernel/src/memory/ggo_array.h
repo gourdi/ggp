@@ -174,9 +174,15 @@ namespace ggo
       return _buffer[offset<n_dims, n_dims>::compute(_dimensions, a...)];
     }
 
+    template <typename... args>
+    data_t & at(args... a) { return this->operator()(a...); }
+
+    template <typename... args>
+    const data_t & at(args... a) const { return this->operator()(a...); }
+
     // Accessing array's elements, with indexes looping over array's dimension.
     template <typename... args>
-    data_t & get_loop(args... a)
+    data_t & at_loop(args... a)
     {
       static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
       return _buffer[offset<n_dims, n_dims>::compute_loop(_dimensions, a...)];
@@ -184,7 +190,7 @@ namespace ggo
 
     // Accessing array's elements, with indexes looping over array's dimension.
     template <typename... args>
-    const data_t & get_loop(args... a) const
+    const data_t & at_loop(args... a) const
     {
       static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
       return _buffer[offset<n_dims, n_dims>::compute_loop(_dimensions, a...)];
@@ -192,7 +198,7 @@ namespace ggo
 
     // Accessing array's elements, with indexes looping over array's dimension.
     template <typename... args>
-    data_t & get_mirror(args... a)
+    data_t & at_mirror(args... a)
     {
       static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
       return _buffer[offset<n_dims, n_dims>::compute_mirror(_dimensions, a...)];
@@ -200,17 +206,17 @@ namespace ggo
 
     // Accessing array's elements, with indexes looping over array's dimension.
     template <typename... args>
-    const data_t & get_mirror(args... a) const
+    const data_t & at_mirror(args... a) const
     {
       static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
       return _buffer[offset<n_dims, n_dims>::compute_mirror(_dimensions, a...)];
     }
 
     // Iterators helpers.
-    data_t *  begin() { return _buffer; }
+    data_t *        begin()       { return _buffer; }
     const data_t *  begin() const { return _buffer; }
-    data_t *  end() { return _buffer + get_count(); }
-    const data_t *  end() const { return _buffer + get_count(); }
+    data_t *        end()         { return _buffer + get_count(); }
+    const data_t *  end() const   { return _buffer + get_count(); }
 
     // Fill the array with a given value.
     void fill(const data_t & v)

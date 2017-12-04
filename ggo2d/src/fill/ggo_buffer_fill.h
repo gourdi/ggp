@@ -35,6 +35,13 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
     const typename pixel_buffer_format_info<pbf>::color_t & c4,
     const ggo::rect_int & clipping);
+
+  template <pixel_buffer_format pbf>
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2,
+    const typename pixel_buffer_format_info<pbf>::color_t & c3,
+    const typename pixel_buffer_format_info<pbf>::color_t & c4);
 }
 
 // Curve.
@@ -150,6 +157,16 @@ namespace ggo
     };
 
     ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, clipping, write_pixel_func);
+  }
+
+  template <pixel_buffer_format pbf>
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2,
+    const typename pixel_buffer_format_info<pbf>::color_t & c3,
+    const typename pixel_buffer_format_info<pbf>::color_t & c4)
+  {
+    fill_4_colors<pbf>(buffer, width, height, line_byte_step, c1, c2, c3, c4, ggo::rect_int::from_width_height(width, height));
   }
 }
 

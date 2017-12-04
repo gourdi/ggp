@@ -18,47 +18,42 @@ namespace ggo
 
   private:
 
-#if 0
-    class loop_array2d : public ggo::array<double, 2>
-    {
-    public:
-
-              loop_array2d(int size_x, int size_y);
-
-      double 	interpolate(double x, double y) const;
-      double 	loop_value(int x, int y) const;
-    };
+    void process_sources();
+    void velocity_self_advection();
+    void make_incompressible();
+    void opacity_advection();
 
     struct fluid_source
     {
-      ggo::circle_double	_circle;
-      double				      _speed;
-      double				      _angle;
-      double				      _angle_amplitude;
-      double				      _angle_offset;
-      double				      _wave_length;
-      int					        _timer1;
-      int					        _timer2;
-      double				      _density;
+      ggo::disc_double  _disc;
+      double				    _speed;
+      double				    _angle;
+      double				    _angle_amplitude;
+      double				    _angle_offset;
+      double				    _wave_length;
+      int					      _timer1;
+      int					      _timer2;
+      double				    _opacity;
     };
 
     int                         _frame_index;
-    loop_array2d	              _velocity_x1;
-    loop_array2d	              _velocity_x2;
-    loop_array2d	              _velocity_y1;
-    loop_array2d	              _velocity_y2;
-    loop_array2d *              _velocity_x_cur;
-    loop_array2d *              _velocity_x_tmp;
-    loop_array2d *              _velocity_y_cur;
-    loop_array2d *              _velocity_y_tmp;
-    loop_array2d	              _density1;
-    loop_array2d	              _density2;
-    loop_array2d *              _density_cur;
-    loop_array2d *              _density_tmp;
+    double                      _cell_size;
+    double                      _density;
+    ggo::array<double, 2>	      _velocity_x1;
+    ggo::array<double, 2>	      _velocity_x2;
+    ggo::array<double, 2>	      _velocity_y1;
+    ggo::array<double, 2>	      _velocity_y2;
+    ggo::array<double, 2> *     _velocity_x_cur;
+    ggo::array<double, 2> *     _velocity_x_tmp;
+    ggo::array<double, 2> *     _velocity_y_cur;
+    ggo::array<double, 2> *     _velocity_y_tmp;
+    ggo::array<double, 2>	      _opacity1;
+    ggo::array<double, 2>	      _opacity2;
+    ggo::array<double, 2> *     _opacity_cur;
+    ggo::array<double, 2> *     _opacity_tmp;
     ggo::array<fluid_source, 1> _sources;
     ggo::array<uint8_t, 1>			_bkgd_buffer;
     ggo::color_8u      	        _smoke_color;
-#endif
   };
 }
 
