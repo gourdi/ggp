@@ -139,8 +139,8 @@ _enable_roughness(enable_roughness)
   grayscale += 0.5f * (1.f - grayscale);
   _top_color = ggo::color_32f(grayscale, grayscale, grayscale);
 
-  _camera_angle_start = ggo::rand<float>(-0.2f, 0.2f);
-  _camera_angle_end = ggo::rand<float>(-0.2f, 0.2f);
+  _camera_angle_start = ggo::rand<float>(-0.4f, 0.4f);
+  _camera_angle_end = ggo::rand<float>(-0.4f, 0.4f);
 }
 
 //////////////////////////////////////////////////////////////
