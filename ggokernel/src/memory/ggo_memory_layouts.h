@@ -2,7 +2,8 @@
 #define __GGO_MEMORY_LAYOUTS__
 
 #include <ggo_kernel.h>
-#include <ggo_memory.h>
+#include <ggo_ptr_offset.h>
+#include <ggo_rect_int.h>
 #include <ggo_buffer_iterator.h>
 
 namespace ggo
@@ -106,20 +107,6 @@ namespace ggo
         ptr = ptr_offset(ptr, (height - 1) * line_byte_step);
         return dynamic_item_byte_size_buffer_read_write_iterator<data_reader_t, data_writer_t>(ptr, -line_byte_step);
       }
-    }
-
-    template <typename raw_buffer_t>
-    static std::optional<raw_buffer_t> clip(const raw_buffer_t & buffer, const ggo::rect_int & clipping)
-    {
-      ggo::rect_int rect = ggo::rect_int::from_width_height(buffer._width, buffer._height);
-      if (rect.clip(clipping) == false)
-      {
-        return {};
-      }
-
-      auto ptr = get_xy_ptr(buffer._buffer, rect.left(), lines_order == direction::up ? rect.bottom() : rect.top(), buffer._height, buffer._line_byte_step);
-
-      return raw_buffer_t(rect.width(), rect.height(), buffer._line_byte_step, ptr);
     }
   };
 }

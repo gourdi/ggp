@@ -91,4 +91,77 @@ namespace ggo
   }
 }
 
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  data_t map_fit(data_t value, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    if (render_width >= render_height)
+    {
+      return ggo::map(value, inf, sup, data_t(0), data_t(render_height));
+    }
+    else
+    {
+      return ggo::map(value, inf, sup, data_t(0), data_t(render_width));
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  ggo::pos2<data_t> map_fit(const ggo::pos2<data_t> & point, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    ggo::pos2<data_t> result;
+
+    if (render_width >= render_height)
+    {
+      result.x() = ggo::map(point.x(), inf, sup, data_t(0), data_t(render_height));
+      result.y() = ggo::map(point.y(), inf, sup, data_t(0), data_t(render_height));
+
+      result.x() += (render_width - render_height) / data_t(2);
+    }
+    else
+    {
+      result.x() = ggo::map(point.x(), inf, sup, data_t(0), data_t(render_width));
+      result.y() = ggo::map(point.y(), inf, sup, data_t(0), data_t(render_width));
+
+      result.y() += (render_height - render_width) / data_t(2);
+    }
+
+    return result;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void map_fit(ggo::rect<data_t> & rect, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    if (render_width >= render_height)
+    {
+      rect.left() = ggo::map(rect.left(), inf, sup, data_t(0), data_t(render_height));
+      rect.bottom() = ggo::map(rect.bottom(), inf, sup, data_t(0), data_t(render_height));
+      rect.width() = ggo::map(rect.width(), inf, sup, data_t(0), data_t(render_height));
+      rect.height() = ggo::map(rect.height(), inf, sup, data_t(0), data_t(render_height));
+
+      rect.left() += (render_width - render_height) / data_t(2);
+    }
+    else
+    {
+      rect.left() = ggo::map(rect.left(), inf, sup, 0.f, data_t(render_width));
+      rect.bottom() = ggo::map(rect.bottom(), inf, sup, 0.f, data_t(render_width));
+      rect.width() = ggo::map(rect.width(), inf, sup, 0.f, data_t(render_width));
+      rect.height() = ggo::map(rect.height(), inf, sup, 0.f, data_t(render_width));
+
+      rect.bottom() += 0.5f * (render_height - render_width);
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void map_fit(ggo::disc<data_t> & disc, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    disc.center() = map_fit(disc.center(), inf, sup, render_width, render_height);
+    disc.radius() = map_fit(disc.radius(), inf, sup, render_width, render_height);
+  }
+}
+
 #endif

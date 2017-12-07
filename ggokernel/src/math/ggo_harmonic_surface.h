@@ -32,8 +32,7 @@ namespace ggo
   void harmonic_surface<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
   {
     wave new_wave;
-    new_wave._wave_vector = dir;
-    new_wave._wave_vector.set_length(1 / wavelength);
+    new_wave._wave_vector = dir.get_normalized();
     new_wave._phase = phase;
     new_wave._amplitude = amplitude;
     _waves.push_back(new_wave);

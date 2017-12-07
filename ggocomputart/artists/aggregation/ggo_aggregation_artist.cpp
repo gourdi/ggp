@@ -1,6 +1,6 @@
 #include "ggo_aggregation_artist.h"
 #include <ggo_gaussian_blur.h>
-#include <ggo_multi_shape_paint.h>
+#include <ggo_color.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_gaussian_blur2d.h>
 
@@ -13,7 +13,7 @@ artist(width, height)
   _threshold_hypot = _threshold_dist * _threshold_dist;
 
   float hue = ggo::rand<float>();
-  _background_color = from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.25f), ggo::rand<float>(0.25f, 0.75f));
+  _background_color = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.25f), ggo::rand<float>(0.25f, 0.75f));
 
   // Create grid.
   const float cell_size = 0.1f * std::min(width, height);
@@ -22,14 +22,17 @@ artist(width, height)
 
   _grid.resize(grid_size_x, grid_size_y);
 
-  for_each(_grid, [&](int x, int y)
+  for (int y = 0; y < _grid.get_height(); ++y)
   {
-    float left = x * cell_size - _threshold_dist;
-    float right = (x + 1) * cell_size + _threshold_dist;
-    float bottom = y * cell_size - _threshold_dist;
-    float top = (y + 1) * cell_size + _threshold_dist;
-    _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
-  });
+    for (int x = 0; x < _grid.get_width(); ++x)
+    {
+      float left = x * cell_size - _threshold_dist;
+      float right = (x + 1) * cell_size + _threshold_dist;
+      float bottom = y * cell_size - _threshold_dist;
+      float top = (y + 1) * cell_size + _threshold_dist;
+      _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
+    }
+  }
 
   // Create seeds.
   for (int i = 0; i < 5; ++i)

@@ -61,7 +61,6 @@
       <Filter>linear_algebra</Filter>
     </ClCompile>
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
-    <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />
     <ClCompile Include="test\ggo_kernel_nonreg.cpp" />
     <ClCompile Include="test\ggo_quadratic_nonreg.cpp" />

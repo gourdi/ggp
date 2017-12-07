@@ -14,6 +14,10 @@ namespace ggo
   using color_16u = color<uint16_t>;
   using color_32u = color<uint32_t>;
   using color_32f = color<float>;
+  using alpha_color_8u = alpha_color<uint8_t>;
+  using alpha_color_16u = alpha_color<uint16_t>;
+  using alpha_color_32u = alpha_color<uint32_t>;
+  using alpha_color_32f = alpha_color<float>;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -26,46 +30,126 @@ namespace ggo
   template <>
   struct color_traits<uint8_t>
   {
-    using floating_point_t = float;
+    using floating_point_color_t = float;
+    using no_alpha_color_t = uint8_t;
     using sample_t = uint8_t;
-    static uint8_t max() { return 0xff; }
-    static const int samples_count = 1;
+    static constexpr uint8_t max() { return 0xff; }
+    static constexpr int samples_count = 1;
+    static constexpr bool has_alpha = false;
   };
 
   template <>
   struct color_traits<float>
   {
-    using floating_point_t = float;
+    using floating_point_color_t = float;
+    using no_alpha_color_t = float;
     using sample_t = float;
-    static float max() { return 1.f; }
-    static const int samples_count = 1;
+    static constexpr float max() { return 1.f; }
+    static constexpr int samples_count = 1;
+    static constexpr bool has_alpha = false;
   };
 
   template <>
   struct color_traits<ggo::color_8u>
   {
-    using floating_point_t = ggo::color_32f;
+    using floating_point_color_t = ggo::color_32f;
+    using no_alpha_color_t = ggo::color_8u;
+    using alpha_color_t = ggo::alpha_color_8u;
     using sample_t = uint8_t;
-    static uint8_t max() { return 0xff; }
-    static const int samples_count = 3;
+    static constexpr uint8_t max() { return 0xff; }
+    static constexpr int samples_count = 3;
+    static constexpr bool has_alpha = false;
   };
 
   template <>
   struct color_traits<ggo::color_32u>
   {
-    using floating_point_t = ggo::color_32f;
+    using floating_point_color_t = ggo::color_32f;
+    using no_alpha_color_t = ggo::color_32u;
+    using alpha_color_t = ggo::alpha_color_32u;
     using sample_t = uint32_t;
-    static uint32_t max() { return 0xffffffff; }
-    static const int samples_count = 3;
+    static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr int samples_count = 3;
+    static constexpr bool has_alpha = false;
   };
 
   template <>
   struct color_traits<ggo::color_32f>
   {
-    using floating_point_t = ggo::color_32f;
+    using floating_point_color_t = ggo::color_32f;
+    using no_alpha_color_t = ggo::color_32f;
+    using alpha_color_t = ggo::alpha_color_32f;
     using sample_t = float;
-    static float max() { return 1.f; }
-    static const int samples_count = 3;
+    static constexpr float max() { return 1.f; }
+    static constexpr int samples_count = 3;
+    static constexpr bool has_alpha = false;
+  };
+
+  template <>
+  struct color_traits<ggo::alpha_color_8u>
+  {
+    using floating_point_color_t = ggo::alpha_color_32f;
+    using no_alpha_color_t = ggo::color_8u;
+    using alpha_color_t = ggo::alpha_color_8u;
+    using sample_t = uint8_t;
+    static constexpr uint8_t max() { return 0xff; }
+    static constexpr int samples_count = 4;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ggo::alpha_color_32u>
+  {
+    using floating_point_color_t = ggo::alpha_color_32f;
+    using no_alpha_color_t = ggo::color_32u;
+    using alpha_color_t = ggo::alpha_color_32u;
+    using sample_t = uint32_t;
+    static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr int samples_count = 4;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ggo::alpha_color_32f>
+  {
+    using floating_point_color_t = ggo::alpha_color_32f;
+    using no_alpha_color_t = ggo::color_32f;
+    using alpha_color_t = ggo::alpha_color_32f;
+    using sample_t = float;
+    static constexpr float max() { return 1.f; }
+    static constexpr int samples_count = 4;
+    static constexpr bool has_alpha = true;
+  };
+}
+
+// The following traits makes it possible to have a floating point color type of a given precision.
+namespace ggo
+{
+  template <typename color_t, typename floating_point_t>
+  struct floating_point_color_traits {};
+
+  template <>
+  struct floating_point_color_traits<uint8_t, float>
+  {
+    using floating_point_color_t = float;
+  };
+
+  template <>
+  struct floating_point_color_traits<float, float>
+  {
+    using floating_point_color_t = float;
+  };
+
+  template <>
+  struct floating_point_color_traits<ggo::color_8u, float>
+  {
+    using floating_point_color_t = ggo::color_32f;
+  };
+
+  template <>
+  struct floating_point_color_traits<ggo::color_32f, float>
+  {
+    using floating_point_color_t = ggo::color_32f;
   };
 }
 
@@ -272,6 +356,25 @@ namespace ggo
   template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::color_32f>(const ggo::color_32f & c)
   {
     return ggo::color_16u(ggo::clamp_and_round_to<uint16_t>(c.r()), ggo::clamp_and_round_to<uint16_t>(c.g()), ggo::clamp_and_round_to<uint16_t>(c.b()));
+  }
+
+  // rgba 8u => rgb 8u
+  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
+  {
+    return ggo::color_8u(c.r(), c.g(), c.b());
+  }
+
+  // rgba 8u => rgba 32f
+  template <> inline ggo::alpha_color_32f convert_color_to<ggo::alpha_color_32f, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
+  {
+    constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
+    return ggo::alpha_color_32f(scale * c.r(), scale * c.g(), scale * c.b(), scale * c.a());
+  }
+
+  // rgba 32f => rgb 32f
+  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::alpha_color_32f>(const ggo::alpha_color_32f & c)
+  {
+    return ggo::color_32f(c.r(), c.g(), c.b());
   }
 }
 
@@ -500,19 +603,19 @@ namespace ggo
 
   template <typename color_t>
   color_t from_hsv(
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t hue,
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t sat,
-    typename color_traits<typename color_traits<color_t>::floating_point_t>::sample_t val)
+    typename color_traits<typename color_traits<color_t>::floating_point_color_t>::sample_t hue,
+    typename color_traits<typename color_traits<color_t>::floating_point_color_t>::sample_t sat,
+    typename color_traits<typename color_traits<color_t>::floating_point_color_t>::sample_t val)
   {
-    using floating_point_color_t = typename color_traits<color_t>::floating_point_t;
-    using real_t = typename color_traits<floating_point_color_t>::sample_t;
+    using floating_point_color_t = typename color_traits<color_t>::floating_point_color_t;
+    using sample_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<decltype(hue)>::value, "expecting floating point type");
     static_assert(std::is_floating_point<decltype(sat)>::value, "expecting floating point type");
     static_assert(std::is_floating_point<decltype(val)>::value, "expecting floating point type");
-    static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<sample_t>::value, "expecting floating point type");
 
-    real_t r, g, b;
+    sample_t r, g, b;
     ggo::hsv2rgb(hue, sat, val, r, g, b);
     floating_point_color_t c(r, g, b);
 

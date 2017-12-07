@@ -7,16 +7,16 @@ GGO_TEST(value, basic)
 {
   {
     ggo::value v(1.f);
-    GGO_CHECK_FABS(v.to<float>(), 1.f);
+    GGO_CHECK_FLOAT_EQ(v.to<float>(), 1.f);
   }
   {
     ggo::value v(1);
-    GGO_CHECK_FABS(v.to<int>(), 1);
+    GGO_CHECK_FLOAT_EQ(v.to<int>(), 1);
   }
   {
     ggo::value v(ggo::pos2f(1.f, 2.f));
-    GGO_CHECK_FABS(v.to<ggo::pos2f>().x(), 1.f);
-    GGO_CHECK_FABS(v.to<ggo::pos2f>().y(), 2.f);
+    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2f>().x(), 1.f);
+    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2f>().y(), 2.f);
   }
 }
 
@@ -40,8 +40,8 @@ GGO_TEST(value, array)
     int i = 0;
     for (auto v : val.to_range_of<ggo::pos2f>())
     {
-      GGO_CHECK_FABS(v.x(), i == 0 ? 1.f : 3.0f);
-      GGO_CHECK_FABS(v.y(), i == 0 ? 2.f : 4.0f);
+      GGO_CHECK_FLOAT_EQ(v.x(), i == 0 ? 1.f : 3.0f);
+      GGO_CHECK_FLOAT_EQ(v.y(), i == 0 ? 2.f : 4.0f);
 
       ++i;
     }

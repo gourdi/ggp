@@ -7,15 +7,15 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class extended_segment final : public paintable_shape2d_abc<data_t>,
-                                 public distancable_shape2d_abc<data_t>,
-                                 public movable_shape2d_abc<data_t>,
-                                 public rotatable_shape2d_abc<data_t>
+  template <typename data_type>
+  class extended_segment final : public paintable_shape2d_abc<data_type>,
+                                 public distancable_shape2d_abc<data_type>,
+                                 public movable_shape2d_abc<data_type>,
+                                 public rotatable_shape2d_abc<data_type>
   {
   public:
 
-    using type = data_t;
+    using data_t = data_type;
 
                               extended_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width);
           

@@ -175,8 +175,8 @@ namespace ggo
   private:
 
     void  init() override;
-    bool  update() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    bool  prepare_frame() override;
+    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
 
     static  std::shared_ptr<particle>   create_particle(float focus_dist, int width, int height);
   };

@@ -35,6 +35,13 @@ namespace ggo
     const typename pixel_buffer_format_info<pbf>::color_t & c3,
     const typename pixel_buffer_format_info<pbf>::color_t & c4,
     const ggo::rect_int & clipping);
+
+  template <pixel_buffer_format pbf>
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2,
+    const typename pixel_buffer_format_info<pbf>::color_t & c3,
+    const typename pixel_buffer_format_info<pbf>::color_t & c4);
 }
 
 // Curve.
@@ -49,7 +56,7 @@ namespace ggo
 {
   template <pixel_buffer_format pbf>
   void fill_perlin(void * buffer, int width, int height, int line_byte_step, 
-    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t size,
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_color_t>::sample_t size,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2);
 }
@@ -59,7 +66,7 @@ namespace ggo
 {
   template <pixel_buffer_format pbf>
   void fill_gaussian(void * buffer, int width, int height, int line_byte_step, 
-    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_color_t>::sample_t stddev,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2);
 }
@@ -73,7 +80,23 @@ namespace ggo
   template <pixel_buffer_format pbf>
   void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename pixel_buffer_format_info<pbf>::color_t & c, const ggo::rect_int & clipping)
   {
-    process_pixel_buffer<pbf>(buffer, width, height, line_byte_step, clipping, [&](void * ptr) { write_pixel<pbf>(ptr, c); });
+    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    constexpr int pixel_byte_size = pixel_buffer_format_info<pbf>::pixel_byte_size;
+
+    ggo::rect_int rect = ggo::rect_int::from_width_height(width, height);
+    if (rect.clip(clipping) == true)
+    {
+      for (int y = rect.bottom(); y <= rect.top(); ++y)
+      {
+        void * ptr = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
+        void * end = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
+
+        for (; ptr != end; ptr = ptr_offset<pixel_byte_size>(ptr))
+        {
+          write_pixel<pbf>(ptr, c);
+        }
+      }
+    }
   }
 
   template <pixel_buffer_format pbf>
@@ -93,7 +116,7 @@ namespace ggo
     int tile_size)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
-    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
 
     const floating_point_color_t c1_fp = ggo::convert_color_to<floating_point_color_t>(c1);
     const floating_point_color_t c2_fp = ggo::convert_color_to<floating_point_color_t>(c2);
@@ -105,7 +128,6 @@ namespace ggo
     ggo::fill_checker<floating_point_color_t>(width, height, c1_fp, c2_fp, tile_size, write_pixel_func);
   }
 }
-
 
 // 4 colors.
 namespace ggo
@@ -120,7 +142,7 @@ namespace ggo
     const ggo::rect_int & clipping)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
-    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
     using real_t = typename ggo::color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
@@ -136,6 +158,16 @@ namespace ggo
 
     ggo::fill_4_colors<floating_point_color_t, real_t>(width, height, c1_fp, c2_fp, c3_fp, c4_fp, clipping, write_pixel_func);
   }
+
+  template <pixel_buffer_format pbf>
+  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
+    const typename pixel_buffer_format_info<pbf>::color_t & c1,
+    const typename pixel_buffer_format_info<pbf>::color_t & c2,
+    const typename pixel_buffer_format_info<pbf>::color_t & c3,
+    const typename pixel_buffer_format_info<pbf>::color_t & c4)
+  {
+    fill_4_colors<pbf>(buffer, width, height, line_byte_step, c1, c2, c3, c4, ggo::rect_int::from_width_height(width, height));
+  }
 }
 
 // Curve.
@@ -145,7 +177,7 @@ namespace ggo
   void fill_color_curve(void * buffer, int width, int height, int line_byte_step, const curve_t & curve)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
-    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
     using real_t = typename ggo::color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
@@ -166,12 +198,12 @@ namespace ggo
 {
   template <pixel_buffer_format pbf>
   void fill_perlin(void * buffer, int width, int height, int line_byte_step,
-    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t size,
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_color_t>::sample_t size,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
-    using floating_point_color_t = typename color_traits<color_t>::floating_point_t;
+    using floating_point_color_t = typename color_traits<color_t>::floating_point_color_t;
     using real_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
@@ -194,12 +226,12 @@ namespace ggo
 {
   template <pixel_buffer_format pbf>
   void fill_gaussian(void * buffer, int width, int height, int line_byte_step,
-    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_t>::sample_t stddev,
+    typename color_traits<typename color_traits<typename pixel_buffer_format_info<pbf>::color_t>::floating_point_color_t>::sample_t stddev,
     const typename pixel_buffer_format_info<pbf>::color_t & c1,
     const typename pixel_buffer_format_info<pbf>::color_t & c2)
   {
     using color_t = typename pixel_buffer_format_info<pbf>::color_t;
-    using floating_point_color_t = typename color_traits<color_t>::floating_point_t;
+    using floating_point_color_t = typename color_traits<color_t>::floating_point_color_t;
     using real_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point<real_t>::value, "execting floating point type");
@@ -216,6 +248,5 @@ namespace ggo
     fill_gaussian(width, height, stddev, c1_fp, c2_fp, write_pixel_func);
   }
 }
-
 
 #endif

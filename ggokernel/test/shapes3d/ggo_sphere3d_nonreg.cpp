@@ -11,10 +11,10 @@ GGO_TEST(sphere3d, merge)
 
     ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().x(), sphere1.center().x());
-    GGO_CHECK_FABS(sphere3.center().y(), sphere1.center().y());
-    GGO_CHECK_FABS(sphere3.center().z(), sphere1.center().z());
-    GGO_CHECK_FABS(sphere3.radius(), sphere1.radius());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().x(), sphere1.center().x());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().y(), sphere1.center().y());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().z(), sphere1.center().z());
+    GGO_CHECK_FLOAT_EQ(sphere3.radius(), sphere1.radius());
   }
 
   // Sphere1 inside sphere2.
@@ -24,10 +24,10 @@ GGO_TEST(sphere3d, merge)
 
     ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().x(), sphere2.center().x());
-    GGO_CHECK_FABS(sphere3.center().y(), sphere2.center().y());
-    GGO_CHECK_FABS(sphere3.center().z(), sphere2.center().z());
-    GGO_CHECK_FABS(sphere3.radius(), sphere2.radius());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().x(), sphere2.center().x());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().y(), sphere2.center().y());
+    GGO_CHECK_FLOAT_EQ(sphere3.center().z(), sphere2.center().z());
+    GGO_CHECK_FLOAT_EQ(sphere3.radius(), sphere2.radius());
   }
 
   // Disjoints spheres.
@@ -37,10 +37,10 @@ GGO_TEST(sphere3d, merge)
 
     ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().x(), -0.5);
-    GGO_CHECK_FABS(sphere3.center().y(), 0);
-    GGO_CHECK_FABS(sphere3.center().z(), 0);
-    GGO_CHECK_FABS(sphere3.radius(), 4.5);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().x(), -0.5);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().y(), 0);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().z(), 0);
+    GGO_CHECK_FLOAT_EQ(sphere3.radius(), 4.5);
   }
 
   // Overlapping spheres.
@@ -50,10 +50,10 @@ GGO_TEST(sphere3d, merge)
 
     ggo::sphere3d_float sphere3 = ggo::get_union(sphere1, sphere2);
 
-    GGO_CHECK_FABS(sphere3.center().x(), 0);
-    GGO_CHECK_FABS(sphere3.center().y(), -0.5);
-    GGO_CHECK_FABS(sphere3.center().z(), 0);
-    GGO_CHECK_FABS(sphere3.radius(), 3.5);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().x(), 0);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().y(), -0.5);
+    GGO_CHECK_FLOAT_EQ(sphere3.center().z(), 0);
+    GGO_CHECK_FLOAT_EQ(sphere3.radius(), 3.5);
   }
 }
 
@@ -66,47 +66,47 @@ GGO_TEST(sphere3d, ray_intersection)
 
   ggo::ray3d_float ray1(ggo::pos3f(10.f, 11.f, 3.f), ggo::vec3f(0.f, 0.f, 1.f));
   GGO_CHECK(sphere.intersect_ray(ray1, t, normal) == true);
-  GGO_CHECK_FABS(t, 7);
-  GGO_CHECK_FABS(normal.pos().x(), 10);
-  GGO_CHECK_FABS(normal.pos().y(), 11);
-  GGO_CHECK_FABS(normal.pos().z(), 10);
-  GGO_CHECK_FABS(normal.dir().x(), 0);
-  GGO_CHECK_FABS(normal.dir().y(), 0);
-  GGO_CHECK_FABS(normal.dir().z(), -1);
+  GGO_CHECK_FLOAT_EQ(t, 7);
+  GGO_CHECK_FLOAT_EQ(normal.pos().x(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.pos().y(), 11);
+  GGO_CHECK_FLOAT_EQ(normal.pos().z(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.dir().x(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().z(), -1);
 
   ggo::ray3d_float ray2(ggo::pos3f(10.f, 2.f, 3.f), ggo::vec3f(1.f, 1.f, 1.f));
   GGO_CHECK(sphere.intersect_ray(ray2, t, normal) == false);
 
   ggo::ray3d_float ray4(ggo::pos3f(8.f, 11.f, 8.f), ggo::vec3f(1.f, 0.f, 1.f));
   GGO_CHECK(sphere.intersect_ray(ray4, t, normal) == true);
-  GGO_CHECK_FABS(t, 2 * std::sqrt(2));
-  GGO_CHECK_FABS(normal.pos().x(), 10);
-  GGO_CHECK_FABS(normal.pos().y(), 11);
-  GGO_CHECK_FABS(normal.pos().z(), 10);
-  GGO_CHECK_FABS(normal.dir().x(), 0);
-  GGO_CHECK_FABS(normal.dir().y(), 0);
-  GGO_CHECK_FABS(normal.dir().z(), -1);
+  GGO_CHECK_FLOAT_EQ(t, 2 * std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(normal.pos().x(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.pos().y(), 11);
+  GGO_CHECK_FLOAT_EQ(normal.pos().z(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.dir().x(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().z(), -1);
 
   ggo::ray3d_float ray5(ggo::pos3f(13.f, 16.f, 12.f), ggo::vec3f(-1.f, -1.f, 0.f));
   GGO_CHECK(sphere.intersect_ray(ray5, t, normal) == true);
-  GGO_CHECK_FABS(t, 3 * std::sqrt(2));
-  GGO_CHECK_FABS(normal.pos().x(), 10);
-  GGO_CHECK_FABS(normal.pos().y(), 13);
-  GGO_CHECK_FABS(normal.pos().z(), 12);
-  GGO_CHECK_FABS(normal.dir().x(), 0);
-  GGO_CHECK_FABS(normal.dir().y(), 1);
-  GGO_CHECK_FABS(normal.dir().z(), 0);
+  GGO_CHECK_FLOAT_EQ(t, 3 * std::sqrt(2));
+  GGO_CHECK_FLOAT_EQ(normal.pos().x(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.pos().y(), 13);
+  GGO_CHECK_FLOAT_EQ(normal.pos().z(), 12);
+  GGO_CHECK_FLOAT_EQ(normal.dir().x(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().y(), 1);
+  GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0);
 
   // Ray'sphere origin inside the shpere.
   ggo::ray3d_float ray6(ggo::pos3f(10.f, 11.f, 12.f), ggo::vec3f(0.f, 1.f, 0.f));
   GGO_CHECK(sphere.intersect_ray(ray6, t, normal) == true);
-  GGO_CHECK_FABS(t, 2);
-  GGO_CHECK_FABS(normal.pos().x(), 10);
-  GGO_CHECK_FABS(normal.pos().y(), 13);
-  GGO_CHECK_FABS(normal.pos().z(), 12);
-  GGO_CHECK_FABS(normal.dir().x(), 0);
-  GGO_CHECK_FABS(normal.dir().y(), -1);
-  GGO_CHECK_FABS(normal.dir().z(), 0);
+  GGO_CHECK_FLOAT_EQ(t, 2);
+  GGO_CHECK_FLOAT_EQ(normal.pos().x(), 10);
+  GGO_CHECK_FLOAT_EQ(normal.pos().y(), 13);
+  GGO_CHECK_FLOAT_EQ(normal.pos().z(), 12);
+  GGO_CHECK_FLOAT_EQ(normal.dir().x(), 0);
+  GGO_CHECK_FLOAT_EQ(normal.dir().y(), -1);
+  GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -126,11 +126,11 @@ GGO_TEST(sphere3d, bounding_box)
   auto aabb = sphere.get_bounding_box(ggo::basis3d_float({ 1.f, 2.f, 3.f }));
   GGO_CHECK(aabb.has_value() == true);
 
-  GGO_CHECK_FABS(aabb->_x_min, 3.5f);
-  GGO_CHECK_FABS(aabb->_x_max, 4.5f);
-  GGO_CHECK_FABS(aabb->_y_min, 2.5f);
-  GGO_CHECK_FABS(aabb->_y_max, 3.5f);
-  GGO_CHECK_FABS(aabb->_z_min, 2.5f);
-  GGO_CHECK_FABS(aabb->_z_max, 3.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_x_min, 3.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_x_max, 4.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_y_min, 2.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_y_max, 3.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_z_min, 2.5f);
+  GGO_CHECK_FLOAT_EQ(aabb->_z_max, 3.5f);
 }
 

@@ -1,7 +1,7 @@
 #ifndef __GGO_BUFFER_ITERATOR__
 #define __GGO_BUFFER_ITERATOR__
 
-#include <ggo_memory.h>
+#include <ggo_ptr_offset.h>
 #include <ggo_data_access.h>
 
 /////////////////////////////////////////////////////////////////////

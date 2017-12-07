@@ -27,8 +27,8 @@ namespace ggo
   private:
 
     void  init() override;
-    bool  update() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    bool  prepare_frame() override;
+    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
 
   private:
 

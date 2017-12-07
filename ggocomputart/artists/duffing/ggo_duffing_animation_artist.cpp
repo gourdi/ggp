@@ -24,13 +24,13 @@ void ggo::duffing_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::duffing_animation_artist::update()
+bool ggo::duffing_animation_artist::prepare_frame()
 {
-  return _artist->update();
+  return _artist->prepare_frame();
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::duffing_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  _artist->render_frame(buffer, clipping);
+  _artist->process_frame(buffer, clipping);
 }

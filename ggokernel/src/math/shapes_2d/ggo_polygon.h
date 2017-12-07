@@ -7,15 +7,15 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class polygon2d final : public paintable_shape2d_abc<data_t>,
-                          public distancable_shape2d_abc<data_t>,
-                          public movable_shape2d_abc<data_t>,
-                          public rotatable_shape2d_abc<data_t>
+  template <typename data_type>
+  class polygon2d final : public paintable_shape2d_abc<data_type>,
+                          public distancable_shape2d_abc<data_type>,
+                          public movable_shape2d_abc<data_type>,
+                          public rotatable_shape2d_abc<data_type>
   {
   public:
 
-    using type = data_t;
+    using data_t = data_type;
     using samplable_shape2d_abc<data_t>::is_point_inside;
 
                               polygon2d() {}

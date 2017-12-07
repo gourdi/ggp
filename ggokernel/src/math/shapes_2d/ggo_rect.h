@@ -7,14 +7,14 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class rect final : public paintable_shape2d_abc<data_t>,
-                     public distancable_shape2d_abc<data_t>,
-                     public movable_shape2d_abc<data_t> 
+  template <typename data_type>
+  class rect final : public paintable_shape2d_abc<data_type>,
+                     public distancable_shape2d_abc<data_type>,
+                     public movable_shape2d_abc<data_type>
   {
   public:
 
-    using type = data_t;
+    using data_t = data_type;
     using ggo::samplable_shape2d_abc<data_t>::is_point_inside;
     using ggo::distancable_shape2d_abc<data_t>::dist_to_point;
 

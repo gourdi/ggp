@@ -14,8 +14,8 @@ namespace ggo
           distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
     void  init() override;
-    bool  update() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    bool  prepare_frame() override;
+    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
 
     void  render_frame(int frame_index, void * buffer, const ggo::rect_int & clipping) const;
     void  render_last_frame(void * buffer) const;

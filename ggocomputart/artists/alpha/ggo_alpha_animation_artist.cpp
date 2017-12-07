@@ -72,7 +72,7 @@ void ggo::alpha_animation_artist::add_new_item()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::alpha_animation_artist::update()
+bool ggo::alpha_animation_artist::prepare_frame()
 {
   // Oscillos.
   ggo::remove_if(_oscillos, [&](oscillo & oscil) { return oscil.update() == false; });
@@ -117,7 +117,7 @@ bool ggo::alpha_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::alpha_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer != nullptr)
   {

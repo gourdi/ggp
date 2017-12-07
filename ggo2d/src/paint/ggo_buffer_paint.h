@@ -1,21 +1,15 @@
 #ifndef __GGO_BUFFER_PAINT__
 #define __GGO_BUFFER_PAINT__
 
+#include <vector>
 #include <ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
 #include <ggo_sampling_paint.h>
 #include <ggo_shapes2d.h>
+#include <ggo_paint_shape.h>
 #include <ggo_multi_scale_paint.h>
 
-// Hard rectangles.
-namespace ggo
-{
-  // No checks are performed, parameters are expected to be valid ones.
-  template <pixel_buffer_format pbf>
-  void paint_rect(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c);
-}
-
-// Shapes.
+// Paint single shape.
 namespace ggo
 {
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
@@ -37,23 +31,23 @@ namespace ggo
     const shape_t & shape, const typename pixel_buffer_format_info<pbf>::color_t & color);
 }
 
+// Paint multiple shapes.
+namespace ggo
+{
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shapes_range_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes_range, const ggo::rect_int & clipping);
+
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes);
+
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> &shapes, const ggo::rect_int & clipping);
+}
+
 //////////////////////////////////////////////////////////////
 // Implementation.
 
-// Hard rectangles.
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf>
-  void paint_rect(void * buffer, int width, int height, int line_step, int left, int right, int bottom, int top, const typename pixel_buffer_format_info<pbf>::color_t & c)
-  {
-    process_pixel_buffer<pbf>(buffer, width, height, line_step,
-      ggo::rect_int::from_left_right_bottom_top(left, right, bottom, top),
-      [&](void * ptr) { write_pixel<pbf>(ptr, c); });
-  }
-}
-
-// Shape.
+// Paint single shape.
 namespace ggo
 {
   template <pixel_buffer_format pbf, sampling smp, typename shape_t, typename brush_t, typename blend_t>
@@ -111,6 +105,58 @@ namespace ggo
     auto blend = [](int, int, const color_t &, const color_t & brush_color) { return brush_color; };
 
     paint_shape<pbf, smp>(buffer, width, height, line_step, shape, brush, blend);
+  }
+}
+
+// Paint multiple shapes.
+namespace ggo
+{
+  /////////////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shapes_range_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes_range, const ggo::rect_int & clipping)
+  {
+    const int scale_factor = 8;
+    const int first_scale = 2;
+
+    using color_t = typename pixel_buffer_format_info<pbf>::color_t;
+
+    auto read_pixel_func = [&](int x, int y)
+    {
+      return ggo::read_pixel<pbf>(buffer, x, y, height, line_step);
+    };
+
+    auto write_pixel_func = [&](int x, int y, const color_t & c)
+    {
+      ggo::write_pixel<pbf>(buffer, x, y, height, line_step, c);
+    };
+
+    paint_multi_scale<smp>(width, height, shapes_range, scale_factor, first_scale, read_pixel_func, write_pixel_func, clipping);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes)
+  {
+    paint_shapes<pbf, smp>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes, const ggo::rect_int & clipping)
+  {
+    if constexpr(std::is_pointer<paint_shape_t>::value == true)
+    {
+      // I could not use an adaptator here, but by doing so, I can call the generic version of the paint_shapes function.
+      auto adaptor = ggo::make_adaptor(shapes, [](const auto * paint_shape) { return paint_shape; });
+
+      paint_shapes<pbf, smp>(buffer, width, height, line_step, adaptor, clipping);
+    }
+    else
+    {
+      auto adaptor = ggo::make_adaptor(shapes, [](const auto & paint_shape) { return &paint_shape; });
+
+      paint_shapes<pbf, smp>(buffer, width, height, line_step, adaptor, clipping);
+    }
   }
 }
 

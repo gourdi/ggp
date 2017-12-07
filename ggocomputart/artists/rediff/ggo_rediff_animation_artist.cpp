@@ -53,7 +53,7 @@ void ggo::rediff_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::rediff_animation_artist::update()
+bool ggo::rediff_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -92,7 +92,7 @@ bool ggo::rediff_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::rediff_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer == nullptr)
   {
@@ -130,12 +130,12 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::rect_i
     for (int x = 0; x < get_width(); ++x)
     {
       // Compute the normal by computing 4 point around the current pixel.
-      ggo::pos3f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x - 1, y - 1)); // Bottom left
-      ggo::pos3f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x + 1, y + 1)); // Top right
+      ggo::pos3f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x - 1, y - 1)); // Bottom left
+      ggo::pos3f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x + 1, y + 1)); // Top right
       ggo::vec3f v1(p_tr - p_bl);
 
-      ggo::pos3f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x - 1, y) + _life.get_loop(x, y + 1)) + 0.15f * _life.get_loop(x - 1, y + 1)); // Top left.
-      ggo::pos3f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.get_loop(x + 1, y) + _life.get_loop(x, y - 1)) + 0.15f * _life.get_loop(x + 1, y - 1)); // Bottom right.
+      ggo::pos3f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x - 1, y + 1)); // Top left.
+      ggo::pos3f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x + 1, y - 1)); // Bottom right.
       ggo::vec3f v2(p_tl - p_br);
 
       ggo::vec3f normal = ggo::cross(v1, v2);

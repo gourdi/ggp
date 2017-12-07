@@ -190,6 +190,16 @@ GGO_TEST(base, pow)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(base, fixed_point_div)
 {
+  static_assert(ggo::fixed_point_div<4>(117) == 7);
+  static_assert(ggo::fixed_point_div<4>(118) == 7); 
+  static_assert(ggo::fixed_point_div<4>(119) == 7); 
+  static_assert(ggo::fixed_point_div<4>(120) == 8); 
+  static_assert(ggo::fixed_point_div<4>(121) == 8); 
+  static_assert(ggo::fixed_point_div<4>(122) == 8); 
+  static_assert(ggo::fixed_point_div<4>(123) == 8); 
+  static_assert(ggo::fixed_point_div<4>(124) == 8);
+  static_assert(ggo::fixed_point_div<4>(125) == 8);
+  static_assert(ggo::fixed_point_div<4>(126) == 8);
   static_assert(ggo::fixed_point_div<4>(127) == 8);
   static_assert(ggo::fixed_point_div<4>(128) == 8);
   static_assert(ggo::fixed_point_div<4>(129) == 8);

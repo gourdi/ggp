@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\ggo_base_nonreg.cpp" />
-    <ClCompile Include="test\ggo_best_match_nonreg.cpp" />
     <ClCompile Include="test\ggo_coordinates_conversion_nonreg.cpp" />
     <ClCompile Include="test\ggo_memory_layouts_nonreg.cpp" />
     <ClCompile Include="test\ggo_harmonics_nonreg.cpp" />

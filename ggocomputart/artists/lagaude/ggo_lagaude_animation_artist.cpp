@@ -1,4 +1,5 @@
 #include "ggo_lagaude_animation_artist.h"
+#include <ggo_coordinates_conversions.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_brush.h>
@@ -52,7 +53,7 @@ void ggo::lagaude_animation_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::update()
+bool ggo::lagaude_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -83,7 +84,7 @@ bool ggo::lagaude_animation_artist::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::lagaude_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Render background.
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
@@ -206,9 +207,9 @@ bool ggo::lagaude_animation_artist::particle::update(int frame_index, const ggo:
 void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
   int frame_index, const ggo::pos2f & pos) const
 {
-	ggo::pos2f p1 = map_fit(ggo::from_polar(_angle, _radius), 0, 1, width, height);
-	ggo::pos2f p2 = map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0, 1, width, height);
-	ggo::pos2f p3 = map_fit(ggo::from_polar(_angle + 4 * ggo::pi<float>() / 3, _radius), 0, 1, width, height);
+	ggo::pos2f p1 = ggo::map_fit(ggo::from_polar(_angle, _radius), 0.f, 1.f, width, height);
+	ggo::pos2f p2 = ggo::map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0.f, 1.f, width, height);
+	ggo::pos2f p3 = ggo::map_fit(ggo::from_polar(_angle + 4 * ggo::pi<float>() / 3, _radius), 0.f, 1.f, width, height);
     
   ggo::vec2f disp(pos.x() * width, pos.y() * height);
   p1 += disp;

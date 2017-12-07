@@ -124,12 +124,12 @@ int main(int argc, char ** argv)
   {
     ggo::chronometer frame_chronometer;
 
-    if (artist->update() == false)
+    if (artist->prepare_frame() == false)
     {
       break;
     }
 
-    artist->render_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
+    artist->process_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
 
     std::ostringstream filename;
     if (params._output_directory.length() > 0)

@@ -86,7 +86,7 @@ void ggo::toutouyoutou_animation_artist::init()
 
 
 ////////////////////////////////////////////////////////////// 
-bool ggo::toutouyoutou_animation_artist::update()
+bool ggo::toutouyoutou_animation_artist::prepare_frame()
 {
   ++_frame_index;
 
@@ -117,7 +117,7 @@ bool ggo::toutouyoutou_animation_artist::update()
 }
 
 ////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::toutouyoutou_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

@@ -36,13 +36,13 @@ GGO_TEST(pixel_buffer, y_32f_yu)
     20.f, 21.f, 22.f, 23.f, 24.f, 25.f, 26.f, 27.f, 28.f, 29.f };
 
   const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::y_32f_yu>(buffer.data(), 1, 2, 10 * sizeof(float)));
-  GGO_CHECK_FABS(*line_ptr, 20.f);
+  GGO_CHECK_FLOAT_EQ(*line_ptr, 20.f);
 
   const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float)));
-  GGO_CHECK_FABS(*pixel_ptr, 27.f);
+  GGO_CHECK_FLOAT_EQ(*pixel_ptr, 27.f);
 
   auto c = ggo::read_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float));
-  GGO_CHECK_FABS(c, 27.f);
+  GGO_CHECK_FLOAT_EQ(c, 27.f);
 
   ggo::write_pixel<ggo::y_32f_yu>(buffer.data(), 6, 0, 2, 10 * sizeof(float), { 30 });
   ggo::write_pixel<ggo::y_32f_yu>(buffer.data(), 7, 1, 2, 10 * sizeof(float), { 40 });
@@ -90,15 +90,15 @@ GGO_TEST(pixel_buffer, rgb_32f_yu)
     20.f, 21.f, 22.f, 23.f, 24.f, 25.f, 26.f, 27.f, 28.f, 29.f };
 
   const float * line_ptr = static_cast<const float*>(ggo::get_line_ptr<ggo::rgb_32f_yu>(buffer.data(), 1, 2, 10 * sizeof(float)));
-  GGO_CHECK_FABS(*line_ptr, 20.f);
+  GGO_CHECK_FLOAT_EQ(*line_ptr, 20.f);
 
   const float * pixel_ptr = static_cast<const float*>(ggo::get_pixel_ptr<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float)));
-  GGO_CHECK_FABS(*pixel_ptr, 26.f);
+  GGO_CHECK_FLOAT_EQ(*pixel_ptr, 26.f);
 
   auto c = ggo::read_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float));
-  GGO_CHECK_FABS(c.r(), 26.f);
-  GGO_CHECK_FABS(c.g(), 27.f);
-  GGO_CHECK_FABS(c.b(), 28.f);
+  GGO_CHECK_FLOAT_EQ(c.r(), 26.f);
+  GGO_CHECK_FLOAT_EQ(c.g(), 27.f);
+  GGO_CHECK_FLOAT_EQ(c.b(), 28.f);
 
   ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 0, 2, 10 * sizeof(float), { 30.f, 31.f, 32.f });
   ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 1, 1, 2, 10 * sizeof(float), { 40.f, 41.f, 42.f });
@@ -153,8 +153,8 @@ GGO_TEST(pixel_buffer, accumulator)
     ggo::accumulator<float> acc;
     acc.add(3.f);
     acc.add(4.f);
-    GGO_CHECK_FABS(acc.acc, 7.f);
-    GGO_CHECK_FABS(acc.div<8>(), 7.f / 8.f);
+    GGO_CHECK_FLOAT_EQ(acc.acc, 7.f);
+    GGO_CHECK_FLOAT_EQ(acc.div<8>(), 7.f / 8.f);
   }
 
   {

@@ -11,9 +11,9 @@ GGO_TEST(template_pointer, copy)
 
     ggo::copy<3>(dst.data(), src.data());
 
-    GGO_CHECK_FABS(dst[0], 1.f);
-    GGO_CHECK_FABS(dst[1], 2.f);
-    GGO_CHECK_FABS(dst[2], 3.f);
+    GGO_CHECK_FLOAT_EQ(dst[0], 1.f);
+    GGO_CHECK_FLOAT_EQ(dst[1], 2.f);
+    GGO_CHECK_FLOAT_EQ(dst[2], 3.f);
   }
 
   {
@@ -37,9 +37,9 @@ GGO_TEST(template_pointer, set)
 
     ggo::set(a.data(), 1.f, 2.f, 3.f);
 
-    GGO_CHECK_FABS(a[0], 1.f);
-    GGO_CHECK_FABS(a[1], 2.f);
-    GGO_CHECK_FABS(a[2], 3.f);
+    GGO_CHECK_FLOAT_EQ(a[0], 1.f);
+    GGO_CHECK_FLOAT_EQ(a[1], 2.f);
+    GGO_CHECK_FLOAT_EQ(a[2], 3.f);
   }
 
   {
@@ -68,9 +68,9 @@ GGO_TEST(template_pointer, gor_each)
   {
     std::array<float, 3> a{ 1.f, 2.f, 3.f };
     ggo::for_each<3>(a.data(), [](float & v) { v = -v; });
-    GGO_CHECK_FABS(-1.f, a[0]);
-    GGO_CHECK_FABS(-2.f, a[1]);
-    GGO_CHECK_FABS(-3.f, a[2]);
+    GGO_CHECK_FLOAT_EQ(-1.f, a[0]);
+    GGO_CHECK_FLOAT_EQ(-2.f, a[1]);
+    GGO_CHECK_FLOAT_EQ(-3.f, a[2]);
   }
 }
 

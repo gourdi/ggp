@@ -7,13 +7,13 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class triangle2d final : public paintable_shape2d_abc<data_t>,
-                           public movable_shape2d_abc<data_t>
+  template <typename data_type>
+  class triangle2d final : public paintable_shape2d_abc<data_type>,
+                           public movable_shape2d_abc<data_type>
   {
   public:
 
-    using type = data_t;
+    using data_t = data_type;
 
     using samplable_shape2d_abc<data_t>::is_point_inside;
   

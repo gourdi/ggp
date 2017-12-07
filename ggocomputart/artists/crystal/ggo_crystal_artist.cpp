@@ -1,4 +1,5 @@
 #include "ggo_crystal_artist.h"
+#include <ggo_coordinates_conversions.h>
 #include <ggo_color.h>
 #include <ggo_array.h>
 #include <ggo_blend.h>
@@ -47,7 +48,7 @@ void ggo::crystal_artist::render_transform(float * buffer, int width, int height
 		pt.y() = params._coefs[i][3]*pt.x() + params._coefs[i][4]*pt.y() + params._coefs[i][5];
 
 		// Render point.
-		ggo::pos2f render_pt = ggo::artist::map_fit(pt, -5, 5, width, height);
+		ggo::pos2f render_pt = ggo::map_fit(pt, -5.f, 5.f, width, height);
 		int x = ggo::round_to<int>(render_pt.x());
 		int y = ggo::round_to<int>(render_pt.y());
 

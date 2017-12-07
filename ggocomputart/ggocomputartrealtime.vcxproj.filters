@@ -2,6 +2,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="ggocomputartrealtime.cpp" />
-    <ClCompile Include="..\externals\SDL2-2.0.4\src\main\windows\SDL_windows_main.c" />
   </ItemGroup>
 </Project>

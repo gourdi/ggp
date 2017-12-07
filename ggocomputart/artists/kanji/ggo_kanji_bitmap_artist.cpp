@@ -33,7 +33,7 @@ void ggo::kanji_bitmap_artist::render_bitmap(void * buffer) const
 	int frame_index = 0;
 	while (artist.update(frame_index) == true)
 	{
-    artist.render_frame(buffer, get_line_step(), get_pixel_buffer_format(), frame_index, ggo::rect_int::from_width_height(get_width(), get_height()));
+    artist.process_frame(buffer, get_line_step(), get_pixel_buffer_format(), frame_index, ggo::rect_int::from_width_height(get_width(), get_height()));
 		++frame_index;
 	}
 }

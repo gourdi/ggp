@@ -13,12 +13,12 @@ GGO_TEST(dwt, haar)
   std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 6, ggo::DWT_HAAR);
 
-  GGO_CHECK_FABS(data[0], 1);
-  GGO_CHECK_FABS(data[1], 2);
-  GGO_CHECK_FABS(data[2], 3);
-  GGO_CHECK_FABS(data[3], 8);
-  GGO_CHECK_FABS(data[4], 9);
-  GGO_CHECK_FABS(data[5], 5);
+  GGO_CHECK_FLOAT_EQ(data[0], 1);
+  GGO_CHECK_FLOAT_EQ(data[1], 2);
+  GGO_CHECK_FLOAT_EQ(data[2], 3);
+  GGO_CHECK_FLOAT_EQ(data[3], 8);
+  GGO_CHECK_FLOAT_EQ(data[4], 9);
+  GGO_CHECK_FLOAT_EQ(data[5], 5);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -32,14 +32,14 @@ GGO_TEST(dwt, daubechies4)
   std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 8, ggo::DWT_D4);
 
-  GGO_CHECK_FABS(data[0], 1);
-  GGO_CHECK_FABS(data[1], 2);
-  GGO_CHECK_FABS(data[2], 3);
-  GGO_CHECK_FABS(data[3], 8);
-  GGO_CHECK_FABS(data[4], 9);
-  GGO_CHECK_FABS(data[5], 5);
-  GGO_CHECK_FABS(data[6], 5);
-  GGO_CHECK_FABS(data[7], 7);
+  GGO_CHECK_FLOAT_EQ(data[0], 1);
+  GGO_CHECK_FLOAT_EQ(data[1], 2);
+  GGO_CHECK_FLOAT_EQ(data[2], 3);
+  GGO_CHECK_FLOAT_EQ(data[3], 8);
+  GGO_CHECK_FLOAT_EQ(data[4], 9);
+  GGO_CHECK_FLOAT_EQ(data[5], 5);
+  GGO_CHECK_FLOAT_EQ(data[6], 5);
+  GGO_CHECK_FLOAT_EQ(data[7], 7);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -53,14 +53,14 @@ GGO_TEST(dwt, daubechies6)
   std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 8, ggo::DWT_D6);
 
-  GGO_CHECK_FABS(data[0], 1);
-  GGO_CHECK_FABS(data[1], 2);
-  GGO_CHECK_FABS(data[2], 3);
-  GGO_CHECK_FABS(data[3], 3);
-  GGO_CHECK_FABS(data[4], 9);
-  GGO_CHECK_FABS(data[5], 5);
-  GGO_CHECK_FABS(data[6], 5);
-  GGO_CHECK_FABS(data[7], 7);
+  GGO_CHECK_FLOAT_EQ(data[0], 1);
+  GGO_CHECK_FLOAT_EQ(data[1], 2);
+  GGO_CHECK_FLOAT_EQ(data[2], 3);
+  GGO_CHECK_FLOAT_EQ(data[3], 3);
+  GGO_CHECK_FLOAT_EQ(data[4], 9);
+  GGO_CHECK_FLOAT_EQ(data[5], 5);
+  GGO_CHECK_FLOAT_EQ(data[6], 5);
+  GGO_CHECK_FLOAT_EQ(data[7], 7);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -74,10 +74,10 @@ GGO_TEST(dwt, daubechies8)
   std::fill(std::begin(data), std::end(data), 0.f);
   ggo::idwt(low, high, data, 6, ggo::DWT_D8);
 
-  GGO_CHECK_FABS(data[0], 1);
-  GGO_CHECK_FABS(data[1], 2);
-  GGO_CHECK_FABS(data[2], 3);
-  GGO_CHECK_FABS(data[3], 3);
-  GGO_CHECK_FABS(data[4], 9);
-  GGO_CHECK_FABS(data[5], 5);
+  GGO_CHECK_FLOAT_EQ(data[0], 1);
+  GGO_CHECK_FLOAT_EQ(data[1], 2);
+  GGO_CHECK_FLOAT_EQ(data[2], 3);
+  GGO_CHECK_FLOAT_EQ(data[3], 3);
+  GGO_CHECK_FLOAT_EQ(data[4], 9);
+  GGO_CHECK_FLOAT_EQ(data[5], 5);
 }

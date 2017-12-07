@@ -6,10 +6,10 @@ GGO_TEST(triangle, bounding_rect)
   ggo::triangle2d_float triangle({ 2.f, 1.f }, { 7.f, 2.f }, { 3.f, 8.f });
 
   ggo::rect_float bounding_rect(triangle.get_bounding_rect());
-  GGO_CHECK_FABS(bounding_rect.left(), 2);
-  GGO_CHECK_FABS(bounding_rect.right(), 7);
-  GGO_CHECK_FABS(bounding_rect.bottom(), 1);
-  GGO_CHECK_FABS(bounding_rect.top(), 8);
+  GGO_CHECK_FLOAT_EQ(bounding_rect.left(), 2);
+  GGO_CHECK_FLOAT_EQ(bounding_rect.right(), 7);
+  GGO_CHECK_FLOAT_EQ(bounding_rect.bottom(), 1);
+  GGO_CHECK_FLOAT_EQ(bounding_rect.top(), 8);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ GGO_TEST(triangle, area)
   auto check_area = [&](float x1, float y1, float x2, float y2, float x3, float y3, float expected_area)
   {
     ggo::triangle2d_float triangle({ x1, y1 }, { x2, y2 }, { x3, y3 });
-    GGO_CHECK_FABS(triangle.area(), expected_area);
+    GGO_CHECK_FLOAT_EQ(triangle.area(), expected_area);
   };
   check_area(2.0f, 2.0f, 4.0f, 2.0f, 5.0f, 3.0f, 1.0f);
   check_area(4.0f, 2.0f, 2.0f, 2.0f, 5.0f, 3.0f, 1.0f);

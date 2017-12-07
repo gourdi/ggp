@@ -16,12 +16,12 @@ GGO_TEST(mean_box_filter, 32f_heaviside)
 
   ggo::mean_box_filter(it, left, right, data.size(), divide, 2);
 
-  GGO_CHECK_FABS(data[0], 8.f / 5.f);
-  GGO_CHECK_FABS(data[1], 9.f / 5.f);
-  GGO_CHECK_FABS(data[2], 2.f);
-  GGO_CHECK_FABS(data[3], 2.f);
-  GGO_CHECK_FABS(data[4], 9.f / 5.f);
-  GGO_CHECK_FABS(data[5], 8.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[0], 8.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[1], 9.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[2], 2.f);
+  GGO_CHECK_FLOAT_EQ(data[3], 2.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 9.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[5], 8.f / 5.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -53,12 +53,12 @@ GGO_TEST(mean_box_filter, 32f_ramp)
 
   ggo::mean_box_filter(it, left, right, data.size(), divide, 2);
 
-  GGO_CHECK_FABS(data[0], 3.f);
-  GGO_CHECK_FABS(data[1], 4.f);
-  GGO_CHECK_FABS(data[2], 5.f);
-  GGO_CHECK_FABS(data[3], 6.f);
-  GGO_CHECK_FABS(data[4], 7.f);
-  GGO_CHECK_FABS(data[5], 8.f);
+  GGO_CHECK_FLOAT_EQ(data[0], 3.f);
+  GGO_CHECK_FLOAT_EQ(data[1], 4.f);
+  GGO_CHECK_FLOAT_EQ(data[2], 5.f);
+  GGO_CHECK_FLOAT_EQ(data[3], 6.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 7.f);
+  GGO_CHECK_FLOAT_EQ(data[5], 8.f);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -75,14 +75,14 @@ GGO_TEST(mean_box_filter, 8u_fixed_point)
 
   ggo::mean_box_filter(it, left, right, data.size(), divide, 3);
 
-  GGO_CHECK_FABS(data[0], 0x92);
-  GGO_CHECK_FABS(data[1], 0xb6);
-  GGO_CHECK_FABS(data[2], 0xdb);
-  GGO_CHECK_FABS(data[3], 0xff);
-  GGO_CHECK_FABS(data[4], 0xff);
-  GGO_CHECK_FABS(data[5], 0xff);
-  GGO_CHECK_FABS(data[6], 0xff);
-  GGO_CHECK_FABS(data[7], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[0], 0x92);
+  GGO_CHECK_FLOAT_EQ(data[1], 0xb6);
+  GGO_CHECK_FLOAT_EQ(data[2], 0xdb);
+  GGO_CHECK_FLOAT_EQ(data[3], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[4], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[5], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[6], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[7], 0xff);
 }
 
 

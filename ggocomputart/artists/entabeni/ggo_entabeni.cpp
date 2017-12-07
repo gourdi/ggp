@@ -1,7 +1,8 @@
 #include "ggo_entabeni.h"
 #include <ggo_shapes3d.h>
-#include <ggo_multi_shape_paint.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>
+#include <ggo_color_triangle.h>
 
 //////////////////////////////////////////////////////////////
 ggo::array<float, 2> ggo::entabeni::create_grid(bool loop_x, bool loop_y)
@@ -168,8 +169,8 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     }
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black_8u(), ggo::rect_int::from_width_height(width, height));
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes.begin(), shapes.end(), ggo::rect_int::from_width_height(width, height));
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black_8u());
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes);
 }
 
 

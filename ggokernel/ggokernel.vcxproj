@@ -91,7 +91,6 @@
     <ClInclude Include="src\ggo_log.h" />
     <ClInclude Include="src\ggo_rect_int.h" />
     <ClInclude Include="src\ggo_random_interpolator_abc.h" />
-    <ClInclude Include="src\ggo_best_match.h" />
     <ClInclude Include="src\ggo_ease.h" />
     <ClInclude Include="src\ggo_string_helpers.h" />
     <ClInclude Include="src\ggo_kernel.h" />
@@ -206,7 +205,7 @@
     <ClInclude Include="src\memory\ggo_buffer_iterator.h" />
     <ClInclude Include="src\memory\ggo_circular_buffer.h" />
     <ClInclude Include="src\memory\ggo_data_access.h" />
-    <ClInclude Include="src\memory\ggo_memory.h" />
+    <ClInclude Include="src\memory\ggo_ptr_offset.h" />
     <ClInclude Include="src\memory\ggo_memory_layouts.h" />
     <ClInclude Include="src\nonreg\ggo_nonreg.h" />
     <ClInclude Include="src\nonreg\ggo_unit_test.h" />
@@ -226,7 +225,6 @@
     <ClCompile Include="src\math\marching_algorithms\ggo_marching_squares.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_best_candidate_sequence.cpp" />
     <ClCompile Include="src\math\sampling\low_discrepancy_sequences\ggo_halton.cpp" />
-    <ClCompile Include="src\math\signal_proc\ggo_dct.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_dwt.cpp" />
     <ClCompile Include="src\math\signal_proc\ggo_fourier.cpp" />
     <ClCompile Include="src\nonreg\ggo_unit_test.cpp" />

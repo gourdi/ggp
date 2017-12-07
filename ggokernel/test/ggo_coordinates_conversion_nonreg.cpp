@@ -6,8 +6,8 @@ GGO_TEST(coordinates_conversions, from_pixel_to_math_point)
 {
   ggo::pos2f p = ggo::from_pixel_to_math<float>({ -1, 2 });
 
-  GGO_CHECK_FABS(p.x(), -0.5f);
-  GGO_CHECK_FABS(p.y(), 2.5f);
+  GGO_CHECK_FLOAT_EQ(p.x(), -0.5f);
+  GGO_CHECK_FLOAT_EQ(p.y(), 2.5f);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -31,10 +31,10 @@ GGO_TEST(coordinates_conversions, from_pixel_to_math_rect)
 {
   ggo::rect_data<float> r = ggo::from_pixel_to_math<float>(ggo::rect_int::from_left_right_bottom_top(-1, 2, 1, 6));
 
-  GGO_CHECK_FABS(r._pos.x(), -1.0f);
-  GGO_CHECK_FABS(r._pos.y(), 1.0f);
-  GGO_CHECK_FABS(r._width, 4.0f);
-  GGO_CHECK_FABS(r._height, 6.0f);
+  GGO_CHECK_FLOAT_EQ(r._pos.x(), -1.0f);
+  GGO_CHECK_FLOAT_EQ(r._pos.y(), 1.0f);
+  GGO_CHECK_FLOAT_EQ(r._width, 4.0f);
+  GGO_CHECK_FLOAT_EQ(r._height, 6.0f);
 }
 
 ////////////////////////////////////////////////////////////////////

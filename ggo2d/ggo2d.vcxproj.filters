@@ -39,9 +39,6 @@
     <ClInclude Include="src\blur\ggo_gaussian_blur2d.h">
       <Filter>blur</Filter>
     </ClInclude>
-    <ClInclude Include="src\paint\ggo_multi_shape_paint.h">
-      <Filter>paint</Filter>
-    </ClInclude>
     <ClInclude Include="src\paint\ggo_gradient_brush.h">
       <Filter>paint</Filter>
     </ClInclude>
@@ -70,6 +67,9 @@
       <Filter>paint</Filter>
     </ClInclude>
     <ClInclude Include="src\ggo_pixel_buffer_format.h" />
+    <ClInclude Include="src\paint\ggo_paint_shape.h">
+      <Filter>paint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\io\ggo_bmp.cpp">
