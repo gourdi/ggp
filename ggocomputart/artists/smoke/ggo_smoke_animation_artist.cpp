@@ -69,7 +69,7 @@ void ggo::smoke_animation_artist::init()
   const double area = 1.;
   _cell_size = area / std::sqrt(double(get_width()) * double(get_height()));
 
-  _density = 10000.;
+  _density = 10.;
 
   for (int i = 0; i < _sources.get_count(); ++i)
   {
@@ -236,32 +236,43 @@ void ggo::smoke_animation_artist::make_incompressible()
   }
 
   // Solve pressure with Gauss-Seidel.
-  for (int k = 0; k < 50; ++k)
   {
-    for (int y = 0; y < get_height(); ++y)
+    double scale = _density * _cell_size * _cell_size / time_step;
+    for (int k = 0; k < 50; ++k)
     {
-      for (int x = 0; x < get_width(); ++x)
+      for (int y = 0; y < get_height(); ++y)
       {
-        pressure(x, y) = (divergence(x, y) + pressure.at_loop(x - 1, y) + pressure.at_loop(x + 1, y) + pressure.at_loop(x, y - 1) + pressure.at_loop(x, y + 1)) / 4;
+        for (int x = 0; x < get_width(); ++x)
+        {
+          double new_pressure = divergence(x, y) * scale;
+          new_pressure += pressure.at_loop(x - 1, y);
+          new_pressure += pressure.at_loop(x + 1, y);
+          new_pressure += pressure.at_loop(x, y - 1);
+          new_pressure += pressure.at_loop(x, y + 1);
+          new_pressure /= 4.;
+          pressure(x, y) = new_pressure;
+        }
       }
     }
   }
 
   // Apply pressure.
-  double scale = time_step / (_density * _cell_size);
-  for (int y = 0; y < get_height(); ++y)
   {
-    for (int x = 0; x < get_width() + 1; ++x)
+    double scale = time_step / (_density * _cell_size);
+    for (int y = 0; y < get_height(); ++y)
     {
-      _velocity_x_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x - 1, y));
+      for (int x = 0; x < get_width() + 1; ++x)
+      {
+        _velocity_x_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x - 1, y));
+      }
     }
-  }
 
-  for (int y = 0; y < get_height() + 1; ++y)
-  {
-    for (int x = 0; x < get_width(); ++x)
+    for (int y = 0; y < get_height() + 1; ++y)
     {
-      _velocity_y_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x, y - 1));
+      for (int x = 0; x < get_width(); ++x)
+      {
+        _velocity_y_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x, y - 1));
+      }
     }
   }
 }
