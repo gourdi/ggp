@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    data_t evaluate(data_t x, data_t y) const override
+    data_t sample(data_t x, data_t y) const override
     {
       return _amp * std::exp(-(ggo::square(x - _x) + ggo::square(y - _y)) / _var);
     }

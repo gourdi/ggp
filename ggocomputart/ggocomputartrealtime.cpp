@@ -178,7 +178,7 @@ void main_loop()
       }
       anim_condition_start.notify_all();
 
-      // Wait for frame to be rendering by workers threads.
+      // Wait for frame to be rendered by workers threads.
       {
         std::unique_lock<std::mutex> lock(anim_mutex);
 #ifdef DEBUG_ANIM_MULTI_THREADING
