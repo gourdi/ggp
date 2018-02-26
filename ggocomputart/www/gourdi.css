@@ -1,0 +1,101 @@
+a:link {color:#666;}      /* unvisited link */
+a:visited {color:#666;}  /* visited link */
+a:hover {color:#ddd;}  /* mouse over link */
+a:active {color:#ddd;}  /* selected link */ 
+
+body {
+background-color:#bbb;
+}
+
+p.faq_question {
+color:#222;
+font-family:sans-serif;
+font-weight:bold;
+}
+
+p.faq_answer {
+color:#444;
+font-family:sans-serif;
+}
+
+p.caption {
+font-family:Arial;
+color:white;
+text-shadow:2px 2px 2px black;
+font-size:220%;
+margin-top:5px;
+margin-bottom:0px;
+}
+
+p.footer {
+font-family:Arial;
+color:white;
+text-shadow:1px 1px 1px black;
+font-size:110%;
+margin-top:2px;
+margin-bottom:0px;
+}
+
+td {
+text-align: center;
+}
+
+
+table.common {
+width:600px;
+margin-left:auto;
+margin-right:auto;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+table.footer {
+width:400px;
+margin-left:auto;
+margin-right:auto;
+}
+
+td.common {
+padding:20px
+}
+
+img.common {
+width:300px;
+height:300px;
+border-radius:20px;
+-moz-border-radius:20px;
+box-shadow:8px 8px 8px #444;
+}
+
+img.footer {
+width:60px;
+height:60px;
+margin-left:auto;
+margin-right:auto;
+margin-top:50px;
+border-radius:15px;
+-moz-border-radius:15px;
+box-shadow:5px 5px 5px #444;
+border-style:solid;
+border-color:#444;
+border-width:2px;
+}
+
+img.fullscreen {
+width:680px;
+height:680px;
+display:block;
+margin-left:auto;
+margin-right:auto;
+border-style:solid;
+border-color:#444;
+border-width:1px;
+}
+
+video {
+width:680px;
+height:382px;
+display:block;
+margin-left:auto;
+margin-right:auto;
+}
