@@ -6,9 +6,9 @@ ForEach-Object {
   Write-Host "Processing image $_";
 
   $FullScreenOutput = $OutputDir + '/' + $_.BaseName + "-fullscreen.jpg";
-  convert.exe $_ -resize 1000x1000 -page +10+10 $Logo -flatten $FullScreenOutput;
+  gm.exe convert $_ -resize 1000x1000 -page +10+10 $Logo -flatten $FullScreenOutput;
   
   $PreviewOutput = $OutputDir + '/' + $_.BaseName + ".jpg";
-  convert.exe $_ -resize 600x600 $PreviewOutput
+  gm.exe convert $_ -resize 600x600 $PreviewOutput
 }
 
