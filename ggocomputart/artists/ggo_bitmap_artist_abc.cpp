@@ -53,7 +53,7 @@ namespace ggo
                                     int width, int height, int line_step,
                                     ggo::pixel_buffer_format pbf,
                                     int frames_count = 0,
-                                    bool render_last_frame_only = false);
+                                    bool render_last_frame_only = true);
 
     void	render_bitmap(void * buffer) const override;
 
@@ -94,33 +94,26 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 
     artist->init();
 
-    //while (true)
-    //{
-    //  bool done = false;
+    while (true)
+    {
+      if (_frames_count > 0 && frame_index >= _frames_count)
+      {
+        break;
+      }
 
-    //  if (_frames_count > 0 && frame_index >= _frames_count)
-    //  {
-    //    done = true;
-    //  }
+      void * frame_buffer = buffer;
+      if (_render_last_frame_only == true && frame_index != _frames_count)
+      {
+        frame_buffer = nullptr;
+      }
 
-    //  void * frame_buffer = buffer;
-    //  if (_render_last_frame_only == true && frame_index != _frames_count)
-    //  {
-    //    frame_buffer = nullptr;
-    //  }
-    //  if (artist->render_next_frame(frame_buffer) == false)
-    //  {
-    //    done = true;
-    //  }
-
-    //  if (done == true)
-    //  {
-    //    break;
-    //  }
-
-    //  if (artist->render_next_frame(frame_buffer) == false)
-
-    //}
+      if (artist->prepare_frame() == false)
+      {
+        break;
+      }
+      
+      artist->process_frame(frame_buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
+    }
   }
 }
 
