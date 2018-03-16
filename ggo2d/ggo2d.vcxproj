@@ -86,13 +86,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\externals\tinyXML2\;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)\x64\Debug</LibraryPath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\externals\tinyXML2\;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\canvas</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,6 +103,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>GGO_DEBUG;_MBCS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\externals\tinyXML2\;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\canvas</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,6 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <DebugInformationFormat>None</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\externals\tinyXML2\;$(SolutionDir)\ggokernel\src\;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\rle;$(SolutionDir)\ggokernel\src\time;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\signal_proc;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\scalar_fields_2d;$(SolutionDir)\ggo2d\src\;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggo2d\src\fill;$(SolutionDir)\ggo2d\src\brush;$(SolutionDir)\ggo2d\src\image;$(SolutionDir)\ggo2d\src\paint;$(SolutionDir)\ggo2d\src\blur;$(SolutionDir)\ggo2d\src\canvas</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

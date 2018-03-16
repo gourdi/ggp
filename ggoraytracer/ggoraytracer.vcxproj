@@ -123,12 +123,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\trees;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\indirect_lighting;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\trees;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\indirect_lighting;$(SolutionDir)\ggoraytracer\src\materials</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -149,6 +149,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\trees;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\indirect_lighting;$(SolutionDir)\ggoraytracer\src\materials</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -181,6 +182,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_MBCS;GGO_WIN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ggokernel\src;$(SolutionDir)\ggokernel\src\memory;$(SolutionDir)\ggokernel\src\trees;$(SolutionDir)\ggokernel\src\math;$(SolutionDir)\ggokernel\src\math\interpolation;$(SolutionDir)\ggokernel\src\math\linear_algebra;$(SolutionDir)\ggokernel\src\math\shapes_2d;$(SolutionDir)\ggokernel\src\math\shapes_3d;$(SolutionDir)\ggokernel\src\math\sampling\low_discrepancy_sequences;$(SolutionDir)\ggokernel\src\math\sampling\pixel_sampling;$(SolutionDir)\ggokernel\src\math\sampling\shape_sampling;$(SolutionDir)\ggo2d\src;$(SolutionDir)\ggo2d\src\color;$(SolutionDir)\ggoraytracer\src;$(SolutionDir)\ggoraytracer\src\backgrounds;$(SolutionDir)\ggoraytracer\src\cameras;$(SolutionDir)\ggoraytracer\src\fog;$(SolutionDir)\ggoraytracer\src\objects3d;$(SolutionDir)\ggoraytracer\src\lights;$(SolutionDir)\ggoraytracer\src\raycasters;$(SolutionDir)\ggoraytracer\src\renderers;$(SolutionDir)\ggoraytracer\src\indirect_lighting;$(SolutionDir)\ggoraytracer\src\materials</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
