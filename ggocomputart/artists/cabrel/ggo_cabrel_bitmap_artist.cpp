@@ -228,7 +228,7 @@ namespace
 
       shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
     }
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), ggo::make_pointer_adaptor(shadows));
+    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shadows);
 
     float stddev = 0.01f * artist.get_min_size();
     ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);

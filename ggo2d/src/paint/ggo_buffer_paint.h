@@ -41,6 +41,12 @@ namespace ggo
 
   template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shapes_range_t>
   void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes, const ggo::rect_int & clipping);
+
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes);
+
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes, const ggo::rect_int & clipping);
 }
 
 //////////////////////////////////////////////////////////////
@@ -137,6 +143,32 @@ namespace ggo
     };
 
     paint_multi_scale<smp>(width, height, paint_shapes, scale_factor, first_scale, read_pixel_func, write_pixel_func, clipping);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes)
+  {
+    paint_shapes<pbf, smp>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <ggo::pixel_buffer_format pbf, sampling smp, typename paint_shape_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes, const ggo::rect_int & clipping)
+  {
+    if constexpr(std::is_pointer<paint_shape_t>::value == true)
+    {
+      // I could not use an adaptator here, but by doing so, I can call the generic version of the paint_shapes function.
+      auto adaptor = ggo::make_adaptor(shapes, [](const auto * paint_shape) { return paint_shape; });
+
+      paint_shapes<pbf, smp>(buffer, width, height, line_step, adaptor, clipping);
+    }
+    else
+    {
+      auto adaptor = ggo::make_adaptor(shapes, [](const auto & paint_shape) { return &paint_shape; });
+
+      paint_shapes<pbf, smp>(buffer, width, height, line_step, adaptor, clipping);
+    }
   }
 }
 

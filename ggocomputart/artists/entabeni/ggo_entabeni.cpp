@@ -170,7 +170,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
   }
 
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, ggo::make_pointer_adaptor(shapes));
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes);
 }
 
 

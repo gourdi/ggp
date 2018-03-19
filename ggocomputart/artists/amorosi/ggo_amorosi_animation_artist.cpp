@@ -136,7 +136,7 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, g
       ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[2]._opacity));
   }
 
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step, ggo::make_pointer_adaptor(triangles));
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step, triangles);
 }
 
 //////////////////////////////////////////////////////////////
