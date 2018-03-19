@@ -298,7 +298,7 @@ void ggo::kame_animation_artist::process_frame(void * buffer, const ggo::rect_in
     paint_glow(glow, buffer);
   }
 
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(), triangles, clipping);
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(), ggo::make_pointer_adaptor(triangles), clipping);
 
   for (const auto & edge : edges)
   {

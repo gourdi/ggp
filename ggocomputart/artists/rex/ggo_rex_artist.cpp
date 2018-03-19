@@ -36,7 +36,7 @@ namespace
   template <ggo::pixel_buffer_format pbf>
   void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<color_triangle_rgb8u> & color_triangles)
   {
-    ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), color_triangles);
+    ggo::paint_shapes<pbf, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), ggo::make_pointer_adaptor(color_triangles));
   }
 
   //////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ namespace
       shapes.emplace_back(segment, ggo::black_8u());
     }
 
-    ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes);
+    ggo::paint_shapes<pbf, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), ggo::make_pointer_adaptor(shapes));
   }
 }
 

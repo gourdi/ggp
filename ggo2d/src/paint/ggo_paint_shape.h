@@ -24,23 +24,23 @@ namespace ggo
   };
 
   // Solid color shape.
-  template <typename shape_type, typename color_type, typename brush_color_type = color_type, typename blender_t = ggo::overwrite_blender<color_type, color_type>>
-  struct solid_color_shape : public paint_shape_abc<typename shape_type::data_t, color_type, brush_color_type>
+  template <typename shape_t, typename color_t, typename blender_t = ggo::overwrite_blender<color_t, color_t>>
+  struct solid_color_shape : public paint_shape_abc<typename shape_t::data_t, color_t, color_t>
   {
-    using shape_t = shape_type;
+    using data_t = typename shape_t::data_t;
 
     shape_t _shape;
-    brush_color_t _color;
+    color_t _color;
     blender_t _blender;
 
-    solid_color_shape(const shape_t & shape, const brush_color_t & color, const blender_t & blender = blender_t()) : _shape(shape), _color(color), _blender(blender) {}
+    solid_color_shape(const shape_t & shape, const color_t & color, const blender_t & blender = blender_t()) : _shape(shape), _color(color), _blender(blender) {}
 
     rect_data<data_t> get_bounding_rect() const override { return _shape.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const override { return _shape.get_rect_intersection(rect_data); }
     bool              is_point_inside(const ggo::pos2<data_t> & p) const override { return _shape.is_point_inside(p); }
 
-    brush_color_t brush(int x, int y) const { return _color; }
-    color_t blend(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const { return _blender(x, y, bkgd_color, brush_color); }
+    color_t brush(int x, int y) const override { return _color; }
+    color_t blend(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const override { return _blender(x, y, bkgd_color, brush_color); }
   };
 }
 

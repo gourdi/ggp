@@ -19,16 +19,13 @@ namespace
   {
     ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u());
 
-    auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
-    auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
+    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+      buffer, width, height, line_step,
+      ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
-
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
-      buffer, width, height, line_step,
-      ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+      ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
     ggo::gaussian_blur2d_mirror<pbf>(buffer, width, height, line_step, 5.f);
 
@@ -87,16 +84,13 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 
   ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
-  auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), 0xff);
 
   ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
-
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
-    buffer.data(), width, height, line_step,
-    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), 0xff);
 
   ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
 
@@ -119,16 +113,13 @@ namespace
   {
     ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u());
 
-    auto brush = [](int x, int y) { return ggo::green<ggo::color_8u>(); };
-    auto blend = [](int x, int y, ggo::color_8u bkgd_color, ggo::color_8u brush_color) { return brush_color; };
+    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+      buffer, width, height, line_step,
+      ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
-
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
-      buffer, width, height, line_step,
-      ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+      ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
     ggo::mean_box_blur2d<pbf>(buffer, width, height, line_step, 9);
 
@@ -187,16 +178,13 @@ GGO_TEST(blur, mean_box_y_8u_yu)
 
   ggo::fill_solid<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 0x00);
 
-  auto brush = [](int x, int y) { return 0xff; };
-  auto blend = [](int x, int y, uint8_t bkgd_color, uint8_t brush_color) { return brush_color; };
+  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), 0xff);
 
   ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), brush, blend);
-
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(
-    buffer.data(), width, height, line_step,
-    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), brush, blend);
+    ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), 0xff);
 
   ggo::mean_box_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 9);
 
@@ -211,5 +199,3 @@ GGO_TEST(blur, mean_box_y_8u_yu)
   ggo::save_bmp("mean_box_blur_y_8u_yu.bmp", buffer.data(), ggo::y_8u_yu, width, height, line_step);
 #endif
 }
-
-

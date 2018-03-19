@@ -113,6 +113,8 @@ namespace ggo
   {
   public:
 
+    using value_type = typename container_t::value_type;
+
     class iterator
     {
     public:
@@ -151,6 +153,12 @@ namespace ggo
   auto make_adaptor(const container_t & container, func_t func)
   {
     return adaptor<container_t, func_t>(container, func);
+  }
+
+  template <typename container_t>
+  auto make_pointer_adaptor(const container_t & container)
+  {
+    return make_adaptor(container, [](const auto & item) { return &item; });
   }
 }
 

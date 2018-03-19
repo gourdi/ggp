@@ -41,10 +41,9 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, int line_step, ggo::pi
       p2 = middle - 1000.f * diff;
 
       // Paint the segment.
-      auto brush = [](int x, int y) { return 1.f; };
-      auto blend = [](int x, int y, float bkgd_color, float brush_color) { return bkgd_color + brush_color; };
       ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_width(), get_height(), line_step,
-        ggo::extended_segment_float(p1, p2, 0.005f * radius), brush, blend);
+        ggo::extended_segment_float(p1, p2, 0.005f * radius),
+        ggo::solid_color_brush<float>(1.f), ggo::add_blender<float>());
     }
   }
   

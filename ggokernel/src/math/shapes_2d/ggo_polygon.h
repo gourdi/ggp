@@ -19,6 +19,7 @@ namespace ggo
     using samplable_shape2d_abc<data_t>::is_point_inside;
 
                               polygon2d() {}
+                              polygon2d(std::initializer_list<ggo::pos2<data_t>> points) { for (const auto & p : points) { _points.push_back(p); } }
                               polygon2d(std::vector<ggo::pos2<data_t>> points) : _points(std::move(points)) {}
                               polygon2d(int capacity) { _points.reserve(capacity); } 
                               polygon2d(const polygon2d & polygon) = default;      

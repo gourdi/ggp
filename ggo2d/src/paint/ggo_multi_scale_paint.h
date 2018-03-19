@@ -70,16 +70,26 @@ namespace ggo
       // The current block is only a pixel => stop the recursion and sample the pixel.
       if (block_rect.is_one() == true)
       {
-        const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
-        const auto brush_color = brush(block_rect.left(), block_rect.bottom());
+        // Sampling.
+        using sampler_t = ggo::sampler<smp>;
+        using fract_t = ggo::log2_fract<sampler_t::samples_count_log2>;
 
-        ggo::accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
-        ggo::sampler<smp>::template sample_pixel<typename shape_t::data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
+        fract_t fract;
+        sampler_t::sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
         {
-          acc.add(shape.is_point_inside({ x_f, y_f }) ? blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color) : bkgd_color);
+          if (shape.is_point_inside({ x_f, y_f }) == true)
+          {
+            ++fract._num;
+          }
         });
+        GGO_ASSERT(fract._num <= fract._den);
 
-        const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
+        // Blending.
+        auto bkgd_color     = read_pixel(block_rect.left(), block_rect.bottom());
+        auto brush_color    = brush(block_rect.left(), block_rect.bottom());
+        auto blended_color  = blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color);
+        auto pixel_color    = linerp(blended_color, bkgd_color, fract);
+
         write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
 
         return;

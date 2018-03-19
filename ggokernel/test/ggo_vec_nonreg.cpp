@@ -150,6 +150,40 @@ GGO_TEST(vec, operators)
 }
 
 /////////////////////////////////////////////////////////////////////
+/*GGO_TEST(vec, argb_sum)
+{
+  {
+    ggo::alpha_color<float> c1{ 0.f, 0.5f, 1.f, 0.5f };
+    ggo::alpha_color<float> c2{ 0.f, 0.5f, 1.f, 0.5f };
+    auto c3 = c1 + c2;
+    GGO_CHECK_FLOAT_EQ(c3.r(), 0.f);
+    GGO_CHECK_FLOAT_EQ(c3.g(), 0.5f);
+    GGO_CHECK_FLOAT_EQ(c3.b(), 1.f);
+    GGO_CHECK_FLOAT_EQ(c3.a(), 0.75f);
+  }
+
+  {
+    ggo::alpha_color<float> c1{ 0.f, 1.f, 0.5f, 0.1f };
+    ggo::alpha_color<float> c2{ 1.f, 0.f, 0.5f, 0.2f };
+    auto c3 = c1 + c2;
+    GGO_CHECK_FLOAT_EQ(c3.r(), 2.f / 3.f);
+    GGO_CHECK_FLOAT_EQ(c3.g(), 1.f / 3.f);
+    GGO_CHECK_FLOAT_EQ(c3.b(), 0.5f);
+    GGO_CHECK_FLOAT_EQ(c3.a(), 0.28f);
+  }
+
+  {
+    ggo::alpha_color<float> c1{ 0.f, 1.f, 0.5f, 0.f };
+    ggo::alpha_color<float> c2{ 1.f, 0.f, 0.5f, 0.f };
+    auto c3 = c1 + c2;
+    GGO_CHECK_FLOAT_EQ(c3.r(), 0.f);
+    GGO_CHECK_FLOAT_EQ(c3.g(), 0.f);
+    GGO_CHECK_FLOAT_EQ(c3.b(), 0.f);
+    GGO_CHECK_FLOAT_EQ(c3.a(), 0.f);
+  }
+}*/
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, flip)
 {
   ggo::vec<int, 2, ggo::geometry_t> v(1, 2);
