@@ -29,7 +29,7 @@ GGO_TEST(marching_squares, circle)
 
   std::vector<uint8_t> buffer(3 * size * size, 0);
 
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, ggo::make_pointer_adaptor(segments));
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, segments);
 
   ggo::save_bmp("marching_squares.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
 }
