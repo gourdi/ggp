@@ -1,13 +1,26 @@
 #include "ggo_kame_animation_artist.h"
-#include <ggo_link.h>
+#include <ggo_buffer.h>
 #include <ggo_buffer_fill.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_color.h>
+#include <ggo_gaussian_blur2d.h>
+#include <ggo_blit.h>
 
 namespace
 {
   const int frames_count = 300;
-  const float projection_range = 4.0f;
+
+  ggo::color_8u sub_blend(ggo::color_8u bkgd_color, ggo::color_8u brush_color)
+  {
+    int r = static_cast<int>(bkgd_color.r()) - static_cast<int>(brush_color.r());
+    int g = static_cast<int>(bkgd_color.g()) - static_cast<int>(brush_color.g());
+    int b = static_cast<int>(bkgd_color.b()) - static_cast<int>(brush_color.b());
+
+    return {
+      static_cast<uint8_t>(std::max(0, r)),
+      static_cast<uint8_t>(std::max(0, g)),
+      static_cast<uint8_t>(std::max(0, b)) };
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -16,204 +29,6 @@ ggo::kame_animation_artist::kame_animation_artist(int width, int height, int lin
 animation_artist_abc(width, height, line_step, pbf, rt)
 {
 
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::init()
-{
-  _frame_index = -1;
-
-  _vertices.clear();
-  _triangles.clear();
-  _neighbors.clear();
-
-  _color = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.25f, 1.f), 1.f);
-
-  // Glows.
-  _foreground_glows.clear();
-  _background_glows.clear();
-  float width_32f = static_cast<float>(get_width());
-  for (int i = 0; i < 200; ++i)
-  {
-    _foreground_glows.push_back({
-      ggo::pos2f(ggo::rand<float>(-width_32f, width_32f), get_height() * ggo::rand<float>(-0.1f, 1.1f)),
-      ggo::rand<float>(0.01f, 0.02f) * get_min_size(),
-      ggo::rand<float>(128.f, 256.f),
-      ggo::rand<float>(0.001f, 0.005f) * get_min_size() });
-  }
-  for (int i = 0; i < 200; ++i)
-  {
-    _background_glows.push_back({
-      ggo::pos2f(ggo::rand<float>(-width_32f, width_32f), get_height() * ggo::rand<float>(-0.1f, 1.1f)),
-      ggo::rand<float>(0.01f, 0.02f) * get_min_size(),
-      ggo::rand<float>(128.f, 256.f),
-      ggo::rand<float>(0.001f, 0.005f) * get_min_size() });
-  }
-
-  // Vertices.
-  const float phi = (1.f + std::sqrt(5.f)) / 2.f;
-
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, +1.f, 0.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, +1.f, 0.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, -1.f, 0.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, -1.f, 0.f)));
-
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, +phi)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, -phi)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, +phi)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, -phi)));
-
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, +1.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, +1.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, -1.f)));
-  _vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, -1.f)));
-
-  // Triangles.
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[0].get(), _vertices[2].get(), _vertices[4].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[0].get(), _vertices[2].get(), _vertices[5].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[0].get(), _vertices[4].get(), _vertices[8].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[0].get(), _vertices[5].get(), _vertices[10].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[0].get(), _vertices[8].get(), _vertices[10].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[1].get(), _vertices[3].get(), _vertices[6].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[1].get(), _vertices[3].get(), _vertices[7].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[1].get(), _vertices[6].get(), _vertices[8].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[1].get(), _vertices[7].get(), _vertices[10].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[1].get(), _vertices[8].get(), _vertices[10].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[2].get(), _vertices[4].get(), _vertices[9].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[2].get(), _vertices[5].get(), _vertices[11].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[2].get(), _vertices[9].get(), _vertices[11].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[3].get(), _vertices[6].get(), _vertices[9].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[3].get(), _vertices[7].get(), _vertices[11].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[3].get(), _vertices[9].get(), _vertices[11].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[4].get(), _vertices[6].get(), _vertices[8].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[4].get(), _vertices[6].get(), _vertices[9].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[5].get(), _vertices[7].get(), _vertices[10].get()));
-  _triangles.push_back(std::make_unique<timed_triangle>(_vertices[5].get(), _vertices[7].get(), _vertices[11].get()));
-
-  _triangles = split_triangles(_triangles, _vertices);
-  _triangles = split_triangles(_triangles, _vertices);
-  _triangles = split_triangles(_triangles, _vertices);
-
-  for (auto & vertex : _vertices)
-  {
-    vertex->set_length(2.f);
-  }
-
-  // Make normals point outwards.
-  for (auto & triangle : _triangles)
-  {
-    auto barycenter = triangle->_v1->_prv + triangle->_v2->_prv + triangle->_v3->_prv;
-
-    if (ggo::dot(barycenter, triangle->get_normal()) < 0.f)
-    {
-      std::swap(triangle->_v2, triangle->_v3);
-    }
-  }
-
-  // Add some random bump.
-  for (int i = 0; i < 2; ++i)
-  {
-    ggo::vec3f main_dir{ ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f) };
-    main_dir.normalize();
-
-    const float scale_max = ggo::rand(0.2f, 0.4f);
-    const float angle_max = ggo::rand(0.6f, 1.2f);
-
-    for (auto & vertex : _vertices)
-    {
-      const float angle = std::acos(ggo::dot(vertex->_cur.get_normalized(), main_dir));
-      const float scale = angle > angle_max ? 1.f : 1.f + scale_max * ggo::ease_inout(ggo::map(angle, 0.f, angle_max, 1.f, 0.f));
-      const float length = scale * vertex->_cur.get_length();
-
-      vertex->set_length(length);
-    }
-  }
-
-  // Neighbors.
-  for (const auto & vertex : _vertices)
-  {
-    for (const auto & triangle : _triangles)
-    {
-      if (triangle->_v1 == vertex.get())
-      {
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v2);
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v3);
-      }
-      else if (triangle->_v2 == vertex.get())
-      {
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v1);
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v3);
-      }
-      else if (triangle->_v3 == vertex.get())
-      {
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v1);
-        ggo::push_once(_neighbors[vertex.get()], triangle->_v2);
-      }
-    }
-  }
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::kame_animation_artist::prepare_frame()
-{
-  ++_frame_index;
-
-  if (_frame_index >= frames_count)
-  {
-    return false;
-  }
-
-  // Update glows.
-  for (auto & glow : _background_glows)
-  {
-    float angle = glow._angle.update(1);
-    glow._pos += ggo::from_polar(angle, glow._speed);
-  }
-  for (auto & glow : _foreground_glows)
-  {
-    float angle = glow._angle.update(1);
-    glow._pos += ggo::from_polar(angle, glow._speed);
-  }
-
-  // Wave equation.
-  for (auto & vertex : _vertices)
-  {
-    float laplacian = 0.f;
-    const auto & neighbors = _neighbors[vertex.get()];
-    for (const auto * neighbor : neighbors)
-    {
-      laplacian += neighbor->_cur.get_length();
-    }
-    laplacian /= neighbors.size();
-    laplacian -= vertex->_cur.get_length();
-
-    const float dist_prv = vertex->_prv.get_length();
-    const float dist_cur = vertex->_cur.get_length();
-
-    vertex->_laplacian.set_length(2 * dist_cur - dist_prv + laplacian);
-  }
-
-  // Averaging.
-  for (auto & vertex : _vertices)
-  {
-    float neightbors_mean = 0.f;
-    const auto & neighbors = _neighbors[vertex.get()];
-    for (const auto * neighbor : neighbors)
-    {
-      neightbors_mean += neighbor->_laplacian.get_length();
-    }
-    neightbors_mean /= neighbors.size();
-
-    vertex->_smoothed.set_length(0.8f * vertex->_laplacian.get_length() + 0.2f * neightbors_mean);
-  }
-
-  for (auto & vertex : _vertices)
-  {
-    vertex->_prv = vertex->_cur;
-    vertex->_cur = vertex->_smoothed;
-  }
-
-  return true;
 }
 
 //////////////////////////////////////////////////////////////
@@ -266,13 +81,172 @@ std::vector<std::unique_ptr<ggo::kame_animation_artist::timed_triangle>> ggo::ka
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+std::unique_ptr<ggo::kame_animation_artist::kame> ggo::kame_animation_artist::create_kame()
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
+  auto new_kame = std::make_unique<kame>();
 
-  const float size = 0.001f * get_min_size();
+  // Vertices.
+  const float phi = (1.f + std::sqrt(5.f)) / 2.f;
 
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, +1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, +1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, -1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, -1.f, 0.f)));
+
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, +phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, -phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, +phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, -phi)));
+
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, +1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, +1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, -1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, -1.f)));
+
+  // Triangles.
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[2].get(), new_kame->_vertices[4].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[2].get(), new_kame->_vertices[5].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[4].get(), new_kame->_vertices[8].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[5].get(), new_kame->_vertices[10].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[8].get(), new_kame->_vertices[10].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[1].get(), new_kame->_vertices[3].get(), new_kame->_vertices[6].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[1].get(), new_kame->_vertices[3].get(), new_kame->_vertices[7].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[1].get(), new_kame->_vertices[6].get(), new_kame->_vertices[8].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[1].get(), new_kame->_vertices[7].get(), new_kame->_vertices[10].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[1].get(), new_kame->_vertices[8].get(), new_kame->_vertices[10].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[2].get(), new_kame->_vertices[4].get(), new_kame->_vertices[9].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[2].get(), new_kame->_vertices[5].get(), new_kame->_vertices[11].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[2].get(), new_kame->_vertices[9].get(), new_kame->_vertices[11].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[3].get(), new_kame->_vertices[6].get(), new_kame->_vertices[9].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[3].get(), new_kame->_vertices[7].get(), new_kame->_vertices[11].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[3].get(), new_kame->_vertices[9].get(), new_kame->_vertices[11].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[4].get(), new_kame->_vertices[6].get(), new_kame->_vertices[8].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[4].get(), new_kame->_vertices[6].get(), new_kame->_vertices[9].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[5].get(), new_kame->_vertices[7].get(), new_kame->_vertices[10].get()));
+  new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[5].get(), new_kame->_vertices[7].get(), new_kame->_vertices[11].get()));
+
+  new_kame->_triangles = split_triangles(new_kame->_triangles, new_kame->_vertices);
+  new_kame->_triangles = split_triangles(new_kame->_triangles, new_kame->_vertices);
+  new_kame->_triangles = split_triangles(new_kame->_triangles, new_kame->_vertices);
+
+  for (auto & vertex : new_kame->_vertices)
+  {
+    vertex->set_length(2.f);
+  }
+
+  // Make normals point outwards.
+  for (auto & triangle : new_kame->_triangles)
+  {
+    auto barycenter = triangle->_v1->_prv + triangle->_v2->_prv + triangle->_v3->_prv;
+
+    if (ggo::dot(barycenter, triangle->get_normal()) < 0.f)
+    {
+      std::swap(triangle->_v2, triangle->_v3);
+    }
+  }
+
+  // Add some random bump.
+  for (int i = 0; i < 2; ++i)
+  {
+    ggo::vec3f main_dir{ ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f) };
+    main_dir.normalize();
+
+    const float scale_max = ggo::rand(0.3f, 0.6f);
+    const float angle_max = ggo::rand(0.6f, 1.2f);
+
+    for (auto & vertex : new_kame->_vertices)
+    {
+      const float angle = std::acos(ggo::dot(vertex->_cur.get_normalized(), main_dir));
+      const float scale = angle > angle_max ? 1.f : 1.f + scale_max * ggo::ease_inout(ggo::map(angle, 0.f, angle_max, 1.f, 0.f));
+      const float length = scale * vertex->_cur.get_length();
+
+      vertex->set_length(length);
+    }
+  }
+
+  // Neighbors.
+  for (const auto & vertex : new_kame->_vertices)
+  {
+    for (const auto & triangle : new_kame->_triangles)
+    {
+      if (triangle->_v1 == vertex.get())
+      {
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v2);
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v3);
+      }
+      else if (triangle->_v2 == vertex.get())
+      {
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v1);
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v3);
+      }
+      else if (triangle->_v3 == vertex.get())
+      {
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v1);
+        ggo::push_once(new_kame->_neighbors[vertex.get()], triangle->_v2);
+      }
+    }
+  }
+
+  return new_kame;
+}
+
+//////////////////////////////////////////////////////////////
+ggo::pos2f ggo::kame_animation_artist::kame::proj(const ggo::pos2f & p) const
+{
+  return _center + _scale * (p + _disp);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::kame_animation_artist::kame::update()
+{
+  _disp = _disp_interpolator.update(1);
+
+  // Wave equation.
+  for (auto & vertex : _vertices)
+  {
+    float laplacian = 0.f;
+    const auto & neighbors = _neighbors[vertex.get()];
+    for (const auto * neighbor : neighbors)
+    {
+      laplacian += neighbor->_cur.get_length();
+    }
+    laplacian /= neighbors.size();
+    laplacian -= vertex->_cur.get_length();
+
+    const float dist_prv = vertex->_prv.get_length();
+    const float dist_cur = vertex->_cur.get_length();
+
+    vertex->_laplacian.set_length(2 * dist_cur - dist_prv + laplacian);
+  }
+
+  // Averaging.
+  for (auto & vertex : _vertices)
+  {
+    float neightbors_mean = 0.f;
+    const auto & neighbors = _neighbors[vertex.get()];
+    for (const auto * neighbor : neighbors)
+    {
+      neightbors_mean += neighbor->_laplacian.get_length();
+    }
+    neightbors_mean /= neighbors.size();
+
+    vertex->_smoothed.set_length(0.8f * vertex->_laplacian.get_length() + 0.2f * neightbors_mean);
+  }
+
+  for (auto & vertex : _vertices)
+  {
+    vertex->_prv = vertex->_cur;
+    vertex->_cur = vertex->_smoothed;
+  }
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_artist_abc & artist) const
+{
   std::vector<ggo::link<const pos3f *>> edges;
+
+  std::vector<ggo::solid_color_shape<ggo::triangle2d_float, uint8_t>> triangles;
+
   for (const auto & triangle : _triangles)
   {
     if (triangle->get_normal().z() > 0.0f)
@@ -280,109 +254,96 @@ void ggo::kame_animation_artist::process_frame(void * buffer, const ggo::rect_in
       ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v1->_prv, &triangle->_v2->_prv));
       ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v2->_prv, &triangle->_v3->_prv));
       ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v3->_prv, &triangle->_v1->_prv));
+
+      auto proj1 = proj({ triangle->_v1->_prv.x(), triangle->_v1->_prv.y() });
+      auto proj2 = proj({ triangle->_v2->_prv.x(), triangle->_v2->_prv.y() });
+      auto proj3 = proj({ triangle->_v3->_prv.x(), triangle->_v3->_prv.y() });
+
+      auto normal = ggo::cross(triangle->_v1->_prv - triangle->_v3->_prv, triangle->_v2->_prv - triangle->_v3->_prv);
+      normal.normalize();
+      uint8_t color = ggo::round_to<uint8_t>(std::pow(std::abs(normal.z()), 0.5f) * 0xff);
+
+      triangles.emplace_back(ggo::triangle2d_float(proj1, proj2, proj3), color);
     }
   }
 
-  std::vector<ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u>> triangles;
-  for (const auto & triangle : _triangles)
-  {
-    auto proj1 = map_fit(ggo::pos2f(triangle->_v1->_prv.x(), triangle->_v1->_prv.y()), -projection_range, projection_range);
-    auto proj2 = map_fit(ggo::pos2f(triangle->_v2->_prv.x(), triangle->_v2->_prv.y()), -projection_range, projection_range);
-    auto proj3 = map_fit(ggo::pos2f(triangle->_v3->_prv.x(), triangle->_v3->_prv.y()), -projection_range, projection_range);
+  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_width(), triangles);
 
-    triangles.emplace_back(ggo::triangle2d_float(proj1, proj2, proj3), ggo::black_8u());
-  }
+  using paint_shape_t = ggo::solid_color_shape<ggo::extended_segment_float, uint8_t>;
 
-  for (const auto & glow : _background_glows)
-  {
-    paint_glow(glow, buffer);
-  }
-
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_1>(buffer, get_width(), get_height(), get_line_step(), triangles, clipping);
-
+  std::vector<paint_shape_t> shapes;
   for (const auto & edge : edges)
   {
-    paint_glow_segment(*edge._v1, *edge._v2, buffer);
+    auto proj1 = proj({ edge._v1->x(), edge._v1->y() });
+    auto proj2 = proj({ edge._v2->x(), edge._v2->y() });
+
+    shapes.push_back(paint_shape_t({ proj1, proj2, _thickness }, 0x00));
   }
 
-  for (const auto & glow : _foreground_glows)
+  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_16x16>(buffer, artist.get_width(), artist.get_height(), artist.get_width(), shapes);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::kame_animation_artist::init()
+{
+  _frame_index = -1;
+
+  _bkgd_colors[0] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[1] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[2] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[3] = ggo::rand<uint8_t>(0xdd, 0xff);
+
+  _kames.clear();
+  for (int i = 256; i > 0; --i)
   {
-    paint_glow(glow, buffer);
+    auto kame = create_kame();
+    kame->_center = i == 1 ? get_center() : get_random_point();
+    kame->_scale = 1.5f * get_min_size() / (i + 16);
+    kame->_thickness = 0.01f * get_min_size() / (i + 16);
+
+    _kames.emplace_back(std::move(kame));
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::paint_glow_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, void * buffer) const
+bool ggo::kame_animation_artist::prepare_frame()
 {
-  auto proj1 = map_fit(ggo::pos2f(p1.x(), p1.y()), -projection_range, projection_range);
-  auto proj2 = map_fit(ggo::pos2f(p2.x(), p2.y()), -projection_range, projection_range);
+  ++_frame_index;
 
-  const float radius = 0.01f * get_min_size();
-  const float sq_radius = radius * radius;
-
-  ggo::rect<float> bounding_rect(proj1, proj2);
-  bounding_rect.inflate(5.f);
-
-  ggo::rect_int pixel_rect = from_math_to_pixel_exclusive(bounding_rect.data());
-  if (pixel_rect.clip(get_width(), get_height()) == false)
+  if (_frame_index >= frames_count)
   {
-    return;
+    return false;
   }
 
-  const ggo::segment<float> segment(proj1, proj2);
-
-  pixel_rect.for_each_pixel([&](int x, int y)
+  for (auto & kame : _kames)
   {
-    const ggo::pos2f p(static_cast<float>(x), static_cast<float>(y));
-    const float hypot = segment.hypot_to_point(p);
+    kame->update();
+  }
 
-    if (hypot < sq_radius)
-    {
-      const float dist = std::sqrt(hypot);
-      const ggo::color_32f color = (128.f * ggo::square(1.f - dist / radius)) * _color;
-
-      ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
-      pixel8u.r() = ggo::round_to<uint8_t>(pixel8u.r() + color.r());
-      pixel8u.g() = ggo::round_to<uint8_t>(pixel8u.g() + color.g());
-      pixel8u.b() = ggo::round_to<uint8_t>(pixel8u.b() + color.b());
-
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), pixel8u);
-    }
-  });
+  return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::paint_glow(const glow & glow, void * buffer) const
+void ggo::kame_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  const float sq_radius = glow._radius * glow._radius;
-
-  ggo::rect<float> bounding_rect(glow._pos, glow._pos);
-  bounding_rect.inflate(glow._radius);
-
-  ggo::rect_int pixel_rect = from_math_to_pixel_exclusive(bounding_rect.data());
-  if (pixel_rect.clip(get_width(), get_height()) == false)
+  if (buffer != nullptr)
   {
-    return;
-  }
+    ggo::buffer buffer_gray(get_width() * get_height());
 
-  pixel_rect.for_each_pixel([&](int x, int y)
-  {
-    const ggo::pos2f p(static_cast<float>(x), static_cast<float>(y));
-    const float hypot = ggo::hypot(p, glow._pos);
+    ggo::fill_4_colors<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),
+      _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 
-    if (hypot < sq_radius)
+    float stddev = 0.001f * get_min_size();
+
+    for (const auto & kame : _kames)
     {
-      const float dist = std::sqrt(hypot);
-      const ggo::color_32f color = (glow._intensity * ggo::square(1.f - dist / glow._radius)) * _color;
+      kame->paint(buffer_gray.data(), *this);
 
-      ggo::color_8u pixel8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
-      pixel8u.r() = ggo::round_to<uint8_t>(pixel8u.r() + color.r());
-      pixel8u.g() = ggo::round_to<uint8_t>(pixel8u.g() + color.g());
-      pixel8u.b() = ggo::round_to<uint8_t>(pixel8u.b() + color.b());
-
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), pixel8u);
+      ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(), stddev);
     }
-  });
-}
 
+    ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),
+      buffer, get_width(), get_height(), get_line_step(), 0, 0);
+  }
+}
 

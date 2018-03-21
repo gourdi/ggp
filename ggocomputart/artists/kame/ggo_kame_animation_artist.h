@@ -4,6 +4,7 @@
 #include "ggo_animation_artist_abc.h"
 #include <ggo_shapes3d.h>
 #include <ggo_random_interpolator_abc.h>
+#include <ggo_link.h>
 #include <memory>
 #include <map>
 
@@ -56,36 +57,39 @@ namespace ggo
       }
     };
 
-    class angle_interpolator : public random_interpolator_abc<float, float>
+    class disp_interpolator : public random_interpolator_abc<ggo::pos2f, float>
     {
-      void get_random_data(float & data, float & dt) override
+      void get_random_data(ggo::pos2f & data, float & dt) override
       {
-        data = ggo::rand<float>(-ggo::pi<float>() / 4, ggo::pi<float>() / 4);
+        float angle = ggo::rand<float>(0.f, 2 * ggo::pi<float>());
+        float radius = ggo::rand<float>(0.f, 1.f);
+        data = ggo::from_polar(angle, radius);
         dt = ggo::rand<float>(25, 50);
       }
     };
 
-    struct glow
+    struct kame
     {
-      ggo::pos2f _pos;
-      float _radius;
-      float _intensity;
-      float _speed;
-      angle_interpolator _angle;
+      std::vector<std::unique_ptr<timed_vertex>>                        _vertices;
+      std::vector<std::unique_ptr<timed_triangle>>                      _triangles;
+      std::map<const timed_vertex *, std::vector<const timed_vertex *>> _neighbors;
+      float                                                             _scale;
+      float                                                             _thickness;
+      ggo::pos2f                                                        _center;
+      disp_interpolator                                                 _disp_interpolator;
+      ggo::vec2f                                                        _disp;
+
+      ggo::pos2f  proj(const ggo::pos2f & p) const;
+      void        update();
+      void        paint(void * buffer, const animation_artist_abc & artist) const;
     };
 
-    static std::vector<std::unique_ptr<timed_triangle>> split_triangles(const std::vector<std::unique_ptr<timed_triangle>> & triangles, std::vector<std::unique_ptr<timed_vertex>> & vertices);
+    static  std::unique_ptr<kame>                         create_kame();
+    static  std::vector<std::unique_ptr<timed_triangle>>  split_triangles(const std::vector<std::unique_ptr<timed_triangle>> & triangles, std::vector<std::unique_ptr<timed_vertex>> & vertices);
 
-    void paint_glow_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, void * buffer) const;
-    void paint_glow(const glow & glow, void * buffer) const;
-
-    int                                                               _frame_index;
-    std::vector<std::unique_ptr<timed_vertex>>                        _vertices;
-    std::vector<std::unique_ptr<timed_triangle>>                      _triangles;
-    std::map<const timed_vertex *, std::vector<const timed_vertex *>> _neighbors;
-    ggo::color_32f                                                    _color;
-    std::vector<glow>                                                 _foreground_glows;
-    std::vector<glow>                                                 _background_glows;
+    int                                 _frame_index;
+    uint8_t                             _bkgd_colors[4];
+    std::vector<std::unique_ptr<kame>>  _kames;
   };
 }
 

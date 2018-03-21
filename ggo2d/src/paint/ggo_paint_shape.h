@@ -6,7 +6,7 @@
 namespace ggo
 {
   // Abstract base class paint shape.
-  template <typename data_type, typename color_type, typename brush_color_type>
+  template <typename data_type, typename color_type, typename brush_color_type = color_type>
   struct paint_shape_abc
   {
     using data_t = typename data_type;

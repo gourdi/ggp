@@ -96,13 +96,13 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 
     while (true)
     {
-      if (_frames_count > 0 && frame_index >= _frames_count)
+      if (_frames_count > 0 && frame_index > _frames_count - 1)
       {
         break;
       }
 
       void * frame_buffer = buffer;
-      if (_render_last_frame_only == true && frame_index != _frames_count)
+      if (_render_last_frame_only == true && frame_index != _frames_count - 1)
       {
         frame_buffer = nullptr;
       }
@@ -113,6 +113,8 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
       }
       
       artist->process_frame(frame_buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
+
+      ++frame_index;
     }
   }
 }
@@ -223,6 +225,8 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::rediff, width, height, line_step, pbf, 350, true);
   case ggo::bitmap_artist_id::aggregation:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::aggregation, width, height, line_step, pbf, 300, true);
+  case ggo::bitmap_artist_id::kame:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::kame, width, height, line_step, pbf, 50, true);
 
 	default:
 		GGO_FAIL();

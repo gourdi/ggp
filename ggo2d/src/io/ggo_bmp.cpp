@@ -78,7 +78,7 @@ namespace ggo
 
     ofs.write(reinterpret_cast<char*>(header), 40);
 
-    ggo::templatize_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_step);
+    ggo::dispatch_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_step);
 
     if (!ofs)
     {

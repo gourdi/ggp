@@ -93,8 +93,7 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rec
       ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u> border2({ v2, v3, border_size }, ggo::white_8u());
       ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u> border3({ v3, v1, border_size }, ggo::white_8u());
 
-      const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u, ggo::color_8u> *> paint_shapes{
-        &triangle, &border1, &border2, &border3 };
+      const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 
       ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), paint_shapes, clipping);
     }

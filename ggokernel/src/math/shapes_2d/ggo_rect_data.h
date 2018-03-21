@@ -28,6 +28,12 @@ namespace ggo
   }
 
   template <typename data_t>
+  rect_data<data_t> extend(const rect_data<data_t> & rect, data_t e)
+  {
+    return { { rect._pos.x() - e, rect._pos.y() - e }, rect._width + 2 * e, rect._height + 2 * e };
+  }
+
+  template <typename data_t>
   rect_data<data_t> get_union(const rect_data<data_t> & rect1, const rect_data<data_t> & rect2)
   {
     data_t left1 = rect1._pos.x();
@@ -46,6 +52,22 @@ namespace ggo
     data_t top = std::max(top1, top2);
 
     return{ { left, bottom }, right - left, top - bottom };
+  }
+
+  template <typename data_t>
+  rect_data<data_t> get_union(const rect_data<data_t> & rect, const pos2<data_t> & p)
+  {
+    data_t left = rect._pos.x();
+    data_t bottom = rect._pos.y();
+    data_t right = left + rect._width;
+    data_t top = bottom + rect._height;
+
+    left = std::min(left, p.x());
+    bottom = std::min(bottom, p.y());
+    right = std::max(right, p.x());
+    top = std::max(top, p.y());
+
+    return rect_data_from_left_right_bottom_top(left, right, bottom, top);
   }
 
   template <typename data_t>

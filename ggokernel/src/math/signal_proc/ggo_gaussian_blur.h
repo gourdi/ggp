@@ -72,44 +72,90 @@ namespace ggo
 
     auto kernel_real = build_gaussian_kernel(stddev, kernel_threshold);
 
-    std::vector<kernel_t> kernel;
-    real_t adjust = 1;
+    real_t scale_inf = 0.5f;
+    real_t scale_mid = 1.0f;
+    real_t scale_sup = 2.0f;
 
-    while (true)
+    auto build_fixed_point_kernel = [&](real_t scale)
     {
-      kernel.clear();
+      std::vector<kernel_t> kernel;
+
       for (const auto & coef_real : kernel_real)
       {
-        kernel_t coef = ggo::round_to<kernel_t>((1 << bit_shift) * adjust * coef_real);
+        kernel_t coef = ggo::round_to<kernel_t>((1 << bit_shift) * scale * coef_real);
         if (coef == 0)
         {
           break;
         }
         kernel.push_back(coef);
-#ifdef GGO_GAUSSIAN_DEBUG		
-        std::cout << kernel.back() << ", ";
-#endif
       }
-#ifdef GGO_GAUSSIAN_DEBUG		
-      std::cout << std::endl;
-#endif  
 
-      // Make sure the sum of integer coef is exactly 1<<bit_shift.
-      kernel_t norm = std::accumulate(kernel.begin(), kernel.end(), kernel_t(0));
-      norm = std::accumulate(kernel.begin() + 1, kernel.end(), norm);
-      if (norm <= kernel_t(1 << bit_shift))
+      if (kernel.empty() == true)
       {
-        if (norm < kernel_t(1 << bit_shift))
-        {
-          kernel[0] += kernel_t(1 << bit_shift) - norm;
-        }
-        break;
+        throw std::runtime_error("failed building fixed point gaussian kernel");
       }
 
-      adjust -= real_t(0.001);
+      return kernel;
+    };
+
+    auto compute_kernel_norm = [](const std::vector<kernel_t> & kernel)
+    {
+      return uint32_t(kernel[0] + 2 * std::accumulate(kernel.begin() + 1, kernel.end(), 0));
+    };
+
+    auto check_kernel = [&](std::vector<kernel_t> & kernel, int bit_shift)
+    {
+      size_t norm = compute_kernel_norm(kernel);
+
+      if (norm == uint32_t(1 << bit_shift))
+      {
+        return true;
+      }
+
+      if (norm == uint32_t(1 << bit_shift) - 1)
+      {
+        kernel[0] += 1;
+        return true;
+      }
+
+      return false;
+    };
+
+    for (int i = 0; i < 100; ++i)
+    {
+      auto kernel_inf = build_fixed_point_kernel(scale_inf);
+      auto kernel_mid = build_fixed_point_kernel(scale_mid);
+      auto kernel_sup = build_fixed_point_kernel(scale_sup);
+
+      if (check_kernel(kernel_inf, bit_shift) == true)
+      {
+        return kernel_inf;
+      }
+
+      if (check_kernel(kernel_mid, bit_shift) == true)
+      {
+        return kernel_mid;
+      }
+
+      if (check_kernel(kernel_sup, bit_shift) == true)
+      {
+        return kernel_sup;
+      }
+
+      auto norm_mid = compute_kernel_norm(kernel_mid);
+      if (norm_mid > uint32_t(1 << bit_shift))
+      {
+        scale_sup = scale_mid;
+      }
+      else
+      {
+        scale_inf = scale_mid;
+      }
+      scale_mid = 0.5f * (scale_inf + scale_sup);
     }
 
-    return kernel;
+    throw std::runtime_error("failed building fixed point gaussian kernel");
+    return {};
   }
 }
 

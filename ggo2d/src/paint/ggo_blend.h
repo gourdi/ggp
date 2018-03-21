@@ -140,6 +140,11 @@ namespace ggo
     {
       return add_blend(bkgd_color, convert_color_to<color_t>(brush_color));
     }
+
+    color_t operator()(const color_t & bkgd_color, const brush_color_t & brush_color) const
+    {
+      return operator()(0, 0, bkgd_color, convert_color_to<color_t>(brush_color));
+    }
   };
 }
 

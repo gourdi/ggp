@@ -47,7 +47,8 @@ namespace ggo
     sonson,
     rediff, // 40
     entabeni,
-    cabrel
+    cabrel,
+    kame
   };
 }
 
