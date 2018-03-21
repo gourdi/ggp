@@ -1,5 +1,6 @@
 #include "ggo_smoke_animation_artist.h"
 #include <ggo_kernel.h>
+#include <ggo_gaussian_blur2d.h>
 #include <ggo_buffer_fill.h>
 
 namespace
@@ -48,7 +49,7 @@ _sources(4)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::init()
+void ggo::smoke_animation_artist::init_animation()
 {
   _frame_index = 0;
 
@@ -69,7 +70,8 @@ void ggo::smoke_animation_artist::init()
   const double area = 1.;
   _cell_size = area / std::sqrt(double(get_width()) * double(get_height()));
 
-  _density = 10.;
+  _density = ggo::rand<float>(1.f, 5.f);// 2.;
+  std::cout << "density: " << _density << std::endl;
 
   for (int i = 0; i < _sources.get_count(); ++i)
   {
@@ -100,7 +102,8 @@ void ggo::smoke_animation_artist::init()
     }
 
     source._disc.radius() = ggo::rand<double>(0.03, 0.04);
-    source._speed = 0.1; //ggo::rand<double>(0.001, 0.002);
+    source._speed = ggo::rand<double>(0.04, 0.09); // 0.05;
+    std::cout << "source speed: " << source._speed << std::endl;
     source._timer1 = ggo::rand<int>(50, 100);
     source._timer2 = ggo::rand<int>(50, 150);
     source._angle_amplitude = ggo::rand<double>(ggo::pi<double>() / 4, ggo::pi<double>());
@@ -304,6 +307,32 @@ void ggo::smoke_animation_artist::opacity_advection()
 }
 
 //////////////////////////////////////////////////////////////
+void ggo::smoke_animation_artist::diffuse()
+{
+  float stddev_opacity = 0.0001f * std::sqrt(float(get_width() * get_height()));
+  float stddev_velocity = 0.0001f * std::sqrt(float(get_width() * get_height()));
+
+  auto border_opacity = [&](int x, int y, void * buffer) { return _opacity_cur->at_loop(x, y); };
+  auto border_velocity_x = [&](int x, int y, void * buffer) { return _velocity_x_cur->at_loop(x, y); };
+  auto border_velocity_y = [&](int x, int y, void * buffer) { return _velocity_y_cur->at_loop(x, y); };
+
+  ggo::gaussian_blur2d<ggo::pixel_buffer_format::y_64f_yd>(
+    _opacity_cur->data(), _opacity_cur->get_width(), _opacity_cur->get_height(), sizeof(double) * _opacity_cur->get_width(),
+    stddev_opacity,
+    border_opacity, border_opacity, border_opacity, border_opacity);
+
+  ggo::gaussian_blur2d<ggo::pixel_buffer_format::y_64f_yd>(
+    _velocity_x_cur->data(), _velocity_x_cur->get_width(), _velocity_x_cur->get_height(), sizeof(double) * _velocity_x_cur->get_width(),
+    stddev_velocity,
+    border_velocity_x, border_velocity_x, border_velocity_x, border_velocity_x);
+
+  ggo::gaussian_blur2d<ggo::pixel_buffer_format::y_64f_yd>(
+    _velocity_y_cur->data(), _velocity_y_cur->get_width(), _velocity_y_cur->get_height(), sizeof(double) * _velocity_y_cur->get_width(),
+    stddev_velocity,
+    border_velocity_y, border_velocity_y, border_velocity_y, border_velocity_y);
+}
+
+//////////////////////////////////////////////////////////////
 bool ggo::smoke_animation_artist::prepare_frame()
 {
   const int frames_count = 600;
@@ -317,6 +346,7 @@ bool ggo::smoke_animation_artist::prepare_frame()
   velocity_self_advection();
   make_incompressible();
   opacity_advection();
+  diffuse();
 
   ++_frame_index;
 
@@ -324,7 +354,7 @@ bool ggo::smoke_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
 	// Draw the opacity.
   for (int y = 0; y < get_height(); ++y)

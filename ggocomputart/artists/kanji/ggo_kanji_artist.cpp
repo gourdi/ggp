@@ -11,7 +11,7 @@ artist(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_artist::init()
+void ggo::kanji_artist::init_animation()
 {
 	_parts_color	= ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
 	_timer_max		= ggo::rand<int>(500, 750);
@@ -38,7 +38,7 @@ void ggo::kanji_artist::init()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::kanji_artist::update(int frame_index)
+bool ggo::kanji_artist::prepare_frame(int frame_index)
 {
   if (frame_index >= _timer_max)
   {
@@ -110,7 +110,7 @@ bool ggo::kanji_artist::update(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_artist::process_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::rect_int & clipping) const
+void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::rect_int & clipping) const
 {
   const float radius = 0.0005f * get_min_size();
   const auto brush = ggo::make_solid_brush(_parts_color);

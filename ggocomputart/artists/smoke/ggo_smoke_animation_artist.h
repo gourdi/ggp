@@ -12,9 +12,9 @@ namespace ggo
 
           smoke_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
 
-    void  init() override;
+    void  init_animation() override;
     bool  prepare_frame() override;
-    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
   private:
 
@@ -22,6 +22,7 @@ namespace ggo
     void velocity_self_advection();
     void make_incompressible();
     void opacity_advection();
+    void diffuse();
 
     struct fluid_source
     {

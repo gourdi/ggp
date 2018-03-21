@@ -29,9 +29,9 @@ namespace ggo
       ggo::filling_squares_artist::colored_square _colored_square;
     };
 
-    void  init() override;
+    void  init_animation() override;
     bool  prepare_frame() override;
-    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
   private:
 

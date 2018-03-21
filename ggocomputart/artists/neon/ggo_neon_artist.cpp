@@ -38,7 +38,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::init()
+void ggo::neon_artist::init_animation()
 {
   _frame_index = -1;
   _angle = 0;
@@ -84,7 +84,7 @@ bool ggo::neon_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::neon_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

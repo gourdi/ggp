@@ -28,12 +28,12 @@ void ggo::kanji_bitmap_artist::render_bitmap(void * buffer) const
 
   ggo::kanji_artist	artist(get_width(), get_height());
 
-	artist.init();
+	artist.init_animation();
 	
 	int frame_index = 0;
-	while (artist.update(frame_index) == true)
+	while (artist.prepare_frame(frame_index) == true)
 	{
-    artist.process_frame(buffer, get_line_step(), get_pixel_buffer_format(), frame_index, ggo::rect_int::from_width_height(get_width(), get_height()));
+    artist.render_frame(buffer, get_line_step(), get_pixel_buffer_format(), frame_index, ggo::rect_int::from_width_height(get_width(), get_height()));
 		++frame_index;
 	}
 }

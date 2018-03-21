@@ -13,7 +13,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_animation_artist::init()
+void ggo::duffing_realtime_animation_artist::init_animation()
 {
   _frame_index = -1;
   uint8_t gray = ggo::rand<uint8_t>(0x80, 0xff);
@@ -52,7 +52,7 @@ bool ggo::duffing_realtime_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   auto contract = [](int v) -> int
   {

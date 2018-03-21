@@ -54,7 +54,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::init()
+void ggo::filling_squares_animation_artist::init_animation()
 {
 	_animator.clear();
 	
@@ -101,7 +101,7 @@ bool ggo::filling_squares_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::filling_squares_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
 

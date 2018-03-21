@@ -82,7 +82,7 @@ void render_anim_func(const ggo::rect_int & clipping, int id)
       break;
     }
 
-    anim_artist->process_frame(screen_surface->pixels, clipping);
+    anim_artist->render_frame(screen_surface->pixels, clipping);
 
     {
       std::unique_lock<std::mutex> lock(anim_mutex);

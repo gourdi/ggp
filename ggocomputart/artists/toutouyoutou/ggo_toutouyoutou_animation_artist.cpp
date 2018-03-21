@@ -38,7 +38,7 @@ _background(new uint8_t[height * line_step])
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_animation_artist::init()
+void ggo::toutouyoutou_animation_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -117,7 +117,7 @@ bool ggo::toutouyoutou_animation_artist::prepare_frame()
 }
 
 ////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (_frame_index == 0)
   {

@@ -15,7 +15,7 @@ _artist(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_animation_artist::init()
+void ggo::julia_animation_artist::init_animation()
 {
   _frame_index = -1;
   _angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
@@ -36,7 +36,7 @@ bool ggo::julia_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::julia_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   float angle = ggo::ease_inout(_frame_index, frames_count, _angle, _angle + ggo::pi<float>() / 8);
 

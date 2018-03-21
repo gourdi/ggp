@@ -18,7 +18,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 } 
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::init()
+void ggo::hexa_animation_artist::init_animation()
 {
 #ifdef GGO_PREVIEW
   _artist.reset(new ggo::hexa_artist(false));
@@ -41,7 +41,7 @@ bool ggo::hexa_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   float progress = static_cast<float>(_frame_index) / frames_count;
   progress = ggo::ease_inout(progress);

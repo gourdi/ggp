@@ -476,7 +476,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_animation_artist::init()
+void ggo::sonson_animation_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -522,7 +522,7 @@ bool ggo::sonson_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::sonson_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer != nullptr)
   {

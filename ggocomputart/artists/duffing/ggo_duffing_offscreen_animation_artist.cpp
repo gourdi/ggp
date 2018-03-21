@@ -22,7 +22,7 @@ animation_artist_abc(width, height, line_step, pbf, offscreen_rendering)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_offscreen_animation_artist::init()
+void ggo::duffing_offscreen_animation_artist::init_animation()
 {
   _frame_index = 0;
 
@@ -105,7 +105,7 @@ bool ggo::duffing_offscreen_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_offscreen_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::duffing_offscreen_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   int last_point = std::max(1, _frame_index * points_per_frame);
   int first_point = last_point - visible_points_count;

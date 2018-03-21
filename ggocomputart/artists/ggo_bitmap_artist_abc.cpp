@@ -92,35 +92,26 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
   {
     int frame_index = 0;
 
-    artist->init();
+    artist->init_animation();
 
-    //while (true)
-    //{
-    //  bool done = false;
+    while (true)
+    {
+      if (_frames_count > 0 && frame_index >= _frames_count)
+      {
+        break;
+      }
+      if (artist->prepare_frame() == false)
+      {
+        break;
+      }
 
-    //  if (_frames_count > 0 && frame_index >= _frames_count)
-    //  {
-    //    done = true;
-    //  }
-
-    //  void * frame_buffer = buffer;
-    //  if (_render_last_frame_only == true && frame_index != _frames_count)
-    //  {
-    //    frame_buffer = nullptr;
-    //  }
-    //  if (artist->render_next_frame(frame_buffer) == false)
-    //  {
-    //    done = true;
-    //  }
-
-    //  if (done == true)
-    //  {
-    //    break;
-    //  }
-
-    //  if (artist->render_next_frame(frame_buffer) == false)
-
-    //}
+      void * frame_buffer = buffer;
+      if (_render_last_frame_only == true && frame_index != _frames_count)
+      {
+        frame_buffer = nullptr;
+      }
+      artist->render_frame(frame_buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
+    }
   }
 }
 
@@ -213,7 +204,7 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
 
   // animation artists.
 	case ggo::bitmap_artist_id::smoke:
-		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, pbf, 400);
+		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, pbf);
 	case ggo::bitmap_artist_id::ikeda:
 		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::ikeda, width, height, line_step, pbf, 1);
 	case ggo::bitmap_artist_id::lagaude:

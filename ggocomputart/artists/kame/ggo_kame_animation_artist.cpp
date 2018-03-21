@@ -19,7 +19,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::init()
+void ggo::kame_animation_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -266,7 +266,7 @@ std::vector<std::unique_ptr<ggo::kame_animation_artist::timed_triangle>> ggo::ka
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
 

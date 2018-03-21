@@ -29,9 +29,9 @@ namespace ggo
 
   private:
 
-    void  init() override;
+    void  init_animation() override;
     bool  prepare_frame() override;
-    void  process_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
     void update_predators(float velocity_hypot_min, float velocity_hypot_max, float border_margin);
     void update_stornis(float velocity_hypot_min, float velocity_hypot_max, float border_margin);

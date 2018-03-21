@@ -10,7 +10,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::init()
+void ggo::vortex_animation_artist::init_animation()
 {
   const int vortices_count = 20;
 
@@ -64,7 +64,7 @@ bool ggo::vortex_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
 }

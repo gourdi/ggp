@@ -18,9 +18,9 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::init()
+void ggo::duffing_animation_artist::init_animation()
 {
-  _artist->init();
+  _artist->init_animation();
 }
 
 //////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ bool ggo::duffing_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::duffing_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  _artist->process_frame(buffer, clipping);
+  _artist->render_frame(buffer, clipping);
 }

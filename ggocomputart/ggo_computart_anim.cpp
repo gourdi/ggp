@@ -117,6 +117,8 @@ int main(int argc, char ** argv)
     return 1;
   }
 
+  artist->init_animation();
+
   ggo::chronometer animation_chronometer;
 
   int i = 0;
@@ -129,7 +131,7 @@ int main(int argc, char ** argv)
       break;
     }
 
-    artist->process_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
+    artist->render_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
 
     std::ostringstream filename;
     if (params._output_directory.length() > 0)

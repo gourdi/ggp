@@ -18,6 +18,7 @@ namespace ggo
     y_8u_yd,
     y_16u_yd,
     y_32f_yu,
+    y_64f_yd,
     rgb_8u_yu,
     rgb_8u_yd,
     bgra_8u_yd,
@@ -73,7 +74,7 @@ namespace ggo
   template <>
   struct pixel_buffer_format_info<y_32f_yu>
   {
-    static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
+    static_assert(sizeof(float) == 4);
 
     static const int pixel_byte_size = 4;
 
@@ -84,6 +85,22 @@ namespace ggo
     using type = float;
     static float read(const void * ptr) { return *static_cast<const float *>(ptr); }
     static void write(void * ptr, float c) { *static_cast<float *>(ptr) = c; }
+  };
+
+  template <>
+  struct pixel_buffer_format_info<y_64f_yd>
+  {
+    static_assert(sizeof(double) == 8);
+
+    static const int pixel_byte_size = 8;
+
+    using color_t = double;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 8>;
+
+    // Accessor interface.
+    using type = double;
+    static double read(const void * ptr) { return *static_cast<const double *>(ptr); }
+    static void write(void * ptr, double c) { *static_cast<double *>(ptr) = c; }
   };
 
   template <>

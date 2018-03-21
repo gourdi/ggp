@@ -147,7 +147,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::init()
+void ggo::amorosi_animation_artist::init_animation()
 {
   _frame_index = -1;
   _hue = ggo::rand<float>();
@@ -201,7 +201,7 @@ bool ggo::amorosi_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>(), clipping);
 

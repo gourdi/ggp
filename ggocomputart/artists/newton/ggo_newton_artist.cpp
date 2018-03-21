@@ -15,7 +15,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::newton_artist::init()
+void ggo::newton_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -126,7 +126,7 @@ bool ggo::newton_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::newton_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::newton_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   memcpy(buffer, _background.get(), get_width() * get_line_step());
 

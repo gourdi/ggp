@@ -12,9 +12,9 @@ namespace ggo
 
           kanji_artist(int width, int height);
 
-    void	init();
-    bool	update(int frame_index);
-    void	process_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::rect_int & clipping) const;
+    void	init_animation();
+    bool	prepare_frame(int frame_index);
+    void	render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::rect_int & clipping) const;
 
   private:
 

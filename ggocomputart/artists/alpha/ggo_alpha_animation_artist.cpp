@@ -20,7 +20,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::init()
+void ggo::alpha_animation_artist::init_animation()
 {
   _remaining_counter = 7;
   _creation_counter = ggo::rand<int>(40, 60);
@@ -117,7 +117,7 @@ bool ggo::alpha_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer != nullptr)
   {

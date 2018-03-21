@@ -50,6 +50,22 @@ namespace ggo
   };
 
   template <>
+  struct gaussian_blur2d_helper<double>
+  {
+    using color_t = double;
+
+    static std::vector<double> build_kernel(const double stddev)
+    {
+      return ggo::build_gaussian_kernel<double>(stddev, 0.001);
+    }
+
+    static double convert(const double & c)
+    {
+      return c;
+    }
+  };
+
+  template <>
   struct gaussian_blur2d_helper<ggo::color_8u>
   {
     using color_t = color_16u;
@@ -104,6 +120,10 @@ namespace ggo
     std::vector<uint8_t> tmp(line_byte_step * height);
 
     auto kernel = gaussian_helper::build_kernel(stddev);
+    if (kernel.size() <= 1)
+    {
+      return;
+    }
 
     // First horizontal pass.
     {

@@ -16,7 +16,7 @@ _life(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::init()
+void ggo::rediff_animation_artist::init_animation()
 { 
   _frame_index = -1;
 
@@ -92,7 +92,7 @@ bool ggo::rediff_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::rediff_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   if (buffer == nullptr)
   {

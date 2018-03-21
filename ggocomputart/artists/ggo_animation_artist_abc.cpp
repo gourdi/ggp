@@ -152,11 +152,6 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
 		GGO_FAIL();
 		break;
 	}
-    
-  if (artist != nullptr)
-  {
-    artist->init();
-  }
 
 	return artist;
 }

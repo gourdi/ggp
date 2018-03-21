@@ -15,7 +15,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_animation_artist::init()
+void ggo::cumbia_animation_artist::init_animation()
 {
   _frame_index = -1;
 	_artist.init(_camera_basis, _camera_aperture, 1 << 15);
@@ -37,7 +37,7 @@ bool ggo::cumbia_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::antialiasing_point_camera	camera(get_width(), get_height(), _camera_basis, _camera_aperture);
 

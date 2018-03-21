@@ -15,7 +15,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_animation_artist::init()
+void ggo::crystal_animation_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -42,7 +42,7 @@ bool ggo::crystal_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::crystal_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3], clipping);

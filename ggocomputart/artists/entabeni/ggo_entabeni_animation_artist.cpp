@@ -14,7 +14,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni_animation_artist::init()
+void ggo::entabeni_animation_artist::init_animation()
 {
   _frame_index = -1;
   _z = 0.f;
@@ -41,7 +41,7 @@ bool ggo::entabeni_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::entabeni_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Interpolate grid.
   ggo::array<float, 2> grid(_grid_start.get_width(), _grid_start.get_height());

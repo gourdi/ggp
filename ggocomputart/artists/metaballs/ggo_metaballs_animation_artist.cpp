@@ -16,7 +16,7 @@ animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::init()
+void ggo::metaballs_animation_artist::init_animation()
 {
   _frame_index = -1;
 
@@ -84,7 +84,7 @@ bool ggo::metaballs_animation_artist::prepare_frame()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   ggo::antialiasing_point_camera camera(get_width(), get_height(), _camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);
