@@ -21,7 +21,6 @@ void ggo::aggregation_artist::render(void * buffer, int line_step) const
     }
 
     ggo::fill_solid<pbf>(buffer, get_width(), get_height(), line_step, _background_color, ggo::rect_int::from_width_height(get_width(), get_height()));
-
     ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step, shapes);
   }
 

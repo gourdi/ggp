@@ -68,7 +68,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 
 		ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_2x2>(
       shadow_buffer.data(), get_width(), get_height(), sizeof(float) * get_width(),
-      ggo::disc_float(render_pt, radius), ggo::make_solid_brush<float>(0.f), ggo::alpha_blender<float, float>(0.2f));
+      ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(0.2f));
 	}
 
 	// Blur and blend the shadow.
@@ -100,7 +100,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 
     ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
       buffer_float.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-      ggo::disc_float(points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender<color_32f, color_32f>(0.02f));
+      ggo::disc_float(points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender_rgb32f(0.02f));
 	}
 
 	// From float to uint8_t.

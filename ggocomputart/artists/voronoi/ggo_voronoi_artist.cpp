@@ -285,8 +285,8 @@ namespace
 
           auto pixel_color = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step);
 
-          ggo::alpha_blender<ggo::color_8u, ggo::color_8u> blender(opacity);
-          pixel_color = blender(x, y, pixel_color, voronoi_leaf.data()._color);
+          ggo::alpha_blender_rgb8u blender(opacity);
+          pixel_color = blender(pixel_color, voronoi_leaf.data()._color);
 
           ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, pixel_color);
         }

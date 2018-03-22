@@ -540,6 +540,55 @@ namespace ggo
 }
 
 /////////////////////////////////////////////////////////////////////
+// Linear interpolation.
+namespace ggo
+{
+  template <typename fract_t>
+  uint8_t linerp(uint8_t color_a, uint8_t color_b, const fract_t & weight_a)
+  {
+    constexpr uint32_t one = 1 << fract_t::_log2_den;
+
+    const uint32_t weight_b = one - weight_a._num;
+    
+    return ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a + weight_b * color_b);
+  }
+
+  template <typename fract_t>
+  color_8u linerp(color_8u color_a, color_8u color_b, const fract_t & weight_a)
+  {
+    constexpr uint32_t one = 1 << fract_t::_log2_den;
+
+    const uint32_t weight_b = one - weight_a._num;
+
+    return {
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
+  }
+
+  template <typename fract_t>
+  float linerp(float color_a, float color_b, const fract_t & weight_a)
+  {
+    const float weight_a_32f = weight_a.to<float>();
+    const float weight_b_32f = 1.f - weight_a_32f;
+
+    return weight_a_32f * color_a + weight_b_32f * color_b;
+  }
+
+  template <typename fract_t>
+  color_32f linerp(const color_32f & color_a, const color_32f & color_b, const fract_t & weight_a)
+  {
+    const float weight_a_32f = weight_a.to<float>();
+    const float weight_b_32f = 1.f - weight_a_32f;
+
+    return {
+      weight_a_32f * color_a.r() + weight_b_32f * color_b.r(),
+      weight_a_32f * color_a.g() + weight_b_32f * color_b.g(),
+      weight_a_32f * color_a.b() + weight_b_32f * color_b.b() };
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 // HSV
 namespace ggo
 {

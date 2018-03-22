@@ -5,18 +5,18 @@
 
 namespace ggo
 {
-  template <template <typename> class ggo_shape2d_type, typename T = float>
-  class shape_field2d : public scalar_field_2d_abc<T>
+  template <template <typename> class ggo_shape2d_type, typename data_t = float>
+  class shape_field2d : public scalar_field_2d_abc<data_t>
   {
   public:
 
-    T evaluate(T x, T y) const override
+    data_t sample(data_t x, data_t y) const override
     {
       return _shape.is_point_inside({ x, y }) ? _height : 0;
     }
 
-    T                   _height = 1;
-    ggo_shape2d_type<T> _shape;
+    data_t                   _height = 1;
+    ggo_shape2d_type<data_t> _shape;
   };
 }
 

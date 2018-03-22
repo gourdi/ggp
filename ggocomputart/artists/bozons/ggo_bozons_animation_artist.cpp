@@ -18,6 +18,28 @@ ggo::animation_artist_abc(width, height, line_step, pbf, rt)
 }
 
 //////////////////////////////////////////////////////////////
+void ggo::bozons_animation_artist::create_bozon()
+{
+  bozon new_bozon;
+
+  new_bozon._prv_pos = get_center();
+  new_bozon._cur_pos = get_center();
+
+  new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+
+  new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
+  new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
+
+  new_bozon._counter = ggo::rand<int>(200, 300);
+
+  new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
+
+  new_bozon._radius = 0.0015f * get_min_size();
+
+  _bozons.push_back(new_bozon);
+}
+
+//////////////////////////////////////////////////////////////
 void ggo::bozons_animation_artist::init_animation()
 {
   _frame_index = -1;
@@ -33,20 +55,7 @@ void ggo::bozons_animation_artist::init_animation()
 
   for (int i = 0; i < 32; ++i)
   {
-    bozon new_bozon;
-    new_bozon._prv_pos = get_center();
-    new_bozon._cur_pos = get_center();
-
-    new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-
-    new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-    new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
-
-    new_bozon._counter = ggo::rand<int>(200, 300);
-
-    new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
-
-    _bozons.push_back(new_bozon);
+    create_bozon();
   }
 }
 
@@ -85,6 +94,7 @@ bool ggo::bozons_animation_artist::prepare_frame()
         new_bozon._prv_pos = bozon_it->_cur_pos;
         new_bozon._cur_pos = bozon_it->_cur_pos;
         new_bozon._speed = bozon_it->_speed;
+        new_bozon._radius = bozon_it->_radius;
         new_bozon._color = bozon_it->_color;
         new_bozon._counter = bozon_it->_counter;
 
@@ -95,6 +105,7 @@ bool ggo::bozons_animation_artist::prepare_frame()
       bozon_it->_angle += bozon_it->_dangle;
       bozon_it->_dangle *= 1.01f;
       bozon_it->_speed *= 0.99f;
+      bozon_it->_radius *= 0.995f;
       bozon_it->_prv_pos = bozon_it->_cur_pos;
       bozon_it->_cur_pos += ggo::from_polar(bozon_it->_angle, bozon_it->_speed);
 
@@ -105,20 +116,7 @@ bool ggo::bozons_animation_artist::prepare_frame()
   // Create new bozons.
   if (_frame_index < 100 && ggo::rand<int>(0, 12) == 0)
   {
-    bozon new_bozon;
-    new_bozon._prv_pos = get_center();
-    new_bozon._cur_pos = get_center();
-
-    new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-
-    new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-    new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);
-
-    new_bozon._counter = ggo::rand<int>(200, 300);
-
-    new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
-
-    _bozons.push_back(new_bozon);
+    create_bozon();
   }
 
   return true;
@@ -127,24 +125,16 @@ bool ggo::bozons_animation_artist::prepare_frame()
 //////////////////////////////////////////////////////////////
 void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  if (_frame_index == 0)
+  switch (get_pixel_buffer_format())
   {
-    ggo::fill_4_colors<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(),
-      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
-  }
-
-  const float radius = 0.001f * get_min_size();
-
-  switch (get_rendering_type())
-  {
-  case rendering_type::realtime_rendering_android:
-  case rendering_type::realtime_rendering_pc:
-    for (const auto & bozon : _bozons)
-    {
-      ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
-        ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, radius),
-        ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
-    }
+  case ggo::bgra_8u_yd:
+    process_frame<ggo::bgra_8u_yd>(buffer, clipping);
+    break;
+  case ggo::rgb_8u_yu:
+    process_frame<ggo::rgb_8u_yu>(buffer, clipping);
+    break;
+  case ggo::rgb_8u_yd:
+    process_frame<ggo::rgb_8u_yd>(buffer, clipping);
     break;
   default:
     GGO_FAIL();

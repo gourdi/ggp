@@ -243,7 +243,7 @@ namespace ggo
 namespace ggo
 {
   template <typename functor, typename... args>
-  auto templatize_pbf(pixel_buffer_format pbf, args&&... a)
+  auto dispatch_pbf(pixel_buffer_format pbf, args&&... a)
   {
     switch (pbf)
     {
@@ -257,51 +257,6 @@ namespace ggo
     case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
     case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
     case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
-    }
-  }
-
-  template <ggo::pixel_buffer_format pbf1, typename functor, typename... args>
-  auto templatize_pbf2_aux(ggo::pixel_buffer_format pbf2, args&&... a)
-  {
-    switch (pbf2)
-    {
-    default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
-    case y_8u_yu: return functor::call<pbf1, y_8u_yu>(std::forward<args>(a)...);
-    case y_8u_yd: return functor::call<pbf1, y_8u_yd>(std::forward<args>(a)...);
-    case y_16u_yd: return functor::call<pbf1, y_16u_yd>(std::forward<args>(a)...);
-    case y_32f_yu: return functor::call<pbf1, y_32f_yu>(std::forward<args>(a)...);
-    case rgb_8u_yu: return functor::call<pbf1, rgb_8u_yu>(std::forward<args>(a)...);
-    case rgb_8u_yd: return functor::call<pbf1, rgb_8u_yd>(std::forward<args>(a)...);
-    case bgra_8u_yd: return functor::call<pbf1, bgra_8u_yd>(std::forward<args>(a)...);
-    case rgb_16u_yd: return functor::call<pbf1, rgb_16u_yd>(std::forward<args>(a)...);
-    case rgb_32f_yu: return functor::call<pbf1, rgb_32f_yu>(std::forward<args>(a)...);
-    }
-  }
-
-  template <typename functor, typename... args>
-  auto templatize_pbf2(ggo::pixel_buffer_format pbf1, ggo::pixel_buffer_format pbf2, args&&... a)
-  {
-    switch (pbf1)
-    {
-    default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
-    case y_8u_yu:
-      return templatize_pbf2_aux<y_8u_yu, functor>(pbf2, std::forward<args>(a)...);
-    case y_8u_yd:
-      return templatize_pbf2_aux<y_8u_yd, functor>(pbf2, std::forward<args>(a)...);
-    case y_16u_yd:
-      return templatize_pbf2_aux<y_16u_yd, functor>(pbf2, std::forward<args>(a)...);
-    case y_32f_yu:
-      return templatize_pbf2_aux<y_32f_yu, functor>(pbf2, std::forward<args>(a)...);
-    case rgb_8u_yu:
-      return templatize_pbf2_aux<rgb_8u_yu, functor>(pbf2, std::forward<args>(a)...);
-    case rgb_8u_yd:
-      return templatize_pbf2_aux<rgb_8u_yd, functor>(pbf2, std::forward<args>(a)...);
-    case bgra_8u_yd:
-      return templatize_pbf2_aux<bgra_8u_yd, functor>(pbf2, std::forward<args>(a)...);
-    case rgb_16u_yd:
-      return templatize_pbf2_aux<rgb_16u_yd, functor>(pbf2, std::forward<args>(a)...);
-    case rgb_32f_yu:
-      return templatize_pbf2_aux<rgb_32f_yu, functor>(pbf2, std::forward<args>(a)...);
     }
   }
 }
@@ -319,7 +274,7 @@ namespace ggo
 
   inline int get_pixel_byte_size(pixel_buffer_format pbf)
   {
-    return templatize_pbf<get_pixel_byte_size_t>(pbf);
+    return dispatch_pbf<get_pixel_byte_size_t>(pbf);
   }
 
   inline int get_line_byte_size(pixel_buffer_format pbf, int width)

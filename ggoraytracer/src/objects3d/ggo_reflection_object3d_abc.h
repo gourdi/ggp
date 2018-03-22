@@ -47,7 +47,7 @@ namespace ggo
     GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
     GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
-    if constexpr(flags & discard_roughness)
+    if constexpr((flags & discard_roughness) != 0)
     {
       return ggo::ray3d_float(normal.pos(), reflected_dir, false);
     }

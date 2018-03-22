@@ -11,12 +11,12 @@ namespace ggo
   {
   public:
     
-    data_t evaluate(data_t x, data_t y) const
+    data_t sample(data_t x, data_t y) const
     {
       data_t v(0);
       for (const auto & field : _fields)
       {
-        v += field.evaluate(x, y);
+        v += field.sample(x, y);
       }
       return v;
     }

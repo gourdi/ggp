@@ -13,7 +13,7 @@ namespace ggo
     sampling_8x8,
     sampling_16x16
   };
-
+  
   template <sampling smp>
   struct sampler { };
 
@@ -27,7 +27,8 @@ namespace ggo
       func(real_t(x) + real_t(0.5), real_t(y) + real_t(0.5));
     }
 
-    static const int samples_count = 1;
+    static constexpr int samples_count = 1;
+    static constexpr int samples_count_log2 = 0;
   };
 
   template <>
@@ -47,7 +48,8 @@ namespace ggo
       func(x_f + real_t(0.75), y_f + real_t(0.75));
     }
 
-    static const int samples_count = 4;
+    static constexpr int samples_count = 4;
+    static constexpr int samples_count_log2 = 2;
   };
 
   template <>
@@ -81,7 +83,8 @@ namespace ggo
       func(x_f + real_t(0.875), y_f + real_t(0.875));
     }
 
-    static const int samples_count = 16;
+    static constexpr int samples_count = 16;
+    static constexpr int samples_count_log2 = 4;
   };
 
   template <>
@@ -103,7 +106,8 @@ namespace ggo
       }
     }
 
-    static const int samples_count = 64;
+    static constexpr int samples_count = 64;
+    static constexpr int samples_count_log2 = 6;
   };
 
   template <>
@@ -125,7 +129,8 @@ namespace ggo
       }
     }
 
-    static const int samples_count = 256;
+    static constexpr int samples_count = 256;
+    static constexpr int samples_count_log2 = 8;
   };
 }
 

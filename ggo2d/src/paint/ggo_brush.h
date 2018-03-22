@@ -4,37 +4,31 @@
 namespace ggo
 {
   template <typename color_t>
-  struct brush_abc
-  {
-    virtual color_t operator()(int x, int y) const = 0;
-  };
-
-  template <typename color_t>
-  struct solid_color_brush : public brush_abc<color_t>
+  struct solid_color_brush
   {
     const color_t _brush_color;
 
     solid_color_brush(const color_t & c) : _brush_color(c) {}
 
-    color_t operator()(int x, int y) const override
+    color_t operator()(int x, int y) const
     {
       return _brush_color;
     }
   };
 
   template <typename color_t>
-  struct white_brush : public brush_abc<color_t>
+  struct white_brush
   {
-    color_t operator()(int x, int y) const override
+    color_t operator()(int x, int y) const
     {
       return ggo::white<color_t>();
     }
   };
 
   template <typename color_t>
-  struct black_brush : public brush_abc<color_t>
+  struct black_brush
   {
-    color_t operator()(int x, int y) const override
+    color_t operator()(int x, int y) const
     {
       return ggo::black<color_t>();
     }

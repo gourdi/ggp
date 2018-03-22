@@ -14,7 +14,7 @@ namespace ggo
 
     void   add_octave(data_t scale, data_t amplitude, data_t angle = 0, int noise_size = 16);
     
-    data_t evaluate(data_t x, data_t y) const override;
+    data_t sample(data_t x, data_t y) const override;
 
   private:
 
@@ -24,7 +24,7 @@ namespace ggo
     
               octave(data_t scale, data_t amplitude, data_t angle, int noise_size);
       
-      data_t  evaluate(data_t x, data_t y) const;
+      data_t  sample(data_t x, data_t y) const;
       
       data_t  get(int x, int y) const;
 
@@ -59,7 +59,7 @@ namespace ggo
   }
 
   template <typename data_t, bool positive_only>
-  data_t perlin_noise_field2d<data_t, positive_only>::octave::evaluate(data_t x, data_t y) const
+  data_t perlin_noise_field2d<data_t, positive_only>::octave::sample(data_t x, data_t y) const
   {
     x /= _scale;
     y /= _scale;
@@ -90,12 +90,12 @@ namespace ggo
   }
 
   template <typename data_t, bool positive_only>
-  data_t perlin_noise_field2d<data_t, positive_only>::evaluate(data_t x, data_t y) const
+  data_t perlin_noise_field2d<data_t, positive_only>::sample(data_t x, data_t y) const
   {
     data_t result(0);
     for (const auto & octave : _octaves)
     {
-      result += octave.evaluate(x, y);
+      result += octave.sample(x, y);
     }
     return result;
   }

@@ -53,7 +53,7 @@ namespace ggo
                                     int width, int height, int line_step,
                                     ggo::pixel_buffer_format pbf,
                                     int frames_count = 0,
-                                    bool render_last_frame_only = false);
+                                    bool render_last_frame_only = true);
 
     void	render_bitmap(void * buffer) const override;
 
@@ -96,21 +96,25 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 
     while (true)
     {
-      if (_frames_count > 0 && frame_index >= _frames_count)
-      {
-        break;
-      }
-      if (artist->prepare_frame() == false)
+      if (_frames_count > 0 && frame_index > _frames_count - 1)
       {
         break;
       }
 
       void * frame_buffer = buffer;
-      if (_render_last_frame_only == true && frame_index != _frames_count)
+      if (_render_last_frame_only == true && frame_index != _frames_count - 1)
       {
         frame_buffer = nullptr;
       }
+
+      if (artist->prepare_frame() == false)
+      {
+        break;
+      }
+      
       artist->render_frame(frame_buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
+
+      ++frame_index;
     }
   }
 }
@@ -204,7 +208,7 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
 
   // animation artists.
 	case ggo::bitmap_artist_id::smoke:
-		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, pbf);
+		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, pbf, 400);
 	case ggo::bitmap_artist_id::ikeda:
 		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::ikeda, width, height, line_step, pbf, 1);
 	case ggo::bitmap_artist_id::lagaude:
@@ -221,6 +225,8 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::rediff, width, height, line_step, pbf, 350, true);
   case ggo::bitmap_artist_id::aggregation:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::aggregation, width, height, line_step, pbf, 300, true);
+  case ggo::bitmap_artist_id::kame:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::kame, width, height, line_step, pbf, 50, true);
 
 	default:
 		GGO_FAIL();

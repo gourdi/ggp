@@ -4,62 +4,51 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_y8u)
 {
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0x00, 0xff, 0xff)), int(0xff));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0x00, 0xff, 0x00)), int(0x00));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0xff, 0x00, 0xff)), int(0x00));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0xff, 0x00, 0x00)), int(0xff));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0x00, 0xff, 0x80)), int(0x80));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0xff, 0x00, 0x80)), int(0x7f));
-  GGO_CHECK_EQ(int(ggo::alpha_blend(0x00, 0x01, 0x80)), int(0x01));
+  {
+    const ggo::alpha_blender_y8u alpha_blend(1.f);
+
+    GGO_CHECK_EQ(alpha_blend(0xff, 0x00), 0x00);
+    GGO_CHECK_EQ(alpha_blend(0xff, 0x80), 0x80);
+    GGO_CHECK_EQ(alpha_blend(0xff, 0xff), 0xff);
+  }
+
+  {
+    const ggo::alpha_blender_y8u alpha_blend(0.5f);
+
+    GGO_CHECK_EQ(alpha_blend(0x00, 0x00), 0x00);
+    GGO_CHECK_EQ(alpha_blend(0x00, 0x80), 0x40);
+    GGO_CHECK_EQ(alpha_blend(0x00, 0xff), 0x80);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_rgb8u)
 {
-  auto c1 = ggo::alpha_blend({ uint8_t(0x00), uint8_t(0x00), uint8_t(0x00) }, { uint8_t(0x00), uint8_t(0x80), uint8_t(0xff) }, 0xff);
-  GGO_CHECK_EQ(c1.r(), 0x00);
-  GGO_CHECK_EQ(c1.g(), 0x80);
-  GGO_CHECK_EQ(c1.b(), 0xff);
+  {
+    const ggo::alpha_blender_rgb8u alpha_blend(1.f);
 
-  auto c2 = ggo::alpha_blend({ uint8_t(0x00), uint8_t(0x80), uint8_t(0xff) }, { uint8_t(0xff), uint8_t(0xff), uint8_t(0xff) }, 0x00);
-  GGO_CHECK_EQ(c2.r(), 0x00);
-  GGO_CHECK_EQ(c2.g(), 0x80);
-  GGO_CHECK_EQ(c2.b(), 0xff);
+    auto c = alpha_blend({ 0xff_u8, 0xff_u8, 0xff_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
+    GGO_CHECK_EQ(int(c.r()), 0x00);
+    GGO_CHECK_EQ(int(c.g()), 0x80);
+    GGO_CHECK_EQ(int(c.b()), 0xff);
+  }
 
-  auto c3 = ggo::alpha_blend({ uint8_t(0x00), uint8_t(0x80), uint8_t(0xff) }, { uint8_t(0xff), uint8_t(0xff), uint8_t(0xff) }, 0x80);
-  GGO_CHECK_EQ(c3.r(), 0x80);
-  GGO_CHECK_EQ(c3.g(), 0xc0);
-  GGO_CHECK_EQ(c3.b(), 0xff);
-}
+  {
+    const ggo::alpha_blender_rgb8u alpha_blend(0.5f);
 
-////////////////////////////////////////////////////////////////////
-GGO_TEST(blend, alpha_float_rgb8u)
-{
-  ggo::alpha_blender_rgb8u blender_opaque(1.f);
-  ggo::alpha_blender_rgb8u blender_transparent(0.f);
-  ggo::alpha_blender_rgb8u blender_half(0.5f);
-
-  ggo::color_8u c1 = blender_opaque(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c1.r(), 0x00);
-  GGO_CHECK_EQ(c1.g(), 0xff);
-  GGO_CHECK_EQ(c1.b(), 0xff);
-
-  ggo::color_8u c2 = blender_transparent(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c2.r(), 0x00);
-  GGO_CHECK_EQ(c2.g(), 0x00);
-  GGO_CHECK_EQ(c2.b(), 0xff);
-
-  ggo::color_8u c3 = blender_half(0, 0, ggo::color_8u(uint8_t(0x00), uint8_t(0x00), uint8_t(0xff)), ggo::color_8u(uint8_t(0x00), uint8_t(0xff), uint8_t(0xff)));
-  GGO_CHECK_EQ(c3.r(), 0x00);
-  GGO_CHECK_EQ(c3.g(), 0x80);
-  GGO_CHECK_EQ(c3.b(), 0xff);
+    auto c = alpha_blend({ 0x00_u8, 0x00_u8, 0x00_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
+    GGO_CHECK_EQ(int(c.r()), 0x00);
+    GGO_CHECK_EQ(int(c.g()), 0x40);
+    GGO_CHECK_EQ(int(c.b()), 0x80);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, additive_rgb8u)
 {
-  ggo::color_8u c = additive_blend(ggo::color_8u(uint8_t(0x00), uint8_t(0x80), uint8_t(0xff)), ggo::color_8u(uint8_t(0x80), uint8_t(0x10), uint8_t(0x10)));
-  GGO_CHECK_EQ(c.r(), 0x80);
-  GGO_CHECK_EQ(c.g(), 0x90);
-  GGO_CHECK_EQ(c.b(), 0xff);
+  ggo::color_8u c = ggo::add_blend(ggo::color_8u(0x00, 0x80, 0xff), ggo::color_8u(0xff, 0xff, 0xff));
+  GGO_CHECK_EQ(int(c.r()), 0xff);
+  GGO_CHECK_EQ(int(c.g()), 0xff);
+  GGO_CHECK_EQ(int(c.b()), 0xff);
 }
+

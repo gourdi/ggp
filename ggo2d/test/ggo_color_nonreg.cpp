@@ -1,6 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_curve.h>
 #include <ggo_color.h>
+#include <ggo_kernel.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(color, operators)
@@ -55,5 +56,47 @@ GGO_TEST(color, hex)
   
   ggo::color_8u c2(ggo::from_hex(s));
   GGO_CHECK_EQ(c, c2);
+}
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(color, linear_interpolation_y8u)
+{
+  // 1 sample.
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<0>(0))), int(0x00));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<0>(1))), int(0xff));
+
+  // 4 samples
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<2>(0))), int(0x00));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<2>(1))), int(0x40));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<2>(2))), int(0x80));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<2>(3))), int(0xbf));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<2>(4))), int(0xff));
+
+  // 16 samples
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(0))), int(0x00));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(1))), int(0x10));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(7))), int(0x70));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(8))), int(0x80));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(9))), int(0x8f));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(15))), int(0xef));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<4>(16))), int(0xff));
+
+  // 64 samples
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(0))), int(0x00));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(1))), int(0x04));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(31))), int(0x7c));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(32))), int(0x80));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(33))), int(0x83));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(63))), int(0xfb));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<6>(64))), int(0xff));
+
+  // 256 samples
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(0))), int(0x00));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(1))), int(0x01));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(127))), int(0x7f));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(128))), int(0x80));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(129))), int(0x80));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(255))), int(0xfe));
+  GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(256))), int(0xff));
 }
 

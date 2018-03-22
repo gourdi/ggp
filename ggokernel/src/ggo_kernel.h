@@ -52,6 +52,27 @@
 #endif
 #define	GGO_FAIL() GGO_ASSERT(0)
 
+namespace ggo
+{
+  template <uint32_t log2_den>
+  struct log2_fract final
+  {
+    log2_fract() = default;
+    log2_fract(uint32_t num) : _num(num) {}
+
+    uint32_t _num = 0;
+    static constexpr uint32_t _log2_den = log2_den;
+    static constexpr uint32_t _den = 1 << log2_den;
+
+    template <typename real_t>
+    real_t to() const
+    {
+      static_assert(std::is_floating_point<real_t>::value == true);
+      return real_t(_num) / real_t(_den);
+    }
+  };
+}
+
 //////////////////////////////////////////////////////////////
 // Random.
 namespace ggo
@@ -143,25 +164,31 @@ namespace ggo
     }
   }
 
-  template <int bit_shift, typename data_t>
+  template <uint32_t bit_shift, typename data_t>
   constexpr data_t fixed_point_div(data_t v)
   {
     static_assert(std::is_integral<data_t>::value);
-    static_assert(bit_shift > 1);
 
-    if constexpr(std::is_unsigned<data_t>::value)
+    if constexpr(bit_shift == 0)
     {
-      return (v + (1 << (bit_shift - 1))) >> bit_shift;
+      return v;
     }
     else
     {
-      if (v >= 0)
+      if constexpr(std::is_unsigned<data_t>::value)
       {
         return (v + (1 << (bit_shift - 1))) >> bit_shift;
       }
       else
       {
-        return -((-v + (1 << (bit_shift - 1))) >> bit_shift);
+        if (v >= 0)
+        {
+          return (v + (1 << (bit_shift - 1))) >> bit_shift;
+        }
+        else
+        {
+          return -((-v + (1 << (bit_shift - 1))) >> bit_shift);
+        }
       }
     }
   }

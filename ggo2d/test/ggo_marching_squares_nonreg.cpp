@@ -16,7 +16,7 @@ GGO_TEST(marching_squares, circle)
   const int size = 400;
   const ggo::pos2f offset(0.5f * size, 0.5f * size);
 
-  using color_segment = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u, ggo::color_8u>;
+  using color_segment = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>;
   std::vector<color_segment> segments;
   for (const auto & cell : cells)
   {

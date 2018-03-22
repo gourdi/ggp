@@ -63,7 +63,7 @@ namespace ggo
     {
       for (int x = 0; x < width; ++x)
       {
-        real_t val = scalar_field2d.evaluate(static_cast<real_t>(x), static_cast<real_t>(y));
+        real_t val = scalar_field2d.sample(static_cast<real_t>(x), static_cast<real_t>(y));
 
         set_pixel_func(x, y, val * c1 + (1 - val) * c2);
       }

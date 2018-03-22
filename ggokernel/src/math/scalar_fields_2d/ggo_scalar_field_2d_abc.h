@@ -3,14 +3,14 @@
 
 namespace ggo
 {
-  template <typename T>
+  template <typename data_t>
   class scalar_field_2d_abc
   {
   public:
 
     virtual  ~scalar_field_2d_abc() {}
 
-    virtual T evaluate(T x, T y) const = 0;
+    virtual data_t sample(data_t x, data_t y) const = 0;
   };
 }
 

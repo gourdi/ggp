@@ -18,14 +18,14 @@ namespace
     ggo::disc_float disc1(pos, radius);
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      disc1, ggo::make_solid_brush(color), ggo::additive_blender<ggo::color_8u>(), clipping);
+      disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
 
     pos.x() = artist.get_width() - pos.x() - 1;
 
     ggo::disc_float disc2(pos, radius);
     ggo::paint_shape<pbf, ggo::sampling_4x4>(
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
-      disc2, ggo::make_solid_brush(color), ggo::additive_blender<ggo::color_8u>(), clipping);
+      disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
   }
 }
 
