@@ -203,7 +203,7 @@ bool ggo::amorosi_animation_artist::prepare_frame()
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), 3 * get_line_step(), ggo::black<ggo::color_8u>(), clipping);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), clipping);
 
   if (buffer != nullptr)
   {
