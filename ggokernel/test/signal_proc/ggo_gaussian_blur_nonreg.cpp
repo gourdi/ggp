@@ -50,7 +50,8 @@ GGO_TEST(gaussian_blur, kernel_fixed_point_32u)
     return std::accumulate(kernel.begin() + 1, kernel.end(), norm);
   };
 
-  std::vector<std::pair<float, float>> stddev_thresholds{ { 1.f, 0.01f },{ 2.f, 0.01f },{ 5.f, 0.01f },{ 5.f, 0.0001f } };
+  // Beware that here we use double. Floats are not precise enough.
+  std::vector<std::pair<double, double>> stddev_thresholds{ { 1., 0.01 },{ 2., 0.01 },{ 5., 0.01 },{ 5., 0.0001 } };
 
   for (const auto & stddev_threshold : stddev_thresholds)
   {

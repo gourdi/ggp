@@ -1,0 +1,18 @@
+if (MSVC)
+  add_definitions(/std:c++latest -D_SCL_SECURE_NO_WARNINGS)
+endif()
+
+function(add_sources_from)
+  unset(src)
+  foreach(dir ${ARGN})
+	include_directories(${dir})
+	file(GLOB cur_src  "${dir}/*.h" "${dir}/*.cpp")
+	string(REPLACE "/" "\\\\" group ${dir})
+	foreach(f ${cur_src})
+	  set(src ${src} ${f})
+	  source_group(${group} FILES ${f})
+	endforeach()
+  endforeach()
+  set(src ${src} PARENT_SCOPE)
+endfunction()
+
