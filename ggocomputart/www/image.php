@@ -8,7 +8,7 @@ include_once("helpers.php");
 html_header($artist, "artists/$artist/$image.jpg");
 
 echo "<body>\n";
-echo "<img class=\"fullscreen\" src=\"artists/$artist/$image-fullscreen.jpg\"><br>\n";
+echo "<img class=\"fullscreen\" src=\"artists/$artist/image/$image-fullscreen.jpg\"><br>\n";
 
 // Footer.
 $url = "http://www.gourdi.net/image.php?artist=$artist&image=$image";

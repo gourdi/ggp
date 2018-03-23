@@ -27,10 +27,10 @@ function html_header($title, $meta_image) {
     echo "<html itemscope itemtype=\"http://schema.org/Article\">\n";
     echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />\n";
     echo "<title>$title</title>\n";
-    echo "<meta name=\"viewport\" content=\"width=700, user-scalable=false;\" />\n";
-    echo "<meta itemprop=\"name\" content=\"$title\" />\n";
-    echo "<meta itemprop=\"description\" content=\"From http://www.gourdi.net\" />\n";
-    echo "<meta itemprop=\"image\" content=\"$meta_image\" />\n";
+  //  echo "<meta name=\"viewport\" content=\"width=700, user-scalable=false;\" />\n";
+  //  echo "<meta itemprop=\"name\" content=\"$title\" />\n";
+  //  echo "<meta itemprop=\"description\" content=\"From http://www.gourdi.net\" />\n";
+ //   echo "<meta itemprop=\"image\" content=\"$meta_image\" />\n";
     echo "</head>\n";
 }
 

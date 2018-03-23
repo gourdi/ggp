@@ -8,8 +8,8 @@ include_once("helpers.php");
 html_header($artist, "artists/$artist/$video.jpg");
 
 echo "<body>\n";
-echo "<video controls=\"controls\">\n";
-echo "<source src=\"artists/$artist/$video.mp4\" type=\"video/mp4\" />\n";
+echo "<video controls=\"controls\" poster=\"artists/$artist/video/$video-video-preview.jpg\">\n";
+echo "<source src=\"artists/$artist/video/$video.mp4\" type=\"video/mp4\" />\n";
 echo "</video>\n";
 
 // Footer.

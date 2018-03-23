@@ -17,7 +17,11 @@ foreach ($artists as $artist) {
         echo "<tr>\n";
     }
     echo "<td class=\"common\"><a href=\"artist.php?artist=$artist\">\n";
-    echo "<img src=\"artists/$artist/00000001.jpg\" class=\"common\"/></a>\n";
+    if (file_exists("artists/$artist/video/00000001-video-thumbnail.jpg"))
+        echo "<img src=\"artists/$artist/video/00000001-video-thumbnail.jpg\" class=\"common\"/></a>\n";
+    else
+        echo "<img src=\"artists/$artist/image/00000001.jpg\" class=\"common\"/></a>\n";
+
 	echo "<br><p class=\"caption\">$artist</p></td>\n";
     if (($i % 2) == 1) {
         echo "</tr>\n";

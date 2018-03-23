@@ -1,0 +1,1 @@
+Get-ChildItem *.bmp | ForEach-Object { $b = $_.BaseName; $out = $b + ".png"; gm.exe convert $_ $out }
