@@ -19,8 +19,8 @@
 //////////////////////////////////////////////////////////////
 // Debug.
 
-#ifdef GGO_DEBUG
-#ifdef GGO_WIN
+#ifndef NDEBUG
+#ifdef WIN32
   void GGO_ASSERT(bool b);
 #else
   #include <assert.h>

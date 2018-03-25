@@ -1,7 +1,7 @@
 #include "ggo_kernel.h"
 
-#ifdef GGO_WIN
-#ifdef GGO_DEBUG
+#ifdef WIN32
+#ifndef NDEBUG
 
 #include <windows.h>
 

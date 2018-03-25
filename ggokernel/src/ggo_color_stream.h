@@ -6,7 +6,7 @@
 
 namespace ggo
 {
-#ifdef GGO_WIN
+#ifdef WIN32
   void set_console_green();
   void set_console_yellow();
   void set_console_red();
@@ -16,7 +16,7 @@ namespace ggo
   template<class CharT, class Traits>
   std::basic_ostream<CharT, Traits>& green_color(std::basic_ostream<CharT, Traits>& os)
   {
-#ifdef GGO_WIN
+#ifdef WIN32
     set_console_green();
 #else
     os << "\033[1;32m";
@@ -27,7 +27,7 @@ namespace ggo
   template<class CharT, class Traits>
   std::basic_ostream<CharT, Traits>& yellow_color(std::basic_ostream<CharT, Traits>& os)
   {
-#ifdef GGO_WIN
+#ifdef WIN32
     set_console_yellow();
 #else
     os << "\033[1;33m";
@@ -38,7 +38,7 @@ namespace ggo
   template<class CharT, class Traits>
   std::basic_ostream<CharT, Traits>& red_color(std::basic_ostream<CharT, Traits>& os)
   {
-#ifdef GGO_WIN
+#ifdef WIN32
     set_console_red();
 #else
     os << "\033[31m";
@@ -49,7 +49,7 @@ namespace ggo
   template<class CharT, class Traits>
   std::basic_ostream<CharT, Traits>& default_color(std::basic_ostream<CharT, Traits>& os)
   {
-#ifdef GGO_WIN
+#ifdef WIN32
     set_console_default();
 #else
     os << "\033[0m";
