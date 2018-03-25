@@ -1,3 +1,5 @@
+#if 0 
+
 #include <sstream>
 #include <array>
 #include <ggo_nonreg.h>
@@ -63,3 +65,4 @@ GGO_TEST(low_discrepancy_sequences, best_candidate)
     save_points(points, count, oss.str());
   }
 }
+#endif

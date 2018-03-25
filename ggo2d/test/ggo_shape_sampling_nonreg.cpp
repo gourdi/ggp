@@ -1,3 +1,6 @@
+#if 0 
+
+
 #include <ggo_nonreg.h>
 #include <ggo_array.h>
 #include <ggo_vec.h>
@@ -163,3 +166,4 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
   
   ggo::save_bmp("test_hemisphere_poisson_sampling.bmp", buffer.data(), SIZE, SIZE);
 }
+#endif

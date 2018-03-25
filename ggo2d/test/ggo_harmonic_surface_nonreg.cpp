@@ -1,3 +1,5 @@
+#if 0 
+
 #include <ggo_nonreg.h>
 #include <ggo_vec.h>
 #include <ggo_harmonic_surface.h>
@@ -54,3 +56,4 @@ GGO_TEST(harmonic_surface, test2)
   
   ggo::save_bmp("test_harmonic_surface2.bmp", image.data(), SIZE, SIZE);
 }
+#endif

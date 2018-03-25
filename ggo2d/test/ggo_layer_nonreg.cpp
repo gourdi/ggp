@@ -1,3 +1,4 @@
+#if 0
 #include <ggo_nonreg.h>
 #include <ggo_paint.h>
 #include <ggo_layer.h>
@@ -34,3 +35,5 @@ GGO_TEST(layer, test)
   
   ggo::save_bmp("test_sprite_image.bmp", image.data(), width, height);
 }
+
+#endif

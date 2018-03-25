@@ -1,3 +1,6 @@
+#if 0 
+
+
 #include <ggo_nonreg.h>
 #include <ggo_paint.h>
 #include <ggo_rle_image.h>
@@ -38,3 +41,4 @@ GGO_TEST(rle_image, rle_rgb8)
   ggo::save_bmp("rle_rgb8.bmp", image.data(), width, height);
 }
 
+#endif

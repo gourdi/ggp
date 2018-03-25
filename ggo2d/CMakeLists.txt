@@ -4,12 +4,13 @@ include(../cmake/ggp.cmake)
 get_sources_from_root_directory("src" sources)
 get_subdirectories("src" dirs)
 group_sources(${sources})
-add_library(ggokernel STATIC ${sources})
-target_include_directories(ggokernel PUBLIC ${dirs})
-set(GGOKERNEL_INCLUDE ${dirs} PARENT_SCOPE)
+add_library(ggo2d STATIC ${sources})
+target_include_directories(ggo2d PUBLIC ${GGOKERNEL_INCLUDE} ${dirs})
+set(GGO2D_INCLUDE ${dirs} PARENT_SCOPE)
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)
 group_sources(${sources})
-add_executable(ggokernel_nonreg ${sources})
-target_link_libraries(ggokernel_nonreg ggokernel)
+add_executable(ggo2d_nonreg ${sources})
+target_link_libraries(ggo2d_nonreg ggokernel ggo2d)
+

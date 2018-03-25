@@ -1,3 +1,5 @@
+#if 0 
+
 #include <ggo_nonreg.h>
 #include <ggo_kdtree.h>
 #include <ggo_shapes2d.h>
@@ -43,3 +45,5 @@ GGO_TEST(tree3d, random_points)
 
   ggo::save_bmp("kdtree.bmp", data.data(), SIZE, SIZE);
 }
+
+#endif

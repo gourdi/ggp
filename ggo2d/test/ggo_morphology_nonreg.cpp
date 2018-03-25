@@ -1,3 +1,4 @@
+#if 0
 #include <ggo_nonreg.h>
 #include <ggo_morphology.h>
 #include <ggo_gray_image_buffer.h>
@@ -23,4 +24,5 @@ GGO_TEST(morphology, dilatation)
 
   ggo::save_bmp("dilatation.bmp", rgb_image.data(), rgb_image.get_width(), rgb_image.get_height());
 }
+#endif
 

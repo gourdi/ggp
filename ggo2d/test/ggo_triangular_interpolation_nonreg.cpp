@@ -1,3 +1,5 @@
+#if 0 
+
 #include <memory>
 #include <ggo_nonreg.h>
 #include <ggo_vec.h>
@@ -74,3 +76,4 @@ GGO_TEST(triangular_interpolation, opacity)
   ggo::save_bmp("test_triangular_interpolation_opacity.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
 }
 
+#endif

@@ -1,3 +1,5 @@
+#if 0 
+
 #include <array>
 #include <ggo_nonreg.h>
 #include <ggo_interpolation2d.h>
@@ -61,5 +63,6 @@ GGO_TEST(interpolation, test)
   test_interpolation<bilinear_interpolation2d_zero>("test_bilinear_zero.bmp");
   test_interpolation<ggo::bilinear_interpolation2d_mirror>("test_bilinear_mirror.bmp");
   test_interpolation<bicubic_interpolation2d_zero>("test_bicubic_zero.bmp");
-  test_interpolation<ggo::bicubic_interpolation2d_mirror>("test_bicubic_mirror.bmp");
-}
+  test_
+
+#endif
