@@ -203,12 +203,12 @@ void main_loop()
     auto frame_duration_ms = SDL_GetTicks() - frame_start_time_ms;
     Uint32 delay_ms = 0;
 
-    ggo::paint_rect<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      0, screen_surface->w, 0, 10, ggo::black_8u());
-    ggo::paint_rect<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      0, 100, 0, 10, ggo::white_8u());
-    ggo::paint_rect<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      0, 100 * frame_duration_ms / nominal_frame_duration_ms, 0, 10, ggo::red_8u());
+    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
+    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
+    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+      ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / nominal_frame_duration_ms, 0, 10));
 
     if (frame_duration_ms < nominal_frame_duration_ms)
     {
