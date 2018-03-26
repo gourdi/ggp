@@ -1,20 +1,16 @@
 include(../cmake/ggp.cmake)
 
 # The static library.
-get_sources_from_root_directory("artists" artists_sources)
-get_sources_from_root_directory("animation" animation_sources)
-#get_subdirectories("artists" artists_dirs)
-get_subdirectories("animation" animation_dirs)
-group_sources(${artists_sources} ${animation_sources})
-add_library(ggocomputart STATIC ${artists_sources} ${animation_sources})
+get_sources_from_root_directory("src" sources)
+group_sources(${sources})
+add_library(ggocomputart STATIC ${sources})
 target_include_directories(ggocomputart PUBLIC
   ${GGOKERNEL_INCLUDE}
   ${GGO2D_INCLUDE}
   ${GGOANIMATION_INCLUDE}
   ${GGORAYTRACER_INCLUDE}
   ${animation_dirs}
-  "${CMAKE_CURRENT_SOURCE_DIR}/artists"
-  "${CMAKE_CURRENT_SOURCE_DIR}")
+  "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # The executables.
 add_executable(ggocomputartbitmap ggo_computart_bitmap.cpp)
