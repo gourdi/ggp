@@ -12,5 +12,5 @@ set(GGOANIMATION_INCLUDE ${dirs} PARENT_SCOPE)
 get_sources_from_root_directory("test" sources)
 group_sources(${sources})
 add_executable(ggoanimation_nonreg ${sources})
-target_link_libraries(ggoanimation_nonreg ggokernel ggo2d)
+target_link_libraries(ggoanimation_nonreg ggokernel ggo2d ggoanimation)
 
