@@ -4,7 +4,7 @@
 #include <ggo_animation_artist_abc.h>
 #include <ggo_animator.h>
 #include <ggo_animate_abc.h>
-#include <ggo_linear_path.h>
+#include <ggo_velocity_path.h>
 #include <ggo_array.h>
 #include <ggo_random_interpolator_abc.h>
 
@@ -27,7 +27,7 @@ namespace ggo
     {
     public:
 
-            particle(const ggo::pos2f & pos, ggo::linear_path * path);
+            particle(const ggo::pos2f & pos, ggo::velocity_path * path);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
       void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;

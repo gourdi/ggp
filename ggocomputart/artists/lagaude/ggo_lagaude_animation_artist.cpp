@@ -73,7 +73,7 @@ bool ggo::lagaude_animation_artist::prepare_frame()
   {
     float scale = ggo::rand<float>(0.5, 1);
     ggo::pos2f pos(ggo::rand<float>(), ggo::rand<float>());
-    ggo::path_abc * path = new ggo::linear_path(scale * ggo::rand<float>(0.002f, 0.005f), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+    ggo::path_abc * path = new ggo::velocity_path(scale * ggo::rand<float>(0.002f, 0.005f), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 
     insert_scale_animator(new ggo::lagaude_animation_artist::seed(pos, path, scale, _hue));
   }
@@ -161,7 +161,7 @@ bool ggo::lagaude_animation_artist::seed::update(int frame_index, const ggo::pos
     {
       float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.get_count();
 
-      auto * particle = new ggo::lagaude_animation_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo::linear_path(0.02f * _scale, angle));
+      auto * particle = new ggo::lagaude_animation_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo::velocity_path(0.02f * _scale, angle));
       particle->_angle = angle;
       particle->_dangle = _dangle;
       particle->_radius = 0.025f * _scale;
@@ -187,7 +187,7 @@ void ggo::lagaude_animation_artist::seed::render(void * buffer, int width, int h
 }
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::particle::particle(const ggo::pos2f & pos, ggo::linear_path * path)
+ggo::lagaude_animation_artist::particle::particle(const ggo::pos2f & pos, ggo::velocity_path * path)
 :
 ggo::path_animate_abc(pos, path)
 {

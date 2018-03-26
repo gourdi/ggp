@@ -3,7 +3,7 @@
 #include <ggo_harmonic_curve.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>
-#include <ggo_linear_path.h>
+#include <ggo_velocity_path.h>
 #include <ggo_spiral_path.h>
 #include <ggo_brush.h>
 #include <ggo_blend.h>
@@ -82,7 +82,7 @@ bool ggo::dupecheck_animation_artist::prepare_frame()
     case 0:
       break;
     case 1:
-      path = new ggo::linear_path(ggo::rand<float>(0.001f, 0.01f) * get_min_size(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+      path = new ggo::velocity_path(ggo::rand<float>(0.001f, 0.01f) * get_min_size(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
       break;
     case 2:
       path = new ggo::spiral_path(ggo::rand<float>(-ggo::pi<float>() / 32, ggo::pi<float>() / 32), ggo::rand<float>(0.001f, 0.01f) * get_min_size());
