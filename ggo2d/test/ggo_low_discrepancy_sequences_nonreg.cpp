@@ -1,12 +1,9 @@
-#if 0 
-
 #include <sstream>
-#include <array>
+#include <ggo_buffer.h>
 #include <ggo_nonreg.h>
 #include <ggo_halton.h>
 #include <ggo_best_candidate_sequence.h>
-#include <ggo_rgb_image_buffer.h>
-#include <ggo_paint.h>
+#include <ggo_buffer_paint.h>
 #include <ggo_bmp.h>
 
 namespace
@@ -16,15 +13,15 @@ namespace
   {
     const int SIZE = 400;
     
-    ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
-    image.fill(ggo::color::BLACK);
+    ggo::buffer8u image(3 * SIZE * SIZE, 0);
 
     for (int i = 0; i < points_count; ++i)
     {
-      ggo::paint(image, std::make_shared<ggo::disc_float>(SIZE * points[i].get<0>(), SIZE * (1 - points[i].get<1>()), 2.f), ggo::color::WHITE);
+      ggo::pos2f center = static_cast<float>(SIZE) * points[i];
+      ggo::paint_shape<ggo::rgb_8u_yd, ggo::sampling_2x2>(image.data(), SIZE, SIZE, 3 * SIZE, ggo::disc_float(center, 2.f), ggo::white_8u());
     }
     
-    ggo::save_bmp(filename, image.data(), image.get_width(), image.get_height());
+    ggo::save_bmp(filename, image.data(), ggo::rgb_8u_yd, SIZE, SIZE, 3 * SIZE);
   }
   
   /////////////////////////////////////////////////////////////////////  
@@ -65,4 +62,4 @@ GGO_TEST(low_discrepancy_sequences, best_candidate)
     save_points(points, count, oss.str());
   }
 }
-#endif
+
