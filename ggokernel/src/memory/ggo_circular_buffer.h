@@ -21,7 +21,7 @@ namespace ggo
       {
         _push_index = 0;
       }
-#ifndef NDEBUG
+#ifdef GGO_DEBUG
       ++_size;
       GGO_ASSERT(_size <= _buffer.size());
 #endif
@@ -29,7 +29,7 @@ namespace ggo
 
     data_t pop()
     {
-#ifndef NDEBUG
+#ifdef GGO_DEBUG
       --_size;
       GGO_ASSERT(_size >= 0);
 #endif
@@ -49,7 +49,7 @@ namespace ggo
     std::vector<data_t> _buffer;
     int                 _push_index = 0;
     int                 _pop_index = 0;
-#ifndef NDEBUG
+#ifdef GGO_DEBUG
     int                 _size = 0;
 #endif
   };

@@ -1,15 +1,18 @@
-#include <vector>
-#include <ggo_kernel.h>
+#ifndef __GGO_HARMONIC_SURFACE__
+#define __GGO_HARMONIC_SURFACE__
+
+
+#include <ggo_scalar_field_2d_abc.h>
 
 namespace ggo
 {
   template <typename data_t>
-  class harmonic_surface
+  class harmonics_2d : public scalar_field_2d_abc<data_t>
   {
   public:
     
     void    push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase);
-    data_t  evaluate(data_t x, data_t y) const;
+    data_t  sample(data_t x, data_t y) const;
     
   private:
   
@@ -29,17 +32,17 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t>
-  void harmonic_surface<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
+  void harmonics_2d<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
   {
     wave new_wave;
-    new_wave._wave_vector = dir.get_normalized();
+    new_wave._wave_vector = dir.get_normalized() / wavelength;
     new_wave._phase = phase;
     new_wave._amplitude = amplitude;
     _waves.push_back(new_wave);
   }
   
   template <typename data_t>
-  data_t harmonic_surface<data_t>::evaluate(data_t x, data_t y) const
+  data_t harmonics_2d<data_t>::sample(data_t x, data_t y) const
   {
     data_t result = 0;
     
@@ -51,3 +54,5 @@ namespace ggo
     return result;
   }
 }
+
+#endif

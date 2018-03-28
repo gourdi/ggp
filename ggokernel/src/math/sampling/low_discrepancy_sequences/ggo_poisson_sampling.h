@@ -5,13 +5,13 @@
 
 namespace ggo
 {
-  template <typename SAMPLE_TYPE, typename DIST_TYPE>
-  std::vector<SAMPLE_TYPE> poisson_sampling(std::function<SAMPLE_TYPE()> generate_sample,
-                                            std::function<DIST_TYPE(const SAMPLE_TYPE &, const SAMPLE_TYPE &)> compute_samples_dist,
-                                            DIST_TYPE radius,
+  template <typename sample_type, typename dist_type>
+  std::vector<sample_type> poisson_sampling(std::function<sample_type()> generate_sample,
+                                            std::function<dist_type(const sample_type &, const sample_type &)> compute_samples_dist,
+                                            dist_type radius,
                                             int tries_count)
   {
-    std::vector<SAMPLE_TYPE> samples;
+    std::vector<sample_type> samples;
     
     while (true)
     {
@@ -19,7 +19,7 @@ namespace ggo
       int i = 0;
       for (; i < tries_count; ++i)
       {
-        SAMPLE_TYPE sample = generate_sample();
+        sample_type sample = generate_sample();
         
         // Check if the new sample is not too close from previous samples.
         bool accept_sample = true;

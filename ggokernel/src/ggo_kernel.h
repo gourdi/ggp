@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////
 // Debug.
 
-#ifndef NDEBUG
+#ifdef GGO_DEBUG
 #ifdef WIN32
   void GGO_ASSERT(bool b);
 #else

@@ -1,27 +1,22 @@
-#if 0 
-
-
 #include <ggo_nonreg.h>
-#include <ggo_array.h>
-#include <ggo_vec.h>
 #include <ggo_shape_sampling.h>
+#include <ggo_buffer.h>
 #include <ggo_poisson_sampling.h>
-#include <ggo_paint.h>
-#include <ggo_pixel_sampler_abc.h>
 #include <ggo_bmp.h>
+#include <ggo_buffer_paint.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shape_sampling, disc_uniform_sampling)
 {
   const int SIZE = 500;
-  ggo::array_uint8 buffer(SIZE * SIZE * 3, 0);
+  ggo::buffer8u buffer(SIZE * SIZE * 3, 0);
   
   for (int i = 0; i < (1<<14); ++i)
   {
     auto sample = ggo::disc_uniform_sampling<float>();
     
-    int x = ggo::to<int>(0.4 * SIZE * sample.get<0>() + SIZE / 2);
-    int y = ggo::to<int>(0.4 * SIZE * sample.get<1>() + SIZE / 2);
+    int x = ggo::round_to<int>(0.4 * SIZE * sample.get<0>() + SIZE / 2);
+    int y = ggo::round_to<int>(0.4 * SIZE * sample.get<1>() + SIZE / 2);
     
     uint8_t * ptr = buffer.data() + 3 * (y * SIZE + x);
     ptr[0] = 0xFF;
@@ -29,7 +24,7 @@ GGO_TEST(shape_sampling, disc_uniform_sampling)
     ptr[2] = 0xFF;
   }
   
-  ggo::save_bmp("test_disc_uniform_sampling.bmp", buffer.data(), SIZE, SIZE);
+  ggo::save_bmp("test_disc_uniform_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, SIZE, SIZE, 3 * SIZE);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -50,15 +45,14 @@ GGO_TEST(shape_sampling, disc_poisson_sampling)
     },
     8, 1 << 10);
   
-  ggo::array_uint8 buffer(SIZE * SIZE * 3, 0);
+  ggo::buffer8u buffer(SIZE * SIZE * 3, 0);
 
   for (const auto & sample : samples)
   {
-    auto disc = std::make_shared<ggo::disc_float>(sample, 2.f);
-    ggo::paint(buffer.data(), SIZE, SIZE, disc, ggo::color::WHITE);
+    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), SIZE, SIZE, 3 * SIZE, ggo::disc_float(sample, 2.f), ggo::white_8u());
   }
   
-  ggo::save_bmp("test_disc_poisson_sampling.bmp", buffer.data(), SIZE, SIZE);
+  ggo::save_bmp("test_disc_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, SIZE, SIZE, 3 * SIZE);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -66,20 +60,19 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
 {
   const float ANGLE = 1.2f;
   const int SIZE = 1000;
-  ggo::array_uint8 buffer(SIZE * SIZE * 3, 0);
+  ggo::buffer8u buffer(SIZE * SIZE * 3, 0);
   
   for (int i = 0; i < 1 << 10; ++i)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.get<0>();
-    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
+    float x_f = sample.x();
+    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
     
     x_f = 0.2f * SIZE * x_f + SIZE / 4.f;
     y_f = 0.2f * SIZE * y_f + SIZE / 4.f;
     
-    auto disc = std::make_shared<ggo::disc_float>(x_f, y_f, 2.f);
-    ggo::paint(buffer.data(), SIZE, SIZE, disc, ggo::color::WHITE);
+    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), SIZE, SIZE, 3 * SIZE, ggo::disc_float(x_f, y_f, 2.f), ggo::white_8u());
   }
   
   for (int i = 0; i < (1<<20); ++i)
@@ -89,8 +82,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     float x_f = sample.get<0>();
     float y_f = sample.get<1>();
     
-    int x_i = ggo::to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
-    int y_i = ggo::to<int>(0.2 * SIZE * y_f + SIZE / 4);
+    int x_i = ggo::round_to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
+    int y_i = ggo::round_to<int>(0.2 * SIZE * y_f + SIZE / 4);
     
     uint8_t * ptr = buffer.data() + 3 * (y_i * SIZE + x_i);
     ptr[0] = std::min<int>(ptr[0] + 8, 0xFF);
@@ -105,8 +98,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     float x_f = sample.get<0>();
     float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
-    int x_i = ggo::to<int>(0.2 * SIZE * x_f + SIZE / 4);
-    int y_i = ggo::to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
+    int x_i = ggo::round_to<int>(0.2 * SIZE * x_f + SIZE / 4);
+    int y_i = ggo::round_to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
     
     uint8_t * ptr = buffer.data() + 3 * (y_i * SIZE + x_i);
     ptr[0] = std::min<int>(ptr[0] + 8, 0xFF);
@@ -121,8 +114,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     float x_f = sample.get<0>();
     float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
     
-    int x_i = ggo::to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
-    int y_i = ggo::to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
+    int x_i = ggo::round_to<int>(0.2 * SIZE * x_f + 3 * SIZE / 4);
+    int y_i = ggo::round_to<int>(0.2 * SIZE * y_f + 3 * SIZE / 4);
     
     uint8_t * ptr = buffer.data() + 3 * (y_i * SIZE + x_i);
     ptr[0] = std::min<int>(ptr[0] + 8, 0xFF);
@@ -130,7 +123,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     ptr[2] = std::min<int>(ptr[2] + 8, 0xFF);
   }
   
-  ggo::save_bmp("test_hemisphere_uniform_sampling.bmp", buffer.data(), SIZE, SIZE);
+  ggo::save_bmp("test_hemisphere_uniform_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, SIZE, SIZE, 3 * SIZE);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -150,20 +143,19 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
     },
     0.05f, 1 << 10);
   
-  ggo::array_uint8 buffer(SIZE * SIZE * 3, 0);
+  ggo::buffer8u buffer(SIZE * SIZE * 3, 0);
   
   for (const auto & sample : samples)
   {
-    float x_f = sample.get<0>();
-    float y_f = sample.get<1>() * std::cos(ANGLE) + sample.get<2>() * std::sin(ANGLE);
+    float x_f = sample.x();
+    float y_f = sample.y() * std::cos(ANGLE) + sample.z() * std::sin(ANGLE);
     
     x_f = 0.4f * SIZE * x_f + SIZE / 2;
     y_f = 0.4f * SIZE * y_f + SIZE / 2;
     
-    auto disc = std::make_shared<ggo::disc_float>(x_f, y_f, 2.f);
-    ggo::paint(buffer.data(), SIZE, SIZE, disc, ggo::color::WHITE);
+    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), SIZE, SIZE, 3 * SIZE, ggo::disc_float(x_f, y_f, 2.f), ggo::white_8u());
   }
   
-  ggo::save_bmp("test_hemisphere_poisson_sampling.bmp", buffer.data(), SIZE, SIZE);
+  ggo::save_bmp("test_hemisphere_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, SIZE, SIZE, 3 * SIZE);
 }
-#endif
+

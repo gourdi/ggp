@@ -20,6 +20,6 @@ add_executable(ggocomputartanim ggo_computart_anim.cpp)
 target_link_libraries(ggocomputartanim ggokernel ggo2d ggoanimation ggoraytracer ggocomputart)
 
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_link_libraries(ggocomputartrealtime ggokernel ggo2d ggoanimation ggoraytracer ggocomputart)
+target_link_libraries(ggocomputartrealtime ggokernel ggo2d ggoanimation ggoraytracer ggocomputart "../externals/SDL-2.0.7/lib/x64/SDL2.lib")
 target_include_directories(ggocomputartrealtime PUBLIC "../externals/SDL2-2.0.7/include")
 

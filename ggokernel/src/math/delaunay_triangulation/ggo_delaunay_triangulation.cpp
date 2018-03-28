@@ -251,7 +251,7 @@ namespace
   template <typename T>
   void check_integrity(std::list<ggo::delaunay_triangle<T>> & triangles)
   {
-#ifndef NDEBUG
+#ifdef GGO_DEBUG
     for (auto it1 = triangles.begin(); it1 != triangles.end(); ++it1)
     {
       for (auto it2 = triangles.begin(); it2 != triangles.end(); ++it2)
