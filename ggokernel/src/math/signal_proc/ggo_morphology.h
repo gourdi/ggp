@@ -85,17 +85,18 @@ namespace ggo
     {
       for (int x = 0; x < width; ++x)
       {
+        int y_inf = std::max(0, y - kernel_height);
+        int y_sup = std::min(height - 1, y + kernel_height);
+        int x_inf = std::max(0, x - kernel_width);
+        int x_sup = std::min(width - 1, x + kernel_width);
+
         auto v = in(x, y);
 
-        for (int kernel_y = -kernel_height; kernel_y <= kernel_height; ++kernel_y)
+        for (int kernel_y = y_inf; kernel_y <= y_sup; ++kernel_y)
         {
-          if ((y + kernel_y < 0) || (y + kernel_y >= height)) { continue; }
-
-          for (int kernel_x = -kernel_width; kernel_x <= kernel_width; ++kernel_x)
+          for (int kernel_x = x_inf; kernel_x <= x_sup; ++kernel_x)
           {
-            if ((x + kernel_x < 0) || (x + kernel_x >= width)) { continue; }
-
-            auto cur = in(x + kernel_x, y + kernel_y);
+            auto cur = in(kernel_x, kernel_y);
 
             v = pred(cur, v);
           }
