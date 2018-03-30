@@ -1,13 +1,12 @@
-#ifndef __GGO_HARMONIC_SURFACE__
-#define __GGO_HARMONIC_SURFACE__
-
+#ifndef __GGO_HARMONIC_2D__
+#define __GGO_HARMONIC_2D__
 
 #include <ggo_scalar_field_2d_abc.h>
 
 namespace ggo
 {
   template <typename data_t>
-  class harmonics_2d : public scalar_field_2d_abc<data_t>
+  class harmonics_field_2d : public scalar_field_2d_abc<data_t>
   {
   public:
     
@@ -32,7 +31,7 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t>
-  void harmonics_2d<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
+  void harmonics_field_2d<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
   {
     wave new_wave;
     new_wave._wave_vector = dir.get_normalized() / wavelength;
@@ -42,7 +41,7 @@ namespace ggo
   }
   
   template <typename data_t>
-  data_t harmonics_2d<data_t>::sample(data_t x, data_t y) const
+  data_t harmonics_field_2d<data_t>::sample(data_t x, data_t y) const
   {
     data_t result = 0;
     

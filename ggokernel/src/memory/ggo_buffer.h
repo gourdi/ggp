@@ -24,6 +24,13 @@ namespace ggo
       std::fill(_buffer, _buffer + size, fill_value);
     }
 
+    buffer_t(const std::initializer_list<data_t> & list)
+    {
+      _buffer = new data_t[list.size()];
+      _size = list.size();
+      std::copy(list.begin(), list.end(), _buffer);
+    }
+
     ~buffer_t()
     {
       delete[] _buffer;
@@ -62,6 +69,12 @@ namespace ggo
     // Comparison.
     bool operator==(const buffer_t & other) const { return std::equal(_buffer, _buffer + _size, other._buffer, other._buffer + other._size); };
     bool operator!=(const buffer_t & other) const { return !operator==(other); };
+
+    // Iteration.
+    const data_t * begin() const { return _buffer; };
+    const data_t * end() const { return _buffer + _size; };
+    data_t * begin() { return _buffer; };
+    data_t * end() { return _buffer + _size; };
 
   private:
 

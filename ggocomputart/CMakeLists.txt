@@ -9,7 +9,6 @@ target_include_directories(ggocomputart PUBLIC
   ${GGO2D_INCLUDE}
   ${GGOANIMATION_INCLUDE}
   ${GGORAYTRACER_INCLUDE}
-  ${animation_dirs}
   "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # The executables.

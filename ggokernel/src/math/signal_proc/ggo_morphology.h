@@ -1,6 +1,8 @@
 #ifndef __GGO_MORPHOLOGY__
 #define __GGO_MORPHOLOGY__
 
+#include <ggo_ptr_offset.h>
+
 namespace ggo
 {
   template <typename getter, typename setter, typename predicate>
@@ -12,61 +14,61 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t, int stride_in = 1, int stride_out = 1>
-  void dilatation_rectangle(const data_t * input, data_t * output, int width, int height, int kernel_width, int kernel_height)
+  template <typename data_t>
+  void dilatation_rectangle(const data_t * input, data_t * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
   {
     if (input == output)
     {
       throw inplace_exception();
     }
 
-    auto in = [&](int x, int y){ return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
-    auto out = [&](int x, int y, const data_t & v){ set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto in = [&](int x, int y){ return ggo::ptr_offset(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
     
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
   
-  template <typename data_t, int stride_in = 1, int stride_out = 1>
-  void dilatation_disc(const data_t * input, data_t * output, int width, int height, float radius)
+  template <typename data_t>
+  void dilatation_disc(const data_t * input, data_t * output, int width, int height, int line_byte_step, float radius)
   {
     if (input == output)
     {
       throw inplace_exception();
     }
 
-    auto in = [&](int x, int y){ return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
-    auto out = [&](int x, int y, const data_t & v){ set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
     
     morpho_disc(in, out, width, height, radius, pred);
   }
 
-  template <typename data_t, int stride_in = 1, int stride_out = 1>
-  void erosion_rectangle(const data_t * input, data_t * output, int width, int height, int kernel_width, int kernel_height)
+  template <typename data_t>
+  void erosion_rectangle(const data_t * input, data_t * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
   {
     if (input == output)
     {
       throw inplace_exception();
     }
 
-    auto in = [&](int x, int y) { return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
-    auto out = [&](int x, int y, const data_t & v) { set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
 
-  template <typename data_t, int stride_in = 1, int stride_out = 1>
-  void erosion_disc(const data_t * input, data_t * output, int width, int height, float radius)
+  template <typename data_t>
+  void erosion_disc(const data_t * input, data_t * output, int width, int height, int line_byte_step, float radius)
   {
     if (input == output)
     {
       throw inplace_exception();
     }
 
-    auto in = [&](int x, int y) { return get2d_mirror<data_t, stride_in>(input, x, y, width, height); };
-    auto out = [&](int x, int y, const data_t & v) { set2d<data_t, stride_out>(output, x, y, width, height, v); };
+    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
 
     morpho_disc(in, out, width, height, radius, pred);
