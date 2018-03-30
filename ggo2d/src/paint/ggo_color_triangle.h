@@ -5,7 +5,7 @@
 #include <ggo_coordinates_conversions.h>
 #include <ggo_color.h>
 #include <ggo_blend.h>
-#include <ggo_paint_shape.h>
+#include <ggo_paint_shape_abc.h>
 #include <ggo_triangle_interpolation.h>
 
 namespace ggo

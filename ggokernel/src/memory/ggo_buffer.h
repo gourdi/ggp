@@ -76,6 +76,10 @@ namespace ggo
     data_t * begin() { return _buffer; };
     data_t * end() { return _buffer + _size; };
 
+    // Operator[]
+    data_t &  operator[](int i) { return _buffer[i]; }
+    const data_t &  operator[](int i) const { return _buffer[i]; }
+
   private:
 
     data_t *  _buffer;

@@ -1,7 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_marching_squares.h>
 #include <ggo_color.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////

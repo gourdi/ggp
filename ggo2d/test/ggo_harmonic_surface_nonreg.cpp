@@ -1,6 +1,6 @@
 #include <ggo_nonreg.h>
 #include <ggo_vec.h>
-#include <ggo_harmonic_surface.h>
+#include <ggo_harmonics_field_2d.h>
 #include <ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
@@ -8,7 +8,7 @@ GGO_TEST(harmonic_surface, test1)
 {
   const int size = 200;
   
-  ggo::harmonics_2d<float> harmonics;
+  ggo::harmonics_field_2d<float> harmonics;
   harmonics.push_harmonic({1.f, 1.f}, size / 2, 1, 0);
 
   std::vector<float> image(size * size);
@@ -29,7 +29,7 @@ GGO_TEST(harmonic_surface, test2)
 {
   const int size = 200;
   
-  ggo::harmonics_2d<float> harmonics;
+  ggo::harmonics_field_2d<float> harmonics;
   for (int i = 0; i < 4; ++i)
   {
     float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());

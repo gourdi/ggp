@@ -4,8 +4,8 @@
 #include <ggo_chronometer.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_mean_box_blur2d.h>
-#include <ggo_buffer_paint.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_paint.h>
+#include <ggo_pbf_fill.h>
 #include <ggo_bmp.h>
 #include <ggo_shapes2d.h>
 #include <string>

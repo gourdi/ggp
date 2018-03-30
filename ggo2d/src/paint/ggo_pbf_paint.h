@@ -8,7 +8,7 @@
 #include <ggo_shapes2d.h>
 #include <ggo_brush.h>
 #include <ggo_blend.h>
-#include <ggo_paint_shape.h>
+#include <ggo_paint_shape_abc.h>
 #include <ggo_multi_scale_paint.h>
 
 // Paint single shape.

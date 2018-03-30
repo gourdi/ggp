@@ -3,7 +3,7 @@
 #include <ggo_buffer.h>
 #include <ggo_poisson_sampling.h>
 #include <ggo_bmp.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shape_sampling, disc_uniform_sampling)

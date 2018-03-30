@@ -5,10 +5,10 @@
 #include <ggo_shapes2d.h>
 #include <ggo_color.h>
 #include <ggo_sampling_paint.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_blit.h>
 #include <ggo_color_triangle.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 #include <ggo_bmp.h>
 #include <ggo_brush.h>
 #include <ggo_gradient_brush.h>

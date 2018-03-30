@@ -24,8 +24,8 @@ namespace ggo
 
     auto in = [&](int x, int y){ return ggo::ptr_offset(input, y * line_byte_step)[x]; };
     auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
-    
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
+
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
   
@@ -39,8 +39,8 @@ namespace ggo
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
     auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return cur > ref; };
-    
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
+
     morpho_disc(in, out, width, height, radius, pred);
   }
 
@@ -54,7 +54,7 @@ namespace ggo
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
     auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
@@ -69,7 +69,7 @@ namespace ggo
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
     auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return cur < ref; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
 
     morpho_disc(in, out, width, height, radius, pred);
   }
@@ -97,10 +97,7 @@ namespace ggo
 
             auto cur = in(x + kernel_x, y + kernel_y);
 
-            if (pred(cur, v))
-            {
-              v = cur;
-            }
+            v = pred(cur, v);
           }
         }
         
@@ -136,10 +133,7 @@ namespace ggo
             {
               auto cur = in(input_x, input_y);
 
-              if (pred(cur, v))
-              {
-                v = cur;
-              }
+              v = pred(cur, v);
             }
           }
         }
