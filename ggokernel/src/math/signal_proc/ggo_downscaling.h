@@ -50,6 +50,11 @@ namespace ggo
   template <typename input, typename output>
   void downscale2x2_t(input in, output out, int width, int height)
   {
+    if ((width % 2) != 0 || (height % 2) != 0)
+    {
+      std::runtime_error("invalid input size");
+    }
+
     for (int y = 0; y < height; y += 2)
     {
       for (int x = 0; x < width; x += 2)
@@ -62,6 +67,11 @@ namespace ggo
   template <typename input, typename output>
   void downscale4x4_t(input in, output out, int width, int height)
   {
+    if ((width % 4) != 0 || (height % 4) != 0)
+    {
+      std::runtime_error("invalid input size");
+    }
+
     for (int y = 0; y < height; y += 4)
     {
       for (int x = 0; x < width; x += 4)
