@@ -30,10 +30,10 @@ namespace ggo
     int i_nn = zero_offset + 2;
 
     // Retrieve the values of the cubic and its derivatives.
-    real_t y0 = in(i_c);	// Value at x=0
+    real_t y0 = in(i_c);	// Value at x=0.
     real_t y1 = in(i_n);	// Value at x=1.
-    real_t d0 = (in(i_n) - in(i_p)) / 2.0; // Derative at x=0.
-    real_t d1 = (in(i_nn) - in(i_c)) / 2.0; // Derative at x=1.
+    real_t d0 = (in(i_n) - in(i_p)) / 2; // Derative at x=0.
+    real_t d1 = (in(i_nn) - in(i_c)) / 2; // Derative at x=1.
 
     // Now we have a linear system with 4 equations:
     // y0 = d;
@@ -58,37 +58,37 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename real_t, typename input>
-  real_t integrate_cubic(input in, real_t from, real_t to)
+  real_t integrate_cubic(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
     real_t val = 0;
-    int from_i = static_cast<int>(from);
-    int to_i = static_cast<int>(to + 1.0);
+    int from_i = std::max(0, static_cast<int>(from));
+    int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
     GGO_ASSERT(from_i < to_i);
 
     // Integrate the middle parts.
     for (int i = from_i; i < to_i; ++i)
     {
-      val += integrate_cubic_single(in, i, i, i + 1);
+      val += integrate_cubic_single<real_t>(in, i, real_t(i), real_t(i + 1));
     }
 
     // Remove first block.
-    val -= integrate_cubic_single(in, from_i, from_i, from);
+    val -= integrate_cubic_single<real_t>(in, from_i, real_t(from_i), from);
 
     // Remove last block.
-    val -= integrate_cubic_single(in, to_i - 1, to, to_i);
+    val -= integrate_cubic_single<real_t>(in, to_i - 1, to, real_t(to_i));
 
     return val;
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t, typename real_t, typename input>
-  data_t integrate_linear(input in, int size_in, real_t from, real_t to)
+  template <typename real_t, typename input>
+  real_t integrate_linear(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
-    data_t val = 0;
+    real_t val = 0;
     int from_i = std::max(0, static_cast<int>(from));
     int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
     GGO_ASSERT(from_i < to_i);
@@ -101,8 +101,8 @@ namespace ggo
     val /= 2;
 
     // Remove first block.
-    data_t a = in(from_i + 1) - in(from_i);
-    data_t b = in(from_i) - a * from_i;
+    real_t a = in(from_i + 1) - in(from_i);
+    real_t b = in(from_i) - a * from_i;
     val -= a * (from * from - from_i * from_i) / 2 + b * (from - from_i);
 
     // Remove last block.
@@ -114,8 +114,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename real_t, typename input, typename output>
-  void	scale_1d(input in, int size_in, output out, int size_out)
+  template <scaling_algo algo, typename real_t, typename input, typename output>
+  void scale_1d(input in, int size_in, output out, int size_out)
   {
     static_assert(std::is_floating_point<real_t>::value == true);
 
@@ -136,11 +136,11 @@ namespace ggo
 
         if constexpr(algo == scaling_algo::linear_integration)
         {
-          out(i, inv_ratio * integrate_linear<data_t, real_t>(in, size_in, from, to));
+          out(i, inv_ratio * integrate_linear<real_t>(in, size_in, from, to));
         }
         else if constexpr(algo == scaling_algo::cubic_integration)
         {
-          out(i, inv_ratio * integrate_cubic<data_t, real_t>(in, from, to));
+          out(i, inv_ratio * integrate_cubic<real_t>(in, size_in, from, to));
         }
         else
         {
@@ -157,10 +157,22 @@ namespace ggo
     static_assert(std::is_floating_point<real_t>::value == true);
     static_assert(std::is_integral<size_t>::value == true);
 
-    auto in = [&](int i) { return input[i]; };
-    auto out = [&](int i, real_t v) { output[i] = v; };
+    auto in = [&](int i)
+    {
+      if constexpr(algo == scaling_algo::cubic_integration)
+      {
+        i = ggo::clamp<int>(i, 0, int(size_in) - 1);
+      }
 
-    scale_1d<algo, real_t, real_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
+      return input[i];
+    };
+    
+    auto out = [&](int i, real_t v) 
+    {
+      output[i] = v;
+    };
+
+    scale_1d<algo, real_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
   }
 
   /*
