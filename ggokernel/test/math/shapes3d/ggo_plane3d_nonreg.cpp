@@ -1,4 +1,4 @@
-#include "../ggo_kernel_nonreg.h"
+#include "../../ggo_kernel_nonreg.h"
 #include <ggo_shapes3d.h>
 
 /////////////////////////////////////////////////////////////////////

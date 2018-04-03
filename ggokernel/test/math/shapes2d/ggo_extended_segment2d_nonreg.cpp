@@ -1,4 +1,4 @@
-#include "../ggo_kernel_nonreg.h"
+#include "../../ggo_kernel_nonreg.h"
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(extended_segment, get_bounding_rect)

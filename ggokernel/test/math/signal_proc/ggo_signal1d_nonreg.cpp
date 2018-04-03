@@ -86,8 +86,11 @@ GGO_TEST(scale1d, cubic_upsample)
   ggo::scale_1d<ggo::scaling_algo::cubic_integration>(input.data(), input.get_size(), output.data(), output.get_size());
 
   const ggo::buffer_t<float> expected{
-    1.f, 1.f, 1.f, 1.f, 0.9915363f, 0.9563802f, 0.9290364f, 0.9563798f, 1.0898437f, 1.3476562f,
-    1.6523437f, 1.9101562f, 2.0436201f, 2.0709633f, 2.0436196f, 2.0084648f, 2.f, 2.f, 2.f, 2.f };
+    1.f, 1.f, 1.f, 1.f,
+    0.9915363f, 0.9563802f, 0.9290364f, 0.9563798f,
+    1.0898437f, 1.3476562f, 1.6523437f, 1.9101562f,
+    2.0436201f, 2.0709633f, 2.0436196f, 2.0084648f,
+    2.f, 2.f, 2.f, 2.f };
 
   for (int i = 0; i < output.get_size(); ++i)
   {
