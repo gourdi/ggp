@@ -12,7 +12,7 @@ GGO_TEST(morphology, dilatation_rectangle)
     0x00, 0x00, 0x00, 0x00, 0xff ,0x00,
     0x00, 0x00, 0x00, 0x00, 0x00 ,0x00
   };
-  ggo::buffer8u output(input.get_size());
+  ggo::buffer8u output(input.size());
 
   ggo::dilatation_rectangle(input.data(), output.data(), 6, 5, 6, 1, 1);
 
@@ -37,7 +37,7 @@ GGO_TEST(morphology, dilatation_disc)
     0x00, 0x00, 0x00, 0x00, 0x00 ,0x00,
     0x00, 0x00, 0x00, 0x00, 0x00 ,0x00
   };
-  ggo::buffer8u output(input.get_size());
+  ggo::buffer8u output(input.size());
 
   ggo::dilatation_disc(input.data(), output.data(), 6, 5, 6, 2.5f);
 
@@ -62,7 +62,7 @@ GGO_TEST(morphology, erosion_rectangle)
     0xff, 0x00, 0xff, 0xff, 0xff ,0xff,
     0xff, 0xff, 0xff, 0xff, 0xff ,0xff
   };
-  ggo::buffer8u output(input.get_size());
+  ggo::buffer8u output(input.size());
 
   ggo::erosion_rectangle(input.data(), output.data(), 6, 5, 6, 2, 1);
 

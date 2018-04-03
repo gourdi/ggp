@@ -60,7 +60,7 @@ namespace ggo
     void operator=(const buffer_t & b) = delete;
 
     // Size.
-    size_t  get_size() const { return _size; }
+    size_t  size() const { return _size; }
 
     // Raw buffer access.
     data_t *        data()        { return _buffer; }

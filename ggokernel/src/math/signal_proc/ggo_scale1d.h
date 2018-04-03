@@ -1,3 +1,6 @@
+#ifndef __GGO_SCALE1D__
+#define __GGO_SCALE1D__
+
 namespace ggo
 {
   enum class scaling_algo
@@ -8,6 +11,12 @@ namespace ggo
   };
 
   //////////////////////////////////////////////////////////////
+  inline int nearest_neighbor_index(int i, int size_in, int size_out)
+  {
+    return i * size_in / size_out + (size_in / size_out) / 2;
+  }
+
+  //////////////////////////////////////////////////////////////
   // Here what we do is building a cubic curve which value at x=0 is
   // the one is input[i] and which value at x=1 is input[i+1].
   // Furthermore, to have a smooth global curve, we also make sure
@@ -16,7 +25,7 @@ namespace ggo
   // derivative at x=1 is the slope between the points at input[i]
   // and input[i+2].
   //////////////////////////////////////////////////////////////
-  template <typename real_t, typename input>
+  template <typename data_t, typename real_t, typename input>
   real_t integrate_cubic_single(input in, int zero_offset, real_t from, real_t to)
   {
     GGO_ASSERT(from >= zero_offset);
@@ -30,10 +39,10 @@ namespace ggo
     int i_nn = zero_offset + 2;
 
     // Retrieve the values of the cubic and its derivatives.
-    real_t y0 = in(i_c);	// Value at x=0.
-    real_t y1 = in(i_n);	// Value at x=1.
-    real_t d0 = (in(i_n) - in(i_p)) / 2; // Derative at x=0.
-    real_t d1 = (in(i_nn) - in(i_c)) / 2; // Derative at x=1.
+    data_t y0 = in(i_c);	// Value at x=0.
+    data_t y1 = in(i_n);	// Value at x=1.
+    data_t d0 = (in(i_n) - in(i_p)) / 2; // Derative at x=0.
+    data_t d1 = (in(i_nn) - in(i_c)) / 2; // Derative at x=1.
 
     // Now we have a linear system with 4 equations:
     // y0 = d;
@@ -41,12 +50,12 @@ namespace ggo
     // d0 = c
     // d1 = 3*a+2*c+b
     // So we can compute the cubic's coefs.
-    real_t a = 2 * y0 - 2 * y1 + d0 + d1;
-    real_t b = -3 * y0 + 3 * y1 - 2 * d0 - d1;
-    real_t c = d0;
-    real_t d = y0;
+    data_t a = 2 * y0 - 2 * y1 + d0 + d1;
+    data_t b = -3 * y0 + 3 * y1 - 2 * d0 - d1;
+    data_t c = d0;
+    data_t d = y0;
 
-    auto eval_cubic_integrale = [](real_t a, real_t b, real_t c, real_t d, real_t x)
+    auto eval_cubic_integrale = [](data_t a, data_t b, data_t c, data_t d, real_t x)
     {
       real_t xx = x * x;
       return a * xx * xx / 4 + b * xx * x / 3 + c * xx / 2 + d * x;
@@ -57,12 +66,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename real_t, typename input>
+  template <typename data_t, typename real_t, typename input>
   real_t integrate_cubic(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
-    real_t val = 0;
+    data_t val = 0;
     int from_i = std::max(0, static_cast<int>(from));
     int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
     GGO_ASSERT(from_i < to_i);
@@ -83,12 +92,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename real_t, typename input>
+  template <typename data_t, typename real_t, typename input>
   real_t integrate_linear(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
-    real_t val = 0;
+    data_t val = 0;
     int from_i = std::max(0, static_cast<int>(from));
     int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
     GGO_ASSERT(from_i < to_i);
@@ -101,8 +110,8 @@ namespace ggo
     val /= 2;
 
     // Remove first block.
-    real_t a = in(from_i + 1) - in(from_i);
-    real_t b = in(from_i) - a * from_i;
+    data_t a = in(from_i + 1) - in(from_i);
+    data_t b = in(from_i) - a * from_i;
     val -= a * (from * from - from_i * from_i) / 2 + b * (from - from_i);
 
     // Remove last block.
@@ -114,7 +123,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename real_t, typename input, typename output>
+  template <scaling_algo algo, typename data_t, typename real_t, typename input, typename output>
   void scale_1d(input in, int size_in, output out, int size_out)
   {
     static_assert(std::is_floating_point<real_t>::value == true);
@@ -126,21 +135,23 @@ namespace ggo
     {
       if constexpr(algo == scaling_algo::nearest_neighbor)
       {
-        int i_in = i * size_in / size_out + (size_in / size_out) / 2;
+        int i_in = nearest_neighbor_index(i, size_in, size_out);
         out(i, in(i_in));
       }
       else
       {
+        static_assert(std::is_floating_point<real_t>::value == true);
+
         real_t from = static_cast<real_t>(i) * ratio;
         real_t to = static_cast<real_t>(i + 1) * ratio;
 
         if constexpr(algo == scaling_algo::linear_integration)
         {
-          out(i, inv_ratio * integrate_linear<real_t>(in, size_in, from, to));
+          out(i, inv_ratio * integrate_linear<data_t, real_t>(in, size_in, from, to));
         }
         else if constexpr(algo == scaling_algo::cubic_integration)
         {
-          out(i, inv_ratio * integrate_cubic<real_t>(in, size_in, from, to));
+          out(i, inv_ratio * integrate_cubic<data_t, real_t>(in, size_in, from, to));
         }
         else
         {
@@ -151,10 +162,9 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename real_t, typename size_t>
-  void	scale_1d(const real_t * input, size_t size_in, real_t * output, size_t size_out)
+  template <scaling_algo algo, typename data_t, typename size_t>
+  void	scale_1d(const data_t * input, size_t size_in, data_t * output, size_t size_out)
   {
-    static_assert(std::is_floating_point<real_t>::value == true);
     static_assert(std::is_integral<size_t>::value == true);
 
     auto in = [&](int i)
@@ -167,12 +177,12 @@ namespace ggo
       return input[i];
     };
     
-    auto out = [&](int i, real_t v) 
+    auto out = [&](int i, data_t v)
     {
       output[i] = v;
     };
 
-    scale_1d<algo, real_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
+    scale_1d<algo, data_t, data_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
   }
 
   /*
@@ -230,3 +240,5 @@ namespace ggo
     ggo_scale2d_t<uint8_t>(input, width_in, height_in, output, width_out, height_out, algo, 0, 255);
   }*/
 }
+
+#endif
