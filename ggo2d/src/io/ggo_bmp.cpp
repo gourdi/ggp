@@ -5,18 +5,48 @@
 
 namespace
 {
+#pragma pack(push, 1)
+  struct file_header
+  {
+    char _b;
+    char _m;
+    uint32_t _file_size;
+    uint16_t _reserved1;
+    uint16_t _reserved2;
+    uint32_t _offset;
+  };
+
+  struct info_header
+  {
+    uint32_t _size;
+    uint32_t _width;
+    uint32_t _height;
+    uint16_t _planes;
+    uint16_t _bpp;
+    uint32_t _compression;
+    uint32_t _image_size;
+    uint32_t _horizontal_resolution;
+    uint32_t _vertical_resolution;
+    uint32_t _palette_size;
+    uint32_t _important;
+  };
+#pragma pack(pop)
+
+  static_assert(sizeof(file_header) == 14);
+  static_assert(sizeof(info_header) == 40);
+
   //////////////////////////////////////////////////////////////
-  // Write pixels (note that pixels are stored BGR from bottom to top.
+  // Write pixels (note that pixels are stored BGR from bottom to top).
   struct write_pixels
   {
     template <ggo::pixel_buffer_format pbf>
-    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_step)
+    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step)
     {
       using format = ggo::pixel_buffer_format_info<pbf>;
 
       for (int y = 0; y < height; ++y)
       {
-        const void * ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_step);
+        const void * ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_byte_step);
 
         for (int x = 0; x < width; ++x)
         {
@@ -35,50 +65,117 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool save_bmp(const std::string & filename, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_step)
+  bool is_bmp(const std::string & filename)
   {
-    uint8_t			  header[40];
-    std::ofstream ofs(filename.c_str(), std::ios_base::out | std::ios_base::binary);
+    std::string extension = filename.substr(filename.find_last_of(".") + 1);
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
-    int line_size	= ggo::pad(3 * width, 4);
-    int filesize	= 14 + 40 + 3 * line_size * height;
+    if (extension != "bmp")
+    {
+      return false;
+    }
+
+    std::ifstream ifs(filename.c_str(), std::ios_base::binary);
 
     // File header.
-    std::fill(std::begin(header), std::end(header), 0);
-
-    header[ 0]	= 'B';
-    header[ 1]	= 'M';
-
-    header[ 2]	= (filesize&0x000000FF)>>0;
-    header[ 3]	= (filesize&0x0000FF00)>>8;
-    header[ 4]	= (filesize&0x00FF0000)>>16;
-    header[ 5]	= (filesize&0xFF000000)>>24;
-
-    header[10]	= 14+40; // Offset.
-
-    ofs.write(reinterpret_cast<char*>(header), 14);
+    file_header file_header;
+    ifs.read(reinterpret_cast<char *>(&file_header), sizeof(file_header));
+    if (file_header._b != 'B' || file_header._m != 'M')
+    {
+      return false;
+    }
+    if (file_header._offset != 54)
+    {
+      return false;
+    }
 
     // Info header.
-    std::fill(std::begin(header), std::end(header), 0);
+    info_header info_header;
+    ifs.read(reinterpret_cast<char *>(&info_header), sizeof(info_header));
+    if (info_header._size != 40)
+    {
+      return false;
+    }
+    if (info_header._planes != 1 || info_header._bpp != 24)
+    {
+      return false;
+    }
+    if (info_header._compression != 0)
+    {
+      return false;
+    }
+    if (info_header._palette_size)
+    {
+      return false;
+    }
 
-    header[ 0] = 40; // sizeof info header
+    return ifs.good();
+  }
 
-    header[ 4] = (width&0x000000FF)>>0;
-    header[ 5] = (width&0x0000FF00)>>8;
-    header[ 6] = (width&0x00FF0000)>>16;
-    header[ 7] = (width&0xFF000000)>>24;
+  //////////////////////////////////////////////////////////////
+  pixel_buffer load_bmp(const std::string & filename)
+  {
+    if (is_bmp(filename) == false)
+    {
+      throw std::runtime_error("invalid bitmap file");
+    }
 
-    header[ 8] = (height&0x000000FF)>>0;
-    header[ 9] = (height&0x0000FF00)>>8;
-    header[10] = (height&0x00FF0000)>>16;
-    header[11] = (height&0xFF000000)>>24;
+    std::ifstream ifs(filename.c_str(), std::ios_base::binary);
 
-    header[12] = 1;		// Planes.
-    header[14] = 24;	// Bpp.
+    // File header.
+    file_header file_header;
+    ifs.read(reinterpret_cast<char *>(&file_header), sizeof(file_header));
 
-    ofs.write(reinterpret_cast<char*>(header), 40);
+    // Info header.
+    info_header info_header;
+    ifs.read(reinterpret_cast<char *>(&info_header), sizeof(info_header));
 
-    ggo::dispatch_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_step);
+    // Pixels.
+    int line_byte_size = ggo::pad(3 * info_header._width, 4);
+    pixel_buffer pixels(info_header._width, info_header._height, line_byte_size, ggo::bgr_8u_yu);
+
+    ifs.read(reinterpret_cast<char *>(pixels.data()), info_header._height * line_byte_size);
+
+    // Everything went well?
+    if (!ifs)
+    {
+      throw std::runtime_error("invalid bitmap file");
+    }
+
+    return pixels;
+  }
+
+  //////////////////////////////////////////////////////////////
+  bool save_bmp(const std::string & filename, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_byte_step)
+  {
+    std::ofstream ofs(filename.c_str(), std::ios_base::binary);
+
+    int line_size	= ggo::pad(3 * width, 4);
+
+    // File header.
+    file_header file_header;
+    memset(&file_header, 0, sizeof(file_header));
+
+    file_header._b = 'B';
+    file_header._m = 'M';
+    file_header._offset = sizeof(file_header) + sizeof(info_header);
+    file_header._file_size = file_header._offset + 3 * line_size * height;
+
+    ofs.write(reinterpret_cast<char*>(&file_header), sizeof(file_header));
+
+    // Info header.
+    info_header info_header;
+    memset(&info_header, 0, sizeof(info_header));
+
+    info_header._size = sizeof(info_header);
+    info_header._width = width;
+    info_header._height = height;
+    info_header._planes = 1;
+    info_header._bpp = 24;
+
+    ofs.write(reinterpret_cast<char*>(&info_header), sizeof(info_header));
+
+    ggo::dispatch_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_byte_step);
 
     if (!ofs)
     {

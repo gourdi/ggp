@@ -1,6 +1,6 @@
 if (MSVC)
-  add_definitions(/std:c++latest /MP -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
-  set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DGGO_DEBUG") 
+  add_definitions(/std:c++latest /WX /MP -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DGGO_DEBUG") 
 endif()
 
 macro(get_sources_from_root_directory root sources)

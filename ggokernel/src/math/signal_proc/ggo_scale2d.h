@@ -33,10 +33,6 @@ namespace ggo
       {
         auto horz_in = [&](int x)
         {
-          if constexpr(algo == scaling_algo::cubic_integration)
-          {
-            x = ggo::clamp<int>(x, 0, static_cast<int>(width_in - 1));
-          }
           return in(x, y); 
         };
 

@@ -10,8 +10,8 @@ namespace ggo
   {
   public:
 
-    pixel_buffer(int width, int height, pixel_buffer_format pbf, int align = 1);
-    pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf, int align = 1);
+    pixel_buffer(int width, int height, int line_byte_step, pixel_buffer_format pbf);
+    pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf);
     ~pixel_buffer();
 
     // Move.
@@ -22,10 +22,10 @@ namespace ggo
     pixel_buffer(const pixel_buffer &) = delete;
     void operator=(const pixel_buffer &) = delete;
 
-    int                 get_width() const { return _width; }
-    int                 get_height() const { return _height; }
-    int                 get_line_byte_step() const { return _line_byte_step; }
-    pixel_buffer_format get_pixel_buffer_format() const { return _pbf; }
+    int                 width() const { return _width; }
+    int                 height() const { return _height; }
+    int                 line_byte_step() const { return _line_byte_step; }
+    pixel_buffer_format pbf() const { return _pbf; }
     void *              data() { return _buffer; }
     const void *        data() const { return _buffer; }
 

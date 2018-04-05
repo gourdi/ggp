@@ -1,47 +1,27 @@
 #include <ggo_pixel_buffer.h>
-#include <stdlib.h>
 
 //////////////////////////////////////////////////////////////
-ggo::pixel_buffer::pixel_buffer(int width, int height, pixel_buffer_format pbf, int align)
+ggo::pixel_buffer::pixel_buffer(int width, int height, int line_byte_step, pixel_buffer_format pbf)
 {
-  _line_byte_step = pad(width * get_pixel_byte_size(pbf), align); // For each line to be aligned too.
-
-#ifdef _MSC_VER
-  _buffer = _aligned_malloc(height * _line_byte_step, align);
-#else
-  _buffer = aligned_alloc(align, height * _line_byte_step);
-#endif
+  _buffer = malloc(height * line_byte_step);
   _width = width;
   _height = height;
+  _line_byte_step = line_byte_step;
   _pbf = pbf;
 }
 
 //////////////////////////////////////////////////////////////
-ggo::pixel_buffer::pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf, int align)
+ggo::pixel_buffer::pixel_buffer(const void * buffer, int width, int height, int line_byte_step, pixel_buffer_format pbf)
 :
-pixel_buffer(width, height, pbf, align)
+pixel_buffer(width, height, line_byte_step, pbf)
 {
-  int line_byte_size = ggo::get_line_byte_size(pbf, width);
-  const void * src = buffer;
-  void * dst = _buffer;
-
-  for (int y = 0; y < height; ++y)
-  {
-    memcpy(dst, src, line_byte_size);
-
-    src = ggo::ptr_offset(src, line_byte_step);
-    dst = ggo::ptr_offset(dst, _line_byte_step);
-  }
+  memcpy(_buffer, buffer, width * line_byte_step);
 }
 
 //////////////////////////////////////////////////////////////
 ggo::pixel_buffer::~pixel_buffer()
 {
-#ifdef _MSC_VER
-  _aligned_free(_buffer);
-#else
   free(_buffer);
-#endif
 }
 
 //////////////////////////////////////////////////////////////
@@ -64,11 +44,7 @@ void ggo::pixel_buffer::operator=(pixel_buffer && pf)
 {
   if (&pf != this)
   {
-#ifdef _MSC_VER
-    _aligned_free(_buffer);
-#else
     free(_buffer);
-#endif
 
     _buffer = pf._buffer;
     _width = pf._width;

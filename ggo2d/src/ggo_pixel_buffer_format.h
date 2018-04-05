@@ -21,6 +21,8 @@ namespace ggo
     y_64f_yd,
     rgb_8u_yu,
     rgb_8u_yd,
+    bgr_8u_yd,
+    bgr_8u_yu,
     bgra_8u_yd,
     rgb_16u_yd,
     rgb_32f_yu
@@ -186,6 +188,60 @@ namespace ggo
   };
 
   template <>
+  struct pixel_buffer_format_info<bgr_8u_yd>
+  {
+    static const int pixel_byte_size = 3;
+    static const pixel_buffer_format gray_pbf = y_8u_yd;
+
+    using color_t = ggo::color_8u;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
+
+    // Accessor interface.
+    using type = ggo::color_8u;
+
+    static ggo::color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+    }
+
+    static void write(void * ptr, const ggo::color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
+    }
+  };
+
+  template <>
+  struct pixel_buffer_format_info<bgr_8u_yu>
+  {
+    static const int pixel_byte_size = 3;
+    static const pixel_buffer_format gray_pbf = y_8u_yu;
+
+    using color_t = ggo::color_8u;
+    using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
+
+    // Accessor interface.
+    using type = ggo::color_8u;
+
+    static ggo::color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+    }
+
+    static void write(void * ptr, const ggo::color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
+    }
+  };
+
+  template <>
   struct pixel_buffer_format_info<bgra_8u_yd>
   {
     static const int pixel_byte_size = 4;
@@ -254,6 +310,8 @@ namespace ggo
     case y_32f_yu: return functor::call<y_32f_yu>(std::forward<args>(a)...);
     case rgb_8u_yu: return functor::call<rgb_8u_yu>(std::forward<args>(a)...);
     case rgb_8u_yd: return functor::call<rgb_8u_yd>(std::forward<args>(a)...);
+    case bgr_8u_yu: return functor::call<bgr_8u_yu>(std::forward<args>(a)...);
+    case bgr_8u_yd: return functor::call<bgr_8u_yd>(std::forward<args>(a)...);
     case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
     case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
     case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
