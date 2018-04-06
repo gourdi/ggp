@@ -5,8 +5,8 @@ get_sources_from_root_directory("src" sources)
 get_subdirectories("src" dirs)
 group_sources(${sources})
 add_library(ggo2d STATIC ${sources})
-target_include_directories(ggo2d PUBLIC ${GGOKERNEL_INCLUDE} ${dirs})
-target_link_libraries(ggo2d PUBLIC libtga ggokernel)
+target_include_directories(ggo2d PUBLIC ${GGOKERNEL_INCLUDE} ${dirs} PRIVATE ../externals/jpeg)
+target_link_libraries(ggo2d PUBLIC ggokernel)
 set(GGO2D_INCLUDE ${dirs} PARENT_SCOPE)
 
 # The non-regression executable.
