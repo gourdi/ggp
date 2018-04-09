@@ -1,6 +1,7 @@
 #include "ggo_bmp.h"
 #include <ggo_buffer.h>
 #include <ggo_kernel.h>
+#include <ggo_file_helpers.h>
 #include <ggo_color.h>
 #include <fstream>
 
@@ -75,10 +76,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   bool is_bmp(const std::string & filename)
   {
-    std::string extension = filename.substr(filename.find_last_of(".") + 1);
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
-    if (extension != "bmp")
+    if (ggo::get_file_extension(filename) != "bmp")
     {
       return false;
     }
@@ -137,6 +135,23 @@ namespace ggo
     // Info header.
     info_header info_header;
     ifs.read(reinterpret_cast<char *>(&info_header), sizeof(info_header));
+
+    if (info_header._size != 40)
+    {
+      throw std::runtime_error("invalid header size");
+    }
+    if (info_header._planes != 1 || info_header._bpp != 24)
+    {
+      throw std::runtime_error("invalid bpp");
+    }
+    if (info_header._compression != 0)
+    {
+      throw std::runtime_error("unsupported compresed bitmap");
+    }
+    if (info_header._palette_size)
+    {
+      throw std::runtime_error("unsupported color mapped bitmap");
+    }
 
     // Pixels.
     int line_byte_size = ggo::pad(3 * info_header._width, 4);

@@ -6,7 +6,6 @@
 
 namespace ggo
 {
-  bool          is_bmp(const std::string & filename);
   pixel_buffer  load_bmp(const std::string & filename);
   bool          save_bmp(const std::string & filename, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_byte_step);
 }

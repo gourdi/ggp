@@ -1,4 +1,5 @@
 #include <ggo_jpg.h>
+#include <ggo_file_helpers.h>
 #include <ggo_buffer.h>
 #include <jpeglib.h>
 #include <setjmp.h>
@@ -133,8 +134,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   bool is_jpg(const std::string & filename)
   {
-    std::string extension = filename.substr(filename.find_last_of(".") + 1);
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    std::string extension = ggo::get_file_extension(filename);
 
     if (extension != "jpg" && extension != "jpeg")
     {
@@ -148,15 +148,6 @@ namespace ggo
       // Read and check header.
       jpeg_read_header(&decompressor._cinfo, TRUE);
 
-      if (decompressor._cinfo.image_width <= 0 || decompressor._cinfo.image_height <= 0)
-      {
-        return false;
-      }
-
-      if (decompressor._cinfo.out_color_space != JCS_RGB)
-      {
-        return false;
-      }
     }
     catch (...)
     {
@@ -169,16 +160,23 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   pixel_buffer load_jpg(const std::string & filename)
   {
-    if (is_jpg(filename) == false)
-    {
-      throw std::runtime_error("invalid jpg image");
-    }
-
     jpeg_decompressor decompressor(filename);
 
-    // Read header and pixels.
+    // Header.
     jpeg_read_header(&decompressor._cinfo, TRUE);
 
+
+    if (decompressor._cinfo.image_width <= 0 || decompressor._cinfo.image_height <= 0)
+    {
+      throw std::runtime_error("invalid jpg image dimension");
+    }
+
+    if (decompressor._cinfo.out_color_space != JCS_RGB)
+    {
+      throw std::runtime_error("jpg is not rgb");
+    }
+
+    // Pixels.
     jpeg_start_decompress(&decompressor._cinfo);
 
     int line_byte_step = 3 * decompressor._cinfo.output_width;

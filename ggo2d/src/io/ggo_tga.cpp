@@ -1,4 +1,5 @@
 #include <ggo_tga.h>
+#include <ggo_file_helpers.h>
 #include <fstream>
 
 namespace
@@ -53,46 +54,24 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool is_tga(const std::string & filename)
+  pixel_buffer load_tga(const std::string & filename)
   {
-    std::string extension = filename.substr(filename.find_last_of(".") + 1);
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
-    if (extension != "tga")
-    {
-      return false;
-    }
-
     std::ifstream ifs(filename.c_str(), std::ios_base::binary);
 
+    // Header.
     header header;
     ifs.read(reinterpret_cast<char *>(&header), sizeof(header));
 
     if (header._image_type != 2 || header._bpp != 24)
     {
-      return false;
+      throw std::runtime_error("unsupported tga file");
     }
     if (header._image_descriptor & (1 << 4)) // Right-to-left pixels is unsupported.
     {
-      return false;
-    }
-    
-    return true;
-  }
-
-  //////////////////////////////////////////////////////////////
-  pixel_buffer load_tga(const std::string & filename)
-  {
-    if (is_tga(filename) == false)
-    {
-      throw std::runtime_error("invalid tga file");
+      throw std::runtime_error("unsupported right-to-left tga file");
     }
 
-    std::ifstream ifs(filename.c_str(), std::ios_base::binary);
-
-    header header;
-    ifs.read(reinterpret_cast<char *>(&header), sizeof(header));
-
+    // Pixels.
     ifs.seekg(header._id_length, std::ios_base::cur);
 
     ggo::pixel_buffer_format pbf = (header._image_descriptor & (1 << 5)) ? bgr_8u_yd : bgr_8u_yu;
@@ -131,6 +110,5 @@ namespace ggo
 
     return true;
   }
-
 }
 
