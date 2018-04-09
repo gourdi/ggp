@@ -74,63 +74,22 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool is_bmp(const std::string & filename)
+  pixel_buffer load_bmp(const std::string & filename)
   {
-    if (ggo::get_file_extension(filename) != "bmp")
-    {
-      return false;
-    }
-
     std::ifstream ifs(filename.c_str(), std::ios_base::binary);
 
     // File header.
     file_header file_header;
     ifs.read(reinterpret_cast<char *>(&file_header), sizeof(file_header));
+
     if (file_header._b != 'B' || file_header._m != 'M')
     {
-      return false;
+      throw std::runtime_error("invalid header");
     }
     if (file_header._offset != 54)
     {
-      return false;
+      throw std::runtime_error("invalid offset");
     }
-
-    // Info header.
-    info_header info_header;
-    ifs.read(reinterpret_cast<char *>(&info_header), sizeof(info_header));
-    if (info_header._size != 40)
-    {
-      return false;
-    }
-    if (info_header._planes != 1 || info_header._bpp != 24)
-    {
-      return false;
-    }
-    if (info_header._compression != 0)
-    {
-      return false;
-    }
-    if (info_header._palette_size)
-    {
-      return false;
-    }
-
-    return ifs.good();
-  }
-
-  //////////////////////////////////////////////////////////////
-  pixel_buffer load_bmp(const std::string & filename)
-  {
-    if (is_bmp(filename) == false)
-    {
-      throw std::runtime_error("invalid bitmap file");
-    }
-
-    std::ifstream ifs(filename.c_str(), std::ios_base::binary);
-
-    // File header.
-    file_header file_header;
-    ifs.read(reinterpret_cast<char *>(&file_header), sizeof(file_header));
 
     // Info header.
     info_header info_header;
@@ -138,7 +97,7 @@ namespace ggo
 
     if (info_header._size != 40)
     {
-      throw std::runtime_error("invalid header size");
+      throw std::runtime_error("invalid bitmap info header size");
     }
     if (info_header._planes != 1 || info_header._bpp != 24)
     {
@@ -146,7 +105,7 @@ namespace ggo
     }
     if (info_header._compression != 0)
     {
-      throw std::runtime_error("unsupported compresed bitmap");
+      throw std::runtime_error("unsupported compressed bitmap");
     }
     if (info_header._palette_size)
     {

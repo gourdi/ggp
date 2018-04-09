@@ -6,25 +6,30 @@
 #include <ggo_color_stream.h>
 #include <iostream>
 
-bool save_image(const std::string & output, const ggo::pixel_buffer & image, std::string & error_msg)
+void save_image(const std::string & output, const ggo::pixel_buffer & image)
 {
+  bool io_error = true;
   std::string extension = ggo::get_file_extension(output);
   if (extension == "bmp")
   {
-    return ggo::save_bmp(output, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+    io_error = ggo::save_bmp(output, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
   }
   else if (extension == "tga")
   {
-    return ggo::save_tga(output, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+    io_error = ggo::save_tga(output, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
   }
   else if (extension == "jpg" || extension == "jpeg")
   {
-    return ggo::save_jpg(output, 95, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+    io_error = ggo::save_jpg(output, 95, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
   }
   else
   {
-    error_msg = std::string("missing or invalid file extension for filename name '") + output + "'";
-    return false;
+    throw std::runtime_error("invalid or missing extension");
+  }
+
+  if (io_error == true)
+  {
+    throw std::runtime_error("i/o error");
   }
 }
 
@@ -42,16 +47,27 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  auto image = ggo::load_image(args[0]);
-
-  std::string error_msg;
-  if (save_image(args.back(), image, error_msg) == false)
+  bool image_loaded = false;
+  bool image_saved = false;
+  try
   {
-    if (error_msg.empty() == true)
+    auto image = ggo::load_image(args[0]);
+    image_loaded = true;
+
+    save_image(args.back(), image);
+    image_saved = true;
+  }
+  catch (std::exception e)
+  {
+    if (image_loaded == false)
     {
-      error_msg = std::string("failed saving file '") + args.back() + "'";
+      std::cerr << ggo::red_color << "failed loading image '" << args.front() << "': " << e.what() << ggo::default_color << std::endl;
     }
-    std::cerr << ggo::red_color << error_msg << ggo::default_color << std::endl;
+    else if (image_saved == false)
+    {
+      std::cerr << ggo::red_color << "failed saving image '" << args.back() << "': " << e.what() << ggo::default_color << std::endl;
+    }
+
     return 1;
   }
 

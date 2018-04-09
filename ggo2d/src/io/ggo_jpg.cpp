@@ -132,32 +132,6 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  bool is_jpg(const std::string & filename)
-  {
-    std::string extension = ggo::get_file_extension(filename);
-
-    if (extension != "jpg" && extension != "jpeg")
-    {
-      return false;
-    }
-
-    try
-    {
-      jpeg_decompressor decompressor(filename);
-
-      // Read and check header.
-      jpeg_read_header(&decompressor._cinfo, TRUE);
-
-    }
-    catch (...)
-    {
-      return false;
-    }
-
-    return true;
-  }
-
-  //////////////////////////////////////////////////////////////
   pixel_buffer load_jpg(const std::string & filename)
   {
     jpeg_decompressor decompressor(filename);
@@ -168,12 +142,12 @@ namespace ggo
 
     if (decompressor._cinfo.image_width <= 0 || decompressor._cinfo.image_height <= 0)
     {
-      throw std::runtime_error("invalid jpg image dimension");
+      throw std::runtime_error("invalid image dimension");
     }
 
     if (decompressor._cinfo.out_color_space != JCS_RGB)
     {
-      throw std::runtime_error("jpg is not rgb");
+      throw std::runtime_error("image is not rgb");
     }
 
     // Pixels.

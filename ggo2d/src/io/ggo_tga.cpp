@@ -64,7 +64,7 @@ namespace ggo
 
     if (header._image_type != 2 || header._bpp != 24)
     {
-      throw std::runtime_error("unsupported tga file");
+      throw std::runtime_error("unsupported image format");
     }
     if (header._image_descriptor & (1 << 4)) // Right-to-left pixels is unsupported.
     {
