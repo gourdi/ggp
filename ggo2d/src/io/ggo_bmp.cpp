@@ -1,4 +1,5 @@
 #include "ggo_bmp.h"
+#include <ggo_buffer.h>
 #include <ggo_kernel.h>
 #include <ggo_color.h>
 #include <fstream>
@@ -40,23 +41,30 @@ namespace
   struct write_pixels
   {
     template <ggo::pixel_buffer_format pbf>
-    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step)
+    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step, int padded_line_size)
     {
       using format = ggo::pixel_buffer_format_info<pbf>;
 
+      ggo::buffer padded_line(padded_line_size);
+
       for (int y = 0; y < height; ++y)
       {
-        const void * ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_byte_step);
+        const void * in_ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_byte_step);
+        uint8_t * out_ptr = padded_line.data();
 
         for (int x = 0; x < width; ++x)
         {
-          auto c = ggo::read_pixel<pbf>(ptr);
+          auto c = ggo::read_pixel<pbf>(in_ptr);
           ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
-          ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
-          ptr = ggo::ptr_offset<format::pixel_byte_size>(ptr);
+
+          *out_ptr++ = rgb.b();
+          *out_ptr++ = rgb.g();
+          *out_ptr++ = rgb.r();
+
+          in_ptr = ggo::ptr_offset<format::pixel_byte_size>(in_ptr);
         }
+
+        ofs.write(reinterpret_cast<char *>(padded_line.data()), padded_line_size);
       }
     }
   };
@@ -150,7 +158,7 @@ namespace ggo
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
-    int line_size	= ggo::pad(3 * width, 4);
+    int padded_line_size	= ggo::pad(3 * width, 4);
 
     // File header.
     file_header file_header;
@@ -159,7 +167,7 @@ namespace ggo
     file_header._b = 'B';
     file_header._m = 'M';
     file_header._offset = sizeof(file_header) + sizeof(info_header);
-    file_header._file_size = file_header._offset + 3 * line_size * height;
+    file_header._file_size = file_header._offset + 3 * padded_line_size * height;
 
     ofs.write(reinterpret_cast<char*>(&file_header), sizeof(file_header));
 
@@ -175,7 +183,7 @@ namespace ggo
 
     ofs.write(reinterpret_cast<char*>(&info_header), sizeof(info_header));
 
-    ggo::dispatch_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_byte_step);
+    ggo::dispatch_pbf<write_pixels>(pbf, ofs, buffer, width, height, line_byte_step, padded_line_size);
 
     if (!ofs)
     {
