@@ -1,7 +1,7 @@
 #include "ggo_aggregation_artist.h"
 #include <ggo_gaussian_blur.h>
 #include <ggo_color.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 #include <ggo_gaussian_blur2d.h>
 
 //////////////////////////////////////////////////////////////

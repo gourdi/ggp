@@ -1,5 +1,5 @@
 #include "ggo_circles_artist.h"
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 
 //////////////////////////////////////////////////////////////
 std::vector<std::vector<ggo::circles_artist::colored_disc>> ggo::circles_artist::generate_discs(int width, int height)

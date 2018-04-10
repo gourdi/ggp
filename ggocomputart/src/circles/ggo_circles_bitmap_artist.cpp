@@ -1,6 +1,6 @@
 #include "ggo_circles_bitmap_artist.h"
 #include "ggo_circles_artist.h"
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::circles_bitmap_artist::circles_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)

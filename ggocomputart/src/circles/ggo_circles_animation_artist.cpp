@@ -1,8 +1,8 @@
 #include "ggo_circles_animation_artist.h"
 #include "ggo_circles_artist.h"
 #include <math.h>
-#include <ggo_buffer_paint.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_paint.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 bool ggo::circles_animation_artist::circle_animate::update(int frame_index, const ggo::pos2f & pos)

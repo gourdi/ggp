@@ -191,8 +191,8 @@ GGO_TEST(pixel_buffer, accumulator)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(pixel_buffer, move)
 {
-  ggo::pixel_buffer pb1(10, 30, ggo::rgb_8u_yu);
-  ggo::pixel_buffer pb2(10, 20, ggo::rgb_8u_yu);
+  ggo::pixel_buffer pb1(10, 30, 30, ggo::rgb_8u_yu);
+  ggo::pixel_buffer pb2(10, 20, 30, ggo::rgb_8u_yu);
 
   pb1 = std::move(pb2);
 }

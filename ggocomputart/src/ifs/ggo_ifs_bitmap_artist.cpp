@@ -1,6 +1,6 @@
 #include "ggo_ifs_bitmap_artist.h"
 #include "ggo_ifs_artist.h"
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::ifs_bitmap_artist::ifs_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)

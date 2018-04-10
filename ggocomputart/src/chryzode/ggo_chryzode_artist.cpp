@@ -1,6 +1,6 @@
 #include "ggo_chryzode_artist.h"
 #include <ggo_gaussian_blur2d.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_color.h>
 
 //////////////////////////////////////////////////////////////

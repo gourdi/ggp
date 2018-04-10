@@ -1,7 +1,7 @@
 #include "ggo_kame_animation_artist.h"
 #include <ggo_buffer.h>
-#include <ggo_buffer_fill.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_fill.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_color.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_blit.h>

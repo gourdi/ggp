@@ -2,7 +2,7 @@
 #include <ggo_delaunay_triangulation.h>
 #include <ggo_link.h>
 #include <ggo_array.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_color_triangle.h>
 #include <ggo_blend.h>
 #include <map>

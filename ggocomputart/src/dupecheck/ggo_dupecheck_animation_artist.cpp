@@ -1,8 +1,8 @@
 #include "ggo_dupecheck_animation_artist.h"
 #include <ggo_dct.h>
 #include <ggo_harmonic_curve.h>
-#include <ggo_buffer_paint.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_paint.h>
+#include <ggo_pbf_fill.h>
 #include <ggo_velocity_path.h>
 #include <ggo_spiral_path.h>
 #include <ggo_brush.h>

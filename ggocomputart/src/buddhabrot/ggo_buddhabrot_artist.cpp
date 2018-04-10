@@ -1,5 +1,5 @@
 #include "ggo_buddhabrot_artist.h"
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 #include <algorithm>
 #include <iostream>
 #include <cstring>

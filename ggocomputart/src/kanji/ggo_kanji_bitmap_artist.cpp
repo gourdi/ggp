@@ -1,6 +1,6 @@
 #include "ggo_kanji_bitmap_artist.h"
 #include "ggo_kanji_artist.h"
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::kanji_bitmap_artist::kanji_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)

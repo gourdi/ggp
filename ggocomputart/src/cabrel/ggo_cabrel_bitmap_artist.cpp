@@ -1,7 +1,7 @@
 #include "ggo_cabrel_bitmap_artist.h"
 #include <ggo_shape_sampling.h>
-#include <ggo_buffer_fill.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_fill.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_color_triangle.h>
 

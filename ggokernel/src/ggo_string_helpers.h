@@ -58,11 +58,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  inline std::vector<std::string> split(const std::string & s, char delim)
+  template <typename container_t = std::vector<std::string>>
+  inline container_t split(const std::string & s, char delim)
   {
     std::istringstream iss(s);
     std::string item;
-    std::vector<std::string> tokens;
+    container_t tokens;
     while (std::getline(iss, item, delim))
     {
       tokens.emplace_back(item);

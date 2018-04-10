@@ -3,7 +3,7 @@
 #include <ggo_dct.h>
 #include <ggo_color.h>
 #include <ggo_curve.h>
-#include <ggo_buffer_paint.h>
+#include <ggo_pbf_paint.h>
 #include <ggo_brush.h>
 #include <ggo_blend.h>
 #include <ggo_blit.h>

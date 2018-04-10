@@ -1,5 +1,5 @@
 #include "ggo_kanji_animation_artist.h"
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::kanji_animation_artist::kanji_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)

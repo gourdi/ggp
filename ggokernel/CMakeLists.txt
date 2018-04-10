@@ -6,7 +6,6 @@ get_subdirectories("src" dirs)
 group_sources(${sources})
 add_library(ggokernel STATIC ${sources})
 target_include_directories(ggokernel PUBLIC ${dirs})
-set(GGOKERNEL_INCLUDE ${dirs} PARENT_SCOPE)
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

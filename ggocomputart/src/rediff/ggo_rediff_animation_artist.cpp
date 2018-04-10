@@ -1,7 +1,7 @@
 #include "ggo_rediff_animation_artist.h"
 #include <ggo_gaussian_blur2d.h>
-#include <ggo_buffer_paint.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_paint.h>
+#include <ggo_pbf_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)

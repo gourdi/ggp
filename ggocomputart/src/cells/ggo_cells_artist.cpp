@@ -1,6 +1,6 @@
 #include "ggo_cells_artist.h"
 #include <ggo_array.h>
-#include <ggo_buffer_fill.h>
+#include <ggo_pbf_fill.h>
 #include <ggo_interpolation1d.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_seed_paint.h>
