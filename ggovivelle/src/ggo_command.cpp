@@ -4,9 +4,9 @@
 
 namespace
 {
-  std::vector<ggo::parameter> parse_parameters(const std::string & txt)
+  std::map<std::string, std::string> parse_parameters(const std::string & txt)
   {
-    std::vector<ggo::parameter> parameters;
+    std::map<std::string, std::string> parameters;
     auto s = ggo::split(txt, ';');
 
     for (const auto & parameter : s)
@@ -17,7 +17,7 @@ namespace
         throw std::runtime_error(std::string("invalid parameter: '") + parameter + "'");
       }
 
-      parameters.emplace_back(key_value[0], key_value[1]);
+      parameters[key_value[0]] = key_value[1];
     }
 
     return parameters;
