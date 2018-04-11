@@ -16,7 +16,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set(_targetsDefined)
 set(_targetsNotDefined)
 set(_expectedTargets)
-foreach(_expectedTarget png png_static)
+foreach(_expectedTarget png_static)
   list(APPEND _expectedTargets ${_expectedTarget})
   if(NOT TARGET ${_expectedTarget})
     list(APPEND _targetsNotDefined ${_expectedTarget})
@@ -49,18 +49,11 @@ if(_IMPORT_PREFIX STREQUAL "/")
   set(_IMPORT_PREFIX "")
 endif()
 
-# Create imported target png
-add_library(png SHARED IMPORTED)
-
-set_target_properties(png PROPERTIES
-  INTERFACE_LINK_LIBRARIES "D:/zlib/lib/zlibstatic.lib"
-)
-
 # Create imported target png_static
 add_library(png_static STATIC IMPORTED)
 
 set_target_properties(png_static PROPERTIES
-  INTERFACE_LINK_LIBRARIES "D:/zlib/lib/zlibstatic.lib"
+  INTERFACE_LINK_LIBRARIES "D:/Perso/ggp/sources/3rdparty/zlib/lib/zlibstatic.lib"
 )
 
 if(CMAKE_VERSION VERSION_LESS 2.8.12)
