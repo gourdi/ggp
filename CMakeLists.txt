@@ -2,6 +2,8 @@ project(ggp)
 
 cmake_minimum_required(VERSION 3.8)
 
+enable_testing()
+
 add_subdirectory(3rdparty)
 add_subdirectory(ggokernel)
 add_subdirectory(ggo2d)
