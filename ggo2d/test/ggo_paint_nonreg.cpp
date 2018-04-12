@@ -143,20 +143,20 @@ GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
   const int width = 80;
   const int height = 60;
   std::vector<uint8_t> buffer_rgb_8u_yu(width * height * 3, 0);
-  std::vector<uint8_t> buffer_bgra_8u_yd(width * height * 4, 0);
+  std::vector<uint8_t> buffer_bgr_8u_yd(width * height * 4, 0);
 
   const ggo::disc_float disc(35.f, 25.f, 15.f);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rgb_8u_yu.data(), width, height, 3 * width, disc, ggo::green_8u());
-  ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer_bgra_8u_yd.data(), width, height, 4 * width, disc, ggo::green_8u());
+  ggo::paint_shape<ggo::bgr_8u_yd, ggo::sampling_4x4>(buffer_bgr_8u_yd.data(), width, height, 4 * width, disc, ggo::green_8u());
 
   for (int y = 0; y < height; ++y)
   {
     for (int x = 0; x < width; ++x)
     {
       auto c_rgb_8u_yu = ggo::read_pixel<ggo::rgb_8u_yu>(buffer_rgb_8u_yu.data(), x, y, height, 3 * width);
-      auto c_bgra_8u_yd = ggo::read_pixel<ggo::bgra_8u_yd>(buffer_bgra_8u_yd.data(), x, y, height, 4 * width);
-      GGO_CHECK_EQ(c_rgb_8u_yu, c_bgra_8u_yd);
+      auto c_bgr_8u_yd = ggo::read_pixel<ggo::bgr_8u_yd>(buffer_bgr_8u_yd.data(), x, y, height, 4 * width);
+      GGO_CHECK_EQ(c_rgb_8u_yu, c_bgr_8u_yd);
     }
   }
 }

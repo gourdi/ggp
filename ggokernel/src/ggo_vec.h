@@ -82,7 +82,7 @@ namespace ggo
     template <typename real_t = data_t>
     real_t                      get_length() const
     {
-      static_assert(std::is_floating_point<real_t>::value, "invalid type");
+      static_assert(std::is_floating_point<real_t>::value);
       return std::sqrt(static_cast<real_t>(get_hypot()));
     }
 
@@ -274,7 +274,7 @@ namespace ggo
   template <typename data_t>
   ggo::vec<data_t, 2, geometry_t> rotate(const ggo::vec<data_t, 2, geometry_t> & v, const ggo::vec<data_t, 2, geometry_t> & center, data_t angle)
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     ggo::vec<data_t, 2, geometry_t> rotated(v); // We have to use a temporary in case &center == this.
 
@@ -293,7 +293,7 @@ namespace ggo
   template <typename data_t>
   ggo::vec<data_t, 2, geometry_t> from_polar(data_t angle, data_t length)
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
     return ggo::vec<data_t, 2, geometry_t>(length * std::cos(angle), length * std::sin(angle));
   }
 
@@ -327,7 +327,7 @@ namespace ggo
   template <typename data_t>
   bool is_basis(const ggo::vec<data_t, 3, geometry_t> & v1, const ggo::vec<data_t, 3, geometry_t> & v2, const ggo::vec<data_t, 3, geometry_t> & v3)
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     if (v1.is_normalized() == false || v2.is_normalized() == false || v3.is_normalized() == false)
     {
@@ -350,7 +350,7 @@ namespace ggo
   template <typename data_t>
   std::pair<ggo::vec<data_t, 3, geometry_t>, ggo::vec<data_t, 3, geometry_t>> build_basis(const ggo::vec<data_t, 3, geometry_t> & v)
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     GGO_ASSERT(v.is_normalized() == true);
 
@@ -443,7 +443,7 @@ namespace ggo
   template <typename data_t, int n_dims, vec_type vtype>
   void vec<data_t, n_dims, vtype>::set_length(data_t length)
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
     GGO_ASSERT(get_hypot() > data_t(0));
     this->operator*=(length / get_length());
   }
@@ -451,21 +451,21 @@ namespace ggo
   template <typename data_t, int n_dims, vec_type vtype>
   void vec<data_t, n_dims, vtype>::normalize()
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
     set_length(1);
   }
 
   template <typename data_t, int n_dims, vec_type vtype>
   bool vec<data_t, n_dims, vtype>::is_normalized(data_t epsilon) const
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
     return std::abs(get_hypot() - 1) < epsilon;
   }
 
   template <typename data_t, int n_dims, vec_type vtype>
   ggo::vec<data_t, n_dims, vtype> vec<data_t, n_dims, vtype>::get_normalized() const
   {
-    static_assert(std::is_floating_point<data_t>::value, "invalid type");
+    static_assert(std::is_floating_point<data_t>::value);
     ggo::vec<data_t, n_dims, vtype> r(*this);
     r.normalize(); 
     return r;

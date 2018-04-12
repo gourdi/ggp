@@ -37,15 +37,15 @@ GGO_TEST(fill, fill_solid_bgra_8u_yd)
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
 
-  ggo::fill_solid<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, { uint8_t(97), uint8_t(98), uint8_t(99) }, ggo::rect_int::from_left_right_bottom_top(-1, 0, -1, 2));
+  ggo::fill_solid<ggo::bgra_8u_yd>(buffer.data(), 2, 6, 10, { uint8_t(96), uint8_t(97), uint8_t(98), uint8_t(99) }, ggo::rect_int::from_left_right_bottom_top(-1, 0, -1, 2));
 
   const std::vector<uint8_t> expected{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
-    99, 98, 97, 43, 44, 45, 46, 47, 48, 49,
-    99, 98, 97, 53, 54, 55, 56, 57, 58, 59,
-    99, 98, 97, 63, 64, 65, 66, 67, 68, 69 };
+    98, 97, 96, 99, 44, 45, 46, 47, 48, 49,
+    98, 97, 96, 99, 54, 55, 56, 57, 58, 59,
+    98, 97, 96, 99, 64, 65, 66, 67, 68, 69 };
 
   GGO_CHECK(buffer == expected);
 }

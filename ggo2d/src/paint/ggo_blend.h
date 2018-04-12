@@ -23,6 +23,25 @@ namespace ggo
 // Alpha blending.
 namespace ggo
 {
+  // Functions.
+  template <typename bkgd_color_t, typename brush_color_t>
+  bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
+  {
+    static_assert(ggo::color_traits<brush_color_t>::has_alpha == false);
+
+    return ggo::convert_color_to<bkgd_color_t>(brush_color);
+  }
+
+  inline ggo::color_8u alpha_blend(const ggo::color_8u & bkgd_color, const ggo::alpha_color_8u & brush_color)
+  {
+    uint8_t inv_opacity = 0xff - brush_color.a();
+
+    return ggo::color_8u(
+      ggo::round_div(brush_color.a() * brush_color.r() + inv_opacity * bkgd_color.r(), 0xff),
+      ggo::round_div(brush_color.a() * brush_color.g() + inv_opacity * bkgd_color.g(), 0xff),
+      ggo::round_div(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
+  }
+
   // Structs.
   struct alpha_blender_y8u
   {

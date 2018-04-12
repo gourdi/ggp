@@ -26,7 +26,7 @@ namespace ggo
     // Copy constructor.
     array(const array<data_t, n_dims> & rhs)
     {
-      int count = rhs.get_count();
+      int count = rhs.count();
       ggo::copy<n_dims>(_dimensions, rhs._dimensions);
       _buffer = new data_t[count];
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
@@ -98,32 +98,32 @@ namespace ggo
 
     // Returns the size of a dimension given as a template parameter.
     template <int dim>
-    int get_size() const
+    int size() const
     {
       static_assert(dim >= 0 && dim < n_dims);
       return _dimensions[dim];
     }
 
-    int get_size() const
+    int size() const
     {
       static_assert(n_dims == 1);
       return _dimensions[0];
     }
 
-    int get_width() const
+    int width() const
     {
       static_assert(n_dims == 2);
       return _dimensions[0];
     }
 
-    int get_height() const
+    int height() const
     {
       static_assert(n_dims == 2);
       return _dimensions[1];
     }
 
     // Returns the full number of elements inside the array.
-    int get_count() const
+    int count() const
     {
       return ggo::multiply_all<n_dims>(_dimensions);
     }
@@ -146,7 +146,7 @@ namespace ggo
         return false;
       }
 
-      return std::equal(_buffer, _buffer + get_count(), rhs._buffer);
+      return std::equal(_buffer, _buffer + count(), rhs._buffer);
     }
 
     bool operator!=(const array<data_t, n_dims> & rhs) const
@@ -215,8 +215,8 @@ namespace ggo
     // Iterators helpers.
     data_t *        begin()       { return _buffer; }
     const data_t *  begin() const { return _buffer; }
-    data_t *        end()         { return _buffer + get_count(); }
-    const data_t *  end() const   { return _buffer + get_count(); }
+    data_t *        end()         { return _buffer + count(); }
+    const data_t *  end() const   { return _buffer + count(); }
 
     // Fill the array with a given value.
     void fill(const data_t & v)

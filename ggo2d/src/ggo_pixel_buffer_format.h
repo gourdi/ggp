@@ -21,6 +21,7 @@ namespace ggo
     y_64f_yd,
     rgb_8u_yu,
     rgb_8u_yd,
+    rgba_8u_yd,
     bgr_8u_yd,
     bgr_8u_yu,
     bgra_8u_yd,
@@ -160,6 +161,34 @@ namespace ggo
   };
 
   template <>
+  struct pixel_buffer_format_info<rgba_8u_yd>
+  {
+    static const int pixel_byte_size = 4;
+    static const pixel_buffer_format gray_pbf = y_8u_yd;
+
+    using color_t = ggo::alpha_color_8u;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
+
+    // Accessor interface.
+    using type = ggo::alpha_color_8u;
+
+    static ggo::alpha_color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::alpha_color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2], ptr_8u[3]);
+    }
+
+    static void write(void * ptr, const ggo::alpha_color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c.r();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.b();
+      ptr_8u[3] = c.a();
+    }
+  };
+
+  template <>
   struct pixel_buffer_format_info<rgb_32f_yu>
   {
     static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
@@ -247,24 +276,25 @@ namespace ggo
     static const int pixel_byte_size = 4;
     static const pixel_buffer_format gray_pbf = y_8u_yd;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::alpha_color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
 
     // Accessor interface.
     using type = ggo::color_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::alpha_color_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+      return ggo::alpha_color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0], ptr_8u[3]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::alpha_color_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
       ptr_8u[0] = c.b();
       ptr_8u[1] = c.g();
       ptr_8u[2] = c.r();
+      ptr_8u[3] = c.a();
     }
   };
 

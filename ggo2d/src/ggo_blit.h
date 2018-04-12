@@ -2,6 +2,7 @@
 #define __GGO_BLIT__
 
 #include <ggo_pixel_buffer.h>
+#include <ggo_blend.h>
 
 namespace ggo
 {
@@ -28,7 +29,7 @@ namespace ggo
 
     auto blend_func = [](const color_t_out & c_out, const color_t_in & c_in)
     {
-      return ggo::convert_color_to<color_t_out>(c_in);
+      return ggo::alpha_blend(c_out, c_in);
     };
 
     blit<pbf_in, pbf_out>(
@@ -106,7 +107,7 @@ namespace ggo
       {
         const auto color_in = ggo::read_pixel<pbf_in>(input_ptr);
         const auto color_out = ggo::read_pixel<pbf_out>(output_ptr);
-        const auto color_blended = blend_func(color_out, color_in);
+          const auto color_blended = blend_func(color_out, color_in);
 
         ggo::write_pixel<pbf_out>(output_ptr, color_blended);
 

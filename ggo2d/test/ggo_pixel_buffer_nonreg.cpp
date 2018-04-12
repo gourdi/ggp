@@ -128,12 +128,12 @@ GGO_TEST(pixel_buffer, bgra_8u_yd)
   GGO_CHECK_EQ(15, c.g());
   GGO_CHECK_EQ(14, c.b());
 
-  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 0, 2, 10, { uint8_t(30), uint8_t(31), uint8_t(32) });
-  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10, { uint8_t(40), uint8_t(41), uint8_t(42) });
+  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 0, 2, 10, { uint8_t(30), uint8_t(31), uint8_t(32), uint8_t(33) });
+  ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10, { uint8_t(40), uint8_t(41), uint8_t(42), uint8_t(43) });
 
   const std::vector<uint8_t> expected{
-    10, 11, 12, 13, 42, 41, 40, 17, 18, 19,
-    20, 21, 22, 23, 32, 31, 30, 27, 28, 29 };
+    10, 11, 12, 13, 42, 41, 40, 43, 18, 19,
+    20, 21, 22, 23, 32, 31, 30, 33, 28, 29 };
 
   GGO_CHECK(buffer == expected);
 }
