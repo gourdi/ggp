@@ -27,7 +27,8 @@ namespace ggo
   template <typename bkgd_color_t, typename brush_color_t>
   bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
   {
-    static_assert(ggo::color_traits<brush_color_t>::has_alpha == false);
+    //static_assert(ggo::color_traits<brush_color_t>::has_alpha == false);
+    GGO_ASSERT(ggo::color_traits<brush_color_t>::has_alpha == false); // Until all the functions are implemented...
 
     return ggo::convert_color_to<bkgd_color_t>(brush_color);
   }

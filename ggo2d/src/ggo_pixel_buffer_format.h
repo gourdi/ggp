@@ -347,6 +347,37 @@ namespace ggo
     case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
     }
   }
+
+  template <typename functor, pixel_buffer_format pbf1>
+  struct dispatch_pbf_aux
+  {
+    template <ggo::pixel_buffer_format pbf2, typename... args>
+    static auto call(args&&... a)
+    {
+      return functor::call<pbf1, pbf2>(std::forward<args>(a)...);
+    }
+  };
+
+  template <typename functor, typename... args>
+  auto dispatch_pbf(pixel_buffer_format pbf1, pixel_buffer_format pbf2, args&&... a)
+  {
+    switch (pbf1)
+    {
+    default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
+    case y_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, y_8u_yu>>(pbf2, std::forward<args>(a)...);
+    case y_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, y_8u_yd>>(pbf2, std::forward<args>(a)...);
+    case y_16u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, y_16u_yd>>(pbf2, std::forward<args>(a)...);
+    case y_32f_yu: return dispatch_pbf<dispatch_pbf_aux<functor, y_32f_yu>>(pbf2, std::forward<args>(a)...);
+    case rgb_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_8u_yu>>(pbf2, std::forward<args>(a)...);
+    case rgb_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_8u_yd>>(pbf2, std::forward<args>(a)...);
+    case rgba_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgba_8u_yd>>(pbf2, std::forward<args>(a)...);
+    case bgr_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, bgr_8u_yu>>(pbf2, std::forward<args>(a)...);
+    case bgr_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, bgr_8u_yd>>(pbf2, std::forward<args>(a)...);
+    case bgra_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, bgra_8u_yd>>(pbf2, std::forward<args>(a)...);
+    case rgb_16u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_16u_yd>>(pbf2, std::forward<args>(a)...);
+    case rgb_32f_yu: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_32f_yu>>(pbf2, std::forward<args>(a)...);
+    }
+  }
 }
 
 namespace ggo

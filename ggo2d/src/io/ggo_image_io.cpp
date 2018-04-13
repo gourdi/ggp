@@ -2,6 +2,7 @@
 #include "ggo_bmp.h"
 #include "ggo_tga.h"
 #include "ggo_jpg.h"
+#include "ggo_png.h"
 #include <ggo_file_helpers.h>
 
 namespace ggo
@@ -22,6 +23,10 @@ namespace ggo
     else if (extension == "jpg" || extension == "jpeg")
     {
       return load_jpg(filename);
+    }
+    else if (extension == "png")
+    {
+      return load_png(filename);
     }
     else
     {

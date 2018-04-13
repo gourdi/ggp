@@ -4,6 +4,7 @@
 
 namespace
 {
+  /////////////////////////////////////////////////////////////////////
   std::map<std::string, std::string> parse_parameters(const std::string & txt)
   {
     std::map<std::string, std::string> parameters;
@@ -33,35 +34,29 @@ namespace ggo
       throw std::runtime_error("empty command text");
     }
 
-    auto command_parameters = split(txt, ':');
-
-    // Check for a drive letter and if so, restore the filename.
-    if (filename_command == true && command_parameters[0].size() == 1 && command_parameters.size() > 1)
-    {
-      command_parameters[1] = command_parameters[0] + ':' + command_parameters[1];
-      command_parameters.erase(command_parameters.begin());
-    }
-
-    if (command_parameters.size() > 2)
-    {
-      throw std::runtime_error("more than 1 ':' in the command text");
-    }
-
     command result;
-    result._name = command_parameters[0];
 
-    switch (command_parameters.size())
+    size_t pos = txt.find(':');
+    if (pos == std::string::npos)
     {
-    case 1: // No parameters, only the command.
-      break;
-    case 2: // Parameters need to be parsed too.
-      result._parameters = parse_parameters(command_parameters[1]);
-      break;
-    default:
-      GGO_FAIL();
-      throw std::runtime_error("unexpected behavior");
-      break;
+      result._name = txt;
+      return result;
     }
+
+    // Handle file name command with a drive letter in it (like 'd:/foo.jpg').
+    if (filename_command == true && pos == 1)
+    {
+      pos = txt.find(':', pos + 1);
+    }
+
+    result._name = txt.substr(0, pos);
+    if (pos == std::string::npos)
+    {
+      return result;
+    }
+
+    std::string parameters = txt.substr(pos + 1);
+    result._parameters = parse_parameters(parameters);
 
     return result;
   }
