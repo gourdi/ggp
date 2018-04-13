@@ -2,12 +2,11 @@
 #include <ggo_string_helpers.h>
 #include <ggo_kernel.h>
 
-namespace
+namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  std::map<std::string, std::string> parse_parameters(const std::string & txt)
+  parameters::parameters(const std::string & txt)
   {
-    std::map<std::string, std::string> parameters;
     auto s = ggo::split(txt, ';');
 
     for (const auto & parameter : s)
@@ -18,29 +17,23 @@ namespace
         throw std::runtime_error(std::string("invalid parameter: '") + parameter + "'");
       }
 
-      parameters[key_value[0]] = key_value[1];
+      _parameters[key_value[0]] = key_value[1];
     }
-
-    return parameters;
   }
-}
 
-namespace ggo
-{
-  command parse_command(const std::string & txt, bool filename_command)
+  /////////////////////////////////////////////////////////////////////
+  command::command(const std::string & txt, bool filename_command) : _parameters("")
   {
     if (txt.empty() == true)
     {
       throw std::runtime_error("empty command text");
     }
 
-    command result;
-
     size_t pos = txt.find(':');
     if (pos == std::string::npos)
     {
-      result._name = txt;
-      return result;
+      _name = txt;
+      return;
     }
 
     // Handle file name command with a drive letter in it (like 'd:/foo.jpg').
@@ -49,15 +42,48 @@ namespace ggo
       pos = txt.find(':', pos + 1);
     }
 
-    result._name = txt.substr(0, pos);
-    if (pos == std::string::npos)
+    _name = txt.substr(0, pos);
+
+    if (pos != std::string::npos)
     {
-      return result;
+      _parameters = ggo::parameters(txt.substr(pos + 1));
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  int parse_position(const parameters & params, int image_size, int rect_size, const std::string & key)
+  {
+    auto pos_param = params[key];
+
+    if (!pos_param || pos_param->empty() == true)
+    {
+      throw std::runtime_error("missing or empty '" + key + "' parameter");
     }
 
-    std::string parameters = txt.substr(pos + 1);
-    result._parameters = parse_parameters(parameters);
-
-    return result;
+    // Pixel coordinate.
+    if (pos_param->size() > 2 && pos_param->substr(pos_param->size() - 2) == "px")
+    {
+      // Right align.
+      if (pos_param->front() == '-')
+      {
+        return image_size - rect_size - ggo::to<int>(pos_param->substr(1, pos_param->size() - 3));
+      }
+      // Left align.
+      else
+      {
+        return ggo::to<int>(pos_param->substr(0, pos_param->size() - 2));
+      }
+    }
+    // Percentage.
+    else if (pos_param->back() == '%')
+    {
+      float percent = ggo::to<float>(pos_param->substr(0, pos_param->size() - 1));
+      return ggo::round_to<int>(percent * (image_size - rect_size) / 100.f);
+    }
+    else
+    {
+      throw std::runtime_error("invalid value '" + *pos_param + "' for key '" + key + "', must specify either 'px' or '%'");
+      return 0;
+    }
   }
 }

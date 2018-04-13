@@ -14,14 +14,14 @@ namespace ggo
   {
     for (auto it = begin; it != end; ++it)
     {
-      auto command = parse_command(*it);
-      if (command._name == "blit")
+      command cmd(*it);
+      if (cmd.name() == "blit")
       {
-        blit(image, command._parameters);
+        blit(image, cmd.parameters());
       }
       else
       {
-        throw std::runtime_error("unexpected command '" + command._name + "'");
+        throw std::runtime_error("unexpected command '" + cmd.name() + "'");
       }
     }
   }
@@ -60,6 +60,10 @@ int main(int argc, char ** argv)
     if (image_loaded == false)
     {
       std::cerr << ggo::red_color << "failed loading image '" << args.front() << "': " << e.what() << ggo::default_color << std::endl;
+    }
+    else if (image_processed == false)
+    {
+      std::cerr << ggo::red_color << "failed processing image '" << args.back() << "': " << e.what() << ggo::default_color << std::endl;
     }
     else if (image_saved == false)
     {

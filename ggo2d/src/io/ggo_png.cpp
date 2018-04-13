@@ -39,11 +39,5 @@ namespace ggo
 
     return pixels;
   }
-
-  //////////////////////////////////////////////////////////////
-  bool save_png(const std::string & filename, int quality, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_byte_step)
-  {
-    return false;
-  }
 }
 

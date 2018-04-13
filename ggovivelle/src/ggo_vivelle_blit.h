@@ -7,8 +7,9 @@
 namespace ggo
 {
   class pixel_buffer;
+  class parameters;
 
-  void blit(ggo::pixel_buffer & image, std::map<std::string, std::string> & parameters);
+  void blit(ggo::pixel_buffer & image, const parameters & params);
 }
 
 #endif

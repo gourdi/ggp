@@ -18,41 +18,41 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   void save(const std::string & output_command, const ggo::pixel_buffer & image)
   {
-    auto command = ggo::parse_command(output_command, true);
+    command cmd(output_command, true);
 
     bool io_success = true;
-    std::string extension = ggo::get_file_extension(command._name);
+    std::string extension = ggo::get_file_extension(cmd.name());
     if (extension == "bmp")
     {
-      if (command._parameters.empty() == false)
+      if (cmd.parameters().empty() == false)
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_bmp(command._name, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_bmp(cmd.name(), image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == "tga")
     {
-      if (command._parameters.empty() == false)
+      if (cmd.parameters().empty() == false)
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_tga(command._name, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_tga(cmd.name(), image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == "jpg" || extension == "jpeg")
     {
       int quality = 95;
-      switch (command._parameters.size())
+      switch (cmd.parameters().size())
       {
       case 0:
         break;
       case 1:
-        if (command.has_key("q") == true)
+        if (auto quality_param = cmd["q"])
         {
-          quality = ggo::to<int>(command._parameters["q"]);
+          quality = ggo::to<int>(*quality_param);
         }
-        else if (command.has_key("quality") == true)
+        if (auto quality_param = cmd["quality"])
         {
-          quality = ggo::to<int>(command._parameters["quality"]);
+          quality = ggo::to<int>(*quality_param);
         }
         else
         {
@@ -68,7 +68,7 @@ namespace ggo
         throw std::runtime_error("invalid output command");
         break;
       }
-      io_success = ggo::save_jpg(command._name, quality, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_jpg(cmd.name(), quality, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
     }
     else
     {
