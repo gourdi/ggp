@@ -32,12 +32,11 @@ namespace ggo
 
     auto blit_pixels = load_image(*file);
 
-    int x = parse_margin(params, image.width(),  blit_pixels.width(),  "horz_pos");
-    int y = parse_margin(params, image.height(), blit_pixels.height(), "vert_pos");
+    ggo::pos2i pos = parse_margins(params, image.width(), image.height(), blit_pixels.width(), blit_pixels.height(), "margins");
 
     ggo::dispatch_pbf<blit_dispatch>(blit_pixels.pbf(), image.pbf(),
       blit_pixels.data(), blit_pixels.width(), blit_pixels.height(), blit_pixels.line_byte_step(),
       image.data(), image.width(), image.height(), image.line_byte_step(),
-      x, y);
+      pos.x(), pos.y());
   }
 }

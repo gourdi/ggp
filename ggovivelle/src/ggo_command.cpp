@@ -1,6 +1,7 @@
 #include "ggo_command.h"
 #include <ggo_string_helpers.h>
 #include <ggo_kernel.h>
+#include <ggo_rect_int.h>
 
 namespace ggo
 {
@@ -51,39 +52,52 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  int parse_margin(const parameters & params, int image_size, int content_size, const std::string & key)
+  ggo::pos2i parse_margins(const parameters & params, int image_width, int image_height, int content_width, int content_height, const std::string & key)
   {
-    auto pos_param = params[key];
-
-    if (!pos_param || pos_param->empty() == true)
+    auto margins_param = params[key];
+    if (!margins_param || margins_param->empty() == true)
     {
       throw std::runtime_error("missing or empty '" + key + "' parameter");
     }
 
-    // Pixel coordinate.
-    if (pos_param->size() > 2 && pos_param->substr(pos_param->size() - 2) == "px")
+    auto margins = ggo::split(*margins_param, ',');
+    if (margins.size() != 2)
     {
-      // Right align.
-      if (pos_param->front() == '-')
+      throw std::runtime_error("expecting 2 values for the parameter '" + key + "'");
+    }
+
+    auto parse_margin = [& key](const std::string & margin, int image, int content)
+    {
+      // Pixel coordinate.
+      if (margin.size() > 2 && margin.substr(margin.size() - 2) == "px")
       {
-        return image_size - content_size - ggo::to<int>(pos_param->substr(1, pos_param->size() - 3));
+        // Right align.
+        if (margin.front() == '-')
+        {
+          return image - content - ggo::to<int>(margin.substr(1, margin.size() - 3));
+        }
+        // Left align.
+        else
+        {
+          return ggo::to<int>(margin.substr(0, margin.size() - 2));
+        }
       }
-      // Left align.
+      // Percentage.
+      else if (margin.back() == '%')
+      {
+        float percent = ggo::to<float>(margin.substr(0, margin.size() - 1));
+        return ggo::round_to<int>(percent * (image - content) / 100.f);
+      }
       else
       {
-        return ggo::to<int>(pos_param->substr(0, pos_param->size() - 2));
+        throw std::runtime_error("invalid value '" + margin + "' for key '" + key + "', must specify either 'px' or '%'");
+        return 0;
       }
-    }
-    // Percentage.
-    else if (pos_param->back() == '%')
-    {
-      float percent = ggo::to<float>(pos_param->substr(0, pos_param->size() - 1));
-      return ggo::round_to<int>(percent * (image_size - content_size) / 100.f);
-    }
-    else
-    {
-      throw std::runtime_error("invalid value '" + *pos_param + "' for key '" + key + "', must specify either 'px' or '%'");
-      return 0;
-    }
+    };
+
+    int x = parse_margin(margins[0], image_width, content_width);
+    int y = parse_margin(margins[1], image_height, content_height);
+
+    return { x, y };
   }
 }

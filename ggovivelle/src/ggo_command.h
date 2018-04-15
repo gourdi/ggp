@@ -48,7 +48,9 @@ namespace ggo
     ggo::parameters _parameters;
   };
 
-  int parse_margin(const parameters & params, int image_size, int content_size, const std::string & key);
+  class rect_int;
+
+  ggo::pos2i parse_margins(const parameters & params, int image_width, int image_height, int content_width, int content_height, const std::string & key);
 }
 
 #endif
