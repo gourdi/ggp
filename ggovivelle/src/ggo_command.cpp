@@ -51,7 +51,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  int parse_position(const parameters & params, int image_size, int rect_size, const std::string & key)
+  int parse_margin(const parameters & params, int image_size, int content_size, const std::string & key)
   {
     auto pos_param = params[key];
 
@@ -66,7 +66,7 @@ namespace ggo
       // Right align.
       if (pos_param->front() == '-')
       {
-        return image_size - rect_size - ggo::to<int>(pos_param->substr(1, pos_param->size() - 3));
+        return image_size - content_size - ggo::to<int>(pos_param->substr(1, pos_param->size() - 3));
       }
       // Left align.
       else
@@ -78,7 +78,7 @@ namespace ggo
     else if (pos_param->back() == '%')
     {
       float percent = ggo::to<float>(pos_param->substr(0, pos_param->size() - 1));
-      return ggo::round_to<int>(percent * (image_size - rect_size) / 100.f);
+      return ggo::round_to<int>(percent * (image_size - content_size) / 100.f);
     }
     else
     {

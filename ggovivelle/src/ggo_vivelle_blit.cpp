@@ -32,8 +32,8 @@ namespace ggo
 
     auto blit_pixels = load_image(*file);
 
-    int x = parse_position(params, image.width(),  blit_pixels.width(),  "horz_pos");
-    int y = parse_position(params, image.height(), blit_pixels.height(), "vert_pos");
+    int x = parse_margin(params, image.width(),  blit_pixels.width(),  "horz_pos");
+    int y = parse_margin(params, image.height(), blit_pixels.height(), "vert_pos");
 
     ggo::dispatch_pbf<blit_dispatch>(blit_pixels.pbf(), image.pbf(),
       blit_pixels.data(), blit_pixels.width(), blit_pixels.height(), blit_pixels.line_byte_step(),

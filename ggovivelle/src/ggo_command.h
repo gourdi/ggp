@@ -48,7 +48,7 @@ namespace ggo
     ggo::parameters _parameters;
   };
 
-  int parse_position(const parameters & params, int image_size, int rect_size, const std::string & key);
+  int parse_margin(const parameters & params, int image_size, int content_size, const std::string & key);
 }
 
 #endif

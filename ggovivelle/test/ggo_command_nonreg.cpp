@@ -46,17 +46,17 @@ GGO_TEST(command, filename)
 GGO_TEST(command, parse_position)
 {
   // Pixel coordinate, left align.
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=0px"), 10, 4, "p"), 0);
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=1px"), 10, 4, "p"), 1);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=0px"), 10, 4, "p"), 0);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=1px"), 10, 4, "p"), 1);
 
   // Pixel coordinate, right align.
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=-0px"), 10, 4, "p"), 6);
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=-1px"), 10, 4, "p"), 5);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=-0px"), 10, 4, "p"), 6);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=-1px"), 10, 4, "p"), 5);
 
   // Percentage.
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=0%"), 10, 4, "p"), 0);
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=50%"), 10, 4, "p"), 3);
-  GGO_CHECK_EQ(ggo::parse_position(ggo::parameters("p=100%"), 10, 4, "p"), 6);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=0%"), 10, 4, "p"), 0);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=50%"), 10, 4, "p"), 3);
+  GGO_CHECK_EQ(ggo::parse_margin(ggo::parameters("p=100%"), 10, 4, "p"), 6);
 }
 
 
