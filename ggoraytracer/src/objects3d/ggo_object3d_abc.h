@@ -1,7 +1,7 @@
 #ifndef __GGO_OBJECT3D_ABC__
 #define __GGO_OBJECT3D_ABC__
 
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <ggo_color.h>
 #include <ggo_raytracer_global.h>
 #include <ggo_raytracer.h>

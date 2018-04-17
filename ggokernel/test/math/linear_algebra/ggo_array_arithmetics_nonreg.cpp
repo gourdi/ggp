@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_array_arithmetics.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/linear_algebra/ggo_array_arithmetics.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, multiply1)

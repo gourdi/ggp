@@ -1,5 +1,5 @@
 #include <array>
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_marching_cubes.h>
 #include <ggo_buffer.h>
 #include <ggo_bmp.h>

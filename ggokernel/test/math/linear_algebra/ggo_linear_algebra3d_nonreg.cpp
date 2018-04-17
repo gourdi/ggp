@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_linear_algebra3d.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/linear_algebra/ggo_linear_algebra3d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(linear_algebra3d, solution)

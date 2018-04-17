@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_velocity_path.h>
 #include <ggo_spiral_path.h>
 

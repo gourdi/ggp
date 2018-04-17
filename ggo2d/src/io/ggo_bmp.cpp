@@ -1,6 +1,6 @@
 #include "ggo_bmp.h"
 #include <ggo_buffer.h>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_file_helpers.h>
 #include <ggo_color.h>
 #include <fstream>

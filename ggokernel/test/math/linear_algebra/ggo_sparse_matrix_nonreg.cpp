@@ -1,7 +1,7 @@
-#include <ggo_nonreg.h>
-#include <ggo_sparse_matrix.h>
-#include <ggo_array.h>
-#include <ggo_linear_algebra.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/linear_algebra/ggo_sparse_matrix.h>
+#include <kernel/math/linear_algebra/ggo_linear_algebra.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(sparse_matrix, sparse_matrix)

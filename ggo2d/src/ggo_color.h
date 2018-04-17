@@ -2,8 +2,8 @@
 #define __GGO_COLOR__
 
 #include <stdint.h>
-#include <ggo_kernel.h>
-#include <ggo_vec.h>
+#include <kernel/ggo_kernel.h>
+#include <kernel/ggo_vec.h>
 #include <sstream>
 #include <string>
 

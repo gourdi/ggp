@@ -1,5 +1,5 @@
 #include "../../ggo_kernel_nonreg.h"
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 
 /////////////////////////////////////////////////////////////////////  
 GGO_TEST(rectangle3d, ray_intersection)

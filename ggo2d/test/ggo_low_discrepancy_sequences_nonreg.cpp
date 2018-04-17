@@ -1,6 +1,6 @@
 #include <sstream>
 #include <ggo_buffer.h>
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_halton.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_paint.h>

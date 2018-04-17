@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_morphology.h>
-#include <ggo_buffer.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_morphology.h>
+#include <kernel/memory/ggo_buffer.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(morphology, dilatation_rectangle)

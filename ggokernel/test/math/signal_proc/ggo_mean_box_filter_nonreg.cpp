@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_mean_box_filter.h>
-#include <ggo_buffer_iterator.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_mean_box_filter.h>
+#include <kernel/memory/ggo_buffer_iterator.h>
 #include <vector>
 
 /////////////////////////////////////////////////////////////////////

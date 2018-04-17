@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 using namespace std;
 
 //////////////////////////////////////////////////////////////

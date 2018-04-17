@@ -2,7 +2,7 @@
 #define __GGO_RAYTRACER_GLOBAL__
 
 #include <ggo_color.h>
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 
 namespace ggo
 {

@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_circular_buffer.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/memory/ggo_circular_buffer.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(circular_buffer, general_test)

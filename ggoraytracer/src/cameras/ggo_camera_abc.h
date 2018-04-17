@@ -2,7 +2,7 @@
 #define __GGO_CAMERA_ABC__
 
 #include <array>
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 
 namespace ggo
 {

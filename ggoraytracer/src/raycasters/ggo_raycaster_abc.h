@@ -2,7 +2,7 @@
 #define __GGO_RAYCASTER_ABC__
 
 #include <optional>
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <ggo_raytracer_global.h>
 
 // Important note : a raycaster MUST be thread safe.

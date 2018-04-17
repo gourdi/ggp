@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_downscaling.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_downscaling.h>
 #include <array>
 
 /////////////////////////////////////////////////////////////////////

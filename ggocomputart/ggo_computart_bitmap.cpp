@@ -1,5 +1,5 @@
 #include "ggo_bitmap_artist_abc.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_bmp.h>
 #include <ggo_chronometer.h>
 #include <ggo_array.h>

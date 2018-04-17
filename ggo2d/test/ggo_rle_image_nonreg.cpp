@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_rle_image.h>
 #include <ggo_bmp.h>
 

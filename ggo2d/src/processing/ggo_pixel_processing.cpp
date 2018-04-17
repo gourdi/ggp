@@ -2,7 +2,7 @@
 
 #include "ggo_pixel_processing.h"
 #include "ggo_color_reduction.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_helpers.h>
 #include <ggo_math.h>
 #include <ggo_histogram.h>

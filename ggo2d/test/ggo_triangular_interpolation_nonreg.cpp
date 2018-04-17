@@ -1,8 +1,8 @@
 #if 0 
 
 #include <memory>
-#include <ggo_nonreg.h>
-#include <ggo_vec.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_vec.h>
 #include <ggo_shapes2d.h>
 #include <ggo_triangle_interpolation.h>
 #include <ggo_triangle_interpolation_brush.h>

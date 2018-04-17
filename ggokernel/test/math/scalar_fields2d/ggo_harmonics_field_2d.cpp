@@ -1,7 +1,7 @@
-#include <ggo_nonreg.h>
-#include <ggo_vec.h>
-#include <ggo_kernel.h>
-#include <ggo_harmonics_field_2d.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_vec.h>
+#include <kernel/ggo_kernel.h>
+#include <kernel/math/scalar_fields_2d/ggo_harmonics_field_2d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(harmonics_field_2d, harmonic_surface)

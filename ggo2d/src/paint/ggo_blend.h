@@ -1,7 +1,7 @@
 #ifndef __GGO_BLENDER__
 #define __GGO_BLENDER__
 
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_color.h>
 
 /////////////////////////////////////////////////////////////////////

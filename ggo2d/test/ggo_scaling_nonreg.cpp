@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_buffer2d.h>
-#include <ggo_scale2d.h>
+#include <kernel/math/shapes_2d/ggo_scale2d.h>
 #include <ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////

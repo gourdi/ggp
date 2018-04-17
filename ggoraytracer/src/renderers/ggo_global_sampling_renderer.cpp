@@ -1,5 +1,5 @@
 #include "ggo_global_sampling_renderer.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_best_candidate_sequence.h>
 #include <ggo_raytracer.h>
 

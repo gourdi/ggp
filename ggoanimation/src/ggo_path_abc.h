@@ -1,7 +1,7 @@
 #ifndef __GGO_PATH_ABC__
 #define __GGO_PATH_ABC__
 
-#include <ggo_vec.h>
+#include <kernel/ggo_vec.h>
 
 namespace ggo
 {

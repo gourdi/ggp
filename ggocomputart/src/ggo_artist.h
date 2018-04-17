@@ -1,7 +1,7 @@
 #ifndef __GGO_ARTIST_ABC__
 #define __GGO_ARTIST_ABC__
 
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
 #include <ggo_shapes2d.h>
 #include <ggo_ease.h>

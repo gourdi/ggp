@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_shape_sampling.h>
 #include <ggo_buffer.h>
 #include <ggo_poisson_sampling.h>

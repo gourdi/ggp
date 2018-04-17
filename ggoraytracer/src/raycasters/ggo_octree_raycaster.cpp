@@ -1,7 +1,7 @@
 #include "ggo_octree_raycaster.h"
 #include <ggo_object3d_abc.h>
 #include <ggo_scene.h>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <map>
 
 namespace

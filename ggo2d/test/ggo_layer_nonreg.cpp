@@ -1,5 +1,5 @@
 #if 0
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_paint.h>
 #include <ggo_layer.h>
 #include <ggo_bmp.h>

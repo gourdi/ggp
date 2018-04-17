@@ -3,7 +3,7 @@
 
 #include <ggo_image_format.h>
 #include <ggo_rect_int.h>
-#include <ggo_size.h>
+#include <kernel/ggo_size.h>
 
 namespace ggo
 {

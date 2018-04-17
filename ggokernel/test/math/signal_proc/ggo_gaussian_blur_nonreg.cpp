@@ -1,9 +1,9 @@
 //#define GGO_GAUSSIAN_DEBUG 1
 
-#include <ggo_nonreg.h>
-#include <ggo_gaussian_blur.h>
-#include <ggo_memory_layouts.h>
-#include <ggo_edges_management.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_gaussian_blur.h>
+#include <kernel/memory/ggo_memory_layouts.h>
+#include <kernel/memory/ggo_edges_management.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, kernel_floating_point)

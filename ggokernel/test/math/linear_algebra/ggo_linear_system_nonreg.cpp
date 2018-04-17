@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_gauss_seidel.h>
-#include <ggo_conjugate_gradient.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/linear_algebra/ggo_gauss_seidel.h>
+#include <kernel/math/linear_algebra/ggo_conjugate_gradient.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(linear_system, gauss_seidel_2x2)

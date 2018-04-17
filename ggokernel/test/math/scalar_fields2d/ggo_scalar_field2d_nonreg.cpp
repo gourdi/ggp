@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_shapes2d.h>
-#include <ggo_shape_field_2d.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
+#include <kernel/math/scalar_fields_2d/ggo_shape_field_2d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scalar_field2d, shape_field2d)

@@ -1,5 +1,5 @@
 #include "ggo_smoke_animation_artist.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_pbf_fill.h>
 

@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_coordinates_conversions.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/ggo_coordinates_conversions.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(coordinates_conversions, from_pixel_to_math_point)

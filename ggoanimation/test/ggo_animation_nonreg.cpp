@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 
 /////////////////////////////////////////////////////////////////////
 int main(int argc, char ** argv)

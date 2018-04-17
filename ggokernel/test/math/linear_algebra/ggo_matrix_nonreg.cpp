@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_matrix.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/linear_algebra/ggo_matrix.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(matrix, access)

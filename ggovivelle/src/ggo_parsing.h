@@ -1,8 +1,8 @@
 #ifndef __GGO_PARSING__
 #define __GGO_PARSING__
 
-#include <ggo_vec.h>
-#include <ggo_size.h>
+#include <kernel/ggo_vec.h>
+#include <kernel/ggo_size.h>
 
 namespace ggo
 {

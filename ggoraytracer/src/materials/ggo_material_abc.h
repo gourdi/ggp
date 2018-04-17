@@ -1,7 +1,7 @@
 #ifndef __GGO_MATERIAL_ABC__
 #define __GGO_MATERIAL_ABC__
 
-#include <ggo_vec.h>
+#include <kernel/ggo_vec.h>
 #include <ggo_color.h>
 
 namespace ggo

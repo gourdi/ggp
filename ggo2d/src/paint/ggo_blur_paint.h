@@ -2,7 +2,7 @@
 #define __GGO_BLUR_PAINT__
 
 #include <vector>
-#include <ggo_vec.h>
+#include <kernel/ggo_vec.h>
 #include <ggo_coordinates_conversions.h>
 
 namespace ggo

@@ -1,5 +1,5 @@
-#include "ggo_nonreg.h"
-#include <ggo_quadratic.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/ggo_quadratic.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(quadratic_solve, quadratic_solve)

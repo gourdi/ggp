@@ -2,7 +2,7 @@
 #define __GGO_FILLING_SQUARES_ARTIST__
 
 #include <vector>
-#include <ggo_vec.h>
+#include <kernel/ggo_vec.h>
 #include <ggo_color.h>
 
 namespace ggo

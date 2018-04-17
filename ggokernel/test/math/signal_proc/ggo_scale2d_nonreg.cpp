@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_scale2d.h>
-#include <ggo_buffer2d.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_scale2d.h>
+#include <kernel/memory/ggo_buffer2d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scale2d, nearest_neighbor_upsample)
@@ -10,7 +10,7 @@ GGO_TEST(scale2d, nearest_neighbor_upsample)
     { 4, 5, 6 } };
   ggo::buffer2d_32s output(6, 4);
 
-  ggo::scale_2d<ggo::scaling_algo::nearest_neighbor>(
+  ggo::scale_2d<ggo::scaling_algo::nearest_neighbor, ggo::scaling_algo::nearest_neighbor>(
     input.data(), input.width(), input.height(), input.line_byte_step(),
     output.data(), output.width(), output.height(), output.line_byte_step());
 
@@ -32,7 +32,7 @@ GGO_TEST(scale2d, linear_upsample)
       { 4.f, 5.f, 6.f } };
     ggo::buffer2d_32f output(5, 3);
 
-    ggo::scale_2d<ggo::scaling_algo::linear_integration>(
+    ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
       input.data(), input.width(), input.height(), input.line_byte_step(),
       output.data(), output.width(), output.height(), output.line_byte_step());
 
@@ -50,7 +50,7 @@ GGO_TEST(scale2d, linear_upsample)
       { 1.f, 1.f, 2.f } };
     ggo::buffer2d_32f output(6, 4);
 
-    ggo::scale_2d<ggo::scaling_algo::linear_integration>(
+    ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
       input.data(), input.width(), input.height(), input.line_byte_step(),
       output.data(), output.width(), output.height(), output.line_byte_step());
 

@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_link.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_link.h>
 
 GGO_TEST(link, equality)
 {

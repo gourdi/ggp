@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_buffer_iterator.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/memory/ggo_buffer_iterator.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(buffer_iterator, stride_iterator_read_only)

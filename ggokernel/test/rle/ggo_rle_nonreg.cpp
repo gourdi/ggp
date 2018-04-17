@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_rle.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/rle/ggo_rle.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rle, same_value)

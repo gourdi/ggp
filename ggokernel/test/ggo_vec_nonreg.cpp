@@ -1,5 +1,5 @@
 #include "ggo_kernel_nonreg.h"
-#include <ggo_vec.h>
+#include <kernel/ggo_vec.h>
 #include <sstream>
 
 /////////////////////////////////////////////////////////////////////

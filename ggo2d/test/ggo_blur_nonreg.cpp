@@ -1,6 +1,6 @@
 //#define GGO_GAUSSIAN_DEBUG 1
 
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_chronometer.h>
 #include <blur/ggo_gaussian_blur.h>
 #include <blur/ggo_mean_box_blur.h>

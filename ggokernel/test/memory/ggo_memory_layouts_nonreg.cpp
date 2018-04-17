@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_memory_layouts.h>
-#include <ggo_data_access.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/memory/ggo_memory_layouts.h>
+#include <kernel/memory/ggo_data_access.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(memory_layouts, get_xy_ptr)

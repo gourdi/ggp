@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_kernel.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_kernel.h>
 #include <array>
 
 /////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_file_helpers.h>
+#include <kernel/ggo_file_helpers.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(file_helpers, extension)

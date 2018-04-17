@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_marching_squares.h>
 #include <ggo_color.h>
 #include <ggo_paint.h>

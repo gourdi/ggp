@@ -1,5 +1,5 @@
 #include "ggo_distorsion_animation_artist.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_fill.h>
 
 namespace 

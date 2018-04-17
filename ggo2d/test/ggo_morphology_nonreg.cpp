@@ -1,4 +1,4 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_buffer.h>
 #include <ggo_fill.h>
 #include <ggo_morphology.h>

@@ -1,5 +1,5 @@
 #include "ggo_toutouyoutou_animation_artist.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_pbf_fill.h>
 #include <ggo_pbf_paint.h>
 #include <ggo_morphology.h>

@@ -2,7 +2,7 @@
 #define __GGO_KAME_ANIM_ARTIST__
 
 #include "ggo_animation_artist_abc.h"
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <ggo_random_interpolator_abc.h>
 #include <ggo_link.h>
 #include <memory>

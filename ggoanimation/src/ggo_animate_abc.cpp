@@ -1,5 +1,5 @@
 #include "ggo_animate_abc.h"
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 
 //////////////////////////////////////////////////////////////
 bool ggo::animate_abc::update()

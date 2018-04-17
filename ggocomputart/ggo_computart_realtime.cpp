@@ -3,7 +3,7 @@
 #include <thread>
 #include <atomic>
 #include <ggo_log.h>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_signal.h>
 #include <ggo_buffer_paint.h>
 #include <ggo_buffer_fill.h>

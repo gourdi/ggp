@@ -1,7 +1,7 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
+#include <kernel/math/interpolation/ggo_interpolation2d.h>
 #include <array>
-#include <ggo_interpolation1d.h>
-#include <ggo_interpolation2d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(interpolation2d, bilinear)

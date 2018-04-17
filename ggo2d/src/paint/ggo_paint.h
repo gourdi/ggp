@@ -2,7 +2,7 @@
 #define __GGO_PAINT__
 
 #include <vector>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_image_format.h>
 #include <ggo_pixel_sampling.h>
 #include <ggo_shapes2d.h>

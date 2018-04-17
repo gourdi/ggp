@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_shapes3d.h>
-#include <ggo_octree.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
+#include <kernel/trees/ggo_octree.h>
 
 namespace 
 {

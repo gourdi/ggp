@@ -2,10 +2,9 @@ include(../cmake/ggp.cmake)
 
 # The static library.
 get_sources_from_root_directory("src" sources)
-get_subdirectories("src" dirs)
 group_sources(${sources})
 add_library(ggokernel STATIC ${sources})
-target_include_directories(ggokernel PUBLIC ${dirs})
+target_include_directories(ggokernel PUBLIC "src/")
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

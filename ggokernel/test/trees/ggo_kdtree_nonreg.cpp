@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_kdtree.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/trees/ggo_kdtree.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(trees, kdtree)

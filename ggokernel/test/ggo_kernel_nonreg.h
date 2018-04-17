@@ -2,8 +2,8 @@
 #define __GGO_KERNEL_NON_REG__
 
 #include <vector>
-#include <ggo_nonreg.h>
-#include <ggo_shapes2d.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 
 /////////////////////////////////////////////////////////////////////
 inline bool find_point(const std::vector<ggo::pos2f> & v, const ggo::pos2f & p)

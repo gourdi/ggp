@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_rect_int.h>
+#include <kernel/ggo_rect_int.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rect_int, clip_rect)

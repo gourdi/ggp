@@ -1,6 +1,6 @@
 #include "ggo_command.h"
 #include <ggo_string_helpers.h>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 #include <ggo_rect_int.h>
 
 namespace ggo

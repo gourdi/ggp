@@ -4,7 +4,7 @@
 // Height is the "reference" dimension, ie. if width and height are not the same,
 // computations are made according to the height value.
 
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <ggo_color.h>
 #include <ggo_raytracer_global.h>
 

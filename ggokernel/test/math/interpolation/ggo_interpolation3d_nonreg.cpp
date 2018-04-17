@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/interpolation/ggo_interpolation3d.h>
 #include <array>
-#include <ggo_interpolation3d.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(interpolation3d, test)

@@ -1,6 +1,6 @@
 #include "ggo_demeco_bitmap_artist.h"
 #include <memory>
-#include <ggo_shapes3d.h>
+#include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <ggo_scene.h>
 #include <ggo_background3d_color.h>
 #include <ggo_mono_sampling_renderer.h>

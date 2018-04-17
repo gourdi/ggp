@@ -1,5 +1,5 @@
 #include "ggo_scaling.h"
-#include <ggo_scale2d.h>
+#include <kernel/math/shapes_2d/ggo_scale2d.h>
 
 namespace ggo
 {

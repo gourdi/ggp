@@ -1,7 +1,7 @@
 #include "../ggo_kernel_nonreg.h"
-#include <ggo_grid_sampling.h>
-#include <ggo_halton.h>
-#include <ggo_best_candidate_sequence.h>
+#include <kernel/math/sampling/shape_sampling/ggo_grid_sampling.h>
+#include <kernel/math/sampling/low_discrepancy_sequences/ggo_halton.h>
+#include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(sampling, disc)

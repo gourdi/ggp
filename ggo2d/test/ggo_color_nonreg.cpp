@@ -1,7 +1,7 @@
-#include <ggo_nonreg.h>
+#include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_curve.h>
 #include <ggo_color.h>
-#include <ggo_kernel.h>
+#include <kernel/ggo_kernel.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(color, operators)

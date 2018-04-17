@@ -1,8 +1,8 @@
 #ifndef __GGO_DUFFING__
 #define __GGO_DUFFING__
 
-#include <ggo_kernel.h>
-#include <ggo_vec.h>
+#include <kernel/ggo_kernel.h>
+#include <kernel/ggo_vec.h>
 
 namespace ggo
 {

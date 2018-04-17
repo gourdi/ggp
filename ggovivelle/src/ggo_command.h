@@ -4,8 +4,8 @@
 #include <string>
 #include <map>
 #include <optional>
-#include <ggo_vec.h>
-#include <ggo_size.h>
+#include <kernel/ggo_vec.h>
+#include <kernel/ggo_size.h>
 
 namespace ggo
 {

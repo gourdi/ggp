@@ -1,7 +1,7 @@
-#include <ggo_nonreg.h>
-#include <ggo_convolution.h>
-#include <ggo_edges_management.h>
-#include <ggo_memory_layouts.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_convolution.h>
+#include <kernel/memory/ggo_edges_management.h>
+#include <kernel/memory/ggo_memory_layouts.h>
 #include <array>
 
 /////////////////////////////////////////////////////////////////////

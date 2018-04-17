@@ -1,5 +1,5 @@
 #include "ggo_kernel_nonreg.h"
-#include <ggo_value.h>
+#include <kernel/ggo_value.h>
 #include <list>
 
 /////////////////////////////////////////////////////////////////////

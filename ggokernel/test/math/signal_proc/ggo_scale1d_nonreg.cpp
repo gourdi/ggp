@@ -1,6 +1,6 @@
-#include <ggo_nonreg.h>
-#include <ggo_scale1d.h>
-#include <ggo_buffer.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/signal_proc/ggo_scale1d.h>
+#include <kernel/memory/ggo_buffer.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scale1d, nearest_neighbor_upsample)
