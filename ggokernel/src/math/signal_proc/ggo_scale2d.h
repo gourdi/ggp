@@ -8,10 +8,10 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename real_t, typename input, typename output>
+  template <scaling_algo horz_algo, scaling_algo vert_algo, typename data_t, typename real_t, typename input, typename output>
   void scale_2d(input in, int width_in, int height_in, output out, int width_out, int height_out)
   {
-    if constexpr(algo == scaling_algo::nearest_neighbor)
+    if constexpr(horz_algo == scaling_algo::nearest_neighbor && vert_algo == scaling_algo::nearest_neighbor)
     {
       for (int y = 0; y < height_out; ++y)
       {
@@ -33,6 +33,10 @@ namespace ggo
       {
         auto horz_in = [&](int x)
         {
+          if constexpr(horz_algo == scaling_algo::cubic_integration)
+          {
+            x = ggo::clamp<int>(x, 0, static_cast<int>(width_in - 1));
+          }
           return in(x, y); 
         };
 
@@ -41,7 +45,7 @@ namespace ggo
           temp(x, y) = v;
         };
 
-        scale_1d<algo, data_t, real_t>(horz_in, width_in, horz_out, width_out);
+        scale_1d<horz_algo, data_t, real_t>(horz_in, width_in, horz_out, width_out);
       }
 
       // Second pass to scale vertically.
@@ -49,7 +53,7 @@ namespace ggo
       {
         auto vert_in = [&](int y)
         {
-          if constexpr(algo == scaling_algo::cubic_integration)
+          if constexpr(vert_algo == scaling_algo::cubic_integration)
           {
             y = ggo::clamp<int>(y, 0, static_cast<int>(height_in - 1));
           }
@@ -61,13 +65,13 @@ namespace ggo
           out(x, y, v);
         };
 
-        scale_1d<algo, data_t, real_t>(vert_in, height_in, vert_out, height_out);
+        scale_1d<vert_algo, data_t, real_t>(vert_in, height_in, vert_out, height_out);
       }
     }
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename size_t>
+  template <scaling_algo horz_algo, scaling_algo vert_algo, typename data_t, typename size_t>
   void	scale_2d(const data_t * input, size_t width_in, size_t height_in, size_t line_byte_step_in,
     data_t * output, size_t width_out, size_t height_out, size_t line_byte_step_out)
   {
@@ -75,12 +79,6 @@ namespace ggo
 
     auto in = [&](int x, int y)
     {
-      if constexpr(algo == scaling_algo::cubic_integration)
-      {
-        x = ggo::clamp<int>(x, 0, int(width_in) - 1);
-        y = ggo::clamp<int>(y, 0, int(height_in) - 1);
-      }
-
       return ggo::ptr_offset(input, y * static_cast<int>(line_byte_step_in))[x];
     };
 
@@ -89,7 +87,7 @@ namespace ggo
       ggo::ptr_offset(output, y * static_cast<int>(line_byte_step_out))[x] = v;
     };
 
-    scale_2d<algo, data_t, data_t>(
+    scale_2d<horz_algo, vert_algo, data_t, data_t>(
       in, static_cast<int>(width_in), static_cast<int>(height_in),
       out, static_cast<int>(width_out), static_cast<int>(height_out));
   }

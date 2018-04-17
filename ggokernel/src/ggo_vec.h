@@ -83,6 +83,7 @@ namespace ggo
     real_t                      get_length() const
     {
       static_assert(std::is_floating_point<real_t>::value);
+      static_assert(vtype == geometry_t);
       return std::sqrt(static_cast<real_t>(get_hypot()));
     }
 
@@ -96,6 +97,7 @@ namespace ggo
     void                        move(args... a)
     {
       static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
+      static_assert(vtype == geometry_t);
       ggo::add(_coords, a...);
     }
 
@@ -431,12 +433,14 @@ namespace ggo
   template <typename data_t, int n_dims, vec_type vtype>
   void vec<data_t, n_dims, vtype>::flip()
   {
+    static_assert(vtype == geometry_t);
     ggo::for_each<n_dims>(_coords, [](data_t & d) { d = -d; });
   }
 
   template <typename data_t, int n_dims, vec_type vtype>
   data_t vec<data_t, n_dims, vtype>::get_hypot() const
   {
+    static_assert(vtype == geometry_t);
     return ggo::dot<n_dims>(_coords, _coords);
   }
 
@@ -444,6 +448,7 @@ namespace ggo
   void vec<data_t, n_dims, vtype>::set_length(data_t length)
   {
     static_assert(std::is_floating_point<data_t>::value);
+    static_assert(vtype == geometry_t);
     GGO_ASSERT(get_hypot() > data_t(0));
     this->operator*=(length / get_length());
   }
@@ -452,6 +457,7 @@ namespace ggo
   void vec<data_t, n_dims, vtype>::normalize()
   {
     static_assert(std::is_floating_point<data_t>::value);
+    static_assert(vtype == geometry_t);
     set_length(1);
   }
 
@@ -459,6 +465,7 @@ namespace ggo
   bool vec<data_t, n_dims, vtype>::is_normalized(data_t epsilon) const
   {
     static_assert(std::is_floating_point<data_t>::value);
+    static_assert(vtype == geometry_t);
     return std::abs(get_hypot() - 1) < epsilon;
   }
 
@@ -466,6 +473,7 @@ namespace ggo
   ggo::vec<data_t, n_dims, vtype> vec<data_t, n_dims, vtype>::get_normalized() const
   {
     static_assert(std::is_floating_point<data_t>::value);
+    static_assert(vtype == geometry_t);
     ggo::vec<data_t, n_dims, vtype> r(*this);
     r.normalize(); 
     return r;

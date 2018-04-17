@@ -3,6 +3,7 @@
 #include <ggo_image_io.h>
 #include <ggo_blit.h>
 #include <ggo_command.h>
+#include <ggo_parsing.h>
 #include <ggo_string_helpers.h>
 
 namespace ggo
@@ -32,7 +33,7 @@ namespace ggo
 
     auto blit_pixels = load_image(*file);
 
-    ggo::pos2i pos = parse_margins(params, image.width(), image.height(), blit_pixels.width(), blit_pixels.height(), "margins");
+    ggo::pos2i pos = parse_margins(params, "margins", image.size(), blit_pixels.size());
 
     ggo::dispatch_pbf<blit_dispatch>(blit_pixels.pbf(), image.pbf(),
       blit_pixels.data(), blit_pixels.width(), blit_pixels.height(), blit_pixels.line_byte_step(),

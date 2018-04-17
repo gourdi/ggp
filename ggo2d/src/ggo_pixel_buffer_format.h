@@ -342,9 +342,9 @@ namespace ggo
     case rgb_8u_yd: return functor::call<rgb_8u_yd>(std::forward<args>(a)...);
     case bgr_8u_yu: return functor::call<bgr_8u_yu>(std::forward<args>(a)...);
     case bgr_8u_yd: return functor::call<bgr_8u_yd>(std::forward<args>(a)...);
-    case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
-    case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
-    case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
+    //case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
+    //case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
+    //case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
     }
   }
 

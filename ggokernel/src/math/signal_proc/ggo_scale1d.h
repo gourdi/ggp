@@ -26,8 +26,9 @@ namespace ggo
   // and input[i+2].
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename real_t, typename input>
-  real_t integrate_cubic_single(input in, int zero_offset, real_t from, real_t to)
+  data_t integrate_cubic_single(input in, int zero_offset, real_t from, real_t to)
   {
+    static_assert(std::is_floating_point<real_t>::value);
     GGO_ASSERT(from >= zero_offset);
     GGO_ASSERT(to <= zero_offset + 1);
     GGO_ASSERT(from <= to);
@@ -41,8 +42,8 @@ namespace ggo
     // Retrieve the values of the cubic and its derivatives.
     data_t y0 = in(i_c);	// Value at x=0.
     data_t y1 = in(i_n);	// Value at x=1.
-    data_t d0 = (in(i_n) - in(i_p)) / 2; // Derative at x=0.
-    data_t d1 = (in(i_nn) - in(i_c)) / 2; // Derative at x=1.
+    data_t d0 = (in(i_n) - in(i_p)) / real_t(2); // Derative at x=0.
+    data_t d1 = (in(i_nn) - in(i_c)) / real_t(2); // Derative at x=1.
 
     // Now we have a linear system with 4 equations:
     // y0 = d;
@@ -50,15 +51,15 @@ namespace ggo
     // d0 = c
     // d1 = 3*a+2*c+b
     // So we can compute the cubic's coefs.
-    data_t a = 2 * y0 - 2 * y1 + d0 + d1;
-    data_t b = -3 * y0 + 3 * y1 - 2 * d0 - d1;
+    data_t a = real_t(2) * y0 - real_t(2) * y1 + d0 + d1;
+    data_t b = real_t(-3) * y0 + real_t(3) * y1 - real_t(2) * d0 - d1;
     data_t c = d0;
     data_t d = y0;
 
     auto eval_cubic_integrale = [](data_t a, data_t b, data_t c, data_t d, real_t x)
     {
       real_t xx = x * x;
-      return a * xx * xx / 4 + b * xx * x / 3 + c * xx / 2 + d * x;
+      return a * xx * xx / real_t(4) + b * xx * x / real_t(3) + c * xx / real_t(2) + d * x;
     };
 
     // Finally, we can integrate.
@@ -67,11 +68,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename real_t, typename input>
-  real_t integrate_cubic(input in, int size_in, real_t from, real_t to)
+  data_t integrate_cubic(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
-    data_t val = 0;
+    data_t val(0);
     int from_i = std::max(0, static_cast<int>(from));
     int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
     GGO_ASSERT(from_i < to_i);
@@ -79,21 +80,21 @@ namespace ggo
     // Integrate the middle parts.
     for (int i = from_i; i < to_i; ++i)
     {
-      val += integrate_cubic_single<real_t>(in, i, real_t(i), real_t(i + 1));
+      val += integrate_cubic_single<data_t>(in, i, real_t(i), real_t(i + 1));
     }
 
     // Remove first block.
-    val -= integrate_cubic_single<real_t>(in, from_i, real_t(from_i), from);
+    val -= integrate_cubic_single<data_t>(in, from_i, real_t(from_i), from);
 
     // Remove last block.
-    val -= integrate_cubic_single<real_t>(in, to_i - 1, to, real_t(to_i));
+    val -= integrate_cubic_single<data_t>(in, to_i - 1, to, real_t(to_i));
 
     return val;
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename real_t, typename input>
-  real_t integrate_linear(input in, int size_in, real_t from, real_t to)
+  data_t integrate_linear(input in, int size_in, real_t from, real_t to)
   {
     GGO_ASSERT(from < to);
 
@@ -162,10 +163,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename size_t>
-  void	scale_1d(const data_t * input, size_t size_in, data_t * output, size_t size_out)
+  template <scaling_algo algo, typename data_t, typename int_t>
+  void	scale_1d(const data_t * input, int_t size_in, data_t * output, int_t size_out)
   {
-    static_assert(std::is_integral<size_t>::value == true);
+    static_assert(std::is_integral<int_t>::value == true);
 
     auto in = [&](int i)
     {
@@ -184,61 +185,6 @@ namespace ggo
 
     scale_1d<algo, data_t, data_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
   }
-
-  /*
-  //////////////////////////////////////////////////////////////
-  template <typename T>
-  void	scale_fast_t(const T * input, int width_in, int height_in, T * output, int width_out, int height_out)
-  {
-    int	x, y, x_in, y_in;
-
-    for (y = 0; y < height_out; ++y)
-    {
-      for (x = 0; x < width_out; ++x)
-      {
-        x_in = x * width_in / width_out;
-        y_in = y * height_in / height_out;
-
-        output[y * width_out + x] = input[y_in * width_in + x_in];
-      }
-    }
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename T>
-  void	ggo_scale2d_t(const T * input, int width_in, int height_in, T * output, int width_out, int height_out, ggo_resample_algo algo, T clamp_min, T clamp_max)
-  {
-    int	x, y;
-    T *	tmp;
-
-    if (algo == GGO_RESAMPLE_ALGO_FAST)
-    {
-      scale_fast_t(input, width_in, height_in, output, width_out, height_out);
-      return;
-    }
-
-    tmp = new T[width_in*height_out];
-
-    // First perform vertical scaling.
-    for (x = 0; x < width_in; ++x)
-    {
-      scale_1d_t(input + x, height_in, width_in, tmp + x, height_out, width_in, algo, clamp_min, clamp_max);
-    }
-
-    // Then perform the horizontal scaling.
-    for (y = 0; y < height_out; ++y)
-    {
-      scale_1d_t(tmp + y * width_in, width_in, 1, output + y * width_out, width_out, 1, algo, clamp_min, clamp_max);
-    }
-
-    delete[] tmp;
-  }
-
-  //////////////////////////////////////////////////////////////
-  void	ggo_scale_2d(const uint8_t * input, int width_in, int height_in, uint8_t * output, int width_out, int height_out, ggo_resample_algo algo)
-  {
-    ggo_scale2d_t<uint8_t>(input, width_in, height_in, output, width_out, height_out, algo, 0, 255);
-  }*/
 }
 
 #endif

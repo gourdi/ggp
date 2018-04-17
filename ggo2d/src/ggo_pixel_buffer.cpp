@@ -1,6 +1,14 @@
 #include <ggo_pixel_buffer.h>
 
 //////////////////////////////////////////////////////////////
+ggo::pixel_buffer::pixel_buffer(int width, int height, pixel_buffer_format pbf)
+:
+pixel_buffer(width, height, get_line_byte_size(pbf, width), pbf)
+{
+
+}
+
+//////////////////////////////////////////////////////////////
 ggo::pixel_buffer::pixel_buffer(int width, int height, int line_byte_step, pixel_buffer_format pbf)
 {
   _buffer = malloc(height * line_byte_step);

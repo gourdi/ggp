@@ -5,6 +5,7 @@
 #include <map>
 #include <optional>
 #include <ggo_vec.h>
+#include <ggo_size.h>
 
 namespace ggo
 {
@@ -47,10 +48,6 @@ namespace ggo
     std::string     _name;
     ggo::parameters _parameters;
   };
-
-  class rect_int;
-
-  ggo::pos2i parse_margins(const parameters & params, int image_width, int image_height, int content_width, int content_height, const std::string & key);
 }
 
 #endif

@@ -1,9 +1,6 @@
 #ifndef __GGO_VIVELLE_BLIT__
 #define __GGO_VIVELLE_BLIT__
 
-#include <map>
-#include <string>
-
 namespace ggo
 {
   class pixel_buffer;

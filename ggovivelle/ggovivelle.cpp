@@ -2,6 +2,7 @@
 #include <ggo_command.h>
 #include <ggo_vivelle_io.h>
 #include <ggo_vivelle_blit.h>
+#include <ggo_vivelle_rescale.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -18,6 +19,10 @@ namespace ggo
       if (cmd.name() == "blit")
       {
         blit(image, cmd.parameters());
+      }
+      else if (cmd.name() == "rescale")
+      {
+        image = rescale(image, cmd.parameters());
       }
       else
       {
