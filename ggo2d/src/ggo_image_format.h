@@ -360,18 +360,18 @@ namespace ggo
     switch (format1)
     {
     default: GGO_FAIL(); // Don't break to fallback on the below image format.
-    case y_8u_yu: return dispatch_format<dispatch_format_aux<functor, y_8u_yu>>(format2, std::forward<args>(a)...);
-    case y_8u_yd: return dispatch_format<dispatch_format_aux<functor, y_8u_yd>>(format2, std::forward<args>(a)...);
-    case y_16u_yd: return dispatch_format<dispatch_format_aux<functor, y_16u_yd>>(format2, std::forward<args>(a)...);
-    case y_32f_yu: return dispatch_format<dispatch_format_aux<functor, y_32f_yu>>(format2, std::forward<args>(a)...);
-    case rgb_8u_yu: return dispatch_format<dispatch_format_aux<functor, rgb_8u_yu>>(format2, std::forward<args>(a)...);
-    case rgb_8u_yd: return dispatch_format<dispatch_format_aux<functor, rgb_8u_yd>>(format2, std::forward<args>(a)...);
-    case rgba_8u_yd: return dispatch_format<dispatch_format_aux<functor, rgba_8u_yd>>(format2, std::forward<args>(a)...);
-    case bgr_8u_yu: return dispatch_format<dispatch_format_aux<functor, bgr_8u_yu>>(format2, std::forward<args>(a)...);
-    case bgr_8u_yd: return dispatch_format<dispatch_format_aux<functor, bgr_8u_yd>>(format2, std::forward<args>(a)...);
-    case bgra_8u_yd: return dispatch_format<dispatch_format_aux<functor, bgra_8u_yd>>(format2, std::forward<args>(a)...);
-    case rgb_16u_yd: return dispatch_format<dispatch_format_aux<functor, rgb_16u_yd>>(format2, std::forward<args>(a)...);
-    case rgb_32f_yu: return dispatch_format<dispatch_format_aux<functor, rgb_32f_yu>>(format2, std::forward<args>(a)...);
+    case y_8u_yu: return dispatch_image_format<dispatch_image_format_aux<functor, y_8u_yu>>(format2, std::forward<args>(a)...);
+    case y_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, y_8u_yd>>(format2, std::forward<args>(a)...);
+    case y_16u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, y_16u_yd>>(format2, std::forward<args>(a)...);
+    case y_32f_yu: return dispatch_image_format<dispatch_image_format_aux<functor, y_32f_yu>>(format2, std::forward<args>(a)...);
+    case rgb_8u_yu: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_8u_yu>>(format2, std::forward<args>(a)...);
+    case rgb_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_8u_yd>>(format2, std::forward<args>(a)...);
+    case rgba_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgba_8u_yd>>(format2, std::forward<args>(a)...);
+    case bgr_8u_yu: return dispatch_image_format<dispatch_image_format_aux<functor, bgr_8u_yu>>(format2, std::forward<args>(a)...);
+    case bgr_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, bgr_8u_yd>>(format2, std::forward<args>(a)...);
+    case bgra_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, bgra_8u_yd>>(format2, std::forward<args>(a)...);
+    case rgb_16u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_16u_yd>>(format2, std::forward<args>(a)...);
+    case rgb_32f_yu: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_32f_yu>>(format2, std::forward<args>(a)...);
     }
   }
 }

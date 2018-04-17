@@ -3,10 +3,10 @@
 
 namespace ggo
 {
-  class pixel_buffer;
   class parameters;
+  class image;
 
-  void blit(ggo::pixel_buffer & image, const parameters & params);
+  void blit(ggo::image & image, const parameters & params);
 }
 
 #endif

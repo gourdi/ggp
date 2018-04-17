@@ -9,7 +9,7 @@
 
 namespace ggo
 {
-  void process_image(ggo::pixel_buffer & image, 
+  void process_image(ggo::image & image, 
     std::vector<std::string>::const_iterator begin,
     std::vector<std::string>::const_iterator end)
   {

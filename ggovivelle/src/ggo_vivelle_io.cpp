@@ -10,13 +10,13 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::pixel_buffer load(const std::string & filename)
+  ggo::image load(const std::string & filename)
   {
     return load_image(filename);
   }
 
   //////////////////////////////////////////////////////////////
-  void save(const std::string & output_command, const ggo::pixel_buffer & image)
+  void save(const std::string & output_command, const ggo::image & image)
   {
     command cmd(output_command, true);
 
@@ -28,7 +28,7 @@ namespace ggo
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_bmp(cmd.name(), image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_bmp(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == "tga")
     {
@@ -36,7 +36,7 @@ namespace ggo
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_tga(cmd.name(), image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_tga(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == "jpg" || extension == "jpeg")
     {
@@ -68,7 +68,7 @@ namespace ggo
         throw std::runtime_error("invalid output command");
         break;
       }
-      io_success = ggo::save_jpg(cmd.name(), quality, image.data(), image.pbf(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_jpg(cmd.name(), quality, image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
     else
     {
