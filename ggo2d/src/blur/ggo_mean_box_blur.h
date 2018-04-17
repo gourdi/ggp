@@ -1,10 +1,10 @@
-#ifndef __GGO_MEAN_BOX_BLUR2D__
-#define __GGO_MEAN_BOX_BLUR2D__
+#ifndef __GGO_2D_MEAN_BOX_BLUR__
+#define __GGO_2D_MEAN_BOX_BLUR__
 
-#include <ggo_pixel_buffer.h>
+#include <ggo_image_format.h>
 #include <ggo_buffer_iterator.h>
 #include <ggo_convolution.h>
-#include <ggo_mean_box_filter.h>
+#include <math/signal_proc/ggo_mean_box_filter.h>
 
 namespace ggo
 {
@@ -62,33 +62,33 @@ namespace ggo
     }
   };
 
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   struct mean_box_accessor
   {
-    using format = pixel_buffer_format_info<pbf>;
-    using blur_helper = mean_box_blur2d_helper<typename format::color_t>;
+    using format_traits = image_format_traits<format>;
+    using blur_helper = mean_box_blur2d_helper<typename format_traits::color_t>;
     using input_t = typename blur_helper::color_t;
     using output_t = typename blur_helper::color_t;
 
     static typename blur_helper::color_t read(const void * ptr)
     {
-      return blur_helper::convert(format::read(ptr));
+      return blur_helper::convert(format_traits::read(ptr));
     }
 
     static void write(void * ptr, typename blur_helper::color_t c)
     {
-      return format::write(ptr, blur_helper::convert(c));
+      return format_traits::write(ptr, blur_helper::convert(c));
     }
   };
 
   ////////////////////////////////////////////////////////////////////
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void mean_box_blur2d(void * buffer, const int width, const int height, const int line_byte_step, const int box_half_size)
   {
-    using format = pixel_buffer_format_info<pbf>;
-    using memory_format = format::memory_layout_t;
-    using mean_box_helper = mean_box_blur2d_helper<typename format::color_t>;
-    using data_accessor = ggo::mean_box_accessor<pbf>;
+    using format_traits = image_format_traits<format>;
+    using memory_format = format_traits::memory_layout_t;
+    using mean_box_helper = mean_box_blur2d_helper<typename format_traits::color_t>;
+    using data_accessor = ggo::mean_box_accessor<format>;
 
     const int div = 2 * box_half_size + 1;
 
@@ -103,10 +103,10 @@ namespace ggo
       };
 
       auto left = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, 0, y, height, line_byte_step)));
+        return mean_box_helper::convert(format_traits::read(ggo::get_pixel_ptr<format>(buffer, 0, y, height, line_byte_step)));
       };
       auto right = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, width - 1, y, height, line_byte_step)));
+        return mean_box_helper::convert(format_traits::read(ggo::get_pixel_ptr<format>(buffer, width - 1, y, height, line_byte_step)));
       };
 
       ggo::mean_box_filter_2d_horz(line_iterator, left, right, width, height, divide, box_half_size);
@@ -119,10 +119,10 @@ namespace ggo
       };
 
       auto bottom = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, 0, height, line_byte_step)));
+        return mean_box_helper::convert(format_traits::read(ggo::get_pixel_ptr<format>(buffer, x, 0, height, line_byte_step)));
       };
       auto top = [&](int x, int y) {
-        return mean_box_helper::convert(format::read(ggo::get_pixel_ptr<pbf>(buffer, x, height - 1, height, line_byte_step)));
+        return mean_box_helper::convert(format_traits::read(ggo::get_pixel_ptr<format>(buffer, x, height - 1, height, line_byte_step)));
       };
 
       ggo::mean_box_filter_2d_vert(column_iterator, bottom, top, width, height, divide, box_half_size);

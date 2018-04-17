@@ -2,10 +2,10 @@
 
 #include <ggo_nonreg.h>
 #include <ggo_chronometer.h>
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_mean_box_blur2d.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
+#include <blur/ggo_gaussian_blur.h>
+#include <blur/ggo_mean_box_blur.h>
+#include <ggo_paint.h>
+#include <ggo_fill.h>
 #include <ggo_bmp.h>
 #include <ggo_shapes2d.h>
 #include <string>
@@ -14,20 +14,20 @@
 
 namespace
 {
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void gaussian_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u());
+    ggo::fill_solid<format>(buffer, width, height, line_step, ggo::blue_8u());
 
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
-    ggo::gaussian_blur2d_mirror<pbf>(buffer, width, height, line_step, 5.f);
+    ggo::gaussian_blur2d_mirror<format>(buffer, width, height, line_step, 5.f);
 
 #ifdef GGO_BENCH
     ggo::chronometer chronometer;
@@ -37,7 +37,7 @@ namespace
     }
     std::cout << chronometer.get_display_time(true) << std::endl;
 #else
-    ggo::save_bmp(filename, buffer, pbf, width, height, line_step);
+    ggo::save_bmp(filename, buffer, format, width, height, line_step);
 #endif
   }
 }
@@ -108,20 +108,20 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 
 namespace
 {
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void mean_box_blur2d_test(void * buffer, int width, int height, int line_step, const std::string & filename)
   {
-    ggo::fill_solid<pbf>(buffer, width, height, line_step, ggo::blue_8u());
+    ggo::fill_solid<format>(buffer, width, height, line_step, ggo::blue_8u());
 
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float(0.5f * width, 0.5f * height, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float(0.f, 0.f, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
 
-    ggo::mean_box_blur2d<pbf>(buffer, width, height, line_step, 9);
+    ggo::mean_box_blur2d<format>(buffer, width, height, line_step, 9);
 
 #ifdef GGO_BENCH
     ggo::chronometer chronometer;
@@ -131,7 +131,7 @@ namespace
     }
     std::cout << chronometer.get_display_time(true) << std::endl;
 #else
-    ggo::save_bmp(filename, buffer, pbf, width, height, line_step);
+    ggo::save_bmp(filename, buffer, format, width, height, line_step);
 #endif
   }
 }

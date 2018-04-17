@@ -2,7 +2,7 @@
 #define __GGO_MULTI_SCALE_PAINT__
 
 #include <vector>
-#include <ggo_sampling_paint.h>
+#include <ggo_pixel_sampling.h>
 #include <ggo_rect_int.h>
 #include <ggo_coordinates_conversions.h>
 

@@ -1,24 +1,24 @@
-#ifndef __GGO_PBF_MORPHOLOGY__
-#define __GGO_PBF_MORPHOLOGY__
+#ifndef __GGO_2D_MORPHOLOGY__
+#define __GGO_2D_MORPHOLOGY__
 
-#include <ggo_pixel_buffer_format.h>
-#include <ggo_morphology.h>
+#include <ggo_image_format.h>
+#include <math/signal_proc/ggo_morphology.h>
 
 // Definition.
 namespace ggo
 {
   // Dilatation.
-  template <typename color_t>
+  template <image_format format>
   void dilatation_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height);
 
-  template <typename color_t>
+  template <image_format format>
   void dilatation_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius);
 
   // Erosion.
-  template <typename color_t>
+  template <image_format format>
   void erosion_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height);
 
-  template <typename color_t>
+  template <image_format format>
   void erosion_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius);
 }
 
@@ -45,7 +45,7 @@ namespace ggo
   };
 
   // Dilatation.
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void dilatation_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
   {
     if (input == output)
@@ -53,17 +53,17 @@ namespace ggo
       throw inplace_exception();
     }
 
-    using pbf_info = pixel_buffer_format_info<pbf>;
-    using color_t = pbf_info::color_t;
+    using format_info = image_format_info<format>;
+    using color_t = format_info::color_t;
 
-    auto in = [&](int x, int y) { return read_pixel<pbf>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<pbf>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
+    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
 
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void dilatation_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius)
   {
     if (input == output)
@@ -71,18 +71,18 @@ namespace ggo
       throw inplace_exception();
     }
 
-    using pbf_info = pixel_buffer_format_info<pbf>;
-    using color_t = pbf_info::color_t;
+    using format_traits = image_format_traits<format>;
+    using color_t = format_traits::color_t;
 
-    auto in = [&](int x, int y) { return read_pixel<pbf>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<pbf>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
+    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
     morpho_disc(in, out, width, height, radius, pred);
   }
 
   // Erosion.
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void erosion_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
   {
     if (input == output)
@@ -90,17 +90,17 @@ namespace ggo
       throw inplace_exception();
     }
 
-    using pbf_info = pixel_buffer_format_info<pbf>;
-    using color_t = pbf_info::color_t;
+    using format_traits = image_format_traits<format>;
+    using color_t = format_traits::color_t;
 
-    auto in = [&](int x, int y) { return read_pixel<pbf>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<pbf>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
+    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
   }
 
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void erosion_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius)
   {
     if (input == output)
@@ -108,11 +108,11 @@ namespace ggo
       throw inplace_exception();
     }
 
-    using pbf_info = pixel_buffer_format_info<pbf>;
-    using color_t = pbf_info::color_t;
+    using format_info = image_format_info<format>;
+    using color_t = format_info::color_t;
 
-    auto in = [&](int x, int y) { return read_pixel<pbf>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<pbf>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
+    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
     morpho_disc(in, out, width, height, radius, pred);

@@ -5,39 +5,39 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  pixel_buffer load_png(const std::string & filename)
+  image load_png(const std::string & filename)
   {
-    png_image image;
-    memset(&image, 0, (sizeof image));
-    image.version = PNG_IMAGE_VERSION;
+    png_image png_image;
+    memset(&png_image, 0, (sizeof png_image));
+    png_image.version = PNG_IMAGE_VERSION;
 
-    if (png_image_begin_read_from_file(&image, filename.c_str()) == 0)
+    if (png_image_begin_read_from_file(&png_image, filename.c_str()) == 0)
     {
       throw std::runtime_error("failed reading image properties");
     }
 
-    ggo::pixel_buffer_format pbf;
-    switch (image.format)
+    ggo::image_format format;
+    switch (png_image.format)
     {
     case PNG_FORMAT_RGB:
-      pbf = ggo::rgb_8u_yd;
+      format = ggo::rgb_8u_yd;
       break;
     case PNG_FORMAT_RGBA:
-      pbf = ggo::rgba_8u_yd;
+      format = ggo::rgba_8u_yd;
       break;
     default:
       throw std::runtime_error("unsupported image format");
     }
 
-    int line_byte_size = PNG_IMAGE_ROW_STRIDE(image);
-    ggo::pixel_buffer pixels(image.width, image.height, line_byte_size, pbf);
+    int line_byte_size = PNG_IMAGE_ROW_STRIDE(png_image);
+    ggo::image image(png_image.width, png_image.height, line_byte_size, format);
     
-    if (png_image_finish_read(&image, NULL, pixels.data(), 0, NULL) == 0)
+    if (png_image_finish_read(&png_image, NULL, image.data(), 0, NULL) == 0)
     {
       throw std::runtime_error("failed reading image pixels");
     }
 
-    return pixels;
+    return image;
   }
 }
 

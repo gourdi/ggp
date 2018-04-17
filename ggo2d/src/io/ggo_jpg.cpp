@@ -94,10 +94,10 @@ namespace
   // Write pixels (note that pixels are stored BGR from bottom to top).
   struct write_pixels
   {
-    template <ggo::pixel_buffer_format pbf>
+    template <ggo::image_format format>
     static void call(const void * buffer, int width, int height, int line_byte_step, jpeg_compress_struct & cinfo)
     {
-      using format = ggo::pixel_buffer_format_info<pbf>;
+      using format_traits = ggo::image_format_traits<format>;
 
       ggo::buffer line(3 * width);
 
@@ -105,19 +105,19 @@ namespace
 
       while (cinfo.next_scanline < cinfo.image_height)
       {
-        const void * in_ptr = ggo::get_line_ptr<pbf>(buffer, y, height, line_byte_step);
+        const void * in_ptr = ggo::get_line_ptr<format>(buffer, y, height, line_byte_step);
         uint8_t * out_ptr = line.data();
 
         for (int x = 0; x < width; ++x)
         {
-          auto c = ggo::read_pixel<pbf>(in_ptr);
+          auto c = ggo::read_pixel<format>(in_ptr);
           ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
 
           *out_ptr++ = rgb.r();
           *out_ptr++ = rgb.g();
           *out_ptr++ = rgb.b();
 
-          in_ptr = ggo::ptr_offset<format::pixel_byte_size>(in_ptr);
+          in_ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(in_ptr);
         }
 
         uint8_t * ptr = line.data();
@@ -132,7 +132,7 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  pixel_buffer load_jpg(const std::string & filename)
+  image load_jpg(const std::string & filename)
   {
     jpeg_decompressor decompressor(filename);
 
@@ -154,7 +154,7 @@ namespace ggo
     jpeg_start_decompress(&decompressor._cinfo);
 
     int line_byte_step = 3 * decompressor._cinfo.output_width;
-    pixel_buffer image(decompressor._cinfo.output_width, decompressor._cinfo.output_height, line_byte_step, ggo::rgb_8u_yd);
+    image image(decompressor._cinfo.output_width, decompressor._cinfo.output_height, line_byte_step, ggo::rgb_8u_yd);
 
     JSAMPLE * line_ptr = reinterpret_cast<JSAMPLE *>(image.data());
     while (decompressor._cinfo.output_scanline < decompressor._cinfo.output_height)
@@ -169,7 +169,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_jpg(const std::string & filename, int quality, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_byte_step)
+  bool save_jpg(const std::string & filename, int quality, const void * buffer, image_format format, int width, int height, int line_byte_step)
   {
     try
     {
@@ -186,7 +186,7 @@ namespace ggo
       // Go!
       jpeg_start_compress(&compressor._cinfo, TRUE);
 
-      ggo::dispatch_pbf<write_pixels>(pbf, buffer, width, height, line_byte_step, compressor._cinfo);
+      ggo::dispatch_image_format<write_pixels>(format, buffer, width, height, line_byte_step, compressor._cinfo);
 
       jpeg_finish_compress(&compressor._cinfo);
 

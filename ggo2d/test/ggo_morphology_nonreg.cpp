@@ -1,7 +1,7 @@
 #include <ggo_nonreg.h>
 #include <ggo_buffer.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_morphology.h>
+#include <ggo_fill.h>
+#include <ggo_morphology.h>
 #include <ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////

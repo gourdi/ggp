@@ -1,18 +1,14 @@
-#ifndef __GGO_PIXEL_BUFFER_FORMAT__
-#define __GGO_PIXEL_BUFFER_FORMAT__
+#ifndef __GGO_IMAGE_FORMAT__
+#define __GGO_IMAGE_FORMAT__
 
 #include <stdint.h>
 #include <ggo_memory_layouts.h>
 #include <ggo_color.h>
 
-/////////////////////////////////////////////////////////////////////
-// The sampling is rule is that the pixel (0, 0) represents 
-// the square (-0.5, 0.5) x (-0.5, 0.5).
-
-// Pixel buffer formats.
+// Image formats.
 namespace ggo
 {
-  enum pixel_buffer_format
+  enum image_format
   {
     y_8u_yu,
     y_8u_yd,
@@ -29,11 +25,11 @@ namespace ggo
     rgb_32f_yu
   };
 
-  template <pixel_buffer_format pbf>
-  struct pixel_buffer_format_info {};
+  template <image_format format>
+  struct image_format_traits {};
 
   template <>
-  struct pixel_buffer_format_info<y_8u_yu>
+  struct image_format_traits<y_8u_yu>
   {
     static const int pixel_byte_size = 1;
 
@@ -47,7 +43,7 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<y_8u_yd>
+  struct image_format_traits<y_8u_yd>
   {
     static const int pixel_byte_size = 1;
 
@@ -61,7 +57,7 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<y_16u_yd>
+  struct image_format_traits<y_16u_yd>
   {
     static const int pixel_byte_size = 2;
 
@@ -75,7 +71,7 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<y_32f_yu>
+  struct image_format_traits<y_32f_yu>
   {
     static_assert(sizeof(float) == 4);
 
@@ -91,7 +87,7 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<y_64f_yd>
+  struct image_format_traits<y_64f_yd>
   {
     static_assert(sizeof(double) == 8);
 
@@ -107,10 +103,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<rgb_8u_yu>
+  struct image_format_traits<rgb_8u_yu>
   {
     static const int pixel_byte_size = 3;
-    static const pixel_buffer_format gray_pbf = y_8u_yu;
+    static const image_format gray_format = y_8u_yu;
 
     using color_t = ggo::color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
@@ -134,10 +130,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<rgb_8u_yd>
+  struct image_format_traits<rgb_8u_yd>
   {
     static const int pixel_byte_size = 3;
-    static const pixel_buffer_format gray_pbf = y_8u_yd;
+    static const image_format gray_format = y_8u_yd;
 
     using color_t = ggo::color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
@@ -161,10 +157,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<rgba_8u_yd>
+  struct image_format_traits<rgba_8u_yd>
   {
     static const int pixel_byte_size = 4;
-    static const pixel_buffer_format gray_pbf = y_8u_yd;
+    static const image_format gray_format = y_8u_yd;
 
     using color_t = ggo::alpha_color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
@@ -189,7 +185,7 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<rgb_32f_yu>
+  struct image_format_traits<rgb_32f_yu>
   {
     static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
 
@@ -217,10 +213,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<bgr_8u_yd>
+  struct image_format_traits<bgr_8u_yd>
   {
     static const int pixel_byte_size = 3;
-    static const pixel_buffer_format gray_pbf = y_8u_yd;
+    static const image_format gray_format = y_8u_yd;
 
     using color_t = ggo::color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
@@ -244,10 +240,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<bgr_8u_yu>
+  struct image_format_traits<bgr_8u_yu>
   {
     static const int pixel_byte_size = 3;
-    static const pixel_buffer_format gray_pbf = y_8u_yu;
+    static const image_format gray_format = y_8u_yu;
 
     using color_t = ggo::color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
@@ -271,10 +267,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<bgra_8u_yd>
+  struct image_format_traits<bgra_8u_yd>
   {
     static const int pixel_byte_size = 4;
-    static const pixel_buffer_format gray_pbf = y_8u_yd;
+    static const image_format gray_format = y_8u_yd;
 
     using color_t = ggo::alpha_color_8u;
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
@@ -299,10 +295,10 @@ namespace ggo
   };
 
   template <>
-  struct pixel_buffer_format_info<rgb_16u_yd>
+  struct image_format_traits<rgb_16u_yd>
   {
     static const int pixel_byte_size = 6;
-    static const pixel_buffer_format gray_pbf = y_16u_yd;
+    static const image_format gray_format = y_16u_yd;
 
     using color_t = ggo::color_16u;
     using memory_layout_t = lines_memory_layout<ggo::direction::up, 6>;
@@ -329,11 +325,11 @@ namespace ggo
 namespace ggo
 {
   template <typename functor, typename... args>
-  auto dispatch_pbf(pixel_buffer_format pbf, args&&... a)
+  auto dispatch_image_format(image_format format, args&&... a)
   {
-    switch (pbf)
+    switch (format)
     {
-    default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
+    default: GGO_FAIL(); // Don't break to fallback on the below image format.
     case y_8u_yu: return functor::call<y_8u_yu>(std::forward<args>(a)...);
     case y_8u_yd: return functor::call<y_8u_yd>(std::forward<args>(a)...);
     case y_16u_yd: return functor::call<y_16u_yd>(std::forward<args>(a)...);
@@ -348,34 +344,34 @@ namespace ggo
     }
   }
 
-  template <typename functor, pixel_buffer_format pbf1>
-  struct dispatch_pbf_aux
+  template <typename functor, image_format format1>
+  struct dispatch_image_format_aux
   {
-    template <ggo::pixel_buffer_format pbf2, typename... args>
+    template <ggo::image_format format2, typename... args>
     static auto call(args&&... a)
     {
-      return functor::call<pbf1, pbf2>(std::forward<args>(a)...);
+      return functor::call<format1, format2>(std::forward<args>(a)...);
     }
   };
 
   template <typename functor, typename... args>
-  auto dispatch_pbf(pixel_buffer_format pbf1, pixel_buffer_format pbf2, args&&... a)
+  auto dispatch_image_format(image_format format1, image_format format2, args&&... a)
   {
-    switch (pbf1)
+    switch (format1)
     {
-    default: GGO_FAIL(); // Don't break to fallback on the below pixel buffer format.
-    case y_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, y_8u_yu>>(pbf2, std::forward<args>(a)...);
-    case y_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, y_8u_yd>>(pbf2, std::forward<args>(a)...);
-    case y_16u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, y_16u_yd>>(pbf2, std::forward<args>(a)...);
-    case y_32f_yu: return dispatch_pbf<dispatch_pbf_aux<functor, y_32f_yu>>(pbf2, std::forward<args>(a)...);
-    case rgb_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_8u_yu>>(pbf2, std::forward<args>(a)...);
-    case rgb_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_8u_yd>>(pbf2, std::forward<args>(a)...);
-    case rgba_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgba_8u_yd>>(pbf2, std::forward<args>(a)...);
-    case bgr_8u_yu: return dispatch_pbf<dispatch_pbf_aux<functor, bgr_8u_yu>>(pbf2, std::forward<args>(a)...);
-    case bgr_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, bgr_8u_yd>>(pbf2, std::forward<args>(a)...);
-    case bgra_8u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, bgra_8u_yd>>(pbf2, std::forward<args>(a)...);
-    case rgb_16u_yd: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_16u_yd>>(pbf2, std::forward<args>(a)...);
-    case rgb_32f_yu: return dispatch_pbf<dispatch_pbf_aux<functor, rgb_32f_yu>>(pbf2, std::forward<args>(a)...);
+    default: GGO_FAIL(); // Don't break to fallback on the below image format.
+    case y_8u_yu: return dispatch_format<dispatch_format_aux<functor, y_8u_yu>>(format2, std::forward<args>(a)...);
+    case y_8u_yd: return dispatch_format<dispatch_format_aux<functor, y_8u_yd>>(format2, std::forward<args>(a)...);
+    case y_16u_yd: return dispatch_format<dispatch_format_aux<functor, y_16u_yd>>(format2, std::forward<args>(a)...);
+    case y_32f_yu: return dispatch_format<dispatch_format_aux<functor, y_32f_yu>>(format2, std::forward<args>(a)...);
+    case rgb_8u_yu: return dispatch_format<dispatch_format_aux<functor, rgb_8u_yu>>(format2, std::forward<args>(a)...);
+    case rgb_8u_yd: return dispatch_format<dispatch_format_aux<functor, rgb_8u_yd>>(format2, std::forward<args>(a)...);
+    case rgba_8u_yd: return dispatch_format<dispatch_format_aux<functor, rgba_8u_yd>>(format2, std::forward<args>(a)...);
+    case bgr_8u_yu: return dispatch_format<dispatch_format_aux<functor, bgr_8u_yu>>(format2, std::forward<args>(a)...);
+    case bgr_8u_yd: return dispatch_format<dispatch_format_aux<functor, bgr_8u_yd>>(format2, std::forward<args>(a)...);
+    case bgra_8u_yd: return dispatch_format<dispatch_format_aux<functor, bgra_8u_yd>>(format2, std::forward<args>(a)...);
+    case rgb_16u_yd: return dispatch_format<dispatch_format_aux<functor, rgb_16u_yd>>(format2, std::forward<args>(a)...);
+    case rgb_32f_yu: return dispatch_format<dispatch_format_aux<functor, rgb_32f_yu>>(format2, std::forward<args>(a)...);
     }
   }
 }
@@ -384,90 +380,90 @@ namespace ggo
 {
   struct get_pixel_byte_size_t
   {
-    template <pixel_buffer_format pbf>
+    template <image_format format>
     static int call()
     {
-      return pixel_buffer_format_info<pbf>::pixel_byte_size;
+      return image_format_traits<format>::pixel_byte_size;
     }
   };
 
-  inline int get_pixel_byte_size(pixel_buffer_format pbf)
+  inline int get_pixel_byte_size(image_format format)
   {
-    return dispatch_pbf<get_pixel_byte_size_t>(pbf);
+    return dispatch_image_format<get_pixel_byte_size_t>(format);
   }
 
-  inline int get_line_byte_size(pixel_buffer_format pbf, int width)
+  inline int get_line_byte_size(image_format format, int width)
   {
-    return get_pixel_byte_size(pbf) * width;
+    return get_pixel_byte_size(format) * width;
   }
 }
 
 namespace ggo
 {
   // Pointer to line.
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void * get_line_ptr(void * ptr, const int y, const int height, const int line_step)
   {
-    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    using memory_layout = image_format_traits<format>::memory_layout_t;
 
     return memory_layout::get_y_ptr(ptr, y, height, line_step);
   }
 
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   const void * get_line_ptr(const void * ptr, const int y, const int height, const int line_step)
   {
-    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    using memory_layout = image_format_traits<format>::memory_layout_t;
 
     return memory_layout::get_y_ptr(ptr, y, height, line_step);
   }
 
   // Pointer to pixel.
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   void * get_pixel_ptr(void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    using memory_layout = image_format_traits<format>::memory_layout_t;
 
     return memory_layout::get_xy_ptr(ptr, x, y, height, line_step);
   }
 
-  template <pixel_buffer_format pbf>
+  template <image_format format>
   const void * get_pixel_ptr(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    using memory_layout = pixel_buffer_format_info<pbf>::memory_layout_t;
+    using memory_layout = image_format_traits<format>::memory_layout_t;
 
     return memory_layout::get_xy_ptr(ptr, x, y, height, line_step);
   }
 
   // Set pixel to pointer.
-  template <pixel_buffer_format pbf>
-  void write_pixel(void * ptr, const typename pixel_buffer_format_info<pbf>::color_t & c)
+  template <image_format format>
+  void write_pixel(void * ptr, const typename image_format_traits<format>::color_t & c)
   {
-    pixel_buffer_format_info<pbf>::write(ptr, c);
+    image_format_traits<format>::write(ptr, c);
   }
 
   // Set pixel to pointer with coordinates.
-  template <pixel_buffer_format pbf>
-  void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename pixel_buffer_format_info<pbf>::color_t & c)
+  template <image_format format>
+  void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename image_format_traits<format>::color_t & c)
   {
-    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
+    ptr = get_pixel_ptr<format>(ptr, x, y, height, line_step);
 
-    write_pixel<pbf>(ptr, c);
+    write_pixel<format>(ptr, c);
   }
 
   // Get pixel from pointer.
-  template <pixel_buffer_format pbf>
-  typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr)
+  template <image_format format>
+  typename image_format_traits<format>::color_t read_pixel(const void * ptr)
   {
-    return pixel_buffer_format_info<pbf>::read(ptr);
+    return image_format_traits<format>::read(ptr);
   }
 
   // Get pixel from pointer and coordinates.
-  template <pixel_buffer_format pbf>
-  typename pixel_buffer_format_info<pbf>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
+  template <image_format format>
+  typename image_format_traits<format>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    ptr = get_pixel_ptr<pbf>(ptr, x, y, height, line_step);
+    ptr = get_pixel_ptr<format>(ptr, x, y, height, line_step);
 
-    return read_pixel<pbf>(ptr);
+    return read_pixel<format>(ptr);
   }
 }
 

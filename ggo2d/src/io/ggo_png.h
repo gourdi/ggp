@@ -2,11 +2,11 @@
 #define __GGO_PNG__
 
 #include <string>
-#include <ggo_pixel_buffer.h>
+#include <ggo_image.h>
 
 namespace ggo
 {
-  pixel_buffer  load_png(const std::string & filename);
+  image  load_png(const std::string & filename);
 }
 
 #endif

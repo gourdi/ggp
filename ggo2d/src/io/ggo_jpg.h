@@ -2,12 +2,12 @@
 #define __GGO_JPG__
 
 #include <string>
-#include <ggo_pixel_buffer.h>
+#include <ggo_image.h>
 
 namespace ggo
 {
-  pixel_buffer  load_jpg(const std::string & filename);
-  bool          save_jpg(const std::string & filename, int quality, const void * buffer, pixel_buffer_format pbf, int width, int height, int line_byte_step);
+  image load_jpg(const std::string & filename);
+  bool  save_jpg(const std::string & filename, int quality, const void * buffer, image_format format, int width, int height, int line_byte_step);
 }
 
 #endif

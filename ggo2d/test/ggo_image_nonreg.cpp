@@ -1,9 +1,9 @@
 #include <ggo_nonreg.h>
 #include <ggo_kernel.h>
-#include <ggo_pixel_buffer.h>
+#include <ggo_image.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, y_8u_yu)
+GGO_TEST(image, y_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -29,7 +29,7 @@ GGO_TEST(pixel_buffer, y_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, y_32f_yu)
+GGO_TEST(image, y_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -55,7 +55,7 @@ GGO_TEST(pixel_buffer, y_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, rgb_8u_yu)
+GGO_TEST(image, rgb_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -83,7 +83,7 @@ GGO_TEST(pixel_buffer, rgb_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, rgb_32f_yu)
+GGO_TEST(image, rgb_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -111,7 +111,7 @@ GGO_TEST(pixel_buffer, rgb_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, bgra_8u_yd)
+GGO_TEST(image, bgra_8u_yd)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -139,7 +139,7 @@ GGO_TEST(pixel_buffer, bgra_8u_yd)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, accumulator)
+GGO_TEST(image, accumulator)
 {
   {
     ggo::accumulator<uint8_t> acc;
@@ -189,10 +189,10 @@ GGO_TEST(pixel_buffer, accumulator)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(pixel_buffer, move)
+GGO_TEST(image, move)
 {
-  ggo::pixel_buffer pb1(10, 30, 30, ggo::rgb_8u_yu);
-  ggo::pixel_buffer pb2(10, 20, 30, ggo::rgb_8u_yu);
+  ggo::image pb1(10, 30, 30, ggo::rgb_8u_yu);
+  ggo::image pb2(10, 20, 30, ggo::rgb_8u_yu);
 
   pb1 = std::move(pb2);
 }

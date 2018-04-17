@@ -1,5 +1,5 @@
 #include <ggo_nonreg.h>
-#include <ggo_pbf_fill.h>
+#include <ggo_fill.h>
 #include <ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ GGO_TEST(fill, perlin)
 
   std::vector<uint8_t> buffer(3 * width * height);
 
-  ggo::fill_perlin<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, 5.f, ggo::red<ggo::color_8u>(), ggo::yellow<ggo::color_8u>());
+  ggo::fill_perlin<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, 5.f, ggo::red_8u(), ggo::yellow_8u());
 
   ggo::save_bmp("fill_perlin.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

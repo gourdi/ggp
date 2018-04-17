@@ -8,7 +8,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::pixel_buffer load_image(const std::string & filename)
+  ggo::image load_image(const std::string & filename)
   {
     std::string extension = get_file_extension(filename);
 

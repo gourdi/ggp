@@ -1,5 +1,5 @@
-#ifndef __GGO_SAMPLING_PAINT__
-#define __GGO_SAMPLING_PAINT__
+#ifndef __GGO_PIXEL_SAMPLING__
+#define __GGO_PIXEL_SAMPLING__
 
 /////////////////////////////////////////////////////////////////////
 // Sampling structs.

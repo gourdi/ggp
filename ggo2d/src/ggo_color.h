@@ -708,7 +708,7 @@ namespace ggo
   template <typename data_t>
   void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expected floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     h = std::fmod(h, data_t(1));
     if (h < 0)
@@ -859,6 +859,5 @@ namespace ggo
     return { r, g, b };
   }
 }
-
 
 #endif
