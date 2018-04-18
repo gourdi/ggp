@@ -1,8 +1,8 @@
-#include <ggo_color_stream.h>
-#include <ggo_command.h>
-#include <ggo_vivelle_io.h>
-#include <ggo_vivelle_blit.h>
-#include <ggo_vivelle_rescale.h>
+#include <kernel/ggo_color_stream.h>
+#include <vivelle/ggo_command.h>
+#include <vivelle/ggo_io.h>
+#include <vivelle/ggo_blit.h>
+#include <vivelle/ggo_rescale.h>
 #include <iostream>
 #include <vector>
 #include <string>

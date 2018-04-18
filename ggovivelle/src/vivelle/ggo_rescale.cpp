@@ -1,7 +1,7 @@
-#include "ggo_vivelle_rescale.h"
-#include <processing/ggo_scaling.h>
-#include <ggo_command.h>
-#include <ggo_parsing.h>
+#include "ggo_rescale.h"
+#include <2d/processing/ggo_scaling.h>
+#include <vivelle/ggo_command.h>
+#include <vivelle/ggo_parsing.h>
 
 namespace ggo
 {

@@ -6,7 +6,7 @@ group_sources(${sources})
 add_library(ggovivelle STATIC ${sources})
 target_link_libraries(ggovivelle ggo2d)
 get_subdirectories("src" dirs)
-target_include_directories(ggovivelle PUBLIC ${dirs})
+target_include_directories(ggovivelle PUBLIC "src/")
 
 # The main executable.
 add_executable(vivelle ggovivelle.cpp)

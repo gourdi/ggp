@@ -1,10 +1,10 @@
-#include "ggo_vivelle_blit.h"
+#include "ggo_blit.h"
+#include <kernel/ggo_string_helpers.h>
 #include <2d/ggo_image.h>
-#include <ggo_image_io.h>
-#include <ggo_blit.h>
-#include <ggo_command.h>
-#include <ggo_parsing.h>
-#include <ggo_string_helpers.h>
+#include <2d/io/ggo_image_io.h>
+#include <2d/ggo_blit.h>
+#include <vivelle/ggo_command.h>
+#include <vivelle/ggo_parsing.h>
 
 namespace ggo
 {

@@ -1,6 +1,6 @@
 #include "ggo_parsing.h"
 #include "ggo_command.h"
-#include <ggo_string_helpers.h>
+#include <kernel/ggo_string_helpers.h>
 
 namespace ggo
 {
