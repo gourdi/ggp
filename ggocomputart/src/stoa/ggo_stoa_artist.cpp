@@ -1,8 +1,8 @@
 #include "ggo_stoa_artist.h"
 #include <ggo_interpolation3d.h>
 #include <ggo_background3d_color.h>
-#include <ggo_raytracer_global.h>
-#include <ggo_point_camera.h>
+#include <raytracer/ggo_raytracer_global.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_marching_cubes.h>
 #include <ggo_octree_raycaster.h>

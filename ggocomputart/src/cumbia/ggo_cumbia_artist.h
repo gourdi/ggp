@@ -5,7 +5,7 @@
 #include <ggo_tree.h>
 #include <ggo_background3d_color.h>
 #include <ggo_scene.h>
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 
 namespace ggo
 {

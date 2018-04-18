@@ -1,14 +1,14 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/memory/ggo_buffer.h>
 #include <2d/io/ggo_bmp.h>
-#include <ggo_point_camera.h>
-#include <ggo_scene.h>
-#include <ggo_object3d_abc.h>
-#include <ggo_background3d_color.h>
-#include <ggo_global_sampling_renderer.h>
-#include <ggo_brute_force_raycaster.h>
-#include <ggo_photon_mapping.h>
-#include <ggo_solid_color_material.h>
+#include <raytracer/cameras/ggo_point_camera.h>
+#include <raytracer/ggo_scene.h>
+#include <raytracer/objects3d/ggo_object3d_abc.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/renderers/ggo_global_sampling_renderer.h>
+#include <raytracer/raycasters/ggo_brute_force_raycaster.h>
+#include <raytracer/indirect_lighting/ggo_photon_mapping.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
 
 GGO_TEST(caustics, test)
 {

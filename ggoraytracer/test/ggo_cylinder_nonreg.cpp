@@ -1,10 +1,10 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/memory/ggo_buffer.h>
 #include <2d/io/ggo_bmp.h>
-#include <ggo_point_camera.h>
-#include <ggo_mono_sampling_renderer.h>
-#include <ggo_solid_color_material.h>
-#include <ggo_background3d_color.h>
+#include <raytracer/cameras/ggo_point_camera.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
 
 GGO_TEST(cylinder, test)
 {

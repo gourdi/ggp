@@ -1,6 +1,6 @@
 #include "ggo_cumbia_bitmap_artist.h"
 #include "ggo_cumbia_artist.h"
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 #include <ggo_global_sampling_renderer.h>
 
 //////////////////////////////////////////////////////////////

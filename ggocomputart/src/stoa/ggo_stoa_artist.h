@@ -6,7 +6,7 @@
 #include <map>
 #include <ggo_tree.h>
 #include <ggo_renderer_abc.h>
-#include <ggo_raytracer_global.h>
+#include <raytracer/ggo_raytracer_global.h>
 #include <ggo_background3d_color.h>
 
 // Reference: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch01.html

@@ -4,7 +4,7 @@
 #define __GGO_METABALLS_ARTIST__
 
 #include <ggo_artist.h>
-#include <ggo_raytracer_global.h>
+#include <raytracer/ggo_raytracer_global.h>
 #include <ggo_renderer_abc.h>
 
 namespace ggo

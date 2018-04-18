@@ -1,7 +1,7 @@
 #include "ggo_marbles_artist.h"
 #include <ggo_scene.h>
 #include <ggo_global_sampling_renderer.h>
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 #include <ggo_linear_fog.h>
 #include <ggo_material_abc.h>
 #include <ggo_background3d_color.h>

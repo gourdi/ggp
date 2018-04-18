@@ -1,6 +1,6 @@
 #include "ggo_stoa_bitmap_artist.h"
 #include "ggo_stoa_artist.h"
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 #include <ggo_mono_sampling_renderer.h>
 #include <ggo_antialiasing_renderer.h>
 

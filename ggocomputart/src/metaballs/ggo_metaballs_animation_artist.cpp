@@ -1,6 +1,6 @@
 #include "ggo_metaballs_animation_artist.h"
 #include <ggo_antialiasing_renderer.h>
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 
 namespace
 {

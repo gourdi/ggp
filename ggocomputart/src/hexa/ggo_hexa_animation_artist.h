@@ -3,7 +3,7 @@
 
 #include <ggo_animation_artist_abc.h>
 #include <ggo_scalar_field_2d_abc.h>
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 #include "ggo_hexa_artist.h"
 
 namespace ggo

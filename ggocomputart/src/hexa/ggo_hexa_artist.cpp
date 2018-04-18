@@ -1,7 +1,7 @@
 #include "ggo_hexa_artist.h"
 #include <kernel/math/ggo_distance.h>
 #include <ggo_renderer_abc.h>
-#include <ggo_raytracer_global.h>
+#include <raytracer/ggo_raytracer_global.h>
 #include <ggo_solid_color_material.h>
 #include <ggo_background3d_color.h>
 #include <ggo_octree_raycaster.h>

@@ -4,7 +4,7 @@
 #include <ggo_scene.h>
 #include <ggo_background3d_color.h>
 #include <ggo_mono_sampling_renderer.h>
-#include <ggo_point_camera.h>
+#include <raytracer/cameras/ggo_point_camera.h>
 
 //////////////////////////////////////////////////////////////
 ggo::demeco_bitmap_artist::demeco_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
