@@ -11,9 +11,9 @@ namespace ggo
   {
   public:
 
+    image(ggo::size s, image_format format); // Line step is the natural one: no padding at the end of lines.
     image(int width, int height, image_format format); // Line step is the natural one: no padding at the end of lines.
     image(int width, int height, int line_byte_step, image_format format);
-    image(const void * buffer, int width, int height, int line_byte_step, image_format format);
     ~image();
 
     // Move.

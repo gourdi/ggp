@@ -1,6 +1,14 @@
 #include <2d/ggo_image.h>
 
 //////////////////////////////////////////////////////////////
+ggo::image::image(ggo::size s, image_format format)
+:
+image(s.width(), s.height(), format)
+{
+
+}
+
+//////////////////////////////////////////////////////////////
 ggo::image::image(int width, int height, image_format format)
 :
 image(width, height, get_line_byte_size(format, width), format)
@@ -16,14 +24,6 @@ ggo::image::image(int width, int height, int line_byte_step, image_format format
   _height = height;
   _line_byte_step = line_byte_step;
   _format = format;
-}
-
-//////////////////////////////////////////////////////////////
-ggo::image::image(const void * buffer, int width, int height, int line_byte_step, image_format format)
-:
-image(width, height, line_byte_step, format)
-{
-  memcpy(_buffer, buffer, width * line_byte_step);
 }
 
 //////////////////////////////////////////////////////////////

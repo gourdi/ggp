@@ -3,6 +3,7 @@
 
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_vec.h>
+#include <kernel/ggo_size.h>
 
 namespace ggo
 {
@@ -10,28 +11,30 @@ namespace ggo
   {
   public:
     
-          rect_int() = default;
+              rect_int() = default;
 
-    int   left() const   { return _left; }
-    int   right() const  { return _right; }
-    int   bottom() const { return _bottom; }
-    int   top() const    { return _top; }
-          
-    int & left()   { return _left; }
-    int & right()  { return _right; }
-    int & bottom() { return _bottom; }
-    int & top()    { return _top; }
-          
-    int   width() const  { return _right - _left   + 1; }
-    int   height() const { return _top   - _bottom + 1; }
-          
-    bool  is_one() const;
+    int       left() const   { return _left; }
+    int       right() const  { return _right; }
+    int       bottom() const { return _bottom; }
+    int       top() const    { return _top; }
+              
+    int &     left()   { return _left; }
+    int &     right()  { return _right; }
+    int &     bottom() { return _bottom; }
+    int &     top()    { return _top; }
+              
+    int       width() const  { return _right - _left   + 1; }
+    int       height() const { return _top   - _bottom + 1; }
 
-    bool  clip(int image_width, int image_height);
-    bool  clip(const rect_int & other);
+    ggo::size size() const { return { width(), height() }; }
+          
+    bool      is_one() const;
+
+    bool      clip(int image_width, int image_height);
+    bool      clip(const rect_int & other);
  
     template <typename pixel_func>
-    void  for_each_pixel(const pixel_func & f) const
+    void      for_each_pixel(const pixel_func & f) const
     {
       for (int y = _bottom; y <= _top; ++y)
       {
