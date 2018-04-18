@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_command.h>
+#include <vivelle/ggo_command.h>
 
 //////////////////////////////////////////////////////////////
 GGO_TEST(command, regular)

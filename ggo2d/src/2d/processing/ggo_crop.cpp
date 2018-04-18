@@ -31,7 +31,7 @@ namespace ggo
     ggo::rect_int clipped_rect(crop);
     if (clipped_rect.clip(input.width(), input.height()) == false)
     {
-      throw std::runtime_error("invalid crop parameters");
+      throw std::runtime_error("crop rectangle does not intersect image");
     }
 
     return dispatch_image_format<crop_functor>(input.format(), input, clipped_rect);

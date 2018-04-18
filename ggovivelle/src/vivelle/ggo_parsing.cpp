@@ -4,6 +4,71 @@
 
 namespace ggo
 {
+  namespace
+  {
+    /////////////////////////////////////////////////////////////////////
+    ggo::size parse_size(const std::string & param, const ggo::size & image_size)
+    {
+      auto sizes = ggo::split(param, ',');
+      if (sizes.size() != 2)
+      {
+        throw std::runtime_error("expecting 2 values for the size parameter");
+      }
+
+      auto parse_size1d = [](const std::string & size_1d, int image_size_1d)
+      {
+        // Pixel coordinate.
+        if (size_1d.size() > 2 && size_1d.substr(size_1d.size() - 2) == "px")
+        {
+          return ggo::to<int>(size_1d.substr(0, size_1d.size() - 2));
+        }
+        // Percentage.
+        else if (size_1d.back() == '%')
+        {
+          float percent = ggo::to<float>(size_1d.substr(0, size_1d.size() - 1));
+          return ggo::round_to<int>(percent * image_size_1d / 100.f);
+        }
+        else
+        {
+          throw std::runtime_error("invalid value size parameter '" + size_1d + "', must specify either 'px' or '%'");
+          return 0;
+        }
+      };
+
+      int w = parse_size1d(sizes[0], image_size.width());
+      int h = parse_size1d(sizes[1], image_size.height());
+
+      if (w == 0 || h == 0)
+      {
+        throw std::runtime_error("scaling output size is 0");
+      }
+
+      return { w, h };
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  ggo::rect_int parse_rect(const parameters & params, const ggo::size & image_size)
+  {
+    // Parse size first.
+    auto size_param = params["size"];
+    if (!size_param || size_param->empty() == true)
+    {
+      throw std::runtime_error("missing or empty 'size' parameter");
+    }
+    ggo::size rect_size = parse_size(*size_param, image_size);
+
+    // Parse position.
+    ggo::pos2i left_bottom = parse_margins(params, "pos", image_size, rect_size);
+
+    // The output rect.
+    int left    = left_bottom.x();
+    int right   = left + rect_size.width() - 1;
+    int bottom  = left_bottom.y();
+    int top     = bottom + rect_size.height() - 1;
+    return rect_int::from_left_right_bottom_top(left, right, bottom, top);
+  }
+
   /////////////////////////////////////////////////////////////////////
   ggo::pos2i parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size)
   {
@@ -63,40 +128,6 @@ namespace ggo
       throw std::runtime_error("missing or empty '" + key + "' parameter");
     }
 
-    auto scalings = ggo::split(*scalings_param, ',');
-    if (scalings.size() != 2)
-    {
-      throw std::runtime_error("expecting 2 values for the parameter '" + key + "'");
-    }
-
-    auto parse_scaling = [&key](const std::string & scaling, int image)
-    {
-      // Pixel coordinate.
-      if (scaling.size() > 2 && scaling.substr(scaling.size() - 2) == "px")
-      {
-        return ggo::to<int>(scaling.substr(0, scaling.size() - 2));
-      }
-      // Percentage.
-      else if (scaling.back() == '%')
-      {
-        float percent = ggo::to<float>(scaling.substr(0, scaling.size() - 1));
-        return ggo::round_to<int>(percent * image / 100.f);
-      }
-      else
-      {
-        throw std::runtime_error("invalid value '" + scaling + "' for key '" + key + "', must specify either 'px' or '%'");
-        return 0;
-      }
-    };
-
-    int x = parse_scaling(scalings[0], image_size.width());
-    int y = parse_scaling(scalings[1], image_size.height());
-
-    if (x == 0 || y == 0)
-    {
-      throw std::runtime_error("scaling output size is 0");
-    }
-
-    return { x, y };
+    return parse_size(*scalings_param, image_size);
   }
 }

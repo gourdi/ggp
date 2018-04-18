@@ -1,8 +1,9 @@
 #include <kernel/ggo_color_stream.h>
 #include <vivelle/ggo_command.h>
-#include <vivelle/ggo_io.h>
-#include <vivelle/ggo_blit.h>
-#include <vivelle/ggo_rescale.h>
+#include <vivelle/commands/ggo_io.h>
+#include <vivelle/commands/ggo_blit.h>
+#include <vivelle/commands/ggo_rescale.h>
+#include <vivelle/commands/ggo_crop.h>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -23,6 +24,10 @@ namespace ggo
       else if (cmd.name() == "rescale")
       {
         image = rescale(image, cmd.parameters());
+      }
+      else if (cmd.name() == "crop")
+      {
+        image = crop(image, cmd.parameters());
       }
       else
       {

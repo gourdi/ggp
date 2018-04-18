@@ -10,6 +10,6 @@ namespace ggo
   {
     ggo::size output_size = parse_scaling(params, "size", image.size());
 
-    return scale(image, output_size.width(), output_size.height());
+    return scale(image, output_size);
   }
 }
