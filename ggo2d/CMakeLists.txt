@@ -2,7 +2,6 @@ include(../cmake/ggp.cmake)
 
 # The static library.
 get_sources_from_root_directory("src" sources)
-get_subdirectories("src" dirs)
 group_sources(${sources})
 add_library(ggo2d STATIC ${sources})
 target_include_directories(ggo2d PUBLIC "src/" PRIVATE ${JPEG_INCLUDE_DIR} ${PNG_INCLUDE_DIRS})

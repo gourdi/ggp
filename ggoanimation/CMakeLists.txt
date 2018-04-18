@@ -2,10 +2,9 @@ include(../cmake/ggp.cmake)
 
 # The static library.
 get_sources_from_root_directory("src" sources)
-get_subdirectories("src" dirs)
 group_sources(${sources})
 add_library(ggoanimation STATIC ${sources})
-target_include_directories(ggoanimation PUBLIC ${dirs})
+target_include_directories(ggoanimation PUBLIC "src/")
 target_link_libraries(ggoanimation ggokernel ggo2d)
 
 # The non-regression executable.
