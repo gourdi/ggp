@@ -3,7 +3,7 @@
 
 #include <ggo_animation_artist_abc.h>
 #include <ggo_array.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 namespace ggo
 {

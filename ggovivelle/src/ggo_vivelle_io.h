@@ -2,7 +2,7 @@
 #define GGO_VIVELLE_IO__
 
 #include <string>
-#include <ggo_image.h>
+#include <2d/ggo_image.h>
 
 namespace ggo
 {

@@ -1,8 +1,8 @@
 #if 0
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_paint.h>
+#include <2d/paint/ggo_paint.h>
 #include <ggo_layer.h>
-#include <ggo_bmp.h>
+#include <2d/io/ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(layer, test)

@@ -1,8 +1,8 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_buffer.h>
-#include <ggo_fill.h>
-#include <ggo_morphology.h>
-#include <ggo_bmp.h>
+#include <kernel/memory/ggo_buffer.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/processing/ggo_morphology.h>
+#include <2d/io/ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(morphology, dilatation_disc)

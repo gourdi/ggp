@@ -1,9 +1,9 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_kdtree.h>
-#include <ggo_shapes2d.h>
+#include <kernel/trees/ggo_kdtree.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_paint.h>
-#include <ggo_bmp.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/io/ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(kdtree, random_points)

@@ -1,6 +1,6 @@
-#include <ggo_buffer.h>
+#include <kernel/memory/ggo_buffer.h>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_bmp.h>
+#include <2d/io/ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_scene.h>
 #include <ggo_background3d_color.h>

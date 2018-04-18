@@ -4,7 +4,7 @@
 #include <kernel/ggo_vec.h>
 #include <ggo_random_interpolator_abc.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_pixel_buffer_format.h>
 #include <vector>
 

@@ -1,9 +1,9 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_shape_sampling.h>
-#include <ggo_buffer.h>
-#include <ggo_poisson_sampling.h>
-#include <ggo_bmp.h>
-#include <ggo_paint.h>
+#include <kernel/memory/ggo_buffer.h>
+#include <kernel/math/sampling/shape_sampling/ggo_shape_sampling.h>
+#include <kernel/math/sampling/low_discrepancy_sequences/ggo_poisson_sampling.h>
+#include <2d/io/ggo_bmp.h>
+#include <2d/paint/ggo_paint.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(shape_sampling, disc_uniform_sampling)

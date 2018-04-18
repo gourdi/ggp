@@ -2,7 +2,7 @@
 #define GGO_BACKGROUND3D_ABC__
 
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 namespace ggo
 {

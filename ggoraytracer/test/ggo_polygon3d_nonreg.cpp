@@ -1,6 +1,6 @@
 #include <iostream>
-#include <ggo_buffer.h>
-#include <ggo_bmp.h>
+#include <kernel/memory/ggo_buffer.h>
+#include <2d/io/ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_mono_sampling_renderer.h>
 #include <ggo_background3d_color.h>

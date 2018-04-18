@@ -1,10 +1,10 @@
 #include <sstream>
-#include <ggo_buffer.h>
+#include <kernel/memory/ggo_buffer.h>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_halton.h>
-#include <ggo_best_candidate_sequence.h>
-#include <ggo_paint.h>
-#include <ggo_bmp.h>
+#include <kernel/math/sampling/low_discrepancy_sequences/ggo_halton.h>
+#include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/io/ggo_bmp.h>
 
 namespace
 {

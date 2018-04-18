@@ -1,6 +1,6 @@
 #include "ggo_crystal_artist.h"
 #include <ggo_coordinates_conversions.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_array.h>
 #include <ggo_blend.h>
 

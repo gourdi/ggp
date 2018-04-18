@@ -1,7 +1,7 @@
 #include "ggo_animation_artist_abc.h"
 #include <ggo_array.h>
 #include <ggo_chronometer.h>
-#include <ggo_bmp.h>
+#include <2d/io/ggo_bmp.h>
 #include <sstream>
 #include <iostream>
 

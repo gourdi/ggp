@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_rle_image.h>
-#include <ggo_bmp.h>
+#include <2d/rle_image/ggo_rle_image.h>
+#include <2d/io/ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(rle_image, y8u)

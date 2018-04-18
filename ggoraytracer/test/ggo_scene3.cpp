@@ -1,7 +1,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_buffer.h>
-#include <ggo_bmp.h>
-#include <ggo_shapes2d.h>
+#include <kernel/memory/ggo_buffer.h>
+#include <2d/io/ggo_bmp.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <ggo_point_camera.h>
 #include <ggo_pbf_paint.h>
 #include <ggo_mono_sampling_renderer.h>

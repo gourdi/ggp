@@ -1,6 +1,6 @@
 #include "ggo_julia_artist.h"
 #include <ggo_curve.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 //////////////////////////////////////////////////////////////
 ggo::julia_artist::julia_artist(int width, int height)

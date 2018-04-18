@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <cmath>
-#include <ggo_interpolation1d.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 namespace ggo
 {

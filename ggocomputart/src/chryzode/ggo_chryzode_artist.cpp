@@ -1,7 +1,7 @@
 #include "ggo_chryzode_artist.h"
 #include <ggo_gaussian_blur2d.h>
 #include <ggo_pbf_paint.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 //////////////////////////////////////////////////////////////
 ggo::chryzode_artist::chryzode_artist(int width, int height)

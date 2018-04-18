@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_fill.h>
-#include <ggo_bmp.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/io/ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, fill_solid_y_8u_yu)

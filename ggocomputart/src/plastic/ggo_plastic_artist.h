@@ -2,7 +2,7 @@
 #define __GGO_PLASTIC_ARTIST__
 
 #include <ggo_artist.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 namespace ggo
 {

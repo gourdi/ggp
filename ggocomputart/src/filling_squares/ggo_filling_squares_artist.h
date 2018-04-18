@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <kernel/ggo_vec.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 namespace ggo
 {

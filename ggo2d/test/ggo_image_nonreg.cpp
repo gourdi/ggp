@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
-#include <ggo_image.h>
+#include <2d/ggo_image.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(image, y_8u_yu)

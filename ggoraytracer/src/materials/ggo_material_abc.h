@@ -2,7 +2,7 @@
 #define __GGO_MATERIAL_ABC__
 
 #include <kernel/ggo_vec.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 
 namespace ggo
 {

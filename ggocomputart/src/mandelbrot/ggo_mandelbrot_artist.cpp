@@ -1,6 +1,6 @@
 #include "ggo_mandelbrot_artist.h"
 #include <ggo_curve.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <array>
 #include <complex>
 

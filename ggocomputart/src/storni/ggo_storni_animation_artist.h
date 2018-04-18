@@ -3,7 +3,7 @@
 
 #include <ggo_animation_artist_abc.h>
 #include <ggo_sampling_paint.h>
-#include <ggo_buffer.h>
+#include <kernel/memory/ggo_buffer.h>
 
 namespace ggo
 {

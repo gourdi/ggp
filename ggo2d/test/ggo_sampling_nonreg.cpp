@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
-#include <ggo_pixel_sampling.h>
+#include <2d/paint/ggo_pixel_sampling.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(sampling, range_and_count)

@@ -3,7 +3,7 @@
 
 #include <ggo_array.h>
 #include <ggo_curve.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_pixel_buffer.h>
 
 namespace ggo

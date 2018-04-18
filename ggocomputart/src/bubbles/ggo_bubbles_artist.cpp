@@ -1,5 +1,5 @@
 #include "ggo_bubbles_artist.h"
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_pbf_fill.h>
 #include <ggo_pbf_paint.h>
 

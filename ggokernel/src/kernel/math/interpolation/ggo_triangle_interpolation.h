@@ -1,7 +1,7 @@
 #ifndef __GGO_TRIANGLE_INTERPOLATION__
 #define __GGO_TRIANGLE_INTERPOLATION__
 
-#include <ggo_linear_algebra2d.h>
+#include <kernel/math/linear_algebra/ggo_linear_algebra2d.h>
 
 namespace ggo
 {

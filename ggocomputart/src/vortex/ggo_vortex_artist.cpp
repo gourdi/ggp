@@ -1,5 +1,5 @@
 #include "ggo_vortex_artist.h"
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_fill.h>
 
 namespace

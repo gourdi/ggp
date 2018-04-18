@@ -1,13 +1,13 @@
 //#define GGO_GAUSSIAN_DEBUG 1
 
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_chronometer.h>
-#include <blur/ggo_gaussian_blur.h>
-#include <blur/ggo_mean_box_blur.h>
-#include <ggo_paint.h>
-#include <ggo_fill.h>
-#include <ggo_bmp.h>
-#include <ggo_shapes2d.h>
+#include <kernel/time/ggo_chronometer.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/blur/ggo_mean_box_blur.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/io/ggo_bmp.h>
 #include <string>
 
 //#define GGO_BENCH 1

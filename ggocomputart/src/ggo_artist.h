@@ -3,9 +3,9 @@
 
 #include <kernel/ggo_kernel.h>
 #include <ggo_pixel_buffer.h>
-#include <ggo_shapes2d.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <ggo_ease.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <string>
 #include <memory>
 

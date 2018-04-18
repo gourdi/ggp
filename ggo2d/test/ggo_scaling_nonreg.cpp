@@ -1,7 +1,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_buffer2d.h>
-#include <kernel/math/shapes_2d/ggo_scale2d.h>
-#include <ggo_bmp.h>
+#include <kernel/memory/ggo_buffer2d.h>
+#include <kernel/math/signal_proc/ggo_scale2d.h>
+#include <2d/io/ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scaling, y32f)

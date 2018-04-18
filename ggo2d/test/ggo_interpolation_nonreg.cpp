@@ -4,7 +4,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_interpolation2d.h>
 #include <ggo_rgb_image_buffer.h>
-#include <ggo_bmp.h>
+#include <2d/io/ggo_bmp.h>
 
 namespace
 {

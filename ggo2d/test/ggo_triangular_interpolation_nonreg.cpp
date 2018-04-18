@@ -3,13 +3,13 @@
 #include <memory>
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_vec.h>
-#include <ggo_shapes2d.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <ggo_triangle_interpolation.h>
 #include <ggo_triangle_interpolation_brush.h>
 #include <ggo_image_buffer_abc.h>
-#include <ggo_paint.h>
+#include <2d/paint/ggo_paint.h>
 #include <ggo_fill.h>
-#include <ggo_bmp.h>
+#include <2d/io/ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)

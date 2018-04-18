@@ -1,5 +1,5 @@
 #include "ggo_vivelle_blit.h"
-#include <ggo_image.h>
+#include <2d/ggo_image.h>
 #include <ggo_image_io.h>
 #include <ggo_blit.h>
 #include <ggo_command.h>

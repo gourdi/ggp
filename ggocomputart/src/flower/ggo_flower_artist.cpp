@@ -1,7 +1,7 @@
 #include "ggo_flower_artist.h"
 #include <ggo_array.h>
 #include <ggo_dct.h>
-#include <ggo_color.h>
+#include <2d/ggo_color.h>
 #include <ggo_curve.h>
 #include <ggo_pbf_paint.h>
 #include <ggo_brush.h>

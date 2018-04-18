@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_array.h>
-#include <ggo_blit.h>
+#include <kernel/memory/ggo_array.h>
+#include <2d/ggo_blit.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, clipping)

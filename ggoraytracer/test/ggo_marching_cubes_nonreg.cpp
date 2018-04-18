@@ -1,8 +1,8 @@
 #include <array>
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_marching_cubes.h>
-#include <ggo_buffer.h>
-#include <ggo_bmp.h>
+#include <kernel/memory/ggo_buffer.h>
+#include <2d/io/ggo_bmp.h>
 #include <ggo_point_camera.h>
 #include <ggo_antialiasing_renderer.h>
 #include <ggo_solid_color_material.h>
