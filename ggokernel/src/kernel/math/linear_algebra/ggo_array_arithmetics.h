@@ -15,19 +15,19 @@ namespace ggo
   template <typename data_t>
   ggo::array<data_t, 2> operator*(const ggo::array<data_t, 2> & m1, const ggo::array<data_t, 2> & m2)
   {
-    if (m1.template size<1>() != m2.template size<0>())
+    if (m1.height() != m2.width())
     {
       throw ggo::dimension_mismatch_exception();
     }
 
-    ggo::array<data_t, 2> r(m1.template size<0>(), m2.template size<1>());
+    ggo::array<data_t, 2> r(m1.width(), m2.height());
 
-    for (int y = 0; y < m1.template size<0>(); ++y)
+    for (int y = 0; y < m1.width(); ++y)
     {
-      for (int x = 0; x < m2.template size<1>(); ++x)
+      for (int x = 0; x < m2.height(); ++x)
       {
         r(y, x) = 0;
-        for (int j = 0; j < m1.template size<1>(); ++j)
+        for (int j = 0; j < m1.height(); ++j)
         {
           r(y, x) += m1(y, j) * m2(j, x);
         }
@@ -40,7 +40,7 @@ namespace ggo
   template <typename data_t>
   ggo::array<data_t, 2> operator*(data_t k, const ggo::array<data_t, 2> & m)
   {
-    ggo::array<data_t, 2> r(m.template size<0>(), m.template size<1>());
+    ggo::array<data_t, 2> r(m.width(), m.height());
 
     for (int i = 0; i < r.count(); ++i)
     {
@@ -53,12 +53,12 @@ namespace ggo
   template <typename data_t>
   ggo::array<data_t, 2> operator+(const ggo::array<data_t, 2> & m1, const ggo::array<data_t, 2> & m2)
   {
-    if (m1.template size<0>() != m2.template size<0>() || m1.template size<1>() != m2.template size<1>())
+    if (m1.width() != m2.width() || m1.height() != m2.height())
     {
       throw ggo::dimension_mismatch_exception();
     }
 
-    ggo::array<data_t, 2> r(m1.template size<0>(), m2.template size<1>());
+    ggo::array<data_t, 2> r(m1.width(), m2.height());
 
     for (int i = 0; i < r.count(); ++i)
     {
@@ -71,12 +71,12 @@ namespace ggo
   template <typename data_t>
   ggo::array<data_t, 2> operator-(const ggo::array<data_t, 2> & m1, const ggo::array<data_t, 2> & m2)
   {
-    if (m1.template size<0>() != m2.template size<0>() || m1.template size<1>() != m2.template size<1>())
+    if (m1.width() != m2.width() || m1.height() != m2.height())
     {
       throw ggo::dimension_mismatch_exception();
     }
 
-    ggo::array<data_t, 2> r(m1.template size<0>(), m2.template size<1>());
+    ggo::array<data_t, 2> r(m1.width(), m2.height());
 
     for (int i = 0; i < r.count(); ++i)
     {

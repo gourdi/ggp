@@ -1,3 +1,4 @@
+#if 0
 #ifndef __GGO_BUFFER__
 #define __GGO_BUFFER__
 
@@ -91,4 +92,5 @@ namespace ggo
   using buffer16u = buffer_t<uint16_t>;
 }
 
+#endif
 #endif

@@ -1,7 +1,7 @@
 #include "ggo_bmp.h"
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_file_helpers.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <fstream>
 
 namespace
@@ -45,7 +45,7 @@ namespace
     {
       using format_traits = ggo::image_format_traits<format>;
 
-      ggo::buffer padded_line(padded_line_size);
+      ggo::array_8u padded_line(padded_line_size);
 
       for (int y = 0; y < height; ++y)
       {

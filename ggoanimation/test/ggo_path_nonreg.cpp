@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_velocity_path.h>
-#include <ggo_spiral_path.h>
+#include <animation/paths/ggo_velocity_path.h>
+#include <animation/paths/ggo_spiral_path.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(path, velocity)

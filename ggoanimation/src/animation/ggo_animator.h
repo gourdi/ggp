@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdint.h>
 #include <memory>
-#include <ggo_pixel_buffer.h>
+#include <2d/ggo_image_format.h>
 
 namespace ggo
 {
@@ -26,7 +26,7 @@ namespace ggo
     void					            clear();
 
     void					            update();
-    void					            render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const;
+    void					            render(void * buffer, int width, int height, int line_step, ggo::image_format format) const;
 
   private:
 

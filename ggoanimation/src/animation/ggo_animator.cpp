@@ -29,11 +29,11 @@ void ggo::animator::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::animator::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const
+void ggo::animator::render(void * buffer, int width, int height, int line_step, ggo::image_format format) const
 {
   for (const auto & animate : _animates)
   {
-    animate->render(buffer, width, height, line_step, pbf);
+    animate->render(buffer, width, height, line_step, format);
   }
 }
 

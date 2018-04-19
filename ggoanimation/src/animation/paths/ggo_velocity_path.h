@@ -1,7 +1,7 @@
 #ifndef __GGO_VELOCITY_PATH__
 #define __GGO_VELOCITY_PATH__
 
-#include <ggo_path_abc.h>
+#include <animation/ggo_path_abc.h>
 
 namespace ggo
 {

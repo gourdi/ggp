@@ -12,39 +12,39 @@ namespace ggo
   void conjugate_gradient(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 2> & b, ggo::array<data_t, 2> & s, int iterations)
   {
     // Check a is a square matrix.
-    if (a.template size<0>() != a.template size<1>())
+    if (a.width() != a.height())
     {
       throw ggo::dimension_mismatch_exception();
     }
 
     // Check b is a n x 1 vertical vector.
-    if (b.template size<0>() != a.template size<0>())
+    if (b.width() != a.width())
     {
       throw ggo::dimension_mismatch_exception();
     }
-    if (b.template size<1>() != 1)
+    if (b.height() != 1)
     {
       throw ggo::dimension_mismatch_exception();
     }
 
     // Check s is a n x 1 vertical vector.
-    if (s.template size<0>() != a.template size<0>())
+    if (s.width() != a.width())
     {
       throw ggo::dimension_mismatch_exception();
     }
-    if (s.template size<1>() != 1)
+    if (s.height() != 1)
     {
       throw ggo::dimension_mismatch_exception();
     }
 
     auto cg_dot = [](const ggo::array<data_t, 2> & v1, const ggo::array<data_t, 2> & v2)
     {
-      GGO_ASSERT(v1.template size<1>() == 1);
-      GGO_ASSERT(v2.template size<1>() == 1);
-      GGO_ASSERT(v1.template size<1>() == v2.template size<1>());
+      GGO_ASSERT(v1.height() == 1);
+      GGO_ASSERT(v2.height() == 1);
+      GGO_ASSERT(v1.height() == v2.height());
 
       data_t h = 0;
-      for (int y = 0; y < v1.template size<0>(); ++y)
+      for (int y = 0; y < v1.width(); ++y)
       {
         h += v1(y, 0) * v2(y, 0);
       }

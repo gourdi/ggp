@@ -2,7 +2,7 @@
 
 #include "ggo_kernel_processing.h"
 #include <ggo_memory.h>
-#include <ggo_array.h>
+#include <kernel/memory/ggo_array.h>
 #include <functional>
 
 /*

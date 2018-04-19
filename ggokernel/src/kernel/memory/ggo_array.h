@@ -18,9 +18,9 @@ namespace ggo
 
     // Constructor to specify the dimensions, and optionnaly a fill value.
     template <typename... args>
-    array(args... a)
+    array(int dim1, args... a)
     {
-      array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, a...);
+      array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, dim1, a...);
     }
 
     // Copy constructor.
@@ -42,8 +42,8 @@ namespace ggo
     }
 
     // Coefs constructors (only 1d and 2d).
-    template <typename coefs_t, size_t n>
-    array(coefs_t const (&coefs)[n])
+    template <size_t n>
+    array(data_t const (&coefs)[n])
     {
       static_assert(n_dims == 1);
       _dimensions[0] = n;
@@ -51,8 +51,8 @@ namespace ggo
       ggo::copy<n>(_buffer, coefs);
     }
 
-    template <typename coefs_t, size_t h, size_t w>
-    array(coefs_t const (&coefs)[h][w])
+    template <size_t h, size_t w>
+    array(data_t const (&coefs)[h][w])
     {
       static_assert(n_dims == 2);
       _dimensions[0] = w;
@@ -100,7 +100,8 @@ namespace ggo
     template <int dim>
     int size() const
     {
-      static_assert(dim >= 0 && dim < n_dims);
+      static_assert(dim < n_dims);
+      static_assert(dim > 2); // Use size(), width() or height() instead.
       return _dimensions[dim];
     }
 
@@ -224,6 +225,10 @@ namespace ggo
       std::fill(_buffer, _buffer + ggo::multiply_all<n_dims>(_dimensions), v);
     }
 
+    // Operator[] (1D only)
+    data_t &        operator[](int i)       { static_assert(n_dims == 1); return _buffer[i]; }
+    const data_t &  operator[](int i) const { static_assert(n_dims == 1); return _buffer[i]; }
+
   private:
 
     // Set-up array data members. The trick is that the specialized version that handles the stop case
@@ -333,16 +338,9 @@ namespace ggo
 {
   using array_char    = array<char, 1>;
   using array_int     = array<int, 1>;
-  using array_uint8   = array<uint8_t, 1>;
-  using array_uint16  = array<uint16_t, 1>;
-  using array_uint32  = array<uint32_t, 1>;
-  using array_uint64  = array<uint64_t, 1>;
-  using array_int8    = array<int8_t, 1>;
-  using array_int16   = array<int16_t, 1>;
-  using array_int32   = array<int32_t, 1>;
-  using array_int64   = array<int64_t, 1>;
-  using array_float   = array<float, 1>;
-  using array_double  = array<double, 1>;
+
+  using array_8u      = array<uint8_t, 1>;
+  using array_32f     = array<float, 1>;
 }
 
 #endif

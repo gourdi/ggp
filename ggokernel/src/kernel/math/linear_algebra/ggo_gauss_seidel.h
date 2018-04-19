@@ -61,15 +61,15 @@ namespace ggo
   template <typename data_t>
   void gauss_seidel(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 1> & b, ggo::array<data_t, 1> & s, int iterations)
   {
-    if (a.template size<0>() != a.template size<1>())
+    if (a.width() != a.height())
     {
       throw ggo::dimension_mismatch_exception();
     }
-    if (a.template size<0>() != b.template size<0>())
+    if (a.width() != b.size())
     {
       throw ggo::dimension_mismatch_exception();
     }
-    if (a.template size<0>() != s.template size<0>())
+    if (a.width() != s.size())
     {
       throw ggo::dimension_mismatch_exception();
     }
@@ -79,7 +79,7 @@ namespace ggo
     auto read_s   = [&](int i) { return s.data()[i]; };
     auto write_s  = [&](int i, float v) { s.data()[i] = v; };
 
-    return gauss_seidel<data_t>(a.template size<0>(), lambda_a, lambda_b, read_s, write_s, iterations);
+    return gauss_seidel<data_t>(a.width(), lambda_a, lambda_b, read_s, write_s, iterations);
   }
 }
 

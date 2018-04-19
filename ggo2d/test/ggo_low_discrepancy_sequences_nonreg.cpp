@@ -1,5 +1,5 @@
 #include <sstream>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_halton.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
@@ -13,7 +13,7 @@ namespace
   {
     const int size = 400;
     
-    ggo::buffer8u image(3 * size * size, 0);
+    ggo::array_8u image(3 * size * size, 0);
 
     for (int i = 0; i < points_count; ++i)
     {

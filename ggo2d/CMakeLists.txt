@@ -12,4 +12,3 @@ get_sources_from_root_directory("test" sources)
 group_sources(${sources})
 add_executable(ggo2d_nonreg ${sources})
 target_link_libraries(ggo2d_nonreg ggo2d)
-

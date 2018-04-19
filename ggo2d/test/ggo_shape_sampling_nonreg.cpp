@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <kernel/math/sampling/shape_sampling/ggo_shape_sampling.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_poisson_sampling.h>
 #include <2d/io/ggo_bmp.h>
@@ -9,7 +9,7 @@
 GGO_TEST(shape_sampling, disc_uniform_sampling)
 {
   const int size = 500;
-  ggo::buffer8u buffer(size * size * 3, 0);
+  ggo::array_8u buffer(size * size * 3, 0);
   
   for (int i = 0; i < (1<<14); ++i)
   {
@@ -45,7 +45,7 @@ GGO_TEST(shape_sampling, disc_poisson_sampling)
     },
     8, 1 << 10);
   
-  ggo::buffer8u buffer(size * size * 3, 0);
+  ggo::array_8u buffer(size * size * 3, 0);
 
   for (const auto & sample : samples)
   {
@@ -60,7 +60,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
 {
   const float angle = 1.2f;
   const int size = 1000;
-  ggo::buffer8u buffer(size * size * 3, 0);
+  ggo::array_8u buffer(size * size * 3, 0);
   
   for (int i = 0; i < 1 << 10; ++i)
   {
@@ -143,7 +143,7 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
     },
     0.05f, 1 << 10);
   
-  ggo::buffer8u buffer(size * size * 3, 0);
+  ggo::array_8u buffer(size * size * 3, 0);
   
   for (const auto & sample : samples)
   {

@@ -6,26 +6,26 @@ GGO_TEST(ggo_array, construction)
 {  
   {
     ggo::array<uint8_t, 1> a(7);
-    GGO_CHECK(a.size<0>() == 7);
+    GGO_CHECK(a.size() == 7);
     GGO_CHECK(a.count() == 7);
   }
 
   {
     ggo::array<std::string, 1> a(3);
-    GGO_CHECK_EQ(a.size<0>(), 3);
+    GGO_CHECK_EQ(a.size(), 3);
     GGO_CHECK_EQ(a.count(),3);
   }
 
   {
     ggo::array<float, 2> a(7, 11);
-    GGO_CHECK_EQ(a.size<0>(), 7);
-    GGO_CHECK_EQ(a.size<1>(), 11);
+    GGO_CHECK_EQ(a.width(), 7);
+    GGO_CHECK_EQ(a.height(), 11);
     GGO_CHECK_EQ(a.count(), 77);
   }
 
   {
     ggo::array<int, 1> a({ 1, 2, 3, 4 });
-    GGO_CHECK_EQ(a.size<0>(), 4);
+    GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
     GGO_CHECK_EQ(a(2), 3);
@@ -34,7 +34,7 @@ GGO_TEST(ggo_array, construction)
 
   {
     ggo::array<uint8_t, 1> a({ 1_u8, 2_u8, 3_u8, 4_u8 });
-    GGO_CHECK_EQ(a.size<0>(), 4);
+    GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
     GGO_CHECK_EQ(a(2), 3);
@@ -42,8 +42,17 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
+    ggo::array<uint8_t, 1> a({ 0x00_u8, 0xff_u8, 0x00_u8, 0xff_u8 });
+    GGO_CHECK_EQ(a.size(), 4);
+    GGO_CHECK_EQ(a(0), 0x00);
+    GGO_CHECK_EQ(a(1), 0xff);
+    GGO_CHECK_EQ(a(2), 0x00);
+    GGO_CHECK_EQ(a(3), 0xff);
+  }
+
+  {
     ggo::array<uint8_t, 1> a({ 1, 2, 3, 4 });
-    GGO_CHECK_EQ(a.size<0>(), 4);
+    GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
     GGO_CHECK_EQ(a(2), 3);
@@ -55,8 +64,8 @@ GGO_TEST(ggo_array, construction)
       {1, 2, 3},
       {4, 5, 6} });
     GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.size<0>(), 3);
-    GGO_CHECK_EQ(a.size<1>(), 2);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
     GGO_CHECK_EQ(a(0, 0), 1);
     GGO_CHECK_EQ(a(1, 0), 2);
     GGO_CHECK_EQ(a(2, 0), 3);
@@ -70,8 +79,8 @@ GGO_TEST(ggo_array, construction)
       { 1_u8, 2_u8, 3_u8 },
       { 4_u8, 5_u8, 6_u8 } });
     GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.size<0>(), 3);
-    GGO_CHECK_EQ(a.size<1>(), 2);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
     GGO_CHECK_EQ(a(0, 0), 1);
     GGO_CHECK_EQ(a(1, 0), 2);
     GGO_CHECK_EQ(a(2, 0), 3);
@@ -85,8 +94,8 @@ GGO_TEST(ggo_array, construction)
       { 1, 2, 3 },
       { 4, 5, 6 } });
     GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.size<0>(), 3);
-    GGO_CHECK_EQ(a.size<1>(), 2);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
     GGO_CHECK_EQ(a(0, 0), 1);
     GGO_CHECK_EQ(a(1, 0), 2);
     GGO_CHECK_EQ(a(2, 0), 3);
@@ -101,7 +110,7 @@ GGO_TEST(ggo_array, construction_and_fill)
 {
   {
     ggo::array<uint8_t, 1> a(3, 2);
-    GGO_CHECK_EQ(a.size<0>(), 3);
+    GGO_CHECK_EQ(a.size(), 3);
     GGO_CHECK_EQ(a.count(), 3);
     GGO_CHECK_EQ(a(0), 2);
     GGO_CHECK_EQ(a(1), 2);
@@ -110,8 +119,8 @@ GGO_TEST(ggo_array, construction_and_fill)
 
   {
     ggo::array<float, 2> a(2, 3, 1.f);
-    GGO_CHECK_EQ(a.size<0>(), 2);
-    GGO_CHECK_EQ(a.size<1>(), 3);
+    GGO_CHECK_EQ(a.width(), 2);
+    GGO_CHECK_EQ(a.height(), 3);
     GGO_CHECK_EQ(a.count(), 6);
     GGO_CHECK_FLOAT_EQ(a(0, 0), 1.f);
     GGO_CHECK_FLOAT_EQ(a(1, 0), 1.f);
@@ -127,8 +136,8 @@ GGO_TEST(ggo_array, resize)
 {
   ggo::array<uint8_t, 2> a(2, 3);
   a.resize(10, 5);
-  GGO_CHECK_EQ(a.size<0>(), 10);
-  GGO_CHECK_EQ(a.size<1>(), 5);
+  GGO_CHECK_EQ(a.width(), 10);
+  GGO_CHECK_EQ(a.height(), 5);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -181,7 +190,7 @@ GGO_TEST(ggo_array, access)
 GGO_TEST(ggo_array, loop_access)
 {
   {
-    ggo::array_uint8 a(3);
+    ggo::array_8u a(3);
     a(0) = 1;
     a(1) = 2;
     a(2) = 3;
@@ -237,7 +246,7 @@ GGO_TEST(ggo_array, loop_access)
 GGO_TEST(ggo_array, loop_mirror)
 {
   {
-    ggo::array_uint8 a(3);
+    ggo::array_8u a(3);
     a(0) = 1;
     a(1) = 2;
     a(2) = 3;
@@ -351,8 +360,8 @@ GGO_TEST(ggo_array, copy)
 {
   ggo::array<uint8_t, 2> a(2, 3, 1);
   ggo::array<uint8_t, 2> b(a);
-  GGO_CHECK_EQ(b.size<0>(), 2);
-  GGO_CHECK_EQ(b.size<1>(), 3);
+  GGO_CHECK_EQ(b.width(), 2);
+  GGO_CHECK_EQ(b.height(), 3);
   for (auto v : b)
   {
     GGO_CHECK_EQ(v, 1);

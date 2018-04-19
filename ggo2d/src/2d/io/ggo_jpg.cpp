@@ -1,5 +1,5 @@
 #include <kernel/ggo_file_helpers.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_jpg.h>
 #include <jpeglib.h>
 #include <setjmp.h>
@@ -99,7 +99,7 @@ namespace
     {
       using format_traits = ggo::image_format_traits<format>;
 
-      ggo::buffer line(3 * width);
+      ggo::array_8u line(3 * width);
 
       int y = cinfo.image_height - 1; // Top to bottom.
 
