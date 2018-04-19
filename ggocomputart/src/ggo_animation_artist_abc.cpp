@@ -36,7 +36,7 @@
 // ANIMATION ARTISTS
 
 //////////////////////////////////////////////////////////////
-ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
 ggo::artist(width, height),
 _line_step(line_step),

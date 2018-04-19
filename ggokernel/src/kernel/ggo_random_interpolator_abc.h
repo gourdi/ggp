@@ -1,7 +1,7 @@
 #ifndef __GGO_RANDOM_INTERPOLATOR_ABC__
 #define __GGO_RANDOM_INTERPOLATOR_ABC__
 
-#include <ggo_interpolation1d.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 namespace ggo
 {

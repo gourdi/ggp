@@ -20,6 +20,7 @@ namespace ggo
     rgba_8u_yd,
     bgr_8u_yd,
     bgr_8u_yu,
+    bgrx_8u_yd,
     bgra_8u_yd,
     rgb_16u_yd,
     rgb_32f_yu
@@ -267,6 +268,33 @@ namespace ggo
   };
 
   template <>
+  struct image_format_traits<bgrx_8u_yd>
+  {
+    static const int pixel_byte_size = 4;
+    static const image_format gray_format = y_8u_yd;
+
+    using color_t = ggo::color_8u;
+    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
+
+    // Accessor interface.
+    using type = ggo::color_8u;
+
+    static ggo::color_8u read(const void * ptr)
+    {
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+    }
+
+    static void write(void * ptr, const ggo::color_8u & c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
+    }
+  };
+
+  template <>
   struct image_format_traits<bgra_8u_yd>
   {
     static const int pixel_byte_size = 4;
@@ -276,7 +304,7 @@ namespace ggo
     using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
 
     // Accessor interface.
-    using type = ggo::color_8u;
+    using type = ggo::alpha_color_8u;
 
     static ggo::alpha_color_8u read(const void * ptr)
     {
@@ -338,7 +366,7 @@ namespace ggo
     case rgb_8u_yd: return functor::call<rgb_8u_yd>(std::forward<args>(a)...);
     case bgr_8u_yu: return functor::call<bgr_8u_yu>(std::forward<args>(a)...);
     case bgr_8u_yd: return functor::call<bgr_8u_yd>(std::forward<args>(a)...);
-    //case bgra_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
+    case bgrx_8u_yd: return functor::call<bgra_8u_yd>(std::forward<args>(a)...);
     //case rgb_16u_yd: return functor::call<rgb_16u_yd>(std::forward<args>(a)...);
     //case rgb_32f_yu: return functor::call<rgb_32f_yu>(std::forward<args>(a)...);
     }
@@ -369,6 +397,7 @@ namespace ggo
     case rgba_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgba_8u_yd>>(format2, std::forward<args>(a)...);
     case bgr_8u_yu: return dispatch_image_format<dispatch_image_format_aux<functor, bgr_8u_yu>>(format2, std::forward<args>(a)...);
     case bgr_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, bgr_8u_yd>>(format2, std::forward<args>(a)...);
+    case bgrx_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, bgrx_8u_yd>>(format2, std::forward<args>(a)...);
     case bgra_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, bgra_8u_yd>>(format2, std::forward<args>(a)...);
     case rgb_16u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_16u_yd>>(format2, std::forward<args>(a)...);
     case rgb_32f_yu: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_32f_yu>>(format2, std::forward<args>(a)...);

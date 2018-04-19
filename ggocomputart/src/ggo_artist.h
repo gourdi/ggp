@@ -2,9 +2,9 @@
 #define __GGO_ARTIST_ABC__
 
 #include <kernel/ggo_kernel.h>
-#include <ggo_pixel_buffer.h>
+#include <kernel/ggo_ease.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
-#include <ggo_ease.h>
+#include <2d/ggo_image_format.h>
 #include <2d/ggo_color.h>
 #include <string>
 #include <memory>

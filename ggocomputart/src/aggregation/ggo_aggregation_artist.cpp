@@ -1,8 +1,7 @@
 #include "ggo_aggregation_artist.h"
-#include <ggo_gaussian_blur.h>
+#include <2d/blur/ggo_gaussian_blur.h>
 #include <2d/ggo_color.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_gaussian_blur2d.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::aggregation_artist::aggregation_artist(int width, int height)
@@ -22,9 +21,9 @@ artist(width, height)
 
   _grid.resize(grid_size_x, grid_size_y);
 
-  for (int y = 0; y < _grid.get_height(); ++y)
+  for (int y = 0; y < _grid.height(); ++y)
   {
-    for (int x = 0; x < _grid.get_width(); ++x)
+    for (int x = 0; x < _grid.width(); ++x)
     {
       float left = x * cell_size - _threshold_dist;
       float right = (x + 1) * cell_size + _threshold_dist;
@@ -127,15 +126,15 @@ void ggo::aggregation_artist::update(int points_count)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_artist::render(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const
+void ggo::aggregation_artist::render(void * buffer, int line_step, ggo::image_format format) const
 {
-  switch (pbf)
+  switch (format)
   {
   case ggo::rgb_8u_yu:
     render<ggo::rgb_8u_yu>(buffer, line_step);
     break;
-  case ggo::bgra_8u_yd:
-    render<ggo::bgra_8u_yd>(buffer, line_step);
+  case ggo::bgrx_8u_yd:
+    render<ggo::bgrx_8u_yd>(buffer, line_step);
     break;
   default:
     GGO_FAIL();

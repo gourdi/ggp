@@ -1,7 +1,7 @@
 #ifndef __GGO_AGGREGATION_ARTIST__
 #define __GGO_AGGREGATION_ARTIST__
 
-#include <ggo_array.h>
+#include <kernel/memory/ggo_array.h>
 #include <ggo_artist.h>
 
 namespace ggo
@@ -28,7 +28,7 @@ namespace ggo
                                 aggregation_artist(int width, int height);
 
     void                        update(int points_count);
-    void                        render(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const;
+    void                        render(void * buffer, int line_step, ggo::image_format format) const;
 
     int                         get_final_points_count() const;
 
@@ -37,7 +37,7 @@ namespace ggo
     void                        register_point(const ggo::pos2f & pos, float hue, float sat, float val);
     void                        update();
 
-    template <ggo::pixel_buffer_format pbf>
+    template <ggo::image_format format>
     void                        render(void * buffer, int line_step) const;
 
   private:

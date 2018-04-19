@@ -2,7 +2,7 @@
 #define __GGO_AMOROSI_ANIMATION_ARTIST__
 
 #include "ggo_animation_artist_abc.h"
-#include <ggo_random_interpolator_abc.h>
+#include <kernel/ggo_random_interpolator_abc.h>
 #include <memory>
 #include <array>
 
@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-    amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+    amorosi_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     struct opacity_point
     {
@@ -39,7 +39,7 @@ namespace ggo
             curve(int width, int height, const ggo::color_32f & color);
 
       void  update();
-      void  paint(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const;
+      void  paint(void * buffer, int line_step, ggo::image_format format) const;
             
       bool  is_dead() const;
 

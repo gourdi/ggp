@@ -197,9 +197,27 @@ namespace ggo
   template <typename color_out_t, typename color_in_t>
   color_out_t convert_color_to(const color_in_t & c)
   {
-    // Automatically remove the alpha channel.
+    // Automaticcaly convert from y to rgb.
     if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
-                 color_traits<color_in_t>::samples_count == 4 && color_traits<color_out_t>::samples_count == 3)
+                 color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 3)
+    {
+      return color_out_t(c, c, c);
+    }
+    // Automaticcaly convert from y to rgba.
+    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
+                      color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 4)
+    {
+      return color_out_t(c, c, c, color_traits<color_in_t>::max());
+    }
+    // Automatically convert from rgb to rgba.
+    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
+                      color_traits<color_in_t>::samples_count == 3 && color_traits<color_out_t>::samples_count == 4)
+    {
+      return color_out_t(c.r(), c.g(), c.b(), color_traits<color_in_t>::max());
+    }
+    // Automatically convert from rgba to rgb by removing the alpha channel.
+    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
+                      color_traits<color_in_t>::samples_count == 4 && color_traits<color_out_t>::samples_count == 3)
     {
       return color_out_t(c.r(), c.g(), c.b());
     }
@@ -220,18 +238,6 @@ namespace ggo
   template <> inline float convert_color_to<float, uint8_t>(const uint8_t & c)
   {
     return c / float(std::numeric_limits<uint8_t>::max());
-  }
-
-  // y 8u => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint8_t>(const uint8_t & c)
-  {
-    return ggo::color_8u(c, c, c);
-  }
-
-  // y 8u => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, uint8_t>(const uint8_t & c)
-  {
-    return ggo::alpha_color_8u(c, c, c, 0xff);
   }
 
   // y 8u => rgb 16u
@@ -272,12 +278,6 @@ namespace ggo
   {
     uint8_t gray = static_cast<uint8_t>(c >> 8);
     return ggo::alpha_color_8u(gray, gray, gray, 0xff);
-  }
-
-  // y 16u => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, uint16_t>(const uint16_t & c)
-  {
-    return ggo::color_16u(c, c, c);
   }
 
   // y 16u => rgb 32f
@@ -356,12 +356,6 @@ namespace ggo
   {
     constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
     return ggo::color_32f(scale * c.r(), scale * c.g(), scale * c.b());
-  }
-
-  // rgb 8u => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    return ggo::alpha_color_8u(c.r(), c.g(), c.b(), 0xff);
   }
 
   // rgb 16u => y 8u
@@ -444,12 +438,6 @@ namespace ggo
     return { conv(c.r()), conv(c.g()), conv(c.b()), 0xff };
   }
 
-  // rgba 8u => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    return (c.r() + c.g() + c.b()) / 3;
-  }
-
   // rgba 8u => y 16u
   template <> inline uint16_t convert_color_to<uint16_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
   {
@@ -481,12 +469,6 @@ namespace ggo
   {
     constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
     return ggo::alpha_color_32f(scale * c.r(), scale * c.g(), scale * c.b(), scale * c.a());
-  }
-
-  // rgba 32f => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::alpha_color_32f>(const ggo::alpha_color_32f & c)
-  {
-    return ggo::color_32f(c.r(), c.g(), c.b());
   }
 }
 

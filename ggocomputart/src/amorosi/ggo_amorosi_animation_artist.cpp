@@ -1,7 +1,7 @@
 #include "ggo_amorosi_animation_artist.h"
-#include <ggo_color_triangle.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
+#include <2d/paint/ggo_color_triangle.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::random_angle_interpolator::get_random_data(float & data, float & dt)
@@ -120,7 +120,7 @@ void ggo::amorosi_animation_artist::curve::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, ggo::pixel_buffer_format pbf) const
+void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, ggo::image_format format) const
 {
   using paint_shape_t = ggo::alpha_color_triangle<float, ggo::color_8u>;
 
@@ -140,9 +140,9 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer, int line_step, g
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::amorosi_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::amorosi_animation_artist::amorosi_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 }
 
@@ -209,7 +209,7 @@ void ggo::amorosi_animation_artist::render_frame(void * buffer, const ggo::rect_
   {
     for (const auto & curve : _curves)
     {
-      curve->paint(buffer, get_line_step(), get_pixel_buffer_format());
+      curve->paint(buffer, get_line_step(), get_format());
     }
   }
 }

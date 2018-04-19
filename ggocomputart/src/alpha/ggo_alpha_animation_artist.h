@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          alpha_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          alpha_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void	init_animation() override;
     bool  prepare_frame() override;

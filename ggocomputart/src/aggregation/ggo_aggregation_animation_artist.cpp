@@ -1,9 +1,9 @@
 #include "ggo_aggregation_animation_artist.h"
 
 ////////////////////////////////////////////////////////
-ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _artist(width, height)
 {
 }
@@ -38,6 +38,6 @@ void ggo::aggregation_animation_artist::render_frame(void * buffer, const ggo::r
 {
   if (buffer != nullptr)
   {
-    _artist.render(buffer, get_line_step(), get_pixel_buffer_format());
+    _artist.render(buffer, get_line_step(), get_format());
   }
 }

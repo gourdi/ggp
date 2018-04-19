@@ -2,9 +2,9 @@
 #include "ggo_alpha_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_bitmap_artist::alpha_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::alpha_bitmap_artist::alpha_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 
 }
@@ -12,7 +12,7 @@ bitmap_artist_abc(width, height, line_step, pbf)
 //////////////////////////////////////////////////////////////
 void ggo::alpha_bitmap_artist::render_bitmap(void * buffer) const
 {
-  alpha_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
+  alpha_animation_artist artist(get_width(), get_height(), get_line_step(), get_format(), ggo::animation_artist_abc::offscreen_rendering);
 
   int frame_index = 0;
 
