@@ -2,11 +2,11 @@
 #define __GGO_LAGAUDE_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_animator.h>
-#include <ggo_animate_abc.h>
-#include <ggo_velocity_path.h>
-#include <ggo_array.h>
-#include <ggo_random_interpolator_abc.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/ggo_random_interpolator_abc.h>
+#include <animation/ggo_animator.h>
+#include <animation/ggo_animate_abc.h>
+#include <animation/paths/ggo_velocity_path.h>
 
 namespace ggo
 {
@@ -14,7 +14,7 @@ namespace ggo
   {
   public:
 
-          lagaude_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void  init_animation() override;
     bool  prepare_frame() override;
@@ -30,7 +30,7 @@ namespace ggo
             particle(const ggo::pos2f & pos, ggo::velocity_path * path);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     public:
 
@@ -70,7 +70,7 @@ namespace ggo
             seed(const ggo::pos2f & pos, ggo::path_abc * path, float scale, float hue);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -89,7 +89,7 @@ namespace ggo
             dust(const ggo::pos2f & pos, ggo::path_abc * path, float scale) : scale_animate_abc(pos, path, scale) {};
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     public:
 

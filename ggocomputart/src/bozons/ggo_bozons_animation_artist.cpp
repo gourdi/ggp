@@ -1,8 +1,8 @@
 #include "ggo_bozons_animation_artist.h"
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 namespace
 {
@@ -10,9 +10,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::bozons_animation_artist::bozons_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::bozons_animation_artist::bozons_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-ggo::animation_artist_abc(width, height, line_step, pbf, rt)
+ggo::animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }
@@ -125,10 +125,10 @@ bool ggo::bozons_animation_artist::prepare_frame()
 //////////////////////////////////////////////////////////////
 void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
-  case ggo::bgra_8u_yd:
-    process_frame<ggo::bgra_8u_yd>(buffer, clipping);
+  case ggo::bgrx_8u_yd:
+    process_frame<ggo::bgrx_8u_yd>(buffer, clipping);
     break;
   case ggo::rgb_8u_yu:
     process_frame<ggo::rgb_8u_yu>(buffer, clipping);

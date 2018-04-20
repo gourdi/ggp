@@ -1,11 +1,11 @@
 #include "ggo_stoa_artist.h"
-#include <ggo_interpolation3d.h>
-#include <ggo_background3d_color.h>
+#include <kernel/math/interpolation/ggo_interpolation3d.h>
+#include <kernel/math/marching_algorithms/ggo_marching_cubes.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
 #include <raytracer/ggo_raytracer_global.h>
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_solid_color_material.h>
-#include <ggo_marching_cubes.h>
-#include <ggo_octree_raycaster.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
+#include <raytracer/raycasters/ggo_octree_raycaster.h>
 
 namespace
 {
@@ -128,7 +128,7 @@ ggo::stoa_artist::stoa_artist(int steps)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, float hue,
+void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format, float hue,
                               const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
                               ggo::renderer_abc & renderer) const
 {
@@ -149,5 +149,5 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
 
   ggo::raytrace_params params;
   params._raycaster = &raycaster;
-  renderer.render(buffer, width, height, line_step, pbf, scene, params);
+  renderer.render(buffer, width, height, line_step, format, scene, params);
 }

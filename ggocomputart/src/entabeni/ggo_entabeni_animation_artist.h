@@ -2,8 +2,9 @@
 #define __GGO_ENTABENI_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_curve.h>
-#include <ggo_random_interpolator_abc.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/ggo_random_interpolator_abc.h>
+#include <kernel/math/interpolation/ggo_curve.h>
 
 namespace ggo
 {
@@ -11,7 +12,7 @@ namespace ggo
   {
   public:
 
-          entabeni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          entabeni_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 

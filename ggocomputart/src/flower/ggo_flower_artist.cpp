@@ -1,18 +1,18 @@
 #include "ggo_flower_artist.h"
-#include <ggo_array.h>
-#include <ggo_dct.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/interpolation/ggo_curve.h>
+#include <kernel/math/signal_proc/ggo_dct.h>
 #include <2d/ggo_color.h>
-#include <ggo_curve.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
-#include <ggo_blit.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
+#include <2d/ggo_blit.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
-ggo::flower_artist::flower_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::flower_artist::flower_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -50,8 +50,8 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 		float dy 			      = petal_height / vert_count;
 		float radius_coef 	= flower_shape_curve.evaluate(ratio);
 
-		ggo::array_float freq(horz_count / 2, 0.f);
-		ggo::array_float spat(horz_count / 2, 0.f);
+		ggo::array_32f freq(horz_count / 2, 0.f);
+		ggo::array_32f spat(horz_count / 2, 0.f);
 		for (int i = 1; i < 10; ++i)
 		{
 			freq(i) = ggo::rand<float>(-1, 1);

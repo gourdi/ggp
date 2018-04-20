@@ -1,12 +1,12 @@
 #include "ggo_filling_squares_bitmap_artist.h"
 #include "ggo_filling_squares_artist.h"
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 	
 }

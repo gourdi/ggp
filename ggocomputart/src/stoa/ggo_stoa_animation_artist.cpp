@@ -1,7 +1,7 @@
 #include "ggo_stoa_animation_artist.h"
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_mono_sampling_renderer.h>
-#include <ggo_antialiasing_renderer.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
+#include <raytracer/renderers/ggo_antialiasing_renderer.h>
 
 namespace
 {
@@ -9,9 +9,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 }
 
@@ -70,7 +70,7 @@ void ggo::stoa_animation_artist::render_frame(void * buffer, const ggo::rect_int
   ggo::antialiasing_renderer renderer(camera);
 #endif
 
-  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), _hue, light_pos1, light_pos2, renderer);
+  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_format(), _hue, light_pos1, light_pos2, renderer);
 }
 
 

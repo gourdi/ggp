@@ -3,7 +3,7 @@
 
 #include <kernel/math/signal_proc/ggo_scale1d.h>
 #include <kernel/memory/ggo_ptr_offset.h>
-#include <kernel/memory/ggo_buffer2d.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -26,7 +26,7 @@ namespace ggo
     }
     else
     {
-      ggo::buffer2d_t<data_t> temp(width_out, height_in);
+      ggo::array<data_t, 2> temp(width_out, height_in);
 
       // First pass to scale horizontally.
       for (int y = 0; y < height_in; ++y)

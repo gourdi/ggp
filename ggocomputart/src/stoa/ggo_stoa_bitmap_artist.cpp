@@ -1,15 +1,15 @@
 #include "ggo_stoa_bitmap_artist.h"
 #include "ggo_stoa_artist.h"
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_mono_sampling_renderer.h>
-#include <ggo_antialiasing_renderer.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
+#include <raytracer/renderers/ggo_antialiasing_renderer.h>
 
 //#define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_bitmap_artist::stoa_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::stoa_bitmap_artist::stoa_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -41,5 +41,5 @@ void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
   float hue = ggo::rand<float>();
 
   ggo::stoa_artist artist(384);
-  artist.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), hue, light_pos1, light_pos2, renderer);
+  artist.render(buffer, get_width(), get_height(), get_line_step(), get_format(), hue, light_pos1, light_pos2, renderer);
 }

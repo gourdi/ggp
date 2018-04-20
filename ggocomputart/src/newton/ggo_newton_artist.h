@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          newton_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          newton_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 

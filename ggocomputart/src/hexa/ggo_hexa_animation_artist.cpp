@@ -1,6 +1,6 @@
 #include "ggo_hexa_animation_artist.h"
-#include <ggo_global_sampling_renderer.h>
-#include <ggo_mono_sampling_renderer.h>
+#include <raytracer/renderers/ggo_global_sampling_renderer.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 
 //#define GGO_PREVIEW
 
@@ -11,9 +11,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 } 
 
@@ -64,5 +64,5 @@ void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), progress, renderer);
+  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_format(), progress, renderer);
 }

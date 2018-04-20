@@ -1,13 +1,13 @@
 #include "ggo_distorsion_animation_artist.h"
 #include <kernel/ggo_kernel.h>
-#include <ggo_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace 
 {
   const int frames_count = 300;
 
   //////////////////////////////////////////////////////////////
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void render_t(void * buffer, const ggo::distorsion_animation_artist & artist, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms)
   {
     for (int y = 0; y < artist.get_height(); ++y)
@@ -17,7 +17,7 @@ namespace
       const float y3 = y + 0.125f;
       const float y4 = y + 0.375f;
 
-      void * ptr = ggo::get_line_ptr<pbf>(buffer, y, artist.get_height(), artist.get_line_step());
+      void * ptr = ggo::get_line_ptr<format>(buffer, y, artist.get_height(), artist.get_line_step());
 
       for (int x = 0; x < artist.get_width(); ++x)
       {
@@ -34,7 +34,7 @@ namespace
         // 4 samples are of the same color, we don't go further.
         if (stripe1 == stripe2 && stripe2 == stripe3 && stripe3 == stripe4)
         {
-          ggo::write_pixel<pbf>(buffer, stripe1->_color);
+          ggo::write_pixel<format>(buffer, stripe1->_color);
         }
         // Full processing.
         else
@@ -61,19 +61,19 @@ namespace
           acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y3, transforms))->_color);
           acc.add(stripe4->_color);
 
-          ggo::write_pixel<pbf>(buffer, acc.div<16>());
+          ggo::write_pixel<format>(buffer, acc.div<16>());
         }
 
-        buffer = ggo::ptr_offset<ggo::pixel_buffer_format_info<pbf>::pixel_byte_size>(buffer);
+        buffer = ggo::ptr_offset<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
       }
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _transforms(32)
 {
 }
@@ -156,13 +156,13 @@ void ggo::distorsion_animation_artist::render_frame(int frame_index, void * buff
       transform._variance);
   }
 
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     render_t<ggo::rgb_8u_yu>(buffer, *this, transforms);
     break;
-  case ggo::bgra_8u_yd:
-    render_t<ggo::bgra_8u_yd>(buffer, *this, transforms);
+  case ggo::bgrx_8u_yd:
+    render_t<ggo::bgrx_8u_yd>(buffer, *this, transforms);
     break;
   default:
     GGO_FAIL();

@@ -1,10 +1,10 @@
 #include "ggo_kanji_animation_artist.h"
-#include <ggo_pbf_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_animation_artist::kanji_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::kanji_animation_artist::kanji_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _kanji_artist(width, height)
 {
 	
@@ -29,13 +29,13 @@ void ggo::kanji_animation_artist::render_frame(void * buffer, const ggo::rect_in
 {
   if (_frame_index == 0)
   {
-    switch (get_pixel_buffer_format())
+    switch (get_format())
     {
     case ggo::rgb_8u_yu:
       ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
       break;
-    case ggo::bgra_8u_yd:
-      ggo::fill_solid<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
+    case ggo::bgrx_8u_yd:
+      ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black_8u(), clipping);
       break;
     default:
       GGO_FAIL();
@@ -43,6 +43,6 @@ void ggo::kanji_animation_artist::render_frame(void * buffer, const ggo::rect_in
     }
   }
 
-  _kanji_artist.render_frame(buffer, get_line_step(), get_pixel_buffer_format(), _frame_index, clipping);
+  _kanji_artist.render_frame(buffer, get_line_step(), get_format(), _frame_index, clipping);
 }
 

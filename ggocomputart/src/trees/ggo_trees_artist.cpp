@@ -1,9 +1,9 @@
 #include "ggo_trees_artist.h"
 #include <iostream>
-#include <ggo_tree.h>
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
+#include <kernel/trees/ggo_tree.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -181,9 +181,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::trees_artist::trees_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::trees_artist::trees_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 

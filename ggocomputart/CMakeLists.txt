@@ -14,7 +14,7 @@ target_link_libraries(ggocomputartbitmap ggocomputart)
 add_executable(ggocomputartanim ggo_computart_anim.cpp)
 target_link_libraries(ggocomputartanim ggocomputart)
 
-add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_link_libraries(ggocomputartrealtime "../externals/SDL-2.0.7/lib/x64/SDL2.lib")
-target_include_directories(ggocomputartrealtime PUBLIC "../externals/SDL2-2.0.7/include")
+#add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
+#target_link_libraries(ggocomputartrealtime "../externals/SDL-2.0.7/lib/x64/SDL2.lib")
+#target_include_directories(ggocomputartrealtime PUBLIC "../externals/SDL2-2.0.7/include")
 

@@ -438,6 +438,12 @@ namespace ggo
     return { conv(c.r()), conv(c.g()), conv(c.b()), 0xff };
   }
 
+  // rgba 8u => y 8u
+  template <> inline uint8_t convert_color_to<uint8_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
+  {
+    return (c.r() + c.g() + c.b()) / 3;
+  }
+
   // rgba 8u => y 16u
   template <> inline uint16_t convert_color_to<uint16_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
   {

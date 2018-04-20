@@ -1,9 +1,9 @@
 #include "ggo_plastic_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -70,6 +70,6 @@ void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::rect_
   }
 
   ggo::plastic_artist artist(get_width(), get_height());
-  artist.render(buffer, get_line_step(), get_pixel_buffer_format(), bitmap_params, _color, _altitude_factor);
+  artist.render(buffer, get_line_step(), get_format(), bitmap_params, _color, _altitude_factor);
 }
 

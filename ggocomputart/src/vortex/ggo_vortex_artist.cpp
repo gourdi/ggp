@@ -1,6 +1,6 @@
 #include "ggo_vortex_artist.h"
 #include <2d/ggo_color.h>
-#include <ggo_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -8,7 +8,7 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex_artist::params & params)
+void ggo::vortex_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::vortex_artist::params & params)
 {
   int counter_max = width * height;
   int max_size = std::max(width, height);

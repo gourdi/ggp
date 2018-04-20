@@ -1,11 +1,11 @@
 #include "ggo_sonson_animation_artist.h"
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_multi_scale_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
-#include <ggo_gradient_brush.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_multi_scale_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
+#include <2d/paint/ggo_gradient_brush.h>
 
 namespace
 {
@@ -428,7 +428,7 @@ ggo::extended_segment_float ggo::sonson_animation_artist::line::get_glow_segment
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_animation_artist::line::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const
+void ggo::sonson_animation_artist::line::render(void * buffer, int width, int height, int line_step, ggo::image_format format) const
 {
   // Paint the strips.
   for (int y = 0; y < height; ++y)
@@ -468,9 +468,9 @@ void ggo::sonson_animation_artist::line::render(void * buffer, int width, int he
 }
 
 //////////////////////////////////////////////////////////////
-ggo::sonson_animation_artist::sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::sonson_animation_artist::sonson_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -537,7 +537,7 @@ void ggo::sonson_animation_artist::render_frame(void * buffer, const ggo::rect_i
     {
       for (const auto & line : sub_lines)
       {
-        line->render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+        line->render(buffer, get_width(), get_height(), get_line_step(), get_format());
       }
 
       // Blur (only when needed).

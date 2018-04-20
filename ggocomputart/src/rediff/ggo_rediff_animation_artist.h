@@ -2,6 +2,7 @@
 #define __GGO_REDIFF_ANIMPATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -9,7 +10,7 @@ namespace ggo
   {
   public:
 
-          rediff_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          rediff_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 

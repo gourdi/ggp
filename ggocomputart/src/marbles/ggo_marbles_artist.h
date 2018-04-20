@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          marbles_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          marbles_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 

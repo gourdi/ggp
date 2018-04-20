@@ -3,8 +3,8 @@
 
 #include "ggo_animation_artist_abc.h"
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_random_interpolator_abc.h>
-#include <ggo_link.h>
+#include <kernel/ggo_random_interpolator_abc.h>
+#include <kernel/ggo_link.h>
 #include <memory>
 #include <map>
 
@@ -16,7 +16,7 @@ namespace ggo
   {
   public:
 
-                          kame_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+                          kame_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void	                init_animation() override;
     bool                  prepare_frame() override;

@@ -1,6 +1,6 @@
 #include "ggo_rah_animation_artist.h"
-#include <ggo_pbf_fill.h>
-#include <ggo_blur_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_blur_paint.h>
 
 namespace
 {
@@ -170,10 +170,10 @@ void ggo::rah_animation_artist::particle1::update(int min_size)
 {
   particle::update(min_size);
 
-  for (int i = 0; i < _radius_interpolators.get_count(); ++i)
+  for (int i = 0; i < _radius_interpolators.count(); ++i)
   {
     float radius = _radius_interpolators(i).update(1) * disc_radius(min_size);
-    float angle = _angle + i * 2 * ggo::pi<float>() / _radius_interpolators.get_count();
+    float angle = _angle + i * 2 * ggo::pi<float>() / _radius_interpolators.count();
     _polygon->get_point(i) = _pos + ggo::from_polar(angle, radius);
   }
 }
@@ -340,9 +340,9 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
 // ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
   _focus_dist_interpolator._near = near;
   _focus_dist_interpolator._far = far;

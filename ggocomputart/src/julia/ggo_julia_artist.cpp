@@ -1,5 +1,5 @@
 #include "ggo_julia_artist.h"
-#include <ggo_curve.h>
+#include <kernel/math/interpolation/ggo_curve.h>
 #include <2d/ggo_color.h>
 
 //////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ std::complex<float> ggo::julia_artist::pickup_seed()
 }
 	
 //////////////////////////////////////////////////////////////
-void ggo::julia_artist::render_bitmap(void * buffer, int line_step, ggo::pixel_buffer_format pbf, const std::complex<float> & seed, float range) const
+void ggo::julia_artist::render_bitmap(void * buffer, int line_step, ggo::image_format format, const std::complex<float> & seed, float range) const
 {
 	for (int y = 0; y < get_height(); ++y)
 	{
@@ -84,13 +84,13 @@ void ggo::julia_artist::render_bitmap(void * buffer, int line_step, ggo::pixel_b
 			{
         int index = std::min(static_cast<int>(_palette.size() - 1), iterations[0]);
 
-        switch (pbf)
+        switch (format)
         {
         case ggo::rgb_8u_yu:
           ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), line_step, _palette[index]);
           break;
-        case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), line_step, _palette[index]);
+        case ggo::bgrx_8u_yd:
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), line_step, _palette[index]);
           break;
 				default:
 					GGO_FAIL();
@@ -128,13 +128,13 @@ void ggo::julia_artist::render_bitmap(void * buffer, int line_step, ggo::pixel_b
 
         ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
-        switch (pbf)
+        switch (format)
         {
         case ggo::rgb_8u_yu:
           ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), line_step, c_8u);
           break;
-        case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), line_step, c_8u);
+        case ggo::bgrx_8u_yd:
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), line_step, c_8u);
           break;
 				default:
 					GGO_FAIL();

@@ -1,13 +1,13 @@
 #include "ggo_buddhabrot_artist.h"
-#include <ggo_pbf_fill.h>
+#include <2d/fill/ggo_fill.h>
 #include <algorithm>
 #include <iostream>
 #include <cstring>
 
 //////////////////////////////////////////////////////////////
-ggo::buddhabrot_artist::buddhabrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::buddhabrot_artist::buddhabrot_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {	
 
 }

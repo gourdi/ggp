@@ -181,7 +181,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
 {
   int min_size = std::min(width, height);
 
-  ggo::array_float freq(oscillo_size, 0.f), spat(oscillo_size, 0.f);
+  ggo::array_32f freq(oscillo_size, 0.f), spat(oscillo_size, 0.f);
   for (int i = 0; i < _threshold; ++i)
   {
     freq(i) = static_cast<float>(ggo::rand<int>(-1, 1));

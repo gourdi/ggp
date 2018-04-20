@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <2d/paint/ggo_paint.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
@@ -45,7 +45,7 @@ GGO_TEST(octree, test)
   ggo::mono_sampling_renderer renderer(camera);
 
   // Brute force rendering.
-  ggo::buffer buffer1(3 * width * height);
+  ggo::array_8u buffer1(3 * width * height);
   renderer.render(buffer1.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
 
   // Octree rendering.
@@ -53,7 +53,7 @@ GGO_TEST(octree, test)
   ggo::octree_raycaster raycaster(scene);
   params._raycaster = &raycaster;
 
-  ggo::buffer buffer2(3 * width * height);
+  ggo::array_8u buffer2(3 * width * height);
   renderer.render(buffer2.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, params);
   ggo::save_bmp("octree_raycaster.bmp", buffer2.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 

@@ -1,5 +1,5 @@
 #include "ggo_crystal_animation_artist.h"
-#include <ggo_pbf_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -7,9 +7,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::crystal_animation_artist::crystal_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::crystal_animation_artist::crystal_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }
@@ -63,5 +63,5 @@ void ggo::crystal_animation_artist::render_frame(void * buffer, const ggo::rect_
 		params._db[i] = ggo::ease_inout(_frame_index, frames_count, _start_params._db[i], _end_params._db[i]);
 	}
 	
-	_artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), params);
+	_artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), params);
 }

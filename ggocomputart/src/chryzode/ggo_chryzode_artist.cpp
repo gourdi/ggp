@@ -1,7 +1,6 @@
 #include "ggo_chryzode_artist.h"
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_pbf_paint.h>
-#include <2d/ggo_color.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/paint/ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
 ggo::chryzode_artist::chryzode_artist(int width, int height)
@@ -11,7 +10,7 @@ artist(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_artist::render_chryzode(void * buffer, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::chryzode_artist::render_chryzode(void * buffer, int line_step, ggo::image_format format,
   float radius, const chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.

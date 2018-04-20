@@ -9,15 +9,15 @@ artist(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::plastic_artist::render(void * buffer, int line_step, ggo::pixel_buffer_format pbf, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
+void ggo::plastic_artist::render(void * buffer, int line_step, ggo::image_format format, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
 {
-  switch (pbf)
+  switch (format)
   {
   case ggo::rgb_8u_yu:
     render<ggo::rgb_8u_yu>(buffer, line_step, params, color, altitude_factor);
     break;
-  case ggo::bgra_8u_yd:
-    render<ggo::bgra_8u_yd>(buffer, line_step, params, color, altitude_factor);
+  case ggo::bgrx_8u_yd:
+    render<ggo::bgrx_8u_yd>(buffer, line_step, params, color, altitude_factor);
     break;
   default:
     GGO_FAIL();

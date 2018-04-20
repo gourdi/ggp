@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 #include <raytracer/ggo_scene.h>
@@ -35,7 +35,7 @@ GGO_TEST(caustics, test)
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_count);
-  ggo::buffer buffer(3 * width * height);
+  ggo::array_8u buffer(3 * width * height);
 
   // Without indirect lighting.
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);

@@ -1,15 +1,15 @@
 #include "ggo_newton_artist.h"
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
-#include <ggo_blit.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
+#include <2d/ggo_blit.h>
 
 //////////////////////////////////////////////////////////////
-ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
   _background.reset(new uint8_t[line_step * height]);
 }

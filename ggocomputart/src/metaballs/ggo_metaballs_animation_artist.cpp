@@ -1,5 +1,5 @@
 #include "ggo_metaballs_animation_artist.h"
-#include <ggo_antialiasing_renderer.h>
+#include <raytracer/renderers/ggo_antialiasing_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 
 namespace
@@ -8,9 +8,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }
@@ -88,5 +88,5 @@ void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::rec
 {
   ggo::antialiasing_point_camera camera(get_width(), get_height(), _camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);
-  ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer, _params);
+  ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer, _params);
 }

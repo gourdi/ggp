@@ -1,9 +1,9 @@
 #include "ggo_topodoko_artist.h"
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_array.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_blit.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <kernel/memory/ggo_array.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/ggo_blit.h>
 
 namespace
 {
@@ -14,7 +14,7 @@ namespace
   };
 
   //////////////////////////////////////////////////////////////
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void render_t(void * buffer, const ggo::topodoko_artist & artist, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares)
   {
     const ggo::color_8u bkgd_color1 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
@@ -50,7 +50,7 @@ namespace
     ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(
       shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), 0.005f *  artist.get_min_size());
 
-    ggo::blit<ggo::y_8u_yu, pbf>(shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
+    ggo::blit<ggo::y_8u_yu, format>(shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), 0, 0);
 
     std::cout << "Rendering squares" << std::endl;
@@ -66,16 +66,16 @@ namespace
         square.add_point(point);
       }
 
-      ggo::paint_shape<pbf, ggo::sampling_16x16>(
+      ggo::paint_shape<format, ggo::sampling_16x16>(
         buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), square, ggo::convert_color_to<ggo::color_8u>(color_square._color));
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::topodoko_artist::topodoko_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::topodoko_artist::topodoko_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 	
 }
@@ -139,13 +139,13 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 		}
 	}
 
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     render_t<ggo::rgb_8u_yu>(buffer, *this, hue1, hue2, square_size, color_squares);
     break;
-  case ggo::bgra_8u_yd:
-    render_t<ggo::bgra_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares);
+  case ggo::bgrx_8u_yd:
+    render_t<ggo::bgrx_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares);
     break;
     default:
       GGO_FAIL();

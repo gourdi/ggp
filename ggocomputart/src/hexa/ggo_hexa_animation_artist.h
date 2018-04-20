@@ -2,7 +2,7 @@
 #define __GGO_HEXA_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_scalar_field_2d_abc.h>
+#include <kernel/math/scalar_fields_2d/ggo_scalar_field_2d_abc.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 #include "ggo_hexa_artist.h"
 
@@ -14,7 +14,7 @@ namespace ggo
   {
   public:
 
-          hexa_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          hexa_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 

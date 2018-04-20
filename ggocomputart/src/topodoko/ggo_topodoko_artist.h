@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          topodoko_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          topodoko_artist(int width, int height, int line_step, ggo::image_format format);
 
     void	render_bitmap(void * buffer) const override;
   };

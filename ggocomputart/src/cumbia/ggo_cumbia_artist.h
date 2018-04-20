@@ -2,9 +2,9 @@
 #define __GGO_CUMBIA_ARTIST__
 
 #include <ggo_artist.h>
-#include <ggo_tree.h>
-#include <ggo_background3d_color.h>
-#include <ggo_scene.h>
+#include <kernel/trees/ggo_tree.h>
+#include <raytracer/ggo_scene.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 
 namespace ggo
@@ -21,7 +21,7 @@ namespace ggo
     void	init(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
     void	init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count);
 
-    void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer) const;
+    void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, ggo::renderer_abc & renderer) const;
 
   private:
 

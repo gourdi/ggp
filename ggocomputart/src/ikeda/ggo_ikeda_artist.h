@@ -2,7 +2,7 @@
 #define __GGO_IKEDA_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_harmonic_curve.h>
+#include <kernel/math/ggo_harmonic_curve.h>
 
 namespace ggo
 {
@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          ikeda_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          ikeda_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void  init_animation() override;
     bool  prepare_frame() override;

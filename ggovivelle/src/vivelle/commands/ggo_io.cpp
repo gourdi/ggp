@@ -1,11 +1,11 @@
 #include "ggo_io.h"
-#include "ggo_command.h"
 #include <kernel/ggo_file_helpers.h>
 #include <kernel/ggo_string_helpers.h>
 #include <2d/io/ggo_tga.h>
 #include <2d/io/ggo_bmp.h>
 #include <2d/io/ggo_jpg.h>
 #include <2d/io/ggo_image_io.h>
+#include <vivelle/ggo_command.h>
 
 namespace ggo
 {

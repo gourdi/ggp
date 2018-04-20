@@ -1,16 +1,15 @@
 #include "ggo_cells_artist.h"
-#include <ggo_array.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_interpolation1d.h>
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_seed_paint.h>
-#include <ggo_sampling_paint.h>
-#include <2d/ggo_color.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_seed_paint.h>
+#include <2d/paint/ggo_pixel_sampling.h>
 
 //////////////////////////////////////////////////////////////
-ggo::cells_artist::cells_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::cells_artist::cells_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 
 }

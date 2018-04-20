@@ -1,8 +1,7 @@
 #include "ggo_toutouyoutou_animation_artist.h"
 #include <kernel/ggo_kernel.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_morphology.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
 void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std::vector<ggo::toutouyoutou_animation_artist::particle> & particles)
@@ -29,9 +28,9 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
 _background(new uint8_t[height * line_step])
 {
@@ -255,11 +254,11 @@ void ggo::toutouyoutou_animation_artist::update_grid()
   // Add particles to grid.
   for (auto & particle : _particles)
   {
-    particle._grid_x = ggo::round_to<int>(particle._cur_pos.get<0>() / influence_radius);
-    particle._grid_x = ggo::clamp(particle._grid_x, 1, _grid.get_size<0>() - 2);
+    particle._grid_x = ggo::round_to<int>(particle._cur_pos.x() / influence_radius);
+    particle._grid_x = ggo::clamp(particle._grid_x, 1, _grid.width() - 2);
     
-    particle._grid_y = ggo::round_to<int>(particle._cur_pos.get<1>() / influence_radius);
-    particle._grid_y = ggo::clamp(particle._grid_y, 1, _grid.get_size<1>() - 2);
+    particle._grid_y = ggo::round_to<int>(particle._cur_pos.y() / influence_radius);
+    particle._grid_y = ggo::clamp(particle._grid_y, 1, _grid.height() - 2);
     
     _grid(particle._grid_x, particle._grid_y).push_back(&particle);
   }
@@ -355,7 +354,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
 {
   constexpr float potential_threshold = 0.8f;
   
-  ggo::array_uint8 sample_buffer(get_width() * get_height());
+  ggo::array_8u sample_buffer(get_width() * get_height());
 
   uint8_t * ptr = sample_buffer.data();
   for (int render_y = 0; render_y < get_height(); ++render_y)
@@ -475,8 +474,8 @@ float ggo::toutouyoutou_animation_artist::get_potiental(float render_x, float re
   float view_x = render_x * view_height / get_height();
   float view_y = view_height - render_y * view_height / get_height();
   
-  int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.get_size<0>() - 2);
-  int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.get_size<1>() - 2);
+  int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.width() - 2);
+  int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.height() - 2);
 
   float potential = 0;
   
@@ -507,8 +506,8 @@ float ggo::toutouyoutou_animation_artist::get_temperature(float render_x, float 
   float view_x = render_x * view_height / get_height();
   float view_y = view_height - render_y * view_height / get_height();
   
-  int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.get_size<0>() - 2);
-  int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.get_size<1>() - 2);
+  int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.width() - 2);
+  int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.height() - 2);
 
   float temperature = 0;
   float normalization = 0;

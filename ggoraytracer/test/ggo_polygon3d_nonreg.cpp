@@ -1,5 +1,5 @@
 #include <iostream>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 #include <raytracer/renderers/ggo_mono_sampling_renderer.h>
@@ -29,7 +29,7 @@ void test_polygon3d()
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::buffer buffer(3 * width * height);
+  ggo::array_8u buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("sphere3d.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

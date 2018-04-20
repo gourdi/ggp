@@ -1,12 +1,12 @@
 #include "ggo_cumbia_bitmap_artist.h"
 #include "ggo_cumbia_artist.h"
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_global_sampling_renderer.h>
+#include <raytracer/renderers/ggo_global_sampling_renderer.h>
 
 //////////////////////////////////////////////////////////////
-ggo::cumbia_bitmap_artist::cumbia_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::cumbia_bitmap_artist::cumbia_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -24,6 +24,6 @@ void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer) const
   ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, aperture, depth_of_field, depth_of_field_factor);
 
   ggo::global_sampling_renderer renderer(camera, 56);
-	artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer);
+	artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer);
 }
 

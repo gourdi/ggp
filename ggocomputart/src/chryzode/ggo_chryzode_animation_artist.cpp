@@ -7,9 +7,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_animation_artist::chryzode_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::chryzode_animation_artist::chryzode_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 }
 
@@ -66,6 +66,6 @@ void ggo::chryzode_animation_artist::render_frame(void * buffer, const ggo::rect
 
   float radius = ggo::ease_inout(_frame_index, frames_count, _radius_start, _radius_end);
 
-  artist.render_chryzode(buffer, get_line_step(), get_pixel_buffer_format(), radius, params, _hue_start, _hue_end);
+  artist.render_chryzode(buffer, get_line_step(), get_format(), radius, params, _hue_start, _hue_end);
 }
 

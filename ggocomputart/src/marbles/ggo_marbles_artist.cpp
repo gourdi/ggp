@@ -1,11 +1,10 @@
 #include "ggo_marbles_artist.h"
-#include <ggo_scene.h>
-#include <ggo_global_sampling_renderer.h>
+#include <raytracer/ggo_scene.h>
+#include <raytracer/renderers/ggo_global_sampling_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_linear_fog.h>
-#include <ggo_material_abc.h>
-#include <ggo_background3d_color.h>
-#include <ggo_solid_color_material.h>
+#include <raytracer/fogs/ggo_linear_fog.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
 #include <iostream>
 #include <algorithm>
 
@@ -58,9 +57,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::marbles_artist::marbles_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::marbles_artist::marbles_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -137,6 +136,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene, raytrace_params);
+	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_format(), scene, raytrace_params);
 }
 

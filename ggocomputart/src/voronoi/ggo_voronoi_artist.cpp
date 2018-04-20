@@ -1,10 +1,10 @@
 #include "ggo_voronoi_artist.h"
 #include <map>
-#include <ggo_tree.h>
-#include <ggo_array.h>
-#include <ggo_pixel_buffer.h>
-#include <ggo_morphology.h>
-#include <ggo_blend.h>
+#include <kernel/trees/ggo_tree.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/signal_proc/ggo_morphology.h>
+#include <2d/ggo_image_format.h>
+#include <2d/paint/ggo_blend.h>
 
 namespace
 {
@@ -77,9 +77,9 @@ namespace
     int x_max = -1;
     int y_min = std::numeric_limits<int>::max();
     int y_max = -1;
-    for (int y = 0; y < input.get_size<1>(); ++y)
+    for (int y = 0; y < input.height(); ++y)
     {
-      for (int x = 0; x < input.get_size<0>(); ++x)
+      for (int x = 0; x < input.width(); ++x)
       {
         if (input(x, y) == 1)
         {
@@ -93,23 +93,23 @@ namespace
 
     // For morpho operations to work properly, we must add a 1-pixel large border around the view.
     x_min = std::max(x_min - 1, 0);
-    x_max = std::min(x_max + 1, input.get_size<0>() - 1);
+    x_max = std::min(x_max + 1, input.width() - 1);
     y_min = std::max(y_min - 1, 0);
-    y_max = std::min(y_max + 1, input.get_size<1>() - 1);
+    y_max = std::min(y_max + 1, input.height() - 1);
 
-    int view_offset = y_min * input.get_size<0>() + x_min;
+    int view_offset = y_min * input.width() + x_min;
     int view_width = x_max - x_min + 1;
     int view_height = y_max - y_min + 1;
 
-    ggo::array<uint8_t, 2> tmp(input.get_size<0>(), input.get_size<1>(), 0);
-    ggo::array<uint8_t, 2> output(input.get_size<0>(), input.get_size<1>(), 0);
+    ggo::array<uint8_t, 2> tmp(input.width(), input.height(), 0);
+    ggo::array<uint8_t, 2> output(input.width(), input.height(), 0);
 
-    const_buffer_view input_view{ input.data() + view_offset, view_width, view_height, input.get_size<0>() };
-    buffer_view tmp_view{ tmp.data() + view_offset, view_width, view_height, input.get_size<0>() };
-    buffer_view output_view{ output.data() + view_offset, view_width, view_height, input.get_size<0>() };
+    const_buffer_view input_view{ input.data() + view_offset, view_width, view_height, input.width() };
+    buffer_view tmp_view{ tmp.data() + view_offset, view_width, view_height, input.width() };
+    buffer_view output_view{ output.data() + view_offset, view_width, view_height, input.width() };
 
     // Once the views are properly set up, then erode it and dilate it back with a smaller radius.
-    int size_min = std::min(input.get_size<0>(), input.get_size<1>());
+    int size_min = std::min(input.width(), input.height());
 
     ggo::morpho_disc(input_view, tmp_view, input_view._view_width, input_view._view_height, 0.003f * size_min, [](uint8_t cur, uint8_t ref) { return cur < ref; });
     ggo::morpho_disc(tmp_view, output_view, input_view._view_width, input_view._view_height, 0.002f * size_min, [](uint8_t cur, uint8_t ref) { return cur > ref; });
@@ -122,11 +122,11 @@ namespace
   {
     const float norm = 1.f / ggo::square(scale_factor);
 
-    ggo::array<float, 2> output(input.get_size<0>() / scale_factor, input.get_size<1>() / scale_factor);
+    ggo::array<float, 2> output(input.width() / scale_factor, input.height() / scale_factor);
 
-    for (int y_out = 0; y_out < output.get_size<1>(); ++y_out)
+    for (int y_out = 0; y_out < output.height(); ++y_out)
     {
-      for (int x_out = 0; x_out < output.get_size<0>(); ++x_out)
+      for (int x_out = 0; x_out < output.width(); ++x_out)
       {
         int sum = 0;
 
@@ -216,9 +216,9 @@ namespace
   {
     ggo::array<const ggo::tree<voronoi_node> *, 2> voronoi_map(width, height);
 
-    for (int y = 0; y < voronoi_map.get_size<1>(); y += scale_factor)
+    for (int y = 0; y < voronoi_map.height(); y += scale_factor)
     {
-      for (int x = 0; x < voronoi_map.get_size<0>(); x += scale_factor)
+      for (int x = 0; x < voronoi_map.width(); x += scale_factor)
       {
         const auto left_bottom = find_voronoi_leaf(voronoi_tree, static_cast<float>(x), static_cast<float>(y));
         const auto left_top = find_voronoi_leaf(voronoi_tree, static_cast<float>(x), static_cast<float>(y + scale_factor - 1));
@@ -252,18 +252,18 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void paint_voronoi_map(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+  void paint_voronoi_map(void * buffer, int width, int height, int line_step, ggo::image_format format,
                          const ggo::tree<voronoi_node> & voronoi_tree,
                          const ggo::array<const ggo::tree<voronoi_node> *, 2> & voronoi_map, 
                          int scale_factor)
   {
     auto paint_voronoi_leaf = [&](const ggo::tree<voronoi_node> & voronoi_leaf)
     {
-      ggo::array<uint8_t, 2> mask(voronoi_map.get_size<0>(), voronoi_map.get_size<1>(), 0);
+      ggo::array<uint8_t, 2> mask(voronoi_map.width(), voronoi_map.height(), 0);
 
-      for (int y = 0; y < mask.get_size<1>(); ++y)
+      for (int y = 0; y < mask.height(); ++y)
       {
-        for (int x = 0; x < mask.get_size<0>(); ++x)
+        for (int x = 0; x < mask.width(); ++x)
         {
           if (&voronoi_leaf == voronoi_map(x, y))
           {
@@ -274,8 +274,8 @@ namespace
 
       mask = round_mask(mask);
       auto downsampled = downsample(mask, scale_factor);
-      GGO_ASSERT_EQ(downsampled.get_size<0>(), width);
-      GGO_ASSERT_EQ(downsampled.get_size<1>(), height);
+      GGO_ASSERT_EQ(downsampled.width(), width);
+      GGO_ASSERT_EQ(downsampled.height(), height);
 
       for (int y = 0; y < height; ++y)
       {
@@ -298,9 +298,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::voronoi_artist::voronoi_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::voronoi_artist::voronoi_artist(int width, int height, int line_step, ggo::image_format format)
 :
-ggo::bitmap_artist_abc(width, height, line_step, pbf)
+ggo::bitmap_artist_abc(width, height, line_step, format)
 {
 
 }

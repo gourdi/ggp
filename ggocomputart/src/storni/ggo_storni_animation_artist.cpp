@@ -1,6 +1,6 @@
 #include "ggo_storni_animation_artist.h"
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -116,9 +116,9 @@ void ggo::storni_animation_artist::storni::clamp_velocity(float velocity_hypot_m
 }
 
 //////////////////////////////////////////////////////////////
-ggo::storni_animation_artist::storni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::storni_animation_artist::storni_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _stornis_buffer(width * height),
 _background(width * line_step)
 {
@@ -366,15 +366,15 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::rect_i
 {
   if (_frame_index == 0)
   {
-    switch (get_pixel_buffer_format())
+    switch (get_format())
     {
     case ggo::rgb_8u_yu:
       ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.data(), get_width(), get_height(), get_line_step(),
         _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;
-    case ggo::bgra_8u_yd:
-      ggo::fill_4_colors<ggo::bgra_8u_yd>(_background.data(), get_width(), get_height(), get_line_step(),
+    case ggo::bgrx_8u_yd:
+      ggo::fill_4_colors<ggo::bgrx_8u_yd>(_background.data(), get_width(), get_height(), get_line_step(),
         _background_colors[0], _background_colors[1], _background_colors[2], _background_colors[3],
         clipping);
       break;
@@ -384,7 +384,7 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::rect_i
     }
   }
 
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     blit_background<ggo::rgb_8u_yu>(buffer, clipping);
@@ -401,20 +401,20 @@ void ggo::storni_animation_artist::render_frame(void * buffer, const ggo::rect_i
     }
     paint_obstacles<ggo::rgb_8u_yu>(buffer, clipping, _frame_index);
     break;
-  case ggo::bgra_8u_yd:
-    blit_background<ggo::bgra_8u_yd>(buffer, clipping);
+  case ggo::bgrx_8u_yd:
+    blit_background<ggo::bgrx_8u_yd>(buffer, clipping);
 
     if (get_rendering_type() == ggo::animation_artist_abc::offscreen_rendering)
     {
-      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
-      paint_predators<ggo::bgra_8u_yd, ggo::sampling_8x8>(buffer, clipping);
+      paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_8x8>(buffer, clipping);
+      paint_predators<ggo::bgrx_8u_yd, ggo::sampling_8x8>(buffer, clipping);
     }
     else
     {
-      paint_stornies<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
-      paint_predators<ggo::bgra_8u_yd, ggo::sampling_2x2>(buffer, clipping);
+      paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, clipping);
+      paint_predators<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, clipping);
     }
-    paint_obstacles<ggo::bgra_8u_yd>(buffer, clipping, _frame_index);
+    paint_obstacles<ggo::bgrx_8u_yd>(buffer, clipping, _frame_index);
     break;
   default:
     GGO_FAIL();

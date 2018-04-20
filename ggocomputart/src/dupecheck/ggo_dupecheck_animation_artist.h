@@ -2,8 +2,8 @@
 #define __GGO_DUPECHECK_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_animator.h>
-#include <ggo_animate_abc.h>
+#include <animation/ggo_animator.h>
+#include <animation/ggo_animate_abc.h>
 
 namespace ggo
 {
@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-                  dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+                  dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void          init_animation() override;
     bool          prepare_frame() override;
@@ -45,7 +45,7 @@ namespace ggo
 
             animate1(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -60,7 +60,7 @@ namespace ggo
 
             animate2(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -73,7 +73,7 @@ namespace ggo
 
             animate3(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 

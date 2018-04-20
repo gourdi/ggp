@@ -1,5 +1,5 @@
 #include "ggo_cumbia_animation_artist.h"
-#include "ggo_antialiasing_renderer.h"
+#include <raytracer/renderers/ggo_antialiasing_renderer.h>
 
 namespace
 {
@@ -7,9 +7,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cumbia_animation_artist::cumbia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::cumbia_animation_artist::cumbia_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }
@@ -43,5 +43,5 @@ void ggo::cumbia_animation_artist::render_frame(void * buffer, const ggo::rect_i
 
   ggo::antialiasing_renderer renderer(camera);
 
-  _artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer);
+  _artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer);
 }

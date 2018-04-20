@@ -1,15 +1,15 @@
 #include "ggo_demeco_bitmap_artist.h"
 #include <memory>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_scene.h>
-#include <ggo_background3d_color.h>
-#include <ggo_mono_sampling_renderer.h>
+#include <raytracer/ggo_scene.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 
 //////////////////////////////////////////////////////////////
-ggo::demeco_bitmap_artist::demeco_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::demeco_bitmap_artist::demeco_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -24,5 +24,5 @@ void ggo::demeco_bitmap_artist::render_bitmap(void * buffer) const
 
   //ggo::mono_sampling_point_camera camera(get_width(), get_height(), ggo::basis3d_float({ 0.f, 0.f, 20.f }), 0.1f);
   //ggo::mono_sampling_renderer renderer(camera);
-  //renderer.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), scene_builder);
+  //renderer.render(buffer, get_width(), get_height(), get_line_step(), get_format(), scene_builder);
 }

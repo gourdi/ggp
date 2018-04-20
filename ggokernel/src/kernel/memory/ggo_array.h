@@ -75,7 +75,7 @@ namespace ggo
     {
       delete[] _buffer;
 
-      int count = rhs.get_count();
+      int count = rhs.count();
       ggo::copy<n_dims>(_dimensions, rhs._dimensions);
       _buffer = new data_t[count];
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
@@ -338,9 +338,12 @@ namespace ggo
 {
   using array_char    = array<char, 1>;
   using array_int     = array<int, 1>;
-
   using array_8u      = array<uint8_t, 1>;
   using array_32f     = array<float, 1>;
+
+  using array2d_8u    = array<uint8_t, 2>;
+  using array2d_32s   = array<int32_t, 2>;
+  using array2d_32f   = array<float, 2>;
 }
 
 #endif

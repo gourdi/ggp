@@ -3,8 +3,8 @@
 
 #include "ggo_animation_artist_abc.h"
 #include "ggo_filling_squares_artist.h"
-#include <ggo_animate_abc.h>
-#include <ggo_animator.h>
+#include <animation/ggo_animate_abc.h>
+#include <animation/ggo_animator.h>
 
 namespace ggo
 {
@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-    filling_squares_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+    filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 
@@ -23,7 +23,7 @@ namespace ggo
             animated_square(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
 
       float											                  _angle;
       ggo::filling_squares_artist::colored_square _colored_square;

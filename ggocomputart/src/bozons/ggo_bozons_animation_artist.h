@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          bozons_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          bozons_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void  init_animation() override;
     bool  prepare_frame() override;
@@ -20,7 +20,7 @@ namespace ggo
 
     void create_bozon();
 
-    template <pixel_buffer_format pbf>
+    template <ggo::image_format format>
     void process_frame(void * buffer, const ggo::rect_int & clipping) const;
 
   private:
@@ -46,18 +46,18 @@ namespace ggo
     ggo::color_8u     _bkgd_color4; 
   };
 
-  template <pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void bozons_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping) const
   {
     if (_frame_index == 0)
     {
-      ggo::fill_4_colors<pbf>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<format>(buffer, get_width(), get_height(), get_line_step(),
         _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
     }
 
     for (const auto & bozon : _bozons)
     {
-      ggo::paint_shape<pbf, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
         ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
         ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
     }

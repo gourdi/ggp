@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/ggo_raytracer.h>
 #include <raytracer/cameras/ggo_isometric_camera.h>
@@ -32,7 +32,7 @@ GGO_TEST(test_scene, scene6)
   ggo::multi_sampling_isometric_camera camera(width, height, camera_basis, 3.f, 50.f, 2.f);
 
   ggo::global_sampling_renderer renderer(camera, samples_count);
-  ggo::buffer buffer(3 * width * height);
+  ggo::array_8u buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("scene6.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

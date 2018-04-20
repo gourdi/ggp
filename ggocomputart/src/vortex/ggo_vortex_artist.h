@@ -2,7 +2,7 @@
 #define __GGO_VORTEX_ARTIST__
 
 #include <ggo_bitmap_artist_abc.h>
-#include <ggo_array.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -29,7 +29,7 @@ namespace ggo
       float 					      _split_vert;
     };
 
-    static	void	render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const ggo::vortex_artist::params & params);
+    static	void	render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::vortex_artist::params & params);
   };
 }
 

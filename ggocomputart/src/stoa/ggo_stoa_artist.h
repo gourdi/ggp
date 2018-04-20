@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <ggo_tree.h>
-#include <ggo_renderer_abc.h>
+#include <kernel/trees/ggo_tree.h>
+#include <raytracer/renderers/ggo_renderer_abc.h>
 #include <raytracer/ggo_raytracer_global.h>
-#include <ggo_background3d_color.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
 
 // Reference: http://http.developer.nvidia.com/GPUGems3/gpugems3_ch01.html
 
@@ -19,7 +19,7 @@ namespace ggo
 
           stoa_artist(int steps);
 
-    void  render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, float hue,
+    void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, float hue,
                  const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
                  ggo::renderer_abc & renderer) const;
 

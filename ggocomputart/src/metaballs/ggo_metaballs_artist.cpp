@@ -1,8 +1,10 @@
 #include "ggo_metaballs_artist.h"
 #include <iostream>
 #include <algorithm>
-#include <ggo_background3d_color.h>
-#include <ggo_solid_color_material.h>
+#include <raytracer/ggo_scene.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
+#include <raytracer/renderers/ggo_renderer_abc.h>
 
 //#define GGO_METABALLS_DEBUG
 
@@ -20,7 +22,7 @@ ggo::metaballs_artist::params::params()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
   ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params)
 {
 #ifdef GGO_METABALLS_DEBUG
@@ -42,6 +44,6 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, 
 	scene.add_sphere_light(ggo::color_32f(0.8f), params._light1, 0.1f);
   scene.add_sphere_light(ggo::color_32f(0.8f), params._light2, 0.1f);
 
-  renderer.render(buffer, width, height, line_step, pbf, scene);
+  renderer.render(buffer, width, height, line_step, format, scene);
 }
 

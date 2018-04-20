@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          duffing_realtime_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          duffing_realtime_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 

@@ -1,14 +1,14 @@
 #include "ggo_lagaude_animation_artist.h"
-#include <ggo_coordinates_conversions.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <kernel/math/ggo_coordinates_conversions.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }
@@ -100,7 +100,7 @@ void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_
       ggo::disc_float(x, y, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
   }
 
-  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
 }
 
 //////////////////////////////////////////////////////////////
@@ -157,9 +157,9 @@ bool ggo::lagaude_animation_artist::seed::update(int frame_index, const ggo::pos
 
   if (opacity > 0)
   {
-    for (int i = 0; i < _angle_generators.get_count(); ++i)
+    for (int i = 0; i < _angle_generators.count(); ++i)
     {
-      float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.get_count();
+      float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.count();
 
       auto * particle = new ggo::lagaude_animation_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo::velocity_path(0.02f * _scale, angle));
       particle->_angle = angle;
@@ -180,10 +180,10 @@ bool ggo::lagaude_animation_artist::seed::update(int frame_index, const ggo::pos
 
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::seed::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::lagaude_animation_artist::seed::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
-	_particles_animator.render(buffer, width, height, line_step, pbf);
+	_particles_animator.render(buffer, width, height, line_step, format);
 }
 
 //////////////////////////////////////////////////////////////
@@ -204,7 +204,7 @@ bool ggo::lagaude_animation_artist::particle::update(int frame_index, const ggo:
 
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
 	ggo::pos2f p1 = ggo::map_fit(ggo::from_polar(_angle, _radius), 0.f, 1.f, width, height);
@@ -239,7 +239,7 @@ bool ggo::lagaude_animation_artist::dust::update(int frame_index, const ggo::pos
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::dust::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::lagaude_animation_artist::dust::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
   ggo::pos2f center(width * pos.x(), height * pos.y());

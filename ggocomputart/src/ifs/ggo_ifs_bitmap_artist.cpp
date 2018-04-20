@@ -1,11 +1,11 @@
 #include "ggo_ifs_bitmap_artist.h"
 #include "ggo_ifs_artist.h"
-#include <ggo_pbf_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_bitmap_artist::ifs_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::ifs_bitmap_artist::ifs_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 	
 }
@@ -31,5 +31,5 @@ void ggo::ifs_bitmap_artist::render_bitmap(void * buffer) const
     ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
     ggo::rect_int::from_width_height(get_width(), get_height()));
 
-	artist.render(buffer, get_line_step(), get_pixel_buffer_format(), transform, hue, ggo::rand<float>(0, 2 * ggo::pi<float>()), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+	artist.render(buffer, get_line_step(), get_format(), transform, hue, ggo::rand<float>(0, 2 * ggo::pi<float>()), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 }

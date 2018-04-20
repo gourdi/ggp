@@ -1,8 +1,8 @@
 #include "ggo_bitmap_artist_abc.h"
 #include <kernel/ggo_kernel.h>
+#include <kernel/time/ggo_chronometer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
-#include <ggo_chronometer.h>
-#include <ggo_array.h>
 #include <sstream>
 #include <iostream>
 #include <thread>
@@ -203,7 +203,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 void render_images(const ggo_params & params, int thread_id)
 {
   std::unique_ptr<ggo::bitmap_artist_abc> artist(ggo::bitmap_artist_abc::create(params._artist_id, params._width, params._height, 3 * params._width, ggo::rgb_8u_yu));
-  ggo::array_uint8 buffer(3 * params._width * params._height);
+  ggo::array_8u buffer(3 * params._width * params._height);
   
   while (true)
   {

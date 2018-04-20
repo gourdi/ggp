@@ -1,8 +1,8 @@
 #include "ggo_entabeni.h"
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_color_triangle.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_color_triangle.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
 ggo::array<float, 2> ggo::entabeni::create_grid(bool loop_x, bool loop_y)
@@ -24,9 +24,9 @@ ggo::array<float, 2> ggo::entabeni::create_grid(bool loop_x, bool loop_y)
 
   while (cell_size > 2)
   {
-    for (int cell_start_y = 0; cell_start_y < grid.get_size<1>() - 1; cell_start_y += cell_size - 1)
+    for (int cell_start_y = 0; cell_start_y < grid.height() - 1; cell_start_y += cell_size - 1)
     {
-      for (int cell_start_x = 0; cell_start_x < grid.get_size<0>() - 1; cell_start_x += cell_size - 1)
+      for (int cell_start_x = 0; cell_start_x < grid.width() - 1; cell_start_x += cell_size - 1)
       {
         int cell_end_x = cell_start_x + cell_size - 1;
         int cell_end_y = cell_start_y + cell_size - 1;
@@ -98,7 +98,7 @@ ggo::cubic_curve<float, ggo::color_32f> ggo::entabeni::create_color_map()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
                                   const ggo::array<float, 2> & grid,
                                   const ggo::cubic_curve<float, ggo::color_32f> & color_map,
                                   float z,
@@ -150,11 +150,11 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     shapes.emplace_back(triangle, triangle_color);
   };
 
-  const float delta = 2 * ggo::pi<float>() / (grid.get_size<0>() - 1);
+  const float delta = 2 * ggo::pi<float>() / (grid.width() - 1);
 
-  for (int y = grid.get_size<1>() - 2; y >= 0; --y) // Paint from the furthest.
+  for (int y = grid.height() - 2; y >= 0; --y) // Paint from the furthest.
   {
-    for (int x = 0; x < grid.get_size<0>() - 1; ++x)
+    for (int x = 0; x < grid.width() - 1; ++x)
     {
       ggo::pos3f v1(delta * x, -delta * y, grid(x, y));
       ggo::pos3f v2(delta * x, -delta * (y + 1), grid(x, y + 1));

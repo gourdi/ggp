@@ -1,5 +1,5 @@
 #include "ggo_artist.h"
-#include <ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_coordinates_conversions.h>
 
 namespace ggo
 {

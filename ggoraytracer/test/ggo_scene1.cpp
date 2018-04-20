@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 #include <raytracer/renderers/ggo_antialiasing_renderer.h>
@@ -41,7 +41,7 @@ GGO_TEST(test_scene, scene1)
   ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);
 
-  ggo::buffer buffer(3 * width * height);
+  ggo::array_8u buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
 
   ggo::save_bmp("scene1.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);

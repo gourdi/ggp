@@ -1,6 +1,6 @@
 #include "ggo_cumbia_artist.h"
-#include <ggo_renderer_abc.h>
-#include <ggo_solid_color_material.h>
+#include <raytracer/renderers/ggo_renderer_abc.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
 
 namespace
 {
@@ -217,11 +217,11 @@ void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & apertur
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, ggo::renderer_abc & renderer) const
+void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, ggo::renderer_abc & renderer) const
 {
 	ggo::raytrace_params raytrace_params;
 	raytrace_params._depth = 2;
 
-	renderer.render(buffer, width, height, line_step, pbf, *_scene, raytrace_params);
+	renderer.render(buffer, width, height, line_step, format, *_scene, raytrace_params);
 }
 

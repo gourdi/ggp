@@ -1,8 +1,8 @@
 #include "ggo_filling_squares_animation_artist.h"
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 bool ggo::filling_squares_animation_artist::animated_square::update(int frame_index, const ggo::pos2f & pos)
@@ -11,7 +11,7 @@ bool ggo::filling_squares_animation_artist::animated_square::update(int frame_in
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::animated_square::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::filling_squares_animation_artist::animated_square::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
   constexpr int fade_in_anim_duration = 25;
@@ -46,9 +46,9 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 }
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -105,5 +105,5 @@ void ggo::filling_squares_animation_artist::render_frame(void * buffer, const gg
 {
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
 
-	_animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+	_animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
 }

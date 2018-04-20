@@ -1,10 +1,10 @@
 #include "ggo_vortex_animation_artist.h"
-#include <ggo_interpolation1d.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 //////////////////////////////////////////////////////////////
-ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 	
 }

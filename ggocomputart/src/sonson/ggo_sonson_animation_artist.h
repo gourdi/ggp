@@ -1,10 +1,10 @@
 #ifndef __GGO_SONSON_ANIMATION_ARTIST__
 #define __GGO_SONSON_ANIMATION_ARTIST__
 
-#include <ggo_rle_image.h>
 #include <ggo_animation_artist_abc.h>
-#include <ggo_kdtree.h>
-#include <ggo_curve.h>
+#include <kernel/trees/ggo_kdtree.h>
+#include <kernel/math/interpolation/ggo_curve.h>
+#include <2d/rle_image/ggo_rle_image.h>
 #include <memory>
 
 namespace ggo
@@ -13,7 +13,7 @@ namespace ggo
   {
   public:
 
-          sonson_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          sonson_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
   private:
 
@@ -32,7 +32,7 @@ namespace ggo
       static  line *  create(float hue, int width, int height, int scale_factor);
 
       bool            update();
-      void            render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf) const;
+      void            render(void * buffer, int width, int height, int line_step, ggo::image_format format) const;
 
     private:
 

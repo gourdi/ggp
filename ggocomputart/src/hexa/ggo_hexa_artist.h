@@ -2,10 +2,10 @@
 #define __GGO_HEXA_ARTIST__
 
 #include <kernel/ggo_vec.h>
-#include <ggo_random_interpolator_abc.h>
+#include <kernel/ggo_random_interpolator_abc.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <2d/ggo_color.h>
-#include <ggo_pixel_buffer_format.h>
+#include <2d/ggo_image_format.h>
 #include <vector>
 
 namespace ggo
@@ -20,7 +20,7 @@ namespace ggo
 
     basis3d_float generate_camera_basis(float progress) const;
 
-    void          render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+    void          render(void * buffer, int width, int height, int line_step, ggo::image_format format,
                          float progress, ggo::renderer_abc & renderer) const;
 
   public:

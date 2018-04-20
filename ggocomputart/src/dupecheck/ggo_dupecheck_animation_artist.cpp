@@ -1,17 +1,17 @@
 #include "ggo_dupecheck_animation_artist.h"
-#include <ggo_dct.h>
-#include <ggo_harmonic_curve.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_velocity_path.h>
-#include <ggo_spiral_path.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <kernel/math/signal_proc/ggo_dct.h>
+#include <kernel/math/ggo_harmonic_curve.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
+#include <animation/paths/ggo_velocity_path.h>
+#include <animation/paths/ggo_spiral_path.h>
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 }
 
@@ -145,7 +145,7 @@ void ggo::dupecheck_animation_artist::render_frame(void * buffer, const ggo::rec
   }
 
   // Render anim items.
-  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
 }
 
 //////////////////////////////////////////////////////////////
@@ -252,7 +252,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
 	if (buffer != nullptr)
@@ -285,7 +285,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
 	if (buffer != nullptr)
@@ -343,7 +343,7 @@ void ggo::dupecheck_animation_artist::animate3::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate3::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::dupecheck_animation_artist::animate3::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   int frame_index, const ggo::pos2f & pos) const
 {
 	if (buffer != nullptr)

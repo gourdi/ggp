@@ -1,5 +1,5 @@
 #include "ggo_ifs_animation_artist.h"
-#include <ggo_pbf_fill.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -7,9 +7,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _artist(width, height)
 {
 	
@@ -74,5 +74,5 @@ void ggo::ifs_animation_artist::render_frame(void * buffer, const ggo::rect_int 
 	transform[2] = ggo::map<float>(t, 0, 1, _transform_start[2], _transform_end[2]);
 	transform[3] = ggo::map<float>(t, 0, 1, _transform_start[3], _transform_end[3]);
 	
-	_artist.render(buffer, get_line_step(), get_pixel_buffer_format(), transform, _hue, angle1, angle2);
+	_artist.render(buffer, get_line_step(), get_format(), transform, _hue, angle1, angle2);
 }

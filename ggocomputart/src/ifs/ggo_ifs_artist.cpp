@@ -1,6 +1,6 @@
 #include "ggo_ifs_artist.h"
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_blend.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/paint/ggo_blend.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
@@ -23,11 +23,11 @@ void ggo::ifs_artist::update(ggo::pos3f & point, const float transform[4]) const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::render(void * buffer, int line_step, ggo::pixel_buffer_format pbf, float transform[4], float hue, float angle1, float angle2) const
+void ggo::ifs_artist::render(void * buffer, int line_step, ggo::image_format format, float transform[4], float hue, float angle1, float angle2) const
 {
 	std::cout << "Computing points" << std::endl;
 
-	ggo::array_float accumul_buffer(get_width() * get_height());
+	ggo::array_32f accumul_buffer(get_width() * get_height());
 	accumul_buffer.fill(0);
 
 	float cos1 = std::cos(angle1);
@@ -77,19 +77,19 @@ void ggo::ifs_artist::render(void * buffer, int line_step, ggo::pixel_buffer_for
 	// Render shadow.
 	std::cout << "Rendering shadow" << std::endl;
 	
-	ggo::array_float shadow_buffer(accumul_buffer);
+	ggo::array_32f shadow_buffer(accumul_buffer);
 	ggo::gaussian_blur2d_mirror<ggo::y_32f_yu>(
     shadow_buffer.data(), get_width(), get_height(), sizeof(float) * get_width(), 0.4f * get_min_size());
-	paint_buffer(buffer, line_step, pbf, 255, shadow_buffer);
+	paint_buffer(buffer, line_step, format, 255, shadow_buffer);
 
 	// Render the shape.
 	std::cout << "Rendering shape" << std::endl;
 	
-	paint_buffer(buffer, line_step, pbf, 255, accumul_buffer);
+	paint_buffer(buffer, line_step, format, 255, accumul_buffer);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::pixel_buffer_format pbf, uint8_t color, const ggo::array_float & accumul_buffer) const
+void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::image_format format, uint8_t color, const ggo::array_32f & accumul_buffer) const
 {
   const float * ptr_src = accumul_buffer.data();
 
@@ -104,7 +104,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::pixel_buff
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_dst, c_8u);
 
       ptr_src++;
-      ptr_dst = ggo::ptr_offset<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_dst);
+      ptr_dst = ggo::ptr_offset<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_dst);
     }
 	}
 }

@@ -33,21 +33,12 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<uint8_t, 1> a({ 1_u8, 2_u8, 3_u8, 4_u8 });
+    ggo::array<uint8_t, 1> a({ 1, 2, 3, 4 });
     GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
     GGO_CHECK_EQ(a(2), 3);
     GGO_CHECK_EQ(a(3), 4);
-  }
-
-  {
-    ggo::array<uint8_t, 1> a({ 0x00_u8, 0xff_u8, 0x00_u8, 0xff_u8 });
-    GGO_CHECK_EQ(a.size(), 4);
-    GGO_CHECK_EQ(a(0), 0x00);
-    GGO_CHECK_EQ(a(1), 0xff);
-    GGO_CHECK_EQ(a(2), 0x00);
-    GGO_CHECK_EQ(a(3), 0xff);
   }
 
   {

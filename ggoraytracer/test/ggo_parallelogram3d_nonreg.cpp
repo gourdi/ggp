@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/cameras/ggo_isometric_camera.h>
 #include <raytracer/backgrounds/ggo_background3d_color.h>
@@ -28,7 +28,7 @@ GGO_TEST(parallelogram3d, test)
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::buffer buffer(3 * size * size);
+  ggo::array_8u buffer(3 * size * size);
   renderer.render(buffer.data(), size, size, 3 * size, ggo::rgb_8u_yu, scene);
   ggo::save_bmp("parallelogram3d.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
 }

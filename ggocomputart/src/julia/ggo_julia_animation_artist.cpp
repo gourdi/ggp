@@ -6,9 +6,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::julia_animation_artist::julia_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::julia_animation_artist::julia_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt),
+animation_artist_abc(width, height, line_step, format, rt),
 _artist(width, height)
 {
 	
@@ -43,6 +43,6 @@ void ggo::julia_animation_artist::render_frame(void * buffer, const ggo::rect_in
   float x = -1 + _radius * std::cos(angle);
   float y = _radius * std::sin(angle);
 
-  _artist.render_bitmap(buffer, get_line_step(), get_pixel_buffer_format(), std::complex<float>(x, y), 1);
+  _artist.render_bitmap(buffer, get_line_step(), get_format(), std::complex<float>(x, y), 1);
 }
 

@@ -1,9 +1,9 @@
 #include "ggo_cabrel_bitmap_artist.h"
-#include <ggo_shape_sampling.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_color_triangle.h>
+#include <kernel/math/sampling/shape_sampling/ggo_shape_sampling.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_color_triangle.h>
+#include <2d/blur/ggo_gaussian_blur.h>
 
 namespace
 {
@@ -179,10 +179,10 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void render_bitmap_t(void * buffer, const ggo::cabrel_bitmap_artist & artist)
   {
-    ggo::fill_solid<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+    ggo::fill_solid<format>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       ggo::white_8u(),
       ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
 
@@ -228,10 +228,10 @@ namespace
 
       shadows.emplace_back(shadow_triangle, ggo::black<ggo::color_8u>());
     }
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shadows);
+    ggo::paint_shapes<format, ggo::sampling_4x4>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shadows);
 
     float stddev = 0.01f * artist.get_min_size();
-    ggo::gaussian_blur2d_mirror<pbf>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
+    ggo::gaussian_blur2d_mirror<format>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), stddev);
 
     // Paint the triangles.
     using paint_shape_t = ggo::paint_shape_abc<float, ggo::color_8u, ggo::color_8u>;
@@ -257,7 +257,7 @@ namespace
       create_segment(triangle.v3(), triangle.v1());
     }
 
-    ggo::paint_shapes<pbf, ggo::sampling_4x4>(
+    ggo::paint_shapes<format, ggo::sampling_4x4>(
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       ggo::make_adaptor(shapes, [](const auto & paint_shape) { return paint_shape.get(); }),
       ggo::rect_int::from_width_height(artist.get_width(), artist.get_height()));
@@ -265,22 +265,22 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
 {
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     render_bitmap_t<ggo::rgb_8u_yu>(buffer, *this);
     break;
-  case ggo::bgra_8u_yd:
-    render_bitmap_t<ggo::bgra_8u_yd>(buffer, *this);
+  case ggo::bgrx_8u_yd:
+    render_bitmap_t<ggo::bgrx_8u_yd>(buffer, *this);
     break;
   default:
     GGO_FAIL();

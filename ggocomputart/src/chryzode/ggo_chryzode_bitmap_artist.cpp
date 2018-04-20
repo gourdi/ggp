@@ -1,11 +1,11 @@
 #include "ggo_chryzode_bitmap_artist.h"
 #include "ggo_chryzode_artist.h"
-#include <ggo_gaussian_blur.h>
+#include <2d/blur/ggo_gaussian_blur.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 
@@ -34,5 +34,5 @@ void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
   float hue_start = ggo::rand<float>();
   float hue_end = hue_start + (ggo::rand_bool() ? -0.2f : 0.2f);
     
-  artist.render_chryzode(buffer, get_line_step(), get_pixel_buffer_format(), radius, params, hue_start, hue_end);
+  artist.render_chryzode(buffer, get_line_step(), get_format(), radius, params, hue_start, hue_end);
 }

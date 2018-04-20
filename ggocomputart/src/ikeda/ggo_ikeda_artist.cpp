@@ -1,8 +1,8 @@
 #include "ggo_ikeda_artist.h"
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 namespace
 {
@@ -10,9 +10,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }

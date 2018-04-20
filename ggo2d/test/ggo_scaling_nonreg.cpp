@@ -1,12 +1,12 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer2d.h>
+#include <kernel/memory/ggo_array.h>
 #include <kernel/math/signal_proc/ggo_scale2d.h>
 #include <2d/io/ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scaling, y32f)
 {
-  ggo::buffer2d_32f input{
+  ggo::array2d_32f input({
     { 1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
@@ -16,20 +16,20 @@ GGO_TEST(scaling, y32f)
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, } };
+    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, } });
 
-  ggo::buffer2d_32f output(100, 100);
+  ggo::array2d_32f output(100, 100);
 
   ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
-    input.data(), input.width(), input.height(), input.line_byte_step(),
-    output.data(), output.width(), output.height(), output.line_byte_step());
+    input.data(), input.width(), input.height(), int(sizeof(float) * input.width()),
+    output.data(), output.width(), output.height(), int(sizeof(float) * output.width()));
 
-  ggo::save_bmp("scaling_linear.bmp", output.data(), ggo::y_32f_yu, output.width(), output.height(), output.line_byte_step());
+  ggo::save_bmp("scaling_linear.bmp", output.data(), ggo::y_32f_yu, output.width(), output.height(), int(sizeof(float) * output.width()));
 
   ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration>(
-    input.data(), input.width(), input.height(), input.line_byte_step(),
-    output.data(), output.width(), output.height(), output.line_byte_step());
+    input.data(), input.width(), input.height(), int(sizeof(float) * input.width()),
+    output.data(), output.width(), output.height(), int(sizeof(float) * output.width()));
 
-  ggo::save_bmp("scaling_cubic.bmp", output.data(), ggo::y_32f_yu, output.width(), output.height(), output.line_byte_step());
+  ggo::save_bmp("scaling_cubic.bmp", output.data(), ggo::y_32f_yu, output.width(), output.height(), int(sizeof(float) * output.width()));
 
 }

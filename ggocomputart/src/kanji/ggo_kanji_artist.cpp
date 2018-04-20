@@ -1,7 +1,7 @@
 #include "ggo_kanji_artist.h"
-#include <ggo_pbf_paint.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
 ggo::kanji_artist::kanji_artist(int width, int height)
@@ -110,34 +110,23 @@ bool ggo::kanji_artist::prepare_frame(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::rect_int & clipping) const
+void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping) const
 {
   const float radius = 0.0005f * get_min_size();
   const auto brush = ggo::make_solid_brush(_parts_color);
   const ggo::alpha_blender_rgb8u alpha_blender(0.2f);
 
-  switch (pbf)
+  switch (format)
   {
   case ggo::rgb_8u_yu:
-    for (const auto & particle : _particles)
-    {
-      for (const auto & pos : particle)
-      {
-        ggo::pos2f render_pt = map_fit(pos, 0, 1);  
-
-        ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
-          ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
-      }
-    }
-    break;
-  case ggo::bgra_8u_yd:
+  case ggo::bgrx_8u_yd:
     for (const auto & particle : _particles)
     {
       for (const auto & pos : particle)
       {
         ggo::pos2f render_pt = map_fit(pos, 0, 1);
 
-        ggo::paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
+        ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
           ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
       }
     }

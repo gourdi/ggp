@@ -2,7 +2,6 @@
 #define __GGO_CRYSTAL_ARTIST__
 
 #include <ggo_artist.h>
-#include <ggo_array.h>
 
 namespace ggo
 {
@@ -20,7 +19,7 @@ namespace ggo
 
   public:
 
-    static void render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params);
+    static void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, const params & params);
     static void randomize_params(params & params);
 
   private:

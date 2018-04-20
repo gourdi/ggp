@@ -1,5 +1,5 @@
 #include "ggo_mandelbrot_artist.h"
-#include <ggo_curve.h>
+#include <kernel/math/interpolation/ggo_curve.h>
 #include <2d/ggo_color.h>
 #include <array>
 #include <complex>
@@ -149,9 +149,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 	
@@ -193,13 +193,13 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 			{
 				int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
 
-        switch (get_pixel_buffer_format())
+        switch (get_format())
         {
         case ggo::rgb_8u_yu:
           ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), palette[index]);
           break;
-        case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+        case ggo::bgrx_8u_yd:
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), get_line_step(), palette[index]);
           break;
         default:
           GGO_FAIL();
@@ -237,13 +237,13 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 
         ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
-        switch (get_pixel_buffer_format())
+        switch (get_format())
         {
         case ggo::rgb_8u_yu:
           ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
           break;
-        case ggo::bgra_8u_yd:
-          ggo::write_pixel<ggo::bgra_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+        case ggo::bgrx_8u_yd:
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
           break;
         default:
           GGO_FAIL();

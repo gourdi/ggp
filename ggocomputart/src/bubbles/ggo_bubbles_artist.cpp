@@ -1,12 +1,12 @@
 #include "ggo_bubbles_artist.h"
 #include <2d/ggo_color.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::bubbles_artist::bubbles_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::bubbles_artist::bubbles_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 
 }
@@ -18,13 +18,13 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
 	ggo::linear_curve<float, ggo::color_32f> bkgd_gradient;
   bkgd_gradient.push_point(0, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
   bkgd_gradient.push_point(1, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     ggo::fill_color_curve<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
     break;
-  case ggo::bgra_8u_yd:
-    ggo::fill_color_curve<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
+  case ggo::bgrx_8u_yd:
+    ggo::fill_color_curve<ggo::bgrx_8u_yd>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
     break;
   default:
     GGO_FAIL();
@@ -66,13 +66,13 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
         return convert_color_to<color_8u>(bkgd_color_32f + brush_color);
       };
 
-      switch (get_pixel_buffer_format())
+      switch (get_format())
       {
       case ggo::rgb_8u_yu:
         paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
         break;
-      case ggo::bgra_8u_yd:
-        paint_shape<ggo::bgra_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
+      case ggo::bgrx_8u_yd:
+        paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
         break;
       default:
         GGO_FAIL();

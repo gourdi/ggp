@@ -5,10 +5,11 @@
 
 #include <ggo_artist.h>
 #include <raytracer/ggo_raytracer_global.h>
-#include <ggo_renderer_abc.h>
 
 namespace ggo
 {
+  class renderer_abc;
+
   namespace metaballs_artist
   {
     struct params
@@ -24,7 +25,7 @@ namespace ggo
       ggo::color_32f          _background_color;
     };
 
-    void render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+    void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
       ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
   };
 }

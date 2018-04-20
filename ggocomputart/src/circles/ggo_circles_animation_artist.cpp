@@ -1,8 +1,8 @@
 #include "ggo_circles_animation_artist.h"
 #include "ggo_circles_artist.h"
 #include <math.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
 bool ggo::circles_animation_artist::circle_animate::update(int frame_index, const ggo::pos2f & pos)
@@ -11,17 +11,17 @@ bool ggo::circles_animation_artist::circle_animate::update(int frame_index, cons
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::circles_animation_artist::circle_animate::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, int frame_index, const ggo::pos2f & pos) const
+void ggo::circles_animation_artist::circle_animate::render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const
 {
   float radius = _radius * (1 - std::cos(_bounding_factor * frame_index) * std::exp(-_attenuation_factor * frame_index));
 
-  circles_artist::paint_disc(buffer, width, height, line_step, pbf, pos, radius, _color);
+  circles_artist::paint_disc(buffer, width, height, line_step, format, pos, radius, _color);
 }
 
 //////////////////////////////////////////////////////////////
-ggo::circles_animation_artist::circles_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::circles_animation_artist::circles_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -78,6 +78,6 @@ void ggo::circles_animation_artist::render_frame(void * buffer, const ggo::rect_
 {
   ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
 
-  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format());
+  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
 }
 

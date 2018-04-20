@@ -7,9 +7,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::entabeni_animation_artist::entabeni_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::entabeni_animation_artist::entabeni_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 }
 
@@ -44,18 +44,18 @@ bool ggo::entabeni_animation_artist::prepare_frame()
 void ggo::entabeni_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
   // Interpolate grid.
-  ggo::array<float, 2> grid(_grid_start.get_width(), _grid_start.get_height());
+  ggo::array<float, 2> grid(_grid_start.width(), _grid_start.height());
   float t = static_cast<float>(_frame_index) / static_cast<float>(frames_count);
 
-  for (int y = 0; y < grid.get_height(); ++y)
+  for (int y = 0; y < grid.height(); ++y)
   {
-    for (int x = 0; x < grid.get_width(); ++x)
+    for (int x = 0; x < grid.width(); ++x)
     {
       grid(x, y) = (1.f - t) * _grid_start(x, y) + t * _grid_end(x, y);
     }
   }
 
   // Paint the grid.
-  ggo::entabeni::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), grid, _color_map, _z, _angle);
+  ggo::entabeni::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), grid, _color_map, _z, _angle);
 }
 

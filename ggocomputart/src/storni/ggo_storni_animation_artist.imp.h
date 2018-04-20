@@ -1,38 +1,38 @@
-#include <ggo_pbf_paint.h>
-#include <ggo_blit.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/ggo_blit.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_buffer_format pbf>
+template <ggo::image_format format>
 void ggo::storni_animation_artist::blit_background(void * buffer, const ggo::rect_int & clipping) const
 {
-  const int clipping_width_byte_size = clipping.width() * ggo::pixel_buffer_format_info<pbf>::pixel_byte_size;
+  const int clipping_width_byte_size = clipping.width() * ggo::image_format_traits<format>::pixel_byte_size;
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
-    const void * src = ggo::get_pixel_ptr<pbf>(_background.data(), clipping.left(), y, get_height(), get_line_step());
-    void * dst = ggo::get_pixel_ptr<pbf>(buffer, clipping.left(), y, get_height(), get_line_step());
+    const void * src = ggo::get_pixel_ptr<format>(_background.data(), clipping.left(), y, get_height(), get_line_step());
+    void * dst = ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, get_height(), get_line_step());
 
     memcpy(dst, src, clipping_width_byte_size);
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
+template <ggo::image_format format, ggo::sampling smp>
 void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect_int & clipping)
 {
-  constexpr ggo::pixel_buffer_format gray_pbf = ggo::pixel_buffer_format_info<pbf>::gray_pbf;
+  constexpr ggo::image_format gray_format = ggo::image_format_traits<format>::gray_format;
 
   // Fade out.
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     for (int x = clipping.left(); x <= clipping.right(); ++x)
     {
-      void * ptr = ggo::get_pixel_ptr<gray_pbf>(_stornis_buffer.data(), x, y, get_height(), get_width());
+      void * ptr = ggo::get_pixel_ptr<gray_format>(_stornis_buffer.data(), x, y, get_height(), get_width());
 
-      auto y_8u = ggo::read_pixel<gray_pbf>(ptr);
+      auto y_8u = ggo::read_pixel<gray_format>(ptr);
       y_8u = y_8u >= 32 ? y_8u - 32 : 0;
-      ggo::write_pixel<gray_pbf>(ptr, y_8u);
+      ggo::write_pixel<gray_format>(ptr, y_8u);
     }
   }
 
@@ -40,7 +40,7 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect
   const float storni_radius = 0.0025f * get_min_size();
   for (const auto & storni : _stornis)
   {
-    ggo::paint_shape<gray_pbf, smp>(_stornis_buffer.data(), get_width(), get_height(), get_width(),
+    ggo::paint_shape<gray_format, smp>(_stornis_buffer.data(), get_width(), get_height(), get_width(),
       ggo::extended_segment_float(storni._pos, storni._pos - storni._vel, storni_radius),
       ggo::solid_color_brush<uint8_t>(0xff), ggo::overwrite_blender<uint8_t>(), clipping);
   }
@@ -50,10 +50,10 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect
   {
     for (int x = clipping.left(); x <= clipping.right(); ++x)
     {
-      void * ptr = ggo::get_pixel_ptr<pbf>(buffer, x, y, get_height(), get_line_step());
+      void * ptr = ggo::get_pixel_ptr<format>(buffer, x, y, get_height(), get_line_step());
 
-      auto y_8u = ggo::read_pixel<gray_pbf>(_stornis_buffer.data(), x, y, get_height(), get_width());
-      auto rgb_8u = ggo::read_pixel<pbf>(ptr);
+      auto y_8u = ggo::read_pixel<gray_format>(_stornis_buffer.data(), x, y, get_height(), get_width());
+      auto rgb_8u = ggo::read_pixel<format>(ptr);
 
       const uint32_t weight_rgb = 255 - y_8u;
       const uint32_t weighted_white = y_8u * 255;
@@ -64,13 +64,13 @@ void ggo::storni_animation_artist::paint_stornies(void * buffer, const ggo::rect
       rgb_8u.g() = static_cast<uint8_t>(g);
       rgb_8u.b() = static_cast<uint8_t>(b);
 
-      ggo::write_pixel<pbf>(ptr, rgb_8u);
+      ggo::write_pixel<format>(ptr, rgb_8u);
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_buffer_format pbf, ggo::sampling smp>
+template <ggo::image_format format, ggo::sampling smp>
 void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rect_int & clipping) const
 {
   const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(_hue + 0.5f, 1.f, 1.f);
@@ -95,13 +95,13 @@ void ggo::storni_animation_artist::paint_predators(void * buffer, const ggo::rec
 
       const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 
-      ggo::paint_shapes<pbf, smp>(buffer, get_width(), get_height(), get_line_step(), paint_shapes, clipping);
+      ggo::paint_shapes<format, smp>(buffer, get_width(), get_height(), get_line_step(), paint_shapes, clipping);
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_buffer_format pbf>
+template <ggo::image_format format>
 void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const
 {
   const float obstacle_hypot = get_obstacle_hypot();
@@ -129,9 +129,9 @@ void ggo::storni_animation_artist::paint_obstacles(void * buffer, const ggo::rec
           opacity *= 0.5f + 0.5f * std::sin(20.f * opacity + phase);
 
           const ggo::alpha_blender_rgb8u blender(opacity);
-          auto pixel = ggo::read_pixel<pbf>(buffer, x, y, get_height(), get_line_step());
+          auto pixel = ggo::read_pixel<format>(buffer, x, y, get_height(), get_line_step());
           pixel = blender(x, y, pixel, color);
-          ggo::write_pixel<pbf>(buffer, x, y, get_height(), get_line_step(), pixel);
+          ggo::write_pixel<format>(buffer, x, y, get_height(), get_line_step(), pixel);
         }
       });
     }

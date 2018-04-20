@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_buffer_format pbf>
+template <ggo::image_format format>
 void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
 {
   const float width_f = static_cast<float>(get_width());
@@ -12,7 +12,7 @@ void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector
     const float y1 = ggo::map(y - 3 / 8.f, 0.f, height_f, -range_y, range_y);
     const float y2 = ggo::map(y + 3 / 8.f, 0.f, height_f, -range_y, range_y);
 
-    void * ptr = ggo::get_line_ptr<pbf>(buffer, y, get_height(), line_step);
+    void * ptr = ggo::get_line_ptr<format>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {
@@ -35,9 +35,9 @@ void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector
 
       const ggo::color_32f pixel_color = color * (altitude_factor + std::abs(normal.get<2>()) / altitude_factor);
 
-      ggo::write_pixel<pbf>(buffer, ggo::convert_color_to<ggo::color_8u>(pixel_color));
+      ggo::write_pixel<format>(buffer, ggo::convert_color_to<ggo::color_8u>(pixel_color));
 
-      buffer = ggo::ptr_offset<ggo::pixel_buffer_format_info<pbf>::pixel_byte_size>(buffer);
+      buffer = ggo::ptr_offset<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
     }
   }
 }

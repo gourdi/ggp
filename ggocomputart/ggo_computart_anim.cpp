@@ -1,6 +1,6 @@
 #include "ggo_animation_artist_abc.h"
-#include <ggo_array.h>
-#include <ggo_chronometer.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/time/ggo_chronometer.h>
 #include <2d/io/ggo_bmp.h>
 #include <sstream>
 #include <iostream>
@@ -102,14 +102,15 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  ggo::array_uint8 buffer(4 * params._width * params._height);
+  int line_byte_step = 3 * params._width;
+  ggo::array_8u buffer(line_byte_step * params._height);
 
   std::cout << "Artist ID: " << static_cast<int>(params._artist_id) << std::endl;
   std::cout << "Output resolution: " << params._width << 'x' << params._height << std::endl;
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
   std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
-    params._artist_id, params._width, params._height, 3 * params._width, ggo::rgb_8u_yu, ggo::animation_artist_abc::offscreen_rendering));
+    params._artist_id, params._width, params._height, line_byte_step, ggo::rgb_8u_yu, ggo::animation_artist_abc::offscreen_rendering));
 
   if (artist.get() == nullptr)
   {
@@ -143,7 +144,7 @@ int main(int argc, char ** argv)
     filename << i << ".bmp";
     std::cout << "Saved image " << filename.str() << " (image computed in " << frame_chronometer.get_display_time() << ")" << std::endl;
 
-    if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, 3 * params._width) == false)
+    if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, line_byte_step) == false)
     {
       std::cerr << "Failed saving image " + filename.str() << std::endl;
     }

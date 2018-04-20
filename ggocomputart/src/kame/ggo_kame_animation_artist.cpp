@@ -1,10 +1,10 @@
 #include "ggo_kame_animation_artist.h"
-#include <kernel/memory/ggo_buffer.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_pbf_paint.h>
+#include <kernel/memory/ggo_array.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_paint.h>
 #include <2d/ggo_color.h>
-#include <ggo_gaussian_blur2d.h>
-#include <ggo_blit.h>
+#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/ggo_blit.h>
 
 namespace
 {
@@ -24,9 +24,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::kame_animation_artist::kame_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::kame_animation_artist::kame_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -328,7 +328,7 @@ void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int
 {
   if (buffer != nullptr)
   {
-    ggo::buffer buffer_gray(get_width() * get_height());
+    ggo::array_8u buffer_gray(get_width() * get_height());
 
     ggo::fill_4_colors<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),
       _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);

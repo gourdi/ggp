@@ -1,14 +1,14 @@
 #include "ggo_neon_artist.h"
 #include <2d/ggo_color.h>
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
-#include <ggo_brush.h>
-#include <ggo_blend.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_blend.h>
 
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <ggo::pixel_buffer_format pbf>
+  template <ggo::image_format format>
   void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping)
   {
     const float radius = 0.01f * artist.get_min_size();
@@ -16,23 +16,23 @@ namespace
     ggo::pos2f pos = artist.map_fit(0.8f * point_pos, -1, 1);
 
     ggo::disc_float disc1(pos, radius);
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
 
     pos.x() = artist.get_width() - pos.x() - 1;
 
     ggo::disc_float disc2(pos, radius);
-    ggo::paint_shape<pbf, ggo::sampling_4x4>(
+    ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
       disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
   }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt)
+ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, pbf, rt)
+animation_artist_abc(width, height, line_step, format, rt)
 {
 
 }
@@ -88,13 +88,13 @@ void ggo::neon_artist::render_frame(void * buffer, const ggo::rect_int & clippin
 {
   if (_frame_index == 0)
   {
-    switch (get_pixel_buffer_format())
+    switch (get_format())
     {
     case ggo::rgb_8u_yu:
       ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), clipping);
       break;
-    case ggo::bgra_8u_yd:
-      ggo::fill_solid<ggo::bgra_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), clipping);
+    case ggo::bgrx_8u_yd:
+      ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), clipping);
       break;
     default:
       GGO_FAIL();
@@ -116,13 +116,13 @@ void ggo::neon_artist::render_frame(void * buffer, const ggo::rect_int & clippin
 //////////////////////////////////////////////////////////////
 void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping) const
 {
-  switch (get_pixel_buffer_format())
+  switch (get_format())
   {
   case ggo::rgb_8u_yu:
     paint_point_t<ggo::rgb_8u_yu>(*this, buffer, point_pos, color, clipping);
     break;
-  case ggo::bgra_8u_yd:
-    paint_point_t<ggo::bgra_8u_yd>(*this, buffer, point_pos, color, clipping);
+  case ggo::bgrx_8u_yd:
+    paint_point_t<ggo::bgrx_8u_yd>(*this, buffer, point_pos, color, clipping);
     break;
   default:
     GGO_FAIL();

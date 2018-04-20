@@ -21,7 +21,7 @@ namespace ggo
 
     chryzode_artist(int width, int height);
 
-    void render_chryzode(void * buffer, int line_step, ggo::pixel_buffer_format pbf,
+    void render_chryzode(void * buffer, int line_step, ggo::image_format format,
       float radius, const chryzode_params & params, float hue_start, float hue_end) const;
   };
 }

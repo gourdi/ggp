@@ -1,11 +1,11 @@
 #include "ggo_crystal_artist.h"
-#include <ggo_coordinates_conversions.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/ggo_coordinates_conversions.h>
 #include <2d/ggo_color.h>
-#include <ggo_array.h>
-#include <ggo_blend.h>
+#include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf, const params & params)
+void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, const params & params)
 {
   ggo::array<float, 1> float_buffer(3 * width * height, 0.f);
 
@@ -26,7 +26,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, c_8u);
 
       ptr_in += 3;
-      ptr_out = ggo::ptr_offset<ggo::pixel_buffer_format_info<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
+      ptr_out = ggo::ptr_offset<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
     }
 	}
 }

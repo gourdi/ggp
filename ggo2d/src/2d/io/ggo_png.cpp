@@ -1,5 +1,5 @@
 #include "ggo_png.h"
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <png.h>
 
 namespace ggo

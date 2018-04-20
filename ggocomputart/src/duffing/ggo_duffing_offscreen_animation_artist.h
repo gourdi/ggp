@@ -2,8 +2,8 @@
 #define __GGO_DUFFING_OFFSCREEN_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include <ggo_array.h>
-#include <ggo_curve.h>
+#include <kernel/memory/ggo_array.h>
+#include <kernel/math/interpolation/ggo_curve.h>
 
 namespace ggo
 {
@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-                duffing_offscreen_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+                duffing_offscreen_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 

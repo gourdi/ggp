@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_buffer.h>
+#include <kernel/memory/ggo_array.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/io/ggo_bmp.h>
 #include <2d/paint/ggo_paint.h>
@@ -37,7 +37,7 @@ GGO_TEST(test_scene, scene3)
 
   ggo::mono_sampling_point_camera camera(width, height, ggo::basis3d_float({ 0.f, 0.f, 20.f }), 0.1f);
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::buffer buffer(3 * width * height);
+  ggo::array_8u buffer(3 * width * height);
   
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
 

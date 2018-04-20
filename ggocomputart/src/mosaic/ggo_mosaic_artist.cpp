@@ -1,6 +1,6 @@
 #include "ggo_mosaic_artist.h"
-#include <ggo_pbf_paint.h>
-#include <ggo_pbf_fill.h>
+#include <2d/paint/ggo_paint.h>
+#include <2d/fill/ggo_fill.h>
 
 namespace
 {
@@ -79,9 +79,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mosaic_artist::mosaic_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::mosaic_artist::mosaic_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 }
 						

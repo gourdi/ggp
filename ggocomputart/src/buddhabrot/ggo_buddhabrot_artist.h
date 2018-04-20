@@ -3,7 +3,7 @@
 
 #include "ggo_bitmap_artist_abc.h"
 #include <complex>
-#include <ggo_array.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-          buddhabrot_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          buddhabrot_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 

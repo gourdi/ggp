@@ -6,6 +6,7 @@
 // http://cg.informatik.uni-freiburg.de/publications/2007_SCA_SPH.pdf
 
 #include <ggo_animation_artist_abc.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -13,7 +14,7 @@ namespace ggo
   {
   public:
 
-          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf, rendering_type rt);
+          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
 
     void  init_animation() override;
     bool  prepare_frame() override;

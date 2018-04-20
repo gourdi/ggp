@@ -1,10 +1,10 @@
 #include "ggo_hexa_artist.h"
 #include <kernel/math/ggo_distance.h>
-#include <ggo_renderer_abc.h>
+#include <raytracer/renderers/ggo_renderer_abc.h>
 #include <raytracer/ggo_raytracer_global.h>
-#include <ggo_solid_color_material.h>
-#include <ggo_background3d_color.h>
-#include <ggo_octree_raycaster.h>
+#include <raytracer/materials/ggo_solid_color_material.h>
+#include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/raycasters/ggo_octree_raycaster.h>
 
 namespace
 {
@@ -144,7 +144,7 @@ _enable_roughness(enable_roughness)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_artist::render(void * buffer, int width, int height, int line_step, ggo::pixel_buffer_format pbf,
+void ggo::hexa_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
                               float progress, ggo::renderer_abc & renderer) const
 {
 
@@ -162,5 +162,5 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
   raytrace_params._raycaster = &raycaster;
 
   // Rendering.
-  renderer.render(buffer, width, height, line_step, pbf, scene, raytrace_params);
+  renderer.render(buffer, width, height, line_step, format, scene, raytrace_params);
 }

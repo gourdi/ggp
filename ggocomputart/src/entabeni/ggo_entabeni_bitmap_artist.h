@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          entabeni_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf);
+          entabeni_bitmap_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 

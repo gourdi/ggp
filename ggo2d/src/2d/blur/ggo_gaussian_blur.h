@@ -189,7 +189,7 @@ namespace ggo
   void gaussian_blur2d_loop(void * buffer, const int width, const int height, const int line_byte_step, const float stddev)
   {
     using format_traits = image_format_traits<format>;
-    using gaussian_helper = gaussian_blur2d_helper<typename format::color_t>;
+    using gaussian_helper = gaussian_blur2d_helper<typename format_traits::color_t>;
 
     auto horz = [&](int x, int y, void * buf) {
       x = loop_index(x, width);

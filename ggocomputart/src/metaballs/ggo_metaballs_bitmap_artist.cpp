@@ -1,15 +1,15 @@
 #include "ggo_metaballs_bitmap_artist.h"
 #include "ggo_metaballs_artist.h"
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <ggo_global_sampling_renderer.h>
-#include <ggo_mono_sampling_renderer.h>
+#include <raytracer/renderers/ggo_global_sampling_renderer.h>
+#include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 
 #define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo::metaballs_bitmap_artist::metaballs_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::metaballs_bitmap_artist::metaballs_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {	
 }
 
@@ -43,5 +43,5 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, 56);
 #endif
-	ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), renderer, params);
+	ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer, params);
 }

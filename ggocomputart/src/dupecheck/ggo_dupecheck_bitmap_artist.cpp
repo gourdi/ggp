@@ -2,9 +2,9 @@
 #include "ggo_dupecheck_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_bitmap_artist::dupecheck_bitmap_artist(int width, int height, int line_step, ggo::pixel_buffer_format pbf)
+ggo::dupecheck_bitmap_artist::dupecheck_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
 :
-bitmap_artist_abc(width, height, line_step, pbf)
+bitmap_artist_abc(width, height, line_step, format)
 {
 	
 }
@@ -14,7 +14,7 @@ void ggo::dupecheck_bitmap_artist::render_bitmap(void * buffer) const
 {
 	const int frame_index = 100;
 	
-	ggo::dupecheck_animation_artist artist(get_width(), get_height(), get_line_step(), get_pixel_buffer_format(), ggo::animation_artist_abc::offscreen_rendering);
+	ggo::dupecheck_animation_artist artist(get_width(), get_height(), get_line_step(), get_format(), ggo::animation_artist_abc::offscreen_rendering);
 
 	artist.init_animation();
 	for (int i = 0; i < frame_index; ++i)
