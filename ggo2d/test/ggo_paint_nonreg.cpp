@@ -14,7 +14,6 @@
 #include <2d/paint/ggo_gradient_brush.h>
 #include <2d/paint/ggo_blend.h>
 #include <2d/paint/ggo_blur_paint.h>
-#include <array>
 
 //#define GGO_BENCH
 
@@ -175,7 +174,7 @@ GGO_TEST(paint, polygons_rectangles)
 
   const std::vector<const paint_polygon *> polygons{ &polygon1, &polygon2 };
 
-  std::array<uint8_t, 3 * width * height> buffer_polygons;
+  ggo::array_8u buffer_polygons(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_polygons.data(), width, height, line_step, ggo::blue_8u());
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_polygons.data(), width, height, line_step, polygons);
 
@@ -188,7 +187,7 @@ GGO_TEST(paint, polygons_rectangles)
 
   const std::vector<const paint_rect *> rects{ &rect1, &rect2 };
 
-  std::array<uint8_t, 3 * width * height> buffer_rectangles;
+  ggo::array_8u buffer_rectangles(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::blue_8u());
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rectangles.data(), width, height, line_step, rects);
 
@@ -237,7 +236,7 @@ GGO_TEST(paint, difference)
   shape.add_shape(std::make_shared<ggo::disc_float>(50.f, 50.f, 40.f));
   shape.add_shape(std::make_shared<ggo::disc_float>(70.f, 70.f, 30.f));
 
-  std::array<uint8_t, 3 * width * height> buffer;
+  ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, shape, ggo::yellow_8u());
 
@@ -257,7 +256,7 @@ GGO_TEST(paint, color_triangle)
 
   const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
 
-  std::array<uint8_t, 3 * width * height> buffer;
+  ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
 
@@ -285,7 +284,7 @@ GGO_TEST(paint, alpha_color_triangle)
 
   const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
 
-  std::array<uint8_t, 3 * width * height> buffer;
+  ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
 

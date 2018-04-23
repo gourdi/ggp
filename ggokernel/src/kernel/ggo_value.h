@@ -39,7 +39,7 @@ namespace ggo
       const data_t *  _end;
 
       const data_t *  begin() const { return _begin; }
-      const data_t *  end() const { return _begin; }
+      const data_t *  end() const { return _end; }
     };
 
     template <typename data_t>

@@ -21,7 +21,7 @@ namespace ggo
   private:
 
     ggo::kanji_artist	_kanji_artist;
-    int               _frame_index;
+    int               _frame_index = 0;
   };
 }
 

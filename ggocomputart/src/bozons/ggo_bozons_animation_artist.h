@@ -37,9 +37,9 @@ namespace ggo
       float         _radius;
     };
 
-    int               _frame_index;
+    int               _frame_index = 0;
     std::list<bozon>  _bozons;
-    float             _hue;
+    float             _hue = 0.f;
     ggo::color_8u     _bkgd_color1;
     ggo::color_8u     _bkgd_color2;
     ggo::color_8u     _bkgd_color3;

@@ -96,7 +96,7 @@ namespace ggo
       float	_var;
     };
 
-    int                           _frame_index;
+    int                           _frame_index = 0;
     std::vector<background_color> _bkgd_colors;
     ggo::color_32f 					      _colors[4];
     ggo::pos2f 					          _points[4];

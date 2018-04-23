@@ -31,10 +31,10 @@ namespace ggo
       }
     };
 
-    int                                     _frame_index;
-    float                                   _angle;
+    int                                     _frame_index = 0;
+    float                                   _angle = 0.f;
     angle_interpolator                      _angle_interpolator;
-    float                                   _z;
+    float                                   _z = 0.f;
     ggo::array<float, 2>                    _grid_start;
     ggo::array<float, 2>                    _grid_end;
     ggo::cubic_curve<float, ggo::color_32f> _color_map;

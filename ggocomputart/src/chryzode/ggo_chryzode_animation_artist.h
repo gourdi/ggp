@@ -21,7 +21,7 @@ namespace ggo
   private:
 
     chryzode_params _params;
-    int _frame_index;
+    int _frame_index = 0;
     float _hue_start = 0;
     float _hue_end = 0;
     float _multiplier1_start = 0;

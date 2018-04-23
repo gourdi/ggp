@@ -7,12 +7,12 @@ namespace ggo
 {
   struct chryzode_params
   {
-    float _multiplier1;
-    float _multiplier2;
-    float _offset1;
-    float _offset2;
-    int _modulo_start;
-    int _modulo_end;
+    float _multiplier1 = 0.f;
+    float _multiplier2 = 0.f;
+    float _offset1 = 0.f;
+    float _offset2 = 0.f;
+    int _modulo_start = 0;
+    int _modulo_end = 0;
   };
 
   class chryzode_artist : public artist

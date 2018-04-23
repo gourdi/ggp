@@ -9,9 +9,9 @@
 //////////////////////////////////////////////////////////////
 ggo::newton_artist::newton_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+animation_artist_abc(width, height, line_step, format, rt),
+_background(line_step * height)
 {
-  _background.reset(new uint8_t[line_step * height]);
 }
 
 //////////////////////////////////////////////////////////////
@@ -63,20 +63,20 @@ void ggo::newton_artist::init_animation()
   const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0, 0.5), 1);
 
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(_background.data(), get_width(), get_height(), get_line_step(),
     color1, color2, color3, color4, ggo::rect_int::from_width_height(get_width(), get_height()));
 
-  std::unique_ptr<uint8_t> perlin_buffer(new uint8_t[get_width() * get_height()]);
-  ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.get(), get_width(), get_height(), get_width(),
+  ggo::array_8u perlin_buffer(get_width() * get_height());
+  ggo::fill_perlin<ggo::y_8u_yu>(perlin_buffer.data(), get_width(), get_height(), get_width(),
     0.4f * get_min_size(), uint8_t(0), uint8_t(192));
   
   for (int y = 0; y < get_height(); ++y)
   {
-    uint8_t * ptr = _background.get() + get_line_step();
+    uint8_t * ptr = _background.data() + get_line_step();
 
     for (int x = 0; x < get_width(); ++x)
     {
-      float val = *(perlin_buffer.get() + y * get_width() + x) / 255.f;
+      float val = *(perlin_buffer.data() + y * get_width() + x) / 255.f;
 
       ptr[3 * x + 0] = ggo::round_to<uint8_t>(val * ptr[3 * x + 0]);
       ptr[3 * x + 1] = ggo::round_to<uint8_t>(val * ptr[3 * x + 1]);
@@ -128,7 +128,7 @@ bool ggo::newton_artist::prepare_frame()
 //////////////////////////////////////////////////////////////
 void ggo::newton_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
 {
-  memcpy(buffer, _background.get(), get_width() * get_line_step());
+  memcpy(buffer, _background.data(), get_width() * get_line_step());
 
   newton_paint(buffer);
 }

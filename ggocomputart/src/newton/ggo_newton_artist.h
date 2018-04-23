@@ -2,6 +2,7 @@
 #define __GGO_NEWTON_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
+#include <kernel/memory/ggo_array.h>
 
 namespace ggo
 {
@@ -43,7 +44,7 @@ namespace ggo
     };
 
     int                       _frame_index;
-    std::unique_ptr<uint8_t>  _background;
+    ggo::array_8u             _background;
     float					            _hue;
     std::vector<newton>       _newtons;
     std::vector<string>       _strings;

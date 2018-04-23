@@ -157,12 +157,12 @@ ggo::sonson_animation_artist::line * ggo::sonson_animation_artist::line::create(
   line->_step = ggo::rand<int>(3, 20);
   line->_step_end = 0;
 
-  int strip_size = ggo::rand<int>(3, 10);
+  int strips_count = ggo::rand<int>(3, 10);
 
   line->_strips.push_back(std::make_pair(scale_factor, ggo::black<ggo::color_32f>()));
   float sat = ggo::rand<float>(0.5f, 1.0f);
   float val = ggo::rand<float>(0.5f, 1.0f);
-  for (int i = 0; i < strip_size; ++i)
+  for (int i = 0; i < strips_count; ++i)
   {
     float sat_cur = sat + ggo::rand<float>(-0.1f, 0.1f);
     float val_cur = sat + ggo::rand<float>(-0.1f, 0.1f);

@@ -19,7 +19,7 @@ namespace ggo
     cumbia_artist() = default;
 
     void	init(ggo::basis3d_float & camera_basis, float & aperture, int boxes_count);
-    void	init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count);
+    void	init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float & depth_of_field_factor, int boxes_count);
 
     void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, ggo::renderer_abc & renderer) const;
 

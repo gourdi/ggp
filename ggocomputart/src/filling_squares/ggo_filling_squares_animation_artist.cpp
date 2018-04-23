@@ -5,6 +5,15 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
+ggo::filling_squares_animation_artist::animated_square::animated_square(const ggo::pos2f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square)
+:
+ggo::position_animate_abc(pos, start_offset),
+_angle(angle),
+_colored_square(colored_square)
+{
+}
+
+//////////////////////////////////////////////////////////////
 bool ggo::filling_squares_animation_artist::animated_square::update(int frame_index, const ggo::pos2f & pos)
 {
   return true;
@@ -34,8 +43,8 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 
   // Apply translation.
   float translation = ggo::ease_in(frame_index, fade_in_anim_duration, 1.f, 0.f);
-  float dx = 10 * (pos.x() - width / 2);
-  float dy = 10 * (pos.y() - height / 2);
+  float dx = 10 * (pos.x() - width / 2.f);
+  float dy = 10 * (pos.y() - height / 2.f);
   square.move({ pos.x() + translation * dx, pos.y() + translation * dy });
 
   // Painting.
@@ -70,11 +79,8 @@ void ggo::filling_squares_animation_artist::init_animation()
 		for (const auto & colored_square : multi_square._squares)
 		{
       int start_offset = counter / 3;
-			animated_square * animated_square = new ggo::filling_squares_animation_artist::animated_square(multi_square._pos, start_offset);
-			animated_square->_colored_square = colored_square;
-			animated_square->_angle = angle;
 
-			_animator.add_animate(animated_square);
+      _animator.add_animate(new animated_square(multi_square._pos, start_offset, angle, colored_square));
 		}
 		
 		++counter;

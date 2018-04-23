@@ -201,7 +201,7 @@ void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & apertur
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float depth_of_field_factor, int boxes_count)
+void ggo::cumbia_artist::init(ggo::basis3d_float & camera_basis, float & aperture, float & depth_of_field, float & depth_of_field_factor, int boxes_count)
 {
   auto leaves = init_common(camera_basis, aperture, boxes_count);
   

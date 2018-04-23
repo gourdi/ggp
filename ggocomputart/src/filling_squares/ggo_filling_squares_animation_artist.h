@@ -20,10 +20,12 @@ namespace ggo
     {
     public:
 
-            animated_square(const ggo::pos2f & pos, int start_offset) : ggo::position_animate_abc(pos, start_offset) {};
+            animated_square(const ggo::pos2f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
       void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+
+    private:
 
       float											                  _angle;
       ggo::filling_squares_artist::colored_square _colored_square;
@@ -36,8 +38,8 @@ namespace ggo
   private:
 
     ggo::animator _animator;
-    int           _frame_index;
-    float         _hue;
+    int           _frame_index = 0;
+    float         _hue = 0.f;
     ggo::color_8u _bkgd_color;
   };
 }

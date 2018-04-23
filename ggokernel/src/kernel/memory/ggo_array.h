@@ -73,25 +73,30 @@ namespace ggo
     // Copy operator=.
     array<data_t, n_dims> & operator=(const array<data_t, n_dims> & rhs)
     {
-      delete[] _buffer;
+      if (this != &rhs)
+      {
+        delete[] _buffer;
 
-      int count = rhs.count();
-      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
-      _buffer = new data_t[count];
-      std::copy(rhs._buffer, rhs._buffer + count, _buffer);
-
+        int count = rhs.count();
+        ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+        _buffer = new data_t[count];
+        std::copy(rhs._buffer, rhs._buffer + count, _buffer);
+      }
       return *this;
     }
 
     // Move operator=.
     array<data_t, n_dims> & operator=(array<data_t, n_dims> && rhs)
     {
-      delete _buffer;
+      if (this != &rhs)
+      {
+        delete _buffer;
 
-      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
-      _buffer = rhs._buffer;
+        ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+        _buffer = rhs._buffer;
 
-      rhs._buffer = nullptr;
+        rhs._buffer = nullptr;
+      }
 
       return *this;
     }

@@ -17,11 +17,11 @@ namespace ggo
     struct moving_center
     {
       ggo::pos3f  _center;
-      float				_radius;
-      float				_start_angle1;
-      float				_start_angle2;
-      float				_end_angle1;
-      float				_end_angle2;
+      float				_radius = 0.f;
+      float				_start_angle1 = 0.f;
+      float				_start_angle2 = 0.f;
+      float				_end_angle1 = 0.f;
+      float				_end_angle2 = 0.f;
     };
 
   private:
@@ -32,7 +32,7 @@ namespace ggo
 
   private:
 
-    int                             _frame_index;
+    int                             _frame_index = 0;
     ggo::metaballs_artist::params   _params;
     std::vector<moving_center>      _centers;
     ggo::basis3d_float              _camera_basis;

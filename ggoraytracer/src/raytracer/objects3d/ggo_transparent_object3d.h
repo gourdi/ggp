@@ -96,10 +96,10 @@ namespace ggo
   ggo::transmission_data transparent_object3d<flags, shape_t>::compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const
   {
     // Try to transmit the ray into the current object.
-    auto transmitted_ray = transmit_ray(ray, normal, 1.0f, _density);
+    auto inner_ray = transmit_ray(ray, normal, 1.0f, _density);
 
     // No transmission (because the ray is reflected).
-    if (!transmitted_ray)
+    if (!inner_ray)
     {
       return transmission_data(transmission_type::full_reflection);
     }
@@ -107,7 +107,7 @@ namespace ggo
     // From world to local coordinates.
     if constexpr(!(flags & discard_basis))
     {
-      transmitted_ray = _basis.ray_from_world_to_local(transmitted_ray);
+      inner_ray = _basis.ray_from_world_to_local(inner_ray);
     }
 
     // Bounce ray internally until it leaves the current object.
@@ -123,30 +123,30 @@ namespace ggo
       float dist = -1.f;
       ggo::ray3d_float normal;
 
-      if (_shape.intersect_ray(*transmitted_ray, dist, normal) == false)
+      if (_shape.intersect_ray(*inner_ray, dist, normal) == false)
       {
         GGO_FAIL();
         return transmission_data(transmission_type::internal_error);
       }
 
       // Does the ray get out of the object?
-      transmitted_ray = transmit_ray(*transmitted_ray, normal, _density, 1.f);
-      if (transmitted_ray)
+      auto outter_ray = transmit_ray(*inner_ray, normal, _density, 1.f);
+      if (outter_ray)
       {
         // From local to world coordinates.
         if constexpr(!(flags & discard_basis))
         {
-          transmitted_ray = _basis.ray_from_local_to_world(*transmitted_ray);
+          outter_ray = _basis.ray_from_local_to_world(*outter_ray);
         }
-        return transmission_data(*transmitted_ray);
+        return transmission_data(*outter_ray);
       }
 
       // Internal reflection.
-      ggo::pos3f reflected_dir(transmitted_ray->dir() - 2 * ggo::dot(normal.dir(), transmitted_ray->dir()) * normal.dir());
+      ggo::vec3f reflected_dir(inner_ray->dir() - 2 * ggo::dot(normal.dir(), inner_ray->dir()) * normal.dir());
       GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
       GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
-      transmitted_ray = ggo::ray3d_float(normal.pos(), reflected_dir, false);
+      inner_ray = ggo::ray3d_float(normal.pos(), reflected_dir, false);
 
       GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
       GGO_ASSERT_GE(ggo::dot(reflected_dir, normal.dir()), -0.001f);

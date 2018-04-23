@@ -45,15 +45,14 @@ namespace ggo
       float       _variance;
     };
 
-    float _hue;
-
     std::vector<colored_stripe>::const_iterator get_stripe_at(float x) const;
 
     static  float                               transform(float x, float y, const std::vector<fixed_transform> & transforms);
 
   private:
 
-    int                               _frame_index;
+    float                             _hue = 0.f;
+    int                               _frame_index = 0;
     std::vector<colored_stripe>       _stripes;
     ggo::array<animated_transform, 1> _transforms;
   };

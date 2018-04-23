@@ -65,7 +65,7 @@ int main(int argc, char ** argv)
     ggo::save(args.back(), image);
     image_saved = true;
   }
-  catch (std::exception e)
+  catch (std::exception & e)
   {
     if (image_loaded == false)
     {

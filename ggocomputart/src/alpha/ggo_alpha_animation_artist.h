@@ -33,17 +33,17 @@ namespace ggo
 
     private:
 
-      int				    _counter;
+      int				    _counter = 0;
       ggo::pos2f    _center;
-      float			    _angle;
-      float			    _angle_offset;
-      float			    _inner_radius;
-      float			    _outter_radius;
+      float			    _angle = 0.f;
+      float			    _angle_offset = 0.f;
+      float			    _inner_radius = 0.f;
+      float			    _outter_radius = 0.f;
       ggo::color_8u _color;
       ggo::pos2f    _p1;
       ggo::pos2f    _p2;
-      float 		    _opacity;
-      float			    _blur;
+      float 		    _opacity = 0.f;
+      float			    _blur = 0.f;
     };
 
     class item
@@ -89,8 +89,8 @@ namespace ggo
 
     std::vector<item>		  _items;
     std::vector<oscillo>  _oscillos;
-    int							      _remaining_counter;
-    int							      _creation_counter;
+    int							      _remaining_counter = 0;
+    int							      _creation_counter = 0;
     ggo::color_8u					_bkgd_color1;
     ggo::color_8u					_bkgd_color2;
     ggo::color_8u					_bkgd_color3;
