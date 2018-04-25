@@ -55,7 +55,7 @@ namespace
         for (float x = bounding_rect._pos.x(); x < bounding_rect._pos.x() + bounding_rect._width; x += delta)
         {
           ggo::multi_shape<float, ggo::boolean_mode::INTERSECTION> clipped_disc;
-          clipped_disc.add_shape(std::make_shared<ggo::disc_float>(x, y, radius));
+          clipped_disc.add_shape(std::make_shared<ggo::disc_float>(ggo::pos2f(x, y), radius));
           clipped_disc.add_shape(clip_triangle);
 
           ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),

@@ -7,8 +7,6 @@
 
 namespace ggo
 {
-  class invalid_points_number_exception : public std::exception { };
-
   template <typename t_x, typename t_y>
   class curve_abc
   {
@@ -90,82 +88,59 @@ namespace ggo
   {
     if (this->_points.size() < 2)
     {
-      throw ggo::invalid_points_number_exception();
+      throw std::runtime_error("not enough points in the curve");
     }
-    
-    int inf = -1;
-    
-    if ((this->_points.size() == 2) || (x <= this->_points[1].first))
-    {
-      inf = 0;
-    }
-    else
-    if (x >= this->_points[this->_points.size() - 2].first)
-    {
-      inf = static_cast<int>(this->_points.size()) - 2;
-    }
-    else
-    {
-      for (int i = 1; i <= this->_points.size() - 2; ++i)
-      {
-        const auto & p_inf = this->_points[i];
-        const auto & p_sup = this->_points[i + 1];
 
-        if ((p_inf.first <= x) && (x <= p_sup.first))
-        {
-          inf = i;
-          break;
-        }
+    if (x <= _points.front().first)
+    {
+      return _points.front().second;
+    }
+
+    for (int i = 1; i < _points.size(); ++i)
+    {
+      if (x <= _points[i].first)
+      {
+        return linear_interpolation(_points[i - 1].first, _points[i - 1].second, _points[i].first, _points[i].second, x);
       }
     }
-    
-    const auto & p0 = this->_points[inf];
-    const auto & p1 = this->_points[inf + 1];
 
-    return linear_interpolation(p0.first, p0.second, p1.first, p1.second, x);
+    return _points.back().second;
   }
 
   //////////////////////////////////////////////////////////////
   template <typename t_x, typename t_y>
   t_y cubic_curve<t_x, t_y>::evaluate(t_x x) const
   {
-    if (this->_points.size() < 4)
+    if (this->_points.size() < 2)
     {
-      throw ggo::invalid_points_number_exception();
+      throw std::runtime_error("not enough points in the curve");
     }
 
-    int inf = -1;
-    
-    if ((this->_points.size() == 4) || (x <= this->_points[2].first))
+    if (x <= _points.front().first)
     {
-      inf = 0;
+      return _points.front().second;
     }
-    else
-    if (x >= this->_points[this->_points.size() - 3].first)
+
+    for (int i = 1; i < _points.size(); ++i)
     {
-      inf = static_cast<int>(this->_points.size()) - 4;
-    }
-    else
-    {
-      for (int i = 2; i <= this->_points.size() - 4; ++i)
+      if (x <= _points[i].first)
       {
-        const auto & p_inf = this->_points[i];
-        const auto & p_sup = this->_points[i + 1];
+        t_x x1 = _points[i - 1].first;
+        t_x x2 = _points[i].first;
+        const auto & y1 = _points[i - 1].second;
+        const auto & y2 = _points[i].second;
 
-        if ((p_inf.first <= x) && (x <= p_sup.first))
-        {
-          inf = i - 1;
-          break;
-        }
+        t_x x0 = i - 2 < 0 ? 2 * x1 - x2 : _points[i - 2].first;
+        const auto & y0 = i - 2 < 0 ? y2 : _points[i - 2].second;
+
+        t_x x3 = i + 1 >= _points.size() ? 2 * x2 - x1 : _points[i + 1].first;
+        const auto & y3 = i + 1 >= _points.size() ? y1 : _points[i + 1].second;
+
+        return cubic_interpolation(x0, y0, x1, y1, x2, y2, x3, y3, x);
       }
     }
-    
-    const auto & p0 = this->_points[inf];
-    const auto & p1 = this->_points[inf + 1];
-    const auto & p2 = this->_points[inf + 2];
-    const auto & p3 = this->_points[inf + 3];
 
-    return cubic_interpolation(p0.first, p0.second, p1.first, p1.second, p2.first, p2.second, p3.first, p3.second, x);
+    return _points.back().second;
   }
 }
 

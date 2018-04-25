@@ -97,7 +97,7 @@ void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_
 
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, get_width(), get_height(), get_line_step(),
-      ggo::disc_float(x, y, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
+      ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
   }
 
   _animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());

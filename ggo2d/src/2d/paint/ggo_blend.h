@@ -43,6 +43,20 @@ namespace ggo
       ggo::round_div(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
   }
 
+  template <typename real_t>
+  ggo::color_8u alpha_blend(const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color, real_t opacity)
+  {
+    static_assert(std::is_floating_point<real_t>::value);
+
+    uint8_t opacity_8u = ggo::round_to<uint8_t>(opacity * 0xff);
+    uint8_t inv_opacity_8u = 0xff - opacity_8u;
+
+    return ggo::color_8u(
+      ggo::round_div(opacity_8u * brush_color.r() + inv_opacity_8u * bkgd_color.r(), 0xff),
+      ggo::round_div(opacity_8u * brush_color.g() + inv_opacity_8u * bkgd_color.g(), 0xff),
+      ggo::round_div(opacity_8u * brush_color.b() + inv_opacity_8u * bkgd_color.b(), 0xff));
+  }
+
   // Structs.
   struct alpha_blender_y8u
   {

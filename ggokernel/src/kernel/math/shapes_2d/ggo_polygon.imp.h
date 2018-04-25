@@ -2,48 +2,40 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void polygon2d<data_t>::create_oriented_box(const ggo::pos2<data_t> & center, const ggo::pos2<data_t> & direction, data_t size1, data_t size2, polygon2d<data_t> & polygon)
+  polygon2d<data_t> polygon2d<data_t>::create_oriented_box(const ggo::pos2<data_t> & center, const ggo::vec2<data_t> & direction, data_t size1, data_t size2)
   {
     // Normalize the direction.
     data_t len = direction.get_length();
-    ggo::pos2<data_t> norm(direction);
-    if (len > 0)
+    if (len <= 0)
     {
-      norm /= len;
+      throw std::runtime_error("division by zero");
     }
 
-    polygon.clear();
+    ggo::vec2<data_t> norm(direction / len);
 
-    data_t x1 = center.x() + size1*norm.x() + size2*norm.y();
-    data_t y1 = center.y() + size1*norm.y() - size2*norm.x();
-    polygon.add_point(x1, y1);
+    data_t x1 = center.x() + size1 * norm.x() + size2 * norm.y();
+    data_t y1 = center.y() + size1 * norm.y() - size2 * norm.x();
+                                                        
+    data_t x2 = center.x() + size1 * norm.x() - size2 * norm.y();
+    data_t y2 = center.y() + size1 * norm.y() + size2 * norm.x();
+                                                        
+    data_t x3 = center.x() - size1 * norm.x() - size2 * norm.y();
+    data_t y3 = center.y() - size1 * norm.y() + size2 * norm.x();
+                                                        
+    data_t x4 = center.x() - size1 * norm.x() + size2 * norm.y();
+    data_t y4 = center.y() - size1 * norm.y() - size2 * norm.x();
 
-    data_t x2 = center.x() + size1*norm.x() - size2*norm.y();
-    data_t y2 = center.y() + size1*norm.y() + size2*norm.x();
-    polygon.add_point(x2, y2);
-
-    data_t x3 = center.x() - size1*norm.x() - size2*norm.y();
-    data_t y3 = center.y() - size1*norm.y() + size2*norm.x();
-    polygon.add_point(x3, y3);
-
-    data_t x4 = center.x() - size1*norm.x() + size2*norm.y();
-    data_t y4 = center.y() - size1*norm.y() - size2*norm.x();
-    polygon.add_point(x4, y4);
+    return polygon2d<data_t>({ {x1, y1}, {x2, y2}, {x3, y3}, {x4, y4} });
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void polygon2d<data_t>::create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom, polygon2d<data_t> & polygon)
+  polygon2d<data_t> polygon2d<data_t>::create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom)
   {
-    polygon.clear();
-
     if (left > right) { std::swap(left, right); }
     if (bottom > top) { std::swap(top, bottom); }
 
-    polygon.add_point(left, top);
-    polygon.add_point(right, top);
-    polygon.add_point(right, bottom);
-    polygon.add_point(left, bottom);
+    return polygon2d<data_t>({ {left, top}, {right, top}, {right, bottom}, {left, bottom} });
   }
 
   //////////////////////////////////////////////////////////////

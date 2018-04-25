@@ -219,8 +219,6 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::bozons, width, height, line_step, format);
   case ggo::bitmap_artist_id::rah:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::rah, width, height, line_step, format, 800, true);
-  case ggo::bitmap_artist_id::sonson:
-    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::sonson, width, height, line_step, format, 200, true);
   case ggo::bitmap_artist_id::rediff:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::rediff, width, height, line_step, format, 350, true);
   case ggo::bitmap_artist_id::aggregation:

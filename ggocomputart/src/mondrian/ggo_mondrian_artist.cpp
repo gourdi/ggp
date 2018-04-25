@@ -59,7 +59,7 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
 		float range_x = ggo::rand<float>(0, range);
 		float range_y = ggo::rand<float>(0, range);
 
-		ggo::polygon2d_float::create_axis_aligned_box(x - range_x, x + range_x, y - range_y, y + range_y, area._rect);
+    area._rect = ggo::polygon2d_float::create_axis_aligned_box(x - range_x, x + range_x, y - range_y, y + range_y);
 		areas.push_back(area);
 		
 		range *= 0.9f;
@@ -78,8 +78,7 @@ void ggo::mondrian_artist::render_bitmap(void * buffer) const
 		ggo::pos2f  center		= get_random_point();
 		ggo::vec2f	direction	= ggo::vec2f(std::cos(angle), std::sin(angle));
 	
-    ggo::polygon2d_float box;
-		ggo::polygon2d_float::create_oriented_box(center, direction, size1, size2, box);
+    auto box = ggo::polygon2d_float::create_oriented_box(center, direction, size1, size2);
 
 		// Get a color depending of the area.
     float hue = base_hue;

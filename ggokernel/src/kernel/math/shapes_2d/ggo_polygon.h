@@ -64,8 +64,8 @@ namespace ggo
 
   public:
 
-    static  void	create_oriented_box(const ggo::pos2<data_t> & center, const ggo::pos2<data_t> & direction, data_t size1, data_t size2, polygon2d<data_t> & polygon);
-    static  void  create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom, polygon2d<data_t> & polygon);
+    static  polygon2d<data_t>	create_oriented_box(const ggo::pos2<data_t> & center, const ggo::vec2<data_t> & direction, data_t size1, data_t size2);
+    static  polygon2d<data_t> create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom);
 
   private:
 

@@ -44,7 +44,7 @@ namespace ggo
     hexa,
     chryzode,
     stoa,
-    sonson,
+    sonson__REMOVED,
     rediff, // 40
     entabeni,
     cabrel,
@@ -67,8 +67,8 @@ namespace ggo
     metaballs,
     rubiks_cube,
     smoke, // 10
-    sonson,
-    newton,
+    sonson__REMOVED,
+    newton__REMOVED,
     alpha,
     dupecheck,
     lagaude, // 15

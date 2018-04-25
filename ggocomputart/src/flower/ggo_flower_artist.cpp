@@ -73,7 +73,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 
 				ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
           render_buffer.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-          ggo::disc_float(x, y, 0.001f * get_min_size()),
+          ggo::disc_float({ x, y }, 0.001f * get_min_size()),
           ggo::make_solid_brush(color), ggo::add_blender<ggo::color_32f>());
 			}
 

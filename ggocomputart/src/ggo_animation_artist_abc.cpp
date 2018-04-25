@@ -9,7 +9,6 @@
 #include "ifs/ggo_ifs_animation_artist.h"
 #include "metaballs/ggo_metaballs_animation_artist.h"
 #include "smoke/ggo_smoke_animation_artist.h"
-#include "newton/ggo_newton_artist.h"
 #include "alpha/ggo_alpha_animation_artist.h"
 #include "dupecheck/ggo_dupecheck_animation_artist.h"
 #include "lagaude/ggo_lagaude_animation_artist.h"
@@ -25,7 +24,6 @@
 #include "hexa/ggo_hexa_animation_artist.h"
 #include "chryzode/ggo_chryzode_animation_artist.h"
 #include "stoa/ggo_stoa_animation_artist.h"
-#include "sonson/ggo_sonson_animation_artist.h"
 #include "rediff/ggo_rediff_animation_artist.h"
 #include "entabeni/ggo_entabeni_animation_artist.h"
 #include "neon/ggo_neon_artist.h"
@@ -81,12 +79,6 @@ ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_art
 		break;
 	case ggo::animation_artist_id::smoke:
 		artist = new ggo::smoke_animation_artist(width, height, line_step, format, rt);
-		break;
-  case ggo::animation_artist_id::sonson:
-    artist = new ggo::sonson_animation_artist(width, height, line_step, format, rt);
-    break;
-	case ggo::animation_artist_id::newton:
-		artist = new ggo::newton_artist(width, height, line_step, format, rt);
 		break;
 	case ggo::animation_artist_id::alpha:
 		artist = new ggo::alpha_animation_artist(width, height, line_step, format, rt);

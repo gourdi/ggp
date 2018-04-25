@@ -19,7 +19,6 @@ namespace ggo
     using distancable_shape2d_abc<data_t>::dist_to_point;
 
                               disc() {}
-                              disc(data_t center_x, data_t center_y, data_t radius) : _center(center_x,center_y), _radius(radius) {}
                               disc(const ggo::pos2<data_t> & center, data_t radius) : _center(center), _radius(radius) {}
                               disc(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2);
            
