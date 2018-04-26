@@ -167,11 +167,10 @@ namespace ggo
       }
     };
 
-    int                                                             _frame_index;
-    std::vector<rah_item_ptr>                                       _items;
-    std::function<bool(const rah_item_ptr &, const rah_item_ptr &)> _sort_func;
-    focus_dist_interpolator                                         _focus_dist_interpolator;
-    float                                                           _focus_dist;
+    int                       _frame_index;
+    std::vector<rah_item_ptr> _items;
+    focus_dist_interpolator   _focus_dist_interpolator;
+    float                     _focus_dist;
 
   private:
 
@@ -179,7 +178,9 @@ namespace ggo
     bool  prepare_frame() override;
     void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
-    static  std::shared_ptr<particle>   create_particle(float focus_dist, int width, int height);
+    void  insert_item(rah_item_ptr item);
+
+    static  rah_item_ptr  create_particle(float focus_dist, int width, int height);
   };
 }
 

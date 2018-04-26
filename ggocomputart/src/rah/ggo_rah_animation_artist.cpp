@@ -350,13 +350,15 @@ animation_artist_abc(width, height, line_step, format, rt)
 {
   _focus_dist_interpolator._near = near;
   _focus_dist_interpolator._far = far;
-
-  _sort_func = [](const rah_item_ptr & item1, const rah_item_ptr & item2)
-  {
-    return item1->_dist > item2->_dist;
-  };
 }
 
+//////////////////////////////////////////////////////////////
+void ggo::rah_animation_artist::insert_item(rah_item_ptr item)
+{
+  auto insert_it = std::upper_bound(_items.begin(), _items.end(), item, [](const auto & item1, const auto & item2) { return item1->_dist > item2->_dist; });
+
+  _items.insert(insert_it, item);
+}
 
 //////////////////////////////////////////////////////////////
 void ggo::rah_animation_artist::init_animation()
@@ -371,10 +373,8 @@ void ggo::rah_animation_artist::init_animation()
     auto fog_item = std::make_shared<fog>(get_width(), get_height());
     fog_item->_dist = ggo::map(static_cast<float>(i + 1), 0.f, 31.f, near, far);
 
-    _items.push_back(fog_item);
+    insert_item(fog_item);
   }
-
-  std::sort(_items.begin(), _items.end(), _sort_func);
 }
 
 //////////////////////////////////////////////////////////////
@@ -403,7 +403,7 @@ bool ggo::rah_animation_artist::prepare_frame()
     {
       // Sorted insertion.
       auto particle = create_particle(_focus_dist, get_width(), get_height());
-      _items.insert(std::upper_bound(_items.begin(), _items.end(), particle, _sort_func), particle);
+      insert_item(particle);
     }
 
     return true;
@@ -439,9 +439,9 @@ void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::rect_int 
 }
 
 //////////////////////////////////////////////////////////////
-std::shared_ptr<ggo::rah_animation_artist::particle> ggo::rah_animation_artist::create_particle(float focus_dist,
-                                                                                                int width,
-                                                                                                int height)
+ggo::rah_animation_artist::rah_item_ptr ggo::rah_animation_artist::create_particle(float focus_dist,
+                                                                                   int width,
+                                                                                   int height)
 {
   std::shared_ptr<particle> particle;
   
