@@ -4,7 +4,7 @@
 GGO_TEST(multi_shape, shape_union)
 {
   ggo::multi_shape_float multi_shape;
-  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(2.f, 1.f, 3.f), std::make_shared<ggo::disc_float>(5.f, 3.f, 2.f));
+  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(ggo::pos2f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_float>(ggo::pos2f(5.f, 3.f), 2.f));
 
   // Bounding rectangle.
   ggo::rect_float rect = multi_shape.get_bounding_rect();
@@ -31,7 +31,7 @@ GGO_TEST(multi_shape, shape_union)
 GGO_TEST(multi_shape, shape_intersection)
 {
   ggo::multi_shape<float, ggo::boolean_mode::INTERSECTION> multi_shape;
-  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(2.f, 1.f, 3.f), std::make_shared<ggo::disc_float>(3.f, 3.f, 2.f));
+  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(ggo::pos2f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_float>(ggo::pos2f(3.f, 3.f), 2.f));
 
   // Bounding rectangle.
   ggo::rect_float rect = multi_shape.get_bounding_rect();

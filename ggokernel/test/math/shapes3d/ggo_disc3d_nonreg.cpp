@@ -23,6 +23,35 @@ GGO_TEST(disc3d, ray_intersection)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(disc3d, ray_intersection_double_sided)
+{
+  ggo::ray3d_float disc_normal({ 0.f, 0.f, 0.f }, { 0.f, 0.f, -1.f }, false);
+  ggo::ray3d_float ray({ 0.f, 0.f, 1.f }, { 0.f, 0.f, -1.f }, false);
+
+  ggo::ray3d_float intersection_normal;
+  float intersection_dist = 0;
+
+  // Not double-sided.
+  {
+    ggo::disc3d<float, false> disc(disc_normal, 1);
+    GGO_CHECK(disc.intersect_ray(ray, intersection_dist, intersection_normal) == false);
+  }
+
+  // Double-sided.
+  {
+    ggo::disc3d<float, true> disc(disc_normal, 1);
+    GGO_CHECK(disc.intersect_ray(ray, intersection_dist, intersection_normal) == true);
+    GGO_CHECK_FLOAT_EQ(intersection_dist, 1);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.pos().x(), 0);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.pos().y(), 0);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.pos().z(), 0);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.dir().x(), 0);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.dir().y(), 0);
+    GGO_CHECK_FLOAT_EQ(intersection_normal.dir().z(), 1);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(disc3d, bounding_box)
 {
   ggo::disc3d_float disc({ { 5.f, 2.f, 0.f }, { 1.f, 1.f, 1.f } }, 1);

@@ -1,6 +1,6 @@
 namespace ggo
 {
-  template <typename data_t>
+  template <typename data_t, bool double_sided = false>
   class disc3d : public raytracable_shape3d_abc<data_t>
   {
   public:
