@@ -230,7 +230,7 @@ void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, i
 //////////////////////////////////////////////////////////////
 bool ggo::lagaude_animation_artist::dust::update(int frame_index, const ggo::pos2f & pos)
 {
-  if (pos.x() > 1.1)
+  if (pos.x() > 1.1f)
   {
     return false;
   }

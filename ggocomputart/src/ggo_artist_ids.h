@@ -22,7 +22,7 @@ namespace ggo
     vortex,
     plastic, //15
     mandelbrot,
-    mondrian,
+    mondrian__REMOVED,
     ifs,
     mosaic,
     metaballs, // 20
