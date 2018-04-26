@@ -14,7 +14,6 @@
 #include "vortex/ggo_vortex_bitmap_artist.h"
 #include "plastic/ggo_plastic_bitmap_artist.h"
 #include "mandelbrot/ggo_mandelbrot_artist.h"
-#include "mondrian/ggo_mondrian_artist.h"
 #include "ifs/ggo_ifs_bitmap_artist.h"
 #include "mosaic/ggo_mosaic_artist.h"
 #include "metaballs/ggo_metaballs_bitmap_artist.h"
@@ -163,8 +162,6 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
 		return new ggo::plastic_bitmap_artist(width, height, line_step, format);
 	case ggo::bitmap_artist_id::mandelbrot:
 		return new ggo::mandelbrot_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::mondrian:
-		return new ggo::mondrian_artist(width, height, line_step, format);
 	case ggo::bitmap_artist_id::ifs:
 		return new ggo::ifs_bitmap_artist(width, height, line_step, format);
 	case ggo::bitmap_artist_id::mosaic:

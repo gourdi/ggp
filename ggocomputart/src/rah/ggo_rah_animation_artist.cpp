@@ -98,9 +98,24 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
 {
   int min_size = std::min(width, height);
   
-  ggo::multi_shape_float borders;
+  ggo::multi_shape_float backgrounds;
   ggo::multi_shape_float bodies;
-  fill_multi_shapes(borders, bodies, min_size);
+  fill_multi_shapes(backgrounds, bodies, min_size);
+
+  // Paint background first.
+  auto paint_border_pixel_func = [&](int x, int y, int num, int den)
+  {
+    ggo::color_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+
+    uint8_t r = ggo::round_div((den - num) * pixel.r(), den);
+    uint8_t g = ggo::round_div((den - num) * pixel.g(), den);
+    uint8_t b = ggo::round_div((den - num) * pixel.b(), den);
+
+    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b));
+  };
+
+  ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
+    backgrounds, width, height, blur_radius(min_size, focus_dist), paint_border_pixel_func);
 
   // Paint bodies.
   auto paint_body_pixel_func = [&](int x, int y, int num, int den)
@@ -116,21 +131,6 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
 
   ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
     bodies, width, height, blur_radius(min_size, focus_dist), paint_body_pixel_func);
-
-  // Paint borders.
-  auto paint_border_pixel_func = [&](int x, int y, int num, int den)
-  {
-    ggo::color_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
-
-    uint8_t r = ggo::round_div((den - num) * pixel.r(), den);
-    uint8_t g = ggo::round_div((den - num) * pixel.g(), den);
-    uint8_t b = ggo::round_div((den - num) * pixel.b(), den);
-
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b)); 
-  };
-
-  ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
-    borders, width, height, blur_radius(min_size, focus_dist), paint_border_pixel_func);
 }
 
 //////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ void ggo::rah_animation_artist::particle1::update(int min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::particle1::fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const
+void ggo::rah_animation_artist::particle1::fill_multi_shapes(ggo::multi_shape_float & backgrounds, ggo::multi_shape_float & bodies, int min_size) const
 {
   float border_size = 0.0025f * min_size / _dist;
 
@@ -189,7 +189,7 @@ void ggo::rah_animation_artist::particle1::fill_multi_shapes(ggo::multi_shape_fl
   {
     const auto & p1 = _polygon->get_point(i);
     const auto & p2 = _polygon->get_point((i + 1) % _polygon->get_points_count());
-    borders.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, border_size));
+    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, border_size));
   }
 }
 
@@ -205,14 +205,14 @@ _point_count(ggo::rand<int>(5, 8))
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const
+void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_float & backgrounds, ggo::multi_shape_float & bodies, int min_size) const
 {
   float border_size = 0.0025f * min_size / _dist;
   float segment_size = 0.01f * min_size / _dist;
   
   float radius = disc_radius(min_size);
 
-  for(int i = 0; i < _point_count; ++i)
+  for (int i = 0; i < _point_count; ++i)
   {
     float angle = _angle + i * 2 * ggo::pi<float>() / _point_count;
     ggo::pos2f p1 = ggo::from_polar(angle, radius / 2);
@@ -221,11 +221,10 @@ void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_fl
     p1 += _pos;
     p2 += _pos;
   
-    borders.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
+    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
     bodies.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size));
   }
 }
-
 
 //////////////////////////////////////////////////////////////
 // PARTICLE 3
@@ -235,6 +234,8 @@ ggo::rah_animation_artist::particle3::particle3(int width, int height, float foc
 :
 particle(width, height, focus_dist)
 {
+  _width = _width_interpolator.update(1);
+  _height = _height_interpolator.update(1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -247,7 +248,7 @@ void ggo::rah_animation_artist::particle3::update(int min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::particle3::fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const
+void ggo::rah_animation_artist::particle3::fill_multi_shapes(ggo::multi_shape_float & backgrounds, ggo::multi_shape_float & bodies, int min_size) const
 {
   float radius = disc_radius(min_size);
   
@@ -278,10 +279,13 @@ void ggo::rah_animation_artist::particle3::fill_multi_shapes(ggo::multi_shape_fl
     p1 += _pos;
     p2 += _pos;
   
-    borders.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
+    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
     bodies.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size));
   }
 }
+
+//////////////////////////////////////////////////////////////
+// PARTICLE 4
 
 //////////////////////////////////////////////////////////////
 ggo::rah_animation_artist::particle4::particle4(int width, int height, float focus_dist)
@@ -291,7 +295,7 @@ particle(width, height, focus_dist)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const
+void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_float & backgrounds, ggo::multi_shape_float & bodies, int min_size) const
 {
   float border_size = 0.0025f * min_size / _dist;
   float segment_size = 0.02f * min_size / _dist;
@@ -315,7 +319,7 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
     auto opened_disc = std::make_shared<ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE>>();
     opened_disc->add_shapes(disc1, disc2);
 
-    borders.add_shape(opened_disc);
+    backgrounds.add_shape(opened_disc);
   }
 
   for (int i = 0; i < 8; ++i)
@@ -332,7 +336,7 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
     auto disc_border = std::make_shared<ggo::disc_float>();
     disc_border->center() = _pos + offset;
     disc_border->radius() = segment_size + border_size;
-    borders.add_shape(disc_border);
+    backgrounds.add_shape(disc_border);
   }
 }
 
