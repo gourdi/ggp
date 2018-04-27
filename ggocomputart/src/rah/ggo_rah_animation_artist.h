@@ -16,51 +16,9 @@ namespace ggo
 
   private:
 
-    struct rah_item
-    {
-      float _dist;
-
-      virtual void  update(int min_size) = 0;
-      virtual void  paint(void * buffer, int width, int height, float focus_dist) const = 0;
-      virtual bool  is_alive(int width, int height, float focus_dist) const = 0;
-      virtual bool  is_fog() const = 0;
-    };
-
-    using rah_item_ptr = std::shared_ptr<rah_item>;
-
-    //////////////////////////////////////////////////////////////
-    // FOG
-    struct fog : public rah_item
-    {
-      struct position_interpolator : public ggo::random_interpolator_abc<ggo::pos2f, float>
-      {
-        position_interpolator(int width, int height) : _width(width), _height(height) {}
-
-        void get_random_data(ggo::pos2f & data, float & dt) override
-        {
-          data.get<0>() = ggo::rand<float>(-0.2f * _width, 1.2f * _width);
-          data.get<1>() = ggo::rand<float>(-0.2f * _height, 1.2f * _height);
-          dt = ggo::rand<float>(50, 100);
-        }
-
-        int _width;
-        int _height;
-      };
-
-            fog(int width, int height);
-
-      void  update(int min_size) override;
-      void  paint(void * buffer, int width, int height, float focus_dist) const override;
-      bool  is_alive(int width, int height, float focus_dist) const override;
-      bool  is_fog() const override { return true; }
-
-      position_interpolator _position_interpolator;
-      ggo::pos2f            _position;
-    };
-
     //////////////////////////////////////////////////////////////
     // PARTICLE
-    struct particle : public rah_item
+    struct particle
     {
       struct ggo_vertical_offset_interpolator : public ggo::random_interpolator_abc<float, float>
       {
@@ -76,17 +34,17 @@ namespace ggo
       float blur_radius(int min_size, float focus_dist) const;
       float disc_radius(int min_size) const;
 
-      void  update(int min_size) override;
-      void  paint(void * buffer, int width, int height, float focus_dist) const override;
-      bool  is_alive(int width, int height, float focus_dist) const override;
-      bool  is_fog() const override { return false; }
+      virtual void  update(int min_size);
+              void  paint(void * buffer, int width, int height, float focus_dist) const;
+              bool  is_alive(int width, int height, float focus_dist) const;
 
       virtual void fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const = 0;
 
       ggo_vertical_offset_interpolator  _vertical_offset_interpolator;
       ggo::pos2f                        _pos;
       ggo::color_8u                     _color;
-      float                             _angle = 0;
+      float                             _angle = 0.f;
+      float                             _dist = 0.f;
     };
 
     //////////////////////////////////////////////////////////////
@@ -167,10 +125,10 @@ namespace ggo
       }
     };
 
-    int                       _frame_index;
-    std::vector<rah_item_ptr> _items;
-    focus_dist_interpolator   _focus_dist_interpolator;
-    float                     _focus_dist;
+    int                                     _frame_index;
+    std::vector<std::shared_ptr<particle>>  _particles;
+    focus_dist_interpolator                 _focus_dist_interpolator;
+    float                                   _focus_dist;
 
   private:
 
@@ -178,9 +136,9 @@ namespace ggo
     bool  prepare_frame() override;
     void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
 
-    void  insert_item(rah_item_ptr item);
+    void  insert_particle(std::shared_ptr<particle> particle);
 
-    static  rah_item_ptr  create_particle(float focus_dist, int width, int height);
+    static  std::shared_ptr<particle>  create_particle(float focus_dist, int width, int height);
   };
 }
 
