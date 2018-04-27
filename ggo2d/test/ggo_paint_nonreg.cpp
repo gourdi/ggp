@@ -308,19 +308,19 @@ GGO_TEST(paint, blur)
   {
     std::fill(buffer.begin(), buffer.end(), 0x00);
 
-    ggo::paint_blur_shape<ggo::blur_samples_type::disc_12_samples>(
-      ggo::disc_float({ 50, 40 }, 20), width, height, 5.f, paint_pixel);
+    ggo::paint_blur_shape(
+      ggo::disc_float({ 50, 40 }, 20), width, height, 5.f, 1.5f, paint_pixel);
 
-    ggo::save_bmp("paint_blur_12.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+    ggo::save_bmp("paint_blur_1.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   }
 
   {
     std::fill(buffer.begin(), buffer.end(), 0x00);
 
-    ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
-      ggo::disc_float({ 50, 40 }, 20), width, height, 5.f, paint_pixel);
+    ggo::paint_blur_shape(
+      ggo::disc_float({ 50, 40 }, 20), width, height, 5.f, 0.5f, paint_pixel);
 
-    ggo::save_bmp("paint_blur_52.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+    ggo::save_bmp("paint_blur_2.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   }
 }
 

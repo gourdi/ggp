@@ -65,8 +65,7 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b));
   };
 
-  ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
-    backgrounds, width, height, blur_radius(min_size, focus_dist), paint_border_pixel_func);
+  ggo::paint_blur_shape(backgrounds, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_border_pixel_func);
 
   // Paint bodies.
   auto paint_body_pixel_func = [&](int x, int y, int num, int den)
@@ -80,8 +79,7 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b));
   };
 
-  ggo::paint_blur_shape<ggo::blur_samples_type::disc_52_samples>(
-    bodies, width, height, blur_radius(min_size, focus_dist), paint_body_pixel_func);
+  ggo::paint_blur_shape(bodies, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_body_pixel_func);
 }
 
 //////////////////////////////////////////////////////////////
@@ -338,9 +336,9 @@ bool ggo::rah_animation_artist::prepare_frame()
   });
 
   // Create new particles.
-  if (_frame_index < 600)
+  if (_frame_index < 500)
   {
-    int create_count = std::min(_frame_index / 5, 12);
+    int create_count = std::min(_frame_index / 5, 20);
     for (int i = 0; i < create_count; ++i)
     {
       // Sorted insertion.

@@ -60,8 +60,8 @@ namespace ggo
       {
         void get_random_data(float & data, float & dt) override
         {
-          data = ggo::rand<float>(0.5, 1),
-            dt = ggo::rand<float>(10, 20);
+          data = ggo::rand<float>(0.1f, 1.f),
+            dt = ggo::rand<float>(8.f, 16.f);
         }
       };
 
@@ -120,8 +120,8 @@ namespace ggo
 
       void get_random_data(float & data, float & dt) override
       {
-        data = ggo::rand<float>(_near, _near + 0.5f * (_far - _near));
-        dt = ggo::rand<float>(30.f, 50.f);
+        data = ggo::rand<float>(0.9f * _near, 1.2f * _far);
+        dt = ggo::rand<float>(15.f, 30.f);
       }
     };
 
