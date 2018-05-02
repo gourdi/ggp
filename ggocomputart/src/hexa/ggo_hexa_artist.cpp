@@ -1,5 +1,6 @@
 #include "ggo_hexa_artist.h"
 #include <kernel/math/ggo_distance.h>
+#include <kernel/ggo_ease.h>
 #include <raytracer/renderers/ggo_renderer_abc.h>
 #include <raytracer/ggo_raytracer_global.h>
 #include <raytracer/materials/ggo_solid_color_material.h>

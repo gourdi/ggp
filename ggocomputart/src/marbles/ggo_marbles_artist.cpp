@@ -2,7 +2,7 @@
 #include <raytracer/ggo_scene.h>
 #include <raytracer/renderers/ggo_global_sampling_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <raytracer/fogs/ggo_linear_fog.h>
+#include <raytracer/volumetric_effects/ggo_linear_fog.h>
 #include <raytracer/backgrounds/ggo_background3d_color.h>
 #include <raytracer/materials/ggo_solid_color_material.h>
 #include <iostream>
@@ -69,7 +69,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
 
   // The fog.
-  scene.set_fog(std::make_shared<ggo::linear_fog>(ggo::color_32f(0.5f), 0.f, 25.f));
+  scene.emplace_volumetric_effect<ggo::linear_fog>(ggo::color_32f(0.5f), 0.f, 25.f);
 
 	// Setup the camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });

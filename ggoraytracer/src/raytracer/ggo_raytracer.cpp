@@ -1,6 +1,6 @@
 #include "ggo_raytracer.h"
 #include <kernel/math/sampling/shape_sampling/ggo_shape_sampling.h>
-#include <raytracer/fogs/ggo_fog_abc.h>
+#include <raytracer/volumetric_effects/ggo_volumetric_effect_abc.h>
 #include <raytracer/materials/ggo_material_abc.h>
 #include <raytracer/raycasters/ggo_raycaster_abc.h>
 #include <raytracer/backgrounds/ggo_background3d_abc.h>
@@ -51,10 +51,10 @@ namespace ggo
 
       // Get light color.
       ggo::color_32f light_color = light->get_emissive_color();
-      if (_scene.fog() != nullptr)
-      {
-        light_color = _scene.fog()->process_light_segment(light_pos, world_normal.pos(), light_color);
-      }
+      //for (const auto & volumetric_effect : _scene.get_volumetric_effects())
+      //{
+      //  light_color = volumetric_effect->process_segment(light_pos, world_normal.pos(), light_color);
+      //}
 
       result.emplace_back(ray_to_light, light_color);
     }
@@ -79,9 +79,9 @@ namespace ggo
     {
       ggo::color_32f color = _scene.background().get_color(ray);
 
-      if (_scene.fog())
+      for (const auto & volumetric_effect : _scene.get_volumetric_effects())
       {
-        color = _scene.fog()->process_background_ray(ray, color);
+        color = volumetric_effect->process_background_ray(ray, color);
       }
 
       return color;
@@ -92,9 +92,9 @@ namespace ggo
 
     ggo::color_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, random_variable1, random_variable2);
 
-    if (_scene.fog())
+    for (const auto & volumetric_effect : _scene.get_volumetric_effects())
     {
-      output_color = _scene.fog()->process_segment(ray.pos(), hit->_intersection._world_normal.pos(), output_color);
+      output_color = volumetric_effect->process_segment(ray.pos(), hit->_intersection._world_normal.pos(), output_color);
     }
 
     if (_indirect_lighting != nullptr)

@@ -89,12 +89,6 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f z_fog::process_light_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
-  {
-    return process_segment(p1, p2, color);
-  }
-      
-  //////////////////////////////////////////////////////////////
   ggo::color_32f z_fog::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
   {
     if (std::abs(ray.dir().get<2>()) < 0.001)

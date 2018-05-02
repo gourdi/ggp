@@ -4,12 +4,11 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  linear_fog::linear_fog(const ggo::color_32f & color, float near, float far, uint32_t flags)
+  linear_fog::linear_fog(const ggo::color_32f & color, float near, float far)
   :
   _color(color),
   _near(near),
-  _far(far),
-  _flags(flags)
+  _far(far)
   {
     GGO_ASSERT_LT(_near, _far);
   }
@@ -30,19 +29,6 @@ namespace ggo
     else
     {
       return ggo::linear_interpolation(_near, color, _far, _color, dist);
-    }
-  }
-
-  //////////////////////////////////////////////////////////////
-  ggo::color_32f linear_fog::process_light_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
-  {
-    if (_flags & discard_light_segments)
-    {
-      return color;
-    }
-    else
-    {
-      return process_segment(p1, p2, color);
     }
   }
 

@@ -6,8 +6,10 @@
 #include <raytracer/backgrounds/ggo_background3d_color.h>
 #include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 #include <raytracer/materials/ggo_checker_material.h>
+#include <raytracer/volumetric_effects/ggo_disc_glow.h>
+#include <raytracer/volumetric_effects/ggo_sphere_glow.h>
 
-GGO_TEST(glow, test)
+GGO_TEST(glow, disc)
 {
   const int width = 400;
   const int height = 400;
@@ -18,21 +20,54 @@ GGO_TEST(glow, test)
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
 
   // The scene.
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::red<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
 
   // Light.
   scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 50.f });
 
   // Objects.
-  scene.add_glow({ -0.5f, 0.f, 2.f }, 0.8f, ggo::white_32f(), 0.8f, 1.f);
-  scene.add_glow({ 0.5f, 0.f, 1.f }, 0.8f, ggo::red_32f(), 0.8f, 1.f);
+  scene.emplace_volumetric_effect<ggo::disc_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, ggo::white_32f(), 0.2f, 1.f);
+  scene.emplace_volumetric_effect<ggo::disc_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.8f, ggo::red_32f(), 0.8f, 1.f);
 
-  ggo::checker_xy_material checker_material(ggo::white_32f(), ggo::gray_32f(), 0.5f);
+  ggo::checker_xy_material checker_material(ggo::black_32f(), ggo::gray_32f(), 0.5f);
   scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
   ggo::array_8u buffer(3 * width * height);
   renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("glow.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  ggo::save_bmp("glow_disc.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
+
+
+GGO_TEST(glow, sphere)
+{
+  const int width = 400;
+  const int height = 400;
+
+  // The camera.
+  ggo::basis3d_float camera_basis({ 0.0f, 0.0f, 30.f });
+  camera_basis.rotate(ggo::ray3d_float::O_X(), 0.8f);
+  ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
+
+  // The scene.
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
+
+  // Light.
+  scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 50.f });
+
+  // Objects.
+  scene.emplace_volumetric_effect<ggo::sphere_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, 0.5f, ggo::white_32f());
+  scene.emplace_volumetric_effect<ggo::sphere_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.5f, 0.8f, ggo::red_32f());
+
+  ggo::checker_xy_material checker_material(ggo::black_32f(), ggo::gray_32f(), 0.5f);
+  scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);
+
+  // Rendering.
+  ggo::mono_sampling_renderer renderer(camera);
+  ggo::array_8u buffer(3 * width * height);
+  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
+  ggo::save_bmp("glow_sphere.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+}
+
+
