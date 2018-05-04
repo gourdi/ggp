@@ -5,28 +5,55 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  brute_force_raycaster::brute_force_raycaster(const scene & scene)
+  brute_force_raycaster::brute_force_raycaster(std::vector<const ggo::object3d_abc *> objects)
+    :
+    _objects(std::move(objects))
   {
-    for (const auto & object : scene.visible_objects())
-    {
-      _visible_objects.push_back(object.get());
-    }
 
-    for (const auto & object : scene.casting_shadows_objects())
+  }
+
+  //////////////////////////////////////////////////////////////
+  void brute_force_raycaster::process_ray(const ggo::ray3d_float & ray,
+                                          std::function<bool(const ggo::object3d_abc *)> func,
+                                          const ggo::object3d_abc * exclude_object1,
+                                          const ggo::object3d_abc * exclude_object2) const
+  {
+    for (const auto * object : _objects)
     {
-      _casting_shadows_objects.push_back(object.get());
+      if (object == exclude_object1 || object == exclude_object2)
+      {
+        continue;
+      }
+
+      if (func(object) == false)
+      {
+        break;
+      }
     }
   }
 
   //////////////////////////////////////////////////////////////
-  brute_force_raycaster::brute_force_raycaster(std::vector<const ggo::object3d_abc *> visible_objects, std::vector<const ggo::object3d_abc *> casting_shadows_objects)
-  :
-  _visible_objects(std::move(visible_objects)),
-  _casting_shadows_objects(std::move(casting_shadows_objects))
+  void brute_force_raycaster::process_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length,
+                                              std::function<bool(const ggo::object3d_abc *)> func,
+                                              const ggo::object3d_abc * exclude_object1,
+                                              const ggo::object3d_abc * exclude_object2) const
   {
+    for (const auto * object : _objects)
+    {
+      if (object == exclude_object1 || object == exclude_object2)
+      {
+        continue;
+      }
 
+      if (func(object) == false)
+      {
+        break;
+      }
+    }
   }
+}
 
+#if 0
   //////////////////////////////////////////////////////////////
   std::optional<hit_data> brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
                                                           const ggo::object3d_abc * exclude_object1,
@@ -81,3 +108,4 @@ namespace ggo
     return false;
   }
 }
+#endif

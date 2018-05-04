@@ -1,13 +1,12 @@
 #include "ggo_scene.h"
 #include <raytracer/objects3d/ggo_point_light.h>
-#include <raytracer/objects3d/ggo_shape_light.h>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  scene::scene(std::shared_ptr<const ggo::background3d_abc> background)
+  scene::scene(std::shared_ptr<const ggo::background3d_abc> background, std::shared_ptr<const ggo::indirect_lighting_abc> indirect_lighting)
   :
-  _background(background)
+  _background(background), _indirect_lighting(indirect_lighting)
   {
 
   }

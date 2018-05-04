@@ -38,7 +38,7 @@ namespace ggo
         }
 
         // Check visibility between the light and the object.
-        if (raycaster.check_visibility(ray, intersection->_dist, light, &object) == true)
+        if (raycaster.check_visibility(ray.pos(), ray.pos() + intersection->_dist * ray.dir(), light, &object) == true)
         {
           continue;
         }

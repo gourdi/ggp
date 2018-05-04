@@ -1,6 +1,8 @@
 #ifndef __GGO_SCALE1D__
 #define __GGO_SCALE1D__
 
+#include <kernel/ggo_kernel.h>
+
 namespace ggo
 {
   enum class scaling_algo

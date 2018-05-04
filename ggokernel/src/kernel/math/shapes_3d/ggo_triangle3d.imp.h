@@ -68,6 +68,21 @@ namespace ggo
     return true;
   }
 
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, bool double_sided>
+  bool triangle3d<data_t, double_sided>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    data_t dist = 0;
+    ggo::ray3d<data_t> normal;
+    if (intersect_ray(ggo::ray3d<data_t>(pos, dir, false), dist, normal) == false)
+    {
+      return false;
+    }
+
+    return dist < length;
+  }
+
   //////////////////////////////////////////////////////////////
   template <typename data_t, bool double_sided>
   std::optional<box3d_data<data_t>> triangle3d<data_t, double_sided>::get_bounding_box(const ggo::basis3d<data_t> & basis) const

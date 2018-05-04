@@ -1,6 +1,5 @@
 #include "ggo_raytracer.h"
 #include <kernel/math/sampling/shape_sampling/ggo_shape_sampling.h>
-#include <raytracer/volumetric_effects/ggo_volumetric_effect_abc.h>
 #include <raytracer/materials/ggo_material_abc.h>
 #include <raytracer/raycasters/ggo_raycaster_abc.h>
 #include <raytracer/backgrounds/ggo_background3d_abc.h>
@@ -9,9 +8,9 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  raytracer::raytracer(const ggo::scene & scene, const ggo::raycaster_abc & raycaster, const ggo::indirect_lighting_abc * indirect_lighting)
-    :
-    _scene(scene), _raycaster(raycaster), _indirect_lighting(indirect_lighting)
+  raytracer::raytracer(const ggo::scene & scene, const raycaster_abc & raycaster)
+  :
+  _scene(scene), _raycaster(raycaster)
   {
   }
 
@@ -43,8 +42,7 @@ namespace ggo
       const ggo::object3d_abc * exclude_object = hit_object->handle_self_intersection(ray_to_light);
 
       // Check if there is another object between the light and the hit object.
-      float dist_to_light = ggo::distance(world_normal.pos(), light_pos);
-      if (_raycaster.check_visibility(ray_to_light, dist_to_light, exclude_object, light.get()) == true)
+      if (_raycaster.check_visibility(world_normal.pos(), light_pos, exclude_object, light.get()) == true)
       {
         continue;
       }
@@ -79,7 +77,7 @@ namespace ggo
     {
       ggo::color_32f color = _scene.background().get_color(ray);
 
-      for (const auto & volumetric_effect : _scene.get_volumetric_effects())
+      for (const auto & volumetric_effect : _scene.volumetric_objects())
       {
         color = volumetric_effect->process_background_ray(ray, color);
       }
@@ -92,14 +90,14 @@ namespace ggo
 
     ggo::color_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, random_variable1, random_variable2);
 
-    for (const auto & volumetric_effect : _scene.get_volumetric_effects())
+    for (const auto & volumetric_effect : _scene.volumetric_objects())
     {
       output_color = volumetric_effect->process_segment(ray.pos(), hit->_intersection._world_normal.pos(), output_color);
     }
 
-    if (_indirect_lighting != nullptr)
+    if (_scene.indirect_lighting() != nullptr)
     {
-      output_color += _indirect_lighting->process(ray, hit->_intersection._world_normal, *hit->_object, output_color, random_variable1, random_variable2);
+      output_color += _scene.indirect_lighting()->process(ray, hit->_intersection._world_normal, *hit->_object, output_color, random_variable1, random_variable2);
     }
 
     return output_color;

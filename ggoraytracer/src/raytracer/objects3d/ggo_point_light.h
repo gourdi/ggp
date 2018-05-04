@@ -14,15 +14,24 @@ namespace ggo
 
   private:
 
-    ggo::color_32f                    get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f                    get_emissive_color() const override;
+    std::optional<box3d_data_float>   get_bounding_box() const override;
     const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const override;
-    ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const  override;
-    ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
+
+    // Solid object.
+    ggo::color_32f                    get_color(const ggo::pos3f & pos) const override;
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const  override;
+    bool                              intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const override;
     ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
     transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
-    std::optional<box3d_data_float>   get_bounding_box() const override;
+
+    // Light.
+    ggo::color_32f                    get_emissive_color() const override;
+    ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const  override;
+    ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
+      
+    // Volumetric object.
+    ggo::color_32f                    process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const override;
+    ggo::color_32f                    process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const override;
 
   private:
 
@@ -75,6 +84,13 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  inline bool point_light::intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const
+  {
+    GGO_FAIL();
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////
   inline ggo::color_32f point_light::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
   {
     GGO_FAIL();
@@ -93,6 +109,20 @@ namespace ggo
   {
     GGO_FAIL();
     return {};
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline ggo::color_32f point_light::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
+  {
+    GGO_FAIL();
+    return color;
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline ggo::color_32f point_light::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
+  {
+    GGO_FAIL();
+    return color;
   }
 }
 

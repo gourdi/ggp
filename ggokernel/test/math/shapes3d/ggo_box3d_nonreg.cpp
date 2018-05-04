@@ -151,6 +151,17 @@ GGO_TEST(box3d, ray_intersection)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(box3d, segment_intersection)
+{
+  ggo::box3d_float box(-1, 1, -1, 1, -1, 1);
+
+  GGO_CHECK(box.intersect_segment({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 0.1f) == true);
+  GGO_CHECK(box.intersect_segment({ -2.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 0.1f) == false);
+  GGO_CHECK(box.intersect_segment({ -2.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 2.0f) == true);
+  GGO_CHECK(box.intersect_segment({ -2.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 4.0f) == true);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(box3d, get_union)
 {
   auto box = ggo::get_union(ggo::box3d_float(-1, 1, -1, 2, 2, 5), ggo::box3d_float(-3, -2, -10, 20, 3, 4));

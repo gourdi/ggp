@@ -1,11 +1,11 @@
 #ifndef __GGO_DISC_GLOW__
 #define __GGO_DISC_GLOW__
 
-#include <raytracer/volumetric_effects/ggo_volumetric_effect_abc.h>
+#include <raytracer/objects3d/volumetric_objects/ggo_volumetric_object_abc.h>
 
 namespace ggo
 {
-  class disc_glow : public volumetric_effect_abc
+  class disc_glow : public volumetric_object_abc
   {
   public:
 

@@ -1,7 +1,7 @@
 #ifndef __GGO_SHAPE_LIGHT__
 #define __GGO_SHAPE_LIGHT__
 
-#include <raytracer/objects3d/ggo_reflection_object3d_abc.h>
+#include <raytracer/objects3d/solid_objects/ggo_reflection_object3d_abc.h>
 
 namespace ggo
 {

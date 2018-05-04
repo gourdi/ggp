@@ -77,6 +77,21 @@ namespace ggo
     return dist_sup >= 0;
   }
 
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool sphere3d<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    data_t dist_inf, dist_sup;
+    if (intersect_line(ggo::line3d<data_t>(pos, dir, false), dist_inf, dist_sup) == false)
+    {
+      return false;
+    }
+
+    return dist_inf <= 0 && dist_sup <= length;
+
+  }
+
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   std::vector<data_t> sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const

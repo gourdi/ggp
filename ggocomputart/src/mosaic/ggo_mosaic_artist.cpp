@@ -34,8 +34,8 @@ namespace
       {
         ggo::segment_float s2(polygon2.get_point(i2), polygon2.get_point((i2 + 1) % polygon2.get_points_count()));
 
-        ggo::pos2f intersection;
-        if (s1.intersect_segment(s2, intersection) == true)
+        auto intersection = s1.intersect(s2);
+        if (intersection)
         {
           return true;
         }

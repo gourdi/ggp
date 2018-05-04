@@ -13,10 +13,9 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct raytrace_params
   {
-    int						                      _depth = 3;
-    int                                 _threads_count = 1;
-    const ggo::raycaster_abc *          _raycaster = nullptr;
-    const ggo::indirect_lighting_abc *  _indirect_lighting = nullptr;
+    int						              _depth = 3;
+    int                         _threads_count = 1;
+    const ggo::raycaster_abc *  _raycaster = nullptr;
   };
 
   //////////////////////////////////////////////////////////////

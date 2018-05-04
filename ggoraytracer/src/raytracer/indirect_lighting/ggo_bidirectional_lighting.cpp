@@ -47,7 +47,7 @@ namespace ggo
       ggo::ray3d_float close_ray(camera_world_normal.pos(), dir, false);
 
       // Check visibility.
-      if (_raycaster.check_visibility(close_ray, length, exclude_light_object, exclude_camera_object) == true)
+      if (_raycaster.check_visibility(close_ray.pos(), close_ray.pos() + diff, exclude_light_object, exclude_camera_object) == true)
       {
         continue;
       }

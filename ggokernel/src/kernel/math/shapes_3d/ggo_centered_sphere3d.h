@@ -12,6 +12,7 @@ namespace ggo
     const data_t &      radius() const { return _radius; }
 
     bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
+    bool                intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const override;
     bool                is_convex() const override { return true; }
 
     ggo::pos3<data_t>   sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const override;

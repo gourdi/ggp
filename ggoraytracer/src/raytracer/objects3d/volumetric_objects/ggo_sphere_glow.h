@@ -1,15 +1,15 @@
 #ifndef __GGO_SPHERE_GLOW__
 #define __GGO_SPHERE_GLOW__
 
-#include <raytracer/volumetric_effects/ggo_volumetric_effect_abc.h>
+#include <raytracer/objects3d/volumetric_objects/ggo_volumetric_object_abc.h>
 
 namespace ggo
 {
-  class sphere_glow : public volumetric_effect_abc
+  class sphere_glow : public volumetric_object_abc
   {
   public:
 
-    sphere_glow(const ggo::pos3f & pos, float radius, float opacity, const ggo::color_32f & color);
+                                    sphere_glow(const ggo::pos3f & pos, float radius, float opacity, const ggo::color_32f & color);
 
     ggo::color_32f                  process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const override;
     ggo::color_32f                  process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const override;

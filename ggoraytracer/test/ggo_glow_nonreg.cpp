@@ -6,8 +6,8 @@
 #include <raytracer/backgrounds/ggo_background3d_color.h>
 #include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 #include <raytracer/materials/ggo_checker_material.h>
-#include <raytracer/volumetric_effects/ggo_disc_glow.h>
-#include <raytracer/volumetric_effects/ggo_sphere_glow.h>
+#include <raytracer/objects3d/volumetric_objects/ggo_disc_glow.h>
+#include <raytracer/objects3d/volumetric_objects/ggo_sphere_glow.h>
 
 GGO_TEST(glow, disc)
 {
@@ -26,8 +26,8 @@ GGO_TEST(glow, disc)
   scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 50.f });
 
   // Objects.
-  scene.emplace_volumetric_effect<ggo::disc_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, ggo::white_32f(), 0.2f, 1.f);
-  scene.emplace_volumetric_effect<ggo::disc_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.8f, ggo::red_32f(), 0.8f, 1.f);
+  scene.emplace_volumetric_object<ggo::disc_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, ggo::white_32f(), 0.2f, 1.f);
+  scene.emplace_volumetric_object<ggo::disc_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.8f, ggo::red_32f(), 0.8f, 1.f);
 
   ggo::checker_xy_material checker_material(ggo::black_32f(), ggo::gray_32f(), 0.5f);
   scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);
@@ -57,8 +57,8 @@ GGO_TEST(glow, sphere)
   scene.add_point_light(ggo::white_32f(), { 0.f, 0.f, 50.f });
 
   // Objects.
-  scene.emplace_volumetric_effect<ggo::sphere_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, 0.5f, ggo::white_32f());
-  scene.emplace_volumetric_effect<ggo::sphere_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.5f, 0.8f, ggo::red_32f());
+  scene.emplace_volumetric_object<ggo::sphere_glow>(ggo::pos3f(-0.5f, 0.f, 2.f), 0.5f, 0.5f, ggo::white_32f());
+  scene.emplace_volumetric_object<ggo::sphere_glow>(ggo::pos3f(0.5f, 0.f, 1.f), 0.5f, 0.8f, ggo::red_32f());
 
   ggo::checker_xy_material checker_material(ggo::black_32f(), ggo::gray_32f(), 0.5f);
   scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);

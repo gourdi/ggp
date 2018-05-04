@@ -53,13 +53,14 @@ GGO_TEST(segment, intersect_segment)
 {
   ggo::segment_float segment({ 3, 1 }, { 6, 4 });
 
-  ggo::pos2f intersect;
-  GGO_CHECK(segment.intersect_segment({ { 3, 2 },{ 4, 3 } }) == false);
-  GGO_CHECK(segment.intersect_segment({ { 0, -1 },{ 2, -1 } }) == false);
-  GGO_CHECK(segment.intersect_segment({ { 7, 3 },{ 6, 7 } }) == false);
-  GGO_CHECK(segment.intersect_segment({ { 3, 2 },{ 5, 2 } }, intersect) == true);
-  GGO_CHECK_FLOAT_EQ(intersect.x(), 4);
-  GGO_CHECK_FLOAT_EQ(intersect.y(), 2);
+  GGO_CHECK(segment.intersect({ { 3, 2 },{ 4, 3 } }).has_value() == false);
+  GGO_CHECK(segment.intersect({ { 0, -1 },{ 2, -1 } }).has_value() == false);
+  GGO_CHECK(segment.intersect({ { 7, 3 },{ 6, 7 } }).has_value() == false);
+
+  auto intersection = segment.intersect({ { 3, 2 },{ 5, 2 } });
+  GGO_CHECK(intersection.has_value() == true);
+  GGO_CHECK_FLOAT_EQ(intersection->x(), 4);
+  GGO_CHECK_FLOAT_EQ(intersection->y(), 2);
 }
 
 /////////////////////////////////////////////////////////////////////

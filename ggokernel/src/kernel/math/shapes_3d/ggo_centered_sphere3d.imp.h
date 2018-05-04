@@ -9,14 +9,12 @@ namespace ggo
   bool centered_sphere3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
   {
     // Build the quadratic and solve it.
-    const ggo::vec3<data_t> & dir = ray.dir();
-    const ggo::pos3<data_t> & diff = ray.pos();
     
     // Hint 1: deg2 is dot(dir, dir) which is 1
     // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
     // the multiplication simplifies the computations
-    data_t deg1 = ggo::dot(dir, diff); 
-    data_t deg0 = ggo::dot(diff, diff) - _radius * _radius;
+    data_t deg1 = ggo::dot(ray.dir(), ray.pos());
+    data_t deg0 = ggo::dot(ray.pos(), ray.pos()) - _radius * _radius;
     
     // Solve it.
     data_t d = deg1 * deg1 - deg0;
@@ -30,22 +28,55 @@ namespace ggo
     dist = -deg1 - d;
     if (dist >= 0)
     {
-      normal.pos() = ray.pos() + dist * dir;
+      normal.pos() = ray.pos() + dist * ray.dir();
       normal.set_dir(normal.pos());
       return true;
     }
 
-    // Check the greatest solution (the ray's origin is then inside the spehre, which is a valid case).
+    // Check the greatest solution (the ray's origin is then inside the sphere, which is a valid case).
     // In that case, the normal points towards the center of the sphere.
     dist = -deg1 + d;
     if (dist >= 0)
     {
-      normal.pos() = ray.pos() + dist * dir;
+      normal.pos() = ray.pos() + dist * ray.dir();
       normal.set_dir(-normal.pos());
       return true;
     }
 
     return false;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool centered_sphere3d<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    // Hint 1: deg2 is dot(dir, dir) which is 1
+    // Hint 2: actually, deg1 should be 2*dot(dir,diff), but removing 
+    // the multiplication simplifies the computations
+    data_t deg1 = ggo::dot(dir, pos);
+    data_t deg0 = ggo::dot(pos, pos) - _radius * _radius;
+
+    // Solve it.
+    data_t d = deg1 * deg1 - deg0;
+    if (d < 0)
+    {
+      return false;
+    }
+    d = std::sqrt(d);
+
+    data_t dist_inf = -deg1 - d;
+    if (dist_inf > length)
+    {
+      return false;
+    }
+
+    data_t dist_sup = -deg1 + d;
+    if (dist_sup < 0)
+    {
+      return false;
+    }
+
+    return true;
   }
 
   //////////////////////////////////////////////////////////////
@@ -57,7 +88,6 @@ namespace ggo
 
     return _radius * ggo::hemisphere_sampling(dir, random_variable1, random_variable2);
   }
-
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>

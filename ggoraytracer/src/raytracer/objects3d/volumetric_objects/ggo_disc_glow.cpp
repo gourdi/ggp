@@ -1,5 +1,5 @@
 #include <kernel/ggo_ease.h>
-#include <raytracer/volumetric_effects/ggo_disc_glow.h>
+#include "ggo_disc_glow.h"
 
 namespace ggo
 {

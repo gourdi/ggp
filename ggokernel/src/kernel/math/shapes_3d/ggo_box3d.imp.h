@@ -28,6 +28,115 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
+  bool box3d<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    GGO_ASSERT(dir.is_normalized() == true);
+
+    // First test to check if one of the 2 vertices are inside the box.
+    if (is_point_inside(pos) == true)
+    {
+      return true;
+    }
+    if (is_point_inside(pos + length * dir) == true)
+    {
+      return true;
+    }
+
+    // X coordinate tests (ie. yOz faces).
+    if (std::abs(dir.x()) > data_t(0.00001))
+    {
+      data_t dist = (_data._x_min - pos.x()) / dir.x();
+      if (dist > 0 && dist < length)
+      {
+        data_t y = pos.y() + dist * dir.y();
+        data_t z = pos.z() + dist * dir.z();
+
+        if (y > _data._y_min && y < _data._y_max &&
+            z > _data._z_min && z < _data._z_max)
+        {
+          return true;
+        }
+      }
+
+      dist = (_data._x_max - pos.x()) / dir.x();
+      if (dist > 0 && dist < length)
+      {
+        data_t y = pos.y() + dist * dir.y();
+        data_t z = pos.z() + dist * dir.z();
+
+        if (y > _data._y_min && y < _data._y_max &&
+            z > _data._z_min && z < _data._z_max)
+        {
+          return true;
+        }
+      }
+    }
+
+    // Y coordinate tests (ie. xOz faces).
+    if (std::abs(dir.y()) > data_t(0.00001))
+    {
+      data_t dist = (_data._y_min - pos.y()) / dir.y();
+      if (dist > 0 && dist < length)
+      {
+        data_t x = pos.x() + dist * dir.x();
+        data_t z = pos.z() + dist * dir.z();
+
+        if (x > _data._x_min && x < _data._x_max &&
+            z > _data._z_min && z < _data._z_max)
+        {
+          return true;
+        }
+      }
+
+      dist = (_data._y_max - pos.y()) / dir.y();
+      if (dist > 0 && dist < length)
+      {
+        data_t x = pos.x() + dist * dir.x();
+        data_t z = pos.z() + dist * dir.z();
+
+        if (x > _data._x_min && x < _data._x_max &&
+            z > _data._z_min && z < _data._z_max)
+        {
+          return true;
+        }
+      }
+    }
+
+    // Z coordinate tests (ie. xOy faces).
+    if (std::abs(dir.z()) > data_t(0.00001))
+    {
+      data_t dist = (_data._z_min - pos.z()) / dir.z();
+      if (dist > 0 && dist < length)
+      {
+        data_t x = pos.x() + dist * dir.x();
+        data_t y = pos.y() + dist * dir.y();
+
+        if (x > _data._x_min && x < _data._x_max &&
+            y > _data._y_min && y < _data._y_max)
+        {
+          return true;
+        }
+      }
+
+      dist = (_data._z_max - pos.z()) / dir.z();
+      if (dist > 0 && dist < length)
+      {
+        data_t x = pos.x() + dist * dir.x();
+        data_t y = pos.y() + dist * dir.y();
+
+        if (x > _data._x_min && x < _data._x_max &&
+            y > _data._y_min && y < _data._y_max)
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
   bool box3d<data_t>::intersect_ray(const ggo::ray3d<data_t> & ray) const
   {
     // X coordinate tests (ie. yOz faces).
@@ -274,9 +383,9 @@ namespace ggo
   template <typename data_t>
   bool box3d<data_t>::is_point_inside(const ggo::pos3<data_t> & point) const
   {
-    return point.x() >= _x_min && point.x() <= _x_max &&
-           point.y() >= _y_min && point.y() <= _y_max &&
-           point.z() >= _z_min && point.z() <= _z_max;
+    return point.x() >= _data._x_min && point.x() <= _data._x_max &&
+           point.y() >= _data._y_min && point.y() <= _data._y_max &&
+           point.z() >= _data._z_min && point.z() <= _data._z_max;
   }
 }
 

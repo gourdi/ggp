@@ -8,21 +8,30 @@
 namespace ggo
 {
   template <uint32_t flags, typename shape_t>
-  class shape_object3d_abc : public object3d_abc
+  class solid_object3d_abc : public object3d_abc
   {
   public:
 
-    shape_object3d_abc(const shape_t & shape) : _shape(shape) {}
+                          solid_object3d_abc(const shape_t & shape) : _shape(shape) {}
 
     ggo::basis3d_float &  basis() { return _basis; }
 
   protected:
 
     const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const override;
+    std::optional<box3d_data_float>   get_bounding_box() const;
+
+    // Solid object.
     std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const override;
+    bool                              intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const override;
+
+    // Lights.
     ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const override;
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
-    std::optional<box3d_data_float>   get_bounding_box() const;
+
+    // Volumetric object.
+    ggo::color_32f                    process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const;
+    ggo::color_32f                    process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const;
 
   protected:
 
@@ -37,7 +46,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  std::optional<intersection_data> shape_object3d_abc<flags, shape_t>::intersect_ray(const ggo::ray3d_float & ray) const
+  std::optional<intersection_data> solid_object3d_abc<flags, shape_t>::intersect_ray(const ggo::ray3d_float & ray) const
   {
     if constexpr(flags & discard_basis)
     {
@@ -63,7 +72,21 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  const object3d_abc * shape_object3d_abc<flags, shape_t>::handle_self_intersection(ggo::ray3d_float & ray) const
+  bool solid_object3d_abc<flags, shape_t>::intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const
+  {
+    if constexpr(flags & discard_basis)
+    {
+      return _shape.intersect_segment(pos, dir, length);
+    }
+    else
+    {
+      return _shape.intersect_segment(_basis.point_from_world_to_local(pos), _basis.vector_from_world_to_local(dir), length);
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <uint32_t flags, typename shape_t>
+  const object3d_abc * solid_object3d_abc<flags, shape_t>::handle_self_intersection(ggo::ray3d_float & ray) const
   {
     if (_shape.is_convex() == true)
     {
@@ -76,7 +99,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::pos3f shape_object3d_abc<flags, shape_t>::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
+  ggo::pos3f solid_object3d_abc<flags, shape_t>::sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const
   {
     if constexpr(flags & discard_basis)
     {
@@ -92,7 +115,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////.
   template <uint32_t flags, typename shape_t>
-  ggo::ray3d_float shape_object3d_abc<flags, shape_t>::sample_ray(float random_variable1, float random_variable2) const
+  ggo::ray3d_float solid_object3d_abc<flags, shape_t>::sample_ray(float random_variable1, float random_variable2) const
   {
     ggo::ray3d_float ray = _shape.sample_ray(random_variable1, random_variable2);
 
@@ -106,7 +129,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////.
   template <uint32_t flags, typename shape_t>
-  std::optional<box3d_data_float> shape_object3d_abc<flags, shape_t>::get_bounding_box() const
+  std::optional<box3d_data_float> solid_object3d_abc<flags, shape_t>::get_bounding_box() const
   {
     if constexpr(flags & discard_basis)
     {
@@ -116,6 +139,22 @@ namespace ggo
     {
       return _shape.get_bounding_box(_basis);
     }
+  }
+
+  //////////////////////////////////////////////////////////////.
+  template <uint32_t flags, typename shape_t>
+  ggo::color_32f solid_object3d_abc<flags, shape_t>::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
+  {
+    GGO_FAIL();
+    return color;
+  }
+
+  //////////////////////////////////////////////////////////////.
+  template <uint32_t flags, typename shape_t>
+  ggo::color_32f solid_object3d_abc<flags, shape_t>::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
+  {
+    GGO_FAIL();
+    return color;
   }
 }
 

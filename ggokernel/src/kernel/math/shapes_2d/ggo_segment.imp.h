@@ -51,8 +51,8 @@ namespace ggo
   template <typename data_t>
   data_t segment<data_t>::hypot_to_segment(const segment<data_t> & segment) const
   {
-    ggo::pos2<data_t> intersect;
-    if (intersect_segment(segment, intersect)  == true)
+    auto p = intersect(segment);
+    if (!p)
     {
       return 0;		
     }
@@ -174,15 +174,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  bool segment<data_t>::intersect_segment(const segment<data_t> & segment) const
-  {
-    ggo::pos2<data_t> intersect;
-    return intersect_segment(segment, intersect);
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  bool segment<data_t>::intersect_segment(const segment<data_t> & segment, ggo::pos2<data_t> & intersect) const
+  std::optional<ggo::pos2<data_t>> segment<data_t>::intersect(const segment<data_t> & segment) const
   {
     data_t dx1 = _p2.x() - _p1.x();
     data_t dy1 = _p2.y() - _p1.y();
@@ -192,7 +184,7 @@ namespace ggo
     data_t det = dx1 * dy2 - dy1 * dx2;
     if (std::fabs(det) < data_t(0.00001))
     {
-      return false;
+      return {};
     }
 
     data_t dx3 = _p1.x() - segment._p1.x();
@@ -201,19 +193,16 @@ namespace ggo
     data_t r1 = (dy3 * dx2 - dx3 * dy2) / det;
     if ((r1 < 0) || (r1 > 1))
     {
-      return false;
+      return {};
     }
 
     data_t r2 = (dy3 * dx1 - dx3 * dy1) / det;
     if ((r2 < 0) || (r2 > 1))
     {
-      return false;
+      return {};
     }
 
-    intersect.x() = _p1.x() + r1 * dx1; 
-    intersect.y() = _p1.y() + r1 * dy1; 
-
-    return true;
+    return pos2<data_t>(_p1.x() + r1 * dx1, _p1.y() + r1 * dy1);
   }
 }
 

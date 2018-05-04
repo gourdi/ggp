@@ -8,20 +8,23 @@
 
 // object3d_abc
 //  |
-//  +--> glow
-//  |
 //  +--> point_light
+//  |
+//  +--> volumetric_effect_abc
+//  |       |
+//  |       +--> disc_glow
+//  |       +--> sphere_glow
+//  |       +--> linear_fog
+//  |       +--> z_fog
 //  |
 //  +--> shape_object3d_abc
 //          |
 //          +--> simple_color_object3d
 //          |
-//          +--> reflection_object3d_abc
+//          +--> reflection_object3d_abc  
 //                  |
 //                  +--> diffuse_object3d
-//                  |
 //                  +--> transparent_object3d
-//                  |
 //                  +--> shape_light
 
 namespace ggo
@@ -43,15 +46,24 @@ namespace ggo
     object3d_abc(const object3d_abc &) = delete;
     void operator=(const object3d_abc &) = delete;
 
-    virtual ggo::color_32f                    get_color(const ggo::pos3f & pos) const = 0;
-    virtual ggo::color_32f                    get_emissive_color() const = 0;
     virtual const object3d_abc *              handle_self_intersection(ggo::ray3d_float & ray) const = 0;
-    virtual ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const = 0;
-    virtual ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const = 0;
+    virtual std::optional<box3d_data_float>   get_bounding_box() const = 0;
+
+    // Solid object.
+    virtual ggo::color_32f                    get_color(const ggo::pos3f & pos) const = 0;
     virtual std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const = 0;
+    virtual bool                              intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const = 0;
     virtual ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const = 0;
     virtual transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const = 0;
-    virtual std::optional<box3d_data_float>   get_bounding_box() const = 0;
+
+    // Light.
+    virtual ggo::color_32f                    get_emissive_color() const = 0;
+    virtual ggo::pos3f                        sample_point(const ggo::pos3f & target_pos, float random_variable1, float random_variable2) const = 0;
+    virtual ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const = 0;
+
+    // Volumetric object.
+    virtual ggo::color_32f                    process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const = 0;
+    virtual ggo::color_32f                    process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const = 0;
   };
 }
 

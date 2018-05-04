@@ -1,13 +1,13 @@
 #ifndef __GGO_SCENE__
 #define __GGO_SCENE__
 
-#include <raytracer/volumetric_effects/ggo_volumetric_effect_abc.h>
 #include <raytracer/backgrounds/ggo_background3d_abc.h>
-#include <raytracer/objects3d/ggo_diffuse_object3d.h>
-#include <raytracer/objects3d/ggo_transparent_object3d.h>
-#include <raytracer/objects3d/ggo_simple_color_object3d.h>
 #include <raytracer/objects3d/ggo_point_light.h>
-#include <raytracer/objects3d/ggo_shape_light.h>
+#include <raytracer/objects3d/solid_objects/ggo_diffuse_object3d.h>
+#include <raytracer/objects3d/solid_objects/ggo_transparent_object3d.h>
+#include <raytracer/objects3d/solid_objects/ggo_simple_color_object3d.h>
+#include <raytracer/objects3d/solid_objects/ggo_shape_light.h>
+
 #include <memory>
 
 namespace ggo
@@ -16,7 +16,7 @@ namespace ggo
   {
   public:
 
-    scene(std::shared_ptr<const ggo::background3d_abc> background);
+    scene(std::shared_ptr<const ggo::background3d_abc> background, std::shared_ptr<const ggo::indirect_lighting_abc> indirect_lighting = nullptr);
 
     point_light & add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
 
@@ -27,8 +27,7 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, color);
 
-      _visible_objects.push_back(object);
-      _casting_shadows_objects.push_back(object);
+      _solid_objects.push_back(object);
       _lights.push_back(object);
 
       return *object;
@@ -51,8 +50,7 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, material);
 
-      _visible_objects.push_back(object);
-      _casting_shadows_objects.push_back(object);
+      _solid_objects.push_back(object);
 
       return *object;
     }
@@ -64,8 +62,7 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, material);
 
-      _visible_objects.push_back(object);
-      _casting_shadows_objects.push_back(object);
+      _solid_objectss.push_back(object);
 
       return *object;
     }
@@ -77,40 +74,34 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, color, density);
 
-      _visible_objects.push_back(object);
-      _casting_shadows_objects.push_back(object);
+      _solid_objects.push_back(object);
 
       return *object;
     }
 
-    template <typename volumetric_effect_t, typename... args>
-    void  emplace_volumetric_effect(args&&... a)
+    template <typename volumetric_object_t, typename... args>
+    void emplace_volumetric_object(args&&... a)
     {
-      auto effect = std::make_shared<volumetric_effect_t>(std::forward<args>(a)...);
-      _volumetric_effects.push_back(effect);
-    }
-
-    auto  get_volumetric_effects() const
-    {
-      return _volumetric_effects;
+      auto object = std::make_shared<volumetric_object_t>(std::forward<args>(a)...);
+      _volumetric_objects.push_back(object);
     }
 
     void  set_ambient_color(const ggo::color_32f & ambient_color) { _ambient_color = ambient_color; }
 
-    const auto &  background() const { return *_background; }
-
+    const auto &  solid_objects() const { return _solid_objects; }
     const auto &  lights() const { return _lights; }
-    const auto &  visible_objects() const { return _visible_objects; }
-    const auto &  casting_shadows_objects() const { return _casting_shadows_objects; }
-
+    const auto &  volumetric_objects() const { return _volumetric_objects; }
+    const auto &  background() const { return *_background; }
+    const auto *  indirect_lighting() const { return _indirect_lighting.get(); }
+    
   private:
 
-    std::vector<std::shared_ptr<const ggo::object3d_abc>>           _visible_objects;
-    std::vector<std::shared_ptr<const ggo::object3d_abc>>           _casting_shadows_objects;
-    std::vector<std::shared_ptr<const ggo::object3d_abc>>           _lights;
-    std::vector<std::shared_ptr<const ggo::volumetric_effect_abc>>  _volumetric_effects;
-    std::shared_ptr<const ggo::background3d_abc>                    _background;
-    ggo::color_32f                                                  _ambient_color = ggo::black<ggo::color_32f>();
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _solid_objects;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _lights;
+    std::vector<std::shared_ptr<const ggo::object3d_abc>> _volumetric_objects;
+    std::shared_ptr<const ggo::background3d_abc>          _background;
+    std::shared_ptr<const ggo::indirect_lighting_abc>     _indirect_lighting;
+    ggo::color_32f                                        _ambient_color = ggo::black<ggo::color_32f>();
   };
 }
 

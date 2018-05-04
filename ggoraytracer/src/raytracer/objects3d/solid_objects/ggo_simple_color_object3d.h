@@ -1,16 +1,16 @@
 #ifndef __GGO_SIMPLE_COLOR_OBJECT3D__
 #define __GGO_SIMPLE_COLOR_OBJECT3D__
 
-#include <raytracer/objects3d/ggo_shape_object3d.h>
+#include <raytracer/objects3d/solid_objects/ggo_solid_object3d.h>
 
 namespace ggo
 {
   template <uint32_t flags, typename shape_t, typename material_t>
-  class simple_color_object3d : public shape_object3d_abc<flags, shape_t>
+  class simple_color_object3d : public solid_object3d_abc<flags, shape_t>
   {
   public:
 
-    simple_color_object3d(const shape_t & shape, const material_t & material) : shape_object3d_abc<flags, shape_t>(shape), _material(material) {}
+    simple_color_object3d(const shape_t & shape, const material_t & material) : solid_object3d_abc<flags, shape_t>(shape), _material(material) {}
 
   private:
 

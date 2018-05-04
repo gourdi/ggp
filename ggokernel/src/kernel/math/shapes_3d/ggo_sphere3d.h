@@ -20,6 +20,7 @@ namespace ggo
     bool                      intersect_line(const ggo::line3d<data_t> & line, data_t & dist_inf, data_t & dist_sup) const;
 
     std::vector<data_t>       intersect_ray(const ggo::ray3d<data_t> & ray) const override;
+    bool                      intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const override;
     data_t                    hypot_to_center(const ggo::pos3<data_t> & p) const override { return ggo::hypot(_center, p); }
     data_t                    get_influence_hypot() const override { return _radius * _radius; }
     

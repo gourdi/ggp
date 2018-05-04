@@ -40,8 +40,8 @@ namespace ggo
 
   private:
 
-    std::vector<data_t>                             _data;
-    ggo::box3d_data<floating_point_t>               _aabb;
+    std::vector<data_t>                           _data;
+    ggo::box3d_data<floating_point_t>             _aabb;
     std::vector<octree<data_t, floating_point_t>> _children;
   };
 }
@@ -108,8 +108,6 @@ namespace ggo
       {
         _data.emplace_back(*it);
       }
-
-      //_data = std::vector<data_t>(object_begin, object_end);
     }
     else
     {

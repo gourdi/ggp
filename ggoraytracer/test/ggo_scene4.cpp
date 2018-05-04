@@ -6,7 +6,7 @@
 #include <raytracer/renderers/ggo_mono_sampling_renderer.h>
 #include <raytracer/materials/ggo_solid_color_material.h>
 #include <raytracer/backgrounds/ggo_background3d_color.h>
-#include <raytracer/volumetric_effects/ggo_z_fog.h>
+#include <raytracer/objects3d/volumetric_objects/ggo_z_fog.h>
 
 GGO_TEST(test_scene, scene4)
 {
@@ -14,7 +14,7 @@ GGO_TEST(test_scene, scene4)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
 
   // The fog.
-  scene.emplace_volumetric_effect<ggo::z_fog>(ggo::green_32f(), 0.f, -1.f, 3.f);
+  scene.emplace_volumetric_object<ggo::z_fog>(ggo::green_32f(), 0.f, -1.f, 3.f);
 
   // Light.
   scene.add_point_light(ggo::white_32f(), { -20.f, -20.f, 200.f });

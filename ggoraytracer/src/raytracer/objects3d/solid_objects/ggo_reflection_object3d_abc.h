@@ -1,14 +1,14 @@
 #ifndef __GGO_REFLECTION_OBJECT3D__
 #define __GGO_REFLECTION_OBJECT3D__
 
-#include <raytracer/objects3d/ggo_shape_object3d.h>
+#include <raytracer/objects3d/solid_objects/ggo_solid_object3d.h>
 
 // Basis + Shape + Reflection.
 
 namespace ggo
 {
   template <uint32_t flags, typename shape_t>
-  class reflection_object3d_abc : public shape_object3d_abc<flags, shape_t>
+  class reflection_object3d_abc : public solid_object3d_abc<flags, shape_t>
   {
   public:
 
@@ -19,7 +19,7 @@ namespace ggo
 
   protected:
 
-    reflection_object3d_abc(const shape_t & shape) : shape_object3d_abc<flags, shape_t>(shape) {};
+                      reflection_object3d_abc(const shape_t & shape) : solid_object3d_abc<flags, shape_t>(shape) {};
 
     ggo::ray3d_float  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float random_variable1, float random_variable2) const;
 
