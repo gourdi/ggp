@@ -22,7 +22,23 @@ namespace ggo
     
     return true;
   }
-  
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool plane3d<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    data_t den = ggo::dot(_normal, dir);
+    if (den == 0)
+    {
+      return false; // Here the segment could totally be included in the plane, but we don't need to handle this case for now.
+    }
+
+    data_t num = _dist_to_origin - ggo::dot(_normal, pos);
+    data_t dist = num / den;
+    
+    return (dist >= 0 && dist <= length);
+  }
+
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   std::ostream & operator<<(std::ostream & os, const plane3d<data_t> & plane)

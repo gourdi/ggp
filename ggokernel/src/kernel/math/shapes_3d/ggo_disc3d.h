@@ -11,7 +11,6 @@ namespace ggo
     data_t                    radius() const { return _radius; }
     
     bool                      intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
-    bool                      intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const override;
     bool                      is_convex() const override { return true; }
 
     std::optional<box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const override;

@@ -106,7 +106,7 @@ namespace ggo
 #include <kernel/math/shapes_2d/ggo_segment.h>
 #include <kernel/math/shapes_2d/ggo_circle.h>
 #include <kernel/math/shapes_2d/ggo_disc.h>
-#include <kernel/math/shapes_2d/ggo_extended_segment.h>
+#include <kernel/math/shapes_2d/ggo_capsule.h>
 #include <kernel/math/shapes_2d/ggo_spline.h>
 #include <kernel/math/shapes_2d/ggo_polygon.h>
 #include <kernel/math/shapes_2d/ggo_triangle2d.h>
@@ -119,7 +119,7 @@ namespace ggo
 #include <kernel/math/shapes_2d/ggo_segment.imp.h>
 #include <kernel/math/shapes_2d/ggo_circle.imp.h>
 #include <kernel/math/shapes_2d/ggo_disc.imp.h>
-#include <kernel/math/shapes_2d/ggo_extended_segment.imp.h>
+#include <kernel/math/shapes_2d/ggo_capsule.imp.h>
 #include <kernel/math/shapes_2d/ggo_spline.imp.h>
 #include <kernel/math/shapes_2d/ggo_polygon.imp.h>
 #include <kernel/math/shapes_2d/ggo_triangle2d.imp.h>

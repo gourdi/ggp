@@ -51,7 +51,7 @@ namespace ggo
     virtual                    ~raytracable_shape3d_abc() {}
 
     virtual bool                intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const = 0;
-    virtual bool                intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const = 0;
+    virtual bool                intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const;
     virtual bool                is_convex() const = 0;
 
     virtual ggo::pos3<data_t>   sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const { return ggo::pos3<data_t>(data_t(0), data_t(0), data_t(0)); }
@@ -59,6 +59,20 @@ namespace ggo
 
     virtual std::optional<box3d_data<data_t>>  get_bounding_box(const ggo::basis3d<data_t> & basis) const = 0;
   };
+
+  // Default unoptimized implementation that check ray.
+  template <typename data_t>
+  bool raytracable_shape3d_abc<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
+  {
+    ggo::ray3d_float normal;
+    float dist = 0.f;
+    if (intersect_ray({ pos, dir, false }, dist, normal) == false)
+    {
+      return false;
+    }
+
+    return dist < length;
+  }
 }
 
 //////////////////////////////////////////////////////////////

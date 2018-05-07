@@ -8,16 +8,16 @@
 namespace ggo
 {
   template <typename data_type>
-  class extended_segment final : public paintable_shape2d_abc<data_type>,
-                                 public distancable_shape2d_abc<data_type>,
-                                 public movable_shape2d_abc<data_type>,
-                                 public rotatable_shape2d_abc<data_type>
+  class capsule final : public paintable_shape2d_abc<data_type>,
+                        public distancable_shape2d_abc<data_type>,
+                        public movable_shape2d_abc<data_type>,
+                        public rotatable_shape2d_abc<data_type>
   {
   public:
 
     using data_t = data_type;
 
-                              extended_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width);
+                              capsule(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width);
           
     float                     width() const { return _width; }
     float &                   width() { return _width; }
@@ -46,13 +46,13 @@ namespace ggo
 
 namespace ggo
 {
-  using extended_segment_float    = extended_segment<float>;
+  using capsule_float    = capsule<float>;
 }
 
 namespace ggo
 {
   template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, const ggo::extended_segment<data_t> & s)
+  std::ostream & operator<<(std::ostream & os, const ggo::capsule<data_t> & s)
   {
     os << "(" << s.p1() << ", " << s.p2() << ", " << s.width() << ")";
     return os;
