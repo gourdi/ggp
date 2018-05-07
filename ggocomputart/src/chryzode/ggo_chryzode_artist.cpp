@@ -41,7 +41,7 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, int line_step, ggo::im
 
       // Paint the segment.
       ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), get_width(), get_height(), line_step,
-        ggo::extended_segment_float(p1, p2, 0.005f * radius),
+        ggo::capsule_float(p1, p2, 0.005f * radius),
         ggo::solid_color_brush<float>(1.f), ggo::add_blender<float>());
     }
   }

@@ -197,7 +197,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
     float x2 = i * width / float(oscillo_size);
     float y2 = _y + 0.025f * spat(i) * min_size;
 
-    multi_shape.add_shape(std::make_shared<ggo::extended_segment_float>(ggo::pos2f(x1, y1), ggo::pos2f(x2, y2), 0.001f * min_size));
+    multi_shape.add_shape(std::make_shared<ggo::capsule_float>(ggo::pos2f(x1, y1), ggo::pos2f(x2, y2), 0.001f * min_size));
   }
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
@@ -313,10 +313,10 @@ void ggo::alpha_animation_artist::line::draw(void * buffer, int width, int heigh
     int min_size = std::min(width, height);
     float line_width = 0.0015f * min_size + 0.1f * min_size * get_start_factor();
 
-    ggo::extended_segment_float segment(_p1, _p2, line_width);
+    ggo::capsule_float capsule(_p1, _p2, line_width);
 
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, 3 * width, segment,
+      buffer, width, height, 3 * width, capsule,
       ggo::make_solid_brush(_color),
       ggo::alpha_blender_rgb8u(_opacity));
   }

@@ -13,8 +13,9 @@ namespace ggo
 
     ggo::color_32f  render_pixel(int x, int y,
                                  const ggo::scene & scene,
+                                 int depth,
                                  const ggo::raycaster_abc & raycaster,
-                                 int depth) const override;
+                                 const ggo::indirect_lighting_abc * indirect_lighting) const override;
     
     const ggo::antialiasing_camera_abc & _camera;
   };
@@ -22,8 +23,9 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::color_32f antialiasing_render_task::render_pixel(int x, int y,
                                                         const ggo::scene & scene,
+                                                        int depth,
                                                         const ggo::raycaster_abc & raycaster,
-                                                        int depth) const
+                                                        const ggo::indirect_lighting_abc * indirect_lighting) const
   {
     std::array<ggo::color_32f, 4> colors;
     
@@ -31,10 +33,10 @@ namespace ggo
 
     ggo::raytracer raytracer(scene, raycaster);
     
-    colors[0] = raytracer.process(first_pass_rays[0], depth, 0.f, 0.f);
-    colors[1] = raytracer.process(first_pass_rays[1], depth, 0.f, 0.f);
-    colors[2] = raytracer.process(first_pass_rays[2], depth, 0.f, 0.f);
-    colors[3] = raytracer.process(first_pass_rays[3], depth, 0.f, 0.f);
+    colors[0] = raytracer.process(first_pass_rays[0], depth, indirect_lighting, 0.f, 0.f);
+    colors[1] = raytracer.process(first_pass_rays[1], depth, indirect_lighting, 0.f, 0.f);
+    colors[2] = raytracer.process(first_pass_rays[2], depth, indirect_lighting, 0.f, 0.f);
+    colors[3] = raytracer.process(first_pass_rays[3], depth, indirect_lighting, 0.f, 0.f);
     
     float sum_r = colors[0].r() + colors[1].r() + colors[2].r() + colors[3].r();
     float sum_g = colors[0].g() + colors[1].g() + colors[2].g() + colors[3].g();
@@ -56,18 +58,18 @@ namespace ggo
     auto second_pass_rays = _camera.get_second_pass_rays(x, y);
     
     ggo::color_32f result(sum_r, sum_g, sum_b);
-    result += raytracer.process(second_pass_rays[0],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[1],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[2],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[3],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[4],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[5],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[6],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[7],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[8],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[9],  depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[10], depth, 0.f, 0.f);
-    result += raytracer.process(second_pass_rays[11], depth, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[0],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[1],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[2],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[3],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[4],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[5],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[6],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[7],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[8],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[9],  depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[10], depth, indirect_lighting, 0.f, 0.f);
+    result += raytracer.process(second_pass_rays[11], depth, indirect_lighting, 0.f, 0.f);
 
     return result / 16.f;
   };

@@ -221,7 +221,7 @@ GGO_TEST(paint, extended_segment_8x8_sampling)
   std::vector<uint8_t> buffer(3 * width * height, 255);
 
   ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), width, height, 3 * width, 
-    ggo::extended_segment_float({ 10.f, 10.f }, { 50.f, 15.f }, 5.f), ggo::red_8u());
+    ggo::capsule_float({ 10.f, 10.f }, { 50.f, 15.f }, 5.f), ggo::red_8u());
 
   ggo::save_bmp("paint_extended_segment.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

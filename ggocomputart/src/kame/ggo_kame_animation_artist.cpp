@@ -269,7 +269,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
 
   ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_width(), triangles);
 
-  using paint_shape_t = ggo::solid_color_shape<ggo::extended_segment_float, uint8_t>;
+  using paint_shape_t = ggo::solid_color_shape<ggo::capsule_float, uint8_t>;
 
   std::vector<paint_shape_t> shapes;
   for (const auto & edge : edges)

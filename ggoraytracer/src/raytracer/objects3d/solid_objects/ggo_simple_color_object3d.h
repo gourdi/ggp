@@ -16,7 +16,7 @@ namespace ggo
 
     ggo::color_32f    get_color(const ggo::pos3f & pos) const;
     ggo::color_32f    get_emissive_color() const override;
-    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
   private:
@@ -44,7 +44,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t, typename material_t>
-  ggo::color_32f simple_color_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
+  ggo::color_32f simple_color_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     return _material.get_color(ray.pos());
   }

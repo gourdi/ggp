@@ -3,11 +3,11 @@
 #include <2d/io/ggo_bmp.h>
 #include <raytracer/ggo_raytracer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
-#include <raytracer/objects3d/ggo_transparent_object3d.h>
 #include <raytracer/renderers/ggo_global_sampling_renderer.h>
 #include <raytracer/materials/ggo_solid_color_material.h>
 #include <raytracer/materials/ggo_checker_material.h>
 #include <raytracer/backgrounds/ggo_background3d_color.h>
+#include <raytracer/objects3d/solid_objects/ggo_transparent_object3d.h>
 
 GGO_TEST(transmission, test)
 {

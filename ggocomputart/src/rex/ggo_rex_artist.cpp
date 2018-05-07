@@ -100,11 +100,11 @@ namespace
   template <ggo::image_format format>
   void render_edges(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<ggo::segment_float> & edges)
   {
-    std::vector<ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>> shapes;
+    std::vector<ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u>> shapes;
 
     for (const auto & edge : edges)
     {
-      ggo::extended_segment_float segment(edge.p1(), edge.p2(), 0.001f * artist.get_min_size());
+      ggo::capsule_float segment(edge.p1(), edge.p2(), 0.001f * artist.get_min_size());
       shapes.emplace_back(segment, ggo::black_8u());
     }
 

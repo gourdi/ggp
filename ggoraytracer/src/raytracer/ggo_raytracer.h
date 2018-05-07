@@ -22,7 +22,7 @@ namespace ggo
 
                               raytracer(const ggo::scene & scene, const raycaster_abc & raycaster);
 
-    ggo::color_32f            process(const ggo::ray3d_float & ray, int depth, float random_variable1, float random_variable2, const ggo::object3d_abc * exclude_object = nullptr) const;
+    ggo::color_32f            process(const ggo::ray3d_float & ray, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2, const ggo::object3d_abc * exclude_object = nullptr) const;
 
     std::vector<light_sample> sample_lights(const ggo::ray3d_float & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const;
 

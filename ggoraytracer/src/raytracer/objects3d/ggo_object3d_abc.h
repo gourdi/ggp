@@ -53,7 +53,7 @@ namespace ggo
     virtual ggo::color_32f                    get_color(const ggo::pos3f & pos) const = 0;
     virtual std::optional<intersection_data>  intersect_ray(const ggo::ray3d_float & ray) const = 0;
     virtual bool                              intersect_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length) const = 0;
-    virtual ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const = 0;
+    virtual ggo::color_32f                    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const = 0;
     virtual transmission_data                 compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const = 0;
 
     // Light.

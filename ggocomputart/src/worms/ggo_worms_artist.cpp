@@ -57,8 +57,8 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 			float inside_width = 0.003f * get_min_size();
       float border_width = 0.005f * get_min_size();
         
-      auto inside_segment = std::make_shared<ggo::extended_segment_float>(p1, p2, inside_width);
-      auto border_segment = std::make_shared<ggo::extended_segment_float>(p1, p2, border_width);
+      auto inside_segment = std::make_shared<ggo::capsule_float>(p1, p2, inside_width);
+      auto border_segment = std::make_shared<ggo::capsule_float>(p1, p2, border_width);
 			
 			extended_segments_inside.add_shape(inside_segment);
 			extended_segments_border.add_shape(border_segment);

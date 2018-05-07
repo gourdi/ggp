@@ -6,10 +6,19 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   brute_force_raycaster::brute_force_raycaster(std::vector<const ggo::object3d_abc *> objects)
-    :
-    _objects(std::move(objects))
+  :
+  _objects(std::move(objects))
   {
 
+  }
+
+  //////////////////////////////////////////////////////////////
+  brute_force_raycaster::brute_force_raycaster(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & objects)
+  {
+    for (auto & ptr : objects)
+    {
+      _objects.push_back(ptr.get());
+    }
   }
 
   //////////////////////////////////////////////////////////////

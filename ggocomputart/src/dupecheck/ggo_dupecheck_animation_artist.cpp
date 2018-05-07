@@ -311,7 +311,7 @@ void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width,
       ggo::pos2f p1 = pos + ggo::from_polar(angle1, radius1);
       ggo::pos2f p2 = pos + ggo::from_polar(angle2, radius2);
 
-      auto segment = std::make_shared<ggo::extended_segment_float>(p1, p2, _width);
+      auto segment = std::make_shared<ggo::capsule_float>(p1, p2, _width);
 
       multi_shape.add_shape(segment);
     }

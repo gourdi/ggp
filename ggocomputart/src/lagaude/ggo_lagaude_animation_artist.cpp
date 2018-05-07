@@ -219,9 +219,9 @@ void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, i
   ggo::multi_shape_float multi_shape;
   
   float size = 0.003f * std::min(width, height);
-  multi_shape.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, size));
-  multi_shape.add_shape(std::make_shared<ggo::extended_segment_float>(p2, p3, size));
-  multi_shape.add_shape(std::make_shared<ggo::extended_segment_float>(p3, p1, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p2, p3, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p3, p1, size));
 
 	ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer, width, height, 3 * width, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));

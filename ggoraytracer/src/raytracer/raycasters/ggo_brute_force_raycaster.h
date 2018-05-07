@@ -12,6 +12,7 @@ namespace ggo
   public:
 
     brute_force_raycaster(std::vector<const ggo::object3d_abc *> objects);
+    brute_force_raycaster(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & objects);
 
     void  process_ray(const ggo::ray3d_float & ray,
                       std::function<bool(const ggo::object3d_abc *)> func,

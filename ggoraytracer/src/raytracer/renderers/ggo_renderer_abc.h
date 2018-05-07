@@ -15,8 +15,9 @@ namespace ggo
 
     virtual ggo::color_32f render_pixel(int x, int y,
                                         const ggo::scene & scene,
+                                        int depth,
                                         const ggo::raycaster_abc & raycaster,
-                                        int depth) const = 0;
+                                        const ggo::indirect_lighting_abc * indirect_lighting) const = 0;
   };
 }
 
@@ -36,8 +37,9 @@ namespace ggo
     static  void                                  render_thread_func(const ggo::renderer_abc * renderer,
                                                                      void * buffer, int width, int height, int line_step, ggo::image_format format,
                                                                      const ggo::scene * scene,
+                                                                     int depth,
                                                                      const ggo::raycaster_abc * raycaster,
-                                                                     int depth);
+                                                                     const ggo::indirect_lighting_abc * indirect_lighting);
 
     virtual std::shared_ptr<ggo::render_task_abc> create_render_task(const ggo::scene & scene) const = 0;
   };

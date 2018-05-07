@@ -16,7 +16,7 @@ namespace ggo
 
     ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
     ggo::color_32f    get_emissive_color() const override { return ggo::black_32f(); }
-    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const override;
+    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
     ggo::color_32f    compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
@@ -66,7 +66,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t, typename material_t>
-  ggo::color_32f diffuse_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, float random_variable1, float random_variable2) const
+  ggo::color_32f diffuse_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     auto light_samples = raytracer.sample_lights(intersection._world_normal, this, random_variable1, random_variable2);
 
@@ -74,7 +74,7 @@ namespace ggo
 
     if constexpr(!(flags & discard_reflection))
     {
-      output_color += compute_reflection_color(ray, intersection._world_normal, raytracer, depth, random_variable1, random_variable2);
+      output_color += compute_reflection_color(ray, intersection._world_normal, raytracer, depth, indirect_lighting, random_variable1, random_variable2);
     }
 
     if constexpr(!(flags & discard_phong))

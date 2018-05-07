@@ -138,7 +138,7 @@ void ggo::rah_animation_artist::particle1::fill_multi_shapes(ggo::multi_shape_fl
   {
     const auto & p1 = _polygon->get_point(i);
     const auto & p2 = _polygon->get_point((i + 1) % _polygon->get_points_count());
-    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, border_size));
+    backgrounds.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, border_size));
   }
 }
 
@@ -170,8 +170,8 @@ void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_fl
     p1 += _pos;
     p2 += _pos;
   
-    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
-    bodies.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size));
+    backgrounds.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, segment_size + border_size));
+    bodies.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, segment_size));
   }
 }
 
@@ -228,8 +228,8 @@ void ggo::rah_animation_artist::particle3::fill_multi_shapes(ggo::multi_shape_fl
     p1 += _pos;
     p2 += _pos;
   
-    backgrounds.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size + border_size));
-    bodies.add_shape(std::make_shared<ggo::extended_segment_float>(p1, p2, segment_size));
+    backgrounds.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, segment_size + border_size));
+    bodies.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, segment_size));
   }
 }
 

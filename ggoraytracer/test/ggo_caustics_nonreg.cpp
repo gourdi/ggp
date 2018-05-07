@@ -51,7 +51,7 @@ GGO_TEST(caustics, test)
 
     target_samples.push_back({ x, y, z });
   }
-  ggo::brute_force_raycaster raycaster(scene);
+  ggo::brute_force_raycaster raycaster(scene.solid_objects());
   ggo::photon_mapping photon_mapping({ &light }, target_samples, sphere, raycaster);
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &photon_mapping;

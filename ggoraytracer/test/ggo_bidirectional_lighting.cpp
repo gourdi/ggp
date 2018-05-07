@@ -41,7 +41,7 @@ GGO_TEST(bidirectional_lighting, test)
   ggo::save_bmp("bidirectional_lighting_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
   
   // With indirect lighting.
-  ggo::brute_force_raycaster raycaster(scene);
+  ggo::brute_force_raycaster raycaster(scene.solid_objects());
   ggo::bidirectional_lighting indirect_lighting(raycaster, scene);
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &indirect_lighting;

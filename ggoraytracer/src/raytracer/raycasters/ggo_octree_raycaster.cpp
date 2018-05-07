@@ -56,6 +56,23 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
+  octree_raycaster::octree_raycaster(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & objects, int depth)
+  {
+    std::vector<const ggo::object3d_abc *> raw_pointers;
+    for (auto & ptr : objects)
+    {
+      raw_pointers.push_back(ptr.get());
+    }
+
+    auto result = build_octree(raw_pointers, depth);
+
+    _objects_tree.reset(result.second);
+
+    _brute_force_raycaster.reset(new brute_force_raycaster(result.first));
+
+  }
+
+  //////////////////////////////////////////////////////////////
   void octree_raycaster::process_ray(const ggo::ray3d_float & ray,
                                      std::function<bool(const ggo::object3d_abc *)> func,
                                      const ggo::object3d_abc * exclude_object1,

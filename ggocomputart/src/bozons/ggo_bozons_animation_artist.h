@@ -58,7 +58,7 @@ namespace ggo
     for (const auto & bozon : _bozons)
     {
       ggo::paint_shape<format, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
-        ggo::extended_segment_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
+        ggo::capsule_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
         ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
     }
   }

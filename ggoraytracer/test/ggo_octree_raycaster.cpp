@@ -50,7 +50,7 @@ GGO_TEST(octree, test)
 
   // Octree rendering.
   ggo::raytrace_params params;
-  ggo::octree_raycaster raycaster(scene);
+  ggo::octree_raycaster raycaster(scene.solid_objects());
   params._raycaster = &raycaster;
 
   ggo::array_8u buffer2(3 * width * height);

@@ -163,7 +163,7 @@ namespace
       {
         const ggo::pos2f & p1 = polygon.get_point(i);
         const ggo::pos2f & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
-        paint_borders.add_shape(std::make_shared<ggo::extended_segment<float>>(p1, p2, 0.002f * artist.get_min_size()));
+        paint_borders.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, 0.002f * artist.get_min_size()));
       }
 
       paint_polygons.add_shape(std::make_shared<ggo::polygon2d_float>(polygon));

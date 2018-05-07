@@ -62,7 +62,7 @@ namespace ggo
 
       auto object = std::make_shared<object_t>(shape, material);
 
-      _solid_objectss.push_back(object);
+      _solid_objects.push_back(object);
 
       return *object;
     }
@@ -92,7 +92,6 @@ namespace ggo
     const auto &  lights() const { return _lights; }
     const auto &  volumetric_objects() const { return _volumetric_objects; }
     const auto &  background() const { return *_background; }
-    const auto *  indirect_lighting() const { return _indirect_lighting.get(); }
     
   private:
 

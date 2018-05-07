@@ -158,7 +158,7 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
   scene.add_sphere_light(ggo::white<ggo::color_32f>(), { 0.f, -1000.f, 1000.f }, 100.f);
 
   // Raytracer parameters.
-  ggo::octree_raycaster raycaster(scene, 4);
+  ggo::octree_raycaster raycaster(scene.solid_objects(), 4);
   ggo::raytrace_params raytrace_params;
   raytrace_params._raycaster = &raycaster;
 

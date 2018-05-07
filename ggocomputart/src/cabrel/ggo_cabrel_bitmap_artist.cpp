@@ -247,8 +247,8 @@ namespace
 
       auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2)
       {
-        using paint_extended_segment_t = ggo::solid_color_shape<ggo::extended_segment_float, ggo::color_8u>;
-        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::extended_segment_float(p1, p2, border_size), ggo::black_8u());
+        using paint_extended_segment_t = ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u>;
+        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::capsule_float(p1, p2, border_size), ggo::black_8u());
         shapes.push_back(std::move(paint_extented_segment));
       };
 

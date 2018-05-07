@@ -26,8 +26,9 @@ namespace ggo
   void renderer_abc::render_thread_func(const ggo::renderer_abc * renderer,
                                         void * buffer,int width, int height, int line_step, ggo::image_format format,
                                         const ggo::scene * scene,
+                                        int depth,
                                         const ggo::raycaster_abc * raycaster,
-                                        int depth)
+                                        const ggo::indirect_lighting_abc * indirect_lighting)
   {
     auto render_task = renderer->create_render_task(*scene);
       
@@ -53,7 +54,7 @@ namespace ggo
       
       for (int x = 0; x < width; ++x)
       {
-        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, *raycaster, depth);
+        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, depth, *raycaster, indirect_lighting);
 
         switch (format)
         {
@@ -118,7 +119,7 @@ namespace ggo
 
         for (int x = 0; x < width; ++x)
         {
-          const ggo::color_32f color = render_task->render_pixel(x, y, scene, *raycaster, raytrace_params._depth);
+          const ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params._depth, *raycaster, raytrace_params._indirect_lighting);
           
           switch (format)
           {
@@ -141,7 +142,7 @@ namespace ggo
       std::vector<std::thread> threads;
       for (int i = 0; i < threads_count; ++i)
       {
-        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, line_step, format, &scene, raycaster, raytrace_params._depth));
+        threads.push_back(std::thread(render_thread_func, this, buffer, width, height, line_step, format, &scene, raytrace_params._depth, raycaster, raytrace_params._indirect_lighting));
       }
       for (auto & thread : threads)
       {

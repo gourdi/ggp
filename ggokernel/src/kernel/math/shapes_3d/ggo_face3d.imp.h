@@ -54,7 +54,8 @@ namespace ggo
     data_t t3 = c2 * _m10 - c1 * _m20;
 
     data_t inv_det = 1 / det;
-    data_t s2 = (c0 * _m10m21subm11m20 - _m00 * t2 - _m01 * t3) * inv_det;
+    
+    s2 = (c0 * _m10m21subm11m20 - _m00 * t2 - _m01 * t3) * inv_det;
 
     // If s2 is negative, this means that the intersection point is
     // on the wrong side of the ray line.
@@ -64,13 +65,13 @@ namespace ggo
     }
 
     // We also have to make sure the intersection point is inside the face.
-    data_t s0 = (c0 * (_m11 *  m22 - m12 * _m21) - _m01 * t1 + m02 * t2) * inv_det;
+    s0 = (c0 * (_m11 *  m22 - m12 * _m21) - _m01 * t1 + m02 * t2) * inv_det;
     if (s0 < 0)
     {
       return false;
     }
 
-    data_t s1 = (c0 * (m12 * _m20 - _m10 * m22) + _m00 * t1 + m02 * t3) * inv_det;
+    s1 = (c0 * (m12 * _m20 - _m10 * m22) + _m00 * t1 + m02 * t3) * inv_det;
     if (s1 < 0 || s0 + s1 > 1)
     {
       return false;
@@ -95,7 +96,7 @@ namespace ggo
 
     if (ggo::dot(normal.dir(), ray.dir()) > 0)
     {
-      if (double_sided == false)
+      if constexpr(double_sided == false)
       {
         return false;
       }
@@ -114,7 +115,7 @@ namespace ggo
   bool face3d<data_t, double_sided>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
   {
     data_t s0, s1, dist;
-    if (solve_intersection(ray.pos(), ray.dir(), s0, s1, s2) == false)
+    if (solve_intersection(pos, dir, s0, s1, dist) == false)
     {
       return false;
     }

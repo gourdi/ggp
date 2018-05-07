@@ -145,7 +145,7 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
   scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), light_pos2, 1);
 
   // Rendering.
-  ggo::octree_raycaster raycaster(scene);
+  ggo::octree_raycaster raycaster(scene.solid_objects());
 
   ggo::raytrace_params params;
   params._raycaster = &raycaster;
