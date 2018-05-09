@@ -6,7 +6,8 @@
 
 namespace ggo
 {
-  image  load_png(const std::string & filename);
+  image load_png(const std::string & filename);
+  bool  save_png(const std::string & filename, const void * buffer, image_format format, int width, int height, int line_byte_step);
 }
 
 #endif

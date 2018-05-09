@@ -45,7 +45,7 @@ int main(int argc, char ** argv)
     args.emplace_back(argv[arg]);
   }
 
-  if (args.size() <= 2)
+  if (args.size() < 2)
   {
     std::cerr << ggo::red_color << "expecting at least 2 arguments: input and output" << ggo::default_color << std::endl;
     return 1;

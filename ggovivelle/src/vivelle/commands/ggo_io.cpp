@@ -3,6 +3,7 @@
 #include <kernel/ggo_string_helpers.h>
 #include <2d/io/ggo_tga.h>
 #include <2d/io/ggo_bmp.h>
+#include <2d/io/ggo_png.h>
 #include <2d/io/ggo_jpg.h>
 #include <2d/io/ggo_image_io.h>
 #include <vivelle/ggo_command.h>
@@ -37,6 +38,14 @@ namespace ggo
         throw std::runtime_error("invalid output command");
       }
       io_success = ggo::save_tga(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+    }
+    else if (extension == "png")
+    {
+      if (cmd.parameters().empty() == false)
+      {
+        throw std::runtime_error("invalid output command");
+      }
+      io_success = ggo::save_png(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == "jpg" || extension == "jpeg")
     {
