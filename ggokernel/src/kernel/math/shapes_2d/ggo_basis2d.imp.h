@@ -172,7 +172,7 @@ namespace ggo
   template <typename data_t, bool orthonormal, bool cross_product_up>
   ggo::vec2<data_t> orthogonal_basis2d<data_t, orthonormal, cross_product_up>::vector_from_world_to_local(const ggo::vec2<data_t> & v) const
   {
-    if (orthonormal == true)
+    if constexpr(orthonormal == true)
     {
       return { ggo::dot(v, _x), ggo::dot(v, y()) };
     }

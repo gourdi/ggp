@@ -55,7 +55,7 @@ namespace ggo
 
     if (ggo::dot(normal.dir(), ray.dir()) > 0)
     {
-      if (double_sided == false)
+      if constexpr(double_sided == false)
       {
         return false;
       }

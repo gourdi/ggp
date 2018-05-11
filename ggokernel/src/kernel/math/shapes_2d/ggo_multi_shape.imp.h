@@ -107,7 +107,7 @@ namespace ggo
 
     while (it != _shapes.end())
     {
-      auto shape_ptr = *it;
+      shape_ptr = *it;
       rect = get_union(rect, shape_ptr->get_bounding_rect());
 
       it++;
@@ -127,7 +127,7 @@ namespace ggo
 
     while (it != _shapes.end())
     {
-      auto shape_ptr = *it;
+      shape_ptr = *it;
       auto intersection = get_intersection(rect, shape_ptr->get_bounding_rect());
       if (!intersection)
       {

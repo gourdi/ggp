@@ -2,15 +2,15 @@
 template <int normal_x, int normal_y, int normal_z, typename data_t>
 bool ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const
 {
-  if (normal_x == 1 || normal_x == -1)
+  if constexpr(normal_x == 1 || normal_x == -1)
   {
     return intersect_ray_x(ray, dist, normal);
   }
-  if (normal_y == 1 || normal_y == -1)
+  if constexpr(normal_y == 1 || normal_y == -1)
   {
     return intersect_ray_y(ray, dist, normal);
   }
-  if (normal_z == 1 || normal_z == -1)
+  if constexpr(normal_z == 1 || normal_z == -1)
   {
     return intersect_ray_z(ray, dist, normal);
   }
