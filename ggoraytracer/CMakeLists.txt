@@ -1,4 +1,4 @@
- include(../cmake/ggp.cmake)
+include(../cmake/ggp.cmake)
 
 # The static library.
 get_sources_from_root_directory("src" sources)

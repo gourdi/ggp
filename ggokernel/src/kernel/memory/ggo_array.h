@@ -42,7 +42,7 @@ namespace ggo
     }
 
     // Coefs constructors (only 1d and 2d).
-    template <size_t n>
+    template <size_t n, typename = std::enable_if_t<n_dims == 1>>
     array(data_t const (&coefs)[n])
     {
       static_assert(n_dims == 1);
@@ -51,7 +51,7 @@ namespace ggo
       ggo::copy<n>(_buffer, coefs);
     }
 
-    template <size_t h, size_t w>
+    template <size_t h, size_t w, typename = std::enable_if_t<n_dims == 2>>
     array(data_t const (&coefs)[h][w])
     {
       static_assert(n_dims == 2);
