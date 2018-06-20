@@ -1,6 +1,5 @@
 #include "ggo_bmp.h"
 #include <kernel/ggo_kernel.h>
-#include <kernel/ggo_file_helpers.h>
 #include <kernel/memory/ggo_array.h>
 #include <fstream>
 

@@ -28,6 +28,13 @@ namespace ggo
     GGO_ASSERT_LT(clipping.right(), size.width());
     GGO_ASSERT_LT(clipping.top(), size.height());
 
+    // For now, only duplicated edge is supported when input == output. Other border modes could be handled
+    // but it would requires too much work for now to properly read pixels.
+    if (input == output && border_mode != border_mode::duplicate_edge)
+    {
+      throw std::runtime_error("only duplicate edge border mode is supported when in-place");
+    }
+
     for (int y = clipping.bottom(); y <= clipping.top(); ++y)
     {
       const void * input_line  = ptr_offset(input, y * input_line_byte_step);
@@ -114,6 +121,13 @@ namespace ggo
 
     GGO_ASSERT_LT(clipping.right(), size.width());
     GGO_ASSERT_LT(clipping.top(), size.height());
+
+    // For now, only duplicated edge is supported when input == output. Other border modes could be handled
+    // but it would requires too much work for now to properly read pixels.
+    if (input == output && border_mode != border_mode::duplicate_edge)
+    {
+      throw std::runtime_error("only duplicate edge border mode is supported when in-place");
+    }
 
     for (int x = clipping.left(); x <= clipping.right(); ++x)
     {

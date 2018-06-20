@@ -1,4 +1,3 @@
-#include <kernel/ggo_file_helpers.h>
 #include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_jpg.h>
 #include <jpeglib.h>

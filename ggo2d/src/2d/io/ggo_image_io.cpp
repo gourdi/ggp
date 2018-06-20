@@ -3,14 +3,14 @@
 #include "ggo_tga.h"
 #include "ggo_jpg.h"
 #include "ggo_png.h"
-#include <kernel/ggo_file_helpers.h>
+#include <filesystem>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
   ggo::image load_image(const std::string & filename)
   {
-    std::string extension = get_file_extension(filename);
+    std::string extension = std::filesystem::path(filename).extension().u8string();
 
     if (extension == "bmp")
     {

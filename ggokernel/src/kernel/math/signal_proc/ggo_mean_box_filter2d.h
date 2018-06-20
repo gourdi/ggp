@@ -20,11 +20,11 @@ namespace ggo
   {
     static_assert(std::is_integral<radius_t>::value);
 
-    // For now, mirror mode is not supported in-place, since it would require to read
-    // right pixels into the circular buffer. Possible, but not for today...
+    // For now, only duplicated edge is supported when input == output. Other border modes could be handled
+    // but it would requires too much work for now to properly read pixels.
     if (input == output && border_mode != border_mode::duplicate_edge)
     {
-      throw std::runtime_error("when mirror border is used, mean box filtering cannot process in-place");
+      throw std::runtime_error("only duplicate edge border mode is supported when in-place");
     }
 
     using data_t = std::result_of<read_t(const void *)>::type;

@@ -2,11 +2,10 @@
 #include <sstream>
 #include <thread>
 #include <atomic>
-#include <ggo_log.h>
+#include <kernel/ggo_log.h>
 #include <kernel/ggo_kernel.h>
-#include <ggo_signal.h>
-#include <ggo_buffer_paint.h>
-#include <ggo_buffer_fill.h>
+#include <kernel/threading/ggo_signal.h>
+#include <2d/fill/ggo_fill.h>
 #include <ggo_animation_artist_abc.h>
 
 #define GGO_SDL_ERROR(zzz) GGO_LOG_ERROR("\"" << #zzz << "\" failed (error:" << SDL_GetError() << ")"); throw std::runtime_error(SDL_GetError());
@@ -54,10 +53,10 @@ ggo::animation_artist_abc * create_animation_artist()
 
 #ifdef GGO_ANDROID
   return ggo::animation_artist_abc::create(ids[index],
-    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering_android);
+    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_android);
 #else
   return ggo::animation_artist_abc::create(ids[index],
-    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgra_8u_yd, ggo::animation_artist_abc::realtime_rendering_pc);
+    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_pc);
 #endif
 }
 
@@ -203,11 +202,11 @@ void main_loop()
     auto frame_duration_ms = SDL_GetTicks() - frame_start_time_ms;
     Uint32 delay_ms = 0;
 
-    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
       ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
-    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
       ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
-    ggo::fill_solid<ggo::bgra_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
       ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / nominal_frame_duration_ms, 0, 10));
 
     if (frame_duration_ms < nominal_frame_duration_ms)
