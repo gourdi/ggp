@@ -70,8 +70,8 @@ bool ggo::rediff_animation_artist::prepare_frame()
   {
     diffused_food = _food;
     diffused_life = _life;
-    ggo::gaussian_blur2d_loop<ggo::y_32f_yu>(_food.data(), get_width(), get_height(), sizeof(float) * get_width(), _food_stddev);
-    ggo::gaussian_blur2d_loop<ggo::y_32f_yu>(_life.data(), get_width(), get_height(), sizeof(float) * get_width(), _life_stddev);
+    ggo::gaussian_blur2d<ggo::y_32f_yu, ggo::border_mode::loop>(_food.data(), sizeof(float) * get_width(), get_size(), _food_stddev);
+    ggo::gaussian_blur2d<ggo::y_32f_yu, ggo::border_mode::loop>(_life.data(), sizeof(float) * get_width(), get_size(), _life_stddev);
 
     for (int y = 0; y < get_height(); ++y)
     {

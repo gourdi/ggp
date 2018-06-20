@@ -78,8 +78,7 @@ void ggo::ifs_artist::render(void * buffer, int line_step, ggo::image_format for
 	std::cout << "Rendering shadow" << std::endl;
 	
 	ggo::array_32f shadow_buffer(accumul_buffer);
-	ggo::gaussian_blur2d_mirror<ggo::y_32f_yu>(
-    shadow_buffer.data(), get_width(), get_height(), sizeof(float) * get_width(), 0.4f * get_min_size());
+	ggo::gaussian_blur2d<ggo::y_32f_yu>(shadow_buffer.data(), sizeof(float) * get_width(), get_size(), 0.4f * get_min_size());
 	paint_buffer(buffer, line_step, format, 255, shadow_buffer);
 
 	// Render the shape.
@@ -95,7 +94,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, int line_step, ggo::image_form
 
 	for (int y = 0; y < get_height(); ++y)
 	{
-    void * ptr_dst = ggo::get_line_ptr<ggo::rgb_8u_yu>(buffer, y, get_height(), line_step);
+    void * ptr_dst = ggo::get_line_ptr<ggo::memory_lines_order::bottom_up>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {

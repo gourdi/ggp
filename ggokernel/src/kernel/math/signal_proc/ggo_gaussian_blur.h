@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <vector>
 #include <kernel/memory/ggo_array.h>
-#include <kernel/math/signal_proc/ggo_convolution.h>
 
 /////////////////////////////////////////////////////////////////////
 // Definitions.

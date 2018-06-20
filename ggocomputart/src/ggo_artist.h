@@ -3,6 +3,7 @@
 
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_ease.h>
+#include <kernel/ggo_rect_int.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_image_format.h>
 #include <2d/ggo_color.h>
@@ -30,6 +31,7 @@ namespace ggo
     // Accessors.
     int                       get_width() const { return _width; }
     int                       get_height() const { return _height; }
+    ggo::size                 get_size() const { return { _width, _height }; }
     int                       get_max_size() const { return std::max(_width, _height); }
     int                       get_min_size() const { return std::min(_width, _height); }
     int                       get_pixels_count() const { return _width * _height; }

@@ -312,24 +312,14 @@ void ggo::smoke_animation_artist::diffuse()
   float stddev_opacity = 0.0001f * std::sqrt(float(get_width() * get_height()));
   float stddev_velocity = 0.0001f * std::sqrt(float(get_width() * get_height()));
 
-  auto border_opacity = [&](int x, int y, void * buffer) { return _opacity_cur->at_loop(x, y); };
-  auto border_velocity_x = [&](int x, int y, void * buffer) { return _velocity_x_cur->at_loop(x, y); };
-  auto border_velocity_y = [&](int x, int y, void * buffer) { return _velocity_y_cur->at_loop(x, y); };
+  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _opacity_cur->data(), sizeof(double) * _opacity_cur->width(), { _opacity_cur->width(), _opacity_cur->height() }, stddev_opacity);
 
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd>(
-    _opacity_cur->data(), _opacity_cur->width(), _opacity_cur->height(), sizeof(double) * _opacity_cur->width(),
-    stddev_opacity,
-    border_opacity, border_opacity, border_opacity, border_opacity);
+  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _velocity_x_cur->data(), sizeof(double) * _velocity_x_cur->width(), { _velocity_x_cur->width(), _velocity_x_cur->height() }, stddev_velocity);
 
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd>(
-    _velocity_x_cur->data(), _velocity_x_cur->width(), _velocity_x_cur->height(), sizeof(double) * _velocity_x_cur->width(),
-    stddev_velocity,
-    border_velocity_x, border_velocity_x, border_velocity_x, border_velocity_x);
-
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd>(
-    _velocity_y_cur->data(), _velocity_y_cur->width(), _velocity_y_cur->height(), sizeof(double) * _velocity_y_cur->width(),
-    stddev_velocity,
-    border_velocity_y, border_velocity_y, border_velocity_y, border_velocity_y);
+  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _velocity_y_cur->data(), sizeof(double) * _velocity_y_cur->width(), { _velocity_y_cur->width(), _velocity_y_cur->height() }, stddev_velocity);
 }
 
 //////////////////////////////////////////////////////////////

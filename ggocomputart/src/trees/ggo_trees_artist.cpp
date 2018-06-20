@@ -226,7 +226,7 @@ void ggo::trees_artist::render_bitmap(void * buffer) const
 
     if (counter % 2)
     {
-      ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), stddev);
+      ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer, get_line_step(), get_size(), stddev);
       stddev *= 0.95f;
     }
     

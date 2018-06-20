@@ -9,6 +9,7 @@
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
 #include <string>
+#include <optional>
 
 //#define GGO_BENCH 1
 
@@ -26,8 +27,8 @@ namespace
     ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
-
-    ggo::gaussian_blur2d_mirror<format>(buffer, width, height, line_step, 5.f);
+    
+    ggo::gaussian_blur2d<format>(buffer, line_step, { width, height }, 5.f);
 
 #ifdef GGO_BENCH
     ggo::chronometer chronometer;
@@ -92,7 +93,7 @@ GGO_TEST(blur, gaussian_y_8u_yu)
     buffer.data(), width, height, line_step,
     ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
 
-  ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+  ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 5.f);
 
 #ifdef GGO_BENCH
   ggo::chronometer chronometer;
@@ -120,8 +121,8 @@ namespace
     ggo::paint_shape<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
       ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::color_8u>());
-
-    ggo::mean_box_blur2d<format>(buffer, width, height, line_step, 9);
+    
+    ggo::mean_box_blur2d<format>(buffer, line_step, { width, height }, 9);
 
 #ifdef GGO_BENCH
     ggo::chronometer chronometer;
@@ -186,7 +187,7 @@ GGO_TEST(blur, mean_box_y_8u_yu)
     buffer.data(), width, height, line_step,
     ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
 
-  ggo::mean_box_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 9);
+  ggo::mean_box_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 9);
 
 #ifdef GGO_BENCH
   ggo::chronometer chronometer;

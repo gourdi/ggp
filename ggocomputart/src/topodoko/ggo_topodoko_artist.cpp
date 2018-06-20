@@ -47,8 +47,7 @@ namespace
         shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), square, uint8_t(0x40f));
     }
 
-    ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(
-      shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(), 0.005f *  artist.get_min_size());
+    ggo::gaussian_blur2d<ggo::y_8u_yu>(shadow_buffer.data(), artist.get_width(), artist.get_size(), 0.005f *  artist.get_min_size());
 
     ggo::blit<ggo::y_8u_yu, format>(shadow_buffer.data(), artist.get_width(), artist.get_height(), artist.get_width(),
       buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), 0, 0);

@@ -2,6 +2,8 @@
 template <ggo::image_format format>
 void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector<ggo::plastic_artist::params> & params, const ggo::color_32f & color, float altitude_factor) const
 {
+  using format_traits = ggo::image_format_traits<format>;
+
   const float width_f = static_cast<float>(get_width());
   const float height_f = static_cast<float>(get_height());
   const float range_x = width_f > height_f ? width_f / height_f : 1.f;
@@ -12,7 +14,7 @@ void ggo::plastic_artist::render(void * buffer, int line_step, const std::vector
     const float y1 = ggo::map(y - 3 / 8.f, 0.f, height_f, -range_y, range_y);
     const float y2 = ggo::map(y + 3 / 8.f, 0.f, height_f, -range_y, range_y);
 
-    void * ptr = ggo::get_line_ptr<format>(buffer, y, get_height(), line_step);
+    void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, get_height(), line_step);
 
     for (int x = 0; x < get_width(); ++x)
     {

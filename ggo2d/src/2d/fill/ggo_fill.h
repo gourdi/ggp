@@ -81,16 +81,17 @@ namespace ggo
   template <image_format format>
   void fill_solid(void * buffer, int width, int height, int line_byte_step, const typename image_format_traits<format>::color_t & c, const ggo::rect_int & clipping)
   {
-    using memory_layout = image_format_traits<format>::memory_layout_t;
-    constexpr int pixel_byte_size = image_format_traits<format>::pixel_byte_size;
+    using format_traits = image_format_traits<format>;
+
+    constexpr int pixel_byte_size = format_traits::pixel_byte_size;
 
     ggo::rect_int rect = ggo::rect_int::from_width_height(width, height);
     if (rect.clip(clipping) == true)
     {
       for (int y = rect.bottom(); y <= rect.top(); ++y)
       {
-        void * ptr = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
-        void * end = ptr_offset(memory_layout::get_y_ptr(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
+        void * ptr = ptr_offset(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
+        void * end = ptr_offset(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
 
         for (; ptr != end; ptr = ptr_offset<pixel_byte_size>(ptr))
         {

@@ -2,6 +2,7 @@
 #define __GGO_CIRCULAR_BUFFER__
 
 #include <vector>
+#include <sstream>
 #include <kernel/ggo_kernel.h>
 
 namespace ggo
@@ -44,6 +45,37 @@ namespace ggo
 
     const data_t * data() const { return _buffer.data(); }
 
+    std::string to_string() const
+    {
+      std::ostringstream oss;
+#ifdef GGO_DEBUG
+      oss << '(';
+
+      if (_size > 0)
+      {
+        oss << _buffer[_pop_index];
+        int i = _pop_index + 1;
+        while (true)
+        {
+          if (i >= _buffer.size())
+          {
+            i = 0;
+          }
+          if (i == _push_index)
+          {
+            break;
+          }
+
+          oss << ", " << _buffer[i];
+          i++;
+        }
+      }
+
+      oss << ')';
+#endif
+      return oss.str();
+    }
+
   private:
 
     std::vector<data_t> _buffer;
@@ -53,6 +85,16 @@ namespace ggo
     int                 _size = 0;
 #endif
   };
+}
+
+namespace ggo
+{
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::circular_buffer<data_t> & cb)
+  {
+    os << cb.to_string();
+    return os;
+  }
 }
 
 #endif

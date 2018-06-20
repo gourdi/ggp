@@ -305,12 +305,10 @@ namespace ggo
   template<typename T> constexpr T inv_sqrt2() { return static_cast<T>(0.707106781186547524); }
   template<typename T> constexpr T sqrt2() { return static_cast<T>(1.414213562373095049); }
 
-  enum class direction
+  enum class memory_lines_order
   {
-    left,
-    right,
-    up,
-    down
+    top_down,
+    bottom_up
   };
 }
 

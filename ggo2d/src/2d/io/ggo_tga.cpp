@@ -35,7 +35,7 @@ namespace
 
       for (int y = 0; y < height; ++y)
       {
-        const void * ptr = ggo::get_line_ptr<format>(buffer, height - y - 1, height, line_byte_step);
+        const void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, height - y - 1, height, line_byte_step);
 
         for (int x = 0; x < width; ++x)
         {

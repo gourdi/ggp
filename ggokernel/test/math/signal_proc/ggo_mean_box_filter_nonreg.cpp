@@ -1,88 +1,110 @@
+#define DEBUG_MEAN_BOX_FILTER 1
+
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/math/signal_proc/ggo_mean_box_filter.h>
-#include <kernel/memory/ggo_buffer_iterator.h>
-#include <vector>
+#include <kernel/math/signal_proc/ggo_mean_box_filter2d.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, 32f_heaviside)
+GGO_TEST(mean_box_filter, horizontal_duplicate_edge)
 {
-  std::vector<float> data{ 2.f, 2.f, 2.f, 2.f, 2.f, 2.f };
+  float data[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
 
-  auto it = ggo::make_read_write_iterator(data.data());
-
-  auto left   = [&](int x) { GGO_CHECK(x < 0); return 1.f; };
-  auto right  = [&](int x) { GGO_CHECK(x >= data.size()); return 1.f; };
-  auto divide = [&](float sum) { return sum / 5.f; };
-
-  ggo::mean_box_filter(it, left, right, data.size(), divide, 2);
+  ggo::mean_box_filter_2d_horz<ggo::border_mode::duplicate_edge>(data, data, { 5, 1 }, 2);
 
   GGO_CHECK_FLOAT_EQ(data[0], 8.f / 5.f);
-  GGO_CHECK_FLOAT_EQ(data[1], 9.f / 5.f);
-  GGO_CHECK_FLOAT_EQ(data[2], 2.f);
-  GGO_CHECK_FLOAT_EQ(data[3], 2.f);
-  GGO_CHECK_FLOAT_EQ(data[4], 9.f / 5.f);
-  GGO_CHECK_FLOAT_EQ(data[5], 8.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[1], 11.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[2], 3.f);
+  GGO_CHECK_FLOAT_EQ(data[3], 19.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 22.f / 5.f);
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, 32f_ramp)
+GGO_TEST(mean_box_filter, horizontal_mirror)
 {
-  std::vector<float> data{ 3.f, 4.f, 5.f, 6.f, 7.f, 8.f };
+  const float input[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
+  float output[] = { 0.f, 0.f, 0.f, 0.f, 0.f};
 
-  auto it = ggo::make_read_write_iterator(data.data());
+  ggo::mean_box_filter_2d_horz<ggo::border_mode::mirror>(input, output, { 5, 1 }, 2);
 
-  auto left = [&](int x) {
-    switch (x)
-    {
-    case -1: return 2.f;
-    case -2: return 1.f;
-    default: GGO_CHECK(false); return 0.f;
-    }
-  };
-
-  auto right = [&](int x) {
-    switch (x)
-    {
-    case 6: return 9.f;
-    case 7: return 10.f;
-    default: GGO_CHECK(false); return 0.f;
-    }
-  };
-
-  auto divide = [&](float sum) { return sum / 5.f; };
-
-  ggo::mean_box_filter(it, left, right, data.size(), divide, 2);
-
-  GGO_CHECK_FLOAT_EQ(data[0], 3.f);
-  GGO_CHECK_FLOAT_EQ(data[1], 4.f);
-  GGO_CHECK_FLOAT_EQ(data[2], 5.f);
-  GGO_CHECK_FLOAT_EQ(data[3], 6.f);
-  GGO_CHECK_FLOAT_EQ(data[4], 7.f);
-  GGO_CHECK_FLOAT_EQ(data[5], 8.f);
+  GGO_CHECK_FLOAT_EQ(output[0], 9.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(output[1], 11.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(output[2], 3.f);
+  GGO_CHECK_FLOAT_EQ(output[3], 19.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(output[4], 21.f / 5.f);
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, 8u_fixed_point)
+GGO_TEST(mean_box_filter, horizontal_loop)
 {
-  std::vector<uint8_t> data{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+  const float input[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
+  float output[] = { 0.f, 0.f, 0.f, 0.f, 0.f };
 
-  auto it = ggo::make_cast_read_write_iterator<uint16_t, ggo::cast_mode::regular, ggo::cast_mode::regular>(data.data());
+  ggo::mean_box_filter_2d_horz<ggo::border_mode::loop>(input, output, { 5, 1 }, 2);
 
-  auto left = [&](int x) -> uint16_t { GGO_CHECK(x < 0); return 0; };
-  auto right = [&](int x) -> uint16_t { GGO_CHECK(x >= data.size()); return 0xff; };
+  GGO_CHECK_FLOAT_EQ(output[0], 3.f);
+  GGO_CHECK_FLOAT_EQ(output[1], 3.f);
+  GGO_CHECK_FLOAT_EQ(output[2], 3.f);
+  GGO_CHECK_FLOAT_EQ(output[3], 3.f);
+  GGO_CHECK_FLOAT_EQ(output[4], 3.f);
+}
 
-  auto divide = [&](uint16_t sum) { return ggo::round_div<uint16_t>(sum, 7); };
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(mean_box_filter, horizontal_duplicate_edge_clipping)
+{
+  float data[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
 
-  ggo::mean_box_filter(it, left, right, data.size(), divide, 3);
+  ggo::mean_box_filter_2d_horz<ggo::border_mode::duplicate_edge>(data, data, { 5, 1 }, ggo::rect_int::from_left_right_bottom_top(2, 3, 0, 0), 2);
 
-  GGO_CHECK_FLOAT_EQ(data[0], 0x92);
-  GGO_CHECK_FLOAT_EQ(data[1], 0xb6);
-  GGO_CHECK_FLOAT_EQ(data[2], 0xdb);
-  GGO_CHECK_FLOAT_EQ(data[3], 0xff);
-  GGO_CHECK_FLOAT_EQ(data[4], 0xff);
-  GGO_CHECK_FLOAT_EQ(data[5], 0xff);
-  GGO_CHECK_FLOAT_EQ(data[6], 0xff);
-  GGO_CHECK_FLOAT_EQ(data[7], 0xff);
+  GGO_CHECK_FLOAT_EQ(data[0], 1.f);
+  GGO_CHECK_FLOAT_EQ(data[1], 2.f);
+  GGO_CHECK_FLOAT_EQ(data[2], 3.f);
+  GGO_CHECK_FLOAT_EQ(data[3], 19.f / 5.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 5.f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(mean_box_filter, vertical_duplicate_edge)
+{
+  float data[] = {
+    0.f, 1.f, 0.f, 0.f,
+    0.f, 0.f, 1.f, 0.f,
+    0.f, 0.f, 0.f, 1.f };
+
+  ggo::mean_box_filter_2d_vert<ggo::border_mode::duplicate_edge>(data, data, { 4, 3 }, 1);
+
+  GGO_CHECK_FLOAT_EQ(data[0], 0.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 0.f);
+  GGO_CHECK_FLOAT_EQ(data[8], 0.f);
+
+  GGO_CHECK_FLOAT_EQ(data[1], 2.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[5], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[9], 0.f);
+
+  GGO_CHECK_FLOAT_EQ(data[2], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[6], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[10], 1.f / 3.f);
+
+  GGO_CHECK_FLOAT_EQ(data[3], 0.f);
+  GGO_CHECK_FLOAT_EQ(data[7], 1.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[11], 2.f / 3.f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(mean_box_filter, vertical_duplicate_edge_clipping)
+{
+  float data[] = {
+    1.f, 0.f,
+    2.f, 0.f,
+    4.f, 0.f };
+
+  ggo::mean_box_filter_2d_vert<ggo::border_mode::duplicate_edge>(data, data, { 2, 3 }, ggo::rect_int::from_left_right_bottom_top(0, 0, 1, 2), 1);
+
+  GGO_CHECK_FLOAT_EQ(data[0], 1.f);
+  GGO_CHECK_FLOAT_EQ(data[2], 7.f / 3.f);
+  GGO_CHECK_FLOAT_EQ(data[4], 10.f / 3.f);
+
+  GGO_CHECK_FLOAT_EQ(data[1], 0.f);
+  GGO_CHECK_FLOAT_EQ(data[3], 0.f);
+  GGO_CHECK_FLOAT_EQ(data[5], 0.f);
 }
 
 

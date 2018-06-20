@@ -1,7 +1,7 @@
 #ifndef __GGO_MORPHOLOGY__
 #define __GGO_MORPHOLOGY__
 
-#include <kernel/memory/ggo_ptr_offset.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
 
 namespace ggo
 {

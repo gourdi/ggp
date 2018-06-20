@@ -8,7 +8,9 @@ namespace ggo
     template <image_format format>
     static ggo::image call(const ggo::image & input, const ggo::rect_int & crop)
     {
-      int line_byte_size = image_format_traits<format>::pixel_byte_size * crop.width();
+      using format_traits = image_format_traits<format>;
+
+      int line_byte_size = format_traits::pixel_byte_size * crop.width();
 
       image output(crop.size(), format);
 
@@ -16,7 +18,7 @@ namespace ggo
       {
         int src_y = crop.bottom() + dst_y;
         const void * src_ptr = get_pixel_ptr<format>(input.data(), crop.left(), src_y, input.height(), input.line_byte_step());
-        void * dst_ptr = get_line_ptr<format>(output.data(), dst_y, output.height(), output.line_byte_step());
+        void * dst_ptr = get_line_ptr<format_traits::lines_order>(output.data(), dst_y, output.height(), output.line_byte_step());
 
         memcpy(dst_ptr, src_ptr, line_byte_size);
       }

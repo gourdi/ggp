@@ -1,7 +1,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
 #include <2d/ggo_image.h>
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(image, y_8u_yu)
 {
@@ -196,3 +196,4 @@ GGO_TEST(image, move)
 
   pb1 = std::move(pb2);
 }
+#endif

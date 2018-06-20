@@ -44,12 +44,6 @@ namespace ggo
   {
     using format_traits_in = image_format_traits<format_in>;
     using format_traits_out = image_format_traits<format_out>;
-    using memory_layout_in = format_traits_in::memory_layout_t;
-    using memory_layout_out = format_traits_out::memory_layout_t;
-
-    // Blit is implemented for lines memory layout only.
-    static_assert(memory_layout_in::lines_direction == ggo::direction::up || memory_layout_in::lines_direction == ggo::direction::down);
-    static_assert(memory_layout_out::lines_direction == ggo::direction::up || memory_layout_out::lines_direction == ggo::direction::down);
 
     // Nothing to do.
     if (left >= output_width || left + input_width <= 0)
@@ -65,7 +59,7 @@ namespace ggo
     // Clip.
     if (bottom < 0)
     {
-      if (memory_layout_in::lines_direction == ggo::direction::up)
+      if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
       {
         input = ggo::ptr_offset(input, -bottom * input_line_step);
       }
@@ -76,7 +70,7 @@ namespace ggo
     const int top = bottom + input_height - 1; // Inclusive, output coordinates.
     if (top >= output_height)
     {
-      if (memory_layout_in::lines_direction == ggo::direction::down)
+      if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
       {
         input = ggo::ptr_offset(input, (top - output_height + 1) * input_line_step);
       }
@@ -99,7 +93,7 @@ namespace ggo
     // Copy pixels.
     for (int y = 0; y < input_height; ++y)
     {
-      const void * input_ptr = ggo::get_line_ptr<format_in>(input, y, input_height, input_line_step);
+      const void * input_ptr = ggo::get_line_ptr<format_traits_in::lines_order>(input, y, input_height, input_line_step);
       const void * input_end = ggo::get_pixel_ptr<format_in>(input, input_width, y, input_height, input_line_step);
       void * output_ptr = ggo::get_pixel_ptr<format_out>(output, left, bottom + y, output_height, output_line_step);
 

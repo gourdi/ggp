@@ -339,7 +339,7 @@ void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int
     {
       kame->paint(buffer_gray.data(), *this);
 
-      ggo::gaussian_blur2d_mirror<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(), stddev);
+      ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_size(), stddev);
     }
 
     ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),

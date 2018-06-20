@@ -10,6 +10,8 @@ namespace
   template <ggo::image_format format>
   void render_t(void * buffer, const ggo::distorsion_animation_artist & artist, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms)
   {
+    using format_traits = ::ggo::image_format_traits<format>;
+
     for (int y = 0; y < artist.get_height(); ++y)
     {
       const float y1 = y - 0.375f;
@@ -17,7 +19,7 @@ namespace
       const float y3 = y + 0.125f;
       const float y4 = y + 0.375f;
 
-      void * ptr = ggo::get_line_ptr<format>(buffer, y, artist.get_height(), artist.get_line_step());
+      void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, artist.get_height(), artist.get_line_step());
 
       for (int x = 0; x < artist.get_width(); ++x)
       {

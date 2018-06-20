@@ -25,7 +25,7 @@ void ggo::aggregation_artist::render(void * buffer, int line_step) const
   }
 
   float stddev = 0.001f * get_min_size();
-  ggo::gaussian_blur2d_mirror<format>(buffer, get_width(), get_height(), line_step, stddev);
+  ggo::gaussian_blur2d<format>(buffer, line_step, get_size(), stddev);
 
   {
     std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;

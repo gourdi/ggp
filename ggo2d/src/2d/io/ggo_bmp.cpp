@@ -49,7 +49,7 @@ namespace
 
       for (int y = 0; y < height; ++y)
       {
-        const void * in_ptr = ggo::get_line_ptr<format>(buffer, y, height, line_byte_step);
+        const void * in_ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step);
         uint8_t * out_ptr = padded_line.data();
 
         for (int x = 0; x < width; ++x)

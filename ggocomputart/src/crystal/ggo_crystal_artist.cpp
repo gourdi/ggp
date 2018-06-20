@@ -17,7 +17,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
 	for (int y = 0; y < height; ++y)
 	{
     const float * ptr_in = float_buffer.data() + 3 * y * width;
-    void * ptr_out = ggo::get_line_ptr<ggo::y_8u_yu>(buffer, y, height, line_step);
+    void * ptr_out = ggo::get_line_ptr<ggo::memory_lines_order::bottom_up>(buffer, y, height, line_step);
 
     for (int x = 0; x < width; ++x)
     {

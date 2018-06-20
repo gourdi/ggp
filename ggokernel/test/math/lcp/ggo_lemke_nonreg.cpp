@@ -1,247 +1,40 @@
 #include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/math/lcp/lemke.h>
 
-#include <kernel/memory/ggo_array.h>
-#include <iostream>
-#include <algorithm>
-
-struct lemke_data
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(lemke, case1)
 {
-  int _key_index;
-  ggo::array<float, 1> _coefs; // Assumong the following order: q, w1, w2, ..., wN, z0, z1, z2, ..., zN
-
-  float q() const { return _coefs[0]; }
-};
-
-bool is_terminal(const std::vector<lemke_data> & dictionary)
-{
-  for (const auto & equation : dictionary)
+  // Positive constant.
   {
-    // z0 is the key?
-    if (equation._key_index == dictionary.size() + 1)
-    {
-      return false;
-    }
+    const ggo::array<float, 2> M({ { 2 } });
 
-    // constant is negative?
-    if (equation.q() < 0)
-    {
-      return false;
-    }
+    const ggo::array<float, 2> q({ { 3.f } }); 
+
+    ggo::array<float, 2> w;
+    ggo::array<float, 2> z;
+    ggo::lemke::solve(M, q, w, z);
+
+    GGO_ASSERT_FLOAT_EQ(w(0, 0), 3.f);
+    GGO_ASSERT_FLOAT_EQ(z(0, 0), 0.f);
   }
 
-  return true;
-}
-
-void dump(const lemke_data & equation)
-{
-  const int z_offset = equation._coefs.size() / 2;
-
-  if (equation._key_index < z_offset)
+  // Positive constant.
   {
-    std::cout << 'w' << equation._key_index;
-  }
-  else
-  {
-    std::cout << 'z' << equation._key_index - z_offset;
-  }
-  std::cout << " = " << equation.q();
+    const ggo::array<float, 2> M({ { 2 } });
 
-  for (int i = 1; i < z_offset; ++i)
-  {
-    if (equation._coefs[i] > 0)
-    {
-      std::cout << " + " << equation._coefs[i] << ".w" << i;
-    }
-    else if (equation._coefs[i] < 0)
-    {
-      std::cout << " - " << -equation._coefs[i] << ".w" << i;
-    }
-  }
+    const ggo::array<float, 2> q({ { -3.f } });
 
-  for (int i = z_offset; i < equation._coefs.size(); ++i)
-  {
-    if (equation._coefs[i] > 0)
-    {
-      std::cout << " + " << equation._coefs[i] << ".z" << i - z_offset;
-    }
-    else if (equation._coefs[i] < 0)
-    {
-      std::cout << " - " << -equation._coefs[i] << ".z" << i - z_offset;
-    }
+    ggo::array<float, 2> w;
+    ggo::array<float, 2> z;
+    ggo::lemke::solve(M, q, w, z);
+
+    GGO_ASSERT_FLOAT_EQ(w(0, 0), 0.f);
+    GGO_ASSERT_FLOAT_EQ(z(0, 0), 3.f / 2.f);
   }
 }
 
-void dump(const std::vector<lemke_data> & dictionary)
-{
-  for (const auto & eq : dictionary)
-  {
-    dump(eq);
-    std::cout << std::endl;
-  }
-}
-
-std::vector<lemke_data> build_dictionary(const ggo::array<float, 2> & M, const ggo::array<float, 2> & q)
-{
-  std::vector<lemke_data> dictionary;
-
-  for (int y = 0; y < M.height(); ++y)
-  {
-    dictionary.emplace_back();
-
-    dictionary.back()._key_index = y + 1; // Keys are 'w' variables.
-
-    dictionary.back()._coefs.resize(2 * M.width() + 2);
-
-    dictionary.back()._coefs[0] = q(0, y); // Constants 'q'
-    dictionary.back()._coefs[M.width() + 1] = 1; // Auxiliary variables 'z0'
-
-    for (int x = 0; x < M.width(); ++x)
-    {
-      dictionary.back()._coefs(x + 1) = 0.f; // 'w' variables are null when statring the algo.
-      dictionary.back()._coefs(M.width() + x + 2) = M(x, y);
-    }
-  }
-
-  return dictionary;
-}
-
-int insert_z(std::vector<lemke_data> & dictionary, int in_index)
-{
-  const int z_offset = static_cast<int>(dictionary.size() + 1);
-  GGO_ASSERT_EQ(z_offset, dictionary[0]._coefs.size() / 2);
-
-  // Seek for the equation to substitute. It is the one with the lowest ratio: -q / z[index].
-  float ratio_min = std::numeric_limits<float>::max();
-  auto selected_equation = dictionary.end();
-  if (in_index == z_offset) // z0
-  {
-    selected_equation = std::min_element(dictionary.begin(), dictionary.end(), [](const auto & eq1, const auto & eq2) { return eq1.q() < eq2.q(); });
-    if (selected_equation->q() >= 0)
-    {
-      throw std::runtime_error("could not move z0 to dictionary");
-    }
-  }
-  else
-  {
-    for (auto equation = dictionary.begin(); equation != dictionary.end(); ++equation)
-    {
-      if (equation->_coefs[in_index] != 0)
-      {
-        float ratio_cur = -equation->q() / equation->_coefs[in_index];
-        if (ratio_cur < ratio_min)
-        {
-          ratio_min = ratio_cur;
-          selected_equation = equation;
-        }
-      }
-    }
-  }
-
-  if (selected_equation == dictionary.end())
-  {
-    throw std::runtime_error("failed finding equation to substitute");
-  }
-
-  std::cout << "selected the following equation to make z" << in_index - z_offset << " enter the dictionary:" << std::endl;
-  dump(*selected_equation);
-  std::cout << std::endl << std::endl;
-
-  // Get the index of the key (which should be a w variable), for its compementary z variable to enter the dictionary later.
-  int out_index = selected_equation->_key_index;
-
-  // Update the selected equation.
-  selected_equation->_key_index = in_index;
-
-  float scale = -1.f / selected_equation->_coefs[in_index];
-
-  selected_equation->_coefs[out_index] = -1;
-  selected_equation->_coefs[in_index] = 0;
-  for (auto & c : selected_equation->_coefs)
-  {
-    c *= scale;
-  }
-
-  std::cout << "made z" << in_index - z_offset << " enter the dictionary by modifying the selected equation (w" << out_index << " leaves the dictionary):" << std::endl;
-  dump(dictionary);
-  std::cout << std::endl;
-
-  // Update the other equations.
-  for (auto & equation = dictionary.begin(); equation != dictionary.end(); ++equation)
-  {
-    if (equation != selected_equation)
-    {
-      float scale = equation->_coefs[in_index];
-      for (int i = 0; i < equation->_coefs.size(); ++i)
-      {
-        equation->_coefs[i] += scale * selected_equation->_coefs[i];
-      }
-      equation->_coefs[in_index] = 0;
-    }
-  }
-  std::cout << "substituing z" << in_index - z_offset << " in the other equations:" << std::endl;
-  dump(dictionary);
-  std::cout << std::endl;
-
-  return out_index;
-}
-
-// Solve an LCP. Given a matrix M, and a vector q, construct vectors w and z such that:
-// - w = q + Mz
-// - wz = 0
-// - w >= 0
-// - z >= 0
-void lemke(const ggo::array<float, 2> & M, const ggo::array<float, 2> & q, ggo::array<float, 2> & w, ggo::array<float, 2> & z)
-{
-  // Setup the dictionary.
-  auto dictionary = build_dictionary(M, q);
-  std::cout << "initial dictionary:" << std::endl;
-  dump(dictionary);
-  std::cout << std::endl;
-
-  const int z_offset = static_cast<int>(dictionary.size()) + 1;
-  int z_index = z_offset; // We first want ot move z0 to the dictionary.
-  while (is_terminal(dictionary) == false)
-  {
-    // We made a w variable leave the dictionary, we have to make its complementary z variable enter the dictionary.
-    int w_index = insert_z(dictionary, z_index);
-    z_index = w_index + z_offset; // Convert from the w index that went out of the dictionary, to a z index that must enter the dictionary.
-  }
-
-  // Store solution.
-  w.resize(1, static_cast<int>(dictionary.size()));
-  z.resize(1, static_cast<int>(dictionary.size()));
-
-  w.fill(0.f);
-  z.fill(0.f);
-  for (int i = 0; i < dictionary.size(); ++i)
-  {
-    if (dictionary[i]._key_index < z_offset)
-    {
-      w(0, dictionary[i]._key_index - 1) = dictionary[i].q();
-    }
-    else
-    {
-      z(0, dictionary[i]._key_index - z_offset - 1) = dictionary[i].q();
-    }
-  }
-
-  auto dump = [](const ggo::array<float, 2> & v)
-  {
-    std::cout << v(0, 0);
-    for (int i = 1; i < v.height(); ++i)
-    {
-      std::cout << ", " << v(0, i);
-    }
-  };
-
-  std::cout << "solutions are: " << std::endl << "  w = (";
-  dump(w);
-  std::cout << ")" << std::endl << "  w = (";
-  dump(z);
-  std::cout << ")" << std::endl;
-}
-
-GGO_TEST(lcp, lemke_solver)
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(lemke, case2)
 {
   const ggo::array<float, 2> M({
     { 0.f, 0.f, 1.f },
@@ -255,5 +48,13 @@ GGO_TEST(lcp, lemke_solver)
 
   ggo::array<float, 2> w;
   ggo::array<float, 2> z;
-  lemke(M, q, w, z);
+  ggo::lemke::solve(M, q, w, z);
+
+  GGO_ASSERT_FLOAT_EQ(w(0, 0), 0.f);
+  GGO_ASSERT_FLOAT_EQ(w(0, 1), 1.f);
+  GGO_ASSERT_FLOAT_EQ(w(0, 2), 0.f);
+
+  GGO_ASSERT_FLOAT_EQ(z(0, 0), 3.f);
+  GGO_ASSERT_FLOAT_EQ(z(0, 1), 0.f);
+  GGO_ASSERT_FLOAT_EQ(z(0, 2), 2.f);
 }

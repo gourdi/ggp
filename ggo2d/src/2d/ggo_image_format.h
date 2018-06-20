@@ -2,7 +2,7 @@
 #define __GGO_IMAGE_FORMAT__
 
 #include <stdint.h>
-#include <kernel/memory/ggo_memory_layouts.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <2d/ggo_color.h>
 
 // Image formats.
@@ -32,13 +32,11 @@ namespace ggo
   template <>
   struct image_format_traits<y_8u_yu>
   {
-    static const int pixel_byte_size = 1;
+    static constexpr int pixel_byte_size = 1;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
     using color_t = uint8_t;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 1>;
 
-    // Accessor interface.
-    using type = uint8_t;
     static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
     static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
   };
@@ -46,13 +44,11 @@ namespace ggo
   template <>
   struct image_format_traits<y_8u_yd>
   {
-    static const int pixel_byte_size = 1;
+    static constexpr int pixel_byte_size = 1;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = uint8_t;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 1>;
 
-    // Accessor interface.
-    using type = uint8_t;
     static uint8_t read(const void * ptr) { return *static_cast<const uint8_t *>(ptr); }
     static void write(void * ptr, uint8_t c) { *static_cast<uint8_t *>(ptr) = c; }
   };
@@ -60,13 +56,11 @@ namespace ggo
   template <>
   struct image_format_traits<y_16u_yd>
   {
-    static const int pixel_byte_size = 2;
+    static constexpr int pixel_byte_size = 2;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = uint16_t;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 2>;
 
-    // Accessor interface.
-    using type = uint16_t;
     static uint16_t read(const void * ptr) { return *static_cast<const uint16_t *>(ptr); }
     static void write(void * ptr, uint16_t c) { *static_cast<uint16_t *>(ptr) = c; }
   };
@@ -76,13 +70,11 @@ namespace ggo
   {
     static_assert(sizeof(float) == 4);
 
-    static const int pixel_byte_size = 4;
+    static constexpr int pixel_byte_size = 4;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
     using color_t = float;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 4>;
 
-    // Accessor interface.
-    using type = float;
     static float read(const void * ptr) { return *static_cast<const float *>(ptr); }
     static void write(void * ptr, float c) { *static_cast<float *>(ptr) = c; }
   };
@@ -92,10 +84,10 @@ namespace ggo
   {
     static_assert(sizeof(double) == 8);
 
-    static const int pixel_byte_size = 8;
+    static constexpr int pixel_byte_size = 8;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = double;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 8>;
 
     // Accessor interface.
     using type = double;
@@ -106,14 +98,11 @@ namespace ggo
   template <>
   struct image_format_traits<rgb_8u_yu>
   {
-    static const int pixel_byte_size = 3;
-    static const image_format gray_format = y_8u_yu;
+    static constexpr int pixel_byte_size = 3;
+    static constexpr image_format gray_format = y_8u_yu;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
 
     static ggo::color_8u read(const void * ptr)
     {
@@ -133,14 +122,11 @@ namespace ggo
   template <>
   struct image_format_traits<rgb_8u_yd>
   {
-    static const int pixel_byte_size = 3;
-    static const image_format gray_format = y_8u_yd;
+    static constexpr int pixel_byte_size = 3;
+    static constexpr image_format gray_format = y_8u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
 
     static ggo::color_8u read(const void * ptr)
     {
@@ -160,14 +146,11 @@ namespace ggo
   template <>
   struct image_format_traits<rgba_8u_yd>
   {
-    static const int pixel_byte_size = 4;
-    static const image_format gray_format = y_8u_yd;
+    static constexpr int pixel_byte_size = 4;
+    static constexpr image_format gray_format = y_8u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::alpha_color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
-
-    // Accessor interface.
-    using type = ggo::alpha_color_8u;
 
     static ggo::alpha_color_8u read(const void * ptr)
     {
@@ -190,13 +173,10 @@ namespace ggo
   {
     static_assert(sizeof(float) == 4, "sizeof(float) must be 4");
 
-    static const int pixel_byte_size = 12;
+    static constexpr int pixel_byte_size = 12;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
     using color_t = ggo::color_32f;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 12>;
-
-    // Accessor interface.
-    using type = ggo::color_32f;
 
     static ggo::color_32f read(const void * ptr)
     {
@@ -216,14 +196,11 @@ namespace ggo
   template <>
   struct image_format_traits<bgr_8u_yd>
   {
-    static const int pixel_byte_size = 3;
-    static const image_format gray_format = y_8u_yd;
+    static constexpr int pixel_byte_size = 3;
+    static constexpr image_format gray_format = y_8u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 3>;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
 
     static ggo::color_8u read(const void * ptr)
     {
@@ -243,14 +220,11 @@ namespace ggo
   template <>
   struct image_format_traits<bgr_8u_yu>
   {
-    static const int pixel_byte_size = 3;
-    static const image_format gray_format = y_8u_yu;
+    static constexpr int pixel_byte_size = 3;
+    static constexpr image_format gray_format = y_8u_yu;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 3>;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
 
     static ggo::color_8u read(const void * ptr)
     {
@@ -272,12 +246,9 @@ namespace ggo
   {
     static const int pixel_byte_size = 4;
     static const image_format gray_format = y_8u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
-
-    // Accessor interface.
-    using type = ggo::color_8u;
 
     static ggo::color_8u read(const void * ptr)
     {
@@ -297,14 +268,11 @@ namespace ggo
   template <>
   struct image_format_traits<bgra_8u_yd>
   {
-    static const int pixel_byte_size = 4;
-    static const image_format gray_format = y_8u_yd;
+    static constexpr int pixel_byte_size = 4;
+    static constexpr image_format gray_format = y_8u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::alpha_color_8u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::down, 4>;
-
-    // Accessor interface.
-    using type = ggo::alpha_color_8u;
 
     static ggo::alpha_color_8u read(const void * ptr)
     {
@@ -327,12 +295,9 @@ namespace ggo
   {
     static const int pixel_byte_size = 6;
     static const image_format gray_format = y_16u_yd;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
     using color_t = ggo::color_16u;
-    using memory_layout_t = lines_memory_layout<ggo::direction::up, 6>;
-
-    // Accessor interface.
-    using type = ggo::color_16u;
 
     static ggo::color_16u read(const void * ptr)
     {
@@ -429,38 +394,21 @@ namespace ggo
 
 namespace ggo
 {
-  // Pointer to line.
-  template <image_format format>
-  void * get_line_ptr(void * ptr, const int y, const int height, const int line_step)
-  {
-    using memory_layout = image_format_traits<format>::memory_layout_t;
-
-    return memory_layout::get_y_ptr(ptr, y, height, line_step);
-  }
-
-  template <image_format format>
-  const void * get_line_ptr(const void * ptr, const int y, const int height, const int line_step)
-  {
-    using memory_layout = image_format_traits<format>::memory_layout_t;
-
-    return memory_layout::get_y_ptr(ptr, y, height, line_step);
-  }
-
   // Pointer to pixel.
   template <image_format format>
   void * get_pixel_ptr(void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    using memory_layout = image_format_traits<format>::memory_layout_t;
+    using format_traits = ggo::image_format_traits<format>;
 
-    return memory_layout::get_xy_ptr(ptr, x, y, height, line_step);
+    return ptr_offset(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
   }
 
   template <image_format format>
   const void * get_pixel_ptr(const void * ptr, const int x, const int y, const int height, const int line_step)
   {
-    using memory_layout = image_format_traits<format>::memory_layout_t;
+    using format_traits = ggo::image_format_traits<format>;
 
-    return memory_layout::get_xy_ptr(ptr, x, y, height, line_step);
+    return ptr_offset(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
   }
 
   // Set pixel to pointer.

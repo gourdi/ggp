@@ -98,7 +98,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     {
       float stddev = 0.0005f * get_min_size();
       
-      gaussian_blur2d_mirror<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), stddev);
+      gaussian_blur2d<rgb_8u_yu>(buffer, get_line_step(), get_size(), stddev);
     }
 	}
 }

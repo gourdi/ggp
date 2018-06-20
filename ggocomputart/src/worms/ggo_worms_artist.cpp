@@ -76,6 +76,6 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 
     // Blur the render buffer.
 		float stddev = 0.02f * get_min_size();
-    ggo::gaussian_blur2d_mirror<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), stddev);
+    ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer, get_line_step(), get_size(), stddev);
 	}
 }
