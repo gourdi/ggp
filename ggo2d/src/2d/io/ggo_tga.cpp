@@ -1,4 +1,3 @@
-#include <kernel/ggo_file_helpers.h>
 #include <2d/io/ggo_tga.h>
 #include <fstream>
 

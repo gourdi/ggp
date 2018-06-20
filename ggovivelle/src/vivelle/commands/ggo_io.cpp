@@ -1,5 +1,4 @@
 #include "ggo_io.h"
-#include <kernel/ggo_file_helpers.h>
 #include <kernel/ggo_string_helpers.h>
 #include <2d/io/ggo_tga.h>
 #include <2d/io/ggo_bmp.h>
@@ -7,6 +6,7 @@
 #include <2d/io/ggo_jpg.h>
 #include <2d/io/ggo_image_io.h>
 #include <vivelle/ggo_command.h>
+#include <filesystem>
 
 namespace ggo
 {
@@ -22,7 +22,7 @@ namespace ggo
     command cmd(output_command, true);
 
     bool io_success = true;
-    std::string extension = ggo::get_file_extension(cmd.name());
+    std::string extension = std::filesystem::path(cmd.name()).extension().u8string();
     if (extension == "bmp")
     {
       if (cmd.parameters().empty() == false)
