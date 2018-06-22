@@ -25,7 +25,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void blit(ggo::image & image, const parameters & params)
   {
-    auto file = params["file"];
+    auto file = params.get({ "file" });
     if (!file)
     {
       throw std::runtime_error("missing 'file' parameter");

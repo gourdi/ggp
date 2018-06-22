@@ -51,7 +51,7 @@ namespace ggo
   ggo::rect_int parse_rect(const parameters & params, const ggo::size & image_size)
   {
     // Parse size first.
-    auto size_param = params["size"];
+    auto size_param = params.get({ "size" });
     if (!size_param || size_param->empty() == true)
     {
       throw std::runtime_error("missing or empty 'size' parameter");
@@ -72,7 +72,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   ggo::pos2i parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size)
   {
-    auto margins_param = params[key];
+    auto margins_param = params.get({ key });
     if (!margins_param || margins_param->empty() == true)
     {
       throw std::runtime_error("missing or empty '" + key + "' parameter");
@@ -122,7 +122,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   ggo::size parse_scaling(const parameters & params, const std::string & key, const ggo::size & image_size)
   {
-    auto scalings_param = params[key];
+    auto scalings_param = params.get({ key });
     if (!scalings_param || scalings_param->empty() == true)
     {
       throw std::runtime_error("missing or empty '" + key + "' parameter");

@@ -23,7 +23,7 @@ namespace ggo
 
     bool io_success = true;
     std::string extension = std::filesystem::path(cmd.name()).extension().u8string();
-    if (extension == "bmp")
+    if (extension == ".bmp")
     {
       if (cmd.parameters().empty() == false)
       {
@@ -31,7 +31,7 @@ namespace ggo
       }
       io_success = ggo::save_bmp(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
-    else if (extension == "tga")
+    else if (extension == ".tga")
     {
       if (cmd.parameters().empty() == false)
       {
@@ -39,7 +39,7 @@ namespace ggo
       }
       io_success = ggo::save_tga(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
-    else if (extension == "png")
+    else if (extension == ".png")
     {
       if (cmd.parameters().empty() == false)
       {
@@ -47,7 +47,7 @@ namespace ggo
       }
       io_success = ggo::save_png(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
     }
-    else if (extension == "jpg" || extension == "jpeg")
+    else if (extension == ".jpg" || extension == ".jpeg")
     {
       int quality = 95;
       switch (cmd.parameters().size())
@@ -55,23 +55,20 @@ namespace ggo
       case 0:
         break;
       case 1:
-        if (auto quality_param = cmd["q"])
-        {
-          quality = ggo::to<int>(*quality_param);
-        }
-        if (auto quality_param = cmd["quality"])
-        {
-          quality = ggo::to<int>(*quality_param);
-        }
-        else
+      {
+        auto quality_param = cmd.parameters().get<int>({ "q", "quality" });
+        if (!quality_param)
         {
           throw std::runtime_error("invalid quality parameter");
         }
+
+        quality = *quality_param;
 
         if (quality <= 0 || quality > 100)
         {
           throw std::runtime_error("out of range quality value");
         }
+      }
         break;
       default:
         throw std::runtime_error("invalid output command");

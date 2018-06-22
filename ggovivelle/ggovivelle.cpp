@@ -1,5 +1,7 @@
+#include <kernel/ggo_string_helpers.h>
 #include <kernel/ggo_color_stream.h>
 #include <vivelle/ggo_command.h>
+#include <vivelle/commands/ggo_open.h>
 #include <vivelle/commands/ggo_io.h>
 #include <vivelle/commands/ggo_blit.h>
 #include <vivelle/commands/ggo_rescale.h>
@@ -7,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <filesystem>
 
 namespace ggo
 {
@@ -56,7 +59,7 @@ int main(int argc, char ** argv)
   bool image_saved = false;
   try
   {
-    auto image = ggo::load(args.front());
+    auto image = ggo::open_image(args.front());
     image_loaded = true;
 
     process_image(image, args.begin() + 1, args.end() - 1);
