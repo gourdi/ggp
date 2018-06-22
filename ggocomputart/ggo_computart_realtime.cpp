@@ -55,8 +55,10 @@ ggo::animation_artist_abc * create_animation_artist()
   return ggo::animation_artist_abc::create(ids[index],
     screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_android);
 #else
-  return ggo::animation_artist_abc::create(ids[index],
+  auto artist = ggo::animation_artist_abc::create(ids[index],
     screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_pc);
+  artist->init_animation();
+  return artist;
 #endif
 }
 

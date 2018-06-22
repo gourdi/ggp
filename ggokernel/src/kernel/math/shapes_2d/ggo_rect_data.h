@@ -128,4 +128,14 @@ namespace ggo
   }
 }
 
+namespace ggo
+{
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::rect_data<data_t> & r)
+  {
+    os << "(l: " << r._pos.x() << ", b: " << r._pos.y() << ", w: " << r._width << ", h: " << r._height << ")";
+    return os;
+  }
+}
+
 #endif
