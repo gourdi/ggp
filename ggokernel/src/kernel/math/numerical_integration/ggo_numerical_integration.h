@@ -19,11 +19,11 @@ namespace ggo
     static_assert(std::is_floating_point<scalar_t>::value == true);
 
     const auto k1 = velocity(x_n) * dt;
-    const auto k2 = velocity(x_n + k1 / 2) * dt;
-    const auto k3 = velocity(x_n + k2 / 2) * dt;
+    const auto k2 = velocity(x_n + k1 / scalar_t(2)) * dt;
+    const auto k3 = velocity(x_n + k2 / scalar_t(2)) * dt;
     const auto k4 = velocity(x_n + k3) * dt;
 
-    return x_n + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+    return x_n + (k1 + scalar_t(2) * k2 + scalar_t(2) * k3 + k4) / scalar_t(6);
   }
 }
 
