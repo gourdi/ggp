@@ -9,7 +9,6 @@ ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::image
 :
 fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
-
   _u0.set_harmonic(0, 0, 0);
   _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
   _u0.set_harmonic(2, ggo::rand<float>(-1, 1), 0);
@@ -53,17 +52,14 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 	float u1 = _u1.evaluate(frame_index * ggo::pi<float>() / frames_count());
 	float u2 = _u2.evaluate(frame_index * ggo::pi<float>() / frames_count());
 	
-	while (particles.empty() == false)
+	for (auto & particle : particles)
 	{
-		for (int i = static_cast<int>(particles.size()) - 1; i >= 0; --i)
+		while (true)
 		{
-			particle & particle = particles[i];
-			
 			float k = 1 + particle._pos.x() * particle._pos.x() + particle._pos.y() * particle._pos.y();
-			if (std::abs(k) < 0.00001)
+			if (std::abs(k) < 0.00001f)
 			{
-				particles.erase(particles.begin() + i);
-				continue;
+				break;
 			}
 				
 			float t = u1 - u2 / k;
@@ -77,9 +73,8 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 
 			if (speed < 0.05f)
 			{
-				particles.erase(particles.begin() + i);
-				continue;
-			}
+        break;
+      }
 			
 			// Paint the point.
 			ggo::pos2f point = map_fill(particle._pos, -_range, _range);
@@ -89,11 +84,11 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 
       ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
-        ggo::disc_float(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.15f));
+        ggo::disc_float(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.1f));
 				
 			// Move points slowly.
-			particle._pos.x() += 0.005f * (next_pt.x() - particle._pos.x());
-			particle._pos.y() += 0.005f * (next_pt.y() - particle._pos.y());
+			particle._pos.x() += 0.0025f * (next_pt.x() - particle._pos.x());
+			particle._pos.y() += 0.0025f * (next_pt.y() - particle._pos.y());
 		}
 	}
 }
