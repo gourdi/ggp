@@ -31,6 +31,11 @@ namespace ggo
   template <image_format format, sampling smp, typename shape_t>
   void paint_shape(void * buffer, int width, int height, int line_step,
     const shape_t & shape, const typename image_format_traits<format>::color_t & color);
+
+  template <image_format format, sampling smp, typename shape_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, const typename image_format_traits<format>::color_t & color,
+    const ggo::rect_int & clipping);
 }
 
 // Paint multiple shapes.
@@ -110,6 +115,20 @@ namespace ggo
     overwrite_blender<color_t, color_t> blender;
 
     paint_shape<format, smp>(buffer, width, height, line_step, shape, brush, blender);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <image_format format, sampling smp, typename shape_t>
+  void paint_shape(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, const typename image_format_traits<format>::color_t & c,
+    const ggo::rect_int & clipping)
+  {
+    using color_t = typename image_format_traits<format>::color_t;
+
+    solid_color_brush<color_t> brush(c);
+    overwrite_blender<color_t, color_t> blender;
+
+    paint_shape<format, smp>(buffer, width, height, line_step, shape, brush, blender, clipping);
   }
 }
 

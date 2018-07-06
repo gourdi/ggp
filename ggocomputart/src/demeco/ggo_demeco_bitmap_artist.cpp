@@ -22,7 +22,7 @@ void ggo::demeco_bitmap_artist::render_bitmap(void * buffer) const
   //auto objet = scene_builder.add_object(cylinder, ggo::red_32f(), false);
   //objet->set_shading(shading::simple_color);
 
-  //ggo::mono_sampling_point_camera camera(get_width(), get_height(), ggo::basis3d_float({ 0.f, 0.f, 20.f }), 0.1f);
+  //ggo::mono_sampling_point_camera camera(width(), height(), ggo::basis3d_float({ 0.f, 0.f, 20.f }), 0.1f);
   //ggo::mono_sampling_renderer renderer(camera);
-  //renderer.render(buffer, get_width(), get_height(), get_line_step(), get_format(), scene_builder);
+  //renderer.render(buffer, width(), height(), line_step(), format(), scene_builder);
 }

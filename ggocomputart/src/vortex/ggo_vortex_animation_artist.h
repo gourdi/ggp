@@ -7,17 +7,16 @@
 
 namespace ggo
 {
-  class vortex_animation_artist : public animation_artist_abc
+  class vortex_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          vortex_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          vortex_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 250; }
 
   private:
 
@@ -27,7 +26,6 @@ namespace ggo
       ggo::pos2f	_end_pos;
     };
 
-    int                                                 _frame_index;
     std::map<ggo::vortex_artist::vortex *, vortex_path> _vortices_paths;
     ggo::vortex_artist::params                          _params;
   };

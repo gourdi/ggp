@@ -6,21 +6,19 @@
 
 namespace ggo
 {
-  class rediff_animation_artist : public animation_artist_abc
+  class rediff_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          rediff_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          rediff_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 200; }
 
   private:
 
-    int                   _frame_index;
     float                 _hue;
     ggo::array<float, 2>  _feed_map;
     ggo::array<float, 2>  _kill_map;

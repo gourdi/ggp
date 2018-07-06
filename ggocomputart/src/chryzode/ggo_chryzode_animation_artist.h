@@ -6,22 +6,20 @@
 
 namespace ggo
 {
-  class chryzode_animation_artist : public animation_artist_abc
+  class chryzode_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          chryzode_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          chryzode_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 300; }
 
   private:
 
     chryzode_params _params;
-    int _frame_index = 0;
     float _hue_start = 0;
     float _hue_end = 0;
     float _multiplier1_start = 0;

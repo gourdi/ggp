@@ -12,7 +12,7 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
 {
-  chryzode_artist artist(get_width(), get_height());
+  chryzode_artist artist(width(), height(), line_step(), format());
 
   chryzode_params params;
   params._multiplier1 = ggo::rand<float>(3, 11);
@@ -29,10 +29,10 @@ void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
     lines_count += params._modulo_end;
   }
   
-  float radius = ggo::rand<float>(0.2f, 0.35f) * get_min_size();
+  float radius = ggo::rand<float>(0.2f, 0.35f) * min_size();
   
   float hue_start = ggo::rand<float>();
   float hue_end = hue_start + (ggo::rand_bool() ? -0.2f : 0.2f);
     
-  artist.render_chryzode(buffer, get_line_step(), get_format(), radius, params, hue_start, hue_end);
+  artist.render_chryzode(buffer, radius, params, hue_start, hue_end);
 }

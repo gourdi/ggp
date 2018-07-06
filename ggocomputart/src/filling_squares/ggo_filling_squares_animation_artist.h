@@ -8,11 +8,11 @@
 
 namespace ggo
 {
-  class filling_squares_animation_artist : public animation_artist_abc
+  class filling_squares_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-    filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
@@ -23,7 +23,7 @@ namespace ggo
             animated_square(const ggo::pos2f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -31,14 +31,12 @@ namespace ggo
       ggo::filling_squares_artist::colored_square _colored_square;
     };
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 500; }
 
   private:
 
     ggo::animator _animator;
-    int           _frame_index = 0;
     float         _hue = 0.f;
     ggo::color_8u _bkgd_color;
   };

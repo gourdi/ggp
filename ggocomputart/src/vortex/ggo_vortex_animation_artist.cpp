@@ -2,56 +2,41 @@
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 //////////////////////////////////////////////////////////////
-ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
-{
-	
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::init_animation()
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
   const int vortices_count = 20;
-
-  _vortices_paths.clear();
 
   _params._color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
   _params._color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
   _params._color3 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
   _params._color4 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-  _params._split_horz = ggo::rand<float>(0.4f * get_width(), 0.6f * get_width());
-  _params._split_vert = ggo::rand<float>(0.4f * get_height(), 0.6f * get_height());
+  _params._split_horz = ggo::rand<float>(0.4f * width, 0.6f * width);
+  _params._split_vert = ggo::rand<float>(0.4f * height, 0.6f * height);
 
   _params._vortices.resize(vortices_count);
   for (auto & vortex : _params._vortices)
   {
     vortex._angle = ggo::rand<float>(ggo::pi<float>() / 2, ggo::pi<float>() / 2 + 0.5f);
-    vortex._speed = ggo::rand<float>(0.004f, 0.008f) * get_max_size();
+    vortex._speed = ggo::rand<float>(0.004f, 0.008f) * max_size();
     vortex._power = ggo::rand<float>(6, 8);
 
     ggo::vortex_animation_artist::vortex_path vortex_path;
-    vortex_path._start_pos.get<0>() = ggo::rand<float>() * get_width();
-    vortex_path._start_pos.get<1>() = ggo::rand<float>() * get_height();
-    vortex_path._end_pos.get<0>() = ggo::rand<float>() * get_width();
-    vortex_path._end_pos.get<1>() = ggo::rand<float>() * get_height();
+    vortex_path._start_pos.get<0>() = ggo::rand<float>() * width;
+    vortex_path._start_pos.get<1>() = ggo::rand<float>() * height;
+    vortex_path._end_pos.get<0>() = ggo::rand<float>() * width;
+    vortex_path._end_pos.get<1>() = ggo::rand<float>() * height;
 
     _vortices_paths[&vortex] = vortex_path;
   }
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::vortex_animation_artist::prepare_frame()
+void ggo::vortex_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  const int frames_count = 250;
-
-  if (_frame_index >= frames_count)
-  {
-    return false;
-  }
-
   // Interpolate vortices position.
-  float interp = ggo::ease_inout_to<float>(_frame_index, frames_count);
+  float interp = ggo::ease_inout_to<float>(frame_index, frames_count());
   for (auto & vortex : _params._vortices)
   {
     const ggo::pos2f & start_pos = _vortices_paths[&vortex]._start_pos;
@@ -60,11 +45,5 @@ bool ggo::vortex_animation_artist::prepare_frame()
     vortex._pos = ggo::linear_interpolation(0.f, start_pos, 1.f, end_pos, interp);
   }
 
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  ggo::vortex_artist::render(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, _params);
+  ggo::vortex_artist::render(buffer, width(), height(), line_step(), ggo::rgb_8u_yu, _params);
 }

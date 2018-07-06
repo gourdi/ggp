@@ -1,27 +1,27 @@
-#ifndef __GGO_BOZONS_ANIMATION_ARTIST__
-#define __GGO_BOZONS_ANIMATION_ARTIST__
+#ifndef __GGO_BOZONS_REALTIME_ARTIST__
+#define __GGO_BOZONS_REALTIME_ARTIST__
 
-#include "ggo_animation_artist_abc.h"
+#include "ggo_realtime_artist_abc.h"
 #include <list>
 
 namespace ggo
 {
-  class bozons_animation_artist : public animation_artist_abc
+  class bozons_realtime_artist : public realtime_artist_abc
   {
   public:
 
-          bozons_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          bozons_realtime_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  preprocess_frame(int frame_index) override;
+    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
+    bool  finished(int frame_index) const override;
 
   private:
 
     void create_bozon();
 
     template <ggo::image_format format>
-    void process_frame(void * buffer, const ggo::rect_int & clipping) const;
+    void render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const;
 
   private:
 
@@ -37,7 +37,6 @@ namespace ggo
       float         _radius;
     };
 
-    int               _frame_index = 0;
     std::list<bozon>  _bozons;
     float             _hue = 0.f;
     ggo::color_8u     _bkgd_color1;
@@ -47,17 +46,17 @@ namespace ggo
   };
 
   template <ggo::image_format format>
-  void bozons_animation_artist::process_frame(void * buffer, const ggo::rect_int & clipping) const
+  void bozons_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
   {
-    if (_frame_index == 0)
+    if (frame_index == 0)
     {
-      ggo::fill_4_colors<format>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::fill_4_colors<format>(buffer, width(), height(), line_step(),
         _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
     }
 
     for (const auto & bozon : _bozons)
     {
-      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
+      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
         ggo::capsule_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
         ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
     }

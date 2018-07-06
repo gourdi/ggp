@@ -37,16 +37,16 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 	petal_shape_curve.push_point(ggo::rand<float>(0.1f, 0.5f), ggo::rand<float>(0.1f, 0.5f));
 	petal_shape_curve.push_point(ggo::rand<float>(0.5f, 0.9f), ggo::rand<float>(0.5f, 0.9f));
 		
-  std::vector<float> render_buffer(3 * get_width() * get_height(), 0.f);
+  std::vector<float> render_buffer(3 * width() * height(), 0.f);
 
 	for (int counter = 0; counter < petals_count; ++counter)
 	{
 		std::cout << "Rendering petal " << (counter + 1) << " out of " << petals_count << std::endl; 
 		
-		ggo::pos2f center(0.5f * get_width(), 0.9f * get_height());
+		ggo::pos2f center(0.5f * width(), 0.9f * height());
 
 		float ratio 		    = counter / float(petals_count);
-		float petal_height	= 0.8f * get_height() * counter / petals_count;
+		float petal_height	= 0.8f * height() * counter / petals_count;
 		float dy 			      = petal_height / vert_count;
 		float radius_coef 	= flower_shape_curve.evaluate(ratio);
 
@@ -62,18 +62,18 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 		{
 			float 		      grow 	= i / float(vert_count);
 			ggo::color_32f 	color = 0.0025f * ggo::from_hsv<ggo::color_32f>(hue, grow, 1);
-			float 		      s		  = 0.5f * radius_coef * petal_shape_curve.evaluate(grow) * get_min_size();
+			float 		      s		  = 0.5f * radius_coef * petal_shape_curve.evaluate(grow) * min_size();
 
 			for (int j = 0; j < horz_count; ++j) 
 			{
 				int   k = j < horz_count/2 ? j : horz_count-j-1;
 				float t = 2 * ggo::pi<float>() * j / horz_count;
 				float x = center.x() + s * std::cos(t);
-				float y = center.y() + s * std::sin(t) / 3 + grow * 0.5f * get_height() * spat(k);
+				float y = center.y() + s * std::sin(t) / 3 + grow * 0.5f * height() * spat(k);
 
 				ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
-          render_buffer.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-          ggo::disc_float({ x, y }, 0.001f * get_min_size()),
+          render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
+          ggo::disc_float({ x, y }, 0.001f * min_size()),
           ggo::make_solid_brush(color), ggo::add_blender<ggo::color_32f>());
 			}
 
@@ -82,7 +82,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 	}
 
   ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
-    render_buffer.data(), get_width(), get_height(), 3 * sizeof(float) * get_width(),
-    buffer, get_width(), get_height(), get_line_step(), 0, 0);
+    render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
+    buffer, width(), height(), line_step(), 0, 0);
 }
 

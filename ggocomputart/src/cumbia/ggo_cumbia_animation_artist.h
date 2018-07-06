@@ -6,21 +6,19 @@
 
 namespace ggo
 {
-  class cumbia_animation_artist : public animation_artist_abc
+  class cumbia_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          cumbia_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          cumbia_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 200; }
 
   private:
 
-    int                 _frame_index;
     ggo::basis3d_float  _camera_basis;
     float               _camera_aperture;
     ggo::cumbia_artist  _artist;

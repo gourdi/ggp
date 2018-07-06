@@ -15,8 +15,8 @@ namespace ggo
     void                      set(int x, int y, const color_t & value);
     color_t                   get(int x, int y) const;
 
-    int                       get_width() const { return _width; }
-    int                       get_height() const { return static_cast<int>(_rle_lines.size()); }
+    int                       width() const { return _width; }
+    int                       height() const { return static_cast<int>(_rle_lines.size()); }
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;
@@ -73,7 +73,7 @@ namespace ggo
   template <typename color_t>
   ggo::array<color_t, 1> & rle_image<color_t>::get_cache_line(int y) const
   {
-    GGO_ASSERT_BTW(y, 0, get_height() - 1);
+    GGO_ASSERT_BTW(y, 0, height() - 1);
 
     // Check if the requiredd line already is in the cache.
     auto find_func = [&](const std::pair<int, ggo::array<color_t, 1>> & cache_line) { return cache_line.first == y; };

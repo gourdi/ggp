@@ -32,11 +32,11 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
   const float camera_aperture = 0.15f;
 
 #ifdef GGO_PREVIEW
-  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
+  ggo::mono_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture);
 #else
   float depth_of_field = 0.92f * camera_basis.pos().get_length();
   float depth_of_field_factor = 0.05f * camera_basis.pos().get_length();
-  ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
+  ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
 #endif
 
   // Rendering.
@@ -45,5 +45,5 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  artist.render(buffer, get_width(), get_height(), get_line_step(), get_format(), 1.f, renderer);
+  artist.render(buffer, width(), height(), line_step(), format(), 1.f, renderer);
 }

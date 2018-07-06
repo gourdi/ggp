@@ -1,50 +1,39 @@
-#include "ggo_kanji_artist.h"
+#include "ggo_kanji_realtime_artist.h"
+#include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_artist::kanji_artist(int width, int height)
+ggo::kanji_realtime_artist::kanji_realtime_artist(int width, int height, int line_step, ggo::image_format format)
 :
-artist(width, height)
+fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 {
-}
+  _parts_color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
+  _timer_max = ggo::rand<int>(500, 750);
 
-//////////////////////////////////////////////////////////////
-void ggo::kanji_artist::init_animation()
-{
-	_parts_color	= ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
-	_timer_max		= ggo::rand<int>(500, 750);
-
-	// Create the attractor.
+  // Create the attractor.
   _attractor = { ggo::rand<float>(), ggo::rand<float>() };
   _attractor_counter = 10;
   _shake_counter = 5;
 
-	// Create the particles.
-	ggo::pos2f pos(ggo::rand<float>(0.3f, 0.7f), ggo::rand<float>(0.3f, 0.7f));
-	
-	_particles.clear();
-	
-	for (int i = 0; i < 400; ++i)
-	{
-		const float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
-		const float l = ggo::rand<float>(0.f, 0.02f);
-		
-		std::array<ggo::pos2f, substeps_count> particle;
-		particle.fill(ggo::vec2f(l * cos(a), l * sin(a)));
-		_particles.push_back(particle);
-	}
+  // Create the particles.
+  ggo::pos2f pos(ggo::rand<float>(0.3f, 0.7f), ggo::rand<float>(0.3f, 0.7f));
+
+  for (int i = 0; i < 400; ++i)
+  {
+    const float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
+    const float l = ggo::rand<float>(0.f, 0.02f);
+
+    std::array<ggo::pos2f, substeps_count> particle;
+    particle.fill(ggo::vec2f(l * cos(a), l * sin(a)));
+    _particles.push_back(particle);
+  }
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::kanji_artist::prepare_frame(int frame_index)
+void ggo::kanji_realtime_artist::preprocess_frame(int frame_index)
 {
-  if (frame_index >= _timer_max)
-  {
-    return false;
-  }
-
   // Update the particles system.
   for (auto & particle : _particles)
   {
@@ -105,34 +94,47 @@ bool ggo::kanji_artist::prepare_frame(int frame_index)
 
     _attractor_counter = ggo::rand<int>(20, 50);
   }
-
-  return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_artist::render_frame(void * buffer, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping) const
+template <ggo::image_format format>
+void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  const float radius = 0.0005f * get_min_size();
+  if (frame_index == 0)
+  {
+    ggo::fill_solid<format>(buffer, width(), height(), line_step(), ggo::black_8u());
+  }
+
+  const float radius = 0.0005f * min_size();
   const auto brush = ggo::make_solid_brush(_parts_color);
   const ggo::alpha_blender_rgb8u alpha_blender(0.2f);
 
-  switch (format)
+  for (const auto & particle : _particles)
+  {
+    for (const auto & pos : particle)
+    {
+      ggo::pos2f render_pt = map_fit(pos, 0, 1);
+
+      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
+        ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::kanji_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+{
+  switch (format())
   {
   case ggo::rgb_8u_yu:
+    render_tile_t<ggo::rgb_8u_yu>(buffer, frame_index, clipping);
+    break;
   case ggo::bgrx_8u_yd:
-    for (const auto & particle : _particles)
-    {
-      for (const auto & pos : particle)
-      {
-        ggo::pos2f render_pt = map_fit(pos, 0, 1);
-
-        ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), line_step,
-          ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
-      }
-    }
+    render_tile_t<ggo::bgrx_8u_yd>(buffer, frame_index, clipping);
     break;
   default:
     GGO_FAIL();
     break;
   }
 }
+

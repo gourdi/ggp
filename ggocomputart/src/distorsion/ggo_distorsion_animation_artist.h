@@ -7,18 +7,14 @@
 
 namespace ggo
 {
-  class distorsion_animation_artist : public animation_artist_abc
+  class distorsion_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
-
-    void  render_frame(int frame_index, void * buffer, const ggo::rect_int & clipping) const;
-    void  render_last_frame(void * buffer) const;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 300; }
 
     struct colored_stripe
     {
@@ -52,7 +48,6 @@ namespace ggo
   private:
 
     float                             _hue = 0.f;
-    int                               _frame_index = 0;
     std::vector<colored_stripe>       _stripes;
     ggo::array<animated_transform, 1> _transforms;
   };

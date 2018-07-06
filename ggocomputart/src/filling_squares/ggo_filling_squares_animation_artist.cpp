@@ -21,7 +21,7 @@ bool ggo::filling_squares_animation_artist::animated_square::update(int frame_in
 
 //////////////////////////////////////////////////////////////
 void ggo::filling_squares_animation_artist::animated_square::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
 {
   constexpr int fade_in_anim_duration = 25;
 
@@ -55,61 +55,37 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 }
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
+  _hue = ggo::rand<float>();
+  auto multi_squares = ggo::filling_squares_artist::build_squares(width, height, _hue);
 
-}
+  int counter = 0;
+  for (const auto & multi_square : multi_squares)
+  {
+    float angle = ggo::rand<float>(-ggo::pi<float>(), ggo::pi<float>());
 
-//////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::init_animation()
-{
-	_animator.clear();
-	
-  _frame_index = -1;
-	_hue = ggo::rand<float>();
-	auto multi_squares = ggo::filling_squares_artist::build_squares(get_width(), get_height(), _hue);
-
-	int counter = 0;
-	for (const auto & multi_square : multi_squares)
-	{
-		float angle = ggo::rand<float>(-ggo::pi<float>(), ggo::pi<float>());
-		
-		for (const auto & colored_square : multi_square._squares)
-		{
+    for (const auto & colored_square : multi_square._squares)
+    {
       int start_offset = counter / 3;
 
       _animator.add_animate(new animated_square(multi_square._pos, start_offset, angle, colored_square));
-		}
-		
-		++counter;
-	}
+    }
+
+    ++counter;
+  }
 
   _bkgd_color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::filling_squares_animation_artist::prepare_frame()
+void ggo::filling_squares_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  constexpr int frames_count = 500;
-
-  ++_frame_index;
-
-  if (_frame_index > frames_count)
-  {
-    return false;
-  }
-
   _animator.update();
 
-  return true;
-}
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), _bkgd_color);
 
-//////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
-
-	_animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
+	_animator.render(buffer, width(), height(), line_step(), format());
 }

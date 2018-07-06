@@ -15,7 +15,7 @@ namespace ggo
     virtual      ~animate_abc() {}
 
     bool  update();
-    void  render(void * buffer, int width, int height, int line_step, ggo::image_format format) const;
+    void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping) const;
 
     int	  get_frame_index() const { return _frame_index; }
 
@@ -25,7 +25,7 @@ namespace ggo
   private:
 
     virtual	bool  update(int frame_index) = 0;
-    virtual	void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index) const = 0;
+    virtual	void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const = 0;
 
   private:
 
@@ -52,8 +52,8 @@ namespace ggo
             bool  update(int frame_index) override;
     virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
 
-            void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index) const override;
-    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const = 0;
+            void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const override;
+    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const = 0;
 
   private:
 
@@ -81,8 +81,8 @@ namespace ggo
             bool  update(int frame_index) override;
     virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
 
-            void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index) const override;
-    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const = 0;
+            void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const override;
+    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const = 0;
 
   private:
 

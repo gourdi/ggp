@@ -6,19 +6,18 @@
 
 namespace ggo
 {
-  class smoke_animation_artist : public animation_artist_abc
+  class smoke_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          smoke_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          smoke_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+     void  render_frame(void * buffer, int frame_index) override;
+     int   frames_count() const override { return 600; }
 
   private:
 
-    void process_sources();
+    void process_sources(int frame_index);
     void velocity_self_advection();
     void make_incompressible();
     void opacity_advection();
@@ -37,7 +36,6 @@ namespace ggo
       double				    _opacity;
     };
 
-    int                         _frame_index;
     double                      _cell_size;
     double                      _density;
     ggo::array<double, 2>	      _velocity_x1;

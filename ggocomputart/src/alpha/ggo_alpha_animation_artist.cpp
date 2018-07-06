@@ -12,20 +12,12 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
-{
-
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::init_animation()
+animation_artist_abc(width, height, line_step, format)
 {
   _remaining_counter = 7;
   _creation_counter = ggo::rand<int>(40, 60);
-
-  _items.clear();
 
   add_new_item();
 
@@ -38,7 +30,7 @@ void ggo::alpha_animation_artist::init_animation()
 //////////////////////////////////////////////////////////////
 void ggo::alpha_animation_artist::add_new_item()
 {
-  float margin = 0.1f * get_min_size();
+  float margin = 0.1f * min_size();
 
   ggo::pos2f center = get_random_point(margin);
 
@@ -63,8 +55,8 @@ void ggo::alpha_animation_artist::add_new_item()
     }
   }
 
-  float inner_radius = ggo::rand<float>(0.04f, 0.08f) * get_min_size();
-  float outter_radius = inner_radius + ggo::rand<float>(0.04f, 0.08f) * get_min_size();
+  float inner_radius = ggo::rand<float>(0.04f, 0.08f) * min_size();
+  float outter_radius = inner_radius + ggo::rand<float>(0.04f, 0.08f) * min_size();
   float hue = ggo::rand<float>();
   float sat = ggo::rand<float>(0.5, 1);
   float val = ggo::rand<float>(0.5, 1);
@@ -72,22 +64,22 @@ void ggo::alpha_animation_artist::add_new_item()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::alpha_animation_artist::prepare_frame()
+void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
 {
   // Oscillos.
   ggo::remove_if(_oscillos, [&](oscillo & oscil) { return oscil.update() == false; });
 
   if ((_remaining_counter > 0) && (_oscillos.size() < 5) && (ggo::rand<int>(0, 2) == 0))
   {
-    float y = ggo::rand<float>(0.2f, 0.8f) * get_height();
-    float dy = ggo::rand<float>(-0.01f, 0.01f) * get_min_size();
+    float y = ggo::rand<float>(0.2f, 0.8f) * height();
+    float dy = ggo::rand<float>(-0.01f, 0.01f) * min_size();
 
     if (_oscillos.empty() == false)
     {
       int index = ggo::rand<int>(0, static_cast<int>(_oscillos.size()) - 1);
       const oscillo & src = _oscillos[index];
 
-      if ((src.y() > 0.2 * get_height()) && (src.y() < 0.8 * get_height()))
+      if ((src.y() > 0.2 * height()) && (src.y() < 0.8 * height()))
       {
         y = src.y();
       }
@@ -97,7 +89,7 @@ bool ggo::alpha_animation_artist::prepare_frame()
   }
 
   // Items.
-  ggo::remove_if(_items, [&](item & item) { return item.update(get_width(), get_height()) == false; });
+  ggo::remove_if(_items, [&](item & item) { return item.update(width(), height()) == false; });
 
   if (_creation_counter > 0)
   {
@@ -113,16 +105,17 @@ bool ggo::alpha_animation_artist::prepare_frame()
     }
   }
 
-  return _remaining_counter > 0 || !_items.empty() || !_oscillos.empty();
-}
+  finished = false;
+  if (_remaining_counter == 0 && _items.empty() && _oscillos.empty())
+  {
+    finished = true;
+    return;
+  }
 
-//////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
   if (buffer != nullptr)
   {
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
-      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
+    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
+      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
   }
 
   // Oscillos.
@@ -130,7 +123,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_in
   {
     for (const auto & oscillo : _oscillos)
     {
-      oscillo.draw(buffer, get_width(), get_height());
+      oscillo.draw(buffer, width(), height());
     }
   }
 
@@ -139,7 +132,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, const ggo::rect_in
   {
     for (const auto & item : _items)
     {
-      item.draw(buffer, get_width(), get_height());
+      item.draw(buffer, width(), height());
     }
   }
 }

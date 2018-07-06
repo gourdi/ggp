@@ -164,25 +164,25 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
   double range;
 	std::tie(center, range) = setup_block(static_cast<int>(palette.size()));
 
-	for (int y = 0; y < get_height(); ++y)
+	for (int y = 0; y < height(); ++y)
 	{
-		double range_x = get_width() > get_height() ? range * get_width() / get_height() : range;
-		double range_y = get_width() > get_height() ? range : range * get_height() / get_width();
+		double range_x = width() > height() ? range * width() / height() : range;
+		double range_y = width() > height() ? range : range * height() / width();
 
-		double y1 = ggo::map<double>(y - 3 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
-		double y2 = ggo::map<double>(y - 1 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
-		double y3 = ggo::map<double>(y + 1 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
-		double y4 = ggo::map<double>(y + 3 / 8., 0, get_height(), center.imag() - range_y, center.imag() + range_y);
+		double y1 = ggo::map<double>(y - 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+		double y2 = ggo::map<double>(y - 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+		double y3 = ggo::map<double>(y + 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+		double y4 = ggo::map<double>(y + 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
 	
 		int iterations[16];
 
-		for (int x = 0; x < get_width(); ++x)
+		for (int x = 0; x < width(); ++x)
 		{
 			// Iterate and sample.
-			double x1 = ggo::map<double>(x - 3 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
-			double x2 = ggo::map<double>(x - 1 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
-			double x3 = ggo::map<double>(x + 1 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
-			double x4 = ggo::map<double>(x + 3 / 8., 0, get_width(), center.real() - range_x, center.real() + range_x);
+			double x1 = ggo::map<double>(x - 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+			double x2 = ggo::map<double>(x - 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+			double x3 = ggo::map<double>(x + 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+			double x4 = ggo::map<double>(x + 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
 		
 			iterations[0] = iterate(x1, y1, static_cast<int>(palette.size()));
 			iterations[1] = iterate(x1, y4, static_cast<int>(palette.size()));
@@ -193,13 +193,13 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 			{
 				int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
 
-        switch (get_format())
+        switch (format())
         {
         case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), palette[index]);
           break;
         case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), get_line_step(), palette[index]);
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), palette[index]);
           break;
         default:
           GGO_FAIL();
@@ -237,13 +237,13 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 
         ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
-        switch (get_format())
+        switch (format())
         {
         case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
           break;
         case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, get_height(), get_line_step(), c_8u);
+          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), c_8u);
           break;
         default:
           GGO_FAIL();

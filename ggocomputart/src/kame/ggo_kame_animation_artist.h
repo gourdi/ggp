@@ -12,15 +12,14 @@ namespace ggo
 {
   class scene_builder;
 
-  class kame_animation_artist : public animation_artist_abc
+  class kame_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-                          kame_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+           kame_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void	                init_animation() override;
-    bool                  prepare_frame() override;
-    void                  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+     void  render_frame(void * buffer, int frame_index) override;
+     int   frames_count() const override { return 200; }
 
   private:
 
@@ -87,7 +86,6 @@ namespace ggo
     static  std::unique_ptr<kame>                         create_kame();
     static  std::vector<std::unique_ptr<timed_triangle>>  split_triangles(const std::vector<std::unique_ptr<timed_triangle>> & triangles, std::vector<std::unique_ptr<timed_vertex>> & vertices);
 
-    int                                 _frame_index;
     uint8_t                             _bkgd_colors[4];
     std::vector<std::unique_ptr<kame>>  _kames;
   };

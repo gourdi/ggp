@@ -310,8 +310,8 @@ void ggo::voronoi_artist::render_bitmap(void * buffer) const
 {
   int scale_factor = 4;
 
-  auto voronoi_tree = create_voronoi_tree(scale_factor * get_width(), scale_factor * get_height());
-  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * get_width(), scale_factor * get_height(), scale_factor);
+  auto voronoi_tree = create_voronoi_tree(scale_factor * width(), scale_factor * height());
+  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * width(), scale_factor * height(), scale_factor);
 
-  paint_voronoi_map(buffer, get_width(), get_height(), get_line_step(), ggo::rgb_8u_yu, voronoi_tree, voronoi_map, scale_factor);
+  paint_voronoi_map(buffer, width(), height(), line_step(), ggo::rgb_8u_yu, voronoi_tree, voronoi_map, scale_factor);
 }

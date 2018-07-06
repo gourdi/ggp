@@ -28,21 +28,12 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt),
+fixed_frames_count_animation_artist_abc(width, height, line_step, format),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
 _background(new uint8_t[height * line_step])
 {
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::toutouyoutou_animation_artist::init_animation()
-{
-  _frame_index = -1;
-
-  _particles.clear();
-
   _rest_density = ggo::rand<float>(100.f, 200.f); // 150
   _stiffness = ggo::rand<float>(0.005f, 0.015f); // 0.01
   _near_stiffness = ggo::rand<float>(0.05f, 0.15f); // 0.1
@@ -51,26 +42,26 @@ void ggo::toutouyoutou_animation_artist::init_animation()
   _quadratic_viscocity = ggo::rand<float>(0.08f, 0.12f); // 0.1
   _particle_mass = ggo::rand<float>(0.3f, 0.7f); // 0.5
   _gravity = ggo::rand<float>(5.f, 15.f); // 9.8
-  
+
   _hue1 = ggo::rand<float>();
   _hue2 = _hue1 + ggo::rand<float>(0.1f, 0.2f);
   _sat1 = ggo::rand<float>();
   _sat2 = _sat1 + ggo::rand<float>(0.1f, 0.2f);
   _val1 = ggo::rand<float>();
   _val2 = _val1 + ggo::rand<float>(0.1f, 0.2f);
-  
+
   _emitter1._x = 0;
   _emitter1._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter1._y_sup = _emitter1._y_inf + 0.12f;
   _emitter1._speed = ggo::from_polar(ggo::rand<float>(0, ggo::pi<float>() / 4), ggo::rand<float>(5, 15));
   _emitter1._temperature = 0;
-  
+
   _emitter2._x = get_view_width();
   _emitter2._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter2._y_sup = _emitter2._y_inf + 0.12f;
   _emitter2._speed = ggo::from_polar(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>()), ggo::rand<float>(5, 15));
   _emitter2._temperature = 1;
-  
+
   if (ggo::rand_bool())
   {
     _emitter1._counter = 0;
@@ -83,17 +74,9 @@ void ggo::toutouyoutou_animation_artist::init_animation()
   }
 }
 
-
 ////////////////////////////////////////////////////////////// 
-bool ggo::toutouyoutou_animation_artist::prepare_frame()
+void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > 1000)
-  {
-    return false;
-  }
-
   for (int step = 0; step < sub_steps_count; ++step)
   {
     _emitter1.create_particles(_particles);
@@ -112,21 +95,15 @@ bool ggo::toutouyoutou_animation_artist::prepare_frame()
 
   update_grid();
 
-  return true;
-}
-
-////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  if (_frame_index == 0)
+  if (frame_index == 0)
   {
-    ggo::fill_gaussian<ggo::rgb_8u_yu>(_background.get(), get_width(), get_height(), get_line_step(),
-      static_cast<float>(get_min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
+    ggo::fill_gaussian<ggo::rgb_8u_yu>(_background.get(), width(), height(), line_step(),
+      static_cast<float>(min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
   }
 
   if (buffer != nullptr)
   {
-    memcpy(buffer, _background.get(), get_height() * get_line_step());
+    memcpy(buffer, _background.get(), height() * line_step());
     paint_flow(buffer);
   }
 }
@@ -354,12 +331,12 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
 {
   constexpr float potential_threshold = 0.8f;
   
-  ggo::array_8u sample_buffer(get_width() * get_height());
+  ggo::array_8u sample_buffer(width() * height());
 
   uint8_t * ptr = sample_buffer.data();
-  for (int render_y = 0; render_y < get_height(); ++render_y)
+  for (int render_y = 0; render_y < height(); ++render_y)
   {
-    for (int render_x = 0; render_x < get_width(); ++render_x)
+    for (int render_x = 0; render_x < width(); ++render_x)
     {
       ptr[0] = 0;
       if (get_potiental(render_x - 3 / 8.f, render_y - 3 / 8.f) > potential_threshold) { ptr[0] += 1; }
@@ -412,9 +389,9 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
   }
   
   // Border.
-  //ggo::array_uint8 border_buffer(get_width() * get_height());
+  //ggo::array_uint8 border_buffer(width() * height());
   //float radius = 0.0025f * get_min_size();
-  //ggo::dilate_circle_kernel(sample_buffer, border_buffer, get_width(), get_height(), radius);
+  //ggo::dilate_circle_kernel(sample_buffer, border_buffer, width(), height(), radius);
   
   //for (int i = 0; i < border_buffer.get_size(); ++i)
   //{   
@@ -428,9 +405,9 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
   
   // Inside.
   uint8_t * ptr_sample = sample_buffer.data();
-  for (int render_y = 0; render_y < get_height(); ++render_y)
+  for (int render_y = 0; render_y < height(); ++render_y)
   {
-    for (int render_x = 0; render_x < get_width(); ++render_x)
+    for (int render_x = 0; render_x < width(); ++render_x)
     {
       if (ptr_sample[0] > 0)
       {
@@ -447,7 +424,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
         float val = temperature * _val1 + (1 - temperature) * _val2;
         const ggo::color_8u color(ggo::from_hsv<ggo::color_8u>(hue, sat, val));
         
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,get_height(), get_line_step(), color);
+        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,height(), line_step(), color);
       }
       
       ptr_sample += 1;
@@ -458,12 +435,12 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
   for (const auto & particle : _particles)
   {
     ggo::pos2f center = particle._cur_pos;
-    center *= get_height() / view_height;
+    center *= height() / view_height;
     
-    ggo_disc_float disc(center, 0.001 * get_height());
+    ggo_disc_float disc(center, 0.001 * height());
     disc.center() = horz_mirror(disc.center());
 
-    ggo_paint_shape_rgb(buffer, get_width(), get_height(), disc, ggo::color::RED);
+    ggo_paint_shape_rgb(buffer, width(), height(), disc, ggo::color::RED);
   }
 #endif
 }
@@ -471,8 +448,8 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
 //////////////////////////////////////////////////////////////
 float ggo::toutouyoutou_animation_artist::get_potiental(float render_x, float render_y) const
 {
-  float view_x = render_x * view_height / get_height();
-  float view_y = view_height - render_y * view_height / get_height();
+  float view_x = render_x * view_height / height();
+  float view_y = view_height - render_y * view_height / height();
   
   int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.width() - 2);
   int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.height() - 2);
@@ -503,8 +480,8 @@ float ggo::toutouyoutou_animation_artist::get_potiental(float render_x, float re
 //////////////////////////////////////////////////////////////
 float ggo::toutouyoutou_animation_artist::get_temperature(float render_x, float render_y) const
 {
-  float view_x = render_x * view_height / get_height();
-  float view_y = view_height - render_y * view_height / get_height();
+  float view_x = render_x * view_height / height();
+  float view_y = view_height - render_y * view_height / height();
   
   int grid_x = ggo::clamp(ggo::round_to<int>(view_x / influence_radius), 1, _grid.width() - 2);
   int grid_y = ggo::clamp(ggo::round_to<int>(view_y / influence_radius), 1, _grid.height() - 2);
@@ -544,5 +521,5 @@ float ggo::toutouyoutou_animation_artist::get_temperature(float render_x, float 
 //////////////////////////////////////////////////////////////
 float ggo::toutouyoutou_animation_artist::get_view_width() const
 {
-  return get_width() * view_height / static_cast<float>(get_height());
+  return width() * view_height / static_cast<float>(height());
 }

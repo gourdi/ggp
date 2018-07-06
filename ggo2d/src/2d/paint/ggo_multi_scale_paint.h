@@ -124,6 +124,10 @@ namespace ggo
 
     // Bounding rect.
     const auto shape_bounding_rect_data = shape.get_bounding_rect();
+    if (shape_bounding_rect_data._width == 0.f || shape_bounding_rect_data._height == 0.f)
+    {
+      return;
+    }
 
     // Clip.
     ggo::rect<data_t> shape_bounding_rect(shape_bounding_rect_data);

@@ -111,8 +111,8 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 
 			int x = ggo::round_to<int>(point.get<0>());
 			int y = ggo::round_to<int>(point.get<1>());
-			if ((x >= 0) && (x < get_width()) &&
-		    	(y >= 0) && (y < get_height()))
+			if ((x >= 0) && (x < width()) &&
+		    	(y >= 0) && (y < height()))
 			{
 				accumulation(x, y) += 1;
 			}
@@ -123,11 +123,11 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 //////////////////////////////////////////////////////////////
 void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 {
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::black<ggo::color_8u>(), ggo::rect_int::from_width_height(get_width(), get_height()));
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black<ggo::color_8u>(), ggo::rect_int::from_width_height(width(), height()));
 
-  ggo::array<int, 2> accumulation_r(get_width(), get_height());
-  ggo::array<int, 2> accumulation_g(get_width(), get_height());
-  ggo::array<int, 2> accumulation_b(get_width(), get_height());
+  ggo::array<int, 2> accumulation_r(width(), height());
+  ggo::array<int, 2> accumulation_g(width(), height());
+  ggo::array<int, 2> accumulation_b(width(), height());
 
   accumulation_r.fill(0);
 	accumulation_g.fill(0);
@@ -151,7 +151,7 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
   double range;
 	setup_seed_area(escape_threshold_r, escape_threshold_g, escape_threshold_b, center, range);
 	
-	int counter_max = get_width() * get_height() / 1000;	
+	int counter_max = width() * height() / 1000;	
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{	
@@ -169,9 +169,9 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 	}
 	
 	uint8_t * ptr = static_cast<uint8_t *>(buffer);
-	for (int y = 0; y < get_height(); ++y)
+	for (int y = 0; y < height(); ++y)
 	{
-		for (int x = 0; x < get_height(); ++x)
+		for (int x = 0; x < height(); ++x)
 		{
 			*ptr++ = std::min(accumulation_r(x, y), 255);
 			*ptr++ = std::min(accumulation_g(x, y), 255);

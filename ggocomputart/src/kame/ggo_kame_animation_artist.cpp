@@ -8,8 +8,6 @@
 
 namespace
 {
-  const int frames_count = 300;
-
   ggo::color_8u sub_blend(ggo::color_8u bkgd_color, ggo::color_8u brush_color)
   {
     int r = static_cast<int>(bkgd_color.r()) - static_cast<int>(brush_color.r());
@@ -24,11 +22,24 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::kame_animation_artist::kame_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::kame_animation_artist::kame_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
+  _bkgd_colors[0] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[1] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[2] = ggo::rand<uint8_t>(0xdd, 0xff);
+  _bkgd_colors[3] = ggo::rand<uint8_t>(0xdd, 0xff);
 
+  for (int i = 256; i > 0; --i)
+  {
+    auto kame = create_kame();
+    kame->_center = i == 1 ? get_center() : get_random_point();
+    kame->_scale = 1.5f * min_size() / (i + 16);
+    kame->_thickness = 0.01f * min_size() / (i + 16);
+
+    _kames.emplace_back(std::move(kame));
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -267,7 +278,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
     }
   }
 
-  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_width(), triangles);
+  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.width(), triangles);
 
   using paint_shape_t = ggo::solid_color_shape<ggo::capsule_float, uint8_t>;
 
@@ -280,70 +291,35 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
     shapes.push_back(paint_shape_t({ proj1, proj2, _thickness }, 0x00));
   }
 
-  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_16x16>(buffer, artist.get_width(), artist.get_height(), artist.get_width(), shapes);
+  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_16x16>(buffer, artist.width(), artist.height(), artist.width(), shapes);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::init_animation()
+void ggo::kame_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  _frame_index = -1;
-
-  _bkgd_colors[0] = ggo::rand<uint8_t>(0xdd, 0xff);
-  _bkgd_colors[1] = ggo::rand<uint8_t>(0xdd, 0xff);
-  _bkgd_colors[2] = ggo::rand<uint8_t>(0xdd, 0xff);
-  _bkgd_colors[3] = ggo::rand<uint8_t>(0xdd, 0xff);
-
-  _kames.clear();
-  for (int i = 256; i > 0; --i)
-  {
-    auto kame = create_kame();
-    kame->_center = i == 1 ? get_center() : get_random_point();
-    kame->_scale = 1.5f * get_min_size() / (i + 16);
-    kame->_thickness = 0.01f * get_min_size() / (i + 16);
-
-    _kames.emplace_back(std::move(kame));
-  }
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::kame_animation_artist::prepare_frame()
-{
-  ++_frame_index;
-
-  if (_frame_index >= frames_count)
-  {
-    return false;
-  }
-
   for (auto & kame : _kames)
   {
     kame->update();
   }
 
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
   if (buffer != nullptr)
   {
-    ggo::array_8u buffer_gray(get_width() * get_height());
+    ggo::array_8u buffer_gray(width() * height());
 
-    ggo::fill_4_colors<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),
+    ggo::fill_4_colors<ggo::y_8u_yu>(buffer_gray.data(), width(), height(), width(),
       _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 
-    float stddev = 0.001f * get_min_size();
+    float stddev = 0.001f * min_size();
 
     for (const auto & kame : _kames)
     {
       kame->paint(buffer_gray.data(), *this);
 
-      ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer_gray.data(), get_width(), get_size(), stddev);
+      ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer_gray.data(), width(), size(), stddev);
     }
 
-    ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(buffer_gray.data(), get_width(), get_height(), get_width(),
-      buffer, get_width(), get_height(), get_line_step(), 0, 0);
+    ggo::blit<ggo::y_8u_yu, ggo::rgb_8u_yu>(buffer_gray.data(), width(), height(), width(),
+      buffer, width(), height(), line_step(), 0, 0);
   }
 }
 

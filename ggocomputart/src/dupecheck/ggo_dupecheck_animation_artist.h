@@ -11,11 +11,9 @@ namespace ggo
   {
   public:
 
-                  dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+                  dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void          init_animation() override;
-    bool          prepare_frame() override;
-    void          render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void          render_frame(void * buffer, int frame_index, bool & finished) override;
 
   private:
 
@@ -45,7 +43,7 @@ namespace ggo
 
             animate1(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -60,7 +58,7 @@ namespace ggo
 
             animate2(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -73,7 +71,7 @@ namespace ggo
 
             animate3(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::color_8u & color, int render_min_size);
       void  update() override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -96,7 +94,6 @@ namespace ggo
       float	_var;
     };
 
-    int                           _frame_index = 0;
     std::vector<background_color> _bkgd_colors;
     ggo::color_32f 					      _colors[4];
     ggo::pos2f 					          _points[4];

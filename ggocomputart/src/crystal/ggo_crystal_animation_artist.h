@@ -6,21 +6,19 @@
 
 namespace ggo
 {
-  class crystal_animation_artist : public animation_artist_abc
+  class crystal_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          crystal_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          crystal_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 100; }
 
   private:
 
-    int _frame_index;
     ggo::crystal_artist _artist;
     ggo::color_8u _bkgd_colors[4];
     ggo::crystal_artist::params _start_params;

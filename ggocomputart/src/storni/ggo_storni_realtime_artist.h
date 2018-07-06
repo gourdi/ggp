@@ -1,17 +1,17 @@
-#ifndef __GGO_STORNI_ANIMATION_ARTIST__
-#define __GGO_STORNI_ANIMATION_ARTIST__
+#ifndef __GGO_STORNI_REALTIME_ARTIST__
+#define __GGO_STORNI_REALTIME_ARTIST__
 
-#include <ggo_animation_artist_abc.h>
+#include <ggo_realtime_artist_abc.h>
 #include <kernel/memory/ggo_array.h>
 #include <2D/paint/ggo_pixel_sampling.h>
 
 namespace ggo
 {
-  class storni_animation_artist : public animation_artist_abc
+  class storni_realtime_artist : public fixed_frames_count_realtime_artist_abc
   {
   public:
 
-          storni_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    storni_realtime_artist(int width, int height, int line_step, ggo::image_format format);
 
     struct storni
     {
@@ -30,11 +30,11 @@ namespace ggo
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  preprocess_frame(int frame_index) override;
+    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
+    int   frames_count() const override { return 800; }
 
-    float get_velocity_hypot_max() const { return ggo::square(0.004f * get_min_size()); }
+    float get_velocity_hypot_max() const { return ggo::square(0.004f * min_size()); }
 
     void update_predators(float velocity_hypot_max, float border_margin);
     void update_stornis(float velocity_hypot_max, float border_margin);
@@ -47,7 +47,6 @@ namespace ggo
 
     static float get_obstacle_hypot(int width, int height) { return ggo::square(0.05f) * width * height; }
 
-    int                     _frame_index;
     float                   _hue;
     std::vector<storni>     _stornis;
     std::vector<storni>     _predators;

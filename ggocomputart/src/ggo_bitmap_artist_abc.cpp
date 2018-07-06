@@ -7,7 +7,6 @@
 #include "flower/ggo_flower_artist.h"
 #include "cells/ggo_cells_artist.h"
 #include "buddhabrot/ggo_buddhabrot_artist.h"
-#include "kanji/ggo_kanji_bitmap_artist.h"
 #include "crystal/ggo_crystal_bitmap_artist.h"
 #include "filling_squares/ggo_filling_squares_bitmap_artist.h"
 #include "voronoi/ggo_voronoi_artist.h"
@@ -19,16 +18,12 @@
 #include "metaballs/ggo_metaballs_bitmap_artist.h"
 #include "marbles/ggo_marbles_artist.h"
 #include "julia/ggo_julia_bitmap_artist.h"
-#include "alpha/ggo_alpha_bitmap_artist.h"
-#include "dupecheck/ggo_dupecheck_bitmap_artist.h"
+#include "dupecheck/ggo_dupecheck_animation_artist.h"
 #include "cumbia/ggo_cumbia_bitmap_artist.h"
 #include "topodoko/ggo_topodoko_artist.h"
-#include "bozons/ggo_bozons_animation_artist.h"
+#include "bozons/ggo_bozons_realtime_artist.h"
 #include "rex/ggo_rex_artist.h"
-#include "circles/ggo_circles_bitmap_artist.h"
 #include "bubbles/ggo_bubbles_artist.h"
-#include "distorsion/ggo_distorsion_bitmap_artist.h"
-#include "toutouyoutou/ggo_toutouyoutou_bitmap_artist.h"
 #include "hexa/ggo_hexa_bitmap_artist.h"
 #include "chryzode/ggo_chryzode_bitmap_artist.h"
 #include "stoa/ggo_stoa_bitmap_artist.h"
@@ -49,10 +44,10 @@ namespace ggo
 
     // A 'zero' frames count means: process all frames.
     bitmap_artist_animation_wrapper(ggo::animation_artist_id artist_id,
-                                    int width, int height, int line_step,
-                                    ggo::image_format format,
-                                    int frames_count = 0,
-                                    bool render_last_frame_only = true);
+      int width, int height, int line_step,
+      ggo::image_format format,
+      int frames_count = 0,
+      bool render_last_frame_only = true);
 
     void	render_bitmap(void * buffer) const override;
 
@@ -66,55 +61,51 @@ namespace ggo
 
 //////////////////////////////////////////////////////////////
 ggo::bitmap_artist_animation_wrapper::bitmap_artist_animation_wrapper(ggo::animation_artist_id artist_id,
-                                                                      int width, int height, int line_step,
-                                                                      ggo::image_format format,
-                                                                      int frames_count,
-                                                                      bool render_last_frame_only)
-:
-bitmap_artist_abc(width, height, line_step, format)
+  int width, int height, int line_step,
+  ggo::image_format format,
+  int frames_count,
+  bool render_last_frame_only)
+  :
+  bitmap_artist_abc(width, height, line_step, format)
 {
-	_artist_id = artist_id;
-	_frames_count = frames_count;
+  _artist_id = artist_id;
+  _frames_count = frames_count;
   _render_last_frame_only = render_last_frame_only;
-    
+
   GGO_ASSERT(frames_count > 0 || render_last_frame_only == true);
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 {
-	std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
-    _artist_id, get_width(), get_height(), get_line_step(), get_format(), ggo::animation_artist_abc::offscreen_rendering));
-	GGO_ASSERT(artist.get());
-	
-	if (artist)
+  std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(_artist_id, width(), height(), line_step(), format()));
+
+  if (!artist)
   {
-    int frame_index = 0;
+    throw std::runtime_error("failed creating aniamtion artist");
+  }
 
-    artist->init_animation();
+  int frame_index = 0;
 
-    while (true)
+  while (true)
+  {
+    if (_frames_count > 0 && frame_index >= _frames_count)
     {
-      if (_frames_count > 0 && frame_index > _frames_count - 1)
-      {
-        break;
-      }
-
-      void * frame_buffer = buffer;
-      if (_render_last_frame_only == true && frame_index != _frames_count - 1)
-      {
-        frame_buffer = nullptr;
-      }
-
-      if (artist->prepare_frame() == false)
-      {
-        break;
-      }
-      
-      artist->render_frame(frame_buffer, ggo::rect_int::from_width_height(get_width(), get_height()));
-
-      ++frame_index;
+      break;
     }
+
+    void * frame_buffer = buffer;
+    if (_render_last_frame_only == true && frame_index != _frames_count - 1)
+    {
+      frame_buffer = nullptr;
+    }
+
+    if (artist->render_frame(frame_buffer) == false)
+    {
+      break;
+    }
+
+    ++frame_index;
   }
 }
 
@@ -124,74 +115,60 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 //////////////////////////////////////////////////////////////
 ggo::bitmap_artist_abc::bitmap_artist_abc(int width, int height, int line_step, ggo::image_format format)
 :
-artist(width, height),
-_line_step(line_step),
-_format(format)
+artist(width, height, line_step, format)
 {
-	
+
 }
 
 //////////////////////////////////////////////////////////////
 ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_id, int width, int height, int line_step, ggo::image_format format)
 {
-	switch (artist_id)
-	{
-	case ggo::bitmap_artist_id::duffing:
-		return new ggo::duffing_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::trees:
-		return new ggo::trees_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::worms:
-		return new ggo::worms_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::flower:
-		return new ggo::flower_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::cells:
-		return new ggo::cells_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::buddhabrot:
-		return new ggo::buddhabrot_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::kanji:
-		return new ggo::kanji_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::crystal:
-		return new ggo::crystal_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::filling_squares:
-		return new ggo::filling_squares_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::voronoi:
-		return new ggo::voronoi_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::vortex:
-		return new ggo::vortex_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::plastic:
-		return new ggo::plastic_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::mandelbrot:
-		return new ggo::mandelbrot_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::ifs:
-		return new ggo::ifs_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::mosaic:
-		return new ggo::mosaic_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::metaballs:
-		return new ggo::metaballs_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::marbles:
-		return new ggo::marbles_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::julia:
-		return new ggo::julia_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::alpha:
-		return new ggo::alpha_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::dupecheck:
-		return new ggo::dupecheck_bitmap_artist(width, height, line_step, format);
-  case ggo::bitmap_artist_id::circles:
-    return new ggo::circles_bitmap_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::topodoko:
+  switch (artist_id)
+  {
+  case ggo::bitmap_artist_id::duffing:
+    return new ggo::duffing_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::trees:
+    return new ggo::trees_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::worms:
+    return new ggo::worms_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::flower:
+    return new ggo::flower_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::cells:
+    return new ggo::cells_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::buddhabrot:
+    return new ggo::buddhabrot_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::crystal:
+    return new ggo::crystal_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::filling_squares:
+    return new ggo::filling_squares_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::voronoi:
+    return new ggo::voronoi_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::vortex:
+    return new ggo::vortex_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::plastic:
+    return new ggo::plastic_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::mandelbrot:
+    return new ggo::mandelbrot_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::ifs:
+    return new ggo::ifs_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::mosaic:
+    return new ggo::mosaic_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::metaballs:
+    return new ggo::metaballs_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::marbles:
+    return new ggo::marbles_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::julia:
+    return new ggo::julia_bitmap_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::topodoko:
     return new ggo::topodoko_artist(width, height, line_step, format);
-	case ggo::bitmap_artist_id::rex:
-		return new ggo::rex_artist(width, height, line_step, format);
+  case ggo::bitmap_artist_id::rex:
+    return new ggo::rex_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::bubble:
     return new ggo::bubbles_artist(width, height, line_step, format);
-  case ggo::bitmap_artist_id::distorsion:
-    return new ggo::distorsion_bitmap_artist(width, height, line_step, format);
-  case ggo::bitmap_artist_id::toutouyoutou:
-    return new ggo::toutouyoutou_bitmap_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::cumbia:
-		return new ggo::cumbia_bitmap_artist(width, height, line_step, format);
+    return new ggo::cumbia_bitmap_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::hexa:
-   	return new ggo::hexa_bitmap_artist(width, height, line_step, format);
+    return new ggo::hexa_bitmap_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::chryzode:
     return new ggo::chryzode_bitmap_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::stoa:
@@ -203,13 +180,13 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
   case ggo::bitmap_artist_id::demeco:
     return new ggo::demeco_bitmap_artist(width, height, line_step, format);
 
-  // animation artists.
-	case ggo::bitmap_artist_id::smoke:
-		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, format, 400);
-	case ggo::bitmap_artist_id::ikeda:
-		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::ikeda, width, height, line_step, format, 1);
-	case ggo::bitmap_artist_id::lagaude:
-		return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::lagaude, width, height, line_step, format, 25);
+    // animation artists.
+  case ggo::bitmap_artist_id::smoke:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, width, height, line_step, format, 400);
+  case ggo::bitmap_artist_id::ikeda:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::ikeda, width, height, line_step, format, 1);
+  case ggo::bitmap_artist_id::lagaude:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::lagaude, width, height, line_step, format, 25);
   case ggo::bitmap_artist_id::amorosi:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::amorosi, width, height, line_step, format, 100, true);
   case ggo::bitmap_artist_id::bozons:
@@ -222,11 +199,17 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::aggregation, width, height, line_step, format, 300, true);
   case ggo::bitmap_artist_id::kame:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::kame, width, height, line_step, format, 50, true);
+  case ggo::bitmap_artist_id::dupecheck:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::dupecheck, width, height, line_step, format);
+  case ggo::bitmap_artist_id::kanji:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::kanji, width, height, line_step, format);
+  case ggo::bitmap_artist_id::toutouyoutou:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::toutouyoutou, width, height, line_step, format);
 
-	default:
-		GGO_FAIL();
-		return nullptr;
-    }
+  default:
+    GGO_FAIL();
+    return nullptr;
+  }
 }
 
 

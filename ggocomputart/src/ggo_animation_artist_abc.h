@@ -4,7 +4,6 @@
 #include <ggo_artist.h>
 #include <ggo_artist_ids.h>
 #include <2d/ggo_image_format.h>
-#include <mutex>
 
 namespace ggo
 {
@@ -12,32 +11,36 @@ namespace ggo
   {
   public:
 
-    enum rendering_type
-    {
-      offscreen_rendering,
-      realtime_rendering_android,
-      realtime_rendering_pc
-    };
+    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::image_format format);
 
-    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::image_format format, rendering_type rt);
-
-    virtual void init_animation() = 0;
-    virtual bool prepare_frame() = 0;
-    virtual void render_frame(void * buffer, const ggo::rect_int & clipping) = 0;
-
-    int                                     get_line_step() const { return _line_step; }
-    ggo::image_format                       get_format() const { return _format; }
-    animation_artist_abc::rendering_type    get_rendering_type() const { return _rendering_type; }
+    bool  render_frame(void * buffer);
 
   protected:
 
-                      animation_artist_abc(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    virtual void  render_frame(void * buffer, int frame_index, bool & finished) = 0;
+
+                  animation_artist_abc(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    const int _line_step;
-    const image_format _format;
-    const rendering_type _rendering_type;
+    int _frame_index = 0;
+  };
+}
+
+namespace ggo
+{
+  class fixed_frames_count_animation_artist_abc : public animation_artist_abc
+  {
+  protected:
+
+    fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format);
+
+  private:
+
+    void  render_frame(void * buffer, int frame_index, bool & finished) override;
+
+    virtual void  render_frame(void * buffer, int frame_index) = 0;
+    virtual int   frames_count() const = 0;
   };
 }
 

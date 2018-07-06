@@ -11,39 +11,21 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
-{
-} 
-
-//////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::init_animation()
+  fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
 #ifdef GGO_PREVIEW
   _artist.reset(new ggo::hexa_artist(false));
 #else
   _artist.reset(new ggo::hexa_artist(true));
 #endif
-}
+} 
 
 //////////////////////////////////////////////////////////////
-bool ggo::hexa_animation_artist::prepare_frame()
+void ggo::hexa_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > frames_count)
-  {
-    return false;
-  }
-
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  float progress = static_cast<float>(_frame_index) / frames_count;
+  float progress = static_cast<float>(frame_index) / frames_count();
   progress = ggo::ease_inout(progress);
 
   // The camera.
@@ -51,11 +33,11 @@ void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int
   const float camera_aperture = 0.15f;
 
 #ifdef GGO_PREVIEW
-  ggo::mono_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture);
+  ggo::mono_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture);
 #else
   float depth_of_field = 0.92f * camera_basis.pos().get_length();
   float depth_of_field_factor = 0.05f * camera_basis.pos().get_length();
-  ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
+  ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
 #endif
   
   // Rendering.
@@ -64,5 +46,5 @@ void ggo::hexa_animation_artist::render_frame(void * buffer, const ggo::rect_int
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  _artist->render(buffer, get_width(), get_height(), get_line_step(), get_format(), progress, renderer);
+  _artist->render(buffer, width(), height(), line_step(), format(), progress, renderer);
 }

@@ -293,9 +293,9 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
 // ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
   _focus_dist_interpolator._near = near;
   _focus_dist_interpolator._far = far;
@@ -310,55 +310,34 @@ void ggo::rah_animation_artist::insert_particle(std::shared_ptr<particle> partic
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::init_animation()
+void ggo::rah_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  _frame_index = -1;
-
-  _particles.clear();
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::rah_animation_artist::prepare_frame()
-{
-  ++_frame_index;
-
   _focus_dist = _focus_dist_interpolator.update(1);
 
   // Update items (far from near).
   for (auto & particle : _particles)
   {
-    particle->update(get_min_size());
+    particle->update(min_size());
   }
 
   ggo::remove_if(_particles, [&](const auto & particle)
   {
-    return particle->is_alive(get_width(), get_height(), _focus_dist) == false;
+    return particle->is_alive(width(), height(), _focus_dist) == false;
   });
 
   // Create new particles.
-  if (_frame_index < 500)
+  int create_count = std::min(frame_index / 5, 20);
+  for (int i = 0; i < create_count; ++i)
   {
-    int create_count = std::min(_frame_index / 5, 20);
-    for (int i = 0; i < create_count; ++i)
-    {
-      // Sorted insertion.
-      auto particle = create_particle(_focus_dist, get_width(), get_height());
-      insert_particle(particle);
-    }
-
-    return true;
+    // Sorted insertion.
+    auto particle = create_particle(_focus_dist, width(), height());
+    insert_particle(particle);
   }
 
-  return false;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
   // Paint background.
   if (buffer != nullptr)
   {    
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
+    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::white_8u());
   }
 
   // Paint items (far from near).
@@ -366,7 +345,7 @@ void ggo::rah_animation_artist::render_frame(void * buffer, const ggo::rect_int 
   {
     for (const auto & particle : _particles)
     {
-      particle->paint(buffer, get_width(), get_height(), _focus_dist);
+      particle->paint(buffer, width(), height(), _focus_dist);
     }
   }
 

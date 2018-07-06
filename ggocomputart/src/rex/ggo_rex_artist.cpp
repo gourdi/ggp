@@ -36,7 +36,7 @@ namespace
   template <ggo::image_format format>
   void render_color_triangles(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<color_triangle_rgb8u> & color_triangles)
   {
-    ggo::paint_shapes<format, ggo::sampling_1>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), color_triangles);
+    ggo::paint_shapes<format, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.line_step(), color_triangles);
   }
 
   //////////////////////////////////////////////////////////////
@@ -48,8 +48,8 @@ namespace
       auto clip_triangle = std::make_shared<ggo::triangle2d_float>(pattern_triangle._v1, pattern_triangle._v2, pattern_triangle._v3);
       auto bounding_rect = clip_triangle->get_bounding_rect();
 
-      const float delta = pattern_triangle._delta * artist.get_min_size();
-      const float radius = pattern_triangle._radius * artist.get_min_size();
+      const float delta = pattern_triangle._delta * artist.min_size();
+      const float radius = pattern_triangle._radius * artist.min_size();
       for (float y = bounding_rect._pos.y(); y < bounding_rect._pos.y() + bounding_rect._height; y += delta)
       {
         for (float x = bounding_rect._pos.x(); x < bounding_rect._pos.x() + bounding_rect._width; x += delta)
@@ -58,7 +58,7 @@ namespace
           clipped_disc.add_shape(std::make_shared<ggo::disc_float>(ggo::pos2f(x, y), radius));
           clipped_disc.add_shape(clip_triangle);
 
-          ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+          ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
             clipped_disc, ggo::black_8u());
         }
       }
@@ -91,7 +91,7 @@ namespace
       clip_triangle.add_shape(std::make_shared<ggo::triangle2d_float>(disc_clip_triangle._v1, disc_clip_triangle._v2, disc_clip_triangle._v3));
       clip_triangle.add_shape(circles);
 
-      ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(),
+      ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
         clip_triangle, ggo::black_8u());
     }
   }
@@ -104,11 +104,11 @@ namespace
 
     for (const auto & edge : edges)
     {
-      ggo::capsule_float segment(edge.p1(), edge.p2(), 0.001f * artist.get_min_size());
+      ggo::capsule_float segment(edge.p1(), edge.p2(), 0.001f * artist.min_size());
       shapes.emplace_back(segment, ggo::black_8u());
     }
 
-    ggo::paint_shapes<format, ggo::sampling_8x8>(buffer, artist.get_width(), artist.get_height(), artist.get_line_step(), shapes);
+    ggo::paint_shapes<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(), shapes);
   }
 }
 
@@ -136,32 +136,32 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
 
   vertices.push_back(get_center());
   vertices.push_back({ 0.f, 0.f });
-  vertices.push_back({ get_width() - 1.f, 0.f });
-  vertices.push_back({ 0.f, get_height() - 1.f });
-  vertices.push_back({ get_width() - 1.f, get_height() - 1.f });
+  vertices.push_back({ width() - 1.f, 0.f });
+  vertices.push_back({ 0.f, height() - 1.f });
+  vertices.push_back({ width() - 1.f, height() - 1.f });
 
   for (int i = 0; i < edges_vertices_count; ++i)
   {
     switch (ggo::rand<int>(0, 3))
     {
     case 0: // Left edge.
-      vertices.push_back({ 0.f, ggo::rand<float>(0.f, get_height() - 1.f) });
+      vertices.push_back({ 0.f, ggo::rand<float>(0.f, height() - 1.f) });
       break;
     case 1: // Right edge.
-      vertices.push_back({ get_width() - 1.f, ggo::rand<float>(0.f, get_height() - 1.f) });
+      vertices.push_back({ width() - 1.f, ggo::rand<float>(0.f, height() - 1.f) });
       break;
     case 2: // Bottom edge.
-      vertices.push_back({ ggo::rand<float>(0.f, get_width() - 1.f), 0.f });
+      vertices.push_back({ ggo::rand<float>(0.f, width() - 1.f), 0.f });
       break;
     case 3: // Top edge.
-      vertices.push_back({ ggo::rand<float>(0.f, get_width() - 1.f), get_height() - 1.f });
+      vertices.push_back({ ggo::rand<float>(0.f, width() - 1.f), height() - 1.f });
       break;
     }
   }
 
   for (int i = 0; i < triangles_count; ++i)
   {
-    vertices.push_back(ggo::pos2f(ggo::rand<float>(0.f, get_width() - 1.f), ggo::rand<float>(0.f, get_height() - 1.f)));
+    vertices.push_back(ggo::pos2f(ggo::rand<float>(0.f, width() - 1.f), ggo::rand<float>(0.f, height() - 1.f)));
   }
 
   // Perform the Delaunay triangulation.
@@ -249,7 +249,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
   }
 
   // Create circles.
-  const float diagonal = ggo::distance(float(get_width()), float(get_height())) / 2;
+  const float diagonal = ggo::distance(float(width()), float(height())) / 2;
   float outter_radius = diagonal;
   float inner_radius = outter_radius - diagonal * ggo::rand<float>(0.002f, 0.004f);
   while (inner_radius > 0)
@@ -266,7 +266,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
     inner_radius = outter_radius - diagonal * ggo::rand<float>(0.002f, 0.004f);
   }
 
-  switch (get_format())
+  switch (format())
   {
   case ggo::rgb_8u_yu:
     render_color_triangles<ggo::rgb_8u_yu>(buffer, *this, color_triangles);

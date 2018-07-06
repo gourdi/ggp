@@ -18,9 +18,9 @@ bool ggo::animate_abc::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format) const
+void ggo::animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping) const
 {
-  render(buffer, width, height, line_step, format, _frame_index);
+  render(buffer, width, height, line_step, format, clipping, _frame_index);
 }
 
 //////////////////////////////////////////////////////////////
@@ -30,9 +30,9 @@ bool ggo::position_animate_abc::update(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::position_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index) const
+void ggo::position_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const
 {
-  render(buffer, width, height, line_step, format, frame_index, _pos);
+  render(buffer, width, height, line_step, format, clipping, frame_index, _pos);
 }
 
 //////////////////////////////////////////////////////////////
@@ -46,7 +46,7 @@ bool ggo::path_animate_abc::update(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::path_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index) const
+void ggo::path_animate_abc::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const
 {
-  render(buffer, width, height, line_step, format, frame_index, _cur_pos);
+  render(buffer, width, height, line_step, format, clipping, frame_index, _cur_pos);
 }

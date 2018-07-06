@@ -36,17 +36,17 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 	polynom2._deg1 = ggo::rand<float>(-2, 2);
 	polynom2._deg0 = ggo::rand<float>(-2, 2);
 
-	ggo::fill_solid<rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+	ggo::fill_solid<rgb_8u_yu>(buffer, width(), height(), line_step(),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()),
-    ggo::rect_int::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_width_height(width(), height()));
 	
 	for (int counter = 0; counter < cells_count; ++counter)
 	{
-		float blur_start = 0.005f * get_min_size();
+		float blur_start = 0.005f * min_size();
 
 		float pos_x = ggo::rand<float>();
 		float pos_y = ggo::rand<float>();
-		cell cell(pos_x - 0.02f, pos_x + 0.02f, pos_y + 0.02f, pos_y - 0.02f, get_width(), get_height());
+		cell cell(pos_x - 0.02f, pos_x + 0.02f, pos_y + 0.02f, pos_y - 0.02f, width(), height());
 
 		ggo::color_8u color;
 		if (polynom1._deg2 * pos_x * pos_x + polynom1._deg1 * pos_x + polynom1._deg0 < pos_y)
@@ -68,7 +68,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     auto paint_pixel = [&](int x, int y)
     {
       bool done = true;
-      const color_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, get_height(), get_line_step());
+      const color_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step());
       accumulator<color_8u> acc;
 
       auto sample_shape = [&](float x_f, float y_f)
@@ -86,19 +86,19 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 
       sample_t::sample_pixel<float>(x, y, sample_shape);
 
-      write_pixel<rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), acc.div<sample_t::samples_count>());
+      write_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step(), acc.div<sample_t::samples_count>());
 
       return !done;
     };
 
-		ggo::paint_seed_shape(get_width(), get_height(), cell, paint_pixel);
+		ggo::paint_seed_shape(width(), height(), cell, paint_pixel);
         
     // Blur.
     if (counter % 10 == 0)
     {
-      float stddev = 0.0005f * get_min_size();
+      float stddev = 0.0005f * min_size();
       
-      gaussian_blur2d<rgb_8u_yu>(buffer, get_line_step(), get_size(), stddev);
+      gaussian_blur2d<rgb_8u_yu>(buffer, line_step(), size(), stddev);
     }
 	}
 }

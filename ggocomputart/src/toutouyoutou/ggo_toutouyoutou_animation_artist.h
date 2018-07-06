@@ -10,15 +10,14 @@
 
 namespace ggo
 {
-  class toutouyoutou_animation_artist : public animation_artist_abc
+  class toutouyoutou_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 1000; }
 
   private:
 
@@ -87,7 +86,6 @@ namespace ggo
     constexpr static float near_norm = 30 / (2 * ggo::pi<float>() * influence_radius * influence_radius);
     constexpr static float view_height = 20;
 
-    int                                           _frame_index;
     std::unique_ptr<uint8_t>                      _background;
     std::vector<particle>                         _particles;
     ggo::array<std::vector<const particle *>, 2>  _grid;

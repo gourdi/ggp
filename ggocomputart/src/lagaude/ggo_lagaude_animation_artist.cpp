@@ -6,19 +6,10 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::lagaude_animation_artist::lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
-	
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::init_animation()
-{
-  _frame_index = -1;
-
-  _bkgd_discs.clear();
   for (int i = 0; i < 100; ++i)
   {
     ggo::lagaude_animation_artist::bkgd_disc bkgd_disc;
@@ -30,7 +21,6 @@ void ggo::lagaude_animation_artist::init_animation()
     _bkgd_discs.push_back(bkgd_disc);
   }
 
-  _animator.clear();
   for (int i = 0; i < 1000; ++i)
   {
     float scale = ggo::rand<float>(0.5, 1);
@@ -53,15 +43,8 @@ void ggo::lagaude_animation_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_animation_artist::prepare_frame()
+void ggo::lagaude_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > 450)
-  {
-    return false;
-  }
-
   // Update background.
   for (auto & bkgd_disc : _bkgd_discs)
   {
@@ -69,7 +52,7 @@ bool ggo::lagaude_animation_artist::prepare_frame()
   }
 
   // Add seed.
-  if ((_frame_index % 10 == 0) && (_frame_index < 350))
+  if ((frame_index % 10 == 0) && (frame_index < 350))
   {
     float scale = ggo::rand<float>(0.5, 1);
     ggo::pos2f pos(ggo::rand<float>(), ggo::rand<float>());
@@ -80,27 +63,21 @@ bool ggo::lagaude_animation_artist::prepare_frame()
 
   _animator.update();
 
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::lagaude_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
   // Render background.
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), ggo::white_8u(), clipping);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::white_8u());
 
   for (auto & bkgd_disc : _bkgd_discs)
   {
-    float x = get_width() * bkgd_disc._pos.x();
-    float y = get_height() * bkgd_disc._pos.y();
-    float radius = get_min_size() * bkgd_disc._radius;
+    float x = width() * bkgd_disc._pos.x();
+    float y = height() * bkgd_disc._pos.y();
+    float radius = min_size() * bkgd_disc._radius;
 
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, get_width(), get_height(), get_line_step(),
+      buffer, width(), height(), line_step(),
       ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f));
   }
 
-  _animator.render(buffer, get_width(), get_height(), get_line_step(), get_format());
+  _animator.render(buffer, width(), height(), line_step(), format());
 }
 
 //////////////////////////////////////////////////////////////
@@ -181,9 +158,9 @@ bool ggo::lagaude_animation_artist::seed::update(int frame_index, const ggo::pos
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_animation_artist::seed::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
 {
-	_particles_animator.render(buffer, width, height, line_step, format);
+	_particles_animator.render(buffer, width, height, line_step, format, clipping);
 }
 
 //////////////////////////////////////////////////////////////
@@ -205,7 +182,7 @@ bool ggo::lagaude_animation_artist::particle::update(int frame_index, const ggo:
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_animation_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
 {
 	ggo::pos2f p1 = ggo::map_fit(ggo::from_polar(_angle, _radius), 0.f, 1.f, width, height);
 	ggo::pos2f p2 = ggo::map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0.f, 1.f, width, height);
@@ -240,7 +217,7 @@ bool ggo::lagaude_animation_artist::dust::update(int frame_index, const ggo::pos
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_animation_artist::dust::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
 {
   ggo::pos2f center(width * pos.x(), height * pos.y());
   float disc_radius = std::min(width, height) * _radius;

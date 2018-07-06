@@ -1,4 +1,4 @@
-#include "ggo_bozons_animation_artist.h"
+#include "ggo_bozons_realtime_artist.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>
@@ -10,15 +10,25 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::bozons_animation_artist::bozons_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_step, ggo::image_format format)
 :
-ggo::animation_artist_abc(width, height, line_step, format, rt)
+ggo::realtime_artist_abc(width, height, line_step, format)
 {
-	
+  _hue = ggo::rand<float>();
+  _bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+
+  // Create bozons.
+  for (int i = 0; i < 32; ++i)
+  {
+    create_bozon();
+  }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::create_bozon()
+void ggo::bozons_realtime_artist::create_bozon()
 {
   bozon new_bozon;
 
@@ -32,43 +42,16 @@ void ggo::bozons_animation_artist::create_bozon()
 
   new_bozon._counter = ggo::rand<int>(200, 300);
 
-  new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
+  new_bozon._speed = ggo::rand<float>(0.01f, 0.02f) * min_size();
 
-  new_bozon._radius = 0.0015f * get_min_size();
+  new_bozon._radius = 0.0015f * min_size();
 
   _bozons.push_back(new_bozon);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::init_animation()
+void ggo::bozons_realtime_artist::preprocess_frame(int frame_index)
 {
-  _frame_index = -1;
-
-  _hue = ggo::rand<float>();
-  _bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-
-  // Create bozons.
-  _bozons.clear();
-
-  for (int i = 0; i < 32; ++i)
-  {
-    create_bozon();
-  }
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::bozons_animation_artist::prepare_frame()
-{
-  ++_frame_index;
-
-  if (_bozons.empty() == true)
-  {
-    return false;
-  }
-
   for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
   {
     --bozon_it->_counter;
@@ -79,7 +62,7 @@ bool ggo::bozons_animation_artist::prepare_frame()
     else
     {
       // Split bozon?
-      if (_frame_index < 100 && ggo::rand<int>(0, 256) == 0)
+      if (frame_index < 100 && ggo::rand<int>(0, 256) == 0)
       {
         bozon new_bozon;
 
@@ -114,31 +97,36 @@ bool ggo::bozons_animation_artist::prepare_frame()
   }
 
   // Create new bozons.
-  if (_frame_index < 100 && ggo::rand<int>(0, 12) == 0)
+  if (frame_index < 100 && ggo::rand<int>(0, 12) == 0)
   {
     create_bozon();
   }
-
-  return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::bozons_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  switch (get_format())
+  switch (format())
   {
   case ggo::bgrx_8u_yd:
-    process_frame<ggo::bgrx_8u_yd>(buffer, clipping);
+    render_tile_t<ggo::bgrx_8u_yd>(buffer, frame_index, clipping);
     break;
   case ggo::rgb_8u_yu:
-    process_frame<ggo::rgb_8u_yu>(buffer, clipping);
+    render_tile_t<ggo::rgb_8u_yu>(buffer, frame_index, clipping);
     break;
   case ggo::rgb_8u_yd:
-    process_frame<ggo::rgb_8u_yd>(buffer, clipping);
+    render_tile_t<ggo::rgb_8u_yd>(buffer, frame_index, clipping);
     break;
   default:
     GGO_FAIL();
     break;
   }
 }
+
+//////////////////////////////////////////////////////////////
+bool ggo::bozons_realtime_artist::finished(int frame_index) const
+{
+  return _bozons.empty();
+}
+
 

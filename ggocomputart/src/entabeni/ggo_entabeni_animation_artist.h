@@ -8,17 +8,16 @@
 
 namespace ggo
 {
-  class entabeni_animation_artist : public animation_artist_abc
+  class entabeni_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          entabeni_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          entabeni_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 300; }
 
   private:
 
@@ -31,7 +30,6 @@ namespace ggo
       }
     };
 
-    int                                     _frame_index = 0;
     float                                   _angle = 0.f;
     angle_interpolator                      _angle_interpolator;
     float                                   _z = 0.f;

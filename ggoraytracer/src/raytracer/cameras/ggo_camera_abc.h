@@ -15,8 +15,8 @@ namespace ggo
 
     const ggo::basis3d_float &  basis() const { return _basis; }
 
-    int                         get_width() const { return _width; }
-    int                         get_height() const { return _height; }
+    int                         width() const { return _width; }
+    int                         height() const { return _height; }
 
   protected:
 

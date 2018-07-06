@@ -74,7 +74,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
 	// Setup the camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });
   camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
-	ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
+	ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
 
 	// Floor plane.
   constexpr uint32_t flags = ggo::discard_basis | ggo::discard_phong;
@@ -136,6 +136,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(buffer, get_width(), get_height(), get_line_step(), get_format(), scene, raytrace_params);
+	renderer.render(buffer, width(), height(), line_step(), format(), scene, raytrace_params);
 }
 

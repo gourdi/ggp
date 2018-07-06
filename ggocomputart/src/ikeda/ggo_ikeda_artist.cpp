@@ -4,23 +4,11 @@
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 
-namespace
-{
-  const int frames_count = 200;
-}
-
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
-
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::ikeda_artist::init_animation()
-{
-  _frame_index = -1;
 
   _u0.set_harmonic(0, 0, 0);
   _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
@@ -41,7 +29,6 @@ void ggo::ikeda_artist::init_animation()
   _hue2 = ggo::rand<float>();
   _range = ggo::rand<float>(3, 5);
 
-  _seeds.clear();
   for (int i = 0; i < 500; ++i)
   {
     _seeds.push_back(create_seed());
@@ -54,30 +41,17 @@ void ggo::ikeda_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::ikeda_artist::prepare_frame()
+void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > frames_count)
-  {
-    return false;
-  }
-
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::ikeda_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3],
-    ggo::rect_int::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_size(size()));
 	
 	std::vector<particle> particles = _seeds;
 	
-	float u0 = _u0.evaluate(_frame_index * ggo::pi<float>() / frames_count);
-	float u1 = _u1.evaluate(_frame_index * ggo::pi<float>() / frames_count);
-	float u2 = _u2.evaluate(_frame_index * ggo::pi<float>() / frames_count);
+	float u0 = _u0.evaluate(frame_index * ggo::pi<float>() / frames_count());
+	float u1 = _u1.evaluate(frame_index * ggo::pi<float>() / frames_count());
+	float u2 = _u2.evaluate(frame_index * ggo::pi<float>() / frames_count());
 	
 	while (particles.empty() == false)
 	{
@@ -110,11 +84,11 @@ void ggo::ikeda_artist::render_frame(void * buffer, const ggo::rect_int & clippi
 			// Paint the point.
 			ggo::pos2f point = map_fill(particle._pos, -_range, _range);
 				
-			float radius = 0.0025f * particle._radius * get_max_size();
+			float radius = 0.0025f * particle._radius * max_size();
 			radius = std::max(1.5f, radius);
 
       ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, get_width(), get_height(), get_line_step(),
+        buffer, width(), height(), line_step(),
         ggo::disc_float(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.15f));
 				
 			// Move points slowly.

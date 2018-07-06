@@ -10,15 +10,14 @@
 
 namespace ggo
 {
-  class lagaude_animation_artist : public animation_artist_abc
+  class lagaude_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 450; }
 
   private:
 
@@ -30,7 +29,7 @@ namespace ggo
             particle(const ggo::pos2f & pos, ggo::velocity_path * path);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     public:
 
@@ -70,7 +69,7 @@ namespace ggo
             seed(const ggo::pos2f & pos, ggo::path_abc * path, float scale, float hue);
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     private:
 
@@ -89,7 +88,7 @@ namespace ggo
             dust(const ggo::pos2f & pos, ggo::path_abc * path, float scale) : scale_animate_abc(pos, path, scale) {};
 
       bool  update(int frame_index, const ggo::pos2f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::pos2f & pos) const override;
+      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const override;
 
     public:
 
@@ -126,7 +125,6 @@ namespace ggo
 
   private:
 
-    int                     _frame_index;
     ggo::animator				    _animator;
     std::vector<bkgd_disc>  _bkgd_discs;
     float						        _hue;

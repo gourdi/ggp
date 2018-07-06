@@ -8,11 +8,11 @@
 
 namespace ggo
 {
-  class rah_animation_artist : public animation_artist_abc
+  class rah_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-    rah_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    rah_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
@@ -125,16 +125,14 @@ namespace ggo
       }
     };
 
-    int                                     _frame_index;
     std::vector<std::shared_ptr<particle>>  _particles;
     focus_dist_interpolator                 _focus_dist_interpolator;
     float                                   _focus_dist;
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 500; }
 
     void  insert_particle(std::shared_ptr<particle> particle);
 

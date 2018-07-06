@@ -2,24 +2,11 @@
 #include <raytracer/renderers/ggo_antialiasing_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
 
-namespace
-{
-  const int frames_count = 300;
-}
-
 //////////////////////////////////////////////////////////////
-ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+  fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
-	
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::init_animation()
-{
-  _frame_index = -1;
-
   const float ball_size = 2;
 
   for (int i = 0; i < 200; ++i)
@@ -42,18 +29,11 @@ void ggo::metaballs_animation_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::metaballs_animation_artist::prepare_frame()
+void ggo::metaballs_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index >= frames_count)
-  {
-    return false;
-  }
-
   std::vector<ggo::pos3f> centers;
 
-  float t = ggo::ease_inout_to<float>(_frame_index, frames_count);
+  float t = ggo::ease_inout_to<float>(frame_index, frames_count());
 
   _params._centers.clear();
   for (const auto & center : _centers)
@@ -80,13 +60,7 @@ bool ggo::metaballs_animation_artist::prepare_frame()
     _params._centers.push_back(ggo::pos3f(x3, y3, z3));
   }
 
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  ggo::antialiasing_point_camera camera(get_width(), get_height(), _camera_basis, 0.1f);
+  ggo::antialiasing_point_camera camera(width(), height(), _camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);
-  ggo::metaballs_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer, _params);
+  ggo::metaballs_artist::render_bitmap(buffer, width(), height(), line_step(), format(), renderer, _params);
 }

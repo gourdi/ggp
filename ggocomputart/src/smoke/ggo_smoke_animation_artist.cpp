@@ -34,9 +34,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt),
+  fixed_frames_count_animation_artist_abc(width, height, line_step, format),
 _velocity_x1(width + 1, height),
 _velocity_x2(width + 1, height),
 _velocity_y1(width, height + 1),
@@ -46,13 +46,6 @@ _opacity2(width, height),
 _bkgd_buffer(3 * width * height),
 _sources(4)
 {
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::init_animation()
-{
-  _frame_index = 0;
-
   _velocity_x_cur = &_velocity_x1;
   _velocity_x_tmp = &_velocity_x2;
   _velocity_y_cur = &_velocity_y1;
@@ -68,7 +61,7 @@ void ggo::smoke_animation_artist::init_animation()
   _opacity_tmp->fill(0);
 
   const double area = 1.;
-  _cell_size = area / std::sqrt(double(get_width()) * double(get_height()));
+  _cell_size = area / std::sqrt(double(width) * double(height));
 
   _density = ggo::rand<float>(1.f, 5.f);// 2.;
   std::cout << "density: " << _density << std::endl;
@@ -123,11 +116,11 @@ void ggo::smoke_animation_artist::init_animation()
   const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
   const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
 
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_buffer.data(), get_width(), get_height(), get_line_step(), color1, color2, color3, color4);
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_buffer.data(), width, height, line_step, color1, color2, color3, color4);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::process_sources()
+void ggo::smoke_animation_artist::process_sources(int frame_index)
 {
   for (auto & source : _sources)
   {
@@ -146,9 +139,9 @@ void ggo::smoke_animation_artist::process_sources()
     }
   }
 
-  for (int y = 0; y < get_height(); ++y)
+  for (int y = 0; y < height(); ++y)
   {
-    for (int x = 0; x < get_width(); ++x)
+    for (int x = 0; x < width(); ++x)
     {
       for (const auto & source : _sources)
       {
@@ -165,7 +158,7 @@ void ggo::smoke_animation_artist::process_sources()
 
           if (dist < 0.8 * disc.radius())
           {
-            double angle = source._angle + source._angle_amplitude * std::cos(source._wave_length * _frame_index + source._angle_offset);
+            double angle = source._angle + source._angle_amplitude * std::cos(source._wave_length * frame_index + source._angle_offset);
 
             _velocity_x_cur->at(x, y) = source._speed * std::cos(angle);
             _velocity_y_cur->at(x, y) = source._speed * std::sin(angle);
@@ -182,9 +175,9 @@ void ggo::smoke_animation_artist::velocity_self_advection()
   double scale = time_step / _cell_size;
 
   // Horizontal self advection.
-  for (int y = 0; y < get_height(); ++y)
+  for (int y = 0; y < height(); ++y)
   {
-    for (int x = 0; x < get_width() + 1; ++x)
+    for (int x = 0; x < width() + 1; ++x)
     {
       double velocity_x = _velocity_x_cur->at_loop(x, y);
       double velocity_y = 0.25 * (_velocity_y_cur->at_loop(x, y) + _velocity_y_cur->at_loop(x, y + 1) + _velocity_y_cur->at_loop(x - 1, y) + _velocity_y_cur->at_loop(x - 1, y + 1));
@@ -202,9 +195,9 @@ void ggo::smoke_animation_artist::velocity_self_advection()
   std::swap(_velocity_x_tmp, _velocity_x_cur);
 
   // Vertical self advection.
-  for (int y = 0; y < get_height() + 1; ++y)
+  for (int y = 0; y < height() + 1; ++y)
   {
-    for (int x = 0; x < get_width(); ++x)
+    for (int x = 0; x < width(); ++x)
     {
       double velocity_x = 0.25 * (_velocity_x_cur->at_loop(x, y) + _velocity_x_cur->at_loop(x, y - 1) + _velocity_x_cur->at_loop(x + 1, y) + _velocity_x_cur->at_loop(x + 1, y - 1));
       double velocity_y = _velocity_y_cur->at_loop(x, y);
@@ -226,11 +219,11 @@ void ggo::smoke_animation_artist::velocity_self_advection()
 void ggo::smoke_animation_artist::make_incompressible()
 {
   // Compute pressure.
-  ggo::array<double, 2> divergence(get_width(), get_height());
-  ggo::array<double, 2> pressure(get_width(), get_height());
-  for (int y = 0; y < get_height(); ++y)
+  ggo::array<double, 2> divergence(width(), height());
+  ggo::array<double, 2> pressure(width(), height());
+  for (int y = 0; y < height(); ++y)
   {
-    for (int x = 0; x < get_width(); ++x)
+    for (int x = 0; x < width(); ++x)
     {
       divergence(x, y) = -(_velocity_x_cur->at_loop(x + 1, y) - _velocity_x_cur->at_loop(x, y) + _velocity_y_cur->at_loop(x, y + 1) - _velocity_y_cur->at_loop(x, y));
       divergence(x, y) /= _cell_size;
@@ -243,9 +236,9 @@ void ggo::smoke_animation_artist::make_incompressible()
     double scale = _density * _cell_size * _cell_size / time_step;
     for (int k = 0; k < 50; ++k)
     {
-      for (int y = 0; y < get_height(); ++y)
+      for (int y = 0; y < height(); ++y)
       {
-        for (int x = 0; x < get_width(); ++x)
+        for (int x = 0; x < width(); ++x)
         {
           double new_pressure = divergence(x, y) * scale;
           new_pressure += pressure.at_loop(x - 1, y);
@@ -262,17 +255,17 @@ void ggo::smoke_animation_artist::make_incompressible()
   // Apply pressure.
   {
     double scale = time_step / (_density * _cell_size);
-    for (int y = 0; y < get_height(); ++y)
+    for (int y = 0; y < height(); ++y)
     {
-      for (int x = 0; x < get_width() + 1; ++x)
+      for (int x = 0; x < width() + 1; ++x)
       {
         _velocity_x_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x - 1, y));
       }
     }
 
-    for (int y = 0; y < get_height() + 1; ++y)
+    for (int y = 0; y < height() + 1; ++y)
     {
-      for (int x = 0; x < get_width(); ++x)
+      for (int x = 0; x < width(); ++x)
       {
         _velocity_y_cur->at(x, y) -= scale * (pressure.at_loop(x, y) - pressure.at_loop(x, y - 1));
       }
@@ -285,9 +278,9 @@ void ggo::smoke_animation_artist::opacity_advection()
 {
   double scale = time_step / _cell_size;
 
-  for (int y = 0; y < get_height(); ++y)
+  for (int y = 0; y < height(); ++y)
   {
-    for (int x = 0; x < get_width(); ++x)
+    for (int x = 0; x < width(); ++x)
     {
       // Backtracking.
       double velocity_x = 0.5 * (_velocity_x_cur->at_loop(x, y) + _velocity_x_cur->at_loop(x + 1, y));
@@ -309,8 +302,8 @@ void ggo::smoke_animation_artist::opacity_advection()
 //////////////////////////////////////////////////////////////
 void ggo::smoke_animation_artist::diffuse()
 {
-  float stddev_opacity = 0.0001f * std::sqrt(float(get_width() * get_height()));
-  float stddev_velocity = 0.0001f * std::sqrt(float(get_width() * get_height()));
+  float stddev_opacity = 0.0001f * std::sqrt(float(width() * height()));
+  float stddev_velocity = 0.0001f * std::sqrt(float(width() * height()));
 
   ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
     _opacity_cur->data(), sizeof(double) * _opacity_cur->width(), { _opacity_cur->width(), _opacity_cur->height() }, stddev_opacity);
@@ -323,41 +316,26 @@ void ggo::smoke_animation_artist::diffuse()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::smoke_animation_artist::prepare_frame()
+void ggo::smoke_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  const int frames_count = 600;
-
-  if (_frame_index > frames_count)
-  {
-    return false;
-  }
-
-  process_sources();
+  process_sources(frame_index);
   velocity_self_advection();
   make_incompressible();
   opacity_advection();
   diffuse();
 
-  ++_frame_index;
-
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
 	// Draw the opacity.
-  for (int y = 0; y < get_height(); ++y)
+  for (int y = 0; y < height(); ++y)
   {
-    for (int x = 0; x < get_width(); ++x)
+    for (int x = 0; x < width(); ++x)
     {
       double opacity = _opacity_cur->at(x, y);
 
-      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, get_height(), 3 * get_width());
+      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, height(), 3 * width());
       c_8u.r() = ggo::round_to<uint8_t>(opacity * _smoke_color.r() + (1. - opacity) * c_8u.r());
       c_8u.g() = ggo::round_to<uint8_t>(opacity * _smoke_color.g() + (1. - opacity) * c_8u.g());
       c_8u.b() = ggo::round_to<uint8_t>(opacity * _smoke_color.b() + (1. - opacity) * c_8u.b());
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, get_height(), get_line_step(), c_8u);
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
     }
   }
 }

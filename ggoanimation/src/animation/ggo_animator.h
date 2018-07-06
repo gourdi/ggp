@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdint.h>
 #include <memory>
+#include <kernel/ggo_rect_int.h>
 #include <2d/ggo_image_format.h>
 
 namespace ggo
@@ -27,6 +28,7 @@ namespace ggo
 
     void					            update();
     void					            render(void * buffer, int width, int height, int line_step, ggo::image_format format) const;
+    void					            render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping) const;
 
   private:
 

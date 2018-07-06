@@ -6,15 +6,16 @@
 
 namespace ggo
 {
-  class ikeda_artist : public animation_artist_abc
+  class ikeda_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          ikeda_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          ikeda_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+  private:
+
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 300; }
 
   private:
 
@@ -31,7 +32,6 @@ namespace ggo
 
   private:
 
-    int                         _frame_index;
     ggo::color_8u				        _bkgd_colors[4];
     ggo::harmonic_curve<float> 	_u0;
     ggo::harmonic_curve<float> 	_u1;

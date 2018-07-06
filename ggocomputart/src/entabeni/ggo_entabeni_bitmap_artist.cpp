@@ -16,6 +16,6 @@ void ggo::entabeni_bitmap_artist::render_bitmap(void * buffer) const
   auto color_map = ggo::entabeni::create_color_map();
   float dangle = ggo::rand<float>(0.f, 2 * ggo::pi<float>());
 
-  ggo::entabeni::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), grid, color_map, 0.f, dangle);
+  ggo::entabeni::render_bitmap(buffer, width(), height(), line_step(), format(), grid, color_map, 0.f, dangle);
 }
 

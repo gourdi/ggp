@@ -6,21 +6,19 @@
 
 namespace ggo
 {
-  class ifs_animation_artist : public animation_artist_abc
+  class ifs_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          ifs_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          ifs_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 300; }
 
   private:
 
-    int             _frame_index;
     ggo::ifs_artist	_artist;
     ggo::color_8u   _bkgd_colors[4];
     float			      _hue;

@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-    amorosi_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    amorosi_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
     struct opacity_point
     {
@@ -36,10 +36,10 @@ namespace ggo
     {
     public:
 
-            curve(int width, int height, const ggo::color_32f & color);
+            curve(int width, int height, int line_step, ggo::image_format format, const ggo::color_32f & color);
 
       void  update();
-      void  paint(void * buffer, int line_step, ggo::image_format format) const;
+      void  paint(void * buffer) const;
             
       bool  is_dead() const;
 
@@ -60,15 +60,12 @@ namespace ggo
 
   private:
 
-    void init_animation() override;
-    bool prepare_frame() override;
-    void render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void render_frame(void * buffer, int frame_index, bool & finished) override;
 
     ggo::color_32f get_color() const;
 
   private:
 
-    int                                 _frame_index;
     std::vector<std::unique_ptr<curve>> _curves;
     float                               _hue;
   };

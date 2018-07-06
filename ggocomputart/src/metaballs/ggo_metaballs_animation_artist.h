@@ -6,11 +6,11 @@
 
 namespace ggo
 {
-  class metaballs_animation_artist : public animation_artist_abc
+  class metaballs_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-    metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+    metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
@@ -26,13 +26,11 @@ namespace ggo
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 200; }
 
   private:
 
-    int                             _frame_index = 0;
     ggo::metaballs_artist::params   _params;
     std::vector<moving_center>      _centers;
     ggo::basis3d_float              _camera_basis;

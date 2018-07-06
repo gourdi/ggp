@@ -127,7 +127,7 @@ int main(int argc, char ** argv)
   {
     ggo::chronometer frame_chronometer;
 
-    if (artist->prepare_frame() == false)
+    if (artist->prepare_frame(buffer.data()) == false)
     {
       break;
     }

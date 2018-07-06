@@ -6,17 +6,16 @@
 
 namespace ggo
 {
-  class plastic_animation_artist : public animation_artist_abc
+  class plastic_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          plastic_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          plastic_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
   private:
 
-    void  init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index) override;
+    int   frames_count() const override { return 200; }
 
   private:
 
@@ -33,7 +32,6 @@ namespace ggo
     };
     std::vector<anim_plastic_params> _params;
 
-    int             _frame_index;
     ggo::color_32f  _color;
     float 		      _altitude_factor;
   };

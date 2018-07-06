@@ -12,14 +12,14 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::crystal_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(),
+  ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
-    ggo::rect_int::from_width_height(get_width(), get_height()));
+    ggo::rect_int::from_width_height(width(), height()));
 
 	ggo::crystal_artist::params params;
 	ggo::crystal_artist::randomize_params(params);
-  ggo::crystal_artist::render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), params);
+  ggo::crystal_artist::render_bitmap(buffer, width(), height(), line_step(), format(), params);
 }

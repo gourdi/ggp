@@ -34,7 +34,7 @@ namespace ggo
     smoke,
     lagaude,
     cumbia,
-    circles,
+    circles__REMOVED,
     aggregation, // 30
     bubble,
     distorsion,
@@ -76,7 +76,7 @@ namespace ggo
     ikeda,
     cumbia,
     vortex,
-    circles, // 20
+    circles__REMOVED, // 20
     distorsion,
     toutouyoutou,
     amorosi,
@@ -89,6 +89,19 @@ namespace ggo
     entabeni, // 30
     neon,
     storni
+  };
+}
+
+namespace ggo
+{
+  enum class realtime_artist_id
+  {
+    kanji, // 0
+    bozons,
+    neon,
+    storni,
+    circles__REMOVED,
+    duffing // 5
   };
 }
 

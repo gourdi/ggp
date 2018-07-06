@@ -4,24 +4,27 @@
 
 namespace 
 {
-  const int frames_count = 300;
-
   //////////////////////////////////////////////////////////////
   template <ggo::image_format format>
   void render_t(void * buffer, const ggo::distorsion_animation_artist & artist, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms)
   {
+    if (buffer == nullptr)
+    {
+      return;
+    }
+
     using format_traits = ::ggo::image_format_traits<format>;
 
-    for (int y = 0; y < artist.get_height(); ++y)
+    for (int y = 0; y < artist.height(); ++y)
     {
       const float y1 = y - 0.375f;
       const float y2 = y - 0.125f;
       const float y3 = y + 0.125f;
       const float y4 = y + 0.375f;
 
-      void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, artist.get_height(), artist.get_line_step());
+      void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, artist.height(), artist.line_step());
 
-      for (int x = 0; x < artist.get_width(); ++x)
+      for (int x = 0; x < artist.width(); ++x)
       {
         const float x1 = x - 0.375f;
         const float x2 = x - 0.125f;
@@ -73,54 +76,39 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt),
+fixed_frames_count_animation_artist_abc(width, height, line_step, format),
 _transforms(32)
 {
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_last_frame(void * buffer) const
-{
-  render_frame(frames_count, buffer, ggo::rect_int::from_left_right_bottom_top(0, get_width() - 1, 0, get_height() - 1));
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::init_animation()
-{
-  _frame_index = -1;
-
   _hue = ggo::rand<float>();
 
   for (auto & transform : _transforms)
   {
-    transform._center_start.x() = ggo::rand<float>(-0.25, 1.25) * get_width();
-    transform._center_start.y() = ggo::rand<float>(-0.25, 1.25) * get_height();
-    transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * get_width();
-    transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * get_height();
-    transform._variance = 0.05f * ggo::square(get_min_size());
+    transform._center_start.x() = ggo::rand<float>(-0.25, 1.25) * width;
+    transform._center_start.y() = ggo::rand<float>(-0.25, 1.25) * height;
+    transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * width;
+    transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * height;
+    transform._variance = 0.05f * ggo::square(min_size());
 
     float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-    float length = 0.5f * get_min_size();
+    float length = 0.5f * min_size();
     transform._disp = ggo::from_polar(angle, length);
   }
-
-  _stripes.clear();
 
   float x = 0;
   while (true)
   {
     ggo::distorsion_animation_artist::colored_stripe colored_stripe;
 
-    x += ggo::rand<float>(0.01f, 0.06f) * get_min_size();
+    x += ggo::rand<float>(0.01f, 0.06f) * min_size();
 
     colored_stripe._x_sup = x;
     colored_stripe._color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
     _stripes.push_back(colored_stripe);
 
-    if (x > get_width())
+    if (x > width)
     {
       break;
     }
@@ -128,37 +116,18 @@ void ggo::distorsion_animation_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::distorsion_animation_artist::prepare_frame()
-{
-  ++_frame_index;
-
-  if (_frame_index > frames_count)
-  {
-    return false;
-  }
-
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
-  render_frame(_frame_index, buffer, clipping);
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(int frame_index, void * buffer, const ggo::rect_int & clipping) const
+void ggo::distorsion_animation_artist::render_frame(void * buffer, int frame_index)
 {
   std::vector<fixed_transform> transforms;
   for (auto & transform : _transforms)
   {
     transforms.emplace_back(
-      ggo::ease_inout(frame_index, frames_count, transform._center_start, transform._center_end),
-      ggo::ease_inout(frame_index, frames_count, ggo::vec2f(0.f, 0.f), transform._disp),
+      ggo::ease_inout(frame_index, frames_count(), transform._center_start, transform._center_end),
+      ggo::ease_inout(frame_index, frames_count(), ggo::vec2f(0.f, 0.f), transform._disp),
       transform._variance);
   }
 
-  switch (get_format())
+  switch (format())
   {
   case ggo::rgb_8u_yu:
     render_t<ggo::rgb_8u_yu>(buffer, *this, transforms);
@@ -193,7 +162,7 @@ float ggo::distorsion_animation_artist::transform(float x, float y, const std::v
 //////////////////////////////////////////////////////////////
 std::vector<ggo::distorsion_animation_artist::colored_stripe>::const_iterator ggo::distorsion_animation_artist::get_stripe_at(float x) const
 {
-  x = ggo::pos_mod(x, static_cast<float>(get_width()));
+  x = ggo::pos_mod(x, static_cast<float>(width()));
   
   std::vector<colored_stripe>::const_iterator it = _stripes.begin();
   for (; it != _stripes.end(); ++it)

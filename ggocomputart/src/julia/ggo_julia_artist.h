@@ -11,9 +11,9 @@ namespace ggo
   {
   public:
 
-                                julia_artist(int width, int height);
+                                julia_artist(int width, int height, int line_step, ggo::image_format format);
 
-            void					      render_bitmap(void * buffer, int line_step, ggo::image_format format, const std::complex<float> & seed, float range = 1.7f) const;
+            void					      render_bitmap(void * buffer, const std::complex<float> & seed, float range = 1.7f) const;
 
     static	std::complex<float> pickup_seed();
 

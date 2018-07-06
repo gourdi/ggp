@@ -1,20 +1,10 @@
 #include "ggo_plastic_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
-
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::plastic_animation_artist::init_animation()
-{
-  _frame_index = -1;
-
-  _params.clear();
-
   for (int i = 0; i < 50; ++i)
   {
     anim_plastic_params params;
@@ -36,26 +26,13 @@ void ggo::plastic_animation_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::plastic_animation_artist::prepare_frame()
+void ggo::plastic_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > 300)
-  {
-    return false;
-  }
-
   for (auto & anim_params : _params)
   {
     anim_params._angle += anim_params._dangle;
   }
 
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
-{
   std::vector<ggo::plastic_artist::params> bitmap_params;
   for (auto & anim_params : _params)
   {
@@ -69,7 +46,7 @@ void ggo::plastic_animation_artist::render_frame(void * buffer, const ggo::rect_
     bitmap_params.push_back(params);
   }
 
-  ggo::plastic_artist artist(get_width(), get_height());
-  artist.render(buffer, get_line_step(), get_format(), bitmap_params, _color, _altitude_factor);
+  ggo::plastic_artist artist(width(), height(), line_step(), format());
+  artist.render(buffer, bitmap_params, _color, _altitude_factor);
 }
 

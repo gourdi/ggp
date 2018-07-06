@@ -6,7 +6,7 @@
 #include <kernel/ggo_kernel.h>
 #include <kernel/threading/ggo_signal.h>
 #include <2d/fill/ggo_fill.h>
-#include <ggo_animation_artist_abc.h>
+#include <ggo_realtime_artist_abc.h>
 
 #define GGO_SDL_ERROR(zzz) GGO_LOG_ERROR("\"" << #zzz << "\" failed (error:" << SDL_GetError() << ")"); throw std::runtime_error(SDL_GetError());
 
@@ -19,7 +19,7 @@ int anim_workers_ids = 0;
 std::mutex anim_mutex;
 std::condition_variable anim_condition_start;
 std::condition_variable anim_condition_done;
-std::unique_ptr<ggo::animation_artist_abc> anim_artist;
+std::unique_ptr<ggo::realtime_artist_abc> artist;
 
 SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
@@ -28,7 +28,7 @@ bool quit = false;
 bool paused = false;
 
 /////////////////////////////////////////////////////////////////////
-ggo::animation_artist_abc * create_animation_artist()
+ggo::realtime_artist_abc * create_animation_artist()
 {
 #ifdef GGO_ANDROID
   const std::vector<ggo::animation_artist_id> ids{
@@ -38,12 +38,13 @@ ggo::animation_artist_abc * create_animation_artist()
     ggo::animation_artist_id::kanji
   };
 #else
-  const std::vector<ggo::animation_artist_id> ids{
-    ggo::animation_artist_id::bozons,
-    ggo::animation_artist_id::duffing,
-    ggo::animation_artist_id::kanji,
-    ggo::animation_artist_id::neon,
-    ggo::animation_artist_id::storni
+  const std::vector<ggo::realtime_artist_id> ids{
+    ggo::realtime_artist_id::bozons,
+    //ggo::realtime_artist_id::duffing,
+    //ggo::realtime_artist_id::kanji,
+    //ggo::realtime_artist_id::neon,
+    //ggo::realtime_artist_id::storni,
+    //ggo::realtime_artist_id::circles
   };
 #endif
 
@@ -51,15 +52,7 @@ ggo::animation_artist_abc * create_animation_artist()
 
   std::cout << "Animation artist ID: " << index << std::endl;
 
-#ifdef GGO_ANDROID
-  return ggo::animation_artist_abc::create(ids[index],
-    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_android);
-#else
-  auto artist = ggo::animation_artist_abc::create(ids[index],
-    screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd, ggo::animation_artist_abc::realtime_rendering_pc);
-  artist->init_animation();
-  return artist;
-#endif
+ return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -83,7 +76,7 @@ void render_anim_func(const ggo::rect_int & clipping, int id)
       break;
     }
 
-    anim_artist->render_frame(screen_surface->pixels, clipping);
+    artist->render_tile(screen_surface->pixels, clipping);
 
     {
       std::unique_lock<std::mutex> lock(anim_mutex);
@@ -110,7 +103,7 @@ void finalize_sdl()
 /////////////////////////////////////////////////////////////////////
 void main_loop()
 {
-  anim_artist.reset(create_animation_artist());
+  artist.reset(create_animation_artist());
 
   // Init animation rendering.
   ggo::rect_int pixel_rect1 = ggo::rect_int::from_width_height(screen_surface->w, screen_surface->h);
@@ -167,7 +160,7 @@ void main_loop()
     }
 
     // Update display.
-    if (anim_artist->prepare_frame() == true && next == false)
+    artist->preprocess_frame();
     {
       // Start current frame rendering.
       {
@@ -191,13 +184,14 @@ void main_loop()
 #endif
       }
     }
-    else
+
+    if (artist->finished() == true || next == true)
     {
       std::unique_lock<std::mutex> lock(anim_mutex);
 #ifdef DEBUG_ANIM_MULTI_THREADING
       std::cout << "main: resetting artist " << anim_workers_ids << "\n";
 #endif
-      anim_artist.reset(create_animation_artist());
+      artist.reset(create_animation_artist());
     }
 
     // Check FPS.

@@ -21,9 +21,9 @@ void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer) const
 	ggo::cumbia_artist artist;
 	artist.init(camera_basis, aperture, depth_of_field, depth_of_field_factor, 1 << 17);
 
-  ggo::multi_sampling_point_camera camera(get_width(), get_height(), camera_basis, aperture, depth_of_field, depth_of_field_factor);
+  ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, aperture, depth_of_field, depth_of_field_factor);
 
   ggo::global_sampling_renderer renderer(camera, 56);
-	artist.render_bitmap(buffer, get_width(), get_height(), get_line_step(), get_format(), renderer);
+	artist.render_bitmap(buffer, width(), height(), line_step(), format(), renderer);
 }
 

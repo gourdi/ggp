@@ -10,11 +10,9 @@ namespace ggo
   {
   public:
 
-          alpha_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt);
+          alpha_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void	init_animation() override;
-    bool  prepare_frame() override;
-    void  render_frame(void * buffer, const ggo::rect_int & clipping) override;
+    void  render_frame(void * buffer, int frame_index, bool & finished) override;
 
     int		get_items_count() const { return static_cast<int>(_items.size()); }
 

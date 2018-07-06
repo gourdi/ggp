@@ -1,21 +1,15 @@
-#include "ggo_duffing_realtime_animation_artist.h"
+#include "ggo_duffing_realtime_artist.h"
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::duffing_realtime_animation_artist::duffing_realtime_animation_artist(int width, int height, int line_step, ggo::image_format format, rendering_type rt)
+ggo::duffing_realtime_artist::duffing_realtime_artist(int width, int height, int line_step, ggo::image_format format)
 :
-animation_artist_abc(width, height, line_step, format, rt)
+fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 {
-  _radius = 0.01f * get_min_size();
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_animation_artist::init_animation()
-{
-  _frame_index = -1;
+  _radius = 0.01f * min_size();
   uint8_t gray = ggo::rand<uint8_t>(0x80, 0xff);
   _bkgd_color = ggo::color_8u(gray, gray, gray);
   _hue = ggo::rand<float>();
@@ -23,15 +17,8 @@ void ggo::duffing_realtime_animation_artist::init_animation()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::duffing_realtime_animation_artist::prepare_frame()
+void ggo::duffing_realtime_artist::preprocess_frame(int frame_index)
 {
-  ++_frame_index;
-
-  if (_frame_index > 1500)
-  {
-    return false;
-  }
-
   _paint_color = ggo::from_hsv<ggo::color_8u>(_hue, 1.0f, 0.75f);
   _hue += 0.0005f;
 
@@ -47,12 +34,10 @@ bool ggo::duffing_realtime_animation_artist::prepare_frame()
 
     _angle_offset = std::fmod(_angle_offset + 0.0001f, 2 * ggo::pi<float>());
   }
-
-  return true;
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const ggo::rect_int & clipping)
+void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
   auto contract = [](int v) -> int
   {
@@ -76,18 +61,18 @@ void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const g
   using format_traits = ggo::image_format_traits<ggo::bgrx_8u_yd>;
 
   // Fill background.
-  if (_frame_index == 0)
+  if (frame_index == 0)
   {
-    ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, get_width(), get_height(), get_line_step(), _bkgd_color, clipping);
+    ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), _bkgd_color, clipping);
   }
 
   // Fade out (process 1 frame out of 2).
-  if (ggo::is_even(_frame_index) == true)
+  if (ggo::is_even(frame_index) == true)
   {
     for (int y = clipping.bottom(); y <= clipping.top(); ++y)
     {
-      void * ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.left(), y, get_height(), get_line_step());
-      void * last_ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.right(), y, get_height(), get_line_step());
+      void * ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.left(), y, height(), line_step());
+      void * last_ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.right(), y, height(), line_step());
 
       for (; ptr <= last_ptr; ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(ptr))
       {
@@ -108,7 +93,8 @@ void ggo::duffing_realtime_animation_artist::render_frame(void * buffer, const g
   // Paint the Duffing's points.
   for (const auto & point : _points)
   {
-    ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(),
+    ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
       ggo::disc_float(point, _radius), brush, blender, clipping);
   }
 }
+

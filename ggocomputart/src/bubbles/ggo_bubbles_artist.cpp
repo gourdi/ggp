@@ -18,13 +18,13 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
 	ggo::linear_curve<float, ggo::color_32f> bkgd_gradient;
   bkgd_gradient.push_point(0, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
   bkgd_gradient.push_point(1, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
-  switch (get_format())
+  switch (format())
   {
   case ggo::rgb_8u_yu:
-    ggo::fill_color_curve<ggo::rgb_8u_yu>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
+    ggo::fill_color_curve<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), bkgd_gradient);
     break;
   case ggo::bgrx_8u_yd:
-    ggo::fill_color_curve<ggo::bgrx_8u_yd>(buffer, get_width(), get_height(), get_line_step(), bkgd_gradient);
+    ggo::fill_color_curve<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), bkgd_gradient);
     break;
   default:
     GGO_FAIL();
@@ -35,10 +35,10 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
   for (int i = 0; i < bubbles_count; ++i)
   {
     // Init.
-    float dx			    = ggo::rand<float>(-0.01f, 0.01f) * get_min_size();
-    float dy			    = ggo::rand<float>(0.03f, 0.06f) * get_min_size();
-    float wavelength	= ggo::rand<float>(5.f, 10.f) * get_min_size();
-    float amplitude	  = ggo::rand<float>(0.01f, 0.02f) * get_min_size();
+    float dx			    = ggo::rand<float>(-0.01f, 0.01f) * min_size();
+    float dy			    = ggo::rand<float>(0.03f, 0.06f) * min_size();
+    float wavelength	= ggo::rand<float>(5.f, 10.f) * min_size();
+    float amplitude	  = ggo::rand<float>(0.01f, 0.02f) * min_size();
     
     auto generate_color = []()
     {
@@ -46,16 +46,16 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
     };
 
     ggo::linear_curve<float, ggo::color_32f> curve;
-    curve.push_point(0.0f * get_height(), generate_color());
-    curve.push_point(0.5f * get_height(), generate_color());
-    curve.push_point(1.0f * get_height(), generate_color());
+    curve.push_point(0.0f * height(), generate_color());
+    curve.push_point(0.5f * height(), generate_color());
+    curve.push_point(1.0f * height(), generate_color());
 
     ggo::disc_float bubble;
-    bubble.set_radius(ggo::rand<float>(0.003f, 0.006f) * get_min_size());
-    bubble.set_center(ggo::rand<float>(-0.1f, 1.1f) * get_width(), -0.1f * get_height());
+    bubble.set_radius(ggo::rand<float>(0.003f, 0.006f) * min_size());
+    bubble.set_center(ggo::rand<float>(-0.1f, 1.1f) * width(), -0.1f * height());
 
     // Move the bubble up.
-    while (bubble.get_center().y() < get_height() + bubble.get_radius())
+    while (bubble.get_center().y() < height() + bubble.get_radius())
     {
       bubble.center().get<0>() += dx + amplitude * std::sin(wavelength * bubble.center().y());
       bubble.center().get<1>() += dy;
@@ -66,13 +66,13 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
         return convert_color_to<color_8u>(bkgd_color_32f + brush_color);
       };
 
-      switch (get_format())
+      switch (format())
       {
       case ggo::rgb_8u_yu:
-        paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
+        paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       case ggo::bgrx_8u_yd:
-        paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, get_width(), get_height(), get_line_step(), bubble, brush, blend);
+        paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       default:
         GGO_FAIL();

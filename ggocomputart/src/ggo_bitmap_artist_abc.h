@@ -15,18 +15,10 @@ namespace ggo
 
     virtual	void  render_bitmap(void * buffer) const = 0;
 
-    int               get_line_step() const { return _line_step; }
-    ggo::image_format get_format() const { return _format; }
-
   protected:
 
-                      bitmap_artist_abc(int width, int height, int line_step, ggo::image_format format);
-                      bitmap_artist_abc() = delete;
-
-  private:
-
-    const int _line_step;
-    const ggo::image_format _format;
+                  bitmap_artist_abc(int width, int height, int line_step, ggo::image_format format);
+                  bitmap_artist_abc() = delete;
   };
 }
 
