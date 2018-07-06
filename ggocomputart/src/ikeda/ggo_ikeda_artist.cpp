@@ -54,7 +54,7 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 	
 	for (auto & particle : particles)
 	{
-		while (true)
+    for (int i = 0; i < 10000; ++i)
 		{
 			float k = 1 + particle._pos.x() * particle._pos.x() + particle._pos.y() * particle._pos.y();
 			if (std::abs(k) < 0.00001f)

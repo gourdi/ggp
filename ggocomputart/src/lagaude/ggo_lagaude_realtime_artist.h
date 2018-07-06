@@ -1,7 +1,7 @@
-#ifndef __GGO_LAGAUDE_ANIMATION_ARTIST__
-#define __GGO_LAGAUDE_ANIMATION_ARTIST__
+#ifndef __GGO_LAGAUDE_REALTIME_ARTIST__
+#define __GGO_LAGAUDE_REALTIME_ARTIST__
 
-#include <ggo_animation_artist_abc.h>
+#include <ggo_realtime_artist_abc.h>
 #include <kernel/memory/ggo_array.h>
 #include <kernel/ggo_random_interpolator_abc.h>
 #include <animation/ggo_animator.h>
@@ -10,13 +10,14 @@
 
 namespace ggo
 {
-  class lagaude_animation_artist : public fixed_frames_count_animation_artist_abc
+  class lagaude_realtime_artist : public fixed_frames_count_realtime_artist_abc
   {
   public:
 
-          lagaude_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          lagaude_realtime_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  render_frame(void * buffer, int frame_index) override;
+    void  preprocess_frame(int frame_index) override;
+    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 450; }
 
   private:

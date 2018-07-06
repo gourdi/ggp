@@ -40,54 +40,52 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
       }
       params._artist_id = static_cast<ggo::animation_artist_id>(*artist_id);
     }
-    else
-      if (arg.compare("-d") == 0)
+    else if (arg.compare("-d") == 0)
+    {
+      ++i;
+      if (i >= argc)
       {
-        ++i;
-        if (i >= argc)
-        {
-          std::cout << "Error: missing directory parameter" << std::endl;
-          return false;
-        }
-
-        params._output_directory = argv[i];
+        std::cout << "Error: missing directory parameter" << std::endl;
+        return false;
       }
-      else
-        if (arg.compare("-s") == 0)
-        {
-          ++i;
-          if (i >= argc)
-          {
-            std::cout << "Error : missing width parameter" << std::endl;
-            return false;
-          }
-          auto width = ggo::str_to<int>(argv[i]);
-          if (width.has_value() == false || *width <= 0)
-          {
-            std::cout << "Error : invalid width argument" << std::endl;
-            return false;
-          }
-          params._width = *width;
 
-          ++i;
-          if (i >= argc)
-          {
-            std::cout << "Error : missing height parameter" << std::endl;
-            return false;
-          }
-          auto height = ggo::str_to<int>(argv[i]);
-          if (height.has_value() == false || *height <= 0)
-          {
-            std::cout << "Error : invalid height argument" << std::endl;
-            return false;
-          }
-          params._height = *height;
-        }
-        else
-        {
-          std::cout << "Error: invalid command line parameter" << std::endl;
-          return false;
-        }
+      params._output_directory = argv[i];
+    }
+    else if (arg.compare("-s") == 0)
+    {
+      ++i;
+      if (i >= argc)
+      {
+        std::cout << "Error : missing width parameter" << std::endl;
+        return false;
+      }
+      auto width = ggo::str_to<int>(argv[i]);
+      if (width.has_value() == false || *width <= 0)
+      {
+        std::cout << "Error : invalid width argument" << std::endl;
+        return false;
+      }
+      params._width = *width;
+
+      ++i;
+      if (i >= argc)
+      {
+        std::cout << "Error : missing height parameter" << std::endl;
+        return false;
+      }
+      auto height = ggo::str_to<int>(argv[i]);
+      if (height.has_value() == false || *height <= 0)
+      {
+        std::cout << "Error : invalid height argument" << std::endl;
+        return false;
+      }
+      params._height = *height;
+    }
+    else
+    {
+      std::cout << "Error: invalid command line parameter" << std::endl;
+      return false;
+    }
   }
 
   return true;

@@ -100,7 +100,7 @@ namespace ggo
     bozons,
     neon,
     storni,
-    circles__REMOVED,
+    lagaude,
     duffing // 5
   };
 }

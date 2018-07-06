@@ -111,8 +111,6 @@ namespace ggo
       return new ggo::alpha_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::dupecheck:
       return new ggo::dupecheck_animation_artist(width, height, line_step, format);
-    case ggo::animation_artist_id::lagaude:
-      return new ggo::lagaude_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::crystal:
       return new ggo::crystal_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::ikeda:
@@ -151,6 +149,8 @@ namespace ggo
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::neon, width, height, line_step, format);
     case ggo::animation_artist_id::storni:
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::storni, width, height, line_step, format);
+    case ggo::animation_artist_id::lagaude:
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_step, format);
 
     default:
       GGO_FAIL();
