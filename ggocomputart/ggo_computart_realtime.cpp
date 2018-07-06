@@ -106,21 +106,19 @@ void main_loop()
   artist.reset(create_animation_artist());
 
   // Init animation rendering.
-  ggo::rect_int pixel_rect1 = ggo::rect_int::from_width_height(screen_surface->w, screen_surface->h);
-  ggo::rect_int pixel_rect2 = ggo::rect_int::from_width_height(screen_surface->w, screen_surface->h);
-  if (screen_surface->w > screen_surface->h)
-  {
-    pixel_rect1.right() /= 2;
-    pixel_rect2.left() = pixel_rect1.right() + 1;
-  }
-  else
-  {
-    pixel_rect1.top() /= 2;
-    pixel_rect2.bottom() = pixel_rect1.top() + 1;
-  }
+  ggo::rect_int clipping1 = ggo::rect_int::from_left_right_bottom_top(
+    0, screen_surface->w / 2 - 1, 0, screen_surface->h / 2 - 1);
+  ggo::rect_int clipping2 = ggo::rect_int::from_left_right_bottom_top(
+    screen_surface->w / 2, screen_surface->w - 1, 0, screen_surface->h / 2 - 1);
+  ggo::rect_int clipping3 = ggo::rect_int::from_left_right_bottom_top(
+    0, screen_surface->w / 2 - 1, screen_surface->h / 2, screen_surface->h - 1);
+  ggo::rect_int clipping4 = ggo::rect_int::from_left_right_bottom_top(
+    screen_surface->w / 2, screen_surface->w - 1, screen_surface->h / 2, screen_surface->h - 1);
 
-  std::thread anim_thread1(render_anim_func, pixel_rect1, 1);
-  std::thread anim_thread2(render_anim_func, pixel_rect2, 2);
+  std::thread anim_thread1(render_anim_func, clipping1, 1);
+  std::thread anim_thread2(render_anim_func, clipping2, 2);
+  std::thread anim_thread3(render_anim_func, clipping3, 4);
+  std::thread anim_thread4(render_anim_func, clipping4, 8);
 
   while (quit == false)
   {
@@ -168,7 +166,7 @@ void main_loop()
 #ifdef DEBUG_ANIM_MULTI_THREADING
         std::cout << "main: notify start " << anim_workers_ids << std::endl;
 #endif
-        anim_workers_ids = 1 | 2;
+        anim_workers_ids = 1 | 2 | 4 | 8;
       }
       anim_condition_start.notify_all();
 
@@ -223,6 +221,8 @@ void main_loop()
 
   anim_thread1.join();
   anim_thread2.join();
+  anim_thread3.join();
+  anim_thread4.join();
 }
 
 /////////////////////////////////////////////////////////////////////

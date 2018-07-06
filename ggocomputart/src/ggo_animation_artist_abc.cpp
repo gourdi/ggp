@@ -11,7 +11,6 @@
 #include "smoke/ggo_smoke_animation_artist.h"
 #include "alpha/ggo_alpha_animation_artist.h"
 #include "dupecheck/ggo_dupecheck_animation_artist.h"
-#include "lagaude/ggo_lagaude_animation_artist.h"
 #include "crystal/ggo_crystal_animation_artist.h"
 #include "ikeda/ggo_ikeda_artist.h"
 #include "cumbia/ggo_cumbia_animation_artist.h"
