@@ -110,15 +110,13 @@ int main(int argc, char ** argv)
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
   std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
-    params._artist_id, params._width, params._height, line_byte_step, ggo::rgb_8u_yu, ggo::animation_artist_abc::offscreen_rendering));
+    params._artist_id, params._width, params._height, line_byte_step, ggo::rgb_8u_yu));
 
   if (artist.get() == nullptr)
   {
     std::cout << "Wrong artist ID" << std::endl;
     return 1;
   }
-
-  artist->init_animation();
 
   ggo::chronometer animation_chronometer;
 
@@ -127,12 +125,10 @@ int main(int argc, char ** argv)
   {
     ggo::chronometer frame_chronometer;
 
-    if (artist->prepare_frame(buffer.data()) == false)
+    if (artist->render_frame(buffer.data()) == false)
     {
       break;
     }
-
-    artist->render_frame(buffer.data(), ggo::rect_int::from_left_right_bottom_top(0, params._width - 1, 0, params._height - 1));
 
     std::ostringstream filename;
     if (params._output_directory.length() > 0)

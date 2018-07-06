@@ -75,7 +75,7 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 			float speed = ggo::distance(particle._pos, next_pt);
 			particle._radius = speed;
 
-			if (speed < 0.05)
+			if (speed < 0.05f)
 			{
 				particles.erase(particles.begin() + i);
 				continue;
