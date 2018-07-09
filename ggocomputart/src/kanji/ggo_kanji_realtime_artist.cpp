@@ -26,7 +26,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
     const float l = ggo::rand<float>(0.f, 0.02f);
 
     std::array<ggo::pos2f, substeps_count> particle;
-    particle.fill(ggo::vec2f(l * cos(a), l * sin(a)));
+    particle.fill(pos + ggo::vec2f(l * cos(a), l * sin(a)));
     _particles.push_back(particle);
   }
 }
