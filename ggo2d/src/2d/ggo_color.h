@@ -677,7 +677,7 @@ namespace ggo
   alpha_color_8u linerp(alpha_color_8u color_a, alpha_color_8u color_b, const fract_t & weight_a)
   {
     uint32_t w_a = ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.a());
-    uint32_t w_b = ggo::round_div((0xff - color_b.a()) * color_b.a(), 0xff);
+    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b.a(), 0xff);
 
     uint32_t a = w_a + w_b;
     if (a == 0)
