@@ -1,4 +1,5 @@
 #include <2d/ggo_image.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
 
 //////////////////////////////////////////////////////////////
 ggo::image::image(ggo::size s, image_format format)
@@ -65,4 +66,75 @@ void ggo::image::operator=(image && i)
     i._height = 0;
     i._line_byte_step = 0;
   }
+}
+
+namespace
+{
+  struct line_ptr_functor
+  {
+    template <ggo::image_format format>
+    static void * call(void * ptr, int y, int height, int line_byte_step)
+    {
+      using format_traits = ggo::image_format_traits<format>;
+
+      return ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+    }
+
+    template <ggo::image_format format>
+    static const void * call(const void * ptr, int y, int height, int line_byte_step)
+    {
+      using format_traits = ggo::image_format_traits<format>;
+
+      return ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+    }
+  };
+
+  struct pixel_ptr_functor
+  {
+    template <ggo::image_format format>
+    static void * call(void * ptr, int x, int y, int height, int line_byte_step)
+    {
+      using format_traits = ggo::image_format_traits<format>;
+
+      ptr = ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+      ptr = ggo::ptr_offset(ptr, x * format_traits::pixel_byte_size);
+
+      return ptr;
+    }
+
+    template <ggo::image_format format>
+    static const void * call(const void * ptr, int x, int y, int height, int line_byte_step)
+    {
+      using format_traits = ggo::image_format_traits<format>;
+
+      ptr = ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+      ptr = ggo::ptr_offset(ptr, x * format_traits::pixel_byte_size);
+
+      return ptr;
+    }
+  };
+}
+
+//////////////////////////////////////////////////////////////
+void * ggo::image::line_ptr(int y)
+{
+  return dispatch_image_format<line_ptr_functor>(_format, _buffer, y, _height, _line_byte_step);
+}
+
+//////////////////////////////////////////////////////////////
+const void * ggo::image::line_ptr(int y) const
+{
+  return dispatch_image_format<line_ptr_functor>(_format, _buffer, y, _height, _line_byte_step);
+}
+
+//////////////////////////////////////////////////////////////
+void * ggo::image::pixel_ptr(int x, int y)
+{
+  return dispatch_image_format<pixel_ptr_functor>(_format, _buffer, x, y, _height, _line_byte_step);
+}
+
+//////////////////////////////////////////////////////////////
+const void * ggo::image::pixel_ptr(int x, int y) const
+{
+  return dispatch_image_format<pixel_ptr_functor>(_format, _buffer, x, y, _height, _line_byte_step);
 }

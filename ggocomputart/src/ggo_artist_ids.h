@@ -88,7 +88,8 @@ namespace ggo
     rediff,
     entabeni, // 30
     neon,
-    storni
+    storni,
+    demeco
   };
 }
 

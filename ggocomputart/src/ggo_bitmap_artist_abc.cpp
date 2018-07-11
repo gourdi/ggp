@@ -177,8 +177,6 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::entabeni_bitmap_artist(width, height, line_step, format);
   case ggo::bitmap_artist_id::cabrel:
     return new ggo::cabrel_bitmap_artist(width, height, line_step, format);
-  case ggo::bitmap_artist_id::demeco:
-    return new ggo::demeco_bitmap_artist(width, height, line_step, format);
 
     // animation artists.
   case ggo::bitmap_artist_id::smoke:

@@ -197,13 +197,13 @@ namespace ggo
   template <typename color_out_t, typename color_in_t>
   color_out_t convert_color_to(const color_in_t & c)
   {
-    // Automaticcaly convert from y to rgb.
+    // Automatically convert from y to rgb.
     if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
                  color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 3)
     {
       return color_out_t(c, c, c);
     }
-    // Automaticcaly convert from y to rgba.
+    // Automatically convert from y to rgba.
     else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
                       color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 4)
     {
@@ -476,6 +476,13 @@ namespace ggo
     constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
     return ggo::alpha_color_32f(scale * c.r(), scale * c.g(), scale * c.b(), scale * c.a());
   }
+
+  // rgba 32f => rgba 8u
+  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, ggo::alpha_color_32f>(const ggo::alpha_color_32f & c)
+  {
+    auto conv = [](float v) { return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * v); };
+    return { conv(c.r()), conv(c.g()), conv(c.b()), conv(c.a()) };
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -664,6 +671,25 @@ namespace ggo
       static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
       static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
       static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
+  }
+
+  template <typename fract_t>
+  alpha_color_8u linerp(alpha_color_8u color_a, alpha_color_8u color_b, const fract_t & weight_a)
+  {
+    uint32_t w_a = ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.a());
+    uint32_t w_b = ggo::round_div((0xff - color_b.a()) * color_b.a(), 0xff);
+
+    uint32_t a = w_a + w_b;
+    if (a == 0)
+    {
+      return { 0, 0, 0, 0 };
+    }
+
+    uint32_t r = ggo::round_div(w_a * color_a.r() + w_b * color_b.r(), a);
+    uint32_t g = ggo::round_div(w_a * color_a.g() + w_b * color_b.g(), a);
+    uint32_t b = ggo::round_div(w_a * color_a.b() + w_b * color_b.b(), a);
+
+    return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
   }
 
   template <typename fract_t>

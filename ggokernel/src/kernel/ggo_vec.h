@@ -188,42 +188,14 @@ namespace ggo
   template <typename data_t, int n_dims, vec_type vtype>
   ggo::vec<data_t, n_dims, vtype> operator+(const ggo::vec<data_t, n_dims, vtype> & v1, const ggo::vec<data_t, n_dims, vtype> & v2)
   {
-    /*
-    // Special case for alpha color.
-    if constexpr(vtype == color_t && n_dims == 4)
-    {
-      if (v1.a() == 0 && v2.a() == 0)
-      {
-        return { data_t(0), data_t(0), data_t(0), data_t(0) };
-      }
-
-      if constexpr(std::is_floating_point<data_t>::value == true)
-      {
-        data_t a = v1.a() + v2.a() * (1 - v1.a());
-        data_t inv = 1 / (v1.a() + v2.a());
-        data_t r = inv * (v1.r() * v1.a() + v2.r() * v2.a());
-        data_t g = inv * (v1.g() * v1.a() + v2.g() * v2.a());
-        data_t b = inv * (v1.b() * v1.a() + v2.b() * v2.a());
-        return { r, g, b, a };
-      }
-      else
-      {
-        return { 0, 0, 0, 0 };
-      }
-    }
-    else*/
-    {
-      ggo::vec<data_t, n_dims, vtype> r;
-      ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
-      return r;
-    }
+    ggo::vec<data_t, n_dims, vtype> r;
+    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
+    return r;
   }
 
   template <typename data_t, int n_dims, vec_type vtype>
   ggo::vec<data_t, n_dims, vtype> operator-(const ggo::vec<data_t, n_dims, vtype> & v1, const ggo::vec<data_t, n_dims, vtype> & v2)
   {
-    static_assert(vtype != color_t || n_dims != 4);
-
     ggo::vec<data_t, n_dims, vtype> r;
     ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
     return r;

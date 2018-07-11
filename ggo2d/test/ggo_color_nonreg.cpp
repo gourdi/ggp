@@ -100,3 +100,30 @@ GGO_TEST(color, linear_interpolation_y8u)
   GGO_CHECK_EQ(int(ggo::linerp(0xff_u8, 0x00_u8, ggo::log2_fract<8>(256))), int(0xff));
 }
 
+////////////////////////////////////////////////////////////////////
+GGO_TEST(color, linear_interpolation_rgba8u)
+{
+  auto c1 = ggo::linerp(ggo::alpha_color_8u(0xff, 0x80, 0x40, 0x80), ggo::alpha_color_8u(0x40, 0xff, 0x80, 0x40), ggo::log2_fract<2>(4));
+  GGO_CHECK_EQ(c1.r(), 0xcb);
+  GGO_CHECK_EQ(c1.g(), 0xa3);
+  GGO_CHECK_EQ(c1.b(), 0x51);
+  GGO_CHECK_EQ(c1.a(), 0xb0);
+
+  auto c2 = ggo::linerp(ggo::alpha_color_8u(0x00, 0x80, 0xff, 0xff), ggo::alpha_color_8u(0x00, 0x00, 0x00, 0x00), ggo::log2_fract<8>(1));
+  GGO_CHECK_EQ(c2.r(), 0x00);
+  GGO_CHECK_EQ(c2.g(), 0x80);
+  GGO_CHECK_EQ(c2.b(), 0xff);
+  GGO_CHECK_EQ(c2.a(), 0x01);
+
+  auto c3 = ggo::linerp(ggo::alpha_color_8u(0x00, 0x80, 0xff, 0xff), ggo::alpha_color_8u(0xff, 0xff, 0xff, 0x00), ggo::log2_fract<8>(1));
+  GGO_CHECK_EQ(c3.r(), 0x00);
+  GGO_CHECK_EQ(c3.g(), 0x80);
+  GGO_CHECK_EQ(c3.b(), 0xff);
+  GGO_CHECK_EQ(c3.a(), 0x01);
+
+  auto c4 = ggo::linerp(ggo::alpha_color_8u(0x00, 0x80, 0xff, 0x01), ggo::alpha_color_8u(0x00, 0x00, 0x00, 0x00), ggo::log2_fract<2>(4));
+  GGO_CHECK_EQ(c4.r(), 0x00);
+  GGO_CHECK_EQ(c4.g(), 0x80);
+  GGO_CHECK_EQ(c4.b(), 0xff);
+  GGO_CHECK_EQ(c4.a(), 0x01);
+}

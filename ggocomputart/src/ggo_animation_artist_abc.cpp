@@ -27,6 +27,7 @@
 #include "neon/ggo_neon_artist.h"
 #include "storni/ggo_storni_realtime_artist.h"
 #include "kame/ggo_kame_animation_artist.h"
+#include "demeco/ggo_demeco_bitmap_artist.h"
 
 //////////////////////////////////////////////////////////////
 // REALTIME ARTISTS WRAPPER
@@ -138,6 +139,9 @@ namespace ggo
       return new ggo::entabeni_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::kame:
       return new ggo::kame_animation_artist(width, height, line_step, format);
+    case ggo::animation_artist_id::demeco:
+      return new ggo::demeco_animation_artist(width, height, line_step, format);
+
 
     // Real-time artists.
     case ggo::animation_artist_id::kanji:

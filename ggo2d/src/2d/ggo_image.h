@@ -32,6 +32,11 @@ namespace ggo
     void *              data() { return _buffer; }
     const void *        data() const { return _buffer; }
 
+    void *              line_ptr(int y);
+    const void *        line_ptr(int y) const;
+    void *              pixel_ptr(int x, int y);
+    const void *        pixel_ptr(int x, int y) const;
+
   private:
 
     void *        _buffer;
