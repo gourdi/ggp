@@ -1,4 +1,4 @@
-#include "ggo_demeco_bitmap_artist.h"
+#include "ggo_demeco_animation_artist.h"
 #include <2d/ggo_blit.h>
 #include <2d/blur/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
@@ -45,6 +45,7 @@ _shadow_image(width, height, shadow_format)
       if (create == true)
       {
         auto demeco = std::make_unique<toto>(get_center() + pos2f(x_f, y_f), 0.5f * delta, ggo::rand<int>(-25, 0));
+
         _demecos.emplace_back(std::move(demeco));
       }
     }
@@ -55,7 +56,7 @@ _shadow_image(width, height, shadow_format)
 void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
 {
   finished = false;
-  if (_demecos.empty() == true && frame_index >= 50)
+  if (_demecos.empty() == true && frame_index >= 1)
   {
     finished = true;
     return;
@@ -96,8 +97,8 @@ void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, 
   const int shadow_dy = min_size() / 100;
   for (int y = shadow_dy; y < height(); ++y)
   {
-    const void * src = _render_image.pixel_ptr(0, y - shadow_dy);
-    void * dst = _shadow_image.pixel_ptr(shadow_dx, y + 0);
+    const void * src = _render_image.pixel_ptr(0, y);
+    void * dst = _shadow_image.pixel_ptr(shadow_dx, y - shadow_dy);
 
     for (int x = shadow_dx; x < width(); ++x)
     {
@@ -108,16 +109,16 @@ void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, 
       dst = ggo::ptr_offset<shadow_format_traits::pixel_byte_size>(dst);
     }
   }
-  
+
   // Blur shadow.
   float stddev = min_size() / 100.f;
   gaussian_blur2d<shadow_format>(_shadow_image.data(), _shadow_image.line_byte_step(), _shadow_image.size(), stddev);
   
   // Blit shadow and render buffers into output buffer.
-  blit<shadow_format, ggo::rgb_8u_yd>(_shadow_image.data(), _shadow_image.width(), _shadow_image.height(), _shadow_image.line_byte_step(),
+  blit<shadow_format, ggo::rgb_8u_yu>(_shadow_image.data(), _shadow_image.width(), _shadow_image.height(), _shadow_image.line_byte_step(),
     buffer, width(), height(), line_step(), 0, 0);
 
-  blit<render_format, ggo::rgb_8u_yd>(_render_image.data(), _render_image.width(), _render_image.height(), _render_image.line_byte_step(),
+  blit<render_format, ggo::rgb_8u_yu>(_render_image.data(), _render_image.width(), _render_image.height(), _render_image.line_byte_step(),
     buffer, width(), height(), line_step(), 0, 0);
 }
 

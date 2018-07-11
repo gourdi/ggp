@@ -30,7 +30,6 @@
 #include "rediff/ggo_rediff_animation_artist.h"
 #include "entabeni/ggo_entabeni_bitmap_artist.h"
 #include "cabrel/ggo_cabrel_bitmap_artist.h"
-#include "demeco/ggo_demeco_bitmap_artist.h"
 
 //////////////////////////////////////////////////////////////
 // ANIMATION ARTISTS WRAPPER
