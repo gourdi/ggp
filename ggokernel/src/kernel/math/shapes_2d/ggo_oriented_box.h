@@ -7,11 +7,12 @@
 
 namespace ggo
 {
-  template <typename data_t>
-  class oriented_box final : public affine_shape2d_abc<data_t>, public samplable_shape2d_abc<data_t>
+  template <typename data_type>
+  class oriented_box final : public paintable_shape2d_abc<data_type>, public affine_shape2d_abc<data_type>
   {
   public:
 
+    using data_t = data_type;
     using affine_shape2d_abc<data_t>::rotate;
     using affine_shape2d_abc<data_t>::move;
     using samplable_shape2d_abc<data_t>::is_point_inside;
@@ -33,6 +34,8 @@ namespace ggo
     void                            rotate(data_t angle, const ggo::pos2<data_t> & center) override;
     ggo::pos2<data_t>               get_center() const override { return _pos; }
     bool                            is_point_inside(const ggo::pos2<data_t> & p) const override;
+    rect_data<data_t>               get_bounding_rect() const override;
+    rect_intersection               get_rect_intersection(const rect_data<data_t> & rect_data) const override;
 
   private:
 

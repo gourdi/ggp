@@ -58,4 +58,99 @@ namespace ggo
 
     return true;
   }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  rect_data<data_t> oriented_box<data_t>::get_bounding_rect() const
+  {
+    auto p1 = _pos + _size1 * _dir + _size2 * dir2();
+    auto p2 = _pos + _size1 * _dir - _size2 * dir2();
+    auto p3 = _pos - _size1 * _dir - _size2 * dir2();
+    auto p4 = _pos - _size1 * _dir + _size2 * dir2();
+
+    auto x_inf = ggo::min(p1.x(), p2.x(), p3.x(), p4.x());
+    auto x_sup = ggo::max(p1.x(), p2.x(), p3.x(), p4.x());
+    auto y_inf = ggo::min(p1.y(), p2.y(), p3.y(), p4.y());
+    auto y_sup = ggo::max(p1.y(), p2.y(), p3.y(), p4.y());
+
+    return rect_data_from_left_right_bottom_top(x_inf, x_sup, y_inf, y_sup);
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  rect_intersection oriented_box<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
+  {
+    auto dir2 = this->dir2();
+    auto offset1 = _size1 * _dir;
+    auto offset2 = _size2 * dir2;
+
+    // Shape in rect?
+    auto obb_p1 = _pos + offset1 + offset2;
+    auto obb_p2 = _pos + offset1 - offset2;
+    auto obb_p3 = _pos - offset1 - offset2;
+    auto obb_p4 = _pos - offset1 + offset2;
+
+    rect<data_t> rect(rect_data);
+    if (rect.is_point_inside(obb_p1) == true &&
+        rect.is_point_inside(obb_p2) == true &&
+        rect.is_point_inside(obb_p3) == true &&
+        rect.is_point_inside(obb_p4) == true)
+    {
+      return rect_intersection::shape_in_rect;
+    }
+
+    // Rect in shape?
+    ggo::pos2<data_t> rect_p1(rect.left(), rect.bottom());
+    ggo::pos2<data_t> rect_p2(rect.left(), rect.top());
+    ggo::pos2<data_t> rect_p3(rect.right(), rect.bottom());
+    ggo::pos2<data_t> rect_p4(rect.right(), rect.top());
+
+    if (is_point_inside(rect_p1) == true &&
+        is_point_inside(rect_p2) == true &&
+        is_point_inside(rect_p3) == true &&
+        is_point_inside(rect_p4) == true)
+    {
+      return rect_intersection::rect_in_shape;
+    }
+
+    // Disjoint?
+    auto x_inf = ggo::min(obb_p1.x(), obb_p2.x(), obb_p3.x(), obb_p4.x());
+    if (x_inf > rect.right())
+    {
+      return rect_intersection::disjoints;
+    }
+    auto x_sup = ggo::max(obb_p1.x(), obb_p2.x(), obb_p3.x(), obb_p4.x());
+    if (x_sup < rect.left())
+    {
+      return rect_intersection::disjoints;
+    }
+    auto y_inf = ggo::min(obb_p1.y(), obb_p2.y(), obb_p3.y(), obb_p4.y());
+    if (y_inf > rect.top())
+    {
+      return rect_intersection::disjoints;
+    }
+    auto y_sup = ggo::max(obb_p1.y(), obb_p2.y(), obb_p3.y(), obb_p4.y());
+    if (y_sup < rect.bottom())
+    {
+      return rect_intersection::disjoints;
+    }
+
+    if (std::abs(ggo::dot(_dir, rect_p1 - _pos)) > _size1 &&
+        std::abs(ggo::dot(_dir, rect_p2 - _pos)) > _size1 &&
+        std::abs(ggo::dot(_dir, rect_p3 - _pos)) > _size1 &&
+        std::abs(ggo::dot(_dir, rect_p4 - _pos)) > _size1)
+    {
+      return rect_intersection::disjoints;
+    }
+
+    if (std::abs(ggo::dot(dir2, rect_p1 - _pos)) > _size2 &&
+        std::abs(ggo::dot(dir2, rect_p2 - _pos)) > _size2 &&
+        std::abs(ggo::dot(dir2, rect_p3 - _pos)) > _size2 &&
+        std::abs(ggo::dot(dir2, rect_p4 - _pos)) > _size2)
+    {
+      return rect_intersection::disjoints;
+    }
+
+    return rect_intersection::partial_overlap;
+  }
 }
