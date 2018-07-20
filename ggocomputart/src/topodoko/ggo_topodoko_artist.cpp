@@ -17,10 +17,10 @@ namespace
   template <ggo::image_format format>
   void render_t(void * buffer, const ggo::topodoko_artist & artist, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares)
   {
-    const ggo::color_8u bkgd_color1 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::color_8u bkgd_color2 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::color_8u bkgd_color3 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::color_8u bkgd_color4 = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, 0.5f, 0.5f);
+    const ggo::color_8u bkgd_color1 = ggo::from_hsv<ggo::color_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+    const ggo::color_8u bkgd_color2 = ggo::from_hsv<ggo::color_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+    const ggo::color_8u bkgd_color3 = ggo::from_hsv<ggo::color_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+    const ggo::color_8u bkgd_color4 = ggo::from_hsv<ggo::color_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
 
     ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, artist.width(), artist.height(), artist.line_step(),
       bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4, ggo::rect_int::from_width_height(artist.width(), artist.height()));
@@ -98,7 +98,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 		{
 			ggo::pos2f block_center((1 + 2 * block_x) / (2.f * blocks), (1 + 2 * block_y) / (2.f * blocks));
 			
-			ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(ggo::rand_bool() ? hue1 : hue2, 0.75, 1);
+			ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(ggo::rand<bool>() ? hue1 : hue2, 0.75, 1);
 			
 			for (int y = 0; y < sub_blocks; ++y)
 			{
@@ -118,7 +118,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 
 					if (ggo::rand<int>(0, 8) == 0)
 					{
-						color_square._color = ggo::from_hsv<ggo::color_32f>(ggo::rand_bool() ? hue1 : hue2, 0.75, 1);
+						color_square._color = ggo::from_hsv<ggo::color_32f>(ggo::rand<bool>() ? hue1 : hue2, 0.75, 1);
 					}
 					else
 					{

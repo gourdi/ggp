@@ -22,7 +22,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format)
   _radius_end = ggo::rand<float>(0.2f, 0.35f) * min_size();
 
   _hue_start = ggo::rand<float>();
-  _hue_end = _hue_start + (ggo::rand_bool() ? -0.2f : 0.2f);
+  _hue_end = _hue_start + (ggo::rand<bool>() ? -0.2f : 0.2f);
 }
 
 //////////////////////////////////////////////////////////////

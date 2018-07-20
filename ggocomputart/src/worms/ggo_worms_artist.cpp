@@ -65,7 +65,7 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 		}
 			
 		// Paint the spline.
-    const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(ggo::rand_bool() ? hue1 : hue2, ggo::rand<float>(), 1);
+    const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(ggo::rand<bool>() ? hue1 : hue2, ggo::rand<float>(), 1);
     ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, width(), height(), line_step(),
       extended_segments_border, ggo::black<ggo::color_8u>());

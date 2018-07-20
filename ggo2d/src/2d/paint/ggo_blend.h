@@ -5,21 +5,6 @@
 #include <2d/ggo_color.h>
 
 /////////////////////////////////////////////////////////////////////
-// Overwrite blending.
-namespace ggo
-{
-  // Structs.
-  template <typename color_t, typename brush_color_t = color_t>
-  struct overwrite_blender
-  {
-    color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const
-    {
-      return convert_color_to<color_t>(brush_color);
-    }
-  };
-}
-
-/////////////////////////////////////////////////////////////////////
 // Alpha blending.
 namespace ggo
 {
@@ -43,6 +28,26 @@ namespace ggo
       ggo::round_div(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
   }
 
+  inline ggo::alpha_color_8u alpha_blend(const ggo::alpha_color_8u & bkgd_color, const ggo::alpha_color_8u & brush_color)
+  {
+    uint8_t inv_opacity = 0xff - brush_color.a();
+
+    uint32_t w_a = brush_color.a();
+    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * bkgd_color.a(), 0xff);
+
+    uint32_t a = w_a + w_b;
+    if (a == 0)
+    {
+      return { 0, 0, 0, 0 };
+    }
+
+    uint32_t r = ggo::round_div(w_a * brush_color.r() + w_b * bkgd_color.r(), a);
+    uint32_t g = ggo::round_div(w_a * brush_color.g() + w_b * bkgd_color.g(), a);
+    uint32_t b = ggo::round_div(w_a * brush_color.b() + w_b * bkgd_color.b(), a);
+
+    return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
+  }
+
   template <typename real_t>
   ggo::color_8u alpha_blend(const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color, real_t opacity)
   {
@@ -58,7 +63,24 @@ namespace ggo
   }
 
   // Structs.
-  struct alpha_blender_y8u
+  template <typename color_t>
+  struct alpha_blender
+  {
+    static_assert(std::is_same<typename ggo::color_traits<color_t>::sample_t, float>::value == true);
+
+    float _opacity;
+    float _inv_opacity;
+
+    alpha_blender(float opacity) : _opacity(opacity), _inv_opacity(1.f - opacity) {}
+
+    color_t operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const
+    {
+      return _inv_opacity * bkgd_color + _opacity * brush_color;
+    }
+  };
+
+  template <>
+  struct alpha_blender<uint8_t>
   {
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
@@ -66,7 +88,7 @@ namespace ggo
     uint32_t _opacity;
     uint32_t _inv_opacity;
 
-    alpha_blender_y8u(float opacity)
+    alpha_blender(float opacity)
       :
       _opacity(ggo::round_to<uint32_t>(opacity * one)),
       _inv_opacity(ggo::round_to<uint32_t>((1.f - opacity) * one))
@@ -83,7 +105,8 @@ namespace ggo
     }
   };
 
-  struct alpha_blender_rgb8u
+  template <>
+  struct alpha_blender<ggo::color_8u>
   {
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
@@ -91,7 +114,7 @@ namespace ggo
     uint32_t _opacity;
     uint32_t _inv_opacity;
 
-    alpha_blender_rgb8u(float opacity)
+    alpha_blender(float opacity)
       :
       _opacity(ggo::round_to<uint32_t>(opacity * one)),
       _inv_opacity(ggo::round_to<uint32_t>((1.f - opacity) * one))
@@ -111,24 +134,76 @@ namespace ggo
     }
   };
 
-  template <typename color_t>
-  struct alpha_blender_32f
+  template <>
+  struct alpha_blender<ggo::alpha_color_8u>
   {
-    static_assert(std::is_same<typename ggo::color_traits<color_t>::sample_t, float>::value == true);
+    static constexpr uint32_t bit_shift = 8;
+    static constexpr uint32_t one = 1 << bit_shift;
 
-    float _opacity;
-    float _inv_opacity;
+    uint32_t _opacity;
+    uint32_t _inv_opacity;
 
-    alpha_blender_32f(float opacity) : _opacity(opacity), _inv_opacity(1.f - opacity) {}
+    alpha_blender(float opacity)
+      :
+      _opacity(ggo::round_to<uint32_t>(opacity * one)),
+      _inv_opacity(ggo::round_to<uint32_t>((1.f - opacity) * one))
+    {}
 
-    color_t operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const
+    alpha_color_8u operator()(int x, int y, const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
     {
-      return _inv_opacity * bkgd_color + _opacity * brush_color;
+      uint32_t w_a = ggo::fixed_point_div<bit_shift>(_opacity * brush_color.a());
+      uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * bkgd_color.a(), 0xff);
+
+      uint32_t a = w_a + w_b;
+      if (a == 0)
+      {
+        return { 0, 0, 0, 0 };
+      }
+
+      uint32_t r = ggo::round_div(w_a * brush_color.r() + w_b * bkgd_color.r(), a);
+      uint32_t g = ggo::round_div(w_a * brush_color.g() + w_b * bkgd_color.g(), a);
+      uint32_t b = ggo::round_div(w_a * brush_color.b() + w_b * bkgd_color.b(), a);
+
+      return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
+    }
+
+    alpha_color_8u operator()(const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
+    {
+      return operator()(0, 0, bkgd_color, brush_color);
     }
   };
 
-  using alpha_blender_y32f = ggo::alpha_blender_32f<float>;
-  using alpha_blender_rgb32f = ggo::alpha_blender_32f<color_32f>;
+  using alpha_blender_y8u = ggo::alpha_blender<uint8_t>;
+  using alpha_blender_rgb8u = ggo::alpha_blender<color_8u>;
+  using alpha_blender_rgba8u = ggo::alpha_blender<alpha_color_8u>;
+  using alpha_blender_y32f = ggo::alpha_blender<float>;
+  using alpha_blender_rgb32f = ggo::alpha_blender<color_32f>;
+}
+
+/////////////////////////////////////////////////////////////////////
+// Overwrite blending.
+namespace ggo
+{
+  // Structs.
+  template <typename color_t, typename brush_color_t = color_t>
+  struct overwrite_blender
+  {
+    static_assert(color_traits<brush_color_t>::has_alpha == false);
+
+    color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const
+    {
+      return convert_color_to<color_t>(brush_color);
+    }
+  };
+
+  template <>
+  struct overwrite_blender<alpha_color_8u, alpha_color_8u>
+  {
+    alpha_color_8u operator()(int x, int y, const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
+    {
+      return alpha_blend(bkgd_color, brush_color);
+    }
+  };
 }
 
 /////////////////////////////////////////////////////////////////////

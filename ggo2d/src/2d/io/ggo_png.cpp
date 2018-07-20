@@ -60,9 +60,10 @@ namespace ggo
       png_image.format = PNG_FORMAT_RGB;
       break;
     case ggo::bgr_8u_yd:
-      png_image.format = PNG_FORMAT_RGB;
-      image = std::make_unique<ggo::image>(width, height, ggo::rgb_8u_yd);
-      ggo::blit<ggo::bgr_8u_yd, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
+      png_image.format = PNG_FORMAT_BGR;
+      break;
+    case ggo::rgba_8u_yd:
+      png_image.format = PNG_FORMAT_RGBA;
       break;
     case ggo::bgr_8u_yu:
       png_image.format = PNG_FORMAT_RGB;
@@ -74,6 +75,7 @@ namespace ggo
       image = std::make_unique<ggo::image>(width, height, ggo::rgb_8u_yd);
       ggo::blit<ggo::rgb_8u_yu, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
       break;
+
     default:
       return false;
     }

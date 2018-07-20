@@ -600,13 +600,34 @@ namespace ggo
   template <>
   struct accumulator<color_8u>
   {
-    int r = 0; int g = 0; int b = 0;
+    uint32_t r = 0; uint32_t g = 0; uint32_t b = 0;
     void add(const color_8u & c) { r += c.r(); g += c.g(); b += c.b(); }
-    template <int count> color_8u div() const {
+    template <uint32_t count> color_8u div() const {
       return color_8u(
         static_cast<uint8_t>((r + count / 2) / count),
         static_cast<uint8_t>((g + count / 2) / count),
         static_cast<uint8_t>((b + count / 2) / count));
+    }
+  };
+
+  template <>
+  struct accumulator<alpha_color_8u>
+  {
+    uint32_t r = 0; uint32_t g = 0; uint32_t b = 0; uint32_t a = 0;
+    void add(const alpha_color_8u & c) { r += c.a() * c.r(); g += c.a() * c.g(); b += c.a() * c.b(); a += c.a(); }
+    template <uint32_t count> alpha_color_8u div() const {
+      if (a == 0)
+      {
+        return { 0, 0, 0, 0 };
+      }
+      else
+      {
+        return {
+          static_cast<uint8_t>(ggo::round_div(r, a)),
+          static_cast<uint8_t>(ggo::round_div(g, a)),
+          static_cast<uint8_t>(ggo::round_div(b, a)),
+          static_cast<uint8_t>(ggo::round_div(a, count)) };
+      }
     }
   };
 

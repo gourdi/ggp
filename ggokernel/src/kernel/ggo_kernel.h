@@ -100,7 +100,11 @@ namespace ggo
   template <typename data_t>
   data_t rand()
   {
-    if constexpr(std::is_floating_point<data_t>::value)
+    if constexpr(std::is_same<data_t, bool>::value)
+    {
+      return rand<int>(0, 1) % 2 != 0;
+    }
+    else if constexpr(std::is_floating_point<data_t>::value)
     {
       return rand<data_t>(0, 1);
     }
@@ -109,8 +113,6 @@ namespace ggo
       return rand(std::numeric_limits<data_t>::lowest(), std::numeric_limits<data_t>::max());
     }
   }
-  
-  inline bool rand_bool() { return (rand<int>(0, 1) % 2) != 0; }
 }
 
 //////////////////////////////////////////////////////////////

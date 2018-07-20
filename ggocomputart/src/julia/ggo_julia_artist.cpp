@@ -35,7 +35,7 @@ artist(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 std::complex<float> ggo::julia_artist::pickup_seed()
 {
-	if (ggo::rand_bool())
+	if (ggo::rand<bool>())
 	{	
 		// Pick the seek near the main cardioid of the Mandelbrot set.
 		float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());

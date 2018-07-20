@@ -62,7 +62,7 @@ _background(new uint8_t[height * line_step])
   _emitter2._speed = ggo::from_polar(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>()), ggo::rand<float>(5, 15));
   _emitter2._temperature = 1;
 
-  if (ggo::rand_bool())
+  if (ggo::rand<bool>())
   {
     _emitter1._counter = 0;
     _emitter2._counter = ggo::rand<int>(-200, -100);

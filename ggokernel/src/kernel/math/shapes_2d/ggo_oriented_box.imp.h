@@ -135,18 +135,28 @@ namespace ggo
       return rect_intersection::disjoints;
     }
 
-    if (std::abs(ggo::dot(_dir, rect_p1 - _pos)) > _size1 &&
-        std::abs(ggo::dot(_dir, rect_p2 - _pos)) > _size1 &&
-        std::abs(ggo::dot(_dir, rect_p3 - _pos)) > _size1 &&
-        std::abs(ggo::dot(_dir, rect_p4 - _pos)) > _size1)
+    auto dot1 = ggo::dot(_dir, rect_p1 - _pos);
+    auto dot2 = ggo::dot(_dir, rect_p2 - _pos);
+    auto dot3 = ggo::dot(_dir, rect_p3 - _pos);
+    auto dot4 = ggo::dot(_dir, rect_p4 - _pos);
+    if (dot1 > _size1 && dot2 > _size1 && dot3 > _size1 && dot4 > _size1)
+    {
+      return rect_intersection::disjoints;
+    }
+    if (dot1 < -_size1 && dot2 < -_size1 && dot3 < -_size1 && dot4 < -_size1)
     {
       return rect_intersection::disjoints;
     }
 
-    if (std::abs(ggo::dot(dir2, rect_p1 - _pos)) > _size2 &&
-        std::abs(ggo::dot(dir2, rect_p2 - _pos)) > _size2 &&
-        std::abs(ggo::dot(dir2, rect_p3 - _pos)) > _size2 &&
-        std::abs(ggo::dot(dir2, rect_p4 - _pos)) > _size2)
+    dot1 = ggo::dot(dir2, rect_p1 - _pos);
+    dot2 = ggo::dot(dir2, rect_p2 - _pos);
+    dot3 = ggo::dot(dir2, rect_p3 - _pos);
+    dot4 = ggo::dot(dir2, rect_p4 - _pos);
+    if (dot1 > _size2 && dot2 > _size2 && dot3 > _size2 && dot4 > _size2)
+    {
+      return rect_intersection::disjoints;
+    }
+    if (dot1 < -_size2 && dot2 < -_size2 && dot3 < -_size2 && dot4 < -_size2)
     {
       return rect_intersection::disjoints;
     }

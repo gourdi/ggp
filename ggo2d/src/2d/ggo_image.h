@@ -26,6 +26,7 @@ namespace ggo
 
     int                 width() const { return _width; }
     int                 height() const { return _height; }
+    int                 min_size() const { return std::min(_width, _height); }
     ggo::size           size() const { return { _width, _height }; }
     int                 line_byte_step() const { return _line_byte_step; }
     image_format        format() const { return _format; }

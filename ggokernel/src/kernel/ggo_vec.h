@@ -41,6 +41,15 @@ namespace ggo
       ggo::copy<n_dims, data_t>(_coords, rhs._coords);
     }
 
+    vec(const vec<data_t, 3, color_t> & rgb, data_t alpha)
+    {
+      static_assert(vtype == color_t && n_dims == 4);
+      _coords[0] = rgb.get<0>();
+      _coords[1] = rgb.get<1>();
+      _coords[2] = rgb.get<2>();
+      _coords[3] = alpha;
+    }
+
     const vec<data_t, n_dims, vtype> &	operator=(const vec<data_t, n_dims, vtype> & rhs) { ggo::copy<n_dims, data_t>(_coords, rhs._coords); return *this; }
 
     // Run-time access.

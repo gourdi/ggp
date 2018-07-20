@@ -118,7 +118,7 @@ ggo::ikeda_artist::particle ggo::ikeda_artist::create_seed() const
 			break;
 	}
 
-	if (ggo::rand_bool())
+	if (ggo::rand<bool>())
 	{
 		particle._color = ggo::from_hsv<ggo::color_8u>(_hue1, ggo::rand<float>(0.4f, 0.6f), ggo::rand<float>(0.4f, 1.f));
 	}

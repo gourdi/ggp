@@ -53,6 +53,13 @@ namespace ggo
     
     return start + t * (end - start);
   }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, typename interpolation_t = float>
+  data_t ease_inout(int index, int index_start, int index_end, const data_t & start, const data_t & end)
+  {
+    return ease_inout(index - index_start, index_end - index_start, start, end);
+  }
 }
 
 #endif

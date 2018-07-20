@@ -27,7 +27,7 @@
 #include "neon/ggo_neon_artist.h"
 #include "storni/ggo_storni_realtime_artist.h"
 #include "kame/ggo_kame_animation_artist.h"
-#include "demeco/ggo_demeco_bitmap_artist.h"
+#include "demeco/ggo_demeco_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // REALTIME ARTISTS WRAPPER

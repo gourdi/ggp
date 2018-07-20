@@ -368,5 +368,55 @@ GGO_TEST(paint, clipping)
   ggo::save_bmp("paint_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, rgba8)
+{
+  const int width = 140;
+  const int height = 120;
+  const int line_step_argb = 4 * width;
+  const int line_step_rgb = 3 * width;
+
+  std::vector<uint8_t> buffer_argb(line_step_argb * height, 0);
+
+  ggo::paint_shape<ggo::rgba_8u_yd, ggo::sampling_4x4>(
+    buffer_argb.data(), width, height, line_step_argb, ggo::disc_float({ 70.f, 40.f }, 35.f),
+    { 0xff, 0x00, 0x00, 0xff });
+
+  ggo::paint_shape<ggo::rgba_8u_yd, ggo::sampling_4x4>(
+    buffer_argb.data(), width, height, line_step_argb, ggo::disc_float({ 70.f, 60.f }, 35.f),
+    { 0x00, 0x00, 0xff, 0xff }, 0.5f);
+
+  std::vector<uint8_t> buffer_rgb(line_step_rgb * height, 0xff);
+  ggo::blit<ggo::rgba_8u_yd, ggo::rgb_8u_yd>(buffer_argb.data(), width, height, line_step_argb,
+    buffer_rgb.data(), width, height, line_step_rgb, 0, 0);
+
+  ggo::save_bmp("paint_rgba.bmp", buffer_rgb.data(), ggo::rgb_8u_yd, width, height, line_step_rgb);
+}
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, rgba8_multishape)
+{
+  const int width = 140;
+  const int height = 120;
+  const int line_step_argb = 4 * width;
+  const int line_step_rgb = 3 * width;
+
+  std::vector<uint8_t> buffer_argb(line_step_argb * height, 0);
+
+  using paint_disc = ggo::solid_color_shape<ggo::disc_float, ggo::alpha_color_8u>;
+  std::vector<paint_disc> paints_discs;
+
+  for (int i = 0; i < 512; ++i)
+  {
+    paints_discs.emplace_back(ggo::disc_float({ 0.5f * width + 0.01f * i, 0.5f * height }, 5.f), ggo::alpha_color_8u(255, 0, 0, 255));
+  }
+  ggo::paint_shapes<ggo::rgba_8u_yd, ggo::sampling_8x8>(buffer_argb.data(), width, height, line_step_argb, paints_discs);
+
+  std::vector<uint8_t> buffer_rgb(line_step_rgb * height, 0xff);
+  ggo::blit<ggo::rgba_8u_yd, ggo::rgb_8u_yd>(buffer_argb.data(), width, height, line_step_argb,
+    buffer_rgb.data(), width, height, line_step_rgb, 0, 0);
+
+  ggo::save_bmp("paint_rgba_multi.bmp", buffer_rgb.data(), ggo::rgb_8u_yd, width, height, line_step_rgb);
+}
 
 
