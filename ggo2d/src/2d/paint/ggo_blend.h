@@ -30,22 +30,7 @@ namespace ggo
 
   inline ggo::alpha_color_8u alpha_blend(const ggo::alpha_color_8u & bkgd_color, const ggo::alpha_color_8u & brush_color)
   {
-    uint8_t inv_opacity = 0xff - brush_color.a();
-
-    uint32_t w_a = brush_color.a();
-    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * bkgd_color.a(), 0xff);
-
-    uint32_t a = w_a + w_b;
-    if (a == 0)
-    {
-      return { 0, 0, 0, 0 };
-    }
-
-    uint32_t r = ggo::round_div(w_a * brush_color.r() + w_b * bkgd_color.r(), a);
-    uint32_t g = ggo::round_div(w_a * brush_color.g() + w_b * bkgd_color.g(), a);
-    uint32_t b = ggo::round_div(w_a * brush_color.b() + w_b * bkgd_color.b(), a);
-
-    return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
+    return linerp(brush_color, bkgd_color, one_log2_fract);
   }
 
   template <typename real_t>
@@ -53,13 +38,9 @@ namespace ggo
   {
     static_assert(std::is_floating_point<real_t>::value);
 
-    uint8_t opacity_8u = ggo::round_to<uint8_t>(opacity * 0xff);
-    uint8_t inv_opacity_8u = 0xff - opacity_8u;
+    uint8_t opacity_8u = ggo::round_to<uint8_t>(ggo::clamp(opacity, 0.f, 1.f) * 0xff);
 
-    return ggo::color_8u(
-      ggo::round_div(opacity_8u * brush_color.r() + inv_opacity_8u * bkgd_color.r(), 0xff),
-      ggo::round_div(opacity_8u * brush_color.g() + inv_opacity_8u * bkgd_color.g(), 0xff),
-      ggo::round_div(opacity_8u * brush_color.b() + inv_opacity_8u * bkgd_color.b(), 0xff));
+    alpha_blend(bkgd_color, brush_color, opacity_8u);
   }
 
   // Structs.
@@ -141,30 +122,15 @@ namespace ggo
     static constexpr uint32_t one = 1 << bit_shift;
 
     uint32_t _opacity;
-    uint32_t _inv_opacity;
 
     alpha_blender(float opacity)
-      :
-      _opacity(ggo::round_to<uint32_t>(opacity * one)),
-      _inv_opacity(ggo::round_to<uint32_t>((1.f - opacity) * one))
+    :
+    _opacity(ggo::round_to<uint32_t>(opacity * one))
     {}
 
     alpha_color_8u operator()(int x, int y, const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
     {
-      uint32_t w_a = ggo::fixed_point_div<bit_shift>(_opacity * brush_color.a());
-      uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * bkgd_color.a(), 0xff);
-
-      uint32_t a = w_a + w_b;
-      if (a == 0)
-      {
-        return { 0, 0, 0, 0 };
-      }
-
-      uint32_t r = ggo::round_div(w_a * brush_color.r() + w_b * bkgd_color.r(), a);
-      uint32_t g = ggo::round_div(w_a * brush_color.g() + w_b * bkgd_color.g(), a);
-      uint32_t b = ggo::round_div(w_a * brush_color.b() + w_b * bkgd_color.b(), a);
-
-      return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
+      return linerp(brush_color, bkgd_color, ggo::log2_fract<bit_shift>(_opacity));
     }
 
     alpha_color_8u operator()(const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const

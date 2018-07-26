@@ -58,7 +58,7 @@ namespace ggo
   struct log2_fract final
   {
     log2_fract() = default;
-    log2_fract(uint32_t num) : _num(num) {}
+    constexpr log2_fract(uint32_t num) : _num(num) {}
 
     uint32_t _num = 0;
     static constexpr uint32_t _log2_den = log2_den;
@@ -71,6 +71,20 @@ namespace ggo
       return real_t(_num) / real_t(_den);
     }
   };
+
+  constexpr log2_fract<0> one_log2_fract(1); // One.
+
+  template <uint32_t log2_den>
+  constexpr uint32_t operator*(const log2_fract<log2_den> & fract, uint32_t v)
+  {
+    return ggo::fixed_point_div<log2_den>(fract._num * v);
+  }
+
+  template <uint32_t log2_den>
+  constexpr uint32_t operator*(uint32_t v, const log2_fract<log2_den> & fract)
+  {
+    return ggo::fixed_point_div<log2_den>(fract._num * v);
+  }
 }
 
 //////////////////////////////////////////////////////////////

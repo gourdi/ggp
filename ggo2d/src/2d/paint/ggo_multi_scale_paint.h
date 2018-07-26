@@ -187,6 +187,7 @@ namespace ggo
         break;
       case ggo::rect_intersection::partial_overlap:
       case ggo::rect_intersection::shape_in_rect:
+      case ggo::rect_intersection::unknown:
         block_inside_all_shapes = false;
         current_block_paint_shapes.push_back(paint_shape);
         break;

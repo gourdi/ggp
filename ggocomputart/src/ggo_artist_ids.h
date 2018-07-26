@@ -102,7 +102,8 @@ namespace ggo
     neon,
     storni,
     lagaude,
-    duffing // 5
+    duffing, // 5
+    demeco
   };
 }
 

@@ -45,11 +45,11 @@ namespace ggo
 // Paint multiple shapes.
 namespace ggo
 {
-  template <ggo::image_format format, sampling smp, typename paint_shapes_range_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes);
+  template <ggo::image_format format, sampling smp, typename shapes_container_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes);
 
-  template <ggo::image_format format, sampling smp, typename paint_shapes_range_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes, const ggo::rect_int & clipping);
+  template <ggo::image_format format, sampling smp, typename shapes_container_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes, const ggo::rect_int & clipping);
 
   template <ggo::image_format format, sampling smp, typename paint_shape_t>
   void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes);
@@ -153,15 +153,15 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, sampling smp, typename paint_shapes_range_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & shapes)
+  template <ggo::image_format format, sampling smp, typename shapes_container_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes)
   {
     paint_shapes<format, smp>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, sampling smp, typename paint_shapes_range_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, const paint_shapes_range_t & paint_shapes, const ggo::rect_int & clipping)
+  template <ggo::image_format format, sampling smp, typename shapes_container_t>
+  void paint_shapes(void * buffer, int width, int height, int line_step, const shapes_container_t & paint_shapes, const ggo::rect_int & clipping)
   {
     const int scale_factor = 8;
     const int first_scale = 2;

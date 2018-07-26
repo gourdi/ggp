@@ -5,6 +5,7 @@
 #include "storni/ggo_storni_realtime_artist.h"
 #include "duffing/ggo_duffing_realtime_artist.h"
 #include "lagaude/ggo_lagaude_realtime_artist.h"
+#include "demeco/ggo_demeco_realtime_artist.h"
 
 namespace ggo
 {
@@ -58,6 +59,8 @@ namespace ggo
       return new duffing_realtime_artist(width, height, line_step, format);
     case realtime_artist_id::lagaude:
       return new lagaude_realtime_artist(width, height, line_step, format);
+    case realtime_artist_id::demeco:
+      return new demeco_realtime_artist(width, height, line_step, format);
     default:
       GGO_FAIL();
       return nullptr;
