@@ -6,10 +6,8 @@
 #include <vivelle/commands/ggo_blit.h>
 #include <vivelle/commands/ggo_rescale.h>
 #include <vivelle/commands/ggo_crop.h>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <filesystem>
+#include <vivelle/commands/ggo_fill.h>
+#include <vivelle/commands/ggo_paint.h>
 
 namespace ggo
 {
@@ -31,6 +29,14 @@ namespace ggo
       else if (cmd.name() == "crop")
       {
         image = crop(image, cmd.parameters());
+      }
+      else if (cmd.name() == "fill")
+      {
+        ggo::fill(image, cmd.parameters());
+      }
+      else if (cmd.name() == "paint")
+      {
+        ggo::paint(image, cmd.parameters());
       }
       else
       {

@@ -92,10 +92,12 @@ namespace ggo
     virtual	rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const = 0;
   };
 
-  template <typename data_t>
-  class paintable_shape2d_abc : public samplable_shape2d_abc<data_t>, public bounded_shape2d_abc<data_t>, public rect_intersect_shape2d_abc<data_t>
+  template <typename data_type>
+  class paintable_shape2d_abc : public samplable_shape2d_abc<data_type>, public bounded_shape2d_abc<data_type>, public rect_intersect_shape2d_abc<data_type>
   {
   public:
+
+    using data_t = data_type;
     
     using samplable_shape2d_abc<data_t>::is_point_inside;
   };

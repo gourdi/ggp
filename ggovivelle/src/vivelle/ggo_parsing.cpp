@@ -130,4 +130,37 @@ namespace ggo
 
     return parse_size(*scalings_param, image_size);
   }
+
+  /////////////////////////////////////////////////////////////////////
+  std::optional<ggo::color_8u>  parse_color_8u(const std::string & color_str)
+  {
+    if (color_str == "black")
+    {
+      return ggo::black_8u();
+    }
+    else if (color_str == "gray")
+    {
+      return ggo::gray_8u();
+    }
+    else if (color_str == "white")
+    {
+      return ggo::white_8u();
+    }
+    else if (color_str == "red")
+    {
+      return ggo::red_8u();
+    }
+    else if (color_str == "green")
+    {
+      return ggo::green_8u();
+    }
+    else if (color_str == "blue")
+    {
+      return ggo::blue_8u();
+    }
+    else
+    {
+      return {};
+    }
+  }
 }
