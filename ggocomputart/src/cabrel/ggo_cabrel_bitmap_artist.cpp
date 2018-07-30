@@ -217,7 +217,7 @@ namespace
     }
 
     // Paint shadows.
-    std::vector<ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u>> shadows;
+    std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u>> shadows;
     const ggo::vec2f shadow_offset(0.01f * artist.min_size(), -0.01f * artist.min_size());
     for (auto triangle : triangles)
     {
@@ -241,13 +241,13 @@ namespace
 
     for (const auto & triangle : triangles)
     {
-      using paint_triangle_t = ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u>;
+      using paint_triangle_t = ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u>;
       auto paint_triangle = std::make_unique<paint_triangle_t>(triangle, ggo::color_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
       shapes.push_back(std::move(paint_triangle));
 
       auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2)
       {
-        using paint_extended_segment_t = ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u>;
+        using paint_extended_segment_t = ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u>;
         auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::capsule_float(p1, p2, border_size), ggo::black_8u());
         shapes.push_back(std::move(paint_extented_segment));
       };

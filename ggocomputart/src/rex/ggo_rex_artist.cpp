@@ -100,7 +100,7 @@ namespace
   template <ggo::image_format format>
   void render_edges(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<ggo::segment_float> & edges)
   {
-    std::vector<ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u>> shapes;
 
     for (const auto & edge : edges)
     {

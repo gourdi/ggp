@@ -213,7 +213,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
 {
   using format_traits = image_format_traits<format>;
   using color_t = format_traits::color_t;
-  using paint_shape_t = solid_color_shape<multi_shape_float, color_t, alpha_blender<color_t>>;
+  using paint_shape_t = static_paint_shape<multi_shape_float, color_t, solid_color_brush<color_t>, alpha_blender<color_t>>;
 
   int angle_counter = std::min(_counter, _angle_counter_max);
   float max_angle = std::min(ggo::ease_inout(angle_counter, _angle_counter_max, 0.f, 2.f * ggo::pi<float>()), 2.f * ggo::pi<float>());
@@ -274,7 +274,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
   using format_traits = image_format_traits<format>;
   using color_t = format_traits::color_t;
 
-  using paint_box = solid_color_shape<ggo::oriented_box_float, color_t>;
+  using paint_box = static_paint_shape<ggo::oriented_box_float, color_t>;
   paint_shapes_t paint_boxes;
 
   // Compute current angle.
@@ -389,7 +389,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
   using format_traits = image_format_traits<format>;
   using color_t = format_traits::color_t;
 
-  using paint_polygon = solid_color_shape<ggo::polygon2d_float, color_t>;
+  using paint_polygon = static_paint_shape<ggo::polygon2d_float, color_t>;
   paint_shapes_t paint_polygons;
 
   auto curve = [&](int counter)

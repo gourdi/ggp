@@ -256,7 +256,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
 {
   std::vector<ggo::link<const pos3f *>> edges;
 
-  std::vector<ggo::solid_color_shape<ggo::triangle2d_float, uint8_t>> triangles;
+  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, uint8_t>> triangles;
 
   for (const auto & triangle : _triangles)
   {
@@ -280,7 +280,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
 
   ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.width(), triangles);
 
-  using paint_shape_t = ggo::solid_color_shape<ggo::capsule_float, uint8_t>;
+  using paint_shape_t = ggo::static_paint_shape<ggo::capsule_float, uint8_t>;
 
   std::vector<paint_shape_t> shapes;
   for (const auto & edge : edges)

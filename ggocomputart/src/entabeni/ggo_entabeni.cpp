@@ -122,7 +122,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     return std::make_tuple(pos3d, proj);
   };
 
-  std::vector<ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u>> shapes;
+  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u>> shapes;
 
   auto paint_triangle = [&](const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3)
   {

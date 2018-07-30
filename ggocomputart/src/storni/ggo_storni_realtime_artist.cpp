@@ -442,10 +442,10 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
       const ggo::vec2f v2{ storni._pos + 0.5f * ggo::vec2f(direction.y(), -direction.x()) };
       const ggo::vec2f v3{ storni._pos + 0.5f * ggo::vec2f(-direction.y(), direction.x()) };
 
-      ggo::solid_color_shape<ggo::triangle2d_float, ggo::color_8u> triangle({ v1, v2, v3 }, storni._color);
-      ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u> border1({ v1, v2, border_size }, ggo::black_8u());
-      ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u> border2({ v2, v3, border_size }, ggo::black_8u());
-      ggo::solid_color_shape<ggo::capsule_float, ggo::color_8u> border3({ v3, v1, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u> triangle({ v1, v2, v3 }, storni._color);
+      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border1({ v1, v2, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border2({ v2, v3, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border3({ v3, v1, border_size }, ggo::black_8u());
 
       const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 

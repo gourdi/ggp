@@ -113,7 +113,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color, ggo::rect_int::from_size(size()));
 
   {
-    std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::color_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
@@ -131,7 +131,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::gaussian_blur2d<format>(buffer, line_step(), size(), stddev);
 
   {
-    std::vector<ggo::solid_color_shape<ggo::disc_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::color_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
