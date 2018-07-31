@@ -38,8 +38,7 @@ GGO_TEST(threadpool, base)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(threadpool, many_jobs)
 {
-  std::mutex m;
-  ggo::threadpool pool(2);
+  ggo::threadpool pool(8);
 
   std::vector<std::future<int>> results;
 
