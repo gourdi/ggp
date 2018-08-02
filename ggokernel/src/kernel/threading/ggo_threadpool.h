@@ -16,11 +16,13 @@ namespace ggo
   class threadpool final
   {
   public:
-    threadpool(size_t thread_count);
+    threadpool(size_t threads_count);
     ~threadpool();
 
     template<class func_t, class... args_t>
     auto enqueue(func_t && f, args_t &&... args) -> std::future<typename std::result_of<func_t(args_t...)>::type>;
+
+    auto threads_count() const { return workers.size(); }
     
   private:
     // need to keep track of threads so we can join them
@@ -35,9 +37,9 @@ namespace ggo
   };
 
   // the constructor just launches some amount of workers
-  threadpool::threadpool(size_t thread_count)
+  inline threadpool::threadpool(size_t threads_count)
   {
-    for (size_t i = 0; i < thread_count; ++i)
+    for (size_t i = 0; i < threads_count; ++i)
     {
       workers.emplace_back([this]
       {
@@ -79,7 +81,7 @@ namespace ggo
   }
 
   // the destructor joins all threads
-  threadpool::~threadpool()
+  inline threadpool::~threadpool()
   {
     {
       std::unique_lock<std::mutex> lock(queue_mutex);

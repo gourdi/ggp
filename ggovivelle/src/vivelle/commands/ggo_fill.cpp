@@ -5,7 +5,6 @@
 
 namespace ggo
 {
-  
   struct fill_functor
   {
     template <ggo::image_format format>

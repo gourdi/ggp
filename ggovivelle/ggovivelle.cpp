@@ -8,6 +8,7 @@
 #include <vivelle/commands/ggo_crop.h>
 #include <vivelle/commands/ggo_fill.h>
 #include <vivelle/commands/ggo_paint.h>
+#include <vivelle/commands/ggo_blur.h>
 
 namespace ggo
 {
@@ -37,6 +38,10 @@ namespace ggo
       else if (cmd.name() == "paint")
       {
         ggo::paint(image, cmd.parameters());
+      }
+      else if (cmd.name() == "blur")
+      {
+        ggo::blur(image, cmd.parameters());
       }
       else
       {

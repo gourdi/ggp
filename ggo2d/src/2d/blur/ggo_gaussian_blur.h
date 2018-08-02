@@ -93,23 +93,23 @@ namespace ggo
   void gaussian_blur2d(void * buffer, int line_byte_step, const ggo::size & size, float stddev)
   {
     using format_traits = image_format_traits<format>;
-    using gaussian_helper = gaussian_blur2d_helper<typename format_traits::color_t>;
+    using gaussian_blur_helper = gaussian_blur2d_helper<typename format_traits::color_t>;
 
     std::vector<uint8_t> tmp(line_byte_step * size.height());
     memcpy(tmp.data(), buffer, tmp.size());
 
-    auto kernel = gaussian_helper::build_kernel(stddev);
+    auto kernel = gaussian_blur_helper::build_kernel(stddev);
     if (kernel.size() <= 1)
     {
       return;
     }
 
     auto read = [](const void * ptr) {
-      return gaussian_helper::convert(format_traits::read(ptr));
+      return gaussian_blur_helper::convert(format_traits::read(ptr));
     };
 
-    auto write = [](void * ptr, const typename gaussian_helper::color_t & pixel) {
-      format_traits::write(ptr, gaussian_helper::convert(pixel));
+    auto write = [](void * ptr, const typename gaussian_blur_helper::color_t & pixel) {
+      format_traits::write(ptr, gaussian_blur_helper::convert(pixel));
     };
 
     ggo::apply_symetric_kernel_2d_horz<border_mode>(buffer, format_traits::pixel_byte_size, line_byte_step, read,
