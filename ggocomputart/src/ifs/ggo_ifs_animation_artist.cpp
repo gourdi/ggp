@@ -29,10 +29,10 @@ _artist(width, height, line_step, format)
 
   _hue = ggo::rand<float>();
 
-  _bkgd_colors[0] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
-  _bkgd_colors[1] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
-  _bkgd_colors[2] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
-  _bkgd_colors[3] = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
+  _bkgd_colors[0] = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
+  _bkgd_colors[1] = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
+  _bkgd_colors[2] = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25));
+  _bkgd_colors[3] = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75));
 }
 
 //////////////////////////////////////////////////////////////

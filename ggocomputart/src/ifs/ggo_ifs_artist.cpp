@@ -99,7 +99,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, uint8_t color, const ggo::arra
     for (int x = 0; x < width(); ++x)
     {
       ggo::alpha_blender_rgb8u blender(*ptr_src);
-      ggo::color_8u c_8u = blender(x, y, ggo::read_pixel<ggo::rgb_8u_yu>(ptr_dst), ggo::color_8u(color, color, color));
+      ggo::rgb_8u c_8u = blender(x, y, ggo::read_pixel<ggo::rgb_8u_yu>(ptr_dst), ggo::rgb_8u(color, color, color));
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_dst, c_8u);
 
       ptr_src++;

@@ -109,12 +109,12 @@ _sources(4)
   source._timer1 = 0;
 
   float hue = ggo::rand<float>();
-  _smoke_color = ggo::from_hsv<ggo::color_8u>(hue, 1, ggo::rand<float>(0.2f, 0.8f));
+  _smoke_color = ggo::from_hsv<ggo::rgb_8u>(hue, 1, ggo::rand<float>(0.2f, 0.8f));
 
-  const ggo::color_8u color1 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
-  const ggo::color_8u color2 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
-  const ggo::color_8u color3 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
-  const ggo::color_8u color4 = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+  const ggo::rgb_8u color1 = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+  const ggo::rgb_8u color2 = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+  const ggo::rgb_8u color3 = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
+  const ggo::rgb_8u color4 = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.f, 0.2f), ggo::rand<float>(0.8f, 1.f));
 
   ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_buffer.data(), width, height, line_step, color1, color2, color3, color4);
 }
@@ -331,10 +331,10 @@ void ggo::smoke_animation_artist::render_frame(void * buffer, int frame_index)
     {
       double opacity = _opacity_cur->at(x, y);
 
-      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, height(), 3 * width());
-      c_8u.r() = ggo::round_to<uint8_t>(opacity * _smoke_color.r() + (1. - opacity) * c_8u.r());
-      c_8u.g() = ggo::round_to<uint8_t>(opacity * _smoke_color.g() + (1. - opacity) * c_8u.g());
-      c_8u.b() = ggo::round_to<uint8_t>(opacity * _smoke_color.b() + (1. - opacity) * c_8u.b());
+      ggo::rgb_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, height(), 3 * width());
+      c_8u._r = ggo::round_to<uint8_t>(opacity * _smoke_color._r + (1. - opacity) * c_8u._r);
+      c_8u._g = ggo::round_to<uint8_t>(opacity * _smoke_color._g + (1. - opacity) * c_8u._g);
+      c_8u._b = ggo::round_to<uint8_t>(opacity * _smoke_color._b + (1. - opacity) * c_8u._b);
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
     }
   }

@@ -10,8 +10,7 @@ namespace ggo
                                  const ggo::object3d_abc & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-    using color_point = ggo::kdtree<ggo::color_32f, 3>::data_point;
-
+    using color_point = ggo::kdtree<ggo::rgb_32f, 3>::data_point;
     
     std::vector<color_point> photons;
 
@@ -57,7 +56,7 @@ namespace ggo
         {
           const float intensity = ggo::dot(hit->_intersection._world_normal.dir(), transmission._ray.dir());
           GGO_ASSERT_LE(intensity, 0.001f);
-          ggo::color_32f photon_color = -intensity * (light->get_emissive_color() * hit->_object->get_color(hit->_intersection._world_normal.pos()));
+          ggo::rgb_32f photon_color = -intensity * (light->get_emissive_color() * hit->_object->get_color(hit->_intersection._world_normal.pos()));
           ggo::pos3f photon_pos = transmission._ray.pos() + hit->_intersection._dist * transmission._ray.dir();
           current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
         }
@@ -72,20 +71,20 @@ namespace ggo
       }
     }
 
-    _tree.reset(new ggo::kdtree<ggo::color_32f, 3>(photons));
+    _tree.reset(new ggo::kdtree<ggo::rgb_32f, 3>(photons));
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f photon_mapping::process(const ggo::ray3d_float & ray,
-                                         const ggo::ray3d_float & world_normal,
-                                         const ggo::object3d_abc & hit_object,
-                                         const ggo::color_32f & hit_color,
-                                         float random_variable1,
-                                         float random_variable2) const
+  ggo::rgb_32f photon_mapping::process(const ggo::ray3d_float & ray,
+                                       const ggo::ray3d_float & world_normal,
+                                       const ggo::object3d_abc & hit_object,
+                                       const ggo::rgb_32f & hit_color,
+                                       float random_variable1,
+                                       float random_variable2) const
   {
     const float radius = 0.1f;
 
-    ggo::color_32f output_color(ggo::black<ggo::color_32f>());
+    ggo::rgb_32f output_color(ggo::black_32f());
 
     auto photons = _tree->find_points({ world_normal.pos().get<0>(), world_normal.pos().get<1>(), world_normal.pos().get<2>() }, radius);
         

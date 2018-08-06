@@ -15,7 +15,7 @@ GGO_TEST(octree, test)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black_32f()));
 
   // Light.
-  scene.add_point_light(ggo::white<ggo::color_32f>(), ggo::pos3f(100.f, -100.f, 200.f));
+  scene.add_point_light(ggo::white_32f(), ggo::pos3f(100.f, -100.f, 200.f));
 
   // Objects.
   constexpr uint32_t discard_flags = ggo::discard_basis | ggo::discard_phong | ggo::discard_roughness;

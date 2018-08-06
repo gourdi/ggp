@@ -39,7 +39,7 @@ namespace ggo
       float		      _radius;
       float		      _dradius;
       float		      _opacity;
-      ggo::color_8u _color;
+      ggo::rgb_8u   _color;
     };
 
     //////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ namespace ggo
       ggo::array<angle_generator, 1>  _angle_generators;
       ggo::animator					          _particles_animator;
       int								              _life;
-      ggo::color_8u			              _color;
+      ggo::rgb_8u			                _color;
       float							              _dangle;
     };
 

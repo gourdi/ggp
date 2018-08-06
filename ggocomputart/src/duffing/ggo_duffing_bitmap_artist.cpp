@@ -47,10 +47,10 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	// Render the background.
 	std::cout << "Rendering background" << std::endl;
 	
-  const ggo::color_32f color1 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
-	const ggo::color_32f color2 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
-	const ggo::color_32f color3 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
-	const ggo::color_32f color4 = ggo::from_hsv<ggo::color_32f>(0, 0, ggo::rand<float>(0.5, 1));
+  const ggo::rgb_32f color1 = ggo::from_hsv<ggo::rgb_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	const ggo::rgb_32f color2 = ggo::from_hsv<ggo::rgb_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	const ggo::rgb_32f color3 = ggo::from_hsv<ggo::rgb_32f>(0, 0, ggo::rand<float>(0.5, 1));
+	const ggo::rgb_32f color4 = ggo::from_hsv<ggo::rgb_32f>(0, 0, ggo::rand<float>(0.5, 1));
 	
 	ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
     color1, color2, color3, color4, ggo::rect_int::from_width_height(width(), height()));
@@ -66,7 +66,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 		render_pt.x() += 0.05f * min_size();
 		render_pt.y() += 0.05f * min_size();
 
-		ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_2x2>(
+		ggo::paint<ggo::y_32f_yu, ggo::sampling_2x2>(
       shadow_buffer.data(), width(), height(), sizeof(float) * width(),
       ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(0.2f));
 	}
@@ -95,11 +95,11 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	{
 		float t = float(i) / points.size();
 		float hue = hue_curve.evaluate(t);
-		ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(hue, 1, 1);
+		ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(hue, 1, 1);
 
-    ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
       buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-      ggo::disc_float(points[i], radius), ggo::make_solid_brush<color_32f>(color), ggo::alpha_blender_rgb32f(0.02f));
+      ggo::disc_float(points[i], radius), ggo::make_solid_brush<rgb_32f>(color), ggo::alpha_blender_rgb32f(0.02f));
 	}
 
 	// From float to uint8_t.

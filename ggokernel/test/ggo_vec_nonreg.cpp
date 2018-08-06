@@ -5,11 +5,11 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, contruction_copy)
 {
-  ggo::vec<int, 2, ggo::geometry_t> v1(2, 3);
+  ggo::vec<int, 2> v1(2, 3);
   GGO_CHECK_EQ(v1.x(), 2);
   GGO_CHECK_EQ(v1.y(), 3);
 
-  ggo::vec<int, 2, ggo::geometry_t> v2(v1);
+  ggo::vec<int, 2> v2(v1);
   GGO_CHECK_EQ(v2.x(), 2);
   GGO_CHECK_EQ(v2.y(), 3);
   
@@ -22,7 +22,7 @@ GGO_TEST(vec, contruction_copy)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, set_get)
 {
-  ggo::vec<int, 2, ggo::geometry_t> v;
+  ggo::vec<int, 2> v;
   v.x() = 5;
   v.y() = 6;
   GGO_CHECK_EQ(v.x(), 5);
@@ -36,9 +36,9 @@ GGO_TEST(vec, set_get)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, egality)
 {
-  ggo::vec<int, 3, ggo::geometry_t> v1(1, 2, 3);
-  ggo::vec<int, 3, ggo::geometry_t> v2(1, 2, 3);
-  ggo::vec<int, 3, ggo::geometry_t> v3(1, 2, 4);
+  ggo::vec<int, 3> v1(1, 2, 3);
+  ggo::vec<int, 3> v2(1, 2, 3);
+  ggo::vec<int, 3> v3(1, 2, 4);
   GGO_CHECK(v1 == v2);
   GGO_CHECK(v1 != v3);
 }
@@ -46,8 +46,8 @@ GGO_TEST(vec, egality)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, dot)
 {
-  ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-  ggo::vec<int, 3, ggo::geometry_t> b(1, 1, 2);
+  ggo::vec<int, 3> a(1, 2, 3);
+  ggo::vec<int, 3> b(1, 1, 2);
 
   GGO_CHECK_EQ(9, ggo::dot(a, b));
 }
@@ -56,8 +56,8 @@ GGO_TEST(vec, dot)
 GGO_TEST(vec, operators)
 {
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-    ggo::vec<int, 3, ggo::geometry_t> b(-a);
+    ggo::vec<int, 3> a(1, 2, 3);
+    ggo::vec<int, 3> b(-a);
 
     GGO_CHECK_EQ(-1, b.x());
     GGO_CHECK_EQ(-2, b.y());
@@ -65,8 +65,8 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-    ggo::vec<int, 3, ggo::geometry_t> b(1, 4, 2);
+    ggo::vec<int, 3> a(1, 2, 3);
+    ggo::vec<int, 3> b(1, 4, 2);
 
     a += b;
 
@@ -76,8 +76,8 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-    ggo::vec<int, 3, ggo::geometry_t> b(1, 1, 2);
+    ggo::vec<int, 3> a(1, 2, 3);
+    ggo::vec<int, 3> b(1, 1, 2);
 
     a -= b;
 
@@ -87,7 +87,7 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
+    ggo::vec<int, 3> a(1, 2, 3);
 
     a *= 3;
 
@@ -97,7 +97,7 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<float, 3, ggo::geometry_t> a(1.f, 2.f, 3.f);
+    ggo::vec<float, 3> a(1.f, 2.f, 3.f);
 
     a /= 2.f;
 
@@ -107,9 +107,9 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-    ggo::vec<int, 3, ggo::geometry_t> b(4, 5, 6);
-    ggo::vec<int, 3, ggo::geometry_t> c(a + b);
+    ggo::vec<int, 3> a(1, 2, 3);
+    ggo::vec<int, 3> b(4, 5, 6);
+    ggo::vec<int, 3> c(a + b);
 
     GGO_CHECK_EQ(5, c.x());
     GGO_CHECK_EQ(7, c.y());
@@ -117,9 +117,9 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
-    ggo::vec<int, 3, ggo::geometry_t> b(4, 7, 9);
-    ggo::vec<int, 3, ggo::geometry_t> c(b - a);
+    ggo::vec<int, 3> a(1, 2, 3);
+    ggo::vec<int, 3> b(4, 7, 9);
+    ggo::vec<int, 3> c(b - a);
 
     GGO_CHECK_EQ(3, c.x());
     GGO_CHECK_EQ(5, c.y());
@@ -127,22 +127,22 @@ GGO_TEST(vec, operators)
   }
 
   {
-    ggo::vec<int, 3, ggo::geometry_t> a(1, 2, 3);
+    ggo::vec<int, 3> a(1, 2, 3);
     
-    ggo::vec<int, 3, ggo::geometry_t> b(2 * a);
+    ggo::vec<int, 3> b(2 * a);
     GGO_CHECK_EQ(2, b.x());
     GGO_CHECK_EQ(4, b.y());
     GGO_CHECK_EQ(6, b.z());
 
-    ggo::vec<int, 3, ggo::geometry_t> c(a * 3);
+    ggo::vec<int, 3> c(a * 3);
     GGO_CHECK_EQ(3, c.x());
     GGO_CHECK_EQ(6, c.y());
     GGO_CHECK_EQ(9, c.z());
   }
 
   {
-    ggo::vec<float, 3, ggo::geometry_t> a(1.f, 2.f, 3.f);
-    ggo::vec<float, 3, ggo::geometry_t> b(a / 2.f);
+    ggo::vec<float, 3> a(1.f, 2.f, 3.f);
+    ggo::vec<float, 3> b(a / 2.f);
     GGO_CHECK_FLOAT_EQ(0.5f, b.x());
     GGO_CHECK_FLOAT_EQ(1.0f, b.y());
     GGO_CHECK_FLOAT_EQ(1.5f, b.z());
@@ -186,7 +186,7 @@ GGO_TEST(vec, operators)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, flip)
 {
-  ggo::vec<int, 2, ggo::geometry_t> v(1, 2);
+  ggo::vec<int, 2> v(1, 2);
   v.flip();
   GGO_CHECK_EQ(-1, v.x());
   GGO_CHECK_EQ(-2, v.y());
@@ -195,7 +195,7 @@ GGO_TEST(vec, flip)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, length)
 {
-  ggo::vec<float, 2, ggo::geometry_t> v(1.f, 2.f);
+  ggo::vec<float, 2> v(1.f, 2.f);
   GGO_CHECK_FLOAT_EQ(5.f, v.get_hypot());
   GGO_CHECK_FLOAT_EQ(std::sqrt(5.f), v.get_length());
 
@@ -213,8 +213,8 @@ GGO_TEST(vec, length)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, compare)
 {
-  ggo::vec<float, 2, ggo::geometry_t> v1(1.f, 2.f);
-  ggo::vec<float, 2, ggo::geometry_t> v2(1.f, 2.001f);
+  ggo::vec<float, 2> v1(1.f, 2.f);
+  ggo::vec<float, 2> v2(1.f, 2.001f);
 
   GGO_CHECK(ggo::compare(v1, v2, 0.00001f) == false);
   GGO_CHECK(ggo::compare(v1, v2, 0.01f) == true);
@@ -223,7 +223,7 @@ GGO_TEST(vec, compare)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, dump)
 {
-  ggo::vec<int, 2, ggo::geometry_t> v(1, 2);
+  ggo::vec<int, 2> v(1, 2);
 
   std::ostringstream oss;
   oss << v;
@@ -235,14 +235,14 @@ GGO_TEST(vec, dump)
 GGO_TEST(vec, rotation)
 {
   {
-    ggo::vec<float, 2, ggo::geometry_t> v = ggo::rotate(ggo::vec<float, 2, ggo::geometry_t>(1.f, 0.f), ggo::pi<float>() / 2);
+    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(1.f, 0.f), ggo::pi<float>() / 2);
     GGO_CHECK_FLOAT_EQ(0.f, v.x());
     GGO_CHECK_FLOAT_EQ(1.f, v.y());
   }
 
   {
-    const ggo::vec<float, 2, ggo::geometry_t> center(3.f, 1.f);
-    ggo::vec<float, 2, ggo::geometry_t> v = ggo::rotate(ggo::vec<float, 2, ggo::geometry_t>(4.f, 1.f), center, ggo::pi<float>() / 2);
+    const ggo::vec<float, 2> center(3.f, 1.f);
+    ggo::vec<float, 2> v = ggo::rotate(ggo::vec<float, 2>(4.f, 1.f), center, ggo::pi<float>() / 2);
     GGO_CHECK_FLOAT_EQ(3.f, v.x());
     GGO_CHECK_FLOAT_EQ(2.f, v.y());
   }
@@ -251,7 +251,7 @@ GGO_TEST(vec, rotation)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, move)
 {
-  ggo::vec<int, 2, ggo::geometry_t> v(1, 2);
+  ggo::vec<int, 2> v(1, 2);
   v.move(3, 4);
   GGO_CHECK_FLOAT_EQ(4, v.x());
   GGO_CHECK_FLOAT_EQ(6, v.y());
@@ -260,14 +260,14 @@ GGO_TEST(vec, move)
 //////////////////////////////////////////////////////////////////
 GGO_TEST(vec, ortho_dot)
 {
-  GGO_CHECK_FLOAT_EQ(ggo::ortho_dot(ggo::vec<float, 2, ggo::geometry_t>(1.f, 2.f), ggo::vec<float, 2, ggo::geometry_t>(3.f, 4.f)), 2.f);
-  GGO_CHECK_FLOAT_EQ(ggo::ortho_dot(ggo::vec<float, 2, ggo::geometry_t>(2.f, 1.f), ggo::vec<float, 2, ggo::geometry_t>(5.f, 4.f)), -3.f);
+  GGO_CHECK_FLOAT_EQ(ggo::ortho_dot(ggo::vec<float, 2>(1.f, 2.f), ggo::vec<float, 2>(3.f, 4.f)), 2.f);
+  GGO_CHECK_FLOAT_EQ(ggo::ortho_dot(ggo::vec<float, 2>(2.f, 1.f), ggo::vec<float, 2>(5.f, 4.f)), -3.f);
 }
 
 //////////////////////////////////////////////////////////////////
 GGO_TEST(vec, cross)
 {
-  auto c = cross(ggo::vec<int, 3, ggo::geometry_t>(1, 2, 3), ggo::vec<int, 3, ggo::geometry_t>(2, 3, 4));
+  auto c = cross(ggo::vec<int, 3>(1, 2, 3), ggo::vec<int, 3>(2, 3, 4));
 
   GGO_CHECK_EQ(-1, c.x());
   GGO_CHECK_EQ( 2, c.y());
@@ -278,28 +278,28 @@ GGO_TEST(vec, cross)
 GGO_TEST(vec, basis)
 {
   {
-    ggo::vec<float, 3, ggo::geometry_t> v1(1.f, 0.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v2(0.f, 1.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v3(0.f, 0.0f, 1.0f);
+    ggo::vec<float, 3> v1(1.f, 0.0f, 0.0f);
+    ggo::vec<float, 3> v2(0.f, 1.0f, 0.0f);
+    ggo::vec<float, 3> v3(0.f, 0.0f, 1.0f);
     GGO_CHECK(ggo::is_basis(v1, v2, v3) == true);
   }
 
   {
-    ggo::vec<float, 3, ggo::geometry_t> v1(1.f, 0.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v2(0.f, 1.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v3(0.f, 0.0f, -1.0f);
+    ggo::vec<float, 3> v1(1.f, 0.0f, 0.0f);
+    ggo::vec<float, 3> v2(0.f, 1.0f, 0.0f);
+    ggo::vec<float, 3> v3(0.f, 0.0f, -1.0f);
     GGO_CHECK(ggo::is_basis(v1, v2, v3) == false);
   }
 
   {
-    ggo::vec<float, 3, ggo::geometry_t> v1(1.f, 0.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v2(0.f, 1.0f, 0.0f);
-    ggo::vec<float, 3, ggo::geometry_t> v3(0.f, 1.0f / std::sqrt(2.f), 1.0f / std::sqrt(2.f));
+    ggo::vec<float, 3> v1(1.f, 0.0f, 0.0f);
+    ggo::vec<float, 3> v2(0.f, 1.0f, 0.0f);
+    ggo::vec<float, 3> v3(0.f, 1.0f / std::sqrt(2.f), 1.0f / std::sqrt(2.f));
     GGO_CHECK(ggo::is_basis(v1, v2, v3) == false);
   }
 
   {
-    ggo::vec<float, 3, ggo::geometry_t> v(0.f, 0.f, 1.f);
+    ggo::vec<float, 3> v(0.f, 0.f, 1.f);
     auto basis = ggo::build_basis(v);
     GGO_CHECK(ggo::is_basis(v, basis.first, basis.second));
     GGO_CHECK_FLOAT_EQ(0.f, basis.first.x());

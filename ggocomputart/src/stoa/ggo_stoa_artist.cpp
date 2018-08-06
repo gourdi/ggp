@@ -132,7 +132,7 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
                               const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
                               ggo::renderer_abc & renderer) const
 {
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::color_32f>(hue, 1.f, 1.f)));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::rgb_32f>(hue, 1.f, 1.f)));
 
   // Faces.
   for (const auto & face : _faces)
@@ -141,8 +141,8 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
   }
 
   // Lights.
-  scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.8f), light_pos1, 1);
-  scene.add_sphere_light(ggo::from_hsv<ggo::color_32f>(hue, 0.5f, 0.2f), light_pos2, 1);
+  scene.add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(hue, 0.5f, 0.8f), light_pos1, 1);
+  scene.add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(hue, 0.5f, 0.2f), light_pos2, 1);
 
   // Rendering.
   ggo::octree_raycaster raycaster(scene.solid_objects());

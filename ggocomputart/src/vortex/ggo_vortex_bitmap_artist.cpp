@@ -15,10 +15,10 @@ void ggo::vortex_bitmap_artist::render_bitmap(void * buffer) const
 
 	ggo::vortex_artist::params params;
 	params._vortices.resize(vortices_count);
-	params._color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-	params._color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-	params._color3 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-	params._color4 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+	params._color1 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+	params._color2 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+	params._color3 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+	params._color4 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
 	params._split_horz = ggo::rand<float>(0.4f * width(),  0.6f * width());
 	params._split_vert = ggo::rand<float>(0.4f * height(), 0.6f * height());
 

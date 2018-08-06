@@ -87,12 +87,12 @@ void ggo::lagaude_realtime_artist::render_tile(void * buffer, int frame_index, c
     switch (format())
     {
     case ggo::rgb_8u_yu:
-      ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
         ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
       break;
     case ggo::bgrx_8u_yd:
-      ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
+      ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
         ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
       break;
@@ -141,7 +141,7 @@ scale_animate_abc(pos, path, scale)
 	_angle_generators.resize(ggo::rand<int>(3, 5));
 	_life = ggo::rand<int>(80, 120);
 	_dangle = ggo::rand<float>(-0.1f, 0.1f);
-	_color = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.5f, 1), ggo::rand<float>(0.5f, 1));
+	_color = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.5f, 1), ggo::rand<float>(0.5f, 1));
 }
 
 //////////////////////////////////////////////////////////////
@@ -224,11 +224,11 @@ void ggo::lagaude_realtime_artist::particle::render(void * buffer, int width, in
   switch (format)
   {
   case ggo::rgb_8u_yu:
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
     break;
   case ggo::bgrx_8u_yd:
-    ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
+    ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
       buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
     break;
   }
@@ -262,12 +262,12 @@ void ggo::lagaude_realtime_artist::dust::render(void * buffer, int width, int he
   switch (format)
   {
   case ggo::rgb_8u_yu:
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, line_step, opened_disc, ggo::color_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+      buffer, width, height, line_step, opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
     break;
   case ggo::bgrx_8u_yd:
-    ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
-      buffer, width, height, line_step, opened_disc, ggo::color_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
+    ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
+      buffer, width, height, line_step, opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
     break;
   }
 }

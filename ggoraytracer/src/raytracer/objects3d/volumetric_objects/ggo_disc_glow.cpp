@@ -4,7 +4,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  disc_glow::disc_glow(const ggo::pos3f & pos, float opacity, const ggo::color_32f & color, float inner_radius, float outter_radius)
+  disc_glow::disc_glow(const ggo::pos3f & pos, float opacity, const ggo::rgb_32f & color, float inner_radius, float outter_radius)
   :
   _pos(pos),
   _opacity(opacity),
@@ -15,7 +15,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f disc_glow::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
+  ggo::rgb_32f disc_glow::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const
   {
     ray3d_float ray(p1, p2 - p1);
     ray3d_float normal(_pos, -ray.dir(), false);
@@ -36,7 +36,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f disc_glow::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
+  ggo::rgb_32f disc_glow::process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const
   {
     ray3d_float normal(_pos, -ray.dir(), false);
     disc3d_float disc(normal, _outter_radius);

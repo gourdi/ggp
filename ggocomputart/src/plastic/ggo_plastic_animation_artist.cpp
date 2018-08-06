@@ -21,7 +21,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format)
     _params.push_back(params);
   }
 
-  _color = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(), 1);
+  _color = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(), 1);
   _altitude_factor = ggo::rand<float>(0.04f, 0.08f);
 }
 

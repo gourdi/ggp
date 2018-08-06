@@ -9,23 +9,23 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <ggo::image_format format>
-  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping)
+  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping)
   {
     const float radius = 0.01f * artist.min_size();
 
     ggo::pos2f pos = artist.map_fit(0.8f * point_pos, -1, 1);
 
     ggo::disc_float disc1(pos, radius);
-    ggo::paint_shape<format, ggo::sampling_4x4>(
+    ggo::paint<format, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), artist.line_step(),
-      disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
+      disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
 
     pos.x() = artist.width() - pos.x() - 1;
 
     ggo::disc_float disc2(pos, radius);
-    ggo::paint_shape<format, ggo::sampling_4x4>(
+    ggo::paint<format, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), artist.line_step(),
-      disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::color_8u>(), clipping);
+      disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
   }
 }
 
@@ -39,7 +39,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
   _radius_cur = _radius_prv;
   _radius_attractor = ggo::rand<float>();
   _angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-  _attractor_color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
+  _attractor_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
 }
 
 //////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ void ggo::neon_artist::preprocess_frame(int frame_index)
   if ((frame_index % 100) == 0)
   {
     _radius_attractor = ggo::rand<float>(0.2f, 1);
-    _attractor_color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
+    _attractor_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
   }
 
   for (int substep = 0; substep < substeps_count; ++substep)
@@ -73,10 +73,10 @@ void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::re
     switch (format())
     {
     case ggo::rgb_8u_yu:
-      ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black<ggo::color_8u>(), clipping);
+      ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black_8u(), clipping);
       break;
     case ggo::bgrx_8u_yd:
-      ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), ggo::black<ggo::color_8u>(), clipping);
+      ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), ggo::black_8u(), clipping);
       break;
     default:
       GGO_FAIL();
@@ -86,7 +86,7 @@ void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::re
 
   for (int substep = 0; substep < substeps_count; ++substep)
   {
-    paint_point(buffer, _points[substep], ggo::color_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
+    paint_point(buffer, _points[substep], ggo::rgb_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
 
     if (substep & 1)
     {
@@ -96,7 +96,7 @@ void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::re
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::color_8u & color, const ggo::rect_int & clipping) const
+void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
 {
   switch (format())
   {

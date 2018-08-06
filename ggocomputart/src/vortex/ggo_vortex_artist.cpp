@@ -13,7 +13,7 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
   int counter_max = width * height;
   int max_size = std::max(width, height);
   
-  ggo::array<ggo::color_32f, 2> color_buffer(width, height, ggo::black<ggo::color_32f>());
+  ggo::array<ggo::rgb_32f, 2> color_buffer(width, height, ggo::black<ggo::rgb_32f>());
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
@@ -23,7 +23,7 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
 		particle.y() = ggo::rand<float>(-0.1f * height, 1.1f * height);
 
 		// The particle color.
-		ggo::color_32f color;
+		ggo::rgb_32f color;
 		if ((particle.x() <= params._split_horz) && (particle.y() <= params._split_vert))
 		{
 			color = params._color1;
@@ -82,7 +82,7 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
   {
     for (int x = 0; x < width; ++x)
     {
-      const ggo::color_8u color = ggo::convert_color_to<ggo::color_8u>(ggo::white<ggo::color_32f>() - color_buffer(x, y));
+      const ggo::rgb_8u color = ggo::convert_color_to<ggo::rgb_8u>(ggo::white<ggo::rgb_32f>() - color_buffer(x, y));
 
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, color);
     }

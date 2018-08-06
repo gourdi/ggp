@@ -4,18 +4,18 @@
 
 //////////////////////////////////////////////////////////////
 template <ggo::image_format format, ggo::sampling sampling>
-typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sampling>::from_8u(const ggo::color_8u & c)
+typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sampling>::from_8u(const ggo::rgb_8u & c)
 {
   using format_traits = image_format_traits<format>;
   using color_t = format_traits::color_t;
 
-  if constexpr(std::is_same<color_t, ggo::color_8u>::value)
+  if constexpr(std::is_same<color_t, ggo::rgb_8u>::value)
   {
     return c;
   }
-  else if constexpr(std::is_same<color_t, ggo::alpha_color_8u>::value)
+  else if constexpr(std::is_same<color_t, ggo::rgba_8u>::value)
   {
-    return alpha_color_8u(c, 255);
+    return rgba_8u(c, 255);
   }
   else
   {
@@ -36,7 +36,7 @@ _background_image(width, height)
   // Create palette.
   for (auto & c : _palette)
   {
-    c = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand(0.3f, 1.0f), ggo::rand(0.7f, 0.9f));
+    c = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand(0.3f, 1.0f), ggo::rand(0.7f, 0.9f));
   }
 
   // Create demecos.
@@ -90,11 +90,11 @@ _background_image(width, height)
   }
 
   // Fill background.
-  if constexpr(std::is_same<color_t, ggo::color_8u>::value)
+  if constexpr(std::is_same<color_t, ggo::rgb_8u>::value)
   {
     _background_image.fill(white_8u());
   }
-  else if constexpr(std::is_same<color_t, ggo::alpha_color_8u>::value)
+  else if constexpr(std::is_same<color_t, ggo::rgba_8u>::value)
   {
     _background_image.fill({ 0, 0, 0, 0 });
   }
@@ -158,7 +158,7 @@ void ggo::demeco_artist<format, sampling>::render_tile(void * buffer, int line_b
 
   // Render the background demecos.
   auto adaptator_background = make_adaptor(_background_paint_shapes, [](const auto & item) { return item.get(); });
-  paint_shapes<format, sampling>(
+  paint<format, sampling>(
     _background_image.data(), _background_image.width(), _background_image.height(), _background_image.line_byte_step(),
     adaptator_background, clipping);
 
@@ -174,7 +174,7 @@ void ggo::demeco_artist<format, sampling>::render_tile(void * buffer, int line_b
 
   // Render the active demecos.
   auto adaptator_active = make_adaptor(_active_paint_shapes, [](const auto & item) { return item.get(); });
-  paint_shapes<format, sampling>(buffer, _width, _height, line_byte_step, adaptator_active, clipping);
+  paint<format, sampling>(buffer, _width, _height, line_byte_step, adaptator_active, clipping);
 }
 
 //////////////////////////////////////////////////////////////

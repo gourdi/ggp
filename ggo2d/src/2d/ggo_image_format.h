@@ -15,6 +15,7 @@ namespace ggo
     y_16u_yd,
     y_32f_yu,
     y_64f_yd,
+    ya_8u_yd,
     rgb_8u_yu,
     rgb_8u_yd,
     rgba_8u_yd,
@@ -89,10 +90,30 @@ namespace ggo
 
     using color_t = double;
 
-    // Accessor interface.
-    using type = double;
     static double read(const void * ptr) { return *static_cast<const double *>(ptr); }
     static void write(void * ptr, double c) { *static_cast<double *>(ptr) = c; }
+  };
+
+  template <>
+  struct image_format_traits<ya_8u_yd>
+  {
+    static constexpr int pixel_byte_size = 2;
+    static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
+
+    using color_t = ya_8u;
+
+    static ggo::ya_8u read(const void * ptr)
+    { 
+      const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
+      return ggo::ya_8u(ptr_8u[0], ptr_8u[1]);
+    }
+
+    static void write(void * ptr, ggo::ya_8u c)
+    {
+      uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
+      ptr_8u[0] = c._y;
+      ptr_8u[1] = c._a;
+    }
   };
 
   template <>
@@ -102,20 +123,20 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yu;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::rgb_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::rgb_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
+      return ggo::rgb_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.r();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.b();
+      ptr_8u[0] = c._r;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._b;
     }
   };
 
@@ -126,20 +147,20 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::rgb_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::rgb_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
+      return ggo::rgb_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.r();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.b();
+      ptr_8u[0] = c._r;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._b;
     }
   };
 
@@ -150,21 +171,21 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::alpha_color_8u;
+    using color_t = ggo::rgba_8u;
 
-    static ggo::alpha_color_8u read(const void * ptr)
+    static ggo::rgba_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::alpha_color_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2], ptr_8u[3]);
+      return ggo::rgba_8u(ptr_8u[0], ptr_8u[1], ptr_8u[2], ptr_8u[3]);
     }
 
-    static void write(void * ptr, const ggo::alpha_color_8u & c)
+    static void write(void * ptr, const ggo::rgba_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.r();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.b();
-      ptr_8u[3] = c.a();
+      ptr_8u[0] = c._r;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._b;
+      ptr_8u[3] = c._a;
     }
   };
 
@@ -176,20 +197,20 @@ namespace ggo
     static constexpr int pixel_byte_size = 12;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
-    using color_t = ggo::color_32f;
+    using color_t = ggo::rgb_32f;
 
-    static ggo::color_32f read(const void * ptr)
+    static ggo::rgb_32f read(const void * ptr)
     {
       const float * ptr_32f = static_cast<const float *>(ptr);
-      return ggo::color_32f(ptr_32f[0], ptr_32f[1], ptr_32f[2]);
+      return ggo::rgb_32f(ptr_32f[0], ptr_32f[1], ptr_32f[2]);
     }
 
-    static void write(void * ptr, const ggo::color_32f & c)
+    static void write(void * ptr, const ggo::rgb_32f & c)
     {
       float * ptr_32f = static_cast<float *>(ptr);
-      ptr_32f[0] = c.r();
-      ptr_32f[1] = c.g();
-      ptr_32f[2] = c.b();
+      ptr_32f[0] = c._r;
+      ptr_32f[1] = c._g;
+      ptr_32f[2] = c._b;
     }
   };
 
@@ -200,20 +221,20 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::rgb_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::rgb_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+      return ggo::rgb_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.b();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.r();
+      ptr_8u[0] = c._b;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._r;
     }
   };
 
@@ -224,20 +245,20 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yu;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::bottom_up;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::rgb_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::rgb_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+      return ggo::rgb_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.b();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.r();
+      ptr_8u[0] = c._b;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._r;
     }
   };
 
@@ -248,20 +269,20 @@ namespace ggo
     static const image_format gray_format = y_8u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::color_8u;
+    using color_t = ggo::rgb_8u;
 
-    static ggo::color_8u read(const void * ptr)
+    static ggo::rgb_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
+      return ggo::rgb_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0]);
     }
 
-    static void write(void * ptr, const ggo::color_8u & c)
+    static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.b();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.r();
+      ptr_8u[0] = c._b;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._r;
     }
   };
 
@@ -272,21 +293,21 @@ namespace ggo
     static constexpr image_format gray_format = y_8u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::alpha_color_8u;
+    using color_t = ggo::rgba_8u;
 
-    static ggo::alpha_color_8u read(const void * ptr)
+    static ggo::rgba_8u read(const void * ptr)
     {
       const uint8_t * ptr_8u = static_cast<const uint8_t *>(ptr);
-      return ggo::alpha_color_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0], ptr_8u[3]);
+      return ggo::rgba_8u(ptr_8u[2], ptr_8u[1], ptr_8u[0], ptr_8u[3]);
     }
 
-    static void write(void * ptr, const ggo::alpha_color_8u & c)
+    static void write(void * ptr, const ggo::rgba_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c.b();
-      ptr_8u[1] = c.g();
-      ptr_8u[2] = c.r();
-      ptr_8u[3] = c.a();
+      ptr_8u[0] = c._b;
+      ptr_8u[1] = c._g;
+      ptr_8u[2] = c._r;
+      ptr_8u[3] = c._a;
     }
   };
 
@@ -297,20 +318,20 @@ namespace ggo
     static const image_format gray_format = y_16u_yd;
     static constexpr ggo::memory_lines_order lines_order = ggo::memory_lines_order::top_down;
 
-    using color_t = ggo::color_16u;
+    using color_t = ggo::rgb_16u;
 
-    static ggo::color_16u read(const void * ptr)
+    static ggo::rgb_16u read(const void * ptr)
     {
       const uint16_t * ptr_16u = static_cast<const uint16_t *>(ptr);
-      return ggo::color_16u(ptr_16u[0], ptr_16u[1], ptr_16u[2]);
+      return ggo::rgb_16u(ptr_16u[0], ptr_16u[1], ptr_16u[2]);
     }
 
-    static void write(void * ptr, const ggo::color_16u & c)
+    static void write(void * ptr, const ggo::rgb_16u & c)
     {
       uint16_t * ptr_16u = static_cast<uint16_t *>(ptr);
-      ptr_16u[0] = c.r();
-      ptr_16u[1] = c.g();
-      ptr_16u[2] = c.b();
+      ptr_16u[0] = c._r;
+      ptr_16u[1] = c._g;
+      ptr_16u[2] = c._b;
     }
   };
 }
@@ -327,6 +348,7 @@ namespace ggo
     case y_8u_yd: return functor::call<y_8u_yd>(std::forward<args>(a)...);
     case y_16u_yd: return functor::call<y_16u_yd>(std::forward<args>(a)...);
     case y_32f_yu: return functor::call<y_32f_yu>(std::forward<args>(a)...);
+    case ya_8u_yd: return functor::call<ya_8u_yd>(std::forward<args>(a)...);
     case rgb_8u_yu: return functor::call<rgb_8u_yu>(std::forward<args>(a)...);
     case rgb_8u_yd: return functor::call<rgb_8u_yd>(std::forward<args>(a)...);
     case bgr_8u_yu: return functor::call<bgr_8u_yu>(std::forward<args>(a)...);
@@ -358,6 +380,7 @@ namespace ggo
     case y_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, y_8u_yd>>(format2, std::forward<args>(a)...);
     case y_16u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, y_16u_yd>>(format2, std::forward<args>(a)...);
     case y_32f_yu: return dispatch_image_format<dispatch_image_format_aux<functor, y_32f_yu>>(format2, std::forward<args>(a)...);
+    case ya_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, ya_8u_yd>>(format2, std::forward<args>(a)...);
     case rgb_8u_yu: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_8u_yu>>(format2, std::forward<args>(a)...);
     case rgb_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgb_8u_yd>>(format2, std::forward<args>(a)...);
     case rgba_8u_yd: return dispatch_image_format<dispatch_image_format_aux<functor, rgba_8u_yd>>(format2, std::forward<args>(a)...);

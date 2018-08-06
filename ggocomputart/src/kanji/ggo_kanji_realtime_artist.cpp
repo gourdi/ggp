@@ -9,7 +9,7 @@ ggo::kanji_realtime_artist::kanji_realtime_artist(int width, int height, int lin
 :
 fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 {
-  _parts_color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
+  _parts_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
   _timer_max = ggo::rand<int>(500, 750);
 
   // Create the attractor.
@@ -115,7 +115,7 @@ void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, c
     {
       ggo::pos2f render_pt = map_fit(pos, 0, 1);
 
-      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
         ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
     }
   }

@@ -35,7 +35,7 @@ namespace
   {
     const ggo::tree<voronoi_node> * _parent_node;
     ggo::pos2f                      _position;
-    ggo::color_8u                   _color;
+    ggo::rgb_8u                     _color;
   };
 
   //////////////////////////////////////////////////////////////
@@ -149,15 +149,15 @@ namespace
   ggo::tree<voronoi_node> create_voronoi_tree(int width, int height)
   {
     // Pick up 2 colors that are not too close.
-    ggo::color_32f color1(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
-    ggo::color_32f color2 = color1;
+    ggo::rgb_32f color1(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
+    ggo::rgb_32f color2 = color1;
     float diff = 0.f;
     for (int i = 0; i < 4; ++i)
     {
-      ggo::color_32f candidate(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
-      float diff_cur = std::abs(candidate.r() - color1.r()) +
-                       std::abs(candidate.g() - color1.g()) +
-                       std::abs(candidate.b() - color1.b());
+      ggo::rgb_32f candidate(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
+      float diff_cur = std::abs(candidate._r - color1._r) +
+                       std::abs(candidate._g - color1._g) +
+                       std::abs(candidate._b - color1._b);
       if (diff_cur > diff)
       {
         diff = diff_cur;
@@ -165,7 +165,7 @@ namespace
       }
     }
 
-    ggo::tree<voronoi_node> voronoi_tree({ nullptr,{ 0.f, 0.f }, ggo::white<ggo::color_8u>() });
+    ggo::tree<voronoi_node> voronoi_tree({ nullptr,{ 0.f, 0.f }, ggo::white<ggo::rgb_8u>() });
 
     // First layer.
     for (int i = 0; i < 16; ++i)
@@ -174,7 +174,7 @@ namespace
       node._parent_node = &voronoi_tree;
       node._position.get<0>() = ggo::rand<float>(0.f, static_cast<float>(width));
       node._position.get<1>() = ggo::rand<float>(0.f, static_cast<float>(height));
-      node._color = ggo::black<ggo::color_8u>();
+      node._color = ggo::black<ggo::rgb_8u>();
 
       voronoi_tree.create_leaf(node);
     }
@@ -201,7 +201,7 @@ namespace
         voronoi_node node;
         node._parent_node = &voronoi_tree;
         node._position = point;
-        node._color = ggo::convert_color_to<ggo::color_8u>(color1 * (interp * color1 + (1.f - interp) * color2));
+        node._color = ggo::convert_color_to<ggo::rgb_8u>(color1 * (interp * color1 + (1.f - interp) * color2));
 
         it->first->create_leaf(node);
       }

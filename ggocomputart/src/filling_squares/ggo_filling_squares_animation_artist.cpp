@@ -50,7 +50,7 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
   // Painting.
   float opacity = ggo::ease_in(frame_index, fade_in_anim_duration, 0.f, 1.f);
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width,
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width,
     square, ggo::make_solid_brush(_colored_square._color), ggo::alpha_blender_rgb8u(opacity));
 }
 
@@ -77,7 +77,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format)
     ++counter;
   }
 
-  _bkgd_color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 }
 
 //////////////////////////////////////////////////////////////

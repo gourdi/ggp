@@ -65,26 +65,26 @@ namespace ggo
   };
 
   template <>
-  struct gaussian_blur2d_helper<ggo::color_8u>
+  struct gaussian_blur2d_helper<ggo::rgb_8u>
   {
-    using color_t = color_16u;
+    using color_t = rgb_16u;
 
     static std::vector<uint16_t> build_kernel(const float stddev)
     {
       return ggo::build_fixed_point_gaussian_kernel<uint16_t, float>(stddev, 0.001f, 8);
     }
 
-    static ggo::color_16u convert(const ggo::color_8u & c)
+    static ggo::rgb_16u convert(const ggo::rgb_8u & c)
     {
-      return ggo::color_16u(uint16_t(c.r()), uint16_t(c.g()), uint16_t(c.b()));
+      return ggo::rgb_16u(uint16_t(c._r), uint16_t(c._g), uint16_t(c._b));
     }
 
-    static ggo::color_8u convert(const ggo::color_16u & c)
+    static ggo::rgb_8u convert(const ggo::rgb_16u & c)
     {
-      return ggo::color_8u(
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.r())),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.g())),
-        static_cast<uint8_t>(ggo::fixed_point_div<8>(c.b())));
+      return ggo::rgb_8u(
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._r)),
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._g)),
+        static_cast<uint8_t>(ggo::fixed_point_div<8>(c._b)));
     }
   };
 

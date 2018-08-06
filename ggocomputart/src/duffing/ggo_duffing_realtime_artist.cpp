@@ -11,7 +11,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 {
   _radius = 0.01f * min_size();
   uint8_t gray = ggo::rand<uint8_t>(0x80, 0xff);
-  _bkgd_color = ggo::color_8u(gray, gray, gray);
+  _bkgd_color = ggo::rgb_8u(gray, gray, gray);
   _hue = ggo::rand<float>();
   _angle_offset = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
 }
@@ -19,7 +19,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::duffing_realtime_artist::preprocess_frame(int frame_index)
 {
-  _paint_color = ggo::from_hsv<ggo::color_8u>(_hue, 1.0f, 0.75f);
+  _paint_color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.0f, 0.75f);
   _hue += 0.0005f;
 
   for (auto & point : _points)
@@ -76,16 +76,16 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
 
       for (; ptr <= last_ptr; ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(ptr))
       {
-        const ggo::color_8u pixel = ggo::read_pixel<ggo::bgrx_8u_yd>(ptr);
+        const ggo::rgb_8u pixel = ggo::read_pixel<ggo::bgrx_8u_yd>(ptr);
 
-        const int32_t diff_r = contract(pixel.r() - _bkgd_color.r());
-        const int32_t diff_g = contract(pixel.g() - _bkgd_color.g());
-        const int32_t diff_b = contract(pixel.b() - _bkgd_color.b());
+        const int32_t diff_r = contract(pixel._r - _bkgd_color._r);
+        const int32_t diff_g = contract(pixel._g - _bkgd_color._g);
+        const int32_t diff_b = contract(pixel._b - _bkgd_color._b);
 
         ggo::write_pixel<ggo::bgrx_8u_yd>(ptr, {
-          static_cast<uint8_t>(_bkgd_color.r() + diff_r),
-          static_cast<uint8_t>(_bkgd_color.g() + diff_g),
-          static_cast<uint8_t>(_bkgd_color.b() + diff_b) });
+          static_cast<uint8_t>(_bkgd_color._r + diff_r),
+          static_cast<uint8_t>(_bkgd_color._g + diff_g),
+          static_cast<uint8_t>(_bkgd_color._b + diff_b) });
       }
     }
   }
@@ -93,7 +93,7 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
   // Paint the Duffing's points.
   for (const auto & point : _points)
   {
-    ggo::paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
+    ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
       ggo::disc_float(point, _radius), brush, blender, clipping);
   }
 }

@@ -44,7 +44,7 @@ namespace
         // Full processing.
         else
         {
-          ggo::accumulator<ggo::color_8u> acc;
+          ggo::accumulator<ggo::rgb_8u> acc;
 
           acc.add(stripe1->_color);
           acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y2, transforms))->_color);
@@ -104,7 +104,7 @@ _transforms(32)
     x += ggo::rand<float>(0.01f, 0.06f) * min_size();
 
     colored_stripe._x_sup = x;
-    colored_stripe._color = ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+    colored_stripe._color = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
     _stripes.push_back(colored_stripe);
 

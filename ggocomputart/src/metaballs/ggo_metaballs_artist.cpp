@@ -18,7 +18,7 @@ ggo::metaballs_artist::params::params()
 	_phong_shininess = ggo::rand<float>(10, 100);
 	_light1 = ggo::pos3f(0.f, 0.f, 1000.f);
 	_light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
-	_background_color = ggo::color_32f(ggo::rand<float>(0.2f, 0.8f));
+	_background_color = ggo::rgb_32f(ggo::rand<float>(0.2f, 0.8f));
 }
 
 //////////////////////////////////////////////////////////////
@@ -41,8 +41,8 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, 
   auto & object = scene.add_diffuse_object<flags>(metaball, ggo::solid_color_material(params._background_color));
   object.set_phong(params._phong_factor, params._phong_shininess);
 
-	scene.add_sphere_light(ggo::color_32f(0.8f), params._light1, 0.1f);
-  scene.add_sphere_light(ggo::color_32f(0.8f), params._light2, 0.1f);
+	scene.add_sphere_light(ggo::rgb_32f(0.8f), params._light1, 0.1f);
+  scene.add_sphere_light(ggo::rgb_32f(0.8f), params._light2, 0.1f);
 
   renderer.render(buffer, width, height, line_step, format, scene);
 }

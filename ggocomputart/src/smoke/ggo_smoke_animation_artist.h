@@ -52,7 +52,7 @@ namespace ggo
     ggo::array<double, 2> *     _opacity_tmp;
     ggo::array<fluid_source, 1> _sources;
     ggo::array<uint8_t, 1>			_bkgd_buffer;
-    ggo::color_8u      	        _smoke_color;
+    ggo::rgb_8u      	          _smoke_color;
   };
 }
 

@@ -21,10 +21,10 @@ namespace ggo
     struct params
     {
       ggo::array<vortex, 1> _vortices;
-      ggo::color_32f  	    _color1;
-      ggo::color_32f  	    _color2;
-      ggo::color_32f  	    _color3;
-      ggo::color_32f  	    _color4;
+      ggo::rgb_32f  	      _color1;
+      ggo::rgb_32f  	      _color2;
+      ggo::rgb_32f  	      _color3;
+      ggo::rgb_32f  	      _color4;
       float 					      _split_horz;
       float 					      _split_vert;
     };

@@ -8,17 +8,18 @@
 // Generic
 namespace ggo
 {
-  template <typename data_t, int n_dim, vec_type vtype>
-  data_t hypot(const ggo::vec<data_t, n_dim, vtype> & pos1, const ggo::vec<data_t, n_dim, vtype> & pos2)
+  template <typename data_t, int n_dim>
+  data_t hypot(const ggo::vec<data_t, n_dim> & pos1, const ggo::vec<data_t, n_dim> & pos2)
   {
-    ggo::vec<data_t, n_dim, vtype> diff(pos2 - pos1);
+    ggo::vec<data_t, n_dim> diff(pos2 - pos1);
 
     return ggo::dot(diff, diff);
   }
 
-  template <typename data_t, int n_dim, vec_type vtype>
-  data_t distance(const ggo::vec<data_t, n_dim, vtype> & pos1, const ggo::vec<data_t, n_dim, vtype> & pos2)
+  template <typename data_t, int n_dim>
+  data_t distance(const ggo::vec<data_t, n_dim> & pos1, const ggo::vec<data_t, n_dim> & pos2)
   {
+    static_assert(std::is_floating_point<data_t>::value == true);
     return std::sqrt(ggo::hypot(pos1, pos2));
   }
 }

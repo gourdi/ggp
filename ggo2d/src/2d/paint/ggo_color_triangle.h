@@ -36,7 +36,12 @@ namespace ggo
     brush_color_t brush(int x, int y) const override
     {
       const ggo::pos2<data_t> p = ggo::from_pixel_to_math<data_t>({ x, y });
-      return ggo::triangular_interpolation<data_t, brush_color_t, false>(_triangle.v1(), _color1, _triangle.v2(), _color2, _triangle.v3(), _color3, p);
+      auto c = ggo::triangular_interpolation<data_t, brush_color_t, false>(_triangle.v1(), _color1, _triangle.v2(), _color2, _triangle.v3(), _color3, p);
+      if (c.has_value() == false)
+      {
+        throw std::runtime_error("triangular interpolation failed");
+      }
+      return *c;
     }
 
     ggo::triangle2d<data_t> _triangle;
@@ -100,7 +105,7 @@ namespace ggo
       using no_alpha_color_t = ggo::color_traits<brush_color_t>::no_alpha_color_t;
 
       auto no_alpha_color = ggo::convert_color_to<no_alpha_color_t>(brush_color);
-      auto opacity = brush_color.a();
+      auto opacity = brush_color._a;
 
       auto output_color = opacity * no_alpha_color + (1 - opacity) * convert_color_to<no_alpha_color_t>(bkgd_color);
 

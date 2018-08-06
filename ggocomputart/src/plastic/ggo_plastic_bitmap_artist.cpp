@@ -25,7 +25,7 @@ void ggo::plastic_bitmap_artist::render_bitmap(void * buffer) const
 		params.push_back(param);
 	}
 	
-	ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(), 1);
+	ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(), 1);
 	float altitude_factor = ggo::rand<float>(0.04f, 0.08f);
 	
   ggo::plastic_artist artist(width(), height(), line_step(), format());

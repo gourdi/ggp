@@ -26,7 +26,7 @@ GGO_TEST(caustics, test)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
 
   // Light.
-  auto & light = scene.add_sphere_light(ggo::color_32f(0.9f), { 0.f, 0.f, 20.f }, 1.f);
+  auto & light = scene.add_sphere_light(ggo::rgb_32f(0.9f), { 0.f, 0.f, 20.f }, 1.f);
 
   // Objects.
   auto & plane = scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), ggo::red_material());

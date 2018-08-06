@@ -22,7 +22,7 @@ namespace ggo
       float					          _phong_shininess;
       ggo::pos3f				      _light1;
       ggo::pos3f				      _light2;
-      ggo::color_32f          _background_color;
+      ggo::rgb_32f            _background_color;
     };
 
     void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,

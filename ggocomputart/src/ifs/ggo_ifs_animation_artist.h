@@ -20,7 +20,7 @@ namespace ggo
   private:
 
     ggo::ifs_artist	_artist;
-    ggo::color_8u   _bkgd_colors[4];
+    ggo::rgb_8u     _bkgd_colors[4];
     float			      _hue;
     float 		      _transform_start[4];
     float 		      _transform_end[4];

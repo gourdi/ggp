@@ -29,7 +29,7 @@ namespace ggo
     {
       ggo::pos2f    _prv_pos;
       ggo::pos2f    _cur_pos;
-      ggo::color_8u _color;
+      ggo::rgb_8u   _color;
       float				  _angle;
       float				  _dangle;
       int           _counter;
@@ -39,10 +39,10 @@ namespace ggo
 
     std::list<bozon>  _bozons;
     float             _hue = 0.f;
-    ggo::color_8u     _bkgd_color1;
-    ggo::color_8u     _bkgd_color2;
-    ggo::color_8u     _bkgd_color3;
-    ggo::color_8u     _bkgd_color4; 
+    ggo::rgb_8u       _bkgd_color1;
+    ggo::rgb_8u       _bkgd_color2;
+    ggo::rgb_8u       _bkgd_color3;
+    ggo::rgb_8u       _bkgd_color4; 
   };
 
   template <ggo::image_format format>
@@ -56,9 +56,9 @@ namespace ggo
 
     for (const auto & bozon : _bozons)
     {
-      ggo::paint_shape<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
         ggo::capsule_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
-        ggo::solid_color_brush<ggo::color_8u>(bozon._color), ggo::overwrite_blender<color_8u>(), clipping);
+        ggo::solid_color_brush<ggo::rgb_8u>(bozon._color), ggo::overwrite_blender<rgb_8u>(), clipping);
     }
   }
 }

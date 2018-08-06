@@ -21,8 +21,8 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
 
     for (int x = 0; x < width; ++x)
     {
-      const ggo::color_32f c_32f(ptr_in[0], ptr_in[1], ptr_in[2]);
-      const ggo::color_8u c_8u(add_blend(read_pixel<ggo::rgb_8u_yu>(buffer), ggo::convert_color_to<ggo::color_8u>(c_32f)));
+      const ggo::rgb_32f c_32f(ptr_in[0], ptr_in[1], ptr_in[2]);
+      const ggo::rgb_8u c_8u(add_blend(read_pixel<ggo::rgb_8u_yu>(buffer), ggo::convert_color_to<ggo::rgb_8u>(c_32f)));
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, c_8u);
 
       ptr_in += 3;

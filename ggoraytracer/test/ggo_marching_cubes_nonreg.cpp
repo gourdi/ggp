@@ -20,10 +20,10 @@ GGO_TEST(marching_cubes, test)
   ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
 
   // The scene.
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
   
   // Light.
-  scene.add_point_light(ggo::white<ggo::color_32f>(), camera.basis().pos());
+  scene.add_point_light(ggo::white_32f(), camera.basis().pos());
   
   // Objects.
   auto cells = ggo::marching_cubes([](float x, float y, float z) { return x * x + y * y + z * z - 1; }, ggo::pos3f(-2.f, -2.f, -2.f), 10, 0.4f);

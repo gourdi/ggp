@@ -98,7 +98,7 @@ void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_i
   if (frame_index == 0)
   {
     ggo::fill_gaussian<ggo::rgb_8u_yu>(_background.get(), width(), height(), line_step(),
-      static_cast<float>(min_size()), ggo::white<ggo::color_8u>(), ggo::color_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
+      static_cast<float>(min_size()), ggo::white<ggo::rgb_8u>(), ggo::rgb_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
   }
 
   if (buffer != nullptr)
@@ -422,7 +422,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
         float hue = temperature * _hue1 + (1 - temperature) * _hue2;
         float sat = temperature * _sat1 + (1 - temperature) * _sat2;
         float val = temperature * _val1 + (1 - temperature) * _val2;
-        const ggo::color_8u color(ggo::from_hsv<ggo::color_8u>(hue, sat, val));
+        const ggo::rgb_8u color(ggo::from_hsv<ggo::rgb_8u>(hue, sat, val));
         
         ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,height(), line_step(), color);
       }

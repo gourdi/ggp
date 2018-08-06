@@ -19,8 +19,8 @@ namespace ggo
 
   private:
 
-    ggo::crystal_artist _artist;
-    ggo::color_8u _bkgd_colors[4];
+    ggo::crystal_artist         _artist;
+    ggo::rgb_8u                 _bkgd_colors[4];
     ggo::crystal_artist::params _start_params;
     ggo::crystal_artist::params _end_params;
   };

@@ -49,7 +49,7 @@ GGO_TEST(shape_sampling, disc_poisson_sampling)
 
   for (const auto & sample : samples)
   {
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), size, size, 3 * size, ggo::disc_float(sample, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), size, size, 3 * size, ggo::disc_float(sample, 2.f), ggo::white_8u());
   }
   
   ggo::save_bmp("test_disc_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
@@ -72,7 +72,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     x_f = 0.2f * size * x_f + size / 4.f;
     y_f = 0.2f * size * y_f + size / 4.f;
     
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
   }
   
   for (int i = 0; i < (1<<20); ++i)
@@ -153,7 +153,7 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
     x_f = 0.4f * size * x_f + size / 2;
     y_f = 0.4f * size * y_f + size / 2;
     
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
   }
   
   ggo::save_bmp("test_hemisphere_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);

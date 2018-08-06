@@ -17,12 +17,12 @@ namespace
 		
                     my_material(float sphere_size);
 		
-		ggo::color_32f  get_color(const ggo::pos3f & pos) const override;
+		ggo::rgb_32f    get_color(const ggo::pos3f & pos) const override;
 		
 	private:
 		
-		ggo::color_32f	_color1;
-		ggo::color_32f	_color2;
+		ggo::rgb_32f	  _color1;
+		ggo::rgb_32f	  _color2;
 		float		        _range_large;
 		float		        _range_small;
 		float		        _amplitude;
@@ -32,8 +32,8 @@ namespace
   //////////////////////////////////////////////////////////////
   my_material::my_material(float sphere_size)
   {
-    _color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
-    _color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
+    _color1 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
+    _color2 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.75, 1), ggo::rand<float>(0.5, 1));
     _range_large = sphere_size * ggo::rand<float>(0.2f, 0.4f);
     _range_small = sphere_size * ggo::rand<float>(0.01f, 0.08f);
     _amplitude = sphere_size * ggo::rand<float>(0.04f, 0.08f);
@@ -41,7 +41,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f my_material::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f my_material::get_color(const ggo::pos3f & pos) const
   {
     float x = pos.get<0>() + _amplitude * std::cos(_wavelength * pos.get<2>());
     x = std::fmod(x, _range_large);
@@ -66,10 +66,10 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::marbles_artist::render_bitmap(void * buffer) const
 {
-  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::color_32f>()));
+  ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::rgb_32f>()));
 
   // The fog.
-  scene.emplace_volumetric_object<ggo::linear_fog>(ggo::color_32f(0.5f), 0.f, 25.f);
+  scene.emplace_volumetric_object<ggo::linear_fog>(ggo::rgb_32f(0.5f), 0.f, 25.f);
 
 	// Setup the camera.
   ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });

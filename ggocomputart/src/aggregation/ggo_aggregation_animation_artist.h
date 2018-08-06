@@ -42,7 +42,7 @@ namespace ggo
       ggo::rect_float     _rect;
     };
 
-    ggo::color_8u       _background_color;
+    ggo::rgb_8u         _background_color;
     ggo::array<cell, 2> _grid;
     float               _threshold_hypot;
     float               _threshold_dist;

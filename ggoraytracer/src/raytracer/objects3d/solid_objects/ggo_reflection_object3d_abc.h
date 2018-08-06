@@ -23,8 +23,8 @@ namespace ggo
 
     ggo::ray3d_float  get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float random_variable1, float random_variable2) const;
 
-    ggo::color_32f    compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
-    ggo::color_32f    compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
+    ggo::rgb_32f      compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
+    ggo::rgb_32f      compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
 
   private:
 
@@ -75,21 +75,21 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f reflection_object3d_abc<flags, shape_t>::compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
+  ggo::rgb_32f reflection_object3d_abc<flags, shape_t>::compute_reflection_color(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     ggo::ray3d_float reflection_ray = get_reflected_ray(ray, normal, random_variable1, random_variable2);
     const object3d_abc * exclude_object = handle_self_intersection(reflection_ray);
 
-    ggo::color_32f reflection_color = raytracer.process(reflection_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
+    ggo::rgb_32f reflection_color = raytracer.process(reflection_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
 
     return _reflection_factor * reflection_color;
   }
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f reflection_object3d_abc<flags, shape_t>::compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const
+  ggo::rgb_32f reflection_object3d_abc<flags, shape_t>::compute_phong_color(const ggo::ray3d_float & ray, const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const
   {
-    ggo::color_32f output_color = ggo::black_32f();
+    ggo::rgb_32f output_color = ggo::black_32f();
 
     for (const auto & light_sample : light_samples)
     {

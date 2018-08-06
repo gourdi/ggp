@@ -23,9 +23,9 @@ namespace ggo
     ggo::duffing                _duffing;
     float                       _radius;
     std::array<ggo::pos2f, 16>  _points;
-    ggo::color_8u               _bkgd_color;
+    ggo::rgb_8u                 _bkgd_color;
     float                       _hue;
-    ggo::color_8u               _paint_color;
+    ggo::rgb_8u                 _paint_color;
     float                       _angle_offset;
   };
 }

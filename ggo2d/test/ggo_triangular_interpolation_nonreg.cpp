@@ -1,79 +1,82 @@
-#if 0 
-
-#include <memory>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/ggo_vec.h>
-#include <kernel/math/shapes_2d/ggo_shapes2d.h>
-#include <ggo_triangle_interpolation.h>
-#include <ggo_triangle_interpolation_brush.h>
-#include <ggo_image_buffer_abc.h>
-#include <2d/paint/ggo_paint.h>
-#include <ggo_fill.h>
+#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/interpolation/ggo_triangle_interpolation.h>
 #include <2d/io/ggo_bmp.h>
+#include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_color_triangle.h>
+#include <2d/paint/ggo_paint.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)
 {
-  const int IMAGE_SIZE = 200;
-  ggo::image_buffer_rgb_8u_yu image(IMAGE_SIZE, IMAGE_SIZE, 3 * IMAGE_SIZE);
-  image, ggo::color::BLACK);
+  constexpr int image_size = 200;
+
+  ggo::static_image<ggo::rgb_8u_yd> image(image_size, image_size);
+
+  image.fill(ggo::black_8u());
 
   image.for_each_pixel([&](int x, int y)
   {
-    const ggo::pos2f p(static_cast<float>(x), static_cast<float>(y));
+    const ggo::pos2f p = ggo::from_pixel_to_math<float>(ggo::pos2i(x, y));
     const ggo::pos2f p0(50.f, 50.f);
     const ggo::pos2f p1(150.f, 50.f);
     const ggo::pos2f p2(50.f, 150.f);
     
-    ggo::color pixel_color(0);
-    ggo::triangular_interpolation(p0, ggo::color::RED, p1, ggo::color::GREEN, p2, ggo::color::BLUE, p, pixel_color);
-    image.set(x, y, pixel_color);
+    auto c = ggo::triangular_interpolation(p0, ggo::red_32f(), p1, ggo::green_32f(), p2, ggo::blue_32f(), p);
+    if (c.has_value() == true)
+    {
+      image.write_pixel(x, y, ggo::convert_color_to<ggo::rgb_8u>(*c));
+    }
   });
   
-  ggo::save_bmp("test_triangular_interpolation_function.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
+  ggo::save_bmp("test_triangular_interpolation_function.bmp", image);
+}
+
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, color_triangle)
+{
+  const int width = 120;
+  const int height = 100;
+
+  using color_triangle_t = ggo::solid_color_triangle<float, ggo::rgb_8u>;
+
+  const color_triangle_t triangle1({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f());
+  const color_triangle_t triangle2({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f());
+
+  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
+
+  ggo::array_8u buffer(3 * width * height);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
+
+  ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(triangular_interpolation, brush)
+GGO_TEST(paint, alpha_color_triangle)
 {
-  const int IMAGE_SIZE = 200;
-  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE, ggo::color::BLACK);
-  
-  const ggo::pos2f p0(50.f, 50.f);
-  const ggo::pos2f p1(150.f, 50.f);
-  const ggo::pos2f p2(50.f, 150.f);
-  
-  auto triangle = std::make_shared<ggo::polygon2d_float>();
-  triangle->add_points(p0, p1, p2);
-  
-  auto brush = std::make_shared<ggo::rgb_triangle_interpolation_brush>(p0, ggo::color::RED, p1, ggo::color::GREEN, p2, ggo::color::BLUE);
-  
-  ggo::paint(image, triangle, brush);
-  
-  ggo::save_bmp("test_triangular_interpolation_brush.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
-}
+  const int width = 120;
+  const int height = 100;
 
-////////////////////////////////////////////////////////////////////
-GGO_TEST(triangular_interpolation, opacity)
-{
-  const int IMAGE_SIZE = 200;
-  ggo::rgb_image_buffer_uint8 image(IMAGE_SIZE, IMAGE_SIZE);
-  
-  fill_checker(image, ggo::color::WHITE, ggo::color::BLACK, 20);
-  
-  const ggo::pos2f p0(50.f, 50.f);
-  const ggo::pos2f p1(150.f, 50.f);
-  const ggo::pos2f p2(50.f, 150.f);
-  
-  auto triangle = std::make_shared<ggo::polygon2d_float>();
-  triangle->add_points(p0, p1, p2);
-  
-  auto color_brush = std::make_shared<ggo::rgb_solid_brush>(ggo::color::RED);
-  auto opacity_brush = std::make_shared<ggo::opacity_triangle_interpolation_brush>(p0, 0.25f, p1, 0.5f, p2, 1.f);
-  
-  paint(image, triangle, color_brush, opacity_brush);
-  
-  ggo::save_bmp("test_triangular_interpolation_opacity.bmp", image.data(), IMAGE_SIZE, IMAGE_SIZE);
-}
+  using color_triangle_t = ggo::alpha_color_triangle<float, ggo::rgb_8u>;
+  using brush_color_t = color_triangle_t::brush_color_t;
 
-#endif
+  const color_triangle_t triangle1({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
+    brush_color_t(0.f, 1.f, 0.f, 1.f),
+    brush_color_t(0.f, 1.f, 0.f, 0.75f),
+    brush_color_t(0.f, 1.f, 0.f, 0.5f));
+
+  const color_triangle_t triangle2({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() },
+    brush_color_t(0.f, 1.f, 0.f, 1.f),
+    brush_color_t(0.f, 1.f, 0.f, 0.25f),
+    brush_color_t(0.f, 1.f, 0.f, 0.5f));
+
+  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
+
+  ggo::array_8u buffer(3 * width * height);
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
+  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
+
+  ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+}

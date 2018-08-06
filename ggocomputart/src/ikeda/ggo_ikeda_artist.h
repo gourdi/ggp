@@ -22,7 +22,7 @@ namespace ggo
     struct particle
     {
       ggo::pos2f    _pos;
-      ggo::color_8u	_color;
+      ggo::rgb_8u  	_color;
       float				  _radius;
     };
 
@@ -32,7 +32,7 @@ namespace ggo
 
   private:
 
-    ggo::color_8u				        _bkgd_colors[4];
+    ggo::rgb_8u				          _bkgd_colors[4];
     ggo::harmonic_curve<float> 	_u0;
     ggo::harmonic_curve<float> 	_u1;
     ggo::harmonic_curve<float> 	_u2;

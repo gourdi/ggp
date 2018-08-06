@@ -27,7 +27,7 @@ namespace ggo
     std::vector<std::array<ggo::pos2f, substeps_count>> _particles;
     ggo::pos2f        		                              _attractor;
     int							                                    _timer_max;
-    ggo::color_8u 	                                    _parts_color;
+    ggo::rgb_8u 	                                      _parts_color;
     int							                                    _attractor_counter;
     int							                                    _shake_counter;
   };

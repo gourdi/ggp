@@ -110,11 +110,11 @@ namespace
         for (int x = 0; x < width; ++x)
         {
           auto c = ggo::read_pixel<format>(in_ptr);
-          ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
+          ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
 
-          *out_ptr++ = rgb.r();
-          *out_ptr++ = rgb.g();
-          *out_ptr++ = rgb.b();
+          *out_ptr++ = rgb._r;
+          *out_ptr++ = rgb._g;
+          *out_ptr++ = rgb._b;
 
           in_ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(in_ptr);
         }

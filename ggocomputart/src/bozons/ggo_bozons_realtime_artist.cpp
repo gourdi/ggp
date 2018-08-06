@@ -15,10 +15,10 @@ ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int l
 ggo::realtime_artist_abc(width, height, line_step, format)
 {
   _hue = ggo::rand<float>();
-  _bkgd_color1 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color2 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color3 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
-  _bkgd_color4 = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color1 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color2 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color3 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  _bkgd_color4 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
   // Create bozons.
   for (int i = 0; i < 32; ++i)
@@ -35,7 +35,7 @@ void ggo::bozons_realtime_artist::create_bozon()
   new_bozon._prv_pos = get_center();
   new_bozon._cur_pos = get_center();
 
-  new_bozon._color = from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
+  new_bozon._color = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
   new_bozon._angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
   new_bozon._dangle = ggo::rand<float>(-dangle_amp, dangle_amp);

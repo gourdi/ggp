@@ -24,8 +24,8 @@ GGO_TEST(linear_system, gauss_seidel_2x2)
     a(0, 1) = 3.f;
     a(1, 0) = 7.f;
     a(1, 1) = -11.f;
-    ggo::vec<float, 2, ggo::none_t> b { 11.f, 13.f };
-    ggo::vec<float, 2, ggo::none_t> s { 1.f, 1.f };
+    ggo::vec<float, 2> b { 11.f, 13.f };
+    ggo::vec<float, 2> s { 1.f, 1.f };
 
     ggo::gauss_seidel(a, b, s, 20);
 

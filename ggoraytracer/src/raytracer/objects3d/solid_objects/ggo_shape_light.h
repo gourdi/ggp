@@ -10,18 +10,18 @@ namespace ggo
   {
   public:
 
-    shape_light(const shape_t & shape, const ggo::color_32f & color);
+    shape_light(const shape_t & shape, const ggo::rgb_32f & color);
 
   private:
 
-    ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f    get_emissive_color() const override { return _color; }
-    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
+    ggo::rgb_32f      get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f      get_emissive_color() const override { return _color; }
+    ggo::rgb_32f      process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
   private:
 
-    ggo::color_32f  _color;
+    ggo::rgb_32f  _color;
   };
 }
 
@@ -31,7 +31,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  shape_light<flags, shape_t>::shape_light(const shape_t & shape, const ggo::color_32f & color)
+  shape_light<flags, shape_t>::shape_light(const shape_t & shape, const ggo::rgb_32f & color)
     :
     reflection_object3d_abc<flags, shape_t>(shape),
     _color(color)
@@ -41,7 +41,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f shape_light<flags, shape_t>::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f shape_light<flags, shape_t>::get_color(const ggo::pos3f & pos) const
   {
     GGO_FAIL();
     return _color;
@@ -49,9 +49,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f shape_light<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
+  ggo::rgb_32f shape_light<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
-    ggo::color_32f output_color = _color;
+    ggo::rgb_32f output_color = _color;
 
     if constexpr(!(flags & discard_reflection))
     {

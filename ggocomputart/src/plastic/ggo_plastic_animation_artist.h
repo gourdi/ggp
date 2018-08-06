@@ -32,8 +32,8 @@ namespace ggo
     };
     std::vector<anim_plastic_params> _params;
 
-    ggo::color_32f  _color;
-    float 		      _altitude_factor;
+    ggo::rgb_32f  _color;
+    float 		    _altitude_factor;
   };
 }
 

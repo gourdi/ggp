@@ -219,8 +219,8 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 				float value = 0.5f + 0.5f * scale / min_size();
 
 				polygons.push_back(polygon);
-				ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-          buffer, width(), height(), line_step(), polygon, ggo::from_hsv<ggo::color_8u>(hue, saturation, value));
+				ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+          buffer, width(), height(), line_step(), polygon, ggo::from_hsv<ggo::rgb_8u>(hue, saturation, value));
 				
 				++counter;
 			}
@@ -259,11 +259,11 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 			float dx = static_cast<float>(x - width()) / 2;
 			int val = ggo::round_to<uint8_t>(92 * std::exp(-(dx * dx + dy * dy ) / variance));
 
-      ggo::color_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step());
+      ggo::rgb_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step());
 
-			c_8u.r() = uint8_t(std::min(255, c_8u.r() + val));
-			c_8u.g() = uint8_t(std::min(255, c_8u.g() + val));
-			c_8u.b() = uint8_t(std::min(255, c_8u.b() + val));
+			c_8u._r = uint8_t(std::min(255, c_8u._r + val));
+			c_8u._g = uint8_t(std::min(255, c_8u._g + val));
+			c_8u._b = uint8_t(std::min(255, c_8u._b + val));
 			
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
     }

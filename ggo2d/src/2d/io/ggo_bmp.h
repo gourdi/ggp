@@ -18,6 +18,12 @@ namespace ggo
     static_assert(std::is_integral<size_t>::value);
     return save_bmp(filename, buffer, format, int(width), int(height), int(line_byte_step));
   }
+
+  template <typename image_t>
+  bool save_bmp(const std::string & filename, const image_t & image)
+  {
+    return save_bmp(filename, image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+  }
 }
 
 #endif

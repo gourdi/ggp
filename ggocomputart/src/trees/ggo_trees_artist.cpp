@@ -170,13 +170,13 @@ namespace
     }
 
     // Paint everything.
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), 3 * artist.width(),
-      paint_borders, ggo::black<ggo::color_8u>());
+      paint_borders, ggo::black_8u());
 
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), 3 * artist.width(),
-      paint_polygons, ggo::from_hsv<ggo::color_8u>(hue, dhue, val));
+      paint_polygons, ggo::from_hsv<ggo::rgb_8u>(hue, dhue, val));
   }
 }
 

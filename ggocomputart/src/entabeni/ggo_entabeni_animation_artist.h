@@ -35,7 +35,7 @@ namespace ggo
     float                                   _z = 0.f;
     ggo::array<float, 2>                    _grid_start;
     ggo::array<float, 2>                    _grid_end;
-    ggo::cubic_curve<float, ggo::color_32f> _color_map;
+    ggo::cubic_curve<float, ggo::rgb_32f>   _color_map;
   };
 }
 

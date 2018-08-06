@@ -16,7 +16,7 @@ namespace ggo
     struct storni
     {
       storni() = default;
-      storni(const ggo::pos2f & pos, const ggo::vec2f & vel, const ggo::color_8u & c) : _pos(pos), _vel(vel), _color(c) {}
+      storni(const ggo::pos2f & pos, const ggo::vec2f & vel, const ggo::rgb_8u & c) : _pos(pos), _vel(vel), _color(c) {}
 
       void avoid_obstacles(int width, int height, const std::vector<ggo::pos2f> & obstacles);
       void avoid_stornis(int width, int height, const std::vector<storni> & stornis, float influence_hypot, float weight);
@@ -25,7 +25,7 @@ namespace ggo
 
       ggo::vec2f    _vel;
       ggo::pos2f    _pos;
-      ggo::color_8u _color;
+      ggo::rgb_8u   _color;
     };
 
   private:

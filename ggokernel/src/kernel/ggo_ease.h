@@ -33,7 +33,7 @@ namespace ggo
   template <typename data_t>
   data_t ease_inout(data_t t)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
     data_t sq = t * t;
     return -2 * t * sq + 3 * sq; // -2 * t^3 + 3 * t^2
   }

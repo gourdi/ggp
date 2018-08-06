@@ -14,12 +14,12 @@ namespace ggo
 
   private:
 
-    ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f    get_emissive_color() const override { return ggo::black_32f(); }
-    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
+    ggo::rgb_32f      get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f      get_emissive_color() const override { return ggo::black_32f(); }
+    ggo::rgb_32f      process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
-    ggo::color_32f    compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
+    ggo::rgb_32f      compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const;
 
   private:
 
@@ -31,7 +31,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t, typename material_t>
-  ggo::color_32f diffuse_object3d<flags, shape_t, material_t>::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f diffuse_object3d<flags, shape_t, material_t>::get_color(const ggo::pos3f & pos) const
   {
     if constexpr(flags & discard_basis)
     {
@@ -45,11 +45,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t, typename material_t>
-  ggo::color_32f diffuse_object3d<flags, shape_t, material_t>::compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const
+  ggo::rgb_32f diffuse_object3d<flags, shape_t, material_t>::compute_diffuse_color(const std::vector<ggo::light_sample> & light_samples, const intersection_data & intersection) const
   {
-    const ggo::color_32f diffuse_color(_material.get_color(intersection._local_normal.pos()));
+    const ggo::rgb_32f diffuse_color(_material.get_color(intersection._local_normal.pos()));
 
-    ggo::color_32f output_color = ggo::black_32f();
+    ggo::rgb_32f output_color = ggo::black_32f();
 
     for (const auto & light_sample : light_samples)
     {
@@ -66,11 +66,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t, typename material_t>
-  ggo::color_32f diffuse_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
+  ggo::rgb_32f diffuse_object3d<flags, shape_t, material_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     auto light_samples = raytracer.sample_lights(intersection._world_normal, this, random_variable1, random_variable2);
 
-    ggo::color_32f output_color = compute_diffuse_color(light_samples, intersection);
+    ggo::rgb_32f output_color = compute_diffuse_color(light_samples, intersection);
 
     if constexpr(!(flags & discard_reflection))
     {

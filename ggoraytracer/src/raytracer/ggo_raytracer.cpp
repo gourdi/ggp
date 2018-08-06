@@ -48,7 +48,7 @@ namespace ggo
       }
 
       // Get light color.
-      ggo::color_32f light_color = light->get_emissive_color();
+      ggo::rgb_32f light_color = light->get_emissive_color();
       //for (const auto & volumetric_effect : _scene.get_volumetric_effects())
       //{
       //  light_color = volumetric_effect->process_segment(light_pos, world_normal.pos(), light_color);
@@ -61,22 +61,22 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::color_32f raytracer::process(const ggo::ray3d_float & ray,
-                                    int depth,
-                                    const ggo::indirect_lighting_abc * indirect_lighting,
-                                    float random_variable1,
-                                    float random_variable2,
-                                    const ggo::object3d_abc * exclude_object) const
+  ggo::rgb_32f raytracer::process(const ggo::ray3d_float & ray,
+                                  int depth,
+                                  const ggo::indirect_lighting_abc * indirect_lighting,
+                                  float random_variable1,
+                                  float random_variable2,
+                                  const ggo::object3d_abc * exclude_object) const
   {
     if (depth < 0)
     {
-      return ggo::black<ggo::color_32f>();
+      return ggo::black_32f();
     }
 
     auto hit = _raycaster.hit_test(ray, exclude_object);
     if (hit.has_value() == false)
     {
-      ggo::color_32f color = _scene.background().get_color(ray);
+      ggo::rgb_32f color = _scene.background().get_color(ray);
 
       for (const auto & volumetric_effect : _scene.volumetric_objects())
       {
@@ -89,7 +89,7 @@ namespace ggo
     GGO_ASSERT_FLOAT_EQ(hit->_intersection._local_normal.dir().get_length(), 1.f);
     GGO_ASSERT_FLOAT_EQ(hit->_intersection._world_normal.dir().get_length(), 1.f);
 
-    ggo::color_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, indirect_lighting, random_variable1, random_variable2);
+    ggo::rgb_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, indirect_lighting, random_variable1, random_variable2);
 
     for (const auto & volumetric_effect : _scene.volumetric_objects())
     {

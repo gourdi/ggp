@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    transparent_object3d(const shape_t & shape, const ggo::color_32f & color, float density) : reflection_object3d_abc<flags, shape_t>(shape), _color(color), _density(density) {}
+    transparent_object3d(const shape_t & shape, const ggo::rgb_32f & color, float density) : reflection_object3d_abc<flags, shape_t>(shape), _color(color), _density(density) {}
 
     static float                            compute_reflection_factor(const ggo::ray3d_float& ray, const ggo::ray3d_float& world_normal, float current_density, float next_density);
     static std::optional<ggo::ray3d_float>  transmit_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float current_density, float next_density);
@@ -18,17 +18,17 @@ namespace ggo
   private:
 
     // 'object3d_abc' interface.
-    ggo::color_32f    get_color(const ggo::pos3f & pos) const override;
-    ggo::color_32f    get_emissive_color() const override { return ggo::black_32f(); }
-    ggo::color_32f    process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
+    ggo::rgb_32f      get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f      get_emissive_color() const override { return ggo::black_32f(); }
+    ggo::rgb_32f      process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
     transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
 
-    ggo::color_32f    compute_transmitted_color(ggo::ray3d_float ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
+    ggo::rgb_32f      compute_transmitted_color(ggo::ray3d_float ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
 
   private:
 
-    ggo::color_32f  _color;
-    float _density;
+    ggo::rgb_32f  _color;
+    float         _density;
   };
 }
 
@@ -36,7 +36,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f transparent_object3d<flags, shape_t>::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::get_color(const ggo::pos3f & pos) const
   {
     GGO_FAIL();
     return ggo::black_32f();
@@ -158,7 +158,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f transparent_object3d<flags, shape_t>::compute_transmitted_color(ggo::ray3d_float ray,
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::compute_transmitted_color(ggo::ray3d_float ray,
     const intersection_data & intersection,
     const ggo::raytracer & raytracer,
     int depth,
@@ -192,11 +192,11 @@ namespace ggo
       const object3d_abc * exclude_object = handle_self_intersection(transmitted_ray);
 
       // Compute transmitted ray and color by bouncing ray internally until it leaves the current object.
-      const ggo::color_32f transmitted_color = raytracer.process(transmitted_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
+      const ggo::rgb_32f transmitted_color = raytracer.process(transmitted_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
 
       // Compute reflected ray.
       const ggo::ray3d_float & reflected_ray = get_reflected_ray(ray, intersection._world_normal, random_variable1, random_variable2);
-      const ggo::color_32f reflected_color = raytracer.process(reflected_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
+      const ggo::rgb_32f reflected_color = raytracer.process(reflected_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
 
       // Compute final color.
       const float reflection_factor = compute_reflection_factor(ray, intersection._world_normal, 1.f, _density);
@@ -208,11 +208,11 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f transparent_object3d<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     auto light_samples = raytracer.sample_lights(intersection._world_normal, this, random_variable1, random_variable2);
 
-    ggo::color_32f output_color = compute_transmitted_color(ray, intersection, raytracer, depth, indirect_lighting, random_variable1, random_variable2);
+    ggo::rgb_32f output_color = compute_transmitted_color(ray, intersection, raytracer, depth, indirect_lighting, random_variable1, random_variable2);
 
     if constexpr(!(flags & discard_reflection))
     {

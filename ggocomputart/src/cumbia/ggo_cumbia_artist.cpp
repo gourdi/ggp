@@ -165,7 +165,7 @@ std::vector<ggo::tree<ggo::box3d_float> *> ggo::cumbia_artist::init_common(ggo::
 	}
 
 	// Set up the raytracer, and add the current tree.
-  _scene.reset(new ggo::scene(std::make_shared<ggo::background3d_color>(ggo::color_32f(ggo::rand<float>(0.25f, 0.75f)))));
+  _scene.reset(new ggo::scene(std::make_shared<ggo::background3d_color>(ggo::rgb_32f(ggo::rand<float>(0.25f, 0.75f)))));
 
   _scene->add_diffuse_object<ggo::discard_all>(ggo_boxes_tree_shape(_boxes_tree.get()), ggo::white_material());
 
@@ -175,7 +175,7 @@ std::vector<ggo::tree<ggo::box3d_float> *> ggo::cumbia_artist::init_common(ggo::
 	camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
 	camera_basis.rotate(ggo::ray3d_float::O_Z(), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 	aperture = 0.3f;
-
+    
 	// The lights.
   float angle_offset = ggo::rand<float>(0, 2 * ggo::pi<float>());
   ggo::pos3f light_pos1 { camera_dist * std::cos(angle_offset),                            camera_dist * std::sin(angle_offset),                            0.f };
@@ -183,10 +183,10 @@ std::vector<ggo::tree<ggo::box3d_float> *> ggo::cumbia_artist::init_common(ggo::
   ggo::pos3f light_pos3 { camera_dist * std::cos(angle_offset - 2 * ggo::pi<float>() / 3), camera_dist * std::sin(angle_offset - 2 * ggo::pi<float>() / 3), 0.f };
   ggo::pos3f light_pos4 { 0.f, 0.f, camera_dist };
 
-  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos1, 0.1f);
-  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos2, 0.1f);
-  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos3, 0.1f);
-  _scene->add_sphere_light(ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos4, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos1, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos2, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos3, 0.1f);
+  _scene->add_sphere_light(ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1.f, 0.75f), light_pos4, 0.1f);
 
 	std::cout << "dimension: " << dimension << std::endl;
 	std::cout << "search_ratio: " << search_ratio << std::endl;

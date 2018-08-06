@@ -94,10 +94,10 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
   float t = float(points_per_frame) * frame_index / _points.size();
 
   float hue = _hue_curve.evaluate(t);
-  ggo::color_32f color1 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve1.evaluate(t));
-  ggo::color_32f color2 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve2.evaluate(t));
-  ggo::color_32f color3 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve3.evaluate(t));
-  ggo::color_32f color4 = ggo::from_hsv<ggo::color_32f>(hue, 0.2f, _val_curve4.evaluate(t));
+  ggo::rgb_32f color1 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve1.evaluate(t));
+  ggo::rgb_32f color2 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve2.evaluate(t));
+  ggo::rgb_32f color3 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve3.evaluate(t));
+  ggo::rgb_32f color4 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve4.evaluate(t));
 
   ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
     color1, color2, color3, color4, ggo::rect_int::from_width_height(width(), height()));
@@ -115,7 +115,7 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
       render_pt.x() += 0.05f * min_size();
       render_pt.y() += 0.05f * min_size();
 
-      ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_2x2>(
+      ggo::paint<ggo::y_32f_yu, ggo::sampling_2x2>(
         shadow_buffer.data(), width(), height(), sizeof(float) * width(),
         ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(opacity));
     }
@@ -137,9 +137,9 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
       float t = float(i) / _points.size();
       float hue = _hue_curve.evaluate(t);
       float sat = _sat_curve.evaluate(t);
-      ggo::color_32f color = ggo::from_hsv<ggo::color_32f>(hue, sat, 1);
+      ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(hue, sat, 1);
 
-      ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
+      ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
         buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
         ggo::disc_float(_points[i], radius), ggo::make_solid_brush(color), ggo::alpha_blender_rgb32f(opacity));
     }

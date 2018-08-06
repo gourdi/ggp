@@ -18,7 +18,7 @@ namespace
     for (int i = 0; i < points_count; ++i)
     {
       ggo::pos2f center = static_cast<float>(size) * points[i];
-      ggo::paint_shape<ggo::rgb_8u_yd, ggo::sampling_2x2>(image.data(), size, size, 3 * size, ggo::disc_float(center, 2.f), ggo::white_8u());
+      ggo::paint<ggo::rgb_8u_yd, ggo::sampling_2x2>(image.data(), size, size, 3 * size, ggo::disc_float(center, 2.f), ggo::white_8u());
     }
     
     ggo::save_bmp(filename, image.data(), ggo::rgb_8u_yd, size, size, 3 * size);

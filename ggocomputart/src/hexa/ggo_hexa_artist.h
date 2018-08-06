@@ -38,9 +38,9 @@ namespace ggo
 
     bool                  _enable_roughness;
     std::vector<sinusoid> _sinusoids;
-    ggo::color_32f        _side_color;
-    ggo::color_32f        _top_color;
-    ggo::color_32f        _back_color;
+    ggo::rgb_32f          _side_color;
+    ggo::rgb_32f          _top_color;
+    ggo::rgb_32f          _back_color;
     float                 _camera_angle_start;
     float                 _camera_angle_end;
   };

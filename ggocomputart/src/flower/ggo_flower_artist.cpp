@@ -61,7 +61,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 		for (int i = 0; i < vert_count; ++i)
 		{
 			float 		      grow 	= i / float(vert_count);
-			ggo::color_32f 	color = 0.0025f * ggo::from_hsv<ggo::color_32f>(hue, grow, 1);
+			ggo::rgb_32f 	  color = 0.0025f * ggo::from_hsv<ggo::rgb_32f>(hue, grow, 1);
 			float 		      s		  = 0.5f * radius_coef * petal_shape_curve.evaluate(grow) * min_size();
 
 			for (int j = 0; j < horz_count; ++j) 
@@ -71,10 +71,10 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 				float x = center.x() + s * std::cos(t);
 				float y = center.y() + s * std::sin(t) / 3 + grow * 0.5f * height() * spat(k);
 
-				ggo::paint_shape<ggo::rgb_32f_yu, ggo::sampling_4x4>(
+				ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
           render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
           ggo::disc_float({ x, y }, 0.001f * min_size()),
-          ggo::make_solid_brush(color), ggo::add_blender<ggo::color_32f>());
+          ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_32f>());
 			}
 
 			center.y() -= dy;

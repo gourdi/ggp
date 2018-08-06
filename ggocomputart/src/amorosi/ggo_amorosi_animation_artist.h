@@ -36,7 +36,7 @@ namespace ggo
     {
     public:
 
-            curve(int width, int height, int line_step, ggo::image_format format, const ggo::color_32f & color);
+            curve(int width, int height, int line_step, ggo::image_format format, const ggo::rgb_32f & color);
 
       void  update();
       void  paint(void * buffer) const;
@@ -55,14 +55,14 @@ namespace ggo
       float                                     _prv_width = 0.f;
       float                                     _speed = 0.f;
       std::vector<std::array<opacity_point, 3>> _triangles;
-      ggo::color_32f                            _color;
+      ggo::rgb_32f                              _color;
     };
 
   private:
 
     void render_frame(void * buffer, int frame_index, bool & finished) override;
 
-    ggo::color_32f get_color() const;
+    ggo::rgb_32f get_color() const;
 
   private:
 

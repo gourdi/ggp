@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    virtual	ggo::color_32f  get_color(const ggo::ray3d_float & ray) const = 0;
+    virtual	ggo::rgb_32f  get_color(const ggo::ray3d_float & ray) const = 0;
   };
 }
 

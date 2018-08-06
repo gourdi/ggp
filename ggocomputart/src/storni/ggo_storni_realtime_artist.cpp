@@ -126,14 +126,14 @@ _background_buffer(height * line_step)
 
   const float velocity = std::sqrt(get_velocity_hypot_max());
 
-  auto create_storni = [&](std::vector<storni> & container, ggo::color_8u c)
+  auto create_storni = [&](std::vector<storni> & container, ggo::rgb_8u c)
   {
     container.emplace_back(get_random_point(), ::ggo::from_polar(ggo::rand(0.f, 2 * ggo::pi<float>()), velocity), c);
   };
 
   for (int i = 0; i < 256; ++i)
   {
-    create_storni(_stornis, ggo::from_hsv<ggo::color_8u>(_hue, ggo::rand<float>(0.5f, 1.f), ggo::rand<float>()));
+    create_storni(_stornis, ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(0.5f, 1.f), ggo::rand<float>()));
   }
 
   for (int i = 0; i < 2; ++i)
@@ -377,9 +377,9 @@ void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int &
     {
       auto pixel = ggo::read_pixel<format>(ptr);
 
-      pixel.r() = fade(pixel.r());
-      pixel.g() = fade(pixel.g());
-      pixel.b() = fade(pixel.b());
+      pixel._r = fade(pixel._r);
+      pixel._g = fade(pixel._g);
+      pixel._b = fade(pixel._b);
 
       ggo::write_pixel<format>(ptr, pixel);
     }
@@ -395,11 +395,11 @@ void ggo::storni_realtime_artist::paint_stornies_background(const ggo::rect_int 
   for (const auto & storni : _stornis)
   {
     // Paint 2 stamps.
-    ggo::paint_shape<format, smp>(_background_buffer.data(), width(), height(), line_step(),
+    ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
       ggo::disc_float(storni._pos, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
 
-    ggo::paint_shape<format, smp>(_background_buffer.data(), width(), height(), line_step(),
+    ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
       ggo::disc_float(storni._pos - 0.5f * storni._vel, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
   }
@@ -442,14 +442,14 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
       const ggo::vec2f v2{ storni._pos + 0.5f * ggo::vec2f(direction.y(), -direction.x()) };
       const ggo::vec2f v3{ storni._pos + 0.5f * ggo::vec2f(-direction.y(), direction.x()) };
 
-      ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u> triangle({ v1, v2, v3 }, storni._color);
-      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border1({ v1, v2, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border2({ v2, v3, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u> border3({ v3, v1, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u> triangle({ v1, v2, v3 }, storni._color);
+      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border1({ v1, v2, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border2({ v2, v3, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border3({ v3, v1, border_size }, ggo::black_8u());
 
-      const std::vector<const ggo::paint_shape_abc<float, ggo::color_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
+      const std::vector<const ggo::paint_shape_abc<float, ggo::rgb_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 
-      ggo::paint_shapes<format, smp>(buffer, width(), height(), line_step(), paint_shapes, clipping);
+      ggo::paint<format, smp>(buffer, width(), height(), line_step(), paint_shapes, clipping);
     }
   }
 }
@@ -461,7 +461,7 @@ void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect
   const float obstacle_hypot = get_obstacle_hypot(width(), height());
   const float obstacle_hypot_inv = 1.f / obstacle_hypot;
   const float phase = 0.5f * frame_index;
-  const ggo::color_8u color = ggo::from_hsv<ggo::color_8u>(_hue, 1.f, 1.f);
+  const ggo::rgb_8u color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.f, 1.f);
 
   for (const auto & obstacle : _obstacles)
   {

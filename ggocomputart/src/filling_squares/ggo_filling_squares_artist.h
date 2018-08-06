@@ -11,8 +11,8 @@ namespace ggo
   {
     struct colored_square
     {
-      float		      _size;
-      ggo::color_8u _color;
+      float		    _size;
+      ggo::rgb_8u _color;
     };
 
     struct multi_square

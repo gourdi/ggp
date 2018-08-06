@@ -39,7 +39,7 @@ _life(width, height)
 
   for (int i = 0; i < 5; ++i)
   {
-    ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::y_32f_yu, ggo::sampling_4x4>(
       _life.data(), width, height, sizeof(float) * height,
       ggo::disc_float(get_random_point(), 0.01f * min_size()), 1.0f);
   }
@@ -120,10 +120,10 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
       float sat = sat_map.evaluate(_life(x, y));
       float val = val_map.evaluate(_life(x, y));
 
-      ggo::color_32f pixel = ggo::from_hsv<ggo::color_32f>(_hue, sat, val);
-      pixel += 0.8f * std::pow(dot, 1200.f) * ggo::white<ggo::color_32f>();
+      ggo::rgb_32f pixel = ggo::from_hsv<ggo::rgb_32f>(_hue, sat, val);
+      pixel += 0.8f * std::pow(dot, 1200.f) * ggo::white<ggo::rgb_32f>();
 
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), ggo::convert_color_to<ggo::color_8u>(pixel));
+      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), ggo::convert_color_to<ggo::rgb_8u>(pixel));
     }
   }
 }

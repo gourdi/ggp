@@ -54,12 +54,12 @@ namespace ggo
       
       for (int x = 0; x < width; ++x)
       {
-        const ggo::color_32f color = render_task->render_pixel(x, y, *scene, depth, *raycaster, indirect_lighting);
+        const ggo::rgb_32f color = render_task->render_pixel(x, y, *scene, depth, *raycaster, indirect_lighting);
 
         switch (format)
         {
         case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
+          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::rgb_8u>(color));
           break;
         default:
           GGO_FAIL();
@@ -119,12 +119,12 @@ namespace ggo
 
         for (int x = 0; x < width; ++x)
         {
-          const ggo::color_32f color = render_task->render_pixel(x, y, scene, raytrace_params._depth, *raycaster, raytrace_params._indirect_lighting);
+          const ggo::rgb_32f color = render_task->render_pixel(x, y, scene, raytrace_params._depth, *raycaster, raytrace_params._indirect_lighting);
           
           switch (format)
           {
           case ggo::rgb_8u_yu:
-            ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::color_8u>(color));
+            ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, ggo::convert_color_to<ggo::rgb_8u>(color));
             break;
           default:
             GGO_FAIL();

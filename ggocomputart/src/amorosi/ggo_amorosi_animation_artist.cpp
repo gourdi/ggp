@@ -18,7 +18,7 @@ void ggo::amorosi_animation_artist::random_width_interpolator::get_random_data(f
 }
 
 //////////////////////////////////////////////////////////////
-ggo::amorosi_animation_artist::curve::curve(int width, int height, int line_step, ggo::image_format format, const ggo::color_32f & color)
+ggo::amorosi_animation_artist::curve::curve(int width, int height, int line_step, ggo::image_format format, const ggo::rgb_32f & color)
 :
 artist(width, height, line_step, format),
 _lines_count(ggo::rand<int>(3, 10)),
@@ -122,7 +122,7 @@ void ggo::amorosi_animation_artist::curve::update()
 //////////////////////////////////////////////////////////////
 void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
 {
-  using paint_shape_t = ggo::alpha_color_triangle<float, ggo::color_8u>;
+  using paint_shape_t = ggo::alpha_color_triangle<float, ggo::rgb_8u>;
 
   std::vector<paint_shape_t> triangles;
   
@@ -131,9 +131,9 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
     ggo::triangle2d_float shape(triangle[0]._pos, triangle[1]._pos, triangle[2]._pos);
 
     triangles.emplace_back(shape, 
-      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[0]._opacity),
-      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[1]._opacity),
-      ggo::alpha_color_32f(_color.r(), _color.g(), _color.b(), triangle[2]._opacity));
+      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[0]._opacity),
+      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[1]._opacity),
+      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[2]._opacity));
   }
 
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), triangles);
@@ -148,16 +148,16 @@ animation_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-ggo::color_32f ggo::amorosi_animation_artist::get_color() const
+ggo::rgb_32f ggo::amorosi_animation_artist::get_color() const
 {
   float rnd = ggo::rand<float>();
   if (rnd < 0.5)
   {
-    return from_hsv<ggo::color_32f>(_hue, 1, 1);
+    return from_hsv<ggo::rgb_32f>(_hue, 1, 1);
   }
   else
   {
-    return ggo::white<ggo::color_32f>();
+    return ggo::white<ggo::rgb_32f>();
   }
 }
 
@@ -193,7 +193,7 @@ void ggo::amorosi_animation_artist::render_frame(void * buffer, int frame_index,
     return curve->is_dead();
   });
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black<ggo::color_8u>());
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black<ggo::rgb_8u>());
 
   if (buffer != nullptr)
   {

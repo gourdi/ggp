@@ -18,10 +18,10 @@ namespace ggo
 
     scene(std::shared_ptr<const ggo::background3d_abc> background, std::shared_ptr<const ggo::indirect_lighting_abc> indirect_lighting = nullptr);
 
-    point_light & add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos);
+    point_light & add_point_light(const ggo::rgb_32f & color, const ggo::pos3f & pos);
 
     template <uint32_t flags, typename shape_t>
-    auto & add_shape_light(const shape_t & shape, const ggo::color_32f & color)
+    auto & add_shape_light(const shape_t & shape, const ggo::rgb_32f & color)
     {
       using object_t = shape_light<flags, shape_t>;
 
@@ -33,7 +33,7 @@ namespace ggo
       return *object;
     }
 
-    auto & add_sphere_light(const ggo::color_32f & color, const ggo::pos3f & center, float radius)
+    auto & add_sphere_light(const ggo::rgb_32f & color, const ggo::pos3f & center, float radius)
     {
       constexpr int flags = ggo::discard_roughness | ggo::discard_phong | ggo::discard_reflection;
 
@@ -68,7 +68,7 @@ namespace ggo
     }
 
     template <uint32_t flags, typename shape_t>
-    auto & add_transparent_object(const shape_t & shape, const ggo::color_32f & color, float density)
+    auto & add_transparent_object(const shape_t & shape, const ggo::rgb_32f & color, float density)
     {
       using object_t = transparent_object3d<flags, shape_t>;
 
@@ -86,7 +86,7 @@ namespace ggo
       _volumetric_objects.push_back(object);
     }
 
-    void  set_ambient_color(const ggo::color_32f & ambient_color) { _ambient_color = ambient_color; }
+    void  set_ambient_color(const ggo::rgb_32f & ambient_color) { _ambient_color = ambient_color; }
 
     const auto &  solid_objects() const { return _solid_objects; }
     const auto &  lights() const { return _lights; }
@@ -100,7 +100,7 @@ namespace ggo
     std::vector<std::shared_ptr<const ggo::object3d_abc>> _volumetric_objects;
     std::shared_ptr<const ggo::background3d_abc>          _background;
     std::shared_ptr<const ggo::indirect_lighting_abc>     _indirect_lighting;
-    ggo::color_32f                                        _ambient_color = ggo::black<ggo::color_32f>();
+    ggo::rgb_32f                                          _ambient_color = ggo::black<ggo::rgb_32f>();
   };
 }
 

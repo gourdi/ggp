@@ -24,11 +24,11 @@ namespace ggo
     int   min_size() const { return std::min(_width, _height); }
     pos2f center() const { return { static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2 }; }
 
-    static typename image_format_traits<format>::color_t from_8u(const ggo::color_8u & c);
+    static typename image_format_traits<format>::color_t from_8u(const ggo::rgb_8u & c);
 
   private:
 
-    using palette_t = std::array<ggo::color_8u, 8>;
+    using palette_t = std::array<ggo::rgb_8u, 8>;
     using paint_shapes_t = std::vector<std::unique_ptr<ggo::paint_shape_abc<float, typename ggo::image_format_traits<format>::color_t>>>;
 
     struct demeco
@@ -55,11 +55,11 @@ namespace ggo
 
       struct arc
       {
-        arc(ggo::color_8u c, float radius, float width, float start_angle, bool ccw)
+        arc(ggo::rgb_8u c, float radius, float width, float start_angle, bool ccw)
         :
         _color(c), _radius(radius), _width(width), _start_angle(start_angle), _ccw(ccw) {}
 
-        ggo::color_8u _color;
+        ggo::rgb_8u _color;
         float _radius;
         float _width;
         float _start_angle;
@@ -84,9 +84,9 @@ namespace ggo
 
       struct animation
       {
-        animation(ggo::color_8u c, float size, float end_angle) : _color(c), _size(size), _end_angle(end_angle) {}
+        animation(ggo::rgb_8u c, float size, float end_angle) : _color(c), _size(size), _end_angle(end_angle) {}
 
-        ggo::color_8u _color;
+        ggo::rgb_8u _color;
         float _size;
         float _end_angle;
       };
@@ -108,7 +108,7 @@ namespace ggo
 
       struct peak
       {
-        peak(float angle, float aperture, float radius_inf, float radius_sup, ggo::color_8u c, int delay)
+        peak(float angle, float aperture, float radius_inf, float radius_sup, ggo::rgb_8u c, int delay)
         :
         _angle(angle), _aperture(aperture), _radius_inf(radius_inf), _radius_sup(radius_sup), _color(c), _delay(delay) {}
 
@@ -116,7 +116,7 @@ namespace ggo
         float _aperture;
         float _radius_inf;
         float _radius_sup;
-        ggo::color_8u _color;
+        ggo::rgb_8u _color;
         int _delay;
       };
       std::vector<peak> _peaks;

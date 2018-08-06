@@ -10,9 +10,9 @@ namespace ggo
   {
   public:
     
-    virtual                ~material_abc() {}
+    virtual              ~material_abc() {}
       
-    virtual	ggo::color_32f  get_color(const ggo::pos3f & pos) const = 0;
+    virtual	ggo::rgb_32f  get_color(const ggo::pos3f & pos) const = 0;
   };
 }
 

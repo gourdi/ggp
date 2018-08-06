@@ -39,10 +39,10 @@ namespace
         for (int x = 0; x < width; ++x)
         {
           auto c = ggo::read_pixel<format>(ptr);
-          ggo::color_8u rgb = ggo::convert_color_to<ggo::color_8u>(c);
-          ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
+          ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
+          ofs.write(reinterpret_cast<char*>(&rgb._b), 1);
+          ofs.write(reinterpret_cast<char*>(&rgb._g), 1);
+          ofs.write(reinterpret_cast<char*>(&rgb._r), 1);
           ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(ptr);
         }
       }

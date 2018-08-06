@@ -21,7 +21,7 @@ GGO_TEST(bidirectional_lighting, test)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
   
   // Light.
-  scene.add_sphere_light(ggo::color_32f(0.9f), { 0.f, 0.75f, 0.f }, 0.2f);
+  scene.add_sphere_light(ggo::rgb_32f(0.9f), { 0.f, 0.75f, 0.f }, 0.2f);
 
   // Objects.
   constexpr uint32_t flags = ggo::discard_all;

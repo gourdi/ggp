@@ -14,7 +14,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format)
   _threshold_hypot = _threshold_dist * _threshold_dist;
 
   float hue = ggo::rand<float>();
-  _background_color = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(0.f, 0.25f), ggo::rand<float>(0.25f, 0.75f));
+  _background_color = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand(0.f, 0.25f), ggo::rand(0.25f, 0.75f));
 
   // Create grid.
   const float cell_size = 0.1f * std::min(width, height);
@@ -113,7 +113,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color, ggo::rect_int::from_size(size()));
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::rgb_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
@@ -131,7 +131,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::gaussian_blur2d<format>(buffer, line_step(), size(), stddev);
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::rgb_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
@@ -139,7 +139,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
       {
         float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
         float sat = point._sat - 0.0015f * point._counter;
-        ggo::color_8u c = ggo::from_hsv<ggo::color_8u>(hue, sat, point._val);
+        ggo::rgb_8u c = ggo::from_hsv<ggo::rgb_8u>(hue, sat, point._val);
         shapes.emplace_back(ggo::disc_float(point._pos, _threshold_dist), c);
       }
     }

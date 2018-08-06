@@ -18,8 +18,8 @@ namespace ggo
 
     struct colored_stripe
     {
-      ggo::color_8u _color;
-      float         _x_sup;
+      ggo::rgb_8u _color;
+      float       _x_sup;
     };
 
     struct animated_transform

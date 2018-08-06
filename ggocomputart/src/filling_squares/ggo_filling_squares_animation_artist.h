@@ -38,7 +38,7 @@ namespace ggo
 
     ggo::animator _animator;
     float         _hue = 0.f;
-    ggo::color_8u _bkgd_color;
+    ggo::rgb_8u   _bkgd_color;
   };
 }
 

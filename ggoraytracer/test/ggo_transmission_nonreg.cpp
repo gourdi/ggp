@@ -24,7 +24,7 @@ GGO_TEST(transmission, test)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
 
   // Light.
-  scene.add_sphere_light(ggo::color_32f(1.25f), { -20.f, -100.f, 200.f }, 100.f);
+  scene.add_sphere_light(ggo::rgb_32f(1.25f), { -20.f, -100.f, 200.f }, 100.f);
 
   // Objects.
   std::array<float, 5> densities { 1.0f, 1.01f, 1.05f, 1.1f, 1.5f };

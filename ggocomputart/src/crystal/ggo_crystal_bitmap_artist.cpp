@@ -13,10 +13,10 @@ bitmap_artist_abc(width, height, line_step, format)
 void ggo::crystal_bitmap_artist::render_bitmap(void * buffer) const
 {
   ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
+    ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
+    ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
+    ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
+    ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f)),
     ggo::rect_int::from_width_height(width(), height()));
 
 	ggo::crystal_artist::params params;

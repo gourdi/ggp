@@ -2,22 +2,169 @@
 #define __GGO_COLOR__
 
 #include <stdint.h>
-#include <kernel/ggo_kernel.h>
-#include <kernel/ggo_vec.h>
 #include <sstream>
 #include <string>
+#include <ostream>
+#include <kernel/ggo_kernel.h>
 
-// Aliases.
+// Structs.
 namespace ggo
 {
-  using color_8u = color<uint8_t>;
-  using color_16u = color<uint16_t>;
-  using color_32u = color<uint32_t>;
-  using color_32f = color<float>;
-  using alpha_color_8u = alpha_color<uint8_t>;
-  using alpha_color_16u = alpha_color<uint16_t>;
-  using alpha_color_32u = alpha_color<uint32_t>;
-  using alpha_color_32f = alpha_color<float>;
+  // YA
+  template <typename data_t>
+  struct ya
+  {
+    ya() {}
+    ya(data_t k) : _y(k), _a(k) {}
+    ya(data_t y, data_t a) : _y(y), _a(a) {}
+
+    ya<data_t>  operator-() const { return { -this->_y, -this->_a }; }
+
+    void        operator+=(ggo::ya<data_t> rhs) { this->_y += rhs._y; this->_a += rhs._a; }
+    void        operator-=(ggo::ya<data_t> rhs) { this->_y -= rhs._y; this->_a -= rhs._a; }
+    void        operator*=(data_t k) { this->_y *= k; this->_a *= k; }
+    void        operator/=(data_t k) { this->_y /= k; this->_a /= k; }
+
+    bool        operator==(ggo::ya<data_t> rhs) const { return this->_y == rhs._y && this->_a == rhs._a; }
+    bool        operator!=(ggo::ya<data_t> rhs) const { return this->_y != rhs._y || this->_a != rhs._a; }
+
+    data_t _y;
+    data_t _a;
+  };
+
+  template <typename data_t>
+  ya<data_t> operator+(ya<data_t> c1, ya<data_t> c2) { return { data_t(c1._y + c2._y), data_t(c1._a + c2._a) }; }
+
+  template <typename data_t>
+  ya<data_t> operator-(ya<data_t> c1, ya<data_t> c2) { return { data_t(c1._y - c2._y), data_t(c1._a - c2._a) }; }
+
+  template <typename data_t>
+  ya<data_t> operator*(data_t k, ya<data_t> c) { return { data_t(k * c._y), data_t(k * c._a) }; }
+
+  template <typename data_t>
+  ya<data_t> operator*(ya<data_t> c, data_t k) { return { data_t(k * c._y), data_t(k * c._a) }; }
+
+  template <typename data_t>
+  ya<data_t> operator/(ya<data_t> c, data_t k) { return { data_t(c._y / k), data_t(c._a / k) }; }
+
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, ya<data_t> c) { os << "(y:" << c._y << "; a:" << c._a << ")"; return os; }
+
+  using ya_8u = ggo::ya<uint8_t>;
+  using ya_32f = ggo::ya<float>;
+
+  // RGB
+  template <typename data_t> 
+  struct rgb
+  {
+    rgb() {}
+    rgb(data_t k) : _r(k), _g(k), _b(k) {}
+    rgb(data_t r, data_t g, data_t b) : _r(r), _g(g), _b(b) {}
+
+    rgb<data_t> operator-() const { return { -this->_r, -this->_g, -this->_b }; }
+
+    void        operator+=(ggo::rgb<data_t> rhs) { this->_r += rhs._r; this->_g += rhs._g; this->_b += rhs._b; }
+    void        operator-=(ggo::rgb<data_t> rhs) { this->_r -= rhs._r; this->_g -= rhs._g; this->_b -= rhs._b; }
+    void        operator*=(ggo::rgb<data_t> rhs) { this->_r *= rhs._r; this->_g *= rhs._g; this->_b *= rhs._b; }
+    void        operator*=(data_t k) { this->_r *= k; this->_g *= k; this->_b *= k;}
+    void        operator/=(data_t k) { this->_r /= k; this->_g /= k; this->_b /= k;}
+
+    bool        operator==(ggo::rgb<data_t> rhs) const { return this->_r == rhs._r && this->_g == rhs._g && this->_b == rhs._b; }
+    bool        operator!=(ggo::rgb<data_t> rhs) const { return this->_r != rhs._r || this->_g != rhs._g || this->_b != rhs._b; }
+
+    data_t _r;
+    data_t _g;
+    data_t _b;
+  };
+
+  template <typename data_t>
+  rgb<data_t> operator+(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r + c2._r), data_t(c1._g + c2._g), data_t(c1._b + c2._b) }; }
+
+  template <typename data_t>
+  rgb<data_t> operator-(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r - c2._r), data_t(c1._g - c2._g), data_t(c1._b - c2._b) }; }
+
+  template <typename data_t>
+  rgb<data_t> operator*(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r * c2._r), data_t(c1._g * c2._g), data_t(c1._b * c2._b) }; }
+
+  template <typename data_t>
+  rgb<data_t> operator*(data_t k, rgb<data_t> c) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b) }; }
+
+  template <typename data_t>
+  rgb<data_t> operator*(rgb<data_t> c, data_t k) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b) }; }
+
+  template <typename data_t>
+  rgb<data_t> operator/(rgb<data_t> c, data_t k) { return { data_t(c._r / k), data_t(c._g / k), data_t(c._b / k) }; }
+
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, rgb<data_t> c) { os << "(r:" << c._r << "; g:" << c._g << "; b:" << c._b << ")"; return os; }
+
+  using rgb_8u = ggo::rgb<uint8_t>;
+  using rgb_16u = ggo::rgb<uint16_t>;
+  using rgb_32u = ggo::rgb<uint32_t>;
+  using rgb_32f = ggo::rgb<float>;
+
+  // RGBA
+  template <typename data_t>
+  struct rgba
+  {
+    rgba() {}
+    rgba(data_t k) : _r(k), _g(k), _b(k), _a(k) {}
+    rgba(const ggo::rgb<data_t> & rgb, data_t a) : _r(rgb._r), _g(rgb._g), _b(rgb._b), _a(a) {}
+    rgba(data_t r, data_t g, data_t b, data_t a) : _r(r), _g(g), _b(b), _a(a) {}
+
+    rgb<data_t>   rgb() const { return { this->_r, this->_g, this->_b }; }
+
+    rgba<data_t>  operator-() const { return { -this->_r, -this->_g, -this->_b, -this->_a }; }
+
+    void          operator+=(ggo::rgba<data_t> rhs) { this->_r += rhs._r; this->_g += rhs._g; this->_b += rhs._b; this->_a += rhs._a; }
+    void          operator-=(ggo::rgba<data_t> rhs) { this->_r -= rhs._r; this->_g -= rhs._g; this->_b -= rhs._b; this->_a -= rhs._a;}
+    void          operator*=(data_t k) { this->_r *= k; this->_g *= k; this->_b *= k; this->_a *= k; }
+    void          operator/=(data_t k) { this->_r /= k; this->_g /= k; this->_b /= k; this->_a /= k; }
+
+    bool          operator==(ggo::rgba<data_t> rhs) const { return this->_r == rhs._r && this->_g == rhs._g && this->_b == rhs._b && this->_a == rhs._a; }
+    bool          operator!=(ggo::rgba<data_t> rhs) const { return this->_r != rhs._r || this->_g != rhs._g || this->_b != rhs._b || this->_a != rhs._a; }
+
+    data_t _r;
+    data_t _g;
+    data_t _b;
+    data_t _a;
+  };
+
+  template <typename data_t>
+  rgba<data_t> operator+(rgba<data_t> c1, rgba<data_t> c2) { return { data_t(c1._r + c2._r), data_t(c1._g + c2._g), data_t(c1._b + c2._b), data_t(c1._a + c2._a) }; }
+
+  template <typename data_t>
+  rgba<data_t> operator-(rgba<data_t> c1, rgba<data_t> c2) { return { data_t(c1._r - c2._r), data_t(c1._g - c2._g), data_t(c1._b + c2._b), data_t(c1._a - c2._a) }; }
+
+  template <typename data_t>
+  rgba<data_t> operator*(data_t k, rgba<data_t> c) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b), data_t(k * c._a) }; }
+
+  template <typename data_t>
+  rgba<data_t> operator*(rgba<data_t> c, data_t k) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b), data_t(k * c._a) }; }
+  
+  template <typename data_t>
+  rgba<data_t> operator/(rgba<data_t> c, data_t k) { return { data_t(c._r / k), data_t(c._g / k), data_t(c._b / k), data_t(c._a / k) }; }
+
+  template <typename data_t>
+  std::ostream & operator<<(std::ostream & os, rgba<data_t> c) { os << "(r:" << c._r << "; g:" << c._g << "; b:" << c._b << "; a:" << c._a << ")"; return os; }
+
+  using rgba_8u = ggo::rgba<uint8_t>;
+  using rgba_16u = ggo::rgba<uint16_t>;
+  using rgba_32u = ggo::rgba<uint32_t>;
+  using rgba_32f = ggo::rgba<float>;
+}
+
+/////////////////////////////////////////////////////////////////////
+// Color spaces
+namespace ggo
+{
+  enum class color_space
+  {
+    y,
+    ya,
+    rgb,
+    rgba
+  };
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -33,7 +180,8 @@ namespace ggo
     using floating_point_color_t = float;
     using no_alpha_color_t = uint8_t;
     using sample_t = uint8_t;
-    static constexpr uint8_t max() { return 0xff; }
+    static constexpr uint8_t max = 0xff;
+    static constexpr color_space color_space = color_space::y;
     static constexpr int samples_count = 1;
     static constexpr bool has_alpha = false;
   };
@@ -44,7 +192,8 @@ namespace ggo
     using floating_point_color_t = float;
     using no_alpha_color_t = uint16_t;
     using sample_t = uint16_t;
-    static constexpr uint16_t max() { return 0xffff; }
+    static constexpr uint16_t max = 0xffff;
+    static constexpr color_space color_space = color_space::y;
     static constexpr int samples_count = 1;
     static constexpr bool has_alpha = false;
   };
@@ -55,7 +204,8 @@ namespace ggo
     using floating_point_color_t = float;
     using no_alpha_color_t = uint32_t;
     using sample_t = uint32_t;
-    static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr uint32_t max = 0xffffffff;
+    static constexpr color_space color_space = color_space::y;
     static constexpr int samples_count = 1;
     static constexpr bool has_alpha = false;
   };
@@ -66,91 +216,123 @@ namespace ggo
     using floating_point_color_t = float;
     using no_alpha_color_t = float;
     using sample_t = float;
-    static constexpr float max() { return 1.f; }
+    static constexpr float max = 1.f;
+    static constexpr color_space color_space = color_space::y;
     static constexpr int samples_count = 1;
     static constexpr bool has_alpha = false;
   };
 
   template <>
-  struct color_traits<ggo::color_8u>
+  struct color_traits<ya_8u>
   {
-    using floating_point_color_t = ggo::color_32f;
-    using no_alpha_color_t = ggo::color_8u;
-    using alpha_color_t = ggo::alpha_color_8u;
+    using floating_point_color_t = ya_32f;
+    using no_alpha_color_t = uint8_t;
     using sample_t = uint8_t;
-    static constexpr uint8_t max() { return 0xff; }
+    static constexpr float max = 0xff;
+    static constexpr color_space color_space = color_space::ya;
+    static constexpr int samples_count = 2;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ya_32f>
+  {
+    using floating_point_color_t = ya_32f;
+    using no_alpha_color_t = float;
+    using sample_t = float;
+    static constexpr float max = 1.f;
+    static constexpr color_space color_space = color_space::ya;
+    static constexpr int samples_count = 2;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ggo::rgb_8u>
+  {
+    using floating_point_color_t = ggo::rgb_32f;
+    using no_alpha_color_t = ggo::rgb_8u;
+    using alpha_color_t = ggo::rgba_8u;
+    using sample_t = uint8_t;
+    static constexpr uint8_t max = 0xff;
+    static constexpr color_space color_space = color_space::rgb;
     static constexpr int samples_count = 3;
     static constexpr bool has_alpha = false;
   };
 
   template <>
-  struct color_traits<ggo::color_16u>
+  struct color_traits<ggo::rgb_16u>
   {
-    using floating_point_color_t = ggo::color_32f;
-    using no_alpha_color_t = ggo::color_16u;
-    using alpha_color_t = ggo::alpha_color_16u;
+    using floating_point_color_t = ggo::rgb_32f;
+    using no_alpha_color_t = ggo::rgb_16u;
+    using alpha_color_t = ggo::rgba_16u;
     using sample_t = uint16_t;
-    static constexpr uint16_t max() { return 0xffff; }
+    static constexpr uint16_t max = 0xffff;
+    static constexpr color_space color_space = color_space::rgb;
     static constexpr int samples_count = 3;
     static constexpr bool has_alpha = false;
   };
 
   template <>
-  struct color_traits<ggo::color_32u>
+  struct color_traits<ggo::rgb_32u>
   {
-    using floating_point_color_t = ggo::color_32f;
-    using no_alpha_color_t = ggo::color_32u;
-    using alpha_color_t = ggo::alpha_color_32u;
+    using floating_point_color_t = ggo::rgb_32f;
+    using no_alpha_color_t = ggo::rgb_32u;
+    using alpha_color_t = ggo::rgba_32u;
     using sample_t = uint32_t;
-    static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr uint32_t max = 0xffffffff;
+    static constexpr color_space color_space = color_space::rgb;
     static constexpr int samples_count = 3;
     static constexpr bool has_alpha = false;
   };
 
   template <>
-  struct color_traits<ggo::color_32f>
+  struct color_traits<ggo::rgb_32f>
   {
-    using floating_point_color_t = ggo::color_32f;
-    using no_alpha_color_t = ggo::color_32f;
-    using alpha_color_t = ggo::alpha_color_32f;
+    using floating_point_color_t = ggo::rgb_32f;
+    using no_alpha_color_t = ggo::rgb_32f;
+    using alpha_color_t = ggo::rgba_32f;
     using sample_t = float;
-    static constexpr float max() { return 1.f; }
+    static constexpr float max = 1.f;
+    static constexpr color_space color_space = color_space::rgb;
     static constexpr int samples_count = 3;
     static constexpr bool has_alpha = false;
   };
 
   template <>
-  struct color_traits<ggo::alpha_color_8u>
+  struct color_traits<ggo::rgba_8u>
   {
-    using floating_point_color_t = ggo::alpha_color_32f;
-    using no_alpha_color_t = ggo::color_8u;
-    using alpha_color_t = ggo::alpha_color_8u;
+    using floating_point_color_t = ggo::rgba_32f;
+    using no_alpha_color_t = ggo::rgb_8u;
+    using alpha_color_t = ggo::rgba_8u;
     using sample_t = uint8_t;
-    static constexpr uint8_t max() { return 0xff; }
+    static constexpr uint8_t max = 0xff;
+    static constexpr color_space color_space = color_space::rgba;
     static constexpr int samples_count = 4;
     static constexpr bool has_alpha = true;
   };
 
   template <>
-  struct color_traits<ggo::alpha_color_32u>
+  struct color_traits<ggo::rgba_32u>
   {
-    using floating_point_color_t = ggo::alpha_color_32f;
-    using no_alpha_color_t = ggo::color_32u;
-    using alpha_color_t = ggo::alpha_color_32u;
+    using floating_point_color_t = ggo::rgba_32f;
+    using no_alpha_color_t = ggo::rgb_32u;
+    using alpha_color_t = ggo::rgba_32u;
     using sample_t = uint32_t;
     static constexpr uint32_t max() { return 0xffffffff; }
+    static constexpr color_space color_space = color_space::rgba;
     static constexpr int samples_count = 4;
     static constexpr bool has_alpha = true;
   };
 
   template <>
-  struct color_traits<ggo::alpha_color_32f>
+  struct color_traits<ggo::rgba_32f>
   {
-    using floating_point_color_t = ggo::alpha_color_32f;
-    using no_alpha_color_t = ggo::color_32f;
-    using alpha_color_t = ggo::alpha_color_32f;
+    using floating_point_color_t = ggo::rgba_32f;
+    using no_alpha_color_t = ggo::rgb_32f;
+    using alpha_color_t = ggo::rgba_32f;
     using sample_t = float;
-    static constexpr float max() { return 1.f; }
+    static constexpr float max = 1.f;
+    static constexpr color_space color_space = color_space::rgba;
     static constexpr int samples_count = 4;
     static constexpr bool has_alpha = true;
   };
@@ -175,313 +357,168 @@ namespace ggo
   };
 
   template <>
-  struct floating_point_color_traits<ggo::color_8u, float>
+  struct floating_point_color_traits<ggo::rgb_8u, float>
   {
-    using floating_point_color_t = ggo::color_32f;
+    using floating_point_color_t = ggo::rgb_32f;
   };
 
   template <>
-  struct floating_point_color_traits<ggo::color_32f, float>
+  struct floating_point_color_traits<ggo::rgb_32f, float>
   {
-    using floating_point_color_t = ggo::color_32f;
+    using floating_point_color_t = ggo::rgb_32f;
   };
 }
 
 /////////////////////////////////////////////////////////////////////
 // Color conversion
-// Warning: don't use ggo::to<> because uint8_t <=> float conversion won't work 
-// since float is normalized betwen 0 and 1.
 namespace ggo
 {
-  // Default case : return input color.
+  template <typename sample_out_t, typename sample_in_t>
+  sample_out_t convert_sample_to(sample_in_t s)
+  {
+    static_assert(std::is_same<sample_in_t, sample_out_t>::value == true);
+    return s;
+  }
+
+  // 8u => 16u
+  template <> inline uint16_t convert_sample_to(uint8_t s) { return (uint16_t(s) << 8) | s; }
+  // 8u => 32u
+  template <> inline uint32_t convert_sample_to(uint8_t s) { return (uint32_t(s) << 24) | (uint32_t(s) << 16) | (uint32_t(s) << 8) | s; }
+  // 8u => 32f
+  template <> inline float convert_sample_to(uint8_t s) { return s / float(std::numeric_limits<uint8_t>::max()); }
+
+  // 16u => 8u
+  template <> inline uint8_t convert_sample_to(uint16_t s) { return static_cast<uint8_t>(s >> 8); }
+  // 16u => 32u
+  template <> inline uint32_t convert_sample_to(uint16_t s) { return (uint32_t(s) << 16) | s; }
+  // 16u => 32f
+  template <> inline float convert_sample_to(uint16_t s) { return s / float(std::numeric_limits<uint16_t>::max()); }
+
+  // 32u => 8u
+  template <> inline uint8_t convert_sample_to(uint32_t s) { return static_cast<uint8_t>(s >> 24); }
+  // 32u => 16u
+  template <> inline uint16_t convert_sample_to(uint32_t s) { return static_cast<uint16_t>(s >> 16); }
+  // 32u => 32f
+  template <> inline float convert_sample_to(uint32_t s) { return s / float(std::numeric_limits<uint32_t>::max()); }
+  
+  // 32f => 8u
+  template <> inline uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  // 32f => 16u
+  template <> inline uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  // 32f => 32u
+  template <> inline uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+
+  template <typename sample_t>
+  sample_t rgb_to_y(sample_t r, sample_t g, sample_t b)
+  {
+    return (r + g + b) / 3;
+  }
+
   template <typename color_out_t, typename color_in_t>
   color_out_t convert_color_to(const color_in_t & c)
   {
-    // Automatically convert from y to rgb.
-    if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
-                 color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 3)
+    using color_traits_in = color_traits<color_in_t>;
+    using color_traits_out = color_traits<color_out_t>;
+
+    if constexpr(color_traits_in::color_space == color_space::y)
     {
-      return color_out_t(c, c, c);
+      if constexpr(color_traits_out::color_space == color_space::y) // y => y
+      {
+        return convert_sample_to<color_traits_out::sample_t>(c);
+      }
+      else if constexpr(color_traits_out::color_space == color_space::ya) // y => ya
+      {
+        return { convert_sample_to<color_traits_out::sample_t>(c), color_traits_out::max };
+      }
+      else if constexpr(color_traits_out::color_space == color_space::rgb) // y => rgb
+      {
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c);
+        return { y_out, y_out, y_out };
+      }
+      else // y => rgba
+      {
+        static_assert(color_traits_out::color_space == color_space::rgba);
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c);
+        return { y_out, y_out, y_out, color_traits_out::max };
+      }
     }
-    // Automatically convert from y to rgba.
-    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
-                      color_traits<color_in_t>::samples_count == 1 && color_traits<color_out_t>::samples_count == 4)
+    else if constexpr(color_traits_in::color_space == color_space::ya)
     {
-      return color_out_t(c, c, c, color_traits<color_in_t>::max());
+      if constexpr(color_traits_out::color_space == color_space::y) // ya => y
+      {
+        return convert_sample_to<color_traits_out::sample_t>(c._y);
+      }
+      else if constexpr(color_traits_out::color_space == color_space::ya) // ya => ya
+      {
+        return { convert_sample_to<color_traits_out::sample_t>(c._y), convert_sample_to<color_traits_out::sample_t>(c._a) };
+      }
+      else if constexpr(color_traits_out::color_space == color_space::rgb) // ya => rgb
+      {
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c._y);
+        return { y_out, y_out, y_out };
+      }
+      else // ya => rgb
+      {
+        static_assert(color_traits_out::color_space == color_space::rgba);
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c._y);
+        return { y_out, y_out, y_out, convert_sample_to<color_traits_out::sample_t>(c._a) };
+      }
     }
-    // Automatically convert from rgb to rgba.
-    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
-                      color_traits<color_in_t>::samples_count == 3 && color_traits<color_out_t>::samples_count == 4)
+    else if constexpr(color_traits_in::color_space == color_space::rgb)
     {
-      return color_out_t(c.r(), c.g(), c.b(), color_traits<color_in_t>::max());
+      if constexpr(color_traits_out::color_space == color_space::y) // rgb => y
+      {
+        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._r, c._g, c._b));
+      }
+      else if constexpr(color_traits_out::color_space == color_space::ya) // rgb => ya
+      {
+        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._r, c._g, c._b)), color_traits_out::max };
+      }
+      else if constexpr(color_traits_out::color_space == color_space::rgb) // rgb => rgb
+      {
+        return {
+          convert_sample_to<color_traits_out::sample_t>(c._r),
+          convert_sample_to<color_traits_out::sample_t>(c._g),
+          convert_sample_to<color_traits_out::sample_t>(c._b) };
+      }
+      else // rgb => rgb
+      {
+        static_asssert(color_traits_out::color_space == color_space::rgba);
+        return {
+          convert_sample_to<color_traits_out::sample_t>(c._r),
+          convert_sample_to<color_traits_out::sample_t>(c._g),
+          convert_sample_to<color_traits_out::sample_t>(c._b),
+          color_traits_out::max };
+      }
     }
-    // Automatically convert from rgba to rgb by removing the alpha channel.
-    else if constexpr(std::is_same<color_traits<color_in_t>::sample_t, color_traits<color_out_t>::sample_t>::value == true &&
-                      color_traits<color_in_t>::samples_count == 4 && color_traits<color_out_t>::samples_count == 3)
+    else 
     {
-      return color_out_t(c.r(), c.g(), c.b());
+      static_assert(color_traits_in::color_space == color_space::rgba);
+      if constexpr(color_traits_out::color_space == color_space::y) // rgba => y
+      {
+        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c._g, c._b));
+      }
+      else if constexpr(color_traits_out::color_space == color_space::ya) // rgba => y
+      {
+        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c._g, c._b)), color_traits_out::max };
+      }
+      else if constexpr(color_traits_out::color_space == color_space::rgb) // rgba => rgb
+      {
+        return {
+          convert_sample_to<color_traits_out::sample_t>(c._r),
+          convert_sample_to<color_traits_out::sample_t>(c._g),
+          convert_sample_to<color_traits_out::sample_t>(c._b) };
+      }
+      else // rgba => rgba
+      {
+        static_assert(color_traits_out::color_space == color_space::rgba);
+        return {
+          convert_sample_to<color_traits_out::sample_t>(c._r),
+          convert_sample_to<color_traits_out::sample_t>(c._g),
+          convert_sample_to<color_traits_out::sample_t>(c._b),
+          convert_sample_to<color_traits_out::sample_t>(c._a) };
+      }
     }
-    else
-    {
-      static_assert(std::is_same<color_in_t, color_out_t>::value);
-      return c;
-    }
-  }
-
-  // y 8u => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, uint8_t>(const uint8_t & c)
-  {
-    return (uint16_t(c) << 8) | c;
-  }
-
-  // y 8u => y 32f
-  template <> inline float convert_color_to<float, uint8_t>(const uint8_t & c)
-  {
-    return c / float(std::numeric_limits<uint8_t>::max());
-  }
-
-  // y 8u => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, uint8_t>(const uint8_t & c)
-  {
-    uint16_t gray = (uint16_t(c) << 8) | c;
-    return ggo::color_16u(gray, gray, gray);
-  }
-
-  // y 8u => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, uint8_t>(const uint8_t & c)
-  {
-    float gray = c / float(std::numeric_limits<uint8_t>::max());
-    return ggo::color_32f(gray, gray, gray);
-  }
-
-  // y 16u => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, uint16_t>(const uint16_t & c)
-  {
-    return static_cast<uint8_t>(c >> 8);
-  }
-
-  // y 16u => y 32f
-  template <> inline float convert_color_to<float, uint16_t>(const uint16_t & c)
-  {
-    return c / float(std::numeric_limits<uint16_t>::max());
-  }
-
-  // y 16u => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, uint16_t>(const uint16_t & c)
-  {
-    uint8_t gray = static_cast<uint8_t>(c >> 8);
-    return ggo::color_8u(gray, gray, gray);
-  }
-
-  // y 16u => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, uint16_t>(const uint16_t & c)
-  {
-    uint8_t gray = static_cast<uint8_t>(c >> 8);
-    return ggo::alpha_color_8u(gray, gray, gray, 0xff);
-  }
-
-  // y 16u => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, uint16_t>(const uint16_t & c)
-  {
-    float gray = c / float(std::numeric_limits<uint16_t>::max());
-    return ggo::color_32f(gray, gray, gray);
-  }
-
-  // y 32f => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, float>(const float & c)
-  {
-    return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-  }
-
-  // y 32f => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, float>(const float & c)
-  {
-    return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-  }
-
-  // y 32f => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, float>(const float & c)
-  {
-    uint8_t gray = static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-    return ggo::color_8u(gray, gray, gray);
-  }
-
-  // y 32f => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, float>(const float & c)
-  {
-    uint8_t gray = static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-    return ggo::alpha_color_8u(gray, gray, gray, 0xff);
-  }
-
-  // y 32f => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, float>(const float & c)
-  {
-    uint16_t gray = static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(c, 0.f, 1.f) + 0.5f);
-    return ggo::color_16u(gray, gray, gray);
-  }
-
-  // y 32f => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, float>(const float & c)
-  {
-    return ggo::color_32f(c, c, c);
-  }
-
-  // rgb 8u => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    return (c.r() + c.g() + c.b()) / 3;
-  }
-
-  // rgb 8u => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, ggo::color_8u>(const color_8u & c)
-  {
-    uint16_t gray = (c.r() + c.g() + c.b()) / 3;
-    return (gray << 8) | gray;
-  }
-
-  // rgb 8u => y 32f
-  template <> inline float convert_color_to<float, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    return (c.r() + c.g() + c.b()) / (3.f * std::numeric_limits<uint8_t>::max());
-  }  
-
-  // rgb 8u => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::color_8u>(const color_8u & c)
-  {
-    return ggo::color_16u((uint16_t(c.r()) << 8) | c.r(), (uint16_t(c.g()) << 8) | c.g(), (uint16_t(c.b()) << 8) | c.b());
-  }
-
-  // rgb 8u => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_8u>(const ggo::color_8u & c)
-  {
-    constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
-    return ggo::color_32f(scale * c.r(), scale * c.g(), scale * c.b());
-  }
-
-  // rgb 16u => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, ggo::color_16u>(const ggo::color_16u & c)
-  {
-    return ggo::fixed_point_div<8>((c.r() + c.g() + c.b()) / 3);
-  }
-
-  // rgb 16u => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, ggo::color_16u>(const ggo::color_16u & c)
-  {
-    return (c.r() + c.g() + c.b()) / 3;
-  }
-
-  // rgb 16u => y 32f
-  template <> inline float convert_color_to<float, ggo::color_16u>(const ggo::color_16u & c)
-  {
-    return (c.r() + c.g() + c.b()) / (3.f * std::numeric_limits<uint16_t>::max());
-  }
-
-  // rgb 16u => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_16u>(const color_16u & c)
-  {
-    return ggo::color_8u(c.r() >> 8, c.g() >> 8, c.b() >> 8);
-  }
-
-  // rgb 16u => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::color_16u>(const color_16u & c)
-  {
-    auto conv = [](uint16_t v) { return float(v) / std::numeric_limits<uint16_t>::max(); };
-    return ggo::color_32f(conv(c.r()), conv(c.g()), conv(c.b()));
-  }
-
-  // rgb 16u => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, ggo::color_16u>(const color_16u & c)
-  {
-    return ggo::alpha_color_8u(
-      static_cast<uint8_t>(ggo::fixed_point_div<8>(c.r())), 
-      static_cast<uint8_t>(ggo::fixed_point_div<8>(c.g())),
-      static_cast<uint8_t>(ggo::fixed_point_div<8>(c.b())),
-      0xff);
-  }
-
-  // rgb 32f => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * (c.r() + c.g() + c.b()) / 3.f);
-  }
-
-  // rgb 32f => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    float gray = (c.r() + c.g() + c.b()) / 3.f;
-    return ggo::clamp_and_round_to<uint16_t>(std::numeric_limits<uint16_t>::max() * gray);
-  }
-
-  // rgb 32f => y 32f
-  template <> inline float convert_color_to<float, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    return (c.r() + c.g() + c.b()) / 3.f;
-  }
-
-  // rgb 32f => rgb 8u
-  template <> inline ggo::color_8u convert_color_to<ggo::color_8u, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    auto conv = [](float v) { return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * v); };
-    return { conv(c.r()), conv(c.g()), conv(c.b()) };
-  }
-
-  // rgb 32f => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    return ggo::color_16u(ggo::clamp_and_round_to<uint16_t>(c.r()), ggo::clamp_and_round_to<uint16_t>(c.g()), ggo::clamp_and_round_to<uint16_t>(c.b()));
-  }
-
-  // rgb 32f => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, ggo::color_32f>(const ggo::color_32f & c)
-  {
-    auto conv = [](float v) { return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * v); };
-    return { conv(c.r()), conv(c.g()), conv(c.b()), 0xff };
-  }
-
-  // rgba 8u => y 8u
-  template <> inline uint8_t convert_color_to<uint8_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    return (c.r() + c.g() + c.b()) / 3;
-  }
-
-  // rgba 8u => y 16u
-  template <> inline uint16_t convert_color_to<uint16_t, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    uint16_t gray = (c.r() + c.g() + c.b()) / 3;
-    return (gray << 8) | gray;
-  }
-
-  // rgba 8u => y 32f
-  template <> inline float convert_color_to<float, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    return (c.r() + c.g() + c.b()) / (3.f * std::numeric_limits<uint8_t>::max());
-  }
-
-  // rgba 8u => rgb 16u
-  template <> inline ggo::color_16u convert_color_to<ggo::color_16u, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    return ggo::color_16u((c.r() << 8) | c.r(), (c.g() << 8) | c.g(), (c.b() << 8) | c.b());
-  }
-
-  // rgba 8u => rgb 32f
-  template <> inline ggo::color_32f convert_color_to<ggo::color_32f, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    float scale = 1.f / std::numeric_limits<uint8_t>::max();
-    return ggo::color_32f(scale * c.r(), scale * c.g(), scale * c.b());
-  }
-
-  // rgba 8u => rgba 32f
-  template <> inline ggo::alpha_color_32f convert_color_to<ggo::alpha_color_32f, ggo::alpha_color_8u>(const ggo::alpha_color_8u & c)
-  {
-    constexpr float scale = 1.f / std::numeric_limits<uint8_t>::max();
-    return ggo::alpha_color_32f(scale * c.r(), scale * c.g(), scale * c.b(), scale * c.a());
-  }
-
-  // rgba 32f => rgba 8u
-  template <> inline ggo::alpha_color_8u convert_color_to<ggo::alpha_color_8u, ggo::alpha_color_32f>(const ggo::alpha_color_32f & c)
-  {
-    auto conv = [](float v) { return ggo::clamp_and_round_to<uint8_t>(std::numeric_limits<uint8_t>::max() * v); };
-    return { conv(c.r()), conv(c.g()), conv(c.b()), conv(c.a()) };
   }
 }
 
@@ -491,14 +528,14 @@ namespace ggo
 {
   template <typename color_t> color_t white()
   { 
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(v, v, v);
   }
 
   template <typename color_t> color_t gray()
   { 
     using sample_t = typename color_traits<color_t>::sample_t;
-    const sample_t v = color_traits<color_t>::max() / 2;
+    const sample_t v = color_traits<color_t>::max / 2;
     return color_t(v, v, v);
   }
 
@@ -511,73 +548,73 @@ namespace ggo
   template <typename color_t> color_t red()
   { 
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(0), sample_t(0));
   }
 
   template <typename color_t> color_t green()
   { 
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), v, sample_t(0));
   }
 
   template <typename color_t> color_t blue()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), sample_t(0), v);
   }
 
   template <typename color_t> color_t cyan()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), v, v);
   }
 
   template <typename color_t> color_t magenta()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(0), v);
   }
 
   template <typename color_t> color_t yellow()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(v, v, sample_t(0));
   }
 
   template <typename color_t> color_t orange()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max();
+    const auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(v / 2), sample_t(0));
   }
 
-  inline ggo::color_8u white_8u()     { return ggo::white<ggo::color_8u>(); }
-  inline ggo::color_8u gray_8u()      { return ggo::gray<ggo::color_8u>(); }
-  inline ggo::color_8u black_8u()     { return ggo::black<ggo::color_8u>(); }
-  inline ggo::color_8u red_8u()       { return ggo::red<ggo::color_8u>(); }
-  inline ggo::color_8u green_8u()     { return ggo::green<ggo::color_8u>(); }
-  inline ggo::color_8u blue_8u()      { return ggo::blue<ggo::color_8u>(); }
-  inline ggo::color_8u cyan_8u()      { return ggo::cyan<ggo::color_8u>(); }
-  inline ggo::color_8u magenta_8u()   { return ggo::magenta<ggo::color_8u>(); }
-  inline ggo::color_8u yellow_8u()    { return ggo::yellow<ggo::color_8u>(); }
-  inline ggo::color_8u orange_8u()    { return ggo::orange<ggo::color_8u>(); }
+  inline ggo::rgb_8u white_8u()     { return ggo::white<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u gray_8u()      { return ggo::gray<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u black_8u()     { return ggo::black<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u red_8u()       { return ggo::red<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u green_8u()     { return ggo::green<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u blue_8u()      { return ggo::blue<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u cyan_8u()      { return ggo::cyan<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u magenta_8u()   { return ggo::magenta<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u yellow_8u()    { return ggo::yellow<ggo::rgb_8u>(); }
+  inline ggo::rgb_8u orange_8u()    { return ggo::orange<ggo::rgb_8u>(); }
 
-  inline ggo::color_32f white_32f()   { return ggo::white<ggo::color_32f>(); }
-  inline ggo::color_32f gray_32f()    { return ggo::gray<ggo::color_32f>(); }
-  inline ggo::color_32f black_32f()   { return ggo::black<ggo::color_32f>(); }
-  inline ggo::color_32f red_32f()     { return ggo::red<ggo::color_32f>(); }
-  inline ggo::color_32f green_32f()   { return ggo::green<ggo::color_32f>(); }
-  inline ggo::color_32f blue_32f()    { return ggo::blue<ggo::color_32f>(); }
-  inline ggo::color_32f cyan_32f()    { return ggo::cyan<ggo::color_32f>(); }
-  inline ggo::color_32f magenta_32f() { return ggo::magenta<ggo::color_32f>(); }
-  inline ggo::color_32f yellow_32f()  { return ggo::yellow<ggo::color_32f>(); }
-  inline ggo::color_32f orange_32f()  { return ggo::orange<ggo::color_32f>(); }
+  inline ggo::rgb_32f white_32f()   { return ggo::white<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f gray_32f()    { return ggo::gray<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f black_32f()   { return ggo::black<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f red_32f()     { return ggo::red<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f green_32f()   { return ggo::green<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f blue_32f()    { return ggo::blue<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f cyan_32f()    { return ggo::cyan<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f magenta_32f() { return ggo::magenta<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f yellow_32f()  { return ggo::yellow<ggo::rgb_32f>(); }
+  inline ggo::rgb_32f orange_32f()  { return ggo::orange<ggo::rgb_32f>(); }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -592,41 +629,41 @@ namespace ggo
   template <>
   struct accumulator<uint8_t>
   {
-    int acc = 0;
-    void add(uint8_t c) { acc += c; }
-    template <int count> uint8_t div() const { return (acc + count / 2) / count; }
+    int _acc = 0;
+    void add(uint8_t c) { _acc += c; }
+    template <int count> uint8_t div() const { return (_acc + count / 2) / count; }
   };
 
   template <>
-  struct accumulator<color_8u>
+  struct accumulator<rgb_8u>
   {
-    uint32_t r = 0; uint32_t g = 0; uint32_t b = 0;
-    void add(const color_8u & c) { r += c.r(); g += c.g(); b += c.b(); }
-    template <uint32_t count> color_8u div() const {
-      return color_8u(
-        static_cast<uint8_t>((r + count / 2) / count),
-        static_cast<uint8_t>((g + count / 2) / count),
-        static_cast<uint8_t>((b + count / 2) / count));
+    uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0;
+    void add(const rgb_8u & c) { _r += c._r; _g += c._g; _b += c._b; }
+    template <uint32_t count> rgb_8u div() const {
+      return rgb_8u(
+        static_cast<uint8_t>((_r + count / 2) / count),
+        static_cast<uint8_t>((_g + count / 2) / count),
+        static_cast<uint8_t>((_b + count / 2) / count));
     }
   };
 
   template <>
-  struct accumulator<alpha_color_8u>
+  struct accumulator<rgba_8u>
   {
-    uint32_t r = 0; uint32_t g = 0; uint32_t b = 0; uint32_t a = 0;
-    void add(const alpha_color_8u & c) { r += c.a() * c.r(); g += c.a() * c.g(); b += c.a() * c.b(); a += c.a(); }
-    template <uint32_t count> alpha_color_8u div() const {
-      if (a == 0)
+    uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0; uint32_t _a = 0;
+    void add(const rgba_8u & c) { _r += c._a * c._r; _g += c._a * c._g; _b += c._a * c._b; _a += c._a; }
+    template <uint32_t count> rgba_8u div() const {
+      if (_a == 0)
       {
         return { 0, 0, 0, 0 };
       }
       else
       {
         return {
-          static_cast<uint8_t>(ggo::round_div(r, a)),
-          static_cast<uint8_t>(ggo::round_div(g, a)),
-          static_cast<uint8_t>(ggo::round_div(b, a)),
-          static_cast<uint8_t>(ggo::round_div(a, count)) };
+          static_cast<uint8_t>(ggo::round_div(_r, _a)),
+          static_cast<uint8_t>(ggo::round_div(_g, _a)),
+          static_cast<uint8_t>(ggo::round_div(_b, _a)),
+          static_cast<uint8_t>(ggo::round_div(_a, count)) };
       }
     }
   };
@@ -634,17 +671,17 @@ namespace ggo
   template <>
   struct accumulator<float>
   {
-    float acc = 0.f;
-    void add(float c) { acc += c; }
-    template <int count> float div() const { return acc / count; }
+    float _acc = 0.f;
+    void add(float c) { _acc += c; }
+    template <int count> float div() const { return _acc / count; }
   };
 
   template <>
-  struct accumulator<color_32f>
+  struct accumulator<rgb_32f>
   {
-    float r = 0.f; float g = 0.f; float b = 0.f;
-    void add(const color_32f & c) { r += c.r(); g += c.g(); b += c.b(); }
-    template <int count> color_32f div() const { return color_32f(r / count, g / count, b / count); }
+    float _r = 0.f; float _g = 0.f; float _b = 0.f;
+    void add(const rgb_32f & c) { _r += c._r; _g += c._g; _b += c._b; }
+    template <int count> rgb_32f div() const { return rgb_32f(_r / count, _g / count, _b / count); }
   };
 }
 
@@ -653,7 +690,7 @@ namespace ggo
 namespace ggo
 {
   template <int bit_shift, typename data_t>
-  ggo::color<data_t> fixed_point_div(const ggo::color<data_t> & c)
+  ggo::rgb<data_t> fixed_point_div(const ggo::rgb<data_t> & c)
   {
     using sample_t = typename ggo::color_traits<color<data_t>>::sample_t;
 
@@ -661,9 +698,9 @@ namespace ggo
     static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
 
     return ggo::color<data_t>(
-      ggo::fixed_point_div<bit_shift>(c.r()),
-      ggo::fixed_point_div<bit_shift>(c.g()),
-      ggo::fixed_point_div<bit_shift>(c.b()));
+      ggo::fixed_point_div<bit_shift>(c._r),
+      ggo::fixed_point_div<bit_shift>(c._g),
+      ggo::fixed_point_div<bit_shift>(c._b));
   }
 }
 
@@ -682,23 +719,23 @@ namespace ggo
   }
 
   template <typename fract_t>
-  color_8u linerp(color_8u color_a, color_8u color_b, const fract_t & weight_a)
+  rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, const fract_t & weight_a)
   {
     constexpr uint32_t one = 1 << fract_t::_log2_den;
 
     const uint32_t weight_b = one - weight_a._num;
 
     return {
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._r + weight_b * color_b._r)),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._g + weight_b * color_b._g)),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._b + weight_b * color_b._b)) };
   }
 
   template <typename fract_t>
-  alpha_color_8u linerp(alpha_color_8u color_a, alpha_color_8u color_b, const fract_t & weight_a)
+  rgba_8u linerp(rgba_8u color_a, rgba_8u color_b, const fract_t & weight_a)
   {
-    uint32_t w_a = weight_a * color_a.a();
-    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b.a(), 0xff);
+    uint32_t w_a = weight_a * color_a._a;
+    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b._a, 0xff);
 
     uint32_t a = w_a + w_b;
     if (a == 0)
@@ -706,9 +743,9 @@ namespace ggo
       return { 0, 0, 0, 0 };
     }
 
-    uint32_t r = ggo::round_div(w_a * color_a.r() + w_b * color_b.r(), a);
-    uint32_t g = ggo::round_div(w_a * color_a.g() + w_b * color_b.g(), a);
-    uint32_t b = ggo::round_div(w_a * color_a.b() + w_b * color_b.b(), a);
+    uint32_t r = ggo::round_div(w_a * color_a._r + w_b * color_b._r, a);
+    uint32_t g = ggo::round_div(w_a * color_a._g + w_b * color_b._g, a);
+    uint32_t b = ggo::round_div(w_a * color_a._b + w_b * color_b._b, a);
 
     return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
   }
@@ -723,15 +760,15 @@ namespace ggo
   }
 
   template <typename fract_t>
-  color_32f linerp(const color_32f & color_a, const color_32f & color_b, const fract_t & weight_a)
+  rgb_32f linerp(const rgb_32f & color_a, const rgb_32f & color_b, const fract_t & weight_a)
   {
     const float weight_a_32f = weight_a.to<float>();
     const float weight_b_32f = 1.f - weight_a_32f;
 
     return {
-      weight_a_32f * color_a.r() + weight_b_32f * color_b.r(),
-      weight_a_32f * color_a.g() + weight_b_32f * color_b.g(),
-      weight_a_32f * color_a.b() + weight_b_32f * color_b.b() };
+      weight_a_32f * color_a._r + weight_b_32f * color_b._r,
+      weight_a_32f * color_a._g + weight_b_32f * color_b._g,
+      weight_a_32f * color_a._b + weight_b_32f * color_b._b };
   }
 }
 
@@ -823,7 +860,7 @@ namespace ggo
 // Strings
 namespace ggo
 {
-  inline std::string to_hex(const ggo::color_8u & c)
+  inline std::string to_hex(const ggo::rgb_8u & c)
   {
     auto convert = [](uint8_t v)
     {
@@ -850,13 +887,13 @@ namespace ggo
     };
 
     std::ostringstream oss;
-    oss << convert((c.r() & 0xF0) >> 4) << convert(c.r() & 0x0F);
-    oss << convert((c.g() & 0xF0) >> 4) << convert(c.g() & 0x0F);
-    oss << convert((c.b() & 0xF0) >> 4) << convert(c.b() & 0x0F);
+    oss << convert((c._r & 0xF0) >> 4) << convert(c._r & 0x0F);
+    oss << convert((c._g & 0xF0) >> 4) << convert(c._g & 0x0F);
+    oss << convert((c._b & 0xF0) >> 4) << convert(c._b & 0x0F);
     return oss.str();
   }
 
-  inline ggo::color_8u from_hex(const std::string & s)
+  inline ggo::rgb_8u from_hex(const std::string & s)
   {
     if (s.size() != 6)
     {

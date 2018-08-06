@@ -19,14 +19,14 @@ artist(width, height, line_step, format)
 	val_curve.push_point(1, ggo::rand<float>(0, 0.25));
 	
   int i = 0;
-	for (ggo::color_8u & c : _palette)
+	for (ggo::rgb_8u & c : _palette)
 	{
 		float x = float(i) / _palette.size();
 		
 		float sat = sat_curve.evaluate(x);
 		float val = val_curve.evaluate(x);
 		
-		c = ggo::from_hsv<ggo::color_8u>(hue, sat, val);
+		c = ggo::from_hsv<ggo::rgb_8u>(hue, sat, val);
 
     ++i;
 	}
@@ -121,12 +121,12 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
         for (int i = 0; i < 16; ++i)
         {
           int index = std::min(static_cast<int>(_palette.size() - 1), iterations[i]);
-          r += _palette[index].r();
-          g += _palette[index].g();
-          b += _palette[index].b();
+          r += _palette[index]._r;
+          g += _palette[index]._g;
+          b += _palette[index]._b;
         }
 
-        ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
+        ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
         switch (format())
         {

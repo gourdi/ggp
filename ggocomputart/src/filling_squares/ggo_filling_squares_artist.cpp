@@ -50,7 +50,7 @@ std::vector<ggo::filling_squares_artist::multi_square> ggo::filling_squares_arti
 		colored_square._size = delta;
 		do
 		{
-			colored_square._color = ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>());
+			colored_square._color = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>());
 
 			// Store from largest to smallest square.
 			multi_square._squares.insert(multi_square._squares.begin(), colored_square);

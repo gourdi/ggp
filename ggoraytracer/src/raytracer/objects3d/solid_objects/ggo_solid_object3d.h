@@ -30,8 +30,8 @@ namespace ggo
     ggo::ray3d_float                  sample_ray(float random_variable1, float random_variable2) const override;
 
     // Volumetric object.
-    ggo::color_32f                    process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const;
-    ggo::color_32f                    process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const;
+    ggo::rgb_32f                      process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const;
+    ggo::rgb_32f                      process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const;
 
   protected:
 
@@ -143,7 +143,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////.
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f solid_object3d_abc<flags, shape_t>::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::color_32f & color) const
+  ggo::rgb_32f solid_object3d_abc<flags, shape_t>::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const
   {
     GGO_FAIL();
     return color;
@@ -151,7 +151,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////.
   template <uint32_t flags, typename shape_t>
-  ggo::color_32f solid_object3d_abc<flags, shape_t>::process_background_ray(const ggo::ray3d_float & ray, const ggo::color_32f & color) const
+  ggo::rgb_32f solid_object3d_abc<flags, shape_t>::process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const
   {
     GGO_FAIL();
     return color;

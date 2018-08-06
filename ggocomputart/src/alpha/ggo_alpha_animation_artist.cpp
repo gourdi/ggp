@@ -21,10 +21,10 @@ animation_artist_abc(width, height, line_step, format)
 
   add_new_item();
 
-  _bkgd_color1 = ggo::color_8u(ggo::rand<uint8_t>());
-  _bkgd_color2 = ggo::color_8u(ggo::rand<uint8_t>());
-  _bkgd_color3 = ggo::color_8u(ggo::rand<uint8_t>());
-  _bkgd_color4 = ggo::color_8u(ggo::rand<uint8_t>());
+  _bkgd_color1 = ggo::rgb_8u(ggo::rand<uint8_t>());
+  _bkgd_color2 = ggo::rgb_8u(ggo::rand<uint8_t>());
+  _bkgd_color3 = ggo::rgb_8u(ggo::rand<uint8_t>());
+  _bkgd_color4 = ggo::rgb_8u(ggo::rand<uint8_t>());
 }
 
 //////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
     multi_shape.add_shape(std::make_shared<ggo::capsule_float>(ggo::pos2f(x1, y1), ggo::pos2f(x2, y2), 0.001f * min_size));
   }
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer, width, height, 3 * width, multi_shape, ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(_opacity));
 }
 
@@ -209,7 +209,7 @@ ggo::alpha_animation_artist::item::item(const ggo::pos2f & center, float inner_r
 
   for (int i = 0; i < lines_count; ++i)
   {
-    ggo::color_8u color = from_hsv<ggo::color_8u>(hue, sat + ggo::rand<float>(-0.2f, 0.2f), val + ggo::rand<float>(-0.2f, 0.2f));
+    ggo::rgb_8u color = from_hsv<ggo::rgb_8u>(hue, sat + ggo::rand<float>(-0.2f, 0.2f), val + ggo::rand<float>(-0.2f, 0.2f));
 
     _lines.push_back(line(center, 2 * ggo::pi<float>() * i / lines_count, inner_radius, outter_radius, color));
   }
@@ -236,7 +236,7 @@ void ggo::alpha_animation_artist::item::draw(void * buffer, int width, int heigh
 // line
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::line::line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color_8u & color)
+ggo::alpha_animation_artist::line::line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color)
 {
   _center = center;
   _angle = angle;
@@ -308,7 +308,7 @@ void ggo::alpha_animation_artist::line::draw(void * buffer, int width, int heigh
 
     ggo::capsule_float capsule(_p1, _p2, line_width);
 
-    ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, width, height, 3 * width, capsule,
       ggo::make_solid_brush(_color),
       ggo::alpha_blender_rgb8u(_opacity));

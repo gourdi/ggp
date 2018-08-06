@@ -16,17 +16,17 @@ namespace ggo
 
     struct data_point
     {
-      ggo::vec<float, n_dim, geometry_t>  _pos;
-      data_t                              _data;
+      ggo::vec<float, n_dim>  _pos;
+      data_t                  _data;
     };
 
                             kdtree(const std::vector<data_point> & points);
 
-    std::vector<data_point> find_points(const ggo::vec<float, n_dim, geometry_t> & p, float radius) const;
+    std::vector<data_point> find_points(const ggo::vec<float, n_dim> & p, float radius) const;
 
   private:
 
-    void                    find_points_aux(const ggo::vec<float, n_dim, geometry_t> & p, float radius, float hypot, std::vector<data_point> & result) const;
+    void                    find_points_aux(const ggo::vec<float, n_dim> & p, float radius, float hypot, std::vector<data_point> & result) const;
 
   private:
 
@@ -96,7 +96,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int n_dim>
-  std::vector<typename ggo::kdtree<data_t, n_dim>::data_point> kdtree<data_t, n_dim>::find_points(const ggo::vec<float, n_dim, geometry_t> & p, float radius) const
+  std::vector<typename ggo::kdtree<data_t, n_dim>::data_point> kdtree<data_t, n_dim>::find_points(const ggo::vec<float, n_dim> & p, float radius) const
   {
     std::vector<data_point> result;
 
@@ -112,7 +112,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int n_dim>
-  void kdtree<data_t, n_dim>::find_points_aux(const ggo::vec<float, n_dim, geometry_t> & p, float radius, float hypot, std::vector<data_point> & result) const
+  void kdtree<data_t, n_dim>::find_points_aux(const ggo::vec<float, n_dim> & p, float radius, float hypot, std::vector<data_point> & result) const
   {
     // First check current point.
     if (ggo::hypot(_data_point._pos, p) < hypot)

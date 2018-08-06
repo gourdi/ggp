@@ -11,7 +11,7 @@ namespace
 {  
   using rex_edge = ggo::link<const ggo::pos2f *>;
 
-  using color_triangle_rgb8u = ggo::solid_color_triangle<float, ggo::color_8u>;
+  using color_triangle_rgb8u = ggo::solid_color_triangle<float, ggo::rgb_8u>;
 
   struct rex_pattern_triangle
   {
@@ -58,7 +58,7 @@ namespace
           clipped_disc.add_shape(std::make_shared<ggo::disc_float>(ggo::pos2f(x, y), radius));
           clipped_disc.add_shape(clip_triangle);
 
-          ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
+          ggo::paint<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
             clipped_disc, ggo::black_8u());
         }
       }
@@ -91,7 +91,7 @@ namespace
       clip_triangle.add_shape(std::make_shared<ggo::triangle2d_float>(disc_clip_triangle._v1, disc_clip_triangle._v2, disc_clip_triangle._v3));
       clip_triangle.add_shape(circles);
 
-      ggo::paint_shape<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
+      ggo::paint<format, ggo::sampling_8x8>(buffer, artist.width(), artist.height(), artist.line_step(),
         clip_triangle, ggo::black_8u());
     }
   }
@@ -100,7 +100,7 @@ namespace
   template <ggo::image_format format>
   void render_edges(void * buffer, const ggo::bitmap_artist_abc & artist, const std::vector<ggo::segment_float> & edges)
   {
-    std::vector<ggo::static_paint_shape<ggo::capsule_float, ggo::color_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u>> shapes;
 
     for (const auto & edge : edges)
     {
@@ -170,10 +170,10 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
   // Assign a colour to each vertex.
   float hue = ggo::rand<float>();
 
-  std::map<const ggo::pos2f *, ggo::color_32f> color_map;
+  std::map<const ggo::pos2f *, ggo::rgb_32f> color_map;
   for (const auto & v : vertices)
   {
-    color_map[&v] = ggo::from_hsv<ggo::color_32f>(hue, 1, ggo::rand<float>());
+    color_map[&v] = ggo::from_hsv<ggo::rgb_32f>(hue, 1, ggo::rand<float>());
   }
 
   // Fill the colour triangles and the edges.
@@ -205,19 +205,19 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
     }
 
     // Save the triangles.
-    ggo::color_32f color1 = color_map[triangle._v1];
-    ggo::color_32f color2 = color_map[triangle._v2];
-    ggo::color_32f color3 = color_map[triangle._v3];
+    ggo::rgb_32f color1 = color_map[triangle._v1];
+    ggo::rgb_32f color2 = color_map[triangle._v2];
+    ggo::rgb_32f color3 = color_map[triangle._v3];
 
     float random = ggo::rand<float>();
 
     if (random < 0.1)
     {
-      color1 = color2 = color3 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1, 1);
+      color1 = color2 = color3 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1, 1);
     }
     else if (random < 0.4)
     {
-      color1 = color2 = color3 = ggo::from_hsv<ggo::color_32f>(hue, 1, 1);
+      color1 = color2 = color3 = ggo::from_hsv<ggo::rgb_32f>(hue, 1, 1);
 
       rex_pattern_triangle pattern_triangle;
 
@@ -232,7 +232,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
     }
     else if (random < 0.5)
     {
-      color1 = color2 = color3 = ggo::from_hsv<ggo::color_32f>(hue, 1, 1);
+      color1 = color2 = color3 = ggo::from_hsv<ggo::rgb_32f>(hue, 1, 1);
 
       rex_disc_clip_triangle clip_triangle;
 

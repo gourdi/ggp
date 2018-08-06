@@ -77,9 +77,9 @@ ggo::array<float, 2> ggo::entabeni::create_grid(bool loop_x, bool loop_y)
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cubic_curve<float, ggo::color_32f> ggo::entabeni::create_color_map()
+ggo::cubic_curve<float, ggo::rgb_32f> ggo::entabeni::create_color_map()
 {
-  ggo::cubic_curve<float, ggo::color_32f> color_map;
+  ggo::cubic_curve<float, ggo::rgb_32f> color_map;
 
   float hue_inf = ggo::rand<float>();
   float hue_sup = hue_inf + 0.2f;
@@ -88,7 +88,7 @@ ggo::cubic_curve<float, ggo::color_32f> ggo::entabeni::create_color_map()
   float val = 1.25f;
   for (int i = 0; i < 10; ++i)
   {
-    color_map.push_point(altitude, ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(hue_inf, hue_sup), sat, val));
+    color_map.push_point(altitude, ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(hue_inf, hue_sup), sat, val));
     altitude += ggo::rand<float>(0.25f, 0.5f);
     sat += ggo::rand<float>(0.2f, 0.4f);
     val -= ggo::rand<float>(0.1f, 0.2f);
@@ -100,7 +100,7 @@ ggo::cubic_curve<float, ggo::color_32f> ggo::entabeni::create_color_map()
 //////////////////////////////////////////////////////////////
 void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
                                   const ggo::array<float, 2> & grid,
-                                  const ggo::cubic_curve<float, ggo::color_32f> & color_map,
+                                  const ggo::cubic_curve<float, ggo::rgb_32f> & color_map,
                                   float z,
                                   float angle)
 {
@@ -122,7 +122,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     return std::make_tuple(pos3d, proj);
   };
 
-  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::color_8u>> shapes;
+  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u>> shapes;
 
   auto paint_triangle = [&](const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3)
   {
@@ -145,7 +145,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     
     float altitude = ggo::hypot(center.get<0>(), center.get<1>());
 
-    ggo::color_8u triangle_color = ggo::convert_color_to<ggo::color_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black<ggo::color_32f>()));
+    ggo::rgb_8u triangle_color = ggo::convert_color_to<ggo::rgb_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black_32f()));
     ggo::triangle2d_float triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
     shapes.emplace_back(triangle, triangle_color);
   };

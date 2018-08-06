@@ -8,11 +8,11 @@
 
 namespace
 {
-  ggo::color_8u sub_blend(ggo::color_8u bkgd_color, ggo::color_8u brush_color)
+  ggo::rgb_8u sub_blend(ggo::rgb_8u bkgd_color, ggo::rgb_8u brush_color)
   {
-    int r = static_cast<int>(bkgd_color.r()) - static_cast<int>(brush_color.r());
-    int g = static_cast<int>(bkgd_color.g()) - static_cast<int>(brush_color.g());
-    int b = static_cast<int>(bkgd_color.b()) - static_cast<int>(brush_color.b());
+    int r = static_cast<int>(bkgd_color._r) - static_cast<int>(brush_color._r);
+    int g = static_cast<int>(bkgd_color._g) - static_cast<int>(brush_color._g);
+    int b = static_cast<int>(bkgd_color._b) - static_cast<int>(brush_color._b);
 
     return {
       static_cast<uint8_t>(std::max(0, r)),

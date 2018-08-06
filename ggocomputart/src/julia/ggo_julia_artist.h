@@ -23,7 +23,7 @@ namespace ggo
 
   private:
 
-    std::array<ggo::color_8u, 1000>	_palette;
+    std::array<ggo::rgb_8u, 1000>	_palette;
   };
 }
 

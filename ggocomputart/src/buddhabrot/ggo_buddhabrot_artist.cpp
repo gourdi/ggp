@@ -123,7 +123,7 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 //////////////////////////////////////////////////////////////
 void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 {
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black<ggo::color_8u>(), ggo::rect_int::from_width_height(width(), height()));
+	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black_8u(), ggo::rect_int::from_width_height(width(), height()));
 
   ggo::array<int, 2> accumulation_r(width(), height());
   ggo::array<int, 2> accumulation_g(width(), height());

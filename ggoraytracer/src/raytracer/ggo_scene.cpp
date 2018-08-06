@@ -12,7 +12,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  point_light & scene::add_point_light(const ggo::color_32f & color, const ggo::pos3f & pos)
+  point_light & scene::add_point_light(const ggo::rgb_32f & color, const ggo::pos3f & pos)
   {
     auto light = std::make_shared<point_light>(pos, color);
 

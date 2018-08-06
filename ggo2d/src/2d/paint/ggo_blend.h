@@ -12,35 +12,39 @@ namespace ggo
   template <typename bkgd_color_t, typename brush_color_t>
   bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
   {
-    //static_assert(ggo::color_traits<brush_color_t>::has_alpha == false);
-    GGO_ASSERT(ggo::color_traits<brush_color_t>::has_alpha == false); // Until all the functions are implemented...
+    if constexpr(color_traits<brush_color_t>::has_alpha == false)
+    {
+      return ggo::convert_color_to<bkgd_color_t>(brush_color);
+    }
+    else
+    {
+      static_assert(std::is_same<bkgd_color_t, brush_color_t>::value == true);
+      static_assert(ggo::color_traits<bkgd_color_t>::has_alpha == true);
+      static_assert(ggo::color_traits<brush_color_t>::has_alpha == true);
 
-    return ggo::convert_color_to<bkgd_color_t>(brush_color);
+      return linerp(brush_color, bkgd_color, one_log2_fract);
+    }
   }
 
-  inline ggo::color_8u alpha_blend(const ggo::color_8u & bkgd_color, const ggo::alpha_color_8u & brush_color)
+  template <>
+  inline ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgba_8u & brush_color)
   {
-    uint8_t inv_opacity = 0xff - brush_color.a();
+    uint8_t inv_opacity = 0xff - brush_color._a;
 
-    return ggo::color_8u(
-      ggo::round_div(brush_color.a() * brush_color.r() + inv_opacity * bkgd_color.r(), 0xff),
-      ggo::round_div(brush_color.a() * brush_color.g() + inv_opacity * bkgd_color.g(), 0xff),
-      ggo::round_div(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
-  }
-
-  inline ggo::alpha_color_8u alpha_blend(const ggo::alpha_color_8u & bkgd_color, const ggo::alpha_color_8u & brush_color)
-  {
-    return linerp(brush_color, bkgd_color, one_log2_fract);
+    return ggo::rgb_8u(
+      ggo::round_div(brush_color._a * brush_color._r + inv_opacity * bkgd_color._r, 0xff),
+      ggo::round_div(brush_color._a * brush_color._g + inv_opacity * bkgd_color._g, 0xff),
+      ggo::round_div(brush_color._a * brush_color._b + inv_opacity * bkgd_color._b, 0xff));
   }
 
   template <typename real_t>
-  ggo::color_8u alpha_blend(const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color, real_t opacity)
+  ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgb_8u & brush_color, real_t opacity)
   {
     static_assert(std::is_floating_point<real_t>::value);
 
-    uint8_t opacity_8u = ggo::round_to<uint8_t>(ggo::clamp(opacity, 0.f, 1.f) * 0xff);
+    uint32_t opacity_uint = ggo::round_to<uint32_t>(ggo::clamp<real_t>(opacity, 0., 1.) * 0x100u);
 
-    alpha_blend(bkgd_color, brush_color, opacity_8u);
+    return linerp(brush_color, bkgd_color, ggo::log2_fract<8>(opacity_uint));
   }
 
   // Structs.
@@ -87,7 +91,7 @@ namespace ggo
   };
 
   template <>
-  struct alpha_blender<ggo::color_8u>
+  struct alpha_blender<ggo::rgb_8u>
   {
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
@@ -101,22 +105,22 @@ namespace ggo
       _inv_opacity(ggo::round_to<uint32_t>((1.f - opacity) * one))
     {}
 
-    color_8u operator()(int x, int y, const color_8u & bkgd_color, const color_8u & brush_color) const
+    rgb_8u operator()(int x, int y, const rgb_8u & bkgd_color, const rgb_8u & brush_color) const
     {
       return {
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.r() + _opacity * brush_color.r())),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.g() + _opacity * brush_color.g())),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.b() + _opacity * brush_color.b())) };
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._r + _opacity * brush_color._r)),
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._g + _opacity * brush_color._g)),
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._b + _opacity * brush_color._b)) };
     }
 
-    color_8u operator()(const color_8u & bkgd_color, const color_8u & brush_color) const
+    rgb_8u operator()(const rgb_8u & bkgd_color, const rgb_8u & brush_color) const
     {
       return operator()(0, 0, bkgd_color, brush_color);
     }
   };
 
   template <>
-  struct alpha_blender<ggo::alpha_color_8u>
+  struct alpha_blender<ggo::rgba_8u>
   {
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
@@ -128,22 +132,22 @@ namespace ggo
     _opacity(ggo::round_to<uint32_t>(opacity * one))
     {}
 
-    alpha_color_8u operator()(int x, int y, const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
+    rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
     {
       return linerp(brush_color, bkgd_color, ggo::log2_fract<bit_shift>(_opacity));
     }
 
-    alpha_color_8u operator()(const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
+    rgba_8u operator()(const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
     {
       return operator()(0, 0, bkgd_color, brush_color);
     }
   };
 
   using alpha_blender_y8u = ggo::alpha_blender<uint8_t>;
-  using alpha_blender_rgb8u = ggo::alpha_blender<color_8u>;
-  using alpha_blender_rgba8u = ggo::alpha_blender<alpha_color_8u>;
+  using alpha_blender_rgb8u = ggo::alpha_blender<rgb_8u>;
+  using alpha_blender_rgba8u = ggo::alpha_blender<rgba_8u>;
   using alpha_blender_y32f = ggo::alpha_blender<float>;
-  using alpha_blender_rgb32f = ggo::alpha_blender<color_32f>;
+  using alpha_blender_rgb32f = ggo::alpha_blender<rgb_32f>;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -163,9 +167,9 @@ namespace ggo
   };
 
   template <>
-  struct overwrite_blender<alpha_color_8u, alpha_color_8u>
+  struct overwrite_blender<rgba_8u, rgba_8u>
   {
-    alpha_color_8u operator()(int x, int y, const alpha_color_8u & bkgd_color, const alpha_color_8u & brush_color) const
+    rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
     {
       return alpha_blend(bkgd_color, brush_color);
     }
@@ -184,12 +188,12 @@ namespace ggo
   }
 
   inline
-  ggo::color_8u add_blend(const ggo::color_8u & bkgd_color, const ggo::color_8u & brush_color)
+  ggo::rgb_8u add_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgb_8u & brush_color)
   {
     return {
-      add_blend(bkgd_color.r(), brush_color.r()),
-      add_blend(bkgd_color.g(), brush_color.g()),
-      add_blend(bkgd_color.b(), brush_color.b()) };
+      add_blend(bkgd_color._r, brush_color._r),
+      add_blend(bkgd_color._g, brush_color._g),
+      add_blend(bkgd_color._b, brush_color._b) };
   }
 
   inline
@@ -199,12 +203,12 @@ namespace ggo
   }
 
   inline
-  color_32f add_blend(const color_32f & bkgd_color, const color_32f & brush_color)
+  rgb_32f add_blend(const rgb_32f & bkgd_color, const rgb_32f & brush_color)
   {
     return {
-      add_blend(bkgd_color.r(), brush_color.r()),
-      add_blend(bkgd_color.g(), brush_color.g()),
-      add_blend(bkgd_color.b(), brush_color.b()) };
+      add_blend(bkgd_color._r, brush_color._r),
+      add_blend(bkgd_color._g, brush_color._g),
+      add_blend(bkgd_color._b, brush_color._b) };
   }
 
   // Structs.

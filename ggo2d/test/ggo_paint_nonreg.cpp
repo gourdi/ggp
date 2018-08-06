@@ -22,7 +22,7 @@ GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)
 {
   std::vector<uint8_t> buffer(10 * 11, 0);
 
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_1>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), 0xff);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_1>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), 0xff);
 
   const std::vector<uint8_t> expected{
     0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	0x00,
@@ -56,7 +56,7 @@ GGO_TEST(paint, shape_y_8u_yu_add_sampling1)
   ggo::solid_color_brush<uint8_t> brush(0xff);
   ggo::add_blender<uint8_t, uint8_t> blender;
 
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_1>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), brush, blender);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_1>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), brush, blender);
 
   const std::vector<uint8_t> expected{
     0x80, 0x80, 0xff, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80,	0x80,
@@ -78,7 +78,7 @@ GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling4x4)
 {
   std::vector<uint8_t> buffer(10 * 11, 0);
 
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), 0xff);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f), 0xff);
 
   const std::vector<uint8_t> expected{
     0x00, 0x50, 0x80, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -100,7 +100,7 @@ GGO_TEST(paint, shape_y_8u_yu_alpha_sampling4x4)
 {
   std::vector<uint8_t> buffer(10 * 11, 0);
 
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f),
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(buffer.data(), 10, 10, 11, ggo::disc_float({ 2.5f, 3.5f }, 3.f),
     ggo::solid_color_brush<uint8_t>(0xff), ggo::alpha_blender_y8u(0.5f));
 
   const std::vector<uint8_t> expected{
@@ -123,7 +123,7 @@ GGO_TEST(paint, shape_y_8u_yu_sampling16x16)
 {
   std::vector<uint8_t> buffer(6 * 6, 0);
 
-  ggo::paint_shape<ggo::y_8u_yu, ggo::sampling_16x16>(buffer.data(), 6, 6, 6, ggo::disc_float({ 3.f, 3.f }, 2.5f), 0xff);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_16x16>(buffer.data(), 6, 6, 6, ggo::disc_float({ 3.f, 3.f }, 2.5f), 0xff);
 
   const std::vector<uint8_t> expected{
     0x00, 0x13, 0x6f, 0x6f, 0x13, 0x00,
@@ -146,8 +146,8 @@ GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
 
   const ggo::disc_float disc({ 35.f, 25.f }, 15.f);
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rgb_8u_yu.data(), width, height, 3 * width, disc, ggo::green_8u());
-  ggo::paint_shape<ggo::bgr_8u_yd, ggo::sampling_4x4>(buffer_bgr_8u_yd.data(), width, height, 4 * width, disc, ggo::green_8u());
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rgb_8u_yu.data(), width, height, 3 * width, disc, ggo::green_8u());
+  ggo::paint<ggo::bgr_8u_yd, ggo::sampling_4x4>(buffer_bgr_8u_yd.data(), width, height, 4 * width, disc, ggo::green_8u());
 
   for (int y = 0; y < height; ++y)
   {
@@ -168,7 +168,7 @@ GGO_TEST(paint, polygons_rectangles)
   const int line_step = 3 * width;
 
   // Paint polygons.
-  using paint_polygon = ggo::solid_color_shape<ggo::polygon2d_float, ggo::color_8u>;
+  using paint_polygon = ggo::static_paint_shape<ggo::polygon2d_float, ggo::rgb_8u>;
   const paint_polygon polygon1({ { 10, 10 },{ 50, 10 },{ 50, 90 },{ 10, 90 } }, ggo::white_8u());
   const paint_polygon polygon2({ { 90, 10 },{ 50, 10 },{ 50, 90 },{ 90, 90 } }, ggo::white_8u());
 
@@ -181,7 +181,7 @@ GGO_TEST(paint, polygons_rectangles)
   ggo::save_bmp("paint_polygons.bmp", buffer_polygons.data(), ggo::rgb_8u_yu, width, height, line_step);
 
   // Paint rectangles.
-  using paint_rect = ggo::solid_color_shape<ggo::rect_float, ggo::color_8u>;
+  using paint_rect = ggo::static_paint_shape<ggo::rect_float, ggo::rgb_8u>;
   const paint_rect rect1(ggo::rect_float::from_left_right_bottom_top(10, 50, 10, 90), ggo::white_8u());
   const paint_rect rect2(ggo::rect_float::from_left_right_bottom_top(50, 90, 10, 90), ggo::white_8u());
 
@@ -205,7 +205,7 @@ GGO_TEST(paint, y_32f_yu)
 
   std::vector<float> buffer(width * height, 0.1f);
 
-  ggo::paint_shape<ggo::y_32f_yu, ggo::sampling_4x4>(buffer.data(), width, height, width * sizeof(float),
+  ggo::paint<ggo::y_32f_yu, ggo::sampling_4x4>(buffer.data(), width, height, width * sizeof(float),
     ggo::disc_float({ 0.25f * width, 0.25f * height }, 20.f),
     ggo::solid_color_brush<float>(1.f), ggo::alpha_blender_y32f(0.8f));
 
@@ -220,7 +220,7 @@ GGO_TEST(paint, extended_segment_8x8_sampling)
 
   std::vector<uint8_t> buffer(3 * width * height, 255);
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), width, height, 3 * width, 
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), width, height, 3 * width, 
     ggo::capsule_float({ 10.f, 10.f }, { 50.f, 15.f }, 5.f), ggo::red_8u());
 
   ggo::save_bmp("paint_extended_segment.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
@@ -238,57 +238,9 @@ GGO_TEST(paint, difference)
 
   ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, shape, ggo::yellow_8u());
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, shape, ggo::yellow_8u());
 
   ggo::save_bmp("paint_difference.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
-}
-
-////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, color_triangle)
-{
-  const int width = 120;
-  const int height = 100;
-
-  using color_triangle_t = ggo::solid_color_triangle<float, ggo::color_8u>;
-
-  const color_triangle_t triangle1({ { 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f());
-  const color_triangle_t triangle2({ triangle1._triangle.v1(), { 50.f, 90.f }, triangle1._triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f());
-
-  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
-
-  ggo::array_8u buffer(3 * width * height);
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
-
-  ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
-}
-
-////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, alpha_color_triangle)
-{
-  const int width = 120;
-  const int height = 100;
-
-  using color_triangle_t = ggo::alpha_color_triangle<float, ggo::color_8u>;
-  using brush_color_t = color_triangle_t::brush_color_t;
-
-  const color_triangle_t triangle1({ { 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f } },
-    brush_color_t(0.f, 1.f, 0.f, 1.f),
-    brush_color_t(0.f, 1.f, 0.f, 0.75f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f));
-
-  const color_triangle_t triangle2({ triangle1._triangle.v1(), { 50.f, 90.f }, triangle1._triangle.v3() },
-    brush_color_t(0.f, 1.f, 0.f, 1.f),
-    brush_color_t(0.f, 1.f, 0.f, 0.25f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f));
-
-  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
-
-  ggo::array_8u buffer(3 * width * height);
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
-
-  ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -301,7 +253,7 @@ GGO_TEST(paint, blur)
 
   auto paint_pixel = [&](int x, int y, int samples_count, int samples_sup)
   {
-    ggo::color_8u c(uint8_t(ggo::round_div(samples_count * 0xff, samples_sup)), uint8_t(0x00), uint8_t(0x00));
+    ggo::rgb_8u c(uint8_t(ggo::round_div(samples_count * 0xff, samples_sup)), uint8_t(0x00), uint8_t(0x00));
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), x, y, height, 3 * width, c);
   };
 
@@ -334,14 +286,14 @@ GGO_TEST(paint, gradient)
   std::vector<uint8_t> buffer(line_step * height, 0);
 
   ggo::pos2f center(40.f, 50.f);
-  ggo::gradient_brush<ggo::color_8u> brush(center, { 2.f, 1.f });
+  ggo::gradient_brush<ggo::rgb_8u> brush(center, { 2.f, 1.f });
   brush.push_color(-20.f, ggo::yellow_8u());
   brush.push_color(  0.f, ggo::blue_8u());
   brush.push_color( 20.f, ggo::green_8u());
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float(center, 35.f),
-    brush, ggo::overwrite_blender<ggo::color_8u, ggo::color_8u>());
+    brush, ggo::overwrite_blender<ggo::rgb_8u, ggo::rgb_8u>());
 
   ggo::save_bmp("paint_gradient.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
@@ -355,14 +307,14 @@ GGO_TEST(paint, clipping)
 
   std::vector<uint8_t> buffer(line_step * height, 0);
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float({ 70.f, 40.f }, 35.f),
-    ggo::make_solid_brush<ggo::color_8u>(ggo::red_8u()), ggo::overwrite_blender<ggo::color_8u, ggo::color_8u>(),
+    ggo::make_solid_brush<ggo::rgb_8u>(ggo::red_8u()), ggo::overwrite_blender<ggo::rgb_8u, ggo::rgb_8u>(),
     ggo::rect_int::from_left_right_bottom_top(0, width / 2, 0, height - 1), 8, 2);
 
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step, ggo::disc_float({ 70.f, 60.f }, 35.f),
-    ggo::make_solid_brush<ggo::color_8u>(ggo::blue_8u()), ggo::overwrite_blender<ggo::color_8u, ggo::color_8u>(),
+    ggo::make_solid_brush<ggo::rgb_8u>(ggo::blue_8u()), ggo::overwrite_blender<ggo::rgb_8u, ggo::rgb_8u>(),
     ggo::rect_int::from_left_right_bottom_top(width / 2 + 1, width - 1, 0, height - 1), 8, 2);
 
   ggo::save_bmp("paint_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
@@ -378,11 +330,11 @@ GGO_TEST(paint, rgba8)
 
   std::vector<uint8_t> buffer_argb(line_step_argb * height, 0);
 
-  ggo::paint_shape<ggo::rgba_8u_yd, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgba_8u_yd, ggo::sampling_4x4>(
     buffer_argb.data(), width, height, line_step_argb, ggo::disc_float({ 70.f, 40.f }, 35.f),
     { 0xff, 0x00, 0x00, 0xff });
 
-  ggo::paint_shape<ggo::rgba_8u_yd, ggo::sampling_4x4>(
+  ggo::paint<ggo::rgba_8u_yd, ggo::sampling_4x4>(
     buffer_argb.data(), width, height, line_step_argb, ggo::disc_float({ 70.f, 60.f }, 35.f),
     { 0x00, 0x00, 0xff, 0xff }, 0.5f);
 
@@ -403,12 +355,12 @@ GGO_TEST(paint, rgba8_multishape)
 
   std::vector<uint8_t> buffer_argb(line_step_argb * height, 0);
 
-  using paint_disc = ggo::solid_color_shape<ggo::disc_float, ggo::alpha_color_8u>;
+  using paint_disc = ggo::static_paint_shape<ggo::disc_float, ggo::rgba_8u>;
   std::vector<paint_disc> paints_discs;
 
   for (int i = 0; i < 512; ++i)
   {
-    paints_discs.emplace_back(ggo::disc_float({ 0.5f * width + 0.01f * i, 0.5f * height }, 5.f), ggo::alpha_color_8u(255, 0, 0, 255));
+    paints_discs.emplace_back(ggo::disc_float({ 0.5f * width + 0.01f * i, 0.5f * height }, 5.f), ggo::rgba_8u(255, 0, 0, 255));
   }
   ggo::paint_shapes<ggo::rgba_8u_yd, ggo::sampling_8x8>(buffer_argb.data(), width, height, line_step_argb, paints_discs);
 

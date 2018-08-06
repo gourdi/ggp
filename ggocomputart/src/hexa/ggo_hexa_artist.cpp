@@ -16,7 +16,7 @@ namespace
   template <uint32_t border_flags>
   void create_hexa(
     float x, float y,
-    const ggo::color_32f & top_color, const ggo::color_32f & side_color,
+    const ggo::rgb_32f & top_color, const ggo::rgb_32f & side_color,
     const std::vector<ggo::hexa_artist::sinusoid> & sinusoids, 
     float progress,
     ggo::scene & scene)
@@ -69,7 +69,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void create_hexas(const ggo::color_32f & top_color, const ggo::color_32f & side_color, const std::vector<ggo::hexa_artist::sinusoid> & sinusoids, float progress, bool enable_roughness, ggo::scene & scene)
+  void create_hexas(const ggo::rgb_32f & top_color, const ggo::rgb_32f & side_color, const std::vector<ggo::hexa_artist::sinusoid> & sinusoids, float progress, bool enable_roughness, ggo::scene & scene)
   {
     const int range = ggo::round_to<int>(radius);
     for (int x = -range; x < range; ++x)
@@ -133,12 +133,12 @@ _enable_roughness(enable_roughness)
     printf("%f %f\n", amplitude, wave_length);
   }
 
-  _back_color = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), 1.f, 1.f);
+  _back_color = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), 1.f, 1.f);
 
   float grayscale = ggo::rand<float>(0.6f, 0.9f);
-  _side_color = ggo::color_32f(grayscale, grayscale, grayscale);
+  _side_color = ggo::rgb_32f(grayscale, grayscale, grayscale);
   grayscale += 0.5f * (1.f - grayscale);
-  _top_color = ggo::color_32f(grayscale, grayscale, grayscale);
+  _top_color = ggo::rgb_32f(grayscale, grayscale, grayscale);
 
   _camera_angle_start = ggo::rand<float>(-0.4f, 0.4f);
   _camera_angle_end = ggo::rand<float>(-0.4f, 0.4f);
@@ -155,7 +155,7 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
   create_hexas(_top_color, _side_color, _sinusoids, progress, _enable_roughness, scene);
 
   // Add lights to scene.
-  scene.add_sphere_light(ggo::white<ggo::color_32f>(), { 0.f, -1000.f, 1000.f }, 100.f);
+  scene.add_sphere_light(ggo::white<ggo::rgb_32f>(), { 0.f, -1000.f, 1000.f }, 100.f);
 
   // Raytracer parameters.
   ggo::octree_raycaster raycaster(scene.solid_objects(), 4);

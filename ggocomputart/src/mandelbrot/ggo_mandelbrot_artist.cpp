@@ -14,12 +14,12 @@ namespace
   };
 
   //////////////////////////////////////////////////////////////
-  std::array<ggo::color_8u, 1000> setup_palette()
+  std::array<ggo::rgb_8u, 1000> setup_palette()
   {
     float hue_start = ggo::rand<float>();
     float hue_end = hue_start + ggo::rand<float>(0.5, 1);
 
-    std::array<ggo::color_8u, 1000> palette;
+    std::array<ggo::rgb_8u, 1000> palette;
 
     ggo::linear_curve_float sat_curve;
     sat_curve.push_point(0, 0);
@@ -39,7 +39,7 @@ namespace
       float sat = sat_curve.evaluate(x);
       float val = val_curve.evaluate(x);
 
-      color = ggo::from_hsv<ggo::color_8u>(hue, sat, val);
+      color = ggo::from_hsv<ggo::rgb_8u>(hue, sat, val);
 
       ++i;
     }
@@ -230,12 +230,12 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 				for (int i = 0; i < 16; ++i)
 				{
 					int index = std::min(static_cast<int>(palette.size() - 1), iterations[i]);
-					r += palette[index].r();
-          g += palette[index].g();
-          b += palette[index].b();
+					r += palette[index]._r;
+          g += palette[index]._g;
+          b += palette[index]._b;
 				}
 
-        ggo::color_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
+        ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
         switch (format())
         {

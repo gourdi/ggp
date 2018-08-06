@@ -42,7 +42,7 @@ namespace ggo
 
       ggo_vertical_offset_interpolator  _vertical_offset_interpolator;
       ggo::pos2f                        _pos;
-      ggo::color_8u                     _color;
+      ggo::rgb_8u                       _color;
       float                             _angle = 0.f;
       float                             _dist = 0.f;
     };

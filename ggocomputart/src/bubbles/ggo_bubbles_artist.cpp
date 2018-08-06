@@ -15,7 +15,7 @@ bitmap_artist_abc(width, height, line_step, format)
 void ggo::bubbles_artist::render_bitmap(void * buffer) const
 {
   // Render background.
-	ggo::linear_curve<float, ggo::color_32f> bkgd_gradient;
+	ggo::linear_curve<float, ggo::rgb_32f> bkgd_gradient;
   bkgd_gradient.push_point(0, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
   bkgd_gradient.push_point(1, { ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>() });
   switch (format())
@@ -35,17 +35,17 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
   for (int i = 0; i < bubbles_count; ++i)
   {
     // Init.
-    float dx			    = ggo::rand<float>(-0.01f, 0.01f) * min_size();
-    float dy			    = ggo::rand<float>(0.03f, 0.06f) * min_size();
-    float wavelength	= ggo::rand<float>(5.f, 10.f) * min_size();
-    float amplitude	  = ggo::rand<float>(0.01f, 0.02f) * min_size();
+    float dx			    = ggo::rand(-0.01f, 0.01f) * min_size();
+    float dy			    = ggo::rand(0.03f, 0.06f) * min_size();
+    float wavelength	= ggo::rand(5.f, 10.f) * min_size();
+    float amplitude	  = ggo::rand(0.01f, 0.02f) * min_size();
     
     auto generate_color = []()
     {
-      return ggo::color_32f(ggo::rand<float>(-0.1f, 0.1f), ggo::rand<float>(-0.1f, 0.1f), ggo::rand<float>(-0.1f, 0.1f));
+      return ggo::rgb_32f(ggo::rand(-0.1f, 0.1f), ggo::rand(-0.1f, 0.1f), ggo::rand(-0.1f, 0.1f));
     };
 
-    ggo::linear_curve<float, ggo::color_32f> curve;
+    ggo::linear_curve<float, ggo::rgb_32f> curve;
     curve.push_point(0.0f * height(), generate_color());
     curve.push_point(0.5f * height(), generate_color());
     curve.push_point(1.0f * height(), generate_color());
@@ -61,18 +61,18 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
       bubble.center().get<1>() += dy;
       
       auto brush = [&](int x, int y) { return curve.evaluate(bubble.center().get<0>()); };
-      auto blend = [&](int x, int y, const color_8u & bkgd_color, const color_32f & brush_color) {
-        const color_32f bkgd_color_32f = convert_color_to<color_32f>(bkgd_color);
-        return convert_color_to<color_8u>(bkgd_color_32f + brush_color);
+      auto blend = [&](int x, int y, const rgb_8u & bkgd_color, const rgb_32f & brush_color) {
+        const rgb_32f bkgd_color_32f = convert_color_to<rgb_32f>(bkgd_color);
+        return convert_color_to<rgb_8u>(bkgd_color_32f + brush_color);
       };
 
       switch (format())
       {
       case ggo::rgb_8u_yu:
-        paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
+        paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       case ggo::bgrx_8u_yd:
-        paint_shape<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
+        paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       default:
         GGO_FAIL();

@@ -32,32 +32,32 @@ namespace ggo
   };
 
   template <>
-  struct mean_box_blur2d_helper<ggo::color_8u>
+  struct mean_box_blur2d_helper<ggo::rgb_8u>
   {
-    using color_t = ggo::color_16u;
+    using color_t = ggo::rgb_16u;
 
-    static ggo::color_16u divide(const color_16u c, const int div)
+    static ggo::rgb_16u divide(const rgb_16u c, const int div)
     {
-      return ggo::color_16u(
-        ggo::round_div(c.r(), static_cast<uint16_t>(div)),
-        ggo::round_div(c.g(), static_cast<uint16_t>(div)),
-        ggo::round_div(c.b(), static_cast<uint16_t>(div)));
+      return ggo::rgb_16u(
+        ggo::round_div(c._r, static_cast<uint16_t>(div)),
+        ggo::round_div(c._g, static_cast<uint16_t>(div)),
+        ggo::round_div(c._b, static_cast<uint16_t>(div)));
     }
 
-    static ggo::color_16u convert(const ggo::color_8u & c)
+    static ggo::rgb_16u convert(const ggo::rgb_8u & c)
     {
-      return ggo::color_16u(
-        static_cast<uint16_t>(c.r()),
-        static_cast<uint16_t>(c.g()),
-        static_cast<uint16_t>(c.b()));
+      return ggo::rgb_16u(
+        static_cast<uint16_t>(c._r),
+        static_cast<uint16_t>(c._g),
+        static_cast<uint16_t>(c._b));
     }
 
-    static ggo::color_8u convert(const ggo::color_16u & c)
+    static ggo::rgb_8u convert(const ggo::rgb_16u & c)
     {
-      return ggo::color_8u(
-        static_cast<uint8_t>(c.r()),
-        static_cast<uint8_t>(c.g()),
-        static_cast<uint8_t>(c.b()));
+      return ggo::rgb_8u(
+        static_cast<uint8_t>(c._r),
+        static_cast<uint8_t>(c._g),
+        static_cast<uint8_t>(c._b));
     }
   };
 

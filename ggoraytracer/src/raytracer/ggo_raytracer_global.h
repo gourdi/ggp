@@ -22,10 +22,10 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct light_sample
   {
-    light_sample(const ggo::ray3d_float &ray_to_light, const ggo::color_32f & color) : _ray_to_light(ray_to_light), _color(color) {}
+    light_sample(const ggo::ray3d_float &ray_to_light, const ggo::rgb_32f & color) : _ray_to_light(ray_to_light), _color(color) {}
 
     ggo::ray3d_float  _ray_to_light;
-    ggo::color_32f    _color;
+    ggo::rgb_32f      _color;
   };
 
   //////////////////////////////////////////////////////////////

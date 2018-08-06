@@ -26,6 +26,9 @@ namespace ggo
     case PNG_FORMAT_RGBA:
       format = ggo::rgba_8u_yd;
       break;
+    case PNG_FORMAT_GA:
+      format = ggo::ya_8u_yd;
+      break;
     default:
       throw std::runtime_error("unsupported image format");
     }

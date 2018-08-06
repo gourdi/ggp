@@ -8,10 +8,10 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format)
 {
   const int vortices_count = 20;
 
-  _params._color1 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-  _params._color2 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-  _params._color3 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
-  _params._color4 = ggo::from_hsv<ggo::color_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+  _params._color1 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+  _params._color2 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+  _params._color3 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
+  _params._color4 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
   _params._split_horz = ggo::rand<float>(0.4f * width, 0.6f * width);
   _params._split_vert = ggo::rand<float>(0.4f * height, 0.6f * height);
 

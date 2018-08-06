@@ -13,29 +13,29 @@ namespace ggo
     
                       global_sampling_render_task(ggo::multi_sampling_camera_abc & camera) : _camera(camera) {}
 
-      ggo::color_32f  render_pixel(int x, int y,
-                                   const ggo::scene & scene,
-                                   int depth,
-                                   const ggo::raycaster_abc & raycaster,
-                                   const ggo::indirect_lighting_abc * indirect_lighting) const override;
+      ggo::rgb_32f  render_pixel(int x, int y,
+                                 const ggo::scene & scene,
+                                 int depth,
+                                 const ggo::raycaster_abc & raycaster,
+                                 const ggo::indirect_lighting_abc * indirect_lighting) const override;
 
       int                                     _samples_count;
       const ggo::multi_sampling_camera_abc &  _camera;
   };
   
   //////////////////////////////////////////////////////////////
-  ggo::color_32f global_sampling_render_task::render_pixel(int x, int y,
-                                                           const ggo::scene & scene,
-                                                           int depth,
-                                                           const ggo::raycaster_abc & raycaster,
-                                                           const ggo::indirect_lighting_abc * indirect_lighting) const
+  ggo::rgb_32f global_sampling_render_task::render_pixel(int x, int y,
+                                                         const ggo::scene & scene,
+                                                         int depth,
+                                                         const ggo::raycaster_abc & raycaster,
+                                                         const ggo::indirect_lighting_abc * indirect_lighting) const
   {
     // Get camera rays (which are already shuffled).
     auto camera_rays = _camera.get_rays(x, y, _samples_count);
     GGO_ASSERT(camera_rays.size() >= _samples_count);
 
     // Proceed.
-    ggo::color_32f color(ggo::black<ggo::color_32f>());
+    ggo::rgb_32f color(ggo::black_32f());
     ggo::raytracer raytracer(scene, raycaster);
     
     auto uniform_samples2d = best_candidate_table.data() + ggo::rand(size_t(0), best_candidate_table.size() / 2);

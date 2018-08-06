@@ -21,7 +21,7 @@ ggo::rah_animation_artist::particle::particle(int width, int height, float focus
   float total_radius = disc_radius(min_size) + blur_radius(min_size, focus_dist);
   _pos.x() = -total_radius;
   _pos.y() = ggo::rand<float>(0, static_cast<float>(height));
-  _color = ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), 1, 1);
+  _color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1, 1);
 }
 
 //////////////////////////////////////////////////////////////
@@ -56,13 +56,13 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   // Paint background first.
   auto paint_border_pixel_func = [&](int x, int y, int num, int den)
   {
-    ggo::color_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+    ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
 
-    uint8_t r = ggo::round_div((den - num) * pixel.r(), den);
-    uint8_t g = ggo::round_div((den - num) * pixel.g(), den);
-    uint8_t b = ggo::round_div((den - num) * pixel.b(), den);
+    uint8_t r = ggo::round_div((den - num) * pixel._r, den);
+    uint8_t g = ggo::round_div((den - num) * pixel._g, den);
+    uint8_t b = ggo::round_div((den - num) * pixel._b, den);
 
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b));
+    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
   };
 
   ggo::paint_blur_shape(backgrounds, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_border_pixel_func);
@@ -70,13 +70,13 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   // Paint bodies.
   auto paint_body_pixel_func = [&](int x, int y, int num, int den)
   {
-    ggo::color_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+    ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
 
-    uint8_t r = ggo::round_div(num * _color.r() + (den - num) * pixel.r(), den);
-    uint8_t g = ggo::round_div(num * _color.g() + (den - num) * pixel.g(), den);
-    uint8_t b = ggo::round_div(num * _color.b() + (den - num) * pixel.b(), den);
+    uint8_t r = ggo::round_div(num * _color._r + (den - num) * pixel._r, den);
+    uint8_t g = ggo::round_div(num * _color._g + (den - num) * pixel._g, den);
+    uint8_t b = ggo::round_div(num * _color._b + (den - num) * pixel._b, den);
 
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::color_8u(r, g, b));
+    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
   };
 
   ggo::paint_blur_shape(bodies, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_body_pixel_func);

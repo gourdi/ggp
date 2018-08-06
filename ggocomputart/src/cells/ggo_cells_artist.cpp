@@ -37,7 +37,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 	polynom2._deg0 = ggo::rand<float>(-2, 2);
 
 	ggo::fill_solid<rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::from_hsv<ggo::color_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()),
+    ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()),
     ggo::rect_int::from_width_height(width(), height()));
 	
 	for (int counter = 0; counter < cells_count; ++counter)
@@ -48,19 +48,19 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 		float pos_y = ggo::rand<float>();
 		cell cell(pos_x - 0.02f, pos_x + 0.02f, pos_y + 0.02f, pos_y - 0.02f, width(), height());
 
-		ggo::color_8u color;
+		ggo::rgb_8u color;
 		if (polynom1._deg2 * pos_x * pos_x + polynom1._deg1 * pos_x + polynom1._deg0 < pos_y)
 		{
-			color = ggo::from_hsv<color_8u>(hue1, sat1, ggo::rand<float>());
+			color = ggo::from_hsv<rgb_8u>(hue1, sat1, ggo::rand<float>());
 		}
 		else
 		if (polynom2._deg2 * pos_x * pos_x + polynom2._deg1 * pos_x + polynom2._deg0 < pos_y)
 		{
-			color = ggo::from_hsv<color_8u>(hue2, sat2, ggo::rand<float>());
+			color = ggo::from_hsv<rgb_8u>(hue2, sat2, ggo::rand<float>());
 		}
 		else
 		{
-			color = ggo::from_hsv<color_8u>(hue3, sat3, ggo::rand<float>());
+			color = ggo::from_hsv<rgb_8u>(hue3, sat3, ggo::rand<float>());
 		}
 
     using sample_t = sampler<sampling_4x4>;
@@ -68,8 +68,8 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     auto paint_pixel = [&](int x, int y)
     {
       bool done = true;
-      const color_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step());
-      accumulator<color_8u> acc;
+      const rgb_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step());
+      accumulator<rgb_8u> acc;
 
       auto sample_shape = [&](float x_f, float y_f)
       {

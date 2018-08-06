@@ -1,5 +1,3 @@
-#if 0
-
 #include <array>
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <ggo_interpolation2d.h>

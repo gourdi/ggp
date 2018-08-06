@@ -38,10 +38,10 @@ namespace ggo
   };
 
   template <>
-  struct morpho_t<color_8u>
+  struct morpho_t<rgb_8u>
   {
-    static color_8u dilatation(color_8u c1, color_8u c2) { return color_8u(std::max(c1.r(), c2.r()), std::max(c1.g(), c2.g()), std::max(c1.b(), c2.b())); }
-    static color_8u erosion(color_8u c1, color_8u c2) { return color_8u(std::min(c1.r(), c2.r()), std::min(c1.g(), c2.g()), std::min(c1.b(), c2.b())); }
+    static rgb_8u dilatation(rgb_8u c1, rgb_8u c2) { return rgb_8u(std::max(c1._r, c2._r), std::max(c1._g, c2._g), std::max(c1._b, c2._b)); }
+    static rgb_8u erosion(rgb_8u c1, rgb_8u c2) { return rgb_8u(std::min(c1._r, c2._r), std::min(c1._g, c2._g), std::min(c1._b, c2._b)); }
   };
 
   // Dilatation.

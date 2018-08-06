@@ -22,7 +22,7 @@ namespace ggo
     {
     public:
 
-            line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::color_8u & color);
+            line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color);
 
       bool	update(int width, int height);
       void	draw(void * buffer, int width, int height) const;
@@ -37,7 +37,7 @@ namespace ggo
       float			    _angle_offset = 0.f;
       float			    _inner_radius = 0.f;
       float			    _outter_radius = 0.f;
-      ggo::color_8u _color;
+      ggo::rgb_8u   _color;
       ggo::pos2f    _p1;
       ggo::pos2f    _p2;
       float 		    _opacity = 0.f;
@@ -89,10 +89,10 @@ namespace ggo
     std::vector<oscillo>  _oscillos;
     int							      _remaining_counter = 0;
     int							      _creation_counter = 0;
-    ggo::color_8u					_bkgd_color1;
-    ggo::color_8u					_bkgd_color2;
-    ggo::color_8u					_bkgd_color3;
-    ggo::color_8u					_bkgd_color4;
+    ggo::rgb_8u  					_bkgd_color1;
+    ggo::rgb_8u  					_bkgd_color2;
+    ggo::rgb_8u  					_bkgd_color3;
+    ggo::rgb_8u  					_bkgd_color4;
   };
 }
 

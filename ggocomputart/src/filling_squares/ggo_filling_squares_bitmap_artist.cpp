@@ -19,7 +19,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
   auto multi_squares = ggo::filling_squares_artist::build_squares(width(), height(), hue);
 	
 	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>()),
+    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>()),
     ggo::rect_int::from_width_height(width(), height()));
 
 	for (const auto & multi_square : multi_squares)
@@ -38,7 +38,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
       square.add_point(right, top);
       square.add_point(left, top);
 
-			ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>
+			ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>
         (buffer, width(), height(), line_step(), square, colored_square._color);
 		}
 	}

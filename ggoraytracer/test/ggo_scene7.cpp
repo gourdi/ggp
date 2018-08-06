@@ -14,7 +14,7 @@ GGO_TEST(test_scene, scene7)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::red_32f()));
   
   // Light.
-  scene.add_sphere_light(ggo::white<ggo::color_32f>(), { -20.f, -20.f, 200.f }, 10.f);
+  scene.add_sphere_light(ggo::white_32f(), { -20.f, -20.f, 200.f }, 10.f);
 
   // Objects.
   float roughness = 0.5;
@@ -29,7 +29,7 @@ GGO_TEST(test_scene, scene7)
   }
   
   ggo::plane3d_float plane({ 0.f, 0.f, 1.f }, -1.f);
-  ggo::checker_xy_material checker_material(ggo::white_32f(), ggo::color_32f(0.5f, 0.5f, 0.5f), 0.5f);
+  ggo::checker_xy_material checker_material(ggo::white_32f(), ggo::rgb_32f(0.5f), 0.5f);
 
   scene.add_diffuse_object<ggo::discard_all>(plane, checker_material);
 

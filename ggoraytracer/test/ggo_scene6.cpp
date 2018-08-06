@@ -13,7 +13,7 @@ GGO_TEST(test_scene, scene6)
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::red_32f()));
   
   // Light.
-  scene.add_sphere_light(ggo::white<ggo::color_32f>(), { -20.f, -20.f, 200.f }, 10.f);
+  scene.add_sphere_light(ggo::white_32f(), { -20.f, -20.f, 200.f }, 10.f);
 
   // Objects.
   for (int i = -2; i <= 5; ++i)

@@ -25,10 +25,10 @@ void ggo::ifs_bitmap_artist::render_bitmap(void * buffer) const
 	
   ggo::fill_4_colors<ggo::rgb_8u_yu>(
     buffer, width(), height(), line_step(),
-    ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25)),
-    ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
-    ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25)),
-    ggo::from_hsv<ggo::color_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
+    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25)),
+    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
+    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0, 0.25)),
+    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
     ggo::rect_int::from_size(size()));
 
 	artist.render(buffer, transform, hue, ggo::rand<float>(0, 2 * ggo::pi<float>()), ggo::rand<float>(0, 2 * ggo::pi<float>()));

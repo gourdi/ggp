@@ -12,19 +12,19 @@ namespace ggo
   {
     std::string extension = std::filesystem::path(filename).extension().u8string();
 
-    if (extension == "bmp")
+    if (extension == ".bmp")
     {
       return load_bmp(filename);
     }
-    else if (extension == "tga")
+    else if (extension == ".tga")
     {
       return load_tga(filename);
     }
-    else if (extension == "jpg" || extension == "jpeg")
+    else if (extension == ".jpg" || extension == ".jpeg")
     {
       return load_jpg(filename);
     }
-    else if (extension == "png")
+    else if (extension == ".png")
     {
       return load_png(filename);
     }

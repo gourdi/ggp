@@ -13,10 +13,10 @@ namespace ggo
   public:
 
     static  ggo::array<float, 2> create_grid(bool loop_x, bool loop_y);
-    static  ggo::cubic_curve<float, ggo::color_32f> create_color_map();
+    static  ggo::cubic_curve<float, ggo::rgb_32f> create_color_map();
 
     static  void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::array<float, 2> & grid,
-      const ggo::cubic_curve<float, ggo::color_32f> & color_map, float z, float angle);
+      const ggo::cubic_curve<float, ggo::rgb_32f> & color_map, float z, float angle);
   };
 }
 

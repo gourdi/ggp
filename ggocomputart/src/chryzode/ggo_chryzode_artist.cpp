@@ -39,7 +39,7 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
       p2 = middle - 1000.f * diff;
 
       // Paint the segment.
-      ggo::paint_shape<y_32f_yu, sampling_2x2>(buffer_32f.data(), width(), height(), line_step(),
+      ggo::paint<y_32f_yu, sampling_2x2>(buffer_32f.data(), width(), height(), line_step(),
         ggo::capsule_float(p1, p2, 0.005f * radius),
         ggo::solid_color_brush<float>(1.f), ggo::add_blender<float>());
     }
@@ -51,9 +51,9 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
   {
     float coef = buffer_32f[i] / 512; // Normalize.
     float hue = ggo::map<float>(coef, 0, 1, hue_start, hue_end);
-    const ggo::color_8u color = from_hsv<ggo::color_8u>(hue, 1 - coef, coef);
-    buffer_8u[3 * i + 0] = color.r();
-    buffer_8u[3 * i + 1] = color.g();
-    buffer_8u[3 * i + 2] = color.b();
+    const ggo::rgb_8u color = from_hsv<ggo::rgb_8u>(hue, 1 - coef, coef);
+    buffer_8u[3 * i + 0] = color._r;
+    buffer_8u[3 * i + 1] = color._g;
+    buffer_8u[3 * i + 2] = color._b;
   }
 }
