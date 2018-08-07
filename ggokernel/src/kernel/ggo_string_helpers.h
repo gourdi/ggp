@@ -28,33 +28,36 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename it, typename func>
-  std::string join(it begin, it end, const std::string & delim, func f)
+  template <typename it_t>
+  void join(std::ostream & os, it_t begin, it_t end, const std::string & delim)
   {
-    std::ostringstream oss;
-
     if (begin != end)
     {
-      oss << f(*begin);
+      os << *begin;
       ++begin;
       for (; begin != end; ++begin)
       {
-        oss << delim << f(*begin);
+        os << delim << *begin;
       }
     }
-
-    return oss.str();
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename it>
-  std::string join(it begin, it end, const std::string & delim)
+  template <typename container_t>
+  void join(std::ostream & os, const container_t & c, const std::string & delim)
   {
-    using value_t = std::iterator_traits<it>::value_type;
+    join(os, c.begin(), c.end(), delim);
+  }
 
-    auto f = [](const value_t & v) { return v; };
+  //////////////////////////////////////////////////////////////
+  template <typename it_t>
+  std::string join(it_t begin, it_t end, const std::string & delim)
+  {
+    std::ostringstream oss;
 
-    return join(begin, end, delim, f);
+    join(oss, begin, end, delim);
+
+    return oss.str();
   }
 
   //////////////////////////////////////////////////////////////

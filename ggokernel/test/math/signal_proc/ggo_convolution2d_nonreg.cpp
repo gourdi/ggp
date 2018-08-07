@@ -64,3 +64,51 @@ GGO_TEST(convolution2d, vert)
   GGO_CHECK_FLOAT_EQ(out[11], 2.f / 3.f);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(convolution2d, full)
+{
+  std::vector<int> input = {
+    11, 12, 13, 14, 15, 16,
+    21, 22, 23, 24, 25, 26,
+    31, 32, 33, 34, 35, 36,
+    41, 42, 43, 44, 45, 46,
+    51, 52, 53, 54, 55, 56 };
+
+  const int kernel[] = { 1, 1 };
+
+  ggo::apply_symetric_kernel_2d<ggo::border_mode::mirror>(input.data(), input.data(), { 6, 5 }, kernel, 2);
+
+  const std::vector<int> expected = {
+    132, 138, 147, 156, 165, 171,
+    192, 198, 207, 216, 225, 231,
+    282, 288, 297, 306, 315, 321,
+    372, 378, 387, 396, 405, 411,
+    432, 438, 447, 456, 465, 471 };
+
+  GGO_CHECK_EQ(input, expected);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(convolution2d, full_with_clipping)
+{
+  std::vector<int> input = {
+    11, 12, 13, 14, 15, 16, 
+    21, 22, 23, 24, 25, 26, 
+    31, 32, 33, 34, 35, 36, 
+    41, 42, 43, 44, 45, 46, 
+    51, 52, 53, 54, 55, 56 };
+
+  const int kernel[] = { 1, 1 };
+
+  ggo::apply_symetric_kernel_2d<ggo::memory_lines_order::top_down, ggo::border_mode::mirror>(
+    input.data(), input.data(), { 6, 5 }, ggo::rect_int::from_left_right_bottom_top(0, 2, 2, 3), kernel, 2);
+
+  const std:: vector<int> expected = {
+    11,  12,  13, 14, 15, 16,
+    192, 198, 207, 24, 25, 26,
+    282, 288, 297, 34, 35, 36,
+    41,  42,  43, 44, 45, 46,
+    51,  52,  53, 54, 55, 56 };
+
+  GGO_CHECK_EQ(input, expected);
+}

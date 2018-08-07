@@ -14,7 +14,7 @@ namespace ggo
   template <>
   struct gaussian_blur2d_helper<uint8_t>
   {
-    using color_t = uint16_t;
+    using processing_t = uint16_t;
 
     static std::vector<uint16_t> build_kernel(const float stddev)
     {
@@ -33,41 +33,9 @@ namespace ggo
   };
 
   template <>
-  struct gaussian_blur2d_helper<float>
-  {
-    using color_t = float;
-
-    static std::vector<float> build_kernel(const float stddev)
-    {
-      return ggo::build_gaussian_kernel<float>(stddev, 0.001f);
-    }
-
-    static float convert(const float & c)
-    {
-      return c;
-    }
-  };
-
-  template <>
-  struct gaussian_blur2d_helper<double>
-  {
-    using color_t = double;
-
-    static std::vector<double> build_kernel(const double stddev)
-    {
-      return ggo::build_gaussian_kernel<double>(stddev, 0.001);
-    }
-
-    static double convert(const double & c)
-    {
-      return c;
-    }
-  };
-
-  template <>
   struct gaussian_blur2d_helper<ggo::rgb_8u>
   {
-    using color_t = rgb_16u;
+    using processing_t = rgb_16u;
 
     static std::vector<uint16_t> build_kernel(const float stddev)
     {
@@ -88,15 +56,30 @@ namespace ggo
     }
   };
 
+  template <ggo::image_format format>
+  struct gaussian_blur2d_data_traits
+  {
+    using format_traits = image_format_traits<format>;
+    using data_t = typename format_traits::color_t;
+    using processing_t = typename gaussian_blur2d_helper<data_t>::processing_t;
+
+    static  constexpr size_t  input_item_byte_size = format_traits::pixel_byte_size;
+    static  constexpr size_t  output_item_byte_size = format_traits::pixel_byte_size;
+
+    static  data_t  read(const void * ptr) { return format_traits::read(ptr); }
+    static  void    write(void * ptr, const data_t & c) { format_traits::write(ptr, c); }
+
+    static  processing_t  from_data_to_processing(const data_t & v) { return typename gaussian_blur2d_helper<data_t>::convert(v); }
+    static  data_t        from_processing_to_data(const processing_t & v) { return typename gaussian_blur2d_helper<data_t>::convert(v); }
+  };
+
   ////////////////////////////////////////////////////////////////////
   template <image_format format, ggo::border_mode border_mode = border_mode::mirror>
-  void gaussian_blur2d(void * buffer, int line_byte_step, const ggo::size & size, float stddev)
+  void gaussian_blur2d(void * buffer, int line_byte_step, const ggo::size & size, float stddev, ggo::rect_int clipping)
   {
     using format_traits = image_format_traits<format>;
     using gaussian_blur_helper = gaussian_blur2d_helper<typename format_traits::color_t>;
-
-    std::vector<uint8_t> tmp(line_byte_step * size.height());
-    memcpy(tmp.data(), buffer, tmp.size());
+    using gaussian_blur_data_traits = gaussian_blur2d_data_traits<format>;
 
     auto kernel = gaussian_blur_helper::build_kernel(stddev);
     if (kernel.size() <= 1)
@@ -104,21 +87,16 @@ namespace ggo
       return;
     }
 
-    auto read = [](const void * ptr) {
-      return gaussian_blur_helper::convert(format_traits::read(ptr));
-    };
+    ggo::apply_symetric_kernel_2d<format_traits::lines_order, border_mode, gaussian_blur_data_traits>(
+      buffer, line_byte_step, buffer, line_byte_step,
+      size, clipping, kernel.data(), kernel.size());
+  }
 
-    auto write = [](void * ptr, const typename gaussian_blur_helper::color_t & pixel) {
-      format_traits::write(ptr, gaussian_blur_helper::convert(pixel));
-    };
-
-    ggo::apply_symetric_kernel_2d_horz<border_mode>(buffer, format_traits::pixel_byte_size, line_byte_step, read,
-      tmp.data(), format_traits::pixel_byte_size, line_byte_step, write,
-      size, rect_int::from_size(size), kernel.data(), kernel.size());
-
-    ggo::apply_symetric_kernel_2d_vert<border_mode>(tmp.data(), format_traits::pixel_byte_size, line_byte_step, read,
-      buffer, format_traits::pixel_byte_size, line_byte_step, write,
-      size, rect_int::from_size(size), kernel.data(), kernel.size());
+  ////////////////////////////////////////////////////////////////////
+  template <image_format format, ggo::border_mode border_mode = border_mode::mirror>
+  void gaussian_blur2d(void * buffer, int line_byte_step, const ggo::size & size, float stddev)
+  {
+    gaussian_blur2d<format, border_mode>(buffer, line_byte_step, size, stddev, ggo::rect_int::from_size(size));
   }
 }
 

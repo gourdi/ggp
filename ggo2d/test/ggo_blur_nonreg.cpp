@@ -34,7 +34,7 @@ namespace
     ggo::chronometer chronometer;
     for (int i = 0; i < 1000; ++i)
     {
-      ggo::gaussian_blur2d<pbf>(buffer, width, height, line_step, 5.f);
+      ggo::gaussian_blur2d<format>(buffer, line_step, { width, height }, 5.f);
     }
     std::cout << chronometer.get_display_time(true) << std::endl;
 #else
@@ -99,12 +99,32 @@ GGO_TEST(blur, gaussian_y_8u_yu)
   ggo::chronometer chronometer;
   for (int i = 0; i < 1000; ++i)
   {
-    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 5.f);
   }
   std::cout << chronometer.get_display_time(true) << std::endl;
 #else
   ggo::save_bmp("gaussian_blur_y_8u_yu.bmp", buffer.data(), ggo::y_8u_yu, width, height, line_step);
 #endif
+}
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(blur, gaussian_rgb_yu_clipping)
+{
+  const int width = 400;
+  const int height = 300;
+  const int line_step = 3 * width;
+
+  std::vector<uint8_t> buffer(line_step * height);
+
+  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, ggo::blue_8u());
+
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
+
+  ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), line_step, { width, height }, 5.f, ggo::rect_int::from_left_right_bottom_top(2, 100, 4, 200));
+
+  ggo::save_bmp("gaussian_blur_rgb_8u_yu_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, line_step);
 }
 
 namespace
@@ -128,7 +148,7 @@ namespace
     ggo::chronometer chronometer;
     for (int i = 0; i < 1000; ++i)
     {
-      ggo::gaussian_blur2d<pbf>(buffer, width, height, line_step, 5.f);
+      ggo::gaussian_blur2d<format>(buffer, line_step, { width, height }, 5.f);
     }
     std::cout << chronometer.get_display_time(true) << std::endl;
 #else
@@ -193,7 +213,7 @@ GGO_TEST(blur, mean_box_y_8u_yu)
   ggo::chronometer chronometer;
   for (int i = 0; i < 1000; ++i)
   {
-    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), width, height, line_step, 5.f);
+    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 5.f);
   }
   std::cout << chronometer.get_display_time(true) << std::endl;
 #else

@@ -1,8 +1,9 @@
 #include <array>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <ggo_interpolation2d.h>
-#include <ggo_rgb_image_buffer.h>
+#include <kernel/math/interpolation/ggo_interpolation2d.h>
 #include <2d/io/ggo_bmp.h>
+
+#if 0
 
 namespace
 {

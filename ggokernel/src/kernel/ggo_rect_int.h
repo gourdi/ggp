@@ -31,6 +31,7 @@ namespace ggo
     bool      is_one() const;
 
     bool      clip(int image_width, int image_height);
+    bool      clip(const ggo::size & size);
     bool      clip(const rect_int & other);
  
     template <typename pixel_func>
@@ -133,6 +134,12 @@ namespace ggo
   inline bool rect_int::clip(int image_width, int image_height)
   {
     return clip(from_width_height(image_width, image_height));
+  }
+
+  //////////////////////////////////////////////////////////////
+  inline bool rect_int::clip(const ggo::size & size)
+  {
+    return clip(size.width(), size.height());
   }
 
   //////////////////////////////////////////////////////////////

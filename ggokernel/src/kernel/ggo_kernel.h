@@ -339,7 +339,7 @@ namespace ggo
   }
 
   template <> inline
-    std::optional<bool> str_to(const std::string & str)
+  std::optional<bool> str_to(const std::string & str)
   {
     if (str == "true")
     {
@@ -353,7 +353,7 @@ namespace ggo
   }
 
   template <> inline
-    std::optional<int> str_to(const std::string & str)
+  std::optional<int> str_to(const std::string & str)
   {
     std::optional<int> val;
     try

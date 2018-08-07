@@ -4,7 +4,18 @@
 #include <kernel/nonreg/ggo_unit_test.h>
 #include <kernel/nonreg/ggo_unit_test_manager.h>
 #include <kernel/ggo_log.h>
+#include <kernel/ggo_string_helpers.h>
 #include <cmath>
+#include <ostream>
+
+template <typename data_t>
+std::ostream & operator<<(std::ostream & os, const std::vector<data_t> & v)
+{
+  os << '(';
+  ggo::join(os, v, ", ");
+  os << ')';
+  return os;
+}
 
 #define GGO_UNIT_TEST_CLASS_NAME(test_case_name, unit_test_name) ggo_##test_case_name##_##unit_test_name##_unit_test
 #define GGO_UNIT_TEST_INSTANCE_NAME(test_case_name, unit_test_name) instance_##test_case_name##_##unit_test_name##_unit_test
