@@ -107,6 +107,20 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename get2d_t>
+  auto get2d_zero(get2d_t get2d, int x, int y, int width, int height)
+  {
+    using data_t = std::result_of<get2d_t(int, int)>::type;
+
+    if (x < 0 || x >= width || y < 0 || y >= height)
+    {
+      return data_t(0);
+    }
+
+    return get2d(x, y);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename get2d_t>
   auto get2d_loop(get2d_t get2d, int x, int y, int width, int height)
   {
     x = loop_index(x, width);
@@ -144,6 +158,21 @@ namespace ggo
   {
     x = mirror_index_edge_duplicated(x, width);
     y = mirror_index_edge_duplicated(y, height);
+
+    auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
+    ptr = ptr_offset(ptr, x * sizeof(data_t));
+
+    return *ptr;
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <ggo::memory_lines_order lines_order, typename data_t>
+  data_t get2d_zero(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
+  {
+    if (x < 0 || x >= width || y < 0 || y >= height)
+    {
+      return data_t(0);
+    }
 
     auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
     ptr = ptr_offset(ptr, x * sizeof(data_t));

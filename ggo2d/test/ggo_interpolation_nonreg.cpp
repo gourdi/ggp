@@ -1,67 +1,62 @@
 #include <array>
 #include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/memory/ggo_edges_management.h>
 #include <kernel/math/interpolation/ggo_interpolation2d.h>
 #include <2d/io/ggo_bmp.h>
 
-#if 0
-
 namespace
 {
-  const int SIZE = 800;
-
   ////////////////////////////////////////////////////////////////////
-  uint8_t bilinear_interpolation2d_zero(const uint8_t * input, int width, int height, float x, float y)
+  uint8_t linear_interpolation2d(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_zero(input, x, y, width, height)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::memory_lines_order::bottom_up>(input, x, y, width, height, width)); };
 
-    return ggo::to<uint8_t>(ggo::bilinear_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(ggo::linear_interpolation2d<float>(in, x, y));
   }
 
   ////////////////////////////////////////////////////////////////////
-  uint8_t bicubic_interpolation2d_zero(const uint8_t * input, int width, int height, float x, float y)
+  uint8_t cubic_interpolation2d(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return ggo::to<float>(ggo::get2d_zero(input, x, y, width, height)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::memory_lines_order::bottom_up>(input, x, y, width, height, width)); };
 
-    return ggo::to<uint8_t>(ggo::bicubic_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(ggo::clamp(ggo::cubic_interpolation2d<float>(in, x, y), 0.f, 255.f));
   }
 
   ////////////////////////////////////////////////////////////////////
   template <uint8_t(interpolate_func)(const uint8_t *, int, int, float, float)>
   void test_interpolation(const std::string & filename)
   {
-    ggo::rgb_image_buffer_uint8 image(SIZE, SIZE);
+    constexpr int size = 100;
+
+    ggo::static_image<ggo::y_8u_yd> image(size, size);
     
-    const std::array<uint8_t, 9> input {{
+    const std::array<uint8_t, 9> input{ {
         50, 25, 185,
         200, 132, 98,
-        43, 77, 210}};
+        43, 77, 210} };
 
-    uint8_t * ptr = image.data();
+    uint8_t v = interpolate_func(input.data(), 3, 3, 0.25f, 0.25f);
     
-    for (int y = 0; y < SIZE; ++y)
+    for (int y = 0; y < size; ++y)
     {
-      for (int x = 0; x < SIZE; ++x)
+      for (int x = 0; x < size; ++x)
       {
-        float x_f = 0.025f * x - 4;
-        float y_f = 0.025f * y - 4;
+        float x_f = 0.05f * x - 1;
+        float y_f = 0.05f * y - 1;
         
         uint8_t v = interpolate_func(input.data(), 3, 3, x_f, y_f);
-        *ptr++ = v;
-        *ptr++ = v;
-        *ptr++ = v;
+
+        image.write_pixel(x, y, v);
       }
     }
     
-    ggo::save_bmp(filename, image.data(), SIZE, SIZE);
+    ggo::save_bmp(filename, image);
   }
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(interpolation, test)
+GGO_TEST(interpolation2d, test)
 {
-  test_interpolation<bilinear_interpolation2d_zero>("test_bilinear_zero.bmp");
-  test_interpolation<ggo::bilinear_interpolation2d_mirror>("test_bilinear_mirror.bmp");
-  test_interpolation<bicubic_interpolation2d_zero>("test_bicubic_zero.bmp");
-  test_
-
-#endif
+  test_interpolation<linear_interpolation2d>("test_bilinear.bmp");
+  test_interpolation<cubic_interpolation2d>("test_bicubic.bmp");
+}

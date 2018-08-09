@@ -108,23 +108,36 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(blur, gaussian_rgb_yu_clipping)
+GGO_TEST(blur, gaussian_rgb_8u_clipping)
 {
   const int width = 400;
   const int height = 300;
   const int line_step = 3 * width;
+  const auto clipping = ggo::rect_int::from_left_right_bottom_top(2, 100, 4, 200);
 
   std::vector<uint8_t> buffer(line_step * height);
 
+  // rgb yu
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, line_step, ggo::blue_8u());
 
   ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
     ggo::disc_float({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
 
-  ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), line_step, { width, height }, 5.f, ggo::rect_int::from_left_right_bottom_top(2, 100, 4, 200));
+  ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), line_step, { width, height }, 5.f, clipping);
 
   ggo::save_bmp("gaussian_blur_rgb_8u_yu_clipping.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, line_step);
+
+  // rgb yd
+  ggo::fill_solid<ggo::rgb_8u_yd>(buffer.data(), width, height, line_step, ggo::blue_8u());
+
+  ggo::paint<ggo::rgb_8u_yd, ggo::sampling_4x4>(
+    buffer.data(), width, height, line_step,
+    ggo::disc_float({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
+
+  ggo::gaussian_blur2d<ggo::rgb_8u_yd>(buffer.data(), line_step, { width, height }, 5.f, clipping);
+
+  ggo::save_bmp("gaussian_blur_rgb_8u_yd_clipping.bmp", buffer.data(), ggo::rgb_8u_yd, width, height, line_step);
 }
 
 namespace

@@ -343,7 +343,7 @@ namespace ggo
   {
     switch (format)
     {
-    default: GGO_FAIL(); // Don't break to fallback on the below image format.
+    default: throw std::runtime_error("invalid image format"); break;
     case y_8u_yu: return functor::call<y_8u_yu>(std::forward<args>(a)...);
     case y_8u_yd: return functor::call<y_8u_yd>(std::forward<args>(a)...);
     case y_16u_yd: return functor::call<y_16u_yd>(std::forward<args>(a)...);
