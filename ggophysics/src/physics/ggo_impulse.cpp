@@ -1,5 +1,5 @@
-#include <ggo_impulse.h>
-#include <ggo_physics.h>
+#include <physics/ggo_impulse.h>
+#include <physics/ggo_physics.h>
 
 namespace ggo
 {

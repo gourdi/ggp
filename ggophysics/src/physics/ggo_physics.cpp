@@ -1,5 +1,5 @@
-#include <ggo_kernel.h>
-#include <ggo_link.h>
+#include <kernel/ggo_kernel.h>
+#include <kernel/ggo_link.h>
 #include "ggo_physics.h"
 #include "ggo_collisions.h"
 #include "ggo_impulse.h"

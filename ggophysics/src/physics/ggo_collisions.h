@@ -1,7 +1,7 @@
 #ifndef __GGO_INTERSECTION__
 #define __GGO_INTERSECTION__
 
-#include <ggo_shapes2d.h>
+#include <kernel/math/shapes_2d/ggo_shapes2d.h>
 
 namespace ggo
 {

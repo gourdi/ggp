@@ -1,5 +1,5 @@
-#include <ggo_nonreg.h>
-#include <ggo_collisions.h>
+#include <kernel/nonreg/ggo_nonreg.h>
+#include <physics/ggo_collisions.h>
 
 //////////////////////////////////////////////////////////////////
 GGO_TEST(collisions, half_plane_vs_oriented_box)
@@ -11,7 +11,7 @@ GGO_TEST(collisions, half_plane_vs_oriented_box)
   ggo::vec2f normal;
   GGO_CHECK(ggo::test_collision(half_plane, box, pos, normal) == false);
 
-  box.move(0.f, -1.f);
+  box.move({ 0.f, -1.f });
   GGO_CHECK(ggo::test_collision(half_plane, box, pos, normal) == true);
   GGO_CHECK_FLOAT_EQ(pos.get<0>(), 3.0f);
   GGO_CHECK_FLOAT_EQ(pos.get<1>(), 2.0f);
