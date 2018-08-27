@@ -3,7 +3,7 @@
 
 #include <kernel/ggo_vec.h>
 #include <kernel/memory/ggo_array.h>
-#include <kernel/math/linear_algebra/ggo_matrix.h>
+#include <kernel/math/linear_algebra/ggo_static_matrix.h>
 
 /////////////////////////////////////////////////////////////////////
 // Core algorithm.
@@ -48,7 +48,7 @@ namespace ggo
   }
 
   template <typename data_t, int size>
-  void gauss_seidel(const ggo::matrix<data_t, size, size> & a, const ggo::vec<data_t, size> & b, ggo::vec<data_t, size> & s, int iterations)
+  void gauss_seidel(const ggo::static_matrix<data_t, size, size> & a, const ggo::vec<data_t, size> & b, ggo::vec<data_t, size> & s, int iterations)
   {
     auto lambda_a = [&](int x, int y) { return a(x, y); };
     auto lambda_b = [&](int i) { return b.data()[i]; };

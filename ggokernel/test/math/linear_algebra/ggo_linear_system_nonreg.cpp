@@ -19,7 +19,7 @@ GGO_TEST(linear_system, gauss_seidel_2x2)
 
   // ggo::matrix and ggo::vec (size is known at compile time).
   {
-    ggo::square_matrix<float, 2> a;
+    ggo::static_square_matrix<float, 2> a;
     a(0, 0) = 16.f;
     a(0, 1) = 3.f;
     a(1, 0) = 7.f;

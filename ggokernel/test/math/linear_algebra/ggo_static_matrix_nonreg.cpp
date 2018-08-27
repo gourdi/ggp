@@ -1,10 +1,10 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/math/linear_algebra/ggo_matrix.h>
+#include <kernel/math/linear_algebra/ggo_static_matrix.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, access)
+GGO_TEST(static_matrix, access)
 {
-  ggo::matrix<int, 3, 2> m;
+  ggo::static_matrix<int, 3, 2> m;
 
   m(0, 0) = -4; m(0, 1) = 2;
   m(1, 0) =  1; m(1, 1) = 6;
@@ -19,9 +19,9 @@ GGO_TEST(matrix, access)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, addition)
+GGO_TEST(static_matrix, addition)
 {
-  ggo::matrix<int, 3, 2> m, m1, m2;
+  ggo::static_matrix<int, 3, 2> m, m1, m2;
   
   m1(0, 0) = -4; m1(0, 1) =  2;
   m1(1, 0) =  1; m1(1, 1) =  6;
@@ -41,9 +41,9 @@ GGO_TEST(matrix, addition)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, subtraction)
+GGO_TEST(static_matrix, subtraction)
 {
-  ggo::matrix<int, 2, 3> m, m1, m2;
+  ggo::static_matrix<int, 2, 3> m, m1, m2;
   
   m1(0, 0) = -4; m1(0, 1) =  2; m1(0, 2) = 5;
   m1(1, 0) =  1; m1(1, 1) = -2; m1(1, 2) = 2;
@@ -61,9 +61,9 @@ GGO_TEST(matrix, subtraction)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, scalar_multiplication)
+GGO_TEST(static_matrix, scalar_multiplication)
 {
-  ggo::matrix<int, 2, 3> m;
+  ggo::static_matrix<int, 2, 3> m;
   
   m(0, 0) = -4; m(0, 1) =  2; m(0, 2) = -2;
   m(1, 0) =  1; m(1, 1) =  6; m(1, 2) =  3;
@@ -78,11 +78,11 @@ GGO_TEST(matrix, scalar_multiplication)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, multiplication)
+GGO_TEST(static_matrix, multiplication)
 {
-  ggo::matrix<int, 4, 3> m1;
-  ggo::matrix<int, 3, 2> m2;
-  ggo::matrix<int, 4, 2> m;
+  ggo::static_matrix<int, 4, 3> m1;
+  ggo::static_matrix<int, 3, 2> m2;
+  ggo::static_matrix<int, 4, 2> m;
   
   m1(0, 0) = 14; m1(0, 1) =  9; m1(0, 2) =  3; 
   m1(1, 0) =  2; m1(1, 1) = 11; m1(1, 2) = 15; 
@@ -105,10 +105,10 @@ GGO_TEST(matrix, multiplication)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, symmetric)
+GGO_TEST(static_matrix, symmetric)
 {
   {
-    ggo::square_matrix<int, 3> m;
+    ggo::static_square_matrix<int, 3> m;
 
     m(0, 0) = -4; m(0, 1) = 2; m(0, 2) = 1;
     m(1, 0) = 2; m(1, 1) = 6; m(1, 2) = -2;
@@ -117,7 +117,7 @@ GGO_TEST(matrix, symmetric)
   }
 
   {
-    ggo::square_matrix<float, 3> m;
+    ggo::static_square_matrix<float, 3> m;
 
     m(0, 0) = -4.f; m(0, 1) =  2.f; m(0, 2) =  1.f;
     m(1, 0) =  2.f; m(1, 1) =  6.f; m(1, 2) = -2.f;
@@ -127,9 +127,9 @@ GGO_TEST(matrix, symmetric)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, diagonally_dominant)
+GGO_TEST(static_matrix, diagonally_dominant)
 {
-  ggo::square_matrix<int, 3> m;
+  ggo::static_square_matrix<int, 3> m;
   
   m(0, 0) = -4; m(0, 1) =  2; m(0, 2) = 1;
   m(1, 0) =  1; m(1, 1) =  6; m(1, 2) = 2;
@@ -143,9 +143,9 @@ GGO_TEST(matrix, diagonally_dominant)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, matrix_vector_multiplication)
+GGO_TEST(static_matrix, matrix_vector_multiplication)
 {
-  ggo::square_matrix<int, 2>  m;
+  ggo::static_square_matrix<int, 2>  m;
   ggo::vec2<int>              v;
   
   m(0, 0) = 5; m(0, 1) =  9;
@@ -160,9 +160,8 @@ GGO_TEST(matrix, matrix_vector_multiplication)
   GGO_CHECK(v.get<1>() ==  13);
 }
 
-
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, matrix_rotation)
+GGO_TEST(static_matrix, matrix_rotation)
 {
   ggo::square_matrix2d<float> m;
   ggo::vec2<float>            v{ 1.f, 0.f };
