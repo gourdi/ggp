@@ -9,7 +9,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  static_matrix<data_t, size_y, size_x> & static_matrix<data_t, size_y, size_x>::operator=(const static_matrix<data_t, size_y, size_x> & m)
+  matrix<data_t, size_y, size_x> & matrix<data_t, size_y, size_x>::operator=(const matrix<data_t, size_y, size_x> & m)
   {
     if (&m != this)
     {
@@ -21,7 +21,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  void static_matrix<data_t, size_y, size_x>::operator*=(data_t k)
+  void matrix<data_t, size_y, size_x>::operator*=(data_t k)
   {
     ggo::mul<size_x * size_y>(_data.data(), k);
   }
@@ -34,9 +34,9 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  static_matrix<data_t, size_y, size_x> operator+(const static_matrix<data_t, size_y, size_x> & m1, const static_matrix<data_t, size_y, size_x> & m2)
+  matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
   {
-    static_matrix<data_t, size_y, size_x> result;
+    matrix<data_t, size_y, size_x> result;
 
     ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
 
@@ -45,9 +45,9 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  static_matrix<data_t, size_y, size_x> operator-(const static_matrix<data_t, size_y, size_x> & m1, const static_matrix<data_t, size_y, size_x> & m2)
+  matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
   {
-    static_matrix<data_t, size_y, size_x> result;
+    matrix<data_t, size_y, size_x> result;
 
     ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
 
@@ -56,9 +56,9 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_1, int size_2, int size_3>
-  static_matrix<data_t, size_1, size_3> operator*(const static_matrix<data_t, size_1, size_2> & m1, const static_matrix<data_t, size_2, size_3> & m2)
+  matrix<data_t, size_1, size_3> operator*(const matrix<data_t, size_1, size_2> & m1, const matrix<data_t, size_2, size_3> & m2)
   {
-    static_matrix<data_t, size_1, size_3> result;
+    matrix<data_t, size_1, size_3> result;
     
     for (int y = 0; y < size_1; ++y)
     {
@@ -83,7 +83,7 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  static_matrix<data_t, size_y, size_x> operator*(const static_matrix<data_t, size_y, size_x> & m, data_t k)
+  matrix<data_t, size_y, size_x> operator*(const matrix<data_t, size_y, size_x> & m, data_t k)
   {
     matrix<data_t, size_y, size_x> result;
     
@@ -100,7 +100,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size_y, int size_x>
-  static_matrix<data_t, size_y, size_x> operator*(data_t k, const static_matrix<data_t, size_y, size_x> & m)
+  matrix<data_t, size_y, size_x> operator*(data_t k, const matrix<data_t, size_y, size_x> & m)
   {
     return m * k;
   }
@@ -113,14 +113,14 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size>
-  bool static_square_matrix<data_t, size>::is_diagonally_dominant() const
+  bool square_matrix<data_t, size>::is_diagonally_dominant() const
   {
     return ggo::is_matrix_diagonally_dominant<data_t>(*this, size);
   }
   
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size>
-  bool static_square_matrix<data_t, size>::is_symmetric() const
+  bool square_matrix<data_t, size>::is_symmetric() const
   {
     auto compare = [](data_t v1, data_t v2) { return v1 == v2; };
 
@@ -130,7 +130,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, int size>
   template <typename compare_func>
-  bool static_square_matrix<data_t, size>::is_symmetric(compare_func compare) const
+  bool square_matrix<data_t, size>::is_symmetric(compare_func compare) const
   {
     return ggo::is_matrix_symmetric(*this, size, compare);
   }
@@ -138,7 +138,7 @@ namespace ggo
   template <typename data_t, int row_index, int current, int size>
   struct compute_row_t
   {
-    static data_t compute_row(const ggo::static_square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
     {
       return m.template get<row_index, current>() * v.template get<current>() + ggo::compute_row_t<data_t, row_index, current + 1, size>::compute_row(m, v);
     }
@@ -147,7 +147,7 @@ namespace ggo
   template <typename data_t, int row_index, int size>
   struct compute_row_t<data_t, row_index, size, size>
   {
-    static data_t compute_row(const ggo::static_square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    static data_t compute_row(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
     {
       return 0;
     }
@@ -156,7 +156,7 @@ namespace ggo
   template <typename data_t, int row_index, int size>
   struct process_row_t
   {
-    static void process_row(ggo::vec<data_t, size> & r, const ggo::static_square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    static void process_row(ggo::vec<data_t, size> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
     {
       // Compute coef.
       r.template get<row_index>() = ggo::compute_row_t<data_t, row_index, 0, size>::compute_row(m, v);
@@ -169,14 +169,14 @@ namespace ggo
   template <typename data_t, int size>
   struct process_row_t<data_t, size, size>
   {
-    static void process_row(ggo::vec<data_t, size> & r, const ggo::static_square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+    static void process_row(ggo::vec<data_t, size> & r, const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
     {
       // Do nothing.
     }
   };
 
   template <typename data_t, int size>
-  ggo::vec<data_t, size> operator*(const ggo::static_square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
+  ggo::vec<data_t, size> operator*(const ggo::square_matrix<data_t, size> & m, const ggo::vec<data_t, size> & v)
   {
     ggo::vec<data_t, size> r;
 
@@ -193,15 +193,15 @@ namespace ggo
 {
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t square_matrix2d<data_t>::det() const
+  template <typename T>
+  T square_matrix2d<T>::det() const
   {
     return this->operator()(0, 0)*this->operator()(1, 1) - this->operator()(1, 0)*this->operator()(0, 1); 
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  void square_matrix2d<data_t>::set_rotation(float angle)
+  template <typename T>
+  void square_matrix2d<T>::set_rotation(float angle) 
   {
     this->operator()(0, 0) =  cos(angle);
     this->operator()(0, 1) = -sin(angle);
