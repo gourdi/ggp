@@ -56,6 +56,38 @@ namespace ggo
     }
   };
 
+  template <>
+  struct gaussian_blur2d_helper<float>
+  {
+    using processing_t = float;
+
+    static std::vector<float> build_kernel(const float stddev)
+    {
+      return ggo::build_gaussian_kernel<float>(stddev, 0.001f);
+    }
+
+    static float convert(float c)
+    {
+      return c;
+    }
+  };
+
+  template <>
+  struct gaussian_blur2d_helper<double>
+  {
+    using processing_t = double;
+
+    static std::vector<double> build_kernel(const float stddev)
+    {
+      return ggo::build_gaussian_kernel<double>(stddev, 0.001);
+    }
+
+    static double convert(double c)
+    {
+      return c;
+    }
+  };
+
   template <ggo::image_format format>
   struct gaussian_blur2d_data_traits
   {

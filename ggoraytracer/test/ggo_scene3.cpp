@@ -43,9 +43,9 @@ GGO_TEST(test_scene, scene3)
 
   // Overlay, to check that basis::project is working as expected.
   ggo::pos2f proj1 = camera.basis().project(sphere1.center(), camera.get_aperture(), width, height);
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, ggo::disc_float(proj1, 5.f), ggo::white_8u());
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, ggo::disc_float(proj1, 5.f), ggo::white_8u());
   ggo::pos2f proj2 = camera.basis().project(sphere2.center(), camera.get_aperture(), width, height);
-  ggo::paint_shape<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, ggo::disc_float(proj2, 5.f), ggo::white_8u());
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, ggo::disc_float(proj2, 5.f), ggo::white_8u());
 
   ggo::save_bmp("scene3.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
