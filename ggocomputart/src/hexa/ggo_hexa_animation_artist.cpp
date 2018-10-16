@@ -13,7 +13,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-  fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 {
 #ifdef GGO_PREVIEW
   _artist.reset(new ggo::hexa_artist(false));

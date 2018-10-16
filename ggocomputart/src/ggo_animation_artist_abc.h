@@ -33,14 +33,19 @@ namespace ggo
   {
   protected:
 
-    fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format);
+    fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format, int frames_count);
+
+    int frames_count() const { return _frames_count; }
 
   private:
 
     void  render_frame(void * buffer, int frame_index, bool & finished) override;
 
     virtual void  render_frame(void * buffer, int frame_index) = 0;
-    virtual int   frames_count() const = 0;
+    
+  private:
+
+    const int _frames_count;
   };
 }
 

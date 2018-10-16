@@ -168,16 +168,17 @@ namespace ggo
 // FIXED FRAMES COUNT ANIMATION ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::fixed_frames_count_animation_artist_abc::fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format)
+ggo::fixed_frames_count_animation_artist_abc::fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format, int frames_count)
 :
-ggo::animation_artist_abc(width, height, line_step, format)
+ggo::animation_artist_abc(width, height, line_step, format),
+_frames_count(frames_count)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::fixed_frames_count_animation_artist_abc::render_frame(void * buffer, int frame_index, bool & finished)
 {
-  if (frame_index >= frames_count())
+  if (frame_index >= _frames_count)
   {
     finished = true;
   }

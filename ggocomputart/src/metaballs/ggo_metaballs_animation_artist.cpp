@@ -5,7 +5,7 @@
 //////////////////////////////////////////////////////////////
 ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-  fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+  fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
 {
   const float ball_size = 2;
 

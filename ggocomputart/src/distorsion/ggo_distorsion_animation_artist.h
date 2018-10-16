@@ -14,7 +14,6 @@ namespace ggo
           distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
     void  render_frame(void * buffer, int frame_index) override;
-    int   frames_count() const override { return 300; }
 
     struct colored_stripe
     {

@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////
 ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 150)
 {
   _artist.reset(new ggo::stoa_artist(256));
 

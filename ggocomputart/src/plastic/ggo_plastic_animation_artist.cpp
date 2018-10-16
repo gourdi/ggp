@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////
 ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
 {
   for (int i = 0; i < 50; ++i)
   {

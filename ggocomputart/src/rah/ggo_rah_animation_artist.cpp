@@ -295,7 +295,7 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_fl
 //////////////////////////////////////////////////////////////
 ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 500)
 {
   _focus_dist_interpolator._near = near;
   _focus_dist_interpolator._far = far;

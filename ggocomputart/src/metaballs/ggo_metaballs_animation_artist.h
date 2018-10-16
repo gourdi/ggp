@@ -27,7 +27,6 @@ namespace ggo
   private:
 
     void  render_frame(void * buffer, int frame_index) override;
-    int   frames_count() const override { return 200; }
 
   private:
 

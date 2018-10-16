@@ -30,7 +30,7 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 //////////////////////////////////////////////////////////////
 ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format),
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 1000),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
 _background(new uint8_t[height * line_step])
 {

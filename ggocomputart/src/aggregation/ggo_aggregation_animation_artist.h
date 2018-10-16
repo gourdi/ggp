@@ -15,7 +15,6 @@ namespace ggo
   private:
 
     void  render_frame(void * buffer, int frame_index) override;
-    int   frames_count() const override { return 300; }
 
     void  register_point(const ggo::pos2f & pos, float hue, float sat, float val);
     void  update();

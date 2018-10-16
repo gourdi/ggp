@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////
 ggo::entabeni_animation_artist::entabeni_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 {
   _z = 0.f;
   _grid_start = ggo::entabeni::create_grid(true, false);

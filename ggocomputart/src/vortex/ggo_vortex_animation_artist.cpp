@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////
 ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 250)
 {
   const int vortices_count = 20;
 

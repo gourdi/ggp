@@ -132,7 +132,6 @@ namespace ggo
   private:
 
     void  render_frame(void * buffer, int frame_index) override;
-    int   frames_count() const override { return 500; }
 
     void  insert_particle(std::shared_ptr<particle> particle);
 

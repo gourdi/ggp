@@ -36,7 +36,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::smoke_animation_artist::smoke_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-  fixed_frames_count_animation_artist_abc(width, height, line_step, format),
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 600),
 _velocity_x1(width + 1, height),
 _velocity_x2(width + 1, height),
 _velocity_y1(width, height + 1),

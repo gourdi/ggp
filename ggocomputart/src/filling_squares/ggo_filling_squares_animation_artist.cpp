@@ -57,7 +57,7 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 //////////////////////////////////////////////////////////////
 ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 500)
 {
   _hue = ggo::rand<float>();
   auto multi_squares = ggo::filling_squares_artist::build_squares(width, height, _hue);

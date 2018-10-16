@@ -24,7 +24,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::kame_animation_artist::kame_animation_artist(int width, int height, int line_step, ggo::image_format format)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
 {
   _bkgd_colors[0] = ggo::rand<uint8_t>(0xdd, 0xff);
   _bkgd_colors[1] = ggo::rand<uint8_t>(0xdd, 0xff);
