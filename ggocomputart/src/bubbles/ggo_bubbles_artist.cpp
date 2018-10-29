@@ -69,10 +69,10 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
       switch (format())
       {
       case ggo::rgb_8u_yu:
-        paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
+        ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       case ggo::bgrx_8u_yd:
-        paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
+        ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(), bubble, brush, blend);
         break;
       default:
         GGO_FAIL();

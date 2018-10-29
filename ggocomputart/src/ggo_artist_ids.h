@@ -48,7 +48,8 @@ namespace ggo
     rediff, // 40
     entabeni,
     cabrel,
-    kame
+    kame,
+    wakenda
   };
 }
 
@@ -89,7 +90,8 @@ namespace ggo
     entabeni, // 30
     neon,
     storni,
-    demeco
+    demeco,
+    wakenda
   };
 }
 

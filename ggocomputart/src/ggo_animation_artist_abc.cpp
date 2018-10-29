@@ -28,6 +28,7 @@
 #include "storni/ggo_storni_realtime_artist.h"
 #include "kame/ggo_kame_animation_artist.h"
 #include "demeco/ggo_demeco_animation_artist.h"
+#include "wakenda/ggo_wakenda_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // REALTIME ARTISTS WRAPPER
@@ -141,7 +142,8 @@ namespace ggo
       return new ggo::kame_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::demeco:
       return new ggo::demeco_animation_artist(width, height, line_step, format);
-
+    case ggo::animation_artist_id::wakenda:
+      return new ggo::wakenda_animation_artist(width, height, line_step, format);
 
     // Real-time artists.
     case ggo::animation_artist_id::kanji:

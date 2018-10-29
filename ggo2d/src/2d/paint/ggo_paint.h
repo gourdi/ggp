@@ -111,7 +111,8 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <image_format format, sampling smp, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step, const shape_t & shape, const typename image_format_traits<format>::color_t & c)
+  void paint(void * buffer, int width, int height, int line_step,
+    const shape_t & shape, const typename image_format_traits<format>::color_t & c)
   {
     using color_t = typename image_format_traits<format>::color_t;
 

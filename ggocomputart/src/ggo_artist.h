@@ -7,6 +7,7 @@
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_image_format.h>
 #include <2d/ggo_color.h>
+#include <2d/paint/ggo_paint.h>
 #include <string>
 #include <memory>
 
@@ -59,6 +60,12 @@ namespace ggo
 
     ggo::pos2f                horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _height); }
     ggo::pos2f                vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _width); }
+
+    template <image_format format, sampling smp, typename shape_t>
+    void paint(void * buffer, const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity) const
+    {
+      ggo::paint<format, smp>(buffer, _width, _height, _line_step, shape, c, opacity);
+    }
 
   private:
 
