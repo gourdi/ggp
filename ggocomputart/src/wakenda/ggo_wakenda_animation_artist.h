@@ -2,6 +2,7 @@
 #define __GGO_WAKENDA_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
+#include <2d/ggo_image.h>
 
 namespace ggo
 {
@@ -15,27 +16,21 @@ namespace ggo
 
     void  render_frame(void * buffer, int frame_index, bool & finished) override;
 
-  public:
+    void  process_bkgd(void * buffer) const;
+    void  process_points(void * buffer, int frame_index);
 
-    struct moving_point
+
+  private:
+
+    struct point
     {
-      moving_point(float x, float y, const ggo::rgb_8u & color) : _pos(x, y), _color(color) {}
-      moving_point(const ggo::pos2f & p, const ggo::rgb_8u & color) : _pos(p), _color(color) {}
+      point(float x, float y, const ggo::rgb_8u & color) : _pos(x, y), _color(color) {}
+      point(const ggo::pos2f & p, const ggo::rgb_8u & color) : _pos(p), _color(color) {}
 
       ggo::pos2f _pos;
       ggo::rgb_8u _color;
       float _opacity = 0.f;
       int _counter = 0;
-    };
-
-    struct fading_point
-    {
-      fading_point(float x, float y, const ggo::rgb_8u & color, float opacity) : _pos(x, y), _color(color), _opacity(opacity) {}
-      fading_point(const ggo::pos2f & p, const ggo::rgb_8u & color, float opacity) : _pos(p), _color(color), _opacity(opacity) {}
-
-      ggo::pos2f _pos;
-      ggo::rgb_8u _color;
-      float _opacity = 0;
     };
 
     struct transform
@@ -56,9 +51,8 @@ namespace ggo
   private:
 
     float _hue;
-    std::array<ggo::rgb_8u, 4> _bkgd_colors;
-    std::vector<moving_point> _moving_points;
-    std::vector<fading_point> _fading_points;
+    ggo::image _bkgd_image;
+    std::vector<point> _points;
     std::array<transform_interpolation, 4> _transforms_x;
     std::array<transform_interpolation, 4> _transforms_y;
   };
