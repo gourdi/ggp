@@ -22,7 +22,7 @@ namespace ggo
     vortex,
     plastic, //15
     mandelbrot,
-    mondrian__REMOVED,
+    poupette_REMOVED,
     ifs,
     mosaic,
     metaballs, // 20
@@ -68,7 +68,7 @@ namespace ggo
     metaballs,
     rubiks_cube,
     smoke, // 10
-    sonson__REMOVED,
+    poupette,
     newton__REMOVED,
     alpha,
     dupecheck,
@@ -105,7 +105,9 @@ namespace ggo
     storni,
     lagaude,
     duffing, // 5
-    demeco
+    demeco,
+    wakenda,
+    poupette
   };
 }
 

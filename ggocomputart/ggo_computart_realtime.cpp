@@ -45,7 +45,9 @@ ggo::realtime_artist_abc * create_artist()
     //ggo::realtime_artist_id::neon,
     //ggo::realtime_artist_id::storni,
     //ggo::realtime_artist_id::lagaude,
-    ggo::realtime_artist_id::demeco
+    //ggo::realtime_artist_id::demeco,
+    //ggo::realtime_artist_id::wakenda,
+    ggo::realtime_artist_id::poupette
   };
 #endif
 

@@ -355,7 +355,6 @@ void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, co
   }
 }
 
-
 //////////////////////////////////////////////////////////////
 template <ggo::image_format format>
 void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int & clipping)

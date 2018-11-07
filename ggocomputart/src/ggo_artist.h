@@ -67,6 +67,12 @@ namespace ggo
       ggo::paint<format, smp>(buffer, _width, _height, _line_step, shape, c, opacity);
     }
 
+    template <image_format format, sampling smp, typename shape_t>
+    void paint(void * buffer, const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity, const ggo::rect_int & clipping) const
+    {
+      ggo::paint<format, smp>(buffer, _width, _height, _line_step, shape, c, opacity, clipping);
+    }
+
   private:
 
     const int	_width;

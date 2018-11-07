@@ -6,6 +6,8 @@
 #include "duffing/ggo_duffing_realtime_artist.h"
 #include "lagaude/ggo_lagaude_realtime_artist.h"
 #include "demeco/ggo_demeco_realtime_artist.h"
+#include "wakenda/ggo_wakenda_realtime_artist.h"
+#include "poupette/ggo_poupette_realtime_artist.h"
 
 namespace ggo
 {
@@ -61,6 +63,11 @@ namespace ggo
       return new lagaude_realtime_artist(width, height, line_step, format);
     case realtime_artist_id::demeco:
       return new demeco_realtime_artist(width, height, line_step, format);
+    case realtime_artist_id::wakenda:
+      return new wakenda_realtime_artist(width, height, line_step, format);
+    case realtime_artist_id::poupette:
+      return new poupette_realtime_artist(width, height, line_step, format);
+
     default:
       GGO_FAIL();
       return nullptr;
