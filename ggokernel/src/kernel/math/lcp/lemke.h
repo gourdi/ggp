@@ -12,7 +12,7 @@ namespace ggo
       static_assert(std::is_floating_point<scalar_t>::value);
 
       int _key_index;
-      ggo::array<scalar_t, 1> _coefs; // Assumong the following order: q, w1, w2, ..., wN, z0, z1, z2, ..., zN
+      ggo::array<scalar_t, 1> _coefs; // Assuming the following order: q, w1, w2, ..., wN, z0, z1, z2, ..., zN
 
       scalar_t q() const { return _coefs[0]; }
     };
@@ -38,20 +38,24 @@ namespace ggo
       return true;
     }
 
+    std::string key2str(int key_index, int z_offset)
+    {
+      if (key_index < z_offset)
+      {
+        return "w" + std::to_string(key_index);
+      }
+      else
+      {
+        return "z" + std::to_string(key_index - z_offset);
+      }
+    }
+
     template <typename scalar_t>
     void dump(const equation<scalar_t> & equation)
     {
       const int z_offset = equation._coefs.size() / 2;
 
-      if (equation._key_index < z_offset)
-      {
-        std::cout << 'w' << equation._key_index;
-      }
-      else
-      {
-        std::cout << 'z' << equation._key_index - z_offset;
-      }
-      std::cout << " = " << equation.q();
+      std::cout << key2str(equation._key_index, z_offset) << " = " << equation.q();
 
       for (int i = 1; i < z_offset; ++i)
       {
@@ -173,7 +177,7 @@ namespace ggo
         c *= scale;
       }
 
-      std::cout << "made z" << in_index - z_offset << " enter the dictionary by modifying the selected equation (w" << out_index << " leaves the dictionary):" << std::endl;
+      std::cout << "made z" << in_index - z_offset << " enter the dictionary by modifying the selected equation (" << key2str(out_index, z_offset) << " leaves the dictionary):" << std::endl;
       dump(dictionary);
       std::cout << std::endl;
 
