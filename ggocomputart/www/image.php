@@ -3,15 +3,23 @@
 $artist = $_GET["artist"];
 $image = $_GET["image"];
 
-include_once("helpers.php");
+echo "
+<!DOCTYPE html>
+<html>
+<head>
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
 
-html_header($artist, "artists/$artist/$image.jpg");
+<style>
+body { margin:0; background-color:black; height:100% }
+img { position:fixed; top:0; bottom:0; left:0; right:0; max-width:100%; max-height:100%; margin:auto; }
+</style>
 
-echo "<body>\n";
-echo "<img class=\"fullscreen\" src=\"artists/$artist/image/$image-fullscreen.jpg\"><br>\n";
+</head>
+<body>
 
-// Footer.
-$url = "http://www.gourdi.net/image.php?artist=$artist&image=$image";
-social_footer($url);
+<img src='artists/$artist/image/$image-fullscreen.jpg'>
 
-echo "</body></html>\n";
+</body>
+</html>";
+
+?>
