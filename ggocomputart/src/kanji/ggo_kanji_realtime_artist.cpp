@@ -32,7 +32,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_realtime_artist::preprocess_frame(int frame_index)
+void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
 {
   // Update the particles system.
   for (auto & particle : _particles)

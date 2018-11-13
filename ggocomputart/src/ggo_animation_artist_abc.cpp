@@ -50,7 +50,7 @@ namespace ggo
 
     void  render_frame(void * buffer, int frame_index, bool & finished) override
     {
-      _artist->preprocess_frame();
+      _artist->preprocess_frame(0, { 0, 0 });
       _artist->render_tile(buffer, ggo::rect_int::from_size(size()));
       finished = _artist->finished();
     }

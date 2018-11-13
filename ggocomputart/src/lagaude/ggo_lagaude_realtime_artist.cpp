@@ -43,7 +43,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index)
+void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
 {
   // Update background.
   for (auto & bkgd_disc : _bkgd_discs)

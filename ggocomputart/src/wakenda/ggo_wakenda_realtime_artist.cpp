@@ -111,7 +111,7 @@ void ggo::wakenda_realtime_artist::paint_points(void * buffer, const ggo::rect_i
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index)
+void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
 {
   constexpr int substeps_count = 10;
   constexpr int points_creations_per_subframe = 1;

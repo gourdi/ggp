@@ -25,7 +25,6 @@ SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
 const int nominal_frame_duration_ms = 40; // 25 fps
 bool quit = false;
-bool paused = false;
 
 /////////////////////////////////////////////////////////////////////
 ggo::realtime_artist_abc * create_artist()
@@ -39,14 +38,14 @@ ggo::realtime_artist_abc * create_artist()
   };
 #else
   const std::vector<ggo::realtime_artist_id> ids{
-    //ggo::realtime_artist_id::bozons,
-    //ggo::realtime_artist_id::duffing,
-    //ggo::realtime_artist_id::kanji,
-    //ggo::realtime_artist_id::neon,
-    //ggo::realtime_artist_id::storni,
-    //ggo::realtime_artist_id::lagaude,
-    //ggo::realtime_artist_id::demeco,
-    //ggo::realtime_artist_id::wakenda,
+    ggo::realtime_artist_id::bozons,
+    ggo::realtime_artist_id::duffing,
+    ggo::realtime_artist_id::kanji,
+    ggo::realtime_artist_id::neon,
+    ggo::realtime_artist_id::storni,
+    ggo::realtime_artist_id::lagaude,
+    ggo::realtime_artist_id::demeco,
+    ggo::realtime_artist_id::wakenda,
     ggo::realtime_artist_id::poupette
   };
 #endif
@@ -125,11 +124,15 @@ void main_loop()
     thread_id <<= 1;
   }
 
+  ggo::pos2i cursor_pos;
+  bool fullscreen = false;
+
   while (quit == false)
   {
     auto frame_start_time_ms = SDL_GetTicks();
 
     bool next = false;
+    uint32_t cursor_flags = 0;
 
     // Handle events on queue.
     SDL_Event event;
@@ -142,15 +145,44 @@ void main_loop()
         quit = true;
         break;
       case SDL_KEYUP:
-        if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+        switch (event.key.keysym.scancode)
         {
-          quit = true;
+        case SDL_SCANCODE_ESCAPE:
+          if (fullscreen)
+          {
+            SDL_SetWindowFullscreen(window, 0);
+            fullscreen = false;
+            screen_surface = SDL_GetWindowSurface(window);
+          }
+          else
+          {
+            quit = true;
+          }
+          break;
+        case SDL_SCANCODE_SPACE:
+          next = true;
+          break;
+        case SDL_SCANCODE_F:
+          SDL_SetWindowFullscreen(window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+          fullscreen = !fullscreen;
+          screen_surface = SDL_GetWindowSurface(window);
+          break;
+        }
+        break;
+      case SDL_MOUSEMOTION:
+        cursor_pos.x() = event.motion.x;
+        cursor_pos.y() = event.motion.y;
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == 1)
+        {
+          cursor_flags |= ggo::cursor_event_down;
         }
         break;
       case SDL_MOUSEBUTTONUP:
         if (event.button.button == 1)
         {
-          next = true;
+          cursor_flags |= ggo::cursor_event_up;
         }
         break;
       case SDL_WINDOWEVENT:
@@ -163,7 +195,7 @@ void main_loop()
     }
 
     // Update display.
-    artist->preprocess_frame();
+    artist->preprocess_frame(cursor_flags, cursor_pos);
     {
       // Start current frame rendering.
       {
@@ -216,9 +248,10 @@ void main_loop()
     }
 
     SDL_UpdateWindowSurface(window);
+    std::cout << "update window" << std::endl;
 
     std::ostringstream oss;
-    oss << "FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::round_to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";
+    oss << "Gourdi.net - FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::round_to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";
     SDL_SetWindowTitle(window, oss.str().c_str());
   }
 
@@ -236,12 +269,11 @@ int SDL_main(int argc, char ** argv)
   try
   {
     // Initialize SDL
-    const int screen_width = 640;
-    const int screen_height = 480;
-    const int screen_bpp = 32;
+    const int screen_width = 1280;
+    const int screen_height = 720;
 
     GGO_SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
-    window = SDL_CreateWindow("title", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
       GGO_SDL_ERROR("Window could not be created");
