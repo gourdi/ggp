@@ -20,6 +20,7 @@ namespace ggo
 
       void avoid_obstacles(int width, int height, const std::vector<ggo::pos2f> & obstacles);
       void avoid_stornis(int width, int height, const std::vector<storni> & stornis, float influence_hypot, float weight);
+      void avoid_cursor(int width, int height, ggo::pos2i cursor_pos, float influence_hypot, float weight);
       void avoid_borders(int width, int height, float margin);
       void clamp_velocity(float velocity_hypot_max);
 
@@ -37,7 +38,7 @@ namespace ggo
     float get_velocity_hypot_max() const { return ggo::square(0.004f * min_size()); }
 
     void update_predators(float velocity_hypot_max, float border_margin);
-    void update_stornis(float velocity_hypot_max, float border_margin);
+    void update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2i cursor_pos);
 
     template <ggo::image_format format> void fade_background_to_white(const ggo::rect_int & clipping);
     template <ggo::image_format format, ggo::sampling smp> void paint_stornies_background(const ggo::rect_int & clipping);

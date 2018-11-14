@@ -125,6 +125,7 @@ void main_loop()
   }
 
   ggo::pos2i cursor_pos;
+  SDL_GetMouseState(&cursor_pos.x(), &cursor_pos.y());
   bool fullscreen = false;
 
   while (quit == false)
@@ -195,7 +196,7 @@ void main_loop()
     }
 
     // Update display.
-    artist->preprocess_frame(cursor_flags, cursor_pos);
+    artist->preprocess_frame(cursor_flags, { cursor_pos.x(), screen_surface->h - cursor_pos.y() - 1 });
     {
       // Start current frame rendering.
       {
@@ -248,7 +249,6 @@ void main_loop()
     }
 
     SDL_UpdateWindowSurface(window);
-    std::cout << "update window" << std::endl;
 
     std::ostringstream oss;
     oss << "Gourdi.net - FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::round_to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";

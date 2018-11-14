@@ -41,7 +41,7 @@ namespace ggo
       }
       else
       {
-        ggo::pos2<data_t> proj(_p1 + v1 * dot / hypot);
+        ggo::pos2<data_t> proj(_p1 + v1 * (dot / hypot));
         return ggo::hypot(p, proj);
       }
     }

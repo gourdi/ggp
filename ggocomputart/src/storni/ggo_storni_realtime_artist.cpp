@@ -56,6 +56,19 @@ void ggo::storni_realtime_artist::storni::avoid_obstacles(int width, int height,
 }
 
 //////////////////////////////////////////////////////////////
+void ggo::storni_realtime_artist::storni::avoid_cursor(int width, int height, ggo::pos2i cursor_pos, float influence_hypot, float weight)
+{
+  const ggo::vec2f diff(ggo::from_pixel_to_math<float>(cursor_pos) - _pos);
+  const float hypot = diff.get_hypot();
+
+  if (hypot < influence_hypot)
+  {
+    const ggo::vec2f force = weight * std::min(width, height) * diff.get_normalized();
+    _vel -= force;
+  }
+}
+
+//////////////////////////////////////////////////////////////
 void ggo::storni_realtime_artist::storni::avoid_stornis(int width, int height, const std::vector<storni> & stornis, float influence_hypot, float weight)
 {
   ggo::vec2f force{ 0.f, 0.f };
@@ -215,12 +228,13 @@ void ggo::storni_realtime_artist::update_predators(float velocity_hypot_max, flo
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float border_margin)
+void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2i cursor_pos)
 {
   const float repulsion_influence_hypot = ggo::square(0.02f) * width() * height();
   const float alignment_influence_hypot = ggo::square(0.04f) * width() * height();
   const float attraction_influence_hypot = ggo::square(0.05f) * width() * height();
   const float predator_visibility_hypot = ggo::square(0.05f) * width() * height();
+  const float cursor_visibility_hypot = ggo::square(0.05f) * width() * height();
 
   for (auto & storni : _stornis)
   {
@@ -247,7 +261,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 
       const float hypot = diff.get_hypot();
 
-      // Repulsion of closent neighbors.
+      // Repulsion of closest neighbors.
       if (hypot < repulsion_influence_hypot)
       {
         const float factor = 1.f - hypot / repulsion_influence_hypot;
@@ -297,6 +311,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
     // Avoid obstacles, predators and borders.
     storni.avoid_obstacles(width(), height(), _obstacles);
     storni.avoid_stornis(width(), height(), _predators, predator_visibility_hypot, 0.003f);
+    storni.avoid_cursor(width(), height(), cursor_pos, cursor_visibility_hypot, 0.002f);
     storni.avoid_borders(width(), height(), border_margin);
 
     // Clamp velocity.
@@ -307,12 +322,14 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 //////////////////////////////////////////////////////////////
 void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
 {
+  std::cout << cursor_pos << std::endl;
+
   // Update items.
   const float velocity_hypot_max = get_velocity_hypot_max();
   const float border_margin = 0.04f * min_size();
 
   update_predators(velocity_hypot_max, border_margin);
-  update_stornis(velocity_hypot_max, border_margin);
+  update_stornis(velocity_hypot_max, border_margin, cursor_pos);
 
   // Move stornis and predators once all have been updated.
   for (auto & storni : _stornis)
@@ -335,19 +352,19 @@ void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, co
   {
   case ggo::rgb_8u_yu:
     fade_background_to_white<ggo::rgb_8u_yu>(clipping);
-    paint_stornies_background<ggo::rgb_8u_yu, ggo::sampling_8x8>(clipping);
+    paint_stornies_background<ggo::rgb_8u_yu, ggo::sampling_2x2>(clipping);
     blit_background<ggo::rgb_8u_yu>(buffer, clipping);
     paint_obstacles<ggo::rgb_8u_yu>(buffer, clipping, frame_index);
-    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, _predators, predator_size, clipping);
-    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer, _stornis, storni_size, clipping);
+    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
+    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
     break;
   case ggo::bgrx_8u_yd:
     fade_background_to_white<ggo::bgrx_8u_yd>(clipping);
-    paint_stornies_background<ggo::bgrx_8u_yd, ggo::sampling_8x8>(clipping);
+    paint_stornies_background<ggo::bgrx_8u_yd, ggo::sampling_2x2>(clipping);
     blit_background<ggo::bgrx_8u_yd>(buffer, clipping);
     paint_obstacles<ggo::bgrx_8u_yd>(buffer, clipping, frame_index);
-    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_8x8>(buffer, _predators, predator_size, clipping);
-    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_8x8>(buffer, _stornis, storni_size, clipping);
+    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
+    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
     break;
   default:
     GGO_FAIL();
