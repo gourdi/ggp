@@ -56,6 +56,4 @@ namespace ggo
   };
 }
 
-#include "ggo_storni_animation_artist.imp.h"
-
 #endif
