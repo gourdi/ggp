@@ -46,7 +46,7 @@ namespace ggo
         throw std::runtime_error("invalid or missing color parameter for paint command");
       }
 
-      if constexpr(std::is_same<format_traits::color_t, ggo::color_8u>::value == true)
+      if constexpr(std::is_same<format_traits::color_t, ggo::rgb_8u>::value == true)
       {
         auto color = parse_color_8u(*color_param);
         if (!color)
@@ -54,7 +54,7 @@ namespace ggo
           throw std::runtime_error("wrong solid color parameter '" + *color_param + "'");
         }
 
-        paint_shape<format, ggo::sampling_8x8>(image.data(), image.width(), image.height(), image.line_byte_step(), *shape, *color);
+        ggo::paint<format, ggo::sampling_8x8>(image.data(), image.width(), image.height(), image.line_byte_step(), *shape, *color);
       }
       else
       {

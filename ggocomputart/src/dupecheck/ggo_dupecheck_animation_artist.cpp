@@ -188,9 +188,9 @@ ggo::rgb_8u ggo::dupecheck_animation_artist::get_color(int frame_index)
 		_colors[3] = ggo::rgb_32f(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
 	}
 	
-	c._r = ggo::clamp<float>(c._r + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
-	c._g = ggo::clamp<float>(c._g + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
-	c._b = ggo::clamp<float>(c._b + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
+	c.r() = ggo::clamp<float>(c.r() + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
+	c.g() = ggo::clamp<float>(c.g() + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
+	c.b() = ggo::clamp<float>(c.b() + ggo::rand<float>(-0.1f, 0.1f), 0, 1);
 
 	return ggo::convert_color_to<ggo::rgb_8u>(c);
 }
@@ -294,8 +294,8 @@ void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width,
       float radius1 = _radius + harmonic_curve.evaluate(angle1);
       float radius2 = _radius + harmonic_curve.evaluate(angle2);
 
-      ggo::pos2f p1 = pos + ggo::from_polar(angle1, radius1);
-      ggo::pos2f p2 = pos + ggo::from_polar(angle2, radius2);
+      ggo::pos2f p1 = pos + radius1 * ggo::vec2f::from_angle(angle1);
+      ggo::pos2f p2 = pos + radius2 * ggo::vec2f::from_angle(angle2);
 
       auto segment = std::make_shared<ggo::capsule_float>(p1, p2, _width);
 
@@ -337,14 +337,14 @@ void ggo::dupecheck_animation_artist::animate3::render(void * buffer, int width,
 		for (int i = 0; i < _shapes_count; ++i)
 		{
 			float angle_shape = _angle + i * 2 * ggo::pi<float>() / _shapes_count;
-			ggo::pos2f shape_pos = pos + ggo::from_polar(angle_shape, _radius);
+			ggo::pos2f shape_pos = pos + _radius * ggo::vec2f::from_angle(angle_shape);
 
       ggo::polygon2d_float shape;
 
 			for (int j = 0; j < _vertices_count; ++j)
 			{
 				float angle_vertex = _angle_shape + j * 2 * ggo::pi<float>() / _vertices_count;
-				ggo::pos2f vertex = shape_pos + ggo::from_polar(angle_vertex, _shape_size);
+				ggo::pos2f vertex = shape_pos + _shape_size * ggo::vec2f::from_angle(angle_vertex);
 
 				shape.add_point(vertex);
 			}

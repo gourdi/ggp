@@ -45,7 +45,6 @@ namespace ggo
 
     ggo::pos2f	get_position() const { return _pos; }
     void        set_position(const ggo::pos2f & pos) { _pos = pos; }
-    void        set_position(float x, float y) { _pos.get<0>() = x; _pos.get<1>() = y; }
 
   private:
 

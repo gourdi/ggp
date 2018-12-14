@@ -138,7 +138,7 @@ std::vector<ggo::tree<ggo::box3d_float> *> ggo::cumbia_artist::init_common(ggo::
 		// Insert new boxes in the tree, and in the leaves' list.
 		for (ggo::box3d_float & new_box : new_boxes)
 		{
-			float d = new_box.get_center().get_length();
+			float d = ggo::length(new_box.get_center());
 			if (d < dimension + ggo::rand<float>())
 			{
 				std::vector<ggo::tree<ggo::box3d_float> *>::iterator insert_it;

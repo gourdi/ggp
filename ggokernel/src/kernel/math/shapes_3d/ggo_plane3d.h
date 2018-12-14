@@ -6,7 +6,7 @@ namespace ggo
   {
   public:
 
-                              plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+                              plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin) : _normal(normalize(normal)), _dist_to_origin(dist_to_origin) {}
 
     const ggo::vec3<data_t> & normal() const { return _normal; }
     data_t                    dist_to_origin() const { return _dist_to_origin; }

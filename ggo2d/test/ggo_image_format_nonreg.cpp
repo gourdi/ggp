@@ -59,9 +59,9 @@ GGO_TEST(image, rgb_8u_yu)
   GGO_CHECK_EQ(*pixel_ptr, 26);
 
   auto c = ggo::read_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 1, 2, 10);
-  GGO_CHECK_EQ(26, c._r);
-  GGO_CHECK_EQ(27, c._g);
-  GGO_CHECK_EQ(28, c._b);
+  GGO_CHECK_EQ(26, c.r());
+  GGO_CHECK_EQ(27, c.g());
+  GGO_CHECK_EQ(28, c.b());
 
   ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), 2, 0, 2, 10, { uint8_t(30), uint8_t(31), uint8_t(32) });
   ggo::write_pixel<ggo::rgb_8u_yu>(buffer.data(), 1, 1, 2, 10, { uint8_t(40), uint8_t(41), uint8_t(42) });
@@ -84,9 +84,9 @@ GGO_TEST(image, rgb_32f_yu)
   GGO_CHECK_FLOAT_EQ(*pixel_ptr, 26.f);
 
   auto c = ggo::read_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 1, 2, 10 * sizeof(float));
-  GGO_CHECK_FLOAT_EQ(c._r, 26.f);
-  GGO_CHECK_FLOAT_EQ(c._g, 27.f);
-  GGO_CHECK_FLOAT_EQ(c._b, 28.f);
+  GGO_CHECK_FLOAT_EQ(c.r(), 26.f);
+  GGO_CHECK_FLOAT_EQ(c.g(), 27.f);
+  GGO_CHECK_FLOAT_EQ(c.b(), 28.f);
 
   ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 2, 0, 2, 10 * sizeof(float), { 30.f, 31.f, 32.f });
   ggo::write_pixel<ggo::rgb_32f_yu>(buffer.data(), 1, 1, 2, 10 * sizeof(float), { 40.f, 41.f, 42.f });
@@ -109,9 +109,9 @@ GGO_TEST(image, bgra_8u_yd)
   GGO_CHECK_EQ(*pixel_ptr, 14);
 
   auto c = ggo::read_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10);
-  GGO_CHECK_EQ(16, c._r);
-  GGO_CHECK_EQ(15, c._g);
-  GGO_CHECK_EQ(14, c._b);
+  GGO_CHECK_EQ(16, c.r());
+  GGO_CHECK_EQ(15, c.g());
+  GGO_CHECK_EQ(14, c.b());
 
   ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 0, 2, 10, { uint8_t(30), uint8_t(31), uint8_t(32), uint8_t(33) });
   ggo::write_pixel<ggo::bgra_8u_yd>(buffer.data(), 1, 1, 2, 10, { uint8_t(40), uint8_t(41), uint8_t(42), uint8_t(43) });
@@ -152,9 +152,9 @@ GGO_TEST(image, accumulator)
     GGO_CHECK_EQ(acc._r, 7);
     GGO_CHECK_EQ(acc._g, 3);
     GGO_CHECK_EQ(acc._b, 5);
-    GGO_CHECK_EQ(color._r, 2);
-    GGO_CHECK_EQ(color._g, 1);
-    GGO_CHECK_EQ(color._b, 1);
+    GGO_CHECK_EQ(color.r(), 2);
+    GGO_CHECK_EQ(color.g(), 1);
+    GGO_CHECK_EQ(color.b(), 1);
   }
 
   {
@@ -167,9 +167,9 @@ GGO_TEST(image, accumulator)
     GGO_CHECK_EQ(acc._r, 7.f);
     GGO_CHECK_EQ(acc._g, 3.f);
     GGO_CHECK_EQ(acc._b, 5.f);
-    GGO_CHECK_EQ(color._r, 7.f / 4.f);
-    GGO_CHECK_EQ(color._g, 3.f / 4.f);
-    GGO_CHECK_EQ(color._b, 5.f / 4.f);
+    GGO_CHECK_EQ(color.r(), 7.f / 4.f);
+    GGO_CHECK_EQ(color.g(), 3.f / 4.f);
+    GGO_CHECK_EQ(color.b(), 5.f / 4.f);
   }
 }
 

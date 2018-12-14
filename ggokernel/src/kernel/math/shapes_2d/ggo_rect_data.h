@@ -1,7 +1,7 @@
 #ifndef __GGO_RECT_DATA__
 #define __GGO_RECT_DATA__
 
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 
 namespace ggo
 {

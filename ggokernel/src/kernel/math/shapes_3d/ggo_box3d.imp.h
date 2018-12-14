@@ -30,7 +30,7 @@ namespace ggo
   template <typename data_t>
   bool box3d<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
   {
-    GGO_ASSERT(dir.is_normalized() == true);
+    GGO_ASSERT(ggo::is_normalized(dir) == true);
 
     // First test to check if one of the 2 vertices are inside the box.
     if (is_point_inside(pos) == true)
@@ -253,8 +253,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(_data._x_min, y, z);
-          normal.set_normalized_dir(-1, 0, 0);
+          normal.pos() = { _data._x_min, y, z };
+          normal.set_normalized_dir({ -1, 0, 0 });
         }
       }
 
@@ -269,8 +269,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(_data._x_max, y, z);
-          normal.set_normalized_dir(1, 0, 0);
+          normal.pos() = { _data._x_max, y, z };
+          normal.set_normalized_dir({ 1, 0, 0 });
         }
       }
     }
@@ -289,8 +289,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(x, _data._y_min, z);
-          normal.set_normalized_dir(0, -1, 0);
+          normal.pos() = { x, _data._y_min, z };
+          normal.set_normalized_dir({ 0, -1, 0 });
         }
       }
 
@@ -305,8 +305,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(x, _data._y_max, z);
-          normal.set_normalized_dir(0, 1, 0);
+          normal.pos() = { x, _data._y_max, z };
+          normal.set_normalized_dir({ 0, 1, 0 });
         }
       }
     }
@@ -325,8 +325,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(x, y, _data._z_min);
-          normal.set_normalized_dir(0, 0, -1);
+          normal.pos() = { x, y, _data._z_min };
+          normal.set_normalized_dir({ 0, 0, -1 });
         }
       }
 
@@ -341,8 +341,8 @@ namespace ggo
         {
           hit = true;
           dist = dist_cur;
-          normal.pos().set(x, y, _data._z_max);
-          normal.set_normalized_dir(0, 0, 1);
+          normal.pos() = { x, y, _data._z_max };
+          normal.set_normalized_dir({ 0, 0, 1 });
         }
       }
     }

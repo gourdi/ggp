@@ -25,11 +25,7 @@ void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
   for (auto & point : _points)
   {
     point = _duffing.update(0.01f);
-
-    float angle = atan2(point.y(), point.x()) + _angle_offset;
-    float dist = point.get_length();
-
-    point.set(dist * std::cos(angle), dist * std::sin(angle));
+    point = ggo::rotate(point, _angle_offset);
     point = map_fit(point, -1.7f, 1.7f);
 
     _angle_offset = std::fmod(_angle_offset + 0.0001f, 2 * ggo::pi<float>());
@@ -78,14 +74,14 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
       {
         const ggo::rgb_8u pixel = ggo::read_pixel<ggo::bgrx_8u_yd>(ptr);
 
-        const int32_t diff_r = contract(pixel._r - _bkgd_color._r);
-        const int32_t diff_g = contract(pixel._g - _bkgd_color._g);
-        const int32_t diff_b = contract(pixel._b - _bkgd_color._b);
+        const int32_t diff_r = contract(pixel.r() - _bkgd_color.r());
+        const int32_t diff_g = contract(pixel.g() - _bkgd_color.g());
+        const int32_t diff_b = contract(pixel.b() - _bkgd_color.b());
 
         ggo::write_pixel<ggo::bgrx_8u_yd>(ptr, {
-          static_cast<uint8_t>(_bkgd_color._r + diff_r),
-          static_cast<uint8_t>(_bkgd_color._g + diff_g),
-          static_cast<uint8_t>(_bkgd_color._b + diff_b) });
+          static_cast<uint8_t>(_bkgd_color.r() + diff_r),
+          static_cast<uint8_t>(_bkgd_color.g() + diff_g),
+          static_cast<uint8_t>(_bkgd_color.b() + diff_b) });
       }
     }
   }

@@ -111,8 +111,8 @@ namespace ggo
     static void write(void * ptr, ggo::ya_8u c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._y;
-      ptr_8u[1] = c._a;
+      ptr_8u[0] = c.y();
+      ptr_8u[1] = c.a();
     }
   };
 
@@ -134,9 +134,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._r;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._b;
+      ptr_8u[0] = c.r();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.b();
     }
   };
 
@@ -158,9 +158,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._r;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._b;
+      ptr_8u[0] = c.r();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.b();
     }
   };
 
@@ -182,10 +182,10 @@ namespace ggo
     static void write(void * ptr, const ggo::rgba_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._r;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._b;
-      ptr_8u[3] = c._a;
+      ptr_8u[0] = c.r();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.b();
+      ptr_8u[3] = c.a();
     }
   };
 
@@ -208,9 +208,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_32f & c)
     {
       float * ptr_32f = static_cast<float *>(ptr);
-      ptr_32f[0] = c._r;
-      ptr_32f[1] = c._g;
-      ptr_32f[2] = c._b;
+      ptr_32f[0] = c.r();
+      ptr_32f[1] = c.g();
+      ptr_32f[2] = c.b();
     }
   };
 
@@ -232,9 +232,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._b;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._r;
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
     }
   };
 
@@ -256,9 +256,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._b;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._r;
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
     }
   };
 
@@ -280,9 +280,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._b;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._r;
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
     }
   };
 
@@ -304,10 +304,10 @@ namespace ggo
     static void write(void * ptr, const ggo::rgba_8u & c)
     {
       uint8_t * ptr_8u = static_cast<uint8_t *>(ptr);
-      ptr_8u[0] = c._b;
-      ptr_8u[1] = c._g;
-      ptr_8u[2] = c._r;
-      ptr_8u[3] = c._a;
+      ptr_8u[0] = c.b();
+      ptr_8u[1] = c.g();
+      ptr_8u[2] = c.r();
+      ptr_8u[3] = c.a();
     }
   };
 
@@ -329,9 +329,9 @@ namespace ggo
     static void write(void * ptr, const ggo::rgb_16u & c)
     {
       uint16_t * ptr_16u = static_cast<uint16_t *>(ptr);
-      ptr_16u[0] = c._r;
-      ptr_16u[1] = c._g;
-      ptr_16u[2] = c._b;
+      ptr_16u[0] = c.r();
+      ptr_16u[1] = c.g();
+      ptr_16u[2] = c.b();
     }
   };
 }

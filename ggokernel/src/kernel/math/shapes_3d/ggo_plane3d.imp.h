@@ -68,7 +68,7 @@ namespace ggo
     }
 
     normal.pos() = ray.pos() + dist * ray.dir();
-    normal.set_normalized_dir(normal_x, normal_y, normal_z);
+    normal.set_normalized_dir({ normal_x, normal_y, normal_z });
 
     return true;
   }

@@ -31,7 +31,6 @@ namespace ggo
     data_t					          get_radius() const { return _radius; }
     void				              set_radius(data_t radius) { _radius = radius; }
     void				              set_center(const ggo::pos2<data_t> & center) { _center = center; }
-    void				              set_center(data_t x, data_t y) { _center.template get<0>() = x; _center.template get<1>() = y; }
            
     // Interfaces.
     ggo::pos2<data_t>         get_center() const override { return _center; }

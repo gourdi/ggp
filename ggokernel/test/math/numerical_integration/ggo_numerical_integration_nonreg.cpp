@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 #include <kernel/math/numerical_integration/ggo_numerical_integration.h>
 
 ////////////////////////////////////////////////////////////////////

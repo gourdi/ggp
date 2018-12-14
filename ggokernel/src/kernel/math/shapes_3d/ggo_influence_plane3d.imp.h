@@ -4,7 +4,7 @@ namespace ggo
   template <typename data_t>
   influence_plane3d<data_t>::influence_plane3d(const ggo::vec3<data_t> & normal, data_t dist_to_origin, data_t width)
   :
-  _normal(normal.get_normalized()),
+  _normal(normalize(normal)),
   _dist_to_origin(dist_to_origin),
   _width(width)
   {

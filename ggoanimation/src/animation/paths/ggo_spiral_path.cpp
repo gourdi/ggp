@@ -3,5 +3,5 @@
 //////////////////////////////////////////////////////////////
 ggo::pos2f ggo::spiral_path::get_pos(int counter)
 {
-	return ggo::from_polar(_angle_speed * counter, _radius_speed * counter);
+	return _radius_speed * counter * ggo::vec2f::from_angle(_angle_speed * counter);
 }

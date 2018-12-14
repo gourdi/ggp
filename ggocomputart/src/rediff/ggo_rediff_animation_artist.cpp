@@ -1,4 +1,5 @@
 #include "ggo_rediff_animation_artist.h"
+#include <kernel/ggo_vec3.h>
 #include <2d/ggo_color.h>
 #include <2d/blur/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
@@ -98,7 +99,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
   val_map.push_point(1.0f, 0.0f);
 
   ggo::vec3f light_dir(0.f, -0.05f, -1.f);
-  light_dir.normalize();
+  light_dir = ggo::normalize(light_dir);
 
   for (int y = 0; y < height(); ++y)
   {
@@ -114,7 +115,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
       ggo::vec3f v2(p_tl - p_br);
 
       ggo::vec3f normal = ggo::cross(v1, v2);
-      float dot = -ggo::dot(normal.get_normalized(), light_dir);
+      float dot = -ggo::dot(normalize(normal), light_dir);
 
       // Apply lighting.
       float sat = sat_map.evaluate(_life(x, y));

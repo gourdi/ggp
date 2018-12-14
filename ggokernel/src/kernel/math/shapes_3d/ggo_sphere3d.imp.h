@@ -114,7 +114,7 @@ namespace ggo
   {
     ggo::vec3<data_t> diff(x - _center.x(), y - _center.y(), z - _center.z());
 
-    return diff.get_hypot() <= ggo::square(_radius);
+    return hypot(diff) <= ggo::square(_radius);
   }
 
   //////////////////////////////////////////////////////////////
@@ -169,14 +169,11 @@ namespace ggo
       return sphere1;
     }
 
-    ggo::vec3<data_t> diff(sphere2.center() - sphere1.center());
-    diff /= diff.get_length(); // Normalize.
-
+    ggo::vec3<data_t> diff = normalize(sphere2.center() - sphere1.center());
     ggo::pos3<data_t> p1(sphere1.center() - sphere1.radius() * diff);
     ggo::pos3<data_t> p2(sphere2.center() + sphere2.radius() * diff);
-    ggo::vec3<data_t> diff2(p2 - p1);
 
-    return sphere3d<data_t>((p1 + p2) / data_t(2), diff2.get_length() / data_t(2));
+    return sphere3d<data_t>((p1 + p2) / data_t(2), length(p2 - p1) / data_t(2));
   }
 
   //////////////////////////////////////////////////////////////

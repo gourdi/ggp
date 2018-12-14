@@ -32,7 +32,7 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 	while (params._centers.size() < 200)
 	{
 		ggo::pos3f center(ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size));
-		if (center.get_length() < ball_size)
+		if (ggo::length(center) < ball_size)
 		{
 			params._centers.push_back(center);
 		}

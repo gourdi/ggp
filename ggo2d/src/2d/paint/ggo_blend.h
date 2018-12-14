@@ -29,12 +29,12 @@ namespace ggo
   template <>
   inline ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgba_8u & brush_color)
   {
-    uint8_t inv_opacity = 0xff - brush_color._a;
+    uint8_t inv_opacity = 0xff - brush_color.a();
 
     return ggo::rgb_8u(
-      ggo::round_div(brush_color._a * brush_color._r + inv_opacity * bkgd_color._r, 0xff),
-      ggo::round_div(brush_color._a * brush_color._g + inv_opacity * bkgd_color._g, 0xff),
-      ggo::round_div(brush_color._a * brush_color._b + inv_opacity * bkgd_color._b, 0xff));
+      ggo::round_div(brush_color.a() * brush_color.r() + inv_opacity * bkgd_color.r(), 0xff),
+      ggo::round_div(brush_color.a() * brush_color.g() + inv_opacity * bkgd_color.g(), 0xff),
+      ggo::round_div(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
   }
 
   template <typename real_t>
@@ -108,9 +108,9 @@ namespace ggo
     rgb_8u operator()(int x, int y, const rgb_8u & bkgd_color, const rgb_8u & brush_color) const
     {
       return {
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._r + _opacity * brush_color._r)),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._g + _opacity * brush_color._g)),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color._b + _opacity * brush_color._b)) };
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.r() + _opacity * brush_color.r())),
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.g() + _opacity * brush_color.g())),
+        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.b() + _opacity * brush_color.b())) };
     }
 
     rgb_8u operator()(const rgb_8u & bkgd_color, const rgb_8u & brush_color) const
@@ -191,9 +191,9 @@ namespace ggo
   ggo::rgb_8u add_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgb_8u & brush_color)
   {
     return {
-      add_blend(bkgd_color._r, brush_color._r),
-      add_blend(bkgd_color._g, brush_color._g),
-      add_blend(bkgd_color._b, brush_color._b) };
+      add_blend(bkgd_color.r(), brush_color.r()),
+      add_blend(bkgd_color.g(), brush_color.g()),
+      add_blend(bkgd_color.b(), brush_color.b()) };
   }
 
   inline
@@ -206,9 +206,9 @@ namespace ggo
   rgb_32f add_blend(const rgb_32f & bkgd_color, const rgb_32f & brush_color)
   {
     return {
-      add_blend(bkgd_color._r, brush_color._r),
-      add_blend(bkgd_color._g, brush_color._g),
-      add_blend(bkgd_color._b, brush_color._b) };
+      add_blend(bkgd_color.r(), brush_color.r()),
+      add_blend(bkgd_color.g(), brush_color.g()),
+      add_blend(bkgd_color.b(), brush_color.b()) };
   }
 
   // Structs.

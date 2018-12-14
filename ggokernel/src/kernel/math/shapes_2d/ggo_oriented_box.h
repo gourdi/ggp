@@ -17,7 +17,7 @@ namespace ggo
     using affine_shape2d_abc<data_t>::move;
     using samplable_shape2d_abc<data_t>::is_point_inside;
 
-                                    oriented_box(ggo::pos2<data_t> pos, ggo::pos2<data_t> dir, data_t size1, data_t size2) : _pos(pos), _dir(dir.get_normalized()), _size1(size1), _size2(size2) {}
+                                    oriented_box(ggo::pos2<data_t> pos, ggo::pos2<data_t> dir, data_t size1, data_t size2) : _pos(pos), _dir(normalize(dir)), _size1(size1), _size2(size2) {}
 
     const ggo::pos2<data_t> &       pos() const { return _pos; }
     const ggo::vec2<data_t> &       dir() const { return _dir; }

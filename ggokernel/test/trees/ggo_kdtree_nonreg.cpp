@@ -1,10 +1,11 @@
 #include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_vec2.h>
 #include <kernel/trees/ggo_kdtree.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(trees, kdtree)
 {
-  using tree_type = ggo::kdtree<void *, 2>;
+  using tree_type = ggo::kdtree<void *, ggo::vec2f>;
   std::vector<tree_type::data_point> points{
     { {  2.f, -1.f }, nullptr },
     { {  1.f,  1.f }, nullptr },

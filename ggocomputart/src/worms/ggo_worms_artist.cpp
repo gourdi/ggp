@@ -38,8 +38,8 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
       int pos_y = ggo::rand<int>(0, height());
         
 			ggo::pos2f pt;
-			pt.get<0>() = pos_x + ggo::rand<float>(0, 0.1f * min_size());
-			pt.get<1>() = pos_y + ggo::rand<float>(0, 0.1f * min_size());
+			pt.x() = pos_x + ggo::rand<float>(0, 0.1f * min_size());
+			pt.y() = pos_y + ggo::rand<float>(0, 0.1f * min_size());
 			spline.add_control_point(pt);
 		}
 		

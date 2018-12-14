@@ -15,8 +15,8 @@ GGO_TEST(shape_sampling, disc_uniform_sampling)
   {
     auto sample = ggo::disc_uniform_sampling<float>();
     
-    int x = ggo::round_to<int>(0.4 * size * sample.get<0>() + size / 2);
-    int y = ggo::round_to<int>(0.4 * size * sample.get<1>() + size / 2);
+    int x = ggo::round_to<int>(0.4 * size * sample.x() + size / 2);
+    int y = ggo::round_to<int>(0.4 * size * sample.y() + size / 2);
     
     uint8_t * ptr = buffer.data() + 3 * (y * size + x);
     ptr[0] = 0xFF;
@@ -79,8 +79,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.get<0>();
-    float y_f = sample.get<1>();
+    float x_f = sample.x();
+    float y_f = sample.y();
     
     int x_i = ggo::round_to<int>(0.2 * size * x_f + 3 * size / 4);
     int y_i = ggo::round_to<int>(0.2 * size * y_f + size / 4);
@@ -95,8 +95,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
-    float x_f = sample.get<0>();
-    float y_f = sample.get<1>() * std::cos(angle) + sample.get<2>() * std::sin(angle);
+    float x_f = sample.x();
+    float y_f = sample.y() * std::cos(angle) + sample.z() * std::sin(angle);
     
     int x_i = ggo::round_to<int>(0.2 * size * x_f + size / 4);
     int y_i = ggo::round_to<int>(0.2 * size * y_f + 3 * size / 4);
@@ -111,8 +111,8 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>(ggo::pi<float>() / 4);
     
-    float x_f = sample.get<0>();
-    float y_f = sample.get<1>() * std::cos(angle) + sample.get<2>() * std::sin(angle);
+    float x_f = sample.x();
+    float y_f = sample.y() * std::cos(angle) + sample.z() * std::sin(angle);
     
     int x_i = ggo::round_to<int>(0.2 * size * x_f + 3 * size / 4);
     int y_i = ggo::round_to<int>(0.2 * size * y_f + 3 * size / 4);

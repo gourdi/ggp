@@ -268,8 +268,8 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
   float outter_radius = _outter_radius * (1 + 10 * start_factor);
   float angle = _angle + _angle_offset * start_factor;
 
-  ggo::vec2f offset1 = ggo::from_polar(angle, inner_radius);
-  ggo::vec2f offset2 = ggo::from_polar(angle, outter_radius);
+  ggo::vec2f offset1 = inner_radius * ggo::vec2f::from_angle(angle);
+  ggo::vec2f offset2 = outter_radius * ggo::vec2f::from_angle(angle);
 
   const int END_COUNTER = 100;
   if (_counter >= END_COUNTER)
@@ -277,13 +277,13 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
     ggo::vec2f line_center = 0.5f * (offset1 + offset2);
 
     float end_factor = std::pow(0.1f * (_counter - END_COUNTER), 2.5f);
-    float length = ggo::distance(offset1, offset2);
-    float angle = atan2(line_center.get<1>(), line_center.get<0>());
+    float dist = ggo::distance(offset1, offset2);
+    float angle = ggo::angle(line_center);
 
     angle = _angle + end_factor;
     line_center *= (1 + end_factor);
-    offset1 = line_center + ggo::from_polar(angle, length / 2);
-    offset2 = line_center - ggo::from_polar(angle, length / 2);
+    offset1 = line_center + ggo::vec2f::from_angle(angle) * dist / 2.f;
+    offset2 = line_center - ggo::vec2f::from_angle(angle) * dist / 2.f;
 
     _opacity -= 0.1f * end_factor;
     if (_opacity <= 0)

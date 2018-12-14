@@ -205,8 +205,7 @@ namespace ggo
   template <typename data_t>
   void basis3d<data_t>::look_at(const ggo::pos3<data_t> & at)
   {
-    _z = _pos - at;
-    _z.normalize();
+    _z = normalize(_pos - at);
     auto b = build_basis(_z);
     _x = b.first;
     _y = b.second;
@@ -218,7 +217,7 @@ namespace ggo
   {
     ggo::vec3<data_t> diff(p - _pos);
 
-    // Origin unoptimized code.
+    // Original unoptimized code.
     // T dot_z = -ggo::dot(diff, _z); 
     // T y = T(0.5) * screen_height + T(0.5) * screen_height * ggo::dot(diff, _y) / (dot_z * aperture);
     // T x = T(0.5) * screen_height + T(0.5) * screen_height * ggo::dot(diff, _x) / (dot_z * aperture) + T(0.5) * (screen_width - screen_height);

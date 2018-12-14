@@ -332,9 +332,9 @@ void ggo::smoke_animation_artist::render_frame(void * buffer, int frame_index)
       double opacity = _opacity_cur->at(x, y);
 
       ggo::rgb_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(_bkgd_buffer.data(), x, y, height(), 3 * width());
-      c_8u._r = ggo::round_to<uint8_t>(opacity * _smoke_color._r + (1. - opacity) * c_8u._r);
-      c_8u._g = ggo::round_to<uint8_t>(opacity * _smoke_color._g + (1. - opacity) * c_8u._g);
-      c_8u._b = ggo::round_to<uint8_t>(opacity * _smoke_color._b + (1. - opacity) * c_8u._b);
+      c_8u.r() = ggo::round_to<uint8_t>(opacity * _smoke_color.r() + (1. - opacity) * c_8u.r());
+      c_8u.g() = ggo::round_to<uint8_t>(opacity * _smoke_color.g() + (1. - opacity) * c_8u.g());
+      c_8u.b() = ggo::round_to<uint8_t>(opacity * _smoke_color.b() + (1. - opacity) * c_8u.b());
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
     }
   }

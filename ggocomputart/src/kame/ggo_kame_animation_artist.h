@@ -33,10 +33,10 @@ namespace ggo
 
       void set_length(float l)
       {
-        _prv.set_length(l);
-        _cur.set_length(l);
-        _laplacian.set_length(l);
-        _smoothed.set_length(l);
+        _prv = l * normalize(_prv);
+        _cur = l * normalize(_cur);
+        _laplacian = l * normalize(_laplacian);
+        _smoothed = l * normalize(_smoothed);
       }
     };
 
@@ -61,7 +61,7 @@ namespace ggo
       {
         float angle = ggo::rand<float>(0.f, 2 * ggo::pi<float>());
         float radius = ggo::rand<float>(0.f, 1.f);
-        data = ggo::from_polar(angle, radius);
+        data = radius * ggo::vec2f::from_angle(angle);
         dt = ggo::rand<float>(25, 50);
       }
     };

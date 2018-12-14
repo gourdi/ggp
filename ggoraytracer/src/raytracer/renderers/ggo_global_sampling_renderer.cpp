@@ -42,7 +42,7 @@ namespace ggo
 
     for (int sample = 0; sample < _samples_count; ++sample)
     {
-      color += raytracer.process(camera_rays[sample], depth, indirect_lighting, uniform_samples2d[sample].get<0>(), uniform_samples2d[sample].get<1>());
+      color += raytracer.process(camera_rays[sample], depth, indirect_lighting, uniform_samples2d[sample].x(), uniform_samples2d[sample].y());
     }
     
     return color / static_cast<float>(_samples_count);

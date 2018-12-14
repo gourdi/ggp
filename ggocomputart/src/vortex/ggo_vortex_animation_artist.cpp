@@ -23,10 +23,10 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 250)
     vortex._power = ggo::rand<float>(6, 8);
 
     ggo::vortex_animation_artist::vortex_path vortex_path;
-    vortex_path._start_pos.get<0>() = ggo::rand<float>() * width;
-    vortex_path._start_pos.get<1>() = ggo::rand<float>() * height;
-    vortex_path._end_pos.get<0>() = ggo::rand<float>() * width;
-    vortex_path._end_pos.get<1>() = ggo::rand<float>() * height;
+    vortex_path._start_pos.x() = ggo::rand<float>() * width;
+    vortex_path._start_pos.y() = ggo::rand<float>() * height;
+    vortex_path._end_pos.x() = ggo::rand<float>() * width;
+    vortex_path._end_pos.y() = ggo::rand<float>() * height;
 
     _vortices_paths[&vortex] = vortex_path;
   }

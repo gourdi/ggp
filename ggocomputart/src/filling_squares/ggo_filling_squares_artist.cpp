@@ -25,11 +25,11 @@ std::vector<ggo::filling_squares_artist::multi_square> ggo::filling_squares_arti
 		multi_square._pos = centers[index];
 
 		ggo::pos2f new_center(centers[index]);
-		new_center.get<0>() += ggo::rand<float>(-range, range);
-		new_center.get<1>() += ggo::rand<float>(-range, range);
+		new_center.x() += ggo::rand<float>(-range, range);
+		new_center.y() += ggo::rand<float>(-range, range);
 		
-		if (new_center.get<0>() >= 0 && new_center.get<0>() < width &&
-			  new_center.get<1>() >= 0 && new_center.get<1>() < height)
+		if (new_center.x() >= 0 && new_center.x() < width &&
+			  new_center.y() >= 0 && new_center.y() < height)
 		{
 			centers.push_back(new_center);
 

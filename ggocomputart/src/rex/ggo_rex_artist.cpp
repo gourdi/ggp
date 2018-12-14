@@ -249,7 +249,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
   }
 
   // Create circles.
-  const float diagonal = ggo::distance(float(width()), float(height())) / 2;
+  const float diagonal = ggo::length(ggo::pos2f(float(width()), float(height()))) / 2;
   float outter_radius = diagonal;
   float inner_radius = outter_radius - diagonal * ggo::rand<float>(0.002f, 0.004f);
   while (inner_radius > 0)

@@ -83,8 +83,7 @@ namespace ggo
   template <typename data_t>
   ggo::pos3<data_t> centered_sphere3d<data_t>::sample_point(const ggo::pos3<data_t> & target_pos, data_t random_variable1, data_t random_variable2) const
   {
-    ggo::vec3<data_t> dir(target_pos);
-    dir.normalize();
+    ggo::vec3<data_t> dir(normalize(target_pos));
 
     return _radius * ggo::hemisphere_sampling(dir, random_variable1, random_variable2);
   }

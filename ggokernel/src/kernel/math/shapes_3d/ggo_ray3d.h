@@ -7,20 +7,15 @@ namespace ggo
   public:
 
                           ray3d() {};
-                          ray3d(T pos_x, T pos_y, T pos_z, T dir_x, T dir_y, T dir_z, bool normalize_dir = true);
                           ray3d(const ggo::pos3<T> & pos, const ggo::vec3<T> & dir, bool normalize_dir = true);
 
     const ggo::pos3<T> &	pos() const { return _pos; }
     ggo::pos3<T> &		    pos() { return _pos; }
-    void				          set_pos(T x, T y, T z) { _pos = ggo::pos3<T>(x, y, z); }
 
     const ggo::vec3<T> &	dir() const { return _dir; };
-    void				          set_dir(const ggo::vec3<T> & dir) { _dir = dir; _dir.normalize(); }
-    void				          set_dir(T x, T y, T z) { _dir = ggo::vec3<T>(x, y, z); _dir.normalize(); }
-    void				          set_normalized_dir(const ggo::vec3<T> & dir) { _dir = dir; GGO_ASSERT(_dir.is_normalized(T(0.001))); }
-    void				          set_normalized_dir(T x, T y, T z) { _dir = ggo::vec3<T>(x, y, z); GGO_ASSERT(_dir.is_normalized(T(0.001))); }
-
-    bool                  is_normalized(T epsilon = 0.0001) const { return _dir.is_normalized(epsilon); }
+    void				          set_dir(const ggo::vec3<T> & dir) { _dir = normalize(dir); }
+    void				          set_normalized_dir(const ggo::vec3<T> & dir) { _dir = dir; GGO_ASSERT(ggo::is_normalized(_dir, T(0.001))); }
+    bool                  is_normalized(T epsilon = 0.0001) const { return ggo::is_normalized(_dir, epsilon); }
     
     void                  flip();
     
@@ -59,44 +54,20 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename T>  
-  ray3d<T>::ray3d(T pos_x, T pos_y, T pos_z, T dir_x, T dir_y, T dir_z, bool normalize_dir)
-  :
-  _pos(pos_x, pos_y, pos_z),
-  _dir(dir_x, dir_y, dir_z)
-  {
-    if (normalize_dir == true)
-    {
-      _dir.normalize();
-    }
-    else
-    {
-      GGO_ASSERT(_dir.is_normalized(T(0.001)) == true);
-    }  
-  }
-
-  //////////////////////////////////////////////////////////////
   template <typename T>
   ray3d<T>::ray3d(const ggo::pos3<T> & pos, const ggo::vec3<T> & dir, bool normalize_dir)
   :
   _pos(pos),
-  _dir(dir)
-  {	
-    if (normalize_dir == true)
-    {
-      _dir.normalize();
-    }
-    else
-    {
-      GGO_ASSERT(_dir.is_normalized(T(0.001)) == true);
-    }
+  _dir(normalize_dir ? ggo::normalize(dir) : dir)
+  {
+    GGO_ASSERT(ggo::is_normalized(_dir, T(0.001)) == true);
   }
   
   //////////////////////////////////////////////////////////////
   template <typename T>
   void ray3d<T>::flip()
   {
-    _dir.flip();
+    _dir *= -1;
   }
 }
 

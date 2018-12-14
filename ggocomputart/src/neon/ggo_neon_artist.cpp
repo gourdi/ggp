@@ -58,8 +58,8 @@ void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events,
     _radius_prv = _radius_cur;
     _radius_cur += velocity + force;
 
-    _points[substep] = ggo::from_polar(_angle, _radius_cur);
-    _attractor_points[substep] = ggo::from_polar(_angle, _radius_attractor);
+    _points[substep] = _radius_cur * ggo::vec2f::from_angle(_angle);
+    _attractor_points[substep] = _radius_attractor * ggo::vec2f::from_angle(_angle);
 
     _angle += 0.001f;
   }

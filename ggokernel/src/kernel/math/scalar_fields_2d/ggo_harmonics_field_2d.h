@@ -1,6 +1,7 @@
 #ifndef __GGO_HARMONIC_2D__
 #define __GGO_HARMONIC_2D__
 
+#include <kernel/ggo_vec2.h>
 #include <kernel/math/scalar_fields_2d/ggo_scalar_field_2d_abc.h>
 
 namespace ggo
@@ -34,7 +35,7 @@ namespace ggo
   void harmonics_field_2d<data_t>::push_harmonic(const ggo::vec2<data_t> & dir, data_t wavelength, data_t amplitude, data_t phase)
   {
     wave new_wave;
-    new_wave._wave_vector = dir.get_normalized() / wavelength;
+    new_wave._wave_vector = normalize(dir) / wavelength;
     new_wave._phase = phase;
     new_wave._amplitude = amplitude;
     _waves.push_back(new_wave);

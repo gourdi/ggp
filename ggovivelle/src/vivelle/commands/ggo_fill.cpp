@@ -12,7 +12,7 @@ namespace ggo
     {
       using format_traits = ggo::image_format_traits<format>;
 
-      if constexpr(std::is_same<format_traits::color_t, ggo::color_8u>::value == true)
+      if constexpr(std::is_same<format_traits::color_t, ggo::rgb_8u>::value == true)
       {
         auto color = parse_color_8u(color_param);
         if (!color)

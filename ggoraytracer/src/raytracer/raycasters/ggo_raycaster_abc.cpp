@@ -34,7 +34,7 @@ namespace ggo
   bool raycaster_abc::check_visibility(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::object3d_abc * exclude_object1, const ggo::object3d_abc * exclude_object2) const
   {
     ggo::vec3f diff = p2 - p1;
-    float length = diff.get_length();
+    float length = ggo::length(diff);
     ggo::vec3f dir = diff / length;
 
     bool visible = true;

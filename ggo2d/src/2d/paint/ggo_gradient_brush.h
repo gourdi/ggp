@@ -17,7 +17,7 @@ namespace ggo
 
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
     
-            gradient_brush(const pos2<data_t> & pos, const vec2<data_t> & dir) : _pos(pos), _dir(dir.get_normalized()) {}
+            gradient_brush(const pos2<data_t> & pos, const vec2<data_t> & dir) : _pos(pos), _dir(normalize(dir)) {}
 
     void    push_color(data_t x, const color_t & c) { _curve.push_point(x, ggo::convert_color_to<floating_point_color_t>(c)); }
 

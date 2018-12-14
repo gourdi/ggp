@@ -117,20 +117,20 @@ ggo::cells_artist::cell::cell(float left, float right, float top, float bottom, 
 //////////////////////////////////////////////////////////////
 ggo::rect_data<float> ggo::cells_artist::cell::get_seed_rect() const
 {
-	float left	  = _centers[0].get<0>();
-	float right	  = _centers[0].get<0>();
-	float top		  = _centers[0].get<1>();
-	float bottom	= _centers[0].get<1>();
+	float left	  = _centers[0].x();
+	float right	  = _centers[0].x();
+	float top		  = _centers[0].y();
+	float bottom	= _centers[0].y();
 	
-	left	  = std::min(_centers[1].get<0>(), left);
-	right	  = std::max(_centers[1].get<0>(), right);
-	top		  = std::max(_centers[1].get<1>(), top);
-	bottom	= std::min(_centers[1].get<1>(), bottom);
+	left	  = std::min(_centers[1].x(), left);
+	right	  = std::max(_centers[1].x(), right);
+	top		  = std::max(_centers[1].y(), top);
+	bottom	= std::min(_centers[1].y(), bottom);
 
-	left	  = std::min(_centers[2].get<0>(), left);
-	right	  = std::max(_centers[2].get<0>(), right);
-	top		  = std::max(_centers[2].get<1>(), top);
-	bottom	= std::min(_centers[2].get<1>(), bottom);
+	left	  = std::min(_centers[2].x(), left);
+	right	  = std::max(_centers[2].x(), right);
+	top		  = std::max(_centers[2].y(), top);
+	bottom	= std::min(_centers[2].y(), bottom);
 	
 	left	  /= _inv_width;
 	right	  /= _inv_width;

@@ -14,7 +14,7 @@ GGO_TEST(kdtree, random_points)
   std::vector<uint8_t> buffer(3 * size * size, 0);
 
   // Create random points.
-  using tree_point = ggo::kdtree<void *, 2>::data_point;
+  using tree_point = ggo::kdtree<void *, ggo::vec2f>::data_point;
   std::vector<tree_point> points;
   for (int i = 0; i < 500; ++i)
   {
@@ -30,7 +30,7 @@ GGO_TEST(kdtree, random_points)
     ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, ggo::disc_float({ point._pos.x(), point._pos.y() }, 2.f), ggo::white_8u());
   }
 
-  ggo::kdtree<void *, 2> tree(points);
+  ggo::kdtree<void *, ggo::vec2f> tree(points);
   auto inside_points = tree.find_points({ size / 2.f, size / 2.f }, radius);
 
   for (const auto & point : inside_points)

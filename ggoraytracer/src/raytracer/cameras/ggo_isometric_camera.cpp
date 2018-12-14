@@ -34,8 +34,8 @@ namespace ggo
 
     // Ray position.
     ggo::pos3f pos(_basis.pos());
-    pos += pixel_offset.get<0>() * _basis.x();
-    pos += pixel_offset.get<1>() * _basis.y();
+    pos += pixel_offset.x() * _basis.x();
+    pos += pixel_offset.y() * _basis.y();
       
     return ggo::ray3d_float(pos, -_basis.z(), false);
   }
@@ -68,12 +68,12 @@ namespace ggo
     ggo::pos2f pixel_offset((x + _offset_x) * _ratio, (y + _offset_y) * _ratio);
     
     ggo::pos3f focus(_basis.pos() - _depth_of_field * _basis.z());
-    focus += pixel_offset.get<0>() * _basis.x();
-    focus += pixel_offset.get<1>() * _basis.y();
+    focus += pixel_offset.x() * _basis.x();
+    focus += pixel_offset.y() * _basis.y();
     
     ggo::pos3f eye(_basis.pos());
-    eye += pixel_offset.get<0>() * _basis.x();
-    eye += pixel_offset.get<1>() * _basis.y();
+    eye += pixel_offset.x() * _basis.x();
+    eye += pixel_offset.y() * _basis.y();
     
     // Build the rays.
     std::vector<ggo::ray3d_float> rays;
@@ -82,13 +82,13 @@ namespace ggo
     {
       // Focus point.
       ggo::pos3f focus_point(focus);
-      focus_point += (_ratio * focus_samples2d[i].get<0>()) * _basis.x();
-      focus_point += (_ratio * focus_samples2d[i].get<1>()) * _basis.y();
+      focus_point += (_ratio * focus_samples2d[i].x()) * _basis.x();
+      focus_point += (_ratio * focus_samples2d[i].y()) * _basis.y();
       
       // Eye point.
       ggo::pos3f eye_point(eye);
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<0>()) * _basis.x();
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<1>()) * _basis.y();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].x()) * _basis.x();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].y()) * _basis.y();
 
       rays.emplace_back(eye_point, focus_point - eye_point);
     }

@@ -105,7 +105,7 @@ namespace ggo
       using no_alpha_color_t = ggo::color_traits<brush_color_t>::no_alpha_color_t;
 
       auto no_alpha_color = ggo::convert_color_to<no_alpha_color_t>(brush_color);
-      auto opacity = brush_color._a;
+      auto opacity = brush_color.a();
 
       auto output_color = opacity * no_alpha_color + (1 - opacity) * convert_color_to<no_alpha_color_t>(bkgd_color);
 

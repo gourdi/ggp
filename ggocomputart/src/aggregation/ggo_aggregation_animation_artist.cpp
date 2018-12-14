@@ -80,10 +80,9 @@ void ggo::aggregation_animation_artist::update()
     }
 
     // Move the point.
-    ggo::vec2f disp = ggo::from_polar(ggo::rand<float>(0.f, 2.f * ggo::pi<float>()), _threshold_dist);
-    p.move(disp.x(), disp.y());
-    p.set<0>(ggo::pos_mod(p.x(), static_cast<float>(width())));
-    p.set<1>(ggo::pos_mod(p.y(), static_cast<float>(height())));
+    p += _threshold_dist * ggo::vec2f::from_angle(ggo::rand<float>(0.f, 2.f * ggo::pi<float>()));
+    p.x() = ggo::pos_mod(p.x(), static_cast<float>(width()));
+    p.y() = ggo::pos_mod(p.y(), static_cast<float>(height()));
 
     ++count;
   }

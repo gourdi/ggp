@@ -70,12 +70,12 @@ void ggo::amorosi_animation_artist::curve::update()
       float prv_padding = 0.5f * _prv_width;
         
       float angle = _angle_interpolator.update(0.05f);
-      ggo::vec2f speed = ggo::from_polar(angle, _speed);
+      ggo::vec2f speed = _speed * ggo::vec2f::from_angle(angle);
       ggo::pos2f pos = _prv_pos + speed;
       
       float subangle = _subangle_interpolator.update(0.005f);
-      ggo::vec2f lateral = ggo::from_polar(subangle, 1.f);
-      ggo::vec2f prv_lateral = ggo::from_polar(_prv_subangle, 1.f);
+      ggo::vec2f lateral = ggo::vec2f::from_angle(subangle);
+      ggo::vec2f prv_lateral = ggo::vec2f::from_angle(_prv_subangle);
 
       float offset = 0.5f * (_lines_count * width + (_lines_count - 1) * padding);
       float prv_offset = 0.5f * (_lines_count * _prv_width + (_lines_count - 1) * prv_padding);
@@ -131,9 +131,9 @@ void ggo::amorosi_animation_artist::curve::paint(void * buffer) const
     ggo::triangle2d_float shape(triangle[0]._pos, triangle[1]._pos, triangle[2]._pos);
 
     triangles.emplace_back(shape, 
-      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[0]._opacity),
-      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[1]._opacity),
-      ggo::rgba_32f(_color._r, _color._g, _color._b, triangle[2]._opacity));
+      ggo::rgba_32f(_color.r(), _color.g(), _color.b(), triangle[0]._opacity),
+      ggo::rgba_32f(_color.r(), _color.g(), _color.b(), triangle[1]._opacity),
+      ggo::rgba_32f(_color.r(), _color.g(), _color.b(), triangle[2]._opacity));
   }
 
   ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width(), height(), line_step(), triangles);

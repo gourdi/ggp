@@ -45,7 +45,7 @@ _background_image(width, height)
 
   auto create_demeco = [&](float x, float y)
   {
-    float radius = ggo::distance(x, y);
+    float radius = ggo::length(ggo::pos2f(x, y));
 
     bool create = true;
     if (radius > main_radius)
@@ -234,7 +234,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     {
       float angle = arc._start_angle + (arc._ccw ? 1.f : -1) * i * max_angle / discs_count;
 
-      paint_arc->_shape.add_shape(std::make_shared<ggo::disc_float>(_pos + from_polar(angle, arc._radius), arc._width / 2));
+      paint_arc->_shape.add_shape(std::make_shared<ggo::disc_float>(_pos + arc._radius * ggo::vec2f::from_angle(angle), arc._width / 2));
     }
 
     shapes.push_back(std::move(paint_arc));
@@ -305,7 +305,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
   }
 
   // Boxes animation.
-  ggo::vec2f dir1 = ggo::from_polar(angle, 1.f);
+  ggo::vec2f dir1 = ggo::vec2f::from_angle(angle);
   ggo::vec2f dir2{ dir1.y(), -dir1.x() };
 
   float main_size = _animations[0]._size;
@@ -415,9 +415,9 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float radius_sup = scale * peak._radius_sup;
 
     ggo::pos2f p0 = _pos;
-    ggo::pos2f p1 = _pos + from_polar(peak._angle - 0.5f * peak._aperture, radius_inf);
-    ggo::pos2f p2 = _pos + from_polar(peak._angle, radius_sup);
-    ggo::pos2f p3 = _pos + from_polar(peak._angle + 0.5f * peak._aperture, radius_inf);
+    ggo::pos2f p1 = _pos + radius_inf * vec2f::from_angle(peak._angle - 0.5f * peak._aperture);
+    ggo::pos2f p2 = _pos + radius_sup * vec2f::from_angle(peak._angle);
+    ggo::pos2f p3 = _pos + radius_inf * vec2f::from_angle(peak._angle + 0.5f * peak._aperture);
 
     ggo::polygon2d_float polygon({ p0, p1, p2, p3 });
     auto shape_color = from_8u(peak._color);

@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////
 ggo::velocity_path::velocity_path(float delta, float angle)
 {
-	_velocity = ggo::from_polar(angle, delta);
+	_velocity = delta * ggo::vec2f::from_angle(angle);
 }
 
 //////////////////////////////////////////////////////////////

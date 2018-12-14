@@ -10,9 +10,9 @@ namespace
 {
   ggo::rgb_8u sub_blend(ggo::rgb_8u bkgd_color, ggo::rgb_8u brush_color)
   {
-    int r = static_cast<int>(bkgd_color._r) - static_cast<int>(brush_color._r);
-    int g = static_cast<int>(bkgd_color._g) - static_cast<int>(brush_color._g);
-    int b = static_cast<int>(bkgd_color._b) - static_cast<int>(brush_color._b);
+    int r = static_cast<int>(bkgd_color.r()) - static_cast<int>(brush_color.r());
+    int g = static_cast<int>(bkgd_color.g()) - static_cast<int>(brush_color.g());
+    int b = static_cast<int>(bkgd_color.b()) - static_cast<int>(brush_color.b());
 
     return {
       static_cast<uint8_t>(std::max(0, r)),
@@ -160,16 +160,16 @@ std::unique_ptr<ggo::kame_animation_artist::kame> ggo::kame_animation_artist::cr
   for (int i = 0; i < 2; ++i)
   {
     ggo::vec3f main_dir{ ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f) };
-    main_dir.normalize();
+    main_dir = normalize(main_dir);
 
     const float scale_max = ggo::rand(0.3f, 0.6f);
     const float angle_max = ggo::rand(0.6f, 1.2f);
 
     for (auto & vertex : new_kame->_vertices)
     {
-      const float angle = std::acos(ggo::dot(vertex->_cur.get_normalized(), main_dir));
+      const float angle = std::acos(ggo::dot(normalize(vertex->_cur), main_dir));
       const float scale = angle > angle_max ? 1.f : 1.f + scale_max * ggo::ease_inout(ggo::map(angle, 0.f, angle_max, 1.f, 0.f));
-      const float length = scale * vertex->_cur.get_length();
+      const float length = scale * ggo::length(vertex->_cur);
 
       vertex->set_length(length);
     }
@@ -219,15 +219,15 @@ void ggo::kame_animation_artist::kame::update()
     const auto & neighbors = _neighbors[vertex.get()];
     for (const auto * neighbor : neighbors)
     {
-      laplacian += neighbor->_cur.get_length();
+      laplacian += ggo::length(neighbor->_cur);
     }
     laplacian /= neighbors.size();
-    laplacian -= vertex->_cur.get_length();
+    laplacian -= ggo::length(vertex->_cur);
 
-    const float dist_prv = vertex->_prv.get_length();
-    const float dist_cur = vertex->_cur.get_length();
+    const float dist_prv = ggo::length(vertex->_prv);
+    const float dist_cur = ggo::length(vertex->_cur);
 
-    vertex->_laplacian.set_length(2 * dist_cur - dist_prv + laplacian);
+    vertex->_laplacian = (2 * dist_cur - dist_prv + laplacian) * ggo::normalize(vertex->_laplacian);
   }
 
   // Averaging.
@@ -237,11 +237,11 @@ void ggo::kame_animation_artist::kame::update()
     const auto & neighbors = _neighbors[vertex.get()];
     for (const auto * neighbor : neighbors)
     {
-      neightbors_mean += neighbor->_laplacian.get_length();
+      neightbors_mean += ggo::length(neighbor->_laplacian);
     }
     neightbors_mean /= neighbors.size();
 
-    vertex->_smoothed.set_length(0.8f * vertex->_laplacian.get_length() + 0.2f * neightbors_mean);
+    vertex->_smoothed = (0.8f * ggo::length(vertex->_laplacian) + 0.2f * neightbors_mean) * normalize(vertex->_smoothed);
   }
 
   for (auto & vertex : _vertices)
@@ -270,8 +270,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
       auto proj2 = proj({ triangle->_v2->_prv.x(), triangle->_v2->_prv.y() });
       auto proj3 = proj({ triangle->_v3->_prv.x(), triangle->_v3->_prv.y() });
 
-      auto normal = ggo::cross(triangle->_v1->_prv - triangle->_v3->_prv, triangle->_v2->_prv - triangle->_v3->_prv);
-      normal.normalize();
+      auto normal = ggo::normalize(ggo::cross(triangle->_v1->_prv - triangle->_v3->_prv, triangle->_v2->_prv - triangle->_v3->_prv));
       uint8_t color = ggo::round_to<uint8_t>(std::pow(std::abs(normal.z()), 0.5f) * 0xff);
 
       triangles.emplace_back(ggo::triangle2d_float(proj1, proj2, proj3), color);

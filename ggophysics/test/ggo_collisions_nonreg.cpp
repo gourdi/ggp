@@ -13,10 +13,10 @@ GGO_TEST(collisions, half_plane_vs_oriented_box)
 
   box.move({ 0.f, -1.f });
   GGO_CHECK(ggo::test_collision(half_plane, box, pos, normal) == true);
-  GGO_CHECK_FLOAT_EQ(pos.get<0>(), 3.0f);
-  GGO_CHECK_FLOAT_EQ(pos.get<1>(), 2.0f);
-  GGO_CHECK_FLOAT_EQ(normal.get<0>(), 0.0f);
-  GGO_CHECK_FLOAT_EQ(normal.get<1>(), 1.0f);
+  GGO_CHECK_FLOAT_EQ(pos.x(), 3.0f);
+  GGO_CHECK_FLOAT_EQ(pos.y(), 2.0f);
+  GGO_CHECK_FLOAT_EQ(normal.x(), 0.0f);
+  GGO_CHECK_FLOAT_EQ(normal.y(), 1.0f);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -28,10 +28,10 @@ GGO_TEST(collisions, half_plane_vs_oriented_box_horizontal)
   ggo::pos2f pos;
   ggo::vec2f normal;
   GGO_CHECK(ggo::test_collision(half_plane, box, pos, normal) == true);
-  GGO_CHECK_FLOAT_EQ(pos.get<0>(), 4.0f);
-  GGO_CHECK_FLOAT_EQ(pos.get<1>(), 3.0f);
-  GGO_CHECK_FLOAT_EQ(normal.get<0>(), 0.0f);
-  GGO_CHECK_FLOAT_EQ(normal.get<1>(), 1.0f);
+  GGO_CHECK_FLOAT_EQ(pos.x(), 4.0f);
+  GGO_CHECK_FLOAT_EQ(pos.y(), 3.0f);
+  GGO_CHECK_FLOAT_EQ(normal.x(), 0.0f);
+  GGO_CHECK_FLOAT_EQ(normal.y(), 1.0f);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -46,10 +46,10 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_one_point_inside)
     ggo::pos2f pos;
     ggo::vec2f normal;
     GGO_CHECK(ggo::test_collision(box1, box2, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 6.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 5.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), 0.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), 1.0f);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 6.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 5.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), 1.0f);
   }
 
   // Same test as the previous, but box1 and box2 are inverted when calling test_collision which should result in a reversed normal.
@@ -58,11 +58,11 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_one_point_inside)
 
     ggo::pos2f pos;
     ggo::vec2f normal;
-    GGO_CHECK(ggo::test_collision(box2, box1, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 6.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 5.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), 0.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), -1.0f);
+    GGO_CHECK(ggo::test_collision (box2, box1, pos, normal) == true);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 6.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 5.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), -1.0f);
   }
 
   // Intersection on bottom edge of box1.
@@ -72,10 +72,10 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_one_point_inside)
     ggo::pos2f pos;
     ggo::vec2f normal;
     GGO_CHECK(ggo::test_collision(box1, box2, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 4.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 1.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), 0.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), -1.0f);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 4.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 1.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), -1.0f);
   }
 
   // Intersection on left edge of box1.
@@ -85,10 +85,10 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_one_point_inside)
     ggo::pos2f pos;
     ggo::vec2f normal;
     GGO_CHECK(ggo::test_collision(box1, box2, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 2.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 3.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), -1.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 2.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 3.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), -1.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), 0.0f);
   }
 }
 
@@ -103,10 +103,10 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_two_points_inside)
     ggo::vec2f normal;
 
     GGO_CHECK(ggo::test_collision(box1, box2, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 8.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 3.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), 1.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 8.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 3.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), 1.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), 0.0f);
   }
 
   // Boxes are the same, but box1 and box2 are inverted when calling test_collision which should result in a reversed normal.
@@ -115,9 +115,9 @@ GGO_TEST(collisions, oriented_box_vs_oriented_box_two_points_inside)
     ggo::vec2f normal;
 
     GGO_CHECK(ggo::test_collision(box2, box1, pos, normal) == true);
-    GGO_CHECK_FLOAT_EQ(pos.get<0>(), 8.0f);
-    GGO_CHECK_FLOAT_EQ(pos.get<1>(), 3.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<0>(), -1.0f);
-    GGO_CHECK_FLOAT_EQ(normal.get<1>(), 0.0f);
+    GGO_CHECK_FLOAT_EQ(pos.x(), 8.0f);
+    GGO_CHECK_FLOAT_EQ(pos.y(), 3.0f);
+    GGO_CHECK_FLOAT_EQ(normal.x(), -1.0f);
+    GGO_CHECK_FLOAT_EQ(normal.y(), 0.0f);
   }
 }

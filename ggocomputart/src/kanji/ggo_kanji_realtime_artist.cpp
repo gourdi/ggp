@@ -46,7 +46,7 @@ void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t curs
       ggo::vec2f force = _attractor - cur_pos;
 
       // Clamp force.
-      float l = force.get_length();
+      float l = length(force);
       if (l > 0)
       {
         force /= l; // Normalize;

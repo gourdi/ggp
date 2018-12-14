@@ -143,13 +143,10 @@ namespace ggo
 
       // Internal reflection.
       ggo::vec3f reflected_dir(inner_ray->dir() - 2 * ggo::dot(normal.dir(), inner_ray->dir()) * normal.dir());
-      GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+      GGO_ASSERT(ggo::is_normalized(reflected_dir, 0.001f) == true);
       GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
       inner_ray = ggo::ray3d_float(normal.pos(), reflected_dir, false);
-
-      GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
-      GGO_ASSERT_GE(ggo::dot(reflected_dir, normal.dir()), -0.001f);
     }
 
     GGO_FAIL();

@@ -11,14 +11,14 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
 
     GGO_CHECK_FLOAT_EQ(triangle.area(), 1);
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == true);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 2.5, 10 }, { 0, 0, -1 } }, dist, normal) == true);
     GGO_CHECK_FLOAT_EQ(dist, 5);
     GGO_CHECK_FLOAT_EQ(normal.pos().x(), 1.5);
     GGO_CHECK_FLOAT_EQ(normal.pos().y(), 2.5);
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == false);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 2.5, 2 }, { 0, 0, 1 } }, dist, normal) == false);
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 3.5, 6, 0, 0, -1), dist, normal) == false);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 3.5, 6 }, { 0, 0, -1 } }, dist, normal) == false);
   }
 
   {
@@ -26,9 +26,9 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
     float dist = 0;
     ggo::ray3d_float normal;
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 10, 0, 0, -1), dist, normal) == false);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 2.5, 10 }, { 0, 0, -1 } }, dist, normal) == false);
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 2.5, 2, 0, 0, 1), dist, normal) == true);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 2.5, 2 }, { 0, 0, 1 } }, dist, normal) == true);
     GGO_CHECK_FLOAT_EQ(dist, 3);
     GGO_CHECK_FLOAT_EQ(normal.pos().x(), 1.5);
     GGO_CHECK_FLOAT_EQ(normal.pos().y(), 2.5);
@@ -37,7 +37,7 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
     GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
     GGO_CHECK_FLOAT_EQ(normal.dir().z(), -1);
 
-    GGO_CHECK(triangle.intersect_ray(ggo::ray3d_float(1.5, 3.5, 6, 0, 0, -1), dist, normal) == false);
+    GGO_CHECK(triangle.intersect_ray({ { 1.5, 3.5, 6 }, { 0, 0, -1 } }, dist, normal) == false);
   }
 }
 

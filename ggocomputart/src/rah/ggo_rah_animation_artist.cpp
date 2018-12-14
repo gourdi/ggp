@@ -58,9 +58,9 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   {
     ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
 
-    uint8_t r = ggo::round_div((den - num) * pixel._r, den);
-    uint8_t g = ggo::round_div((den - num) * pixel._g, den);
-    uint8_t b = ggo::round_div((den - num) * pixel._b, den);
+    uint8_t r = ggo::round_div((den - num) * pixel.r(), den);
+    uint8_t g = ggo::round_div((den - num) * pixel.g(), den);
+    uint8_t b = ggo::round_div((den - num) * pixel.b(), den);
 
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
   };
@@ -72,9 +72,9 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   {
     ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
 
-    uint8_t r = ggo::round_div(num * _color._r + (den - num) * pixel._r, den);
-    uint8_t g = ggo::round_div(num * _color._g + (den - num) * pixel._g, den);
-    uint8_t b = ggo::round_div(num * _color._b + (den - num) * pixel._b, den);
+    uint8_t r = ggo::round_div(num * _color.r() + (den - num) * pixel.r(), den);
+    uint8_t g = ggo::round_div(num * _color.g() + (den - num) * pixel.g(), den);
+    uint8_t b = ggo::round_div(num * _color.b() + (den - num) * pixel.b(), den);
 
     ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
   };
@@ -123,7 +123,7 @@ void ggo::rah_animation_artist::particle1::update(int min_size)
   {
     float radius = _radius_interpolators(i).update(1) * disc_radius(min_size);
     float angle = _angle + i * 2 * ggo::pi<float>() / _radius_interpolators.count();
-    _polygon->get_point(i) = _pos + ggo::from_polar(angle, radius);
+    _polygon->get_point(i) = _pos + radius * ggo::vec2f::from_angle(angle);
   }
 }
 
@@ -164,8 +164,8 @@ void ggo::rah_animation_artist::particle2::fill_multi_shapes(ggo::multi_shape_fl
   for (int i = 0; i < _point_count; ++i)
   {
     float angle = _angle + i * 2 * ggo::pi<float>() / _point_count;
-    ggo::pos2f p1 = ggo::from_polar(angle, radius / 2);
-    ggo::pos2f p2 = ggo::from_polar(angle, radius - border_size - segment_size);
+    ggo::pos2f p1 = ggo::vec2f::from_angle(angle) * (radius / 2);
+    ggo::pos2f p2 = ggo::vec2f::from_angle(angle) * (radius - border_size - segment_size);
     
     p1 += _pos;
     p2 += _pos;

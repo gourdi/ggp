@@ -21,7 +21,7 @@ namespace ggo
     for (const auto & body : bodies)
     {
       size_min = std::min(size_min, std::min(body._box.size1(), body._box.size2()));
-      disp_max = std::max(disp_max, body._linear_velocity.get_length());
+      disp_max = std::max(disp_max, ggo::length(body._linear_velocity));
       disp_max = std::max(disp_max, std::max(body._box.size1(), body._box.size2()) * body._angular_velocity);
     }
 

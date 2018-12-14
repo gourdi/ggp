@@ -3,7 +3,8 @@
 
 #include <sstream>
 #include <kernel/ggo_kernel.h>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
+#include <kernel/ggo_vec3.h>
 #include <kernel/math/ggo_distance.h>
 #include <kernel/math/shapes_3d/ggo_ray3d.h>
 #include <kernel/math/shapes_3d/ggo_basis3d.h>
@@ -15,7 +16,7 @@ namespace ggo
   template <typename data_t>
   struct vertex
   {
-    vertex(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & normal) : _pos(pos), _normal(normal) { _normal.normalize(); }
+    vertex(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & normal) : _pos(pos), _normal(normalize(normal)) { }
 
     ggo::pos3<data_t> _pos;
     ggo::vec3<data_t> _normal;

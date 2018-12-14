@@ -15,7 +15,7 @@ namespace ggo
   ggo::pos2i    parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size);
   ggo::size     parse_scaling(const parameters & params, const std::string & key, const ggo::size & image_size);
 
-  std::optional<ggo::color_8u>  parse_color_8u(const std::string & color_str);
+  std::optional<ggo::rgb_8u>  parse_color_8u(const std::string & color_str);
 }
 
 #endif

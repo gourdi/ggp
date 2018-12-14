@@ -7,7 +7,7 @@ namespace ggo
   cylinder3d<data_t>::cylinder3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t size, data_t radius)
     :
     _pos(pos),
-    _dir(dir.get_normalized()),
+    _dir(normalize(dir)),
     _size(size),
     _radius(radius)
   {
@@ -52,9 +52,9 @@ namespace ggo
     ggo::vec3<data_t> a = ggo::dot(line.dir(), _dir) * _dir - line.dir();
     ggo::vec3<data_t> b = ggo::dot(diff, _dir) * _dir - diff;
 
-    data_t deg2 = a.get_hypot();
+    data_t deg2 = hypot(a);
     data_t deg1 = 2 * ggo::dot(a, b);
-    data_t deg0 = b.get_hypot() - ggo::square(_radius);
+    data_t deg0 = hypot(b) - ggo::square(_radius);
 
     data_t sol1, sol2;
     if (ggo::quadratic_solve(deg2, deg1, deg0, sol1, sol2) == false)

@@ -142,33 +142,21 @@ namespace ggo
   template <typename data_t, bool double_sided>
   ggo::vec3<data_t> triangle3d<data_t, double_sided>::get_normal() const
   {
-    ggo::vec3<data_t>	edge1(_v2 - _v1);
-    ggo::vec3<data_t>	edge2(_v3 - _v1);
-    ggo::vec3<data_t>	normal(ggo::cross(edge1, edge2));
-
-    normal.normalize();
-
-    return normal;
+    return normalize(cross(_v2 - _v1, _v3 - _v1));
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, bool double_sided>
   ggo::pos3<data_t> triangle3d<data_t, double_sided>::get_center() const
   {
-    T x = _v1.x() + _v2.x() + _v3.x();
-    T y = _v1.y() + _v2.y() + _v3.y();
-    T z = _v1.z() + _v2.z() + _v3.z();
-
-    return ggo::pos3<data_t>(x/3, y/3, z/3);
+    return (_v1 + _v2 + _v3) / 3;
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, bool double_sided>
   data_t triangle3d<data_t, double_sided>::area() const
   {
-    ggo::vec3<data_t> cross = ggo::cross(ggo::vec3<data_t>(_v3 - _v1), ggo::vec3<data_t>(_v2 - _v1));
-
-    return cross.get_length() / 2;
+    return length(cross(_v3 - _v1, _v2 - _v1)) / 2;
   }
   
   //////////////////////////////////////////////////////////////

@@ -6,97 +6,47 @@
 #include <string>
 #include <ostream>
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_vec.h>
 
 // Structs.
 namespace ggo
 {
   // YA
   template <typename data_t>
-  struct ya
+  struct ya : public vec_base<data_t, 2>
   {
-    ya() {}
-    ya(data_t k) : _y(k), _a(k) {}
-    ya(data_t y, data_t a) : _y(y), _a(a) {}
+    constexpr ya() {}
+    constexpr ya(const ya<data_t> & v) : vec_base<data_t, 2>(v) {}
+    constexpr ya(data_t y, data_t a) : vec_base<data_t, 2>(y, a) {}
+    constexpr ya(data_t k) : vec_base<data_t, 2>(k) {}
 
-    ya<data_t>  operator-() const { return { -this->_y, -this->_a }; }
+    data_t & y() { return this->_coefs[0]; }
+    data_t & a() { return this->_coefs[1]; }
 
-    void        operator+=(ggo::ya<data_t> rhs) { this->_y += rhs._y; this->_a += rhs._a; }
-    void        operator-=(ggo::ya<data_t> rhs) { this->_y -= rhs._y; this->_a -= rhs._a; }
-    void        operator*=(data_t k) { this->_y *= k; this->_a *= k; }
-    void        operator/=(data_t k) { this->_y /= k; this->_a /= k; }
-
-    bool        operator==(ggo::ya<data_t> rhs) const { return this->_y == rhs._y && this->_a == rhs._a; }
-    bool        operator!=(ggo::ya<data_t> rhs) const { return this->_y != rhs._y || this->_a != rhs._a; }
-
-    data_t _y;
-    data_t _a;
+    constexpr data_t y() const { return this->_coefs[0]; }
+    constexpr data_t a() const { return this->_coefs[1]; }
   };
-
-  template <typename data_t>
-  ya<data_t> operator+(ya<data_t> c1, ya<data_t> c2) { return { data_t(c1._y + c2._y), data_t(c1._a + c2._a) }; }
-
-  template <typename data_t>
-  ya<data_t> operator-(ya<data_t> c1, ya<data_t> c2) { return { data_t(c1._y - c2._y), data_t(c1._a - c2._a) }; }
-
-  template <typename data_t>
-  ya<data_t> operator*(data_t k, ya<data_t> c) { return { data_t(k * c._y), data_t(k * c._a) }; }
-
-  template <typename data_t>
-  ya<data_t> operator*(ya<data_t> c, data_t k) { return { data_t(k * c._y), data_t(k * c._a) }; }
-
-  template <typename data_t>
-  ya<data_t> operator/(ya<data_t> c, data_t k) { return { data_t(c._y / k), data_t(c._a / k) }; }
-
-  template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, ya<data_t> c) { os << "(y:" << c._y << "; a:" << c._a << ")"; return os; }
 
   using ya_8u = ggo::ya<uint8_t>;
   using ya_32f = ggo::ya<float>;
 
   // RGB
-  template <typename data_t> 
-  struct rgb
+  template <typename data_t>
+  struct rgb : public vec_base<data_t, 3>
   {
-    rgb() {}
-    rgb(data_t k) : _r(k), _g(k), _b(k) {}
-    rgb(data_t r, data_t g, data_t b) : _r(r), _g(g), _b(b) {}
+    constexpr rgb() {}
+    constexpr rgb(const rgb<data_t> & v) : vec_base<data_t, 3>(v) {}
+    constexpr rgb(data_t r, data_t g, data_t b) : vec_base<data_t, 3>(r, g, b) {}
+    constexpr rgb(data_t k) : vec_base<data_t, 3>(k) {}
 
-    rgb<data_t> operator-() const { return { -this->_r, -this->_g, -this->_b }; }
+    data_t & r() { return this->_coefs[0]; }
+    data_t & g() { return this->_coefs[1]; }
+    data_t & b() { return this->_coefs[2]; }
 
-    void        operator+=(ggo::rgb<data_t> rhs) { this->_r += rhs._r; this->_g += rhs._g; this->_b += rhs._b; }
-    void        operator-=(ggo::rgb<data_t> rhs) { this->_r -= rhs._r; this->_g -= rhs._g; this->_b -= rhs._b; }
-    void        operator*=(ggo::rgb<data_t> rhs) { this->_r *= rhs._r; this->_g *= rhs._g; this->_b *= rhs._b; }
-    void        operator*=(data_t k) { this->_r *= k; this->_g *= k; this->_b *= k;}
-    void        operator/=(data_t k) { this->_r /= k; this->_g /= k; this->_b /= k;}
-
-    bool        operator==(ggo::rgb<data_t> rhs) const { return this->_r == rhs._r && this->_g == rhs._g && this->_b == rhs._b; }
-    bool        operator!=(ggo::rgb<data_t> rhs) const { return this->_r != rhs._r || this->_g != rhs._g || this->_b != rhs._b; }
-
-    data_t _r;
-    data_t _g;
-    data_t _b;
+    constexpr data_t r() const { return this->_coefs[0]; }
+    constexpr data_t g() const { return this->_coefs[1]; }
+    constexpr data_t b() const { return this->_coefs[2]; }
   };
-
-  template <typename data_t>
-  rgb<data_t> operator+(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r + c2._r), data_t(c1._g + c2._g), data_t(c1._b + c2._b) }; }
-
-  template <typename data_t>
-  rgb<data_t> operator-(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r - c2._r), data_t(c1._g - c2._g), data_t(c1._b - c2._b) }; }
-
-  template <typename data_t>
-  rgb<data_t> operator*(rgb<data_t> c1, rgb<data_t> c2) { return { data_t(c1._r * c2._r), data_t(c1._g * c2._g), data_t(c1._b * c2._b) }; }
-
-  template <typename data_t>
-  rgb<data_t> operator*(data_t k, rgb<data_t> c) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b) }; }
-
-  template <typename data_t>
-  rgb<data_t> operator*(rgb<data_t> c, data_t k) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b) }; }
-
-  template <typename data_t>
-  rgb<data_t> operator/(rgb<data_t> c, data_t k) { return { data_t(c._r / k), data_t(c._g / k), data_t(c._b / k) }; }
-
-  template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, rgb<data_t> c) { os << "(r:" << c._r << "; g:" << c._g << "; b:" << c._b << ")"; return os; }
 
   using rgb_8u = ggo::rgb<uint8_t>;
   using rgb_16u = ggo::rgb<uint16_t>;
@@ -105,48 +55,24 @@ namespace ggo
 
   // RGBA
   template <typename data_t>
-  struct rgba
+  struct rgba : public vec_base<data_t, 4>
   {
-    rgba() {}
-    rgba(data_t k) : _r(k), _g(k), _b(k), _a(k) {}
-    rgba(const ggo::rgb<data_t> & rgb, data_t a) : _r(rgb._r), _g(rgb._g), _b(rgb._b), _a(a) {}
-    rgba(data_t r, data_t g, data_t b, data_t a) : _r(r), _g(g), _b(b), _a(a) {}
+    constexpr rgba() {}
+    constexpr rgba(const rgba<data_t> & v) : vec_base<data_t, 4>(v) {}
+    constexpr rgba(data_t r, data_t g, data_t b, data_t a) : vec_base<data_t, 4>(r, g, b, a) {}
+    constexpr rgba(const rgb<data_t> & v, data_t a) : vec_base<data_t, 4>(v.r(), v.g(), v.b(), a) {}
+    constexpr rgba(data_t k) : vec_base<data_t, 4>(k) {}
 
-    rgb<data_t>   rgb() const { return { this->_r, this->_g, this->_b }; }
+    data_t & r() { return this->_coefs[0]; }
+    data_t & g() { return this->_coefs[1]; }
+    data_t & b() { return this->_coefs[2]; }
+    data_t & a() { return this->_coefs[3]; }
 
-    rgba<data_t>  operator-() const { return { -this->_r, -this->_g, -this->_b, -this->_a }; }
-
-    void          operator+=(ggo::rgba<data_t> rhs) { this->_r += rhs._r; this->_g += rhs._g; this->_b += rhs._b; this->_a += rhs._a; }
-    void          operator-=(ggo::rgba<data_t> rhs) { this->_r -= rhs._r; this->_g -= rhs._g; this->_b -= rhs._b; this->_a -= rhs._a;}
-    void          operator*=(data_t k) { this->_r *= k; this->_g *= k; this->_b *= k; this->_a *= k; }
-    void          operator/=(data_t k) { this->_r /= k; this->_g /= k; this->_b /= k; this->_a /= k; }
-
-    bool          operator==(ggo::rgba<data_t> rhs) const { return this->_r == rhs._r && this->_g == rhs._g && this->_b == rhs._b && this->_a == rhs._a; }
-    bool          operator!=(ggo::rgba<data_t> rhs) const { return this->_r != rhs._r || this->_g != rhs._g || this->_b != rhs._b || this->_a != rhs._a; }
-
-    data_t _r;
-    data_t _g;
-    data_t _b;
-    data_t _a;
+    constexpr data_t r() const { return this->_coefs[0]; }
+    constexpr data_t g() const { return this->_coefs[1]; }
+    constexpr data_t b() const { return this->_coefs[2]; }
+    constexpr data_t a() const { return this->_coefs[3]; }
   };
-
-  template <typename data_t>
-  rgba<data_t> operator+(rgba<data_t> c1, rgba<data_t> c2) { return { data_t(c1._r + c2._r), data_t(c1._g + c2._g), data_t(c1._b + c2._b), data_t(c1._a + c2._a) }; }
-
-  template <typename data_t>
-  rgba<data_t> operator-(rgba<data_t> c1, rgba<data_t> c2) { return { data_t(c1._r - c2._r), data_t(c1._g - c2._g), data_t(c1._b + c2._b), data_t(c1._a - c2._a) }; }
-
-  template <typename data_t>
-  rgba<data_t> operator*(data_t k, rgba<data_t> c) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b), data_t(k * c._a) }; }
-
-  template <typename data_t>
-  rgba<data_t> operator*(rgba<data_t> c, data_t k) { return { data_t(k * c._r), data_t(k * c._g), data_t(k * c._b), data_t(k * c._a) }; }
-  
-  template <typename data_t>
-  rgba<data_t> operator/(rgba<data_t> c, data_t k) { return { data_t(c._r / k), data_t(c._g / k), data_t(c._b / k), data_t(c._a / k) }; }
-
-  template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, rgba<data_t> c) { os << "(r:" << c._r << "; g:" << c._g << "; b:" << c._b << "; a:" << c._a << ")"; return os; }
 
   using rgba_8u = ggo::rgba<uint8_t>;
   using rgba_16u = ggo::rgba<uint16_t>;
@@ -446,48 +372,48 @@ namespace ggo
     {
       if constexpr(color_traits_out::color_space == color_space::y) // ya => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(c._y);
+        return convert_sample_to<color_traits_out::sample_t>(c.y());
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // ya => ya
       {
-        return { convert_sample_to<color_traits_out::sample_t>(c._y), convert_sample_to<color_traits_out::sample_t>(c._a) };
+        return { convert_sample_to<color_traits_out::sample_t>(c.y()), convert_sample_to<color_traits_out::sample_t>(c.a()) };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // ya => rgb
       {
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c._y);
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c.y());
         return { y_out, y_out, y_out };
       }
       else // ya => rgb
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c._y);
-        return { y_out, y_out, y_out, convert_sample_to<color_traits_out::sample_t>(c._a) };
+        auto y_out = convert_sample_to<color_traits_out::sample_t>(c.y());
+        return { y_out, y_out, y_out, convert_sample_to<color_traits_out::sample_t>(c.a()) };
       }
     }
     else if constexpr(color_traits_in::color_space == color_space::rgb)
     {
       if constexpr(color_traits_out::color_space == color_space::y) // rgb => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._r, c._g, c._b));
+        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // rgb => ya
       {
-        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._r, c._g, c._b)), color_traits_out::max };
+        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // rgb => rgb
       {
         return {
-          convert_sample_to<color_traits_out::sample_t>(c._r),
-          convert_sample_to<color_traits_out::sample_t>(c._g),
-          convert_sample_to<color_traits_out::sample_t>(c._b) };
+          convert_sample_to<color_traits_out::sample_t>(c.r()),
+          convert_sample_to<color_traits_out::sample_t>(c.g()),
+          convert_sample_to<color_traits_out::sample_t>(c.b()) };
       }
       else // rgb => rgb
       {
         static_asssert(color_traits_out::color_space == color_space::rgba);
         return {
-          convert_sample_to<color_traits_out::sample_t>(c._r),
-          convert_sample_to<color_traits_out::sample_t>(c._g),
-          convert_sample_to<color_traits_out::sample_t>(c._b),
+          convert_sample_to<color_traits_out::sample_t>(c.r()),
+          convert_sample_to<color_traits_out::sample_t>(c.g()),
+          convert_sample_to<color_traits_out::sample_t>(c.b()),
           color_traits_out::max };
       }
     }
@@ -496,27 +422,27 @@ namespace ggo
       static_assert(color_traits_in::color_space == color_space::rgba);
       if constexpr(color_traits_out::color_space == color_space::y) // rgba => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c._g, c._b));
+        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c.g(), c.b()));
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // rgba => y
       {
-        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c._g, c._b)), color_traits_out::max };
+        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c.g(), c.b())), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // rgba => rgb
       {
         return {
-          convert_sample_to<color_traits_out::sample_t>(c._r),
-          convert_sample_to<color_traits_out::sample_t>(c._g),
-          convert_sample_to<color_traits_out::sample_t>(c._b) };
+          convert_sample_to<color_traits_out::sample_t>(c.r()),
+          convert_sample_to<color_traits_out::sample_t>(c.g()),
+          convert_sample_to<color_traits_out::sample_t>(c.b()) };
       }
       else // rgba => rgba
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
         return {
-          convert_sample_to<color_traits_out::sample_t>(c._r),
-          convert_sample_to<color_traits_out::sample_t>(c._g),
-          convert_sample_to<color_traits_out::sample_t>(c._b),
-          convert_sample_to<color_traits_out::sample_t>(c._a) };
+          convert_sample_to<color_traits_out::sample_t>(c.r()),
+          convert_sample_to<color_traits_out::sample_t>(c.g()),
+          convert_sample_to<color_traits_out::sample_t>(c.b()),
+          convert_sample_to<color_traits_out::sample_t>(c.a()) };
       }
     }
   }
@@ -638,7 +564,7 @@ namespace ggo
   struct accumulator<rgb_8u>
   {
     uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0;
-    void add(const rgb_8u & c) { _r += c._r; _g += c._g; _b += c._b; }
+    void add(const rgb_8u & c) { _r += c.r(); _g += c.g(); _b += c.b(); }
     template <uint32_t count> rgb_8u div() const {
       return rgb_8u(
         static_cast<uint8_t>((_r + count / 2) / count),
@@ -651,7 +577,7 @@ namespace ggo
   struct accumulator<rgba_8u>
   {
     uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0; uint32_t _a = 0;
-    void add(const rgba_8u & c) { _r += c._a * c._r; _g += c._a * c._g; _b += c._a * c._b; _a += c._a; }
+    void add(const rgba_8u & c) { _r += c.a() * c.r(); _g += c.a() * c.g(); _b += c.a() * c.b(); _a *= c.a(); }
     template <uint32_t count> rgba_8u div() const {
       if (_a == 0)
       {
@@ -680,7 +606,7 @@ namespace ggo
   struct accumulator<rgb_32f>
   {
     float _r = 0.f; float _g = 0.f; float _b = 0.f;
-    void add(const rgb_32f & c) { _r += c._r; _g += c._g; _b += c._b; }
+    void add(const rgb_32f & c) { _r += c.r(); _g += c.g(); _b += c.b(); }
     template <int count> rgb_32f div() const { return rgb_32f(_r / count, _g / count, _b / count); }
   };
 }
@@ -698,9 +624,9 @@ namespace ggo
     static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
 
     return ggo::color<data_t>(
-      ggo::fixed_point_div<bit_shift>(c._r),
-      ggo::fixed_point_div<bit_shift>(c._g),
-      ggo::fixed_point_div<bit_shift>(c._b));
+      ggo::fixed_point_div<bit_shift>(c.r()),
+      ggo::fixed_point_div<bit_shift>(c.g()),
+      ggo::fixed_point_div<bit_shift>(c.b()));
   }
 }
 
@@ -726,16 +652,16 @@ namespace ggo
     const uint32_t weight_b = one - weight_a._num;
 
     return {
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._r + weight_b * color_b._r)),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._g + weight_b * color_b._g)),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a._b + weight_b * color_b._b)) };
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
+      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
   }
 
   template <typename fract_t>
   rgba_8u linerp(rgba_8u color_a, rgba_8u color_b, const fract_t & weight_a)
   {
-    uint32_t w_a = weight_a * color_a._a;
-    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b._a, 0xff);
+    uint32_t w_a = weight_a * color_a.a();
+    uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b.a(), 0xff);
 
     uint32_t a = w_a + w_b;
     if (a == 0)
@@ -743,9 +669,9 @@ namespace ggo
       return { 0, 0, 0, 0 };
     }
 
-    uint32_t r = ggo::round_div(w_a * color_a._r + w_b * color_b._r, a);
-    uint32_t g = ggo::round_div(w_a * color_a._g + w_b * color_b._g, a);
-    uint32_t b = ggo::round_div(w_a * color_a._b + w_b * color_b._b, a);
+    uint32_t r = ggo::round_div(w_a * color_a.r() + w_b * color_b.r(), a);
+    uint32_t g = ggo::round_div(w_a * color_a.g() + w_b * color_b.g(), a);
+    uint32_t b = ggo::round_div(w_a * color_a.b() + w_b * color_b.b(), a);
 
     return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
   }
@@ -766,9 +692,9 @@ namespace ggo
     const float weight_b_32f = 1.f - weight_a_32f;
 
     return {
-      weight_a_32f * color_a._r + weight_b_32f * color_b._r,
-      weight_a_32f * color_a._g + weight_b_32f * color_b._g,
-      weight_a_32f * color_a._b + weight_b_32f * color_b._b };
+      weight_a_32f * color_a.r() + weight_b_32f * color_b.r(),
+      weight_a_32f * color_a.g() + weight_b_32f * color_b.g(),
+      weight_a_32f * color_a.b() + weight_b_32f * color_b.b() };
   }
 }
 
@@ -887,9 +813,9 @@ namespace ggo
     };
 
     std::ostringstream oss;
-    oss << convert((c._r & 0xF0) >> 4) << convert(c._r & 0x0F);
-    oss << convert((c._g & 0xF0) >> 4) << convert(c._g & 0x0F);
-    oss << convert((c._b & 0xF0) >> 4) << convert(c._b & 0x0F);
+    oss << convert((c.r() & 0xF0) >> 4) << convert(c.r() & 0x0F);
+    oss << convert((c.g() & 0xF0) >> 4) << convert(c.g() & 0x0F);
+    oss << convert((c.b() & 0xF0) >> 4) << convert(c.b() & 0x0F);
     return oss.str();
   }
 

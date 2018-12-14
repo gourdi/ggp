@@ -52,7 +52,7 @@ namespace ggo
   data_t segment<data_t>::hypot_to_segment(const segment<data_t> & segment) const
   {
     auto p = intersect(segment);
-    if (!p)
+    if (p)
     {
       return 0;		
     }

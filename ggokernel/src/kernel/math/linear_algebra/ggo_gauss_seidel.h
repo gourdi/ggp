@@ -47,16 +47,16 @@ namespace ggo
     return gauss_seidel<data_t>(size, lambda_a, lambda_b, read_s, write_s, iterations);
   }
 
-  template <typename data_t, int size>
-  void gauss_seidel(const ggo::matrix<data_t, size, size> & a, const ggo::vec<data_t, size> & b, ggo::vec<data_t, size> & s, int iterations)
-  {
-    auto lambda_a = [&](int x, int y) { return a(x, y); };
-    auto lambda_b = [&](int i) { return b.data()[i]; };
-    auto read_s   = [&](int i) { return s.data()[i]; };
-    auto write_s  = [&](int i, float v) { s.data()[i] = v; };
+  //template <typename data_t, int size>
+  //void gauss_seidel(const ggo::matrix<data_t, size, size> & a, const ggo::vec_base<data_t, size> & b, ggo::vec_base<data_t, size> & s, int iterations)
+  //{
+  //  auto lambda_a = [&](int x, int y) { return a(x, y); };
+  //  auto lambda_b = [&](int i) { return b.data()[i]; };
+  //  auto read_s   = [&](int i) { return s.data()[i]; };
+  //  auto write_s  = [&](int i, float v) { s.data()[i] = v; };
 
-    return gauss_seidel<data_t>(size, lambda_a, lambda_b, read_s, write_s, iterations);
-  }
+  //  return gauss_seidel<data_t>(size, lambda_a, lambda_b, read_s, write_s, iterations);
+  //}
 
   template <typename data_t>
   void gauss_seidel(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 1> & b, ggo::array<data_t, 1> & s, int iterations)

@@ -74,7 +74,7 @@ namespace ggo
 
     ggo::vec2<data_t> result;
 
-    if (linsolve2d(m, c, result.data()) == false)
+    if (linsolve2d(m, c, result._coefs) == false)
     {
       throw std::runtime_error("invalid basis");
     }
@@ -112,7 +112,7 @@ namespace ggo
   template <typename data_t, bool orthonormal, bool cross_product_up>
   orthogonal_basis2d<data_t, orthonormal, cross_product_up>::orthogonal_basis2d(const ggo::pos2<data_t> & pos, const ggo::pos2<data_t> & x)
     :
-    _pos(pos), _x(orthonormal ? x.get_normalized() : x)
+    _pos(pos), _x(orthonormal ? normalize(x) : x)
   {
   }
 
@@ -178,7 +178,7 @@ namespace ggo
     }
     else
     {
-      float inv_hypot = 1 / _x.get_hypot();
+      float inv_hypot = 1 / hypot(_x);
       return { ggo::dot(v, _x) * inv_hypot, ggo::dot(v, y()) * inv_hypot };
     }
   }

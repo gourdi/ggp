@@ -241,7 +241,7 @@ namespace ggo
           z_sup += intersection->_influence->evaluate({ normal.pos().x(), normal.pos().y(), normal.pos().z() + eps });
         }
         
-        normal.set_dir(x_inf - x_sup, y_inf - y_sup, z_inf - z_sup);
+        normal.set_dir({ x_inf - x_sup, y_inf - y_sup, z_inf - z_sup });
 #endif
 
         return true;

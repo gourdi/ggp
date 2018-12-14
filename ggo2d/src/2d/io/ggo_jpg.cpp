@@ -112,9 +112,9 @@ namespace
           auto c = ggo::read_pixel<format>(in_ptr);
           ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
 
-          *out_ptr++ = rgb._r;
-          *out_ptr++ = rgb._g;
-          *out_ptr++ = rgb._b;
+          *out_ptr++ = rgb.r();
+          *out_ptr++ = rgb.g();
+          *out_ptr++ = rgb.b();
 
           in_ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(in_ptr);
         }

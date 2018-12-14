@@ -2,7 +2,7 @@
 #define __GGO_BEST_CANDIDATE_SEQUENCE__
 
 #include <vector>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 
 namespace ggo
 {

@@ -2,7 +2,7 @@
 #define __GGO_PIXEL_INT__
 
 #include <kernel/ggo_kernel.h>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 #include <kernel/ggo_size.h>
 
 namespace ggo

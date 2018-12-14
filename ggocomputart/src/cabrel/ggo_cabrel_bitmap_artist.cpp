@@ -85,9 +85,9 @@ namespace
     area_score -= 1.f; 
 
     // An angle score of 0 means that the candidate triangle is equilateral.
-    const float angle1 = ggo::get_angle(v2 - v1, v3 - v1);
-    const float angle2 = ggo::get_angle(v1 - v2, v3 - v2);
-    const float angle3 = ggo::get_angle(v1 - v3, v2 - v3);
+    const float angle1 = ggo::angle(v2 - v1, v3 - v1);
+    const float angle2 = ggo::angle(v1 - v2, v3 - v2);
+    const float angle3 = ggo::angle(v1 - v3, v2 - v3);
 
     float angle_score = std::abs(angle1 - ggo::pi<float>() / 3.f) + std::abs(angle2 - ggo::pi<float>() / 3.f) + std::abs(angle3 - ggo::pi<float>() / 3.f);
 
@@ -101,9 +101,9 @@ namespace
     std::vector<std::tuple<int, int>> available_edges;
     std::vector<std::tuple<int, int, int>> triangles;
 
-    points.emplace_back(ggo::rotate<float>({ 0.f, 1.f }, 0.f));
-    points.emplace_back(ggo::rotate<float>({ 0.f, 1.f }, 2.f * ggo::pi<float>() / 3.f));
-    points.emplace_back(ggo::rotate<float>({ 0.f, 1.f }, 4.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 0.f));
+    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 2.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 4.f * ggo::pi<float>() / 3.f));
 
     available_edges.push_back(std::make_tuple(0, 1));
     available_edges.push_back(std::make_tuple(1, 2));

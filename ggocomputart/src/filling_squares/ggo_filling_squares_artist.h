@@ -2,7 +2,7 @@
 #define __GGO_FILLING_SQUARES_ARTIST__
 
 #include <vector>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 #include <2d/ggo_color.h>
 
 namespace ggo
@@ -18,7 +18,7 @@ namespace ggo
     struct multi_square
     {
       std::vector<colored_square> _squares;
-      ggo::pos2f				              _pos;
+      ggo::pos2f				          _pos;
     };
 
     std::vector<multi_square>	build_squares(int width, int height, float & hue);

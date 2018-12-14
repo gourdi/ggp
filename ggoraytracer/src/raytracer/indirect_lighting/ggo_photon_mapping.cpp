@@ -10,7 +10,7 @@ namespace ggo
                                  const ggo::object3d_abc & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-    using color_point = ggo::kdtree<ggo::rgb_32f, 3>::data_point;
+    using color_point = ggo::kdtree<ggo::rgb_32f, ggo::vec3f>::data_point;
     
     std::vector<color_point> photons;
 
@@ -71,7 +71,7 @@ namespace ggo
       }
     }
 
-    _tree.reset(new ggo::kdtree<ggo::rgb_32f, 3>(photons));
+    _tree.reset(new ggo::kdtree<ggo::rgb_32f, vec3f>(photons));
   }
 
   //////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ namespace ggo
 
     ggo::rgb_32f output_color(ggo::black_32f());
 
-    auto photons = _tree->find_points({ world_normal.pos().get<0>(), world_normal.pos().get<1>(), world_normal.pos().get<2>() }, radius);
+    auto photons = _tree->find_points({ world_normal.pos().x(), world_normal.pos().y(), world_normal.pos().z() }, radius);
         
     for (const auto & photon : photons)
     {

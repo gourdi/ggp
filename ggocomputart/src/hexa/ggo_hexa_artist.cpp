@@ -21,7 +21,7 @@ namespace
     float progress,
     ggo::scene & scene)
   {
-    float dist = ggo::distance(x, y);
+    float dist = ggo::length(ggo::pos2f(x, y));
     if (dist < radius)
     {
       float height = std::sqrt(radius * radius - dist * dist);

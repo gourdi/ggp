@@ -182,7 +182,7 @@ void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
     }
 
     ggo::remove_if(_points, [&](const auto & p) {
-      return p._opacity <= 0.f || p._pos.get_length() > point_clipping_dist;
+      return p._opacity <= 0.f || ggo::length(p._pos) > point_clipping_dist;
     });
 
     if (frame_index < frames_count)

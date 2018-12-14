@@ -132,7 +132,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  std::optional<ggo::color_8u>  parse_color_8u(const std::string & color_str)
+  std::optional<ggo::rgb_8u>  parse_color_8u(const std::string & color_str)
   {
     if (color_str == "black")
     {

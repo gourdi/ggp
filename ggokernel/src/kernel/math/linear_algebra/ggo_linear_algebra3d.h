@@ -1,7 +1,7 @@
 #ifndef __GGO_LINEAR_ALGEBRA_3D__
 #define __GGO_LINEAR_ALGEBRA_3D__
 
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec3.h>
 
 //////////////////////////////////////////////////////////////////
 // Determinant.
@@ -70,9 +70,9 @@ namespace ggo
   {
     T in_aux[3], out_aux[3];
 
-    in_aux[0] = in.template get<0>();
-    in_aux[1] = in.template get<1>();
-    in_aux[2] = in.template get<2>();
+    in_aux[0] = in.x();
+    in_aux[1] = in.y();
+    in_aux[2] = in.z();
 
     apply_matrix3d(m, in_aux, out_aux);
 
@@ -104,10 +104,10 @@ namespace ggo
   template <typename T>
   void fill_rotation_matrix(const ggo::vec3<T> & axis, T angle, T m[3][3])
   {
-    T l = axis.get_length();
-    T x = axis.template get<0>()/l;
-    T y = axis.template get<1>()/l;
-    T z = axis.template get<2>()/l;
+    T l = ggo::length(axis);
+    T x = axis.x() / l;
+    T y = axis.y() / l;
+    T z = axis.z() / l;
 
     T c = std::cos(angle);
     T s = std::sin(angle);

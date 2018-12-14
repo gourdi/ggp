@@ -52,15 +52,15 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
 
     ggo::disc_float bubble;
     bubble.set_radius(ggo::rand<float>(0.003f, 0.006f) * min_size());
-    bubble.set_center(ggo::rand<float>(-0.1f, 1.1f) * width(), -0.1f * height());
+    bubble.set_center({ ggo::rand<float>(-0.1f, 1.1f) * width(), -0.1f * height() });
 
     // Move the bubble up.
     while (bubble.get_center().y() < height() + bubble.get_radius())
     {
-      bubble.center().get<0>() += dx + amplitude * std::sin(wavelength * bubble.center().y());
-      bubble.center().get<1>() += dy;
+      bubble.center().x() += dx + amplitude * std::sin(wavelength * bubble.center().y());
+      bubble.center().y() += dy;
       
-      auto brush = [&](int x, int y) { return curve.evaluate(bubble.center().get<0>()); };
+      auto brush = [&](int x, int y) { return curve.evaluate(bubble.center().x()); };
       auto blend = [&](int x, int y, const rgb_8u & bkgd_color, const rgb_32f & brush_color) {
         const rgb_32f bkgd_color_32f = convert_color_to<rgb_32f>(bkgd_color);
         return convert_color_to<rgb_8u>(bkgd_color_32f + brush_color);

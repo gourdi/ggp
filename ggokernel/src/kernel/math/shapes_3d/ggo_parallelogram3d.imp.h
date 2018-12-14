@@ -4,9 +4,8 @@ namespace ggo
   template <typename data_t>
   parallelogram3d<data_t>::parallelogram3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & v1, const ggo::vec3<data_t> & v2)
     :
-    _pos(pos), _v1(v1), _v2(v2), _normal(ggo::cross(v1, v2))
+    _pos(pos), _v1(v1), _v2(v2), _normal(normalize(cross(v1, v2)))
   {
-    _normal.normalize();
   }
 
   //////////////////////////////////////////////////////////////

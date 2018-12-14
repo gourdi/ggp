@@ -121,9 +121,9 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
         for (int i = 0; i < 16; ++i)
         {
           int index = std::min(static_cast<int>(_palette.size() - 1), iterations[i]);
-          r += _palette[index]._r;
-          g += _palette[index]._g;
-          b += _palette[index]._b;
+          r += _palette[index].r();
+          g += _palette[index].g();
+          b += _palette[index].b();
         }
 
         ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));

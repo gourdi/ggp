@@ -155,8 +155,8 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 		// Create current shape from seed.
 		const std::vector<ggo::pos2f> & points = seeds[ggo::rand<int>(0, static_cast<int>(seeds.size()) - 1)]._points;
 		ggo::pos2f center = points[ggo::rand<int>(0, static_cast<int>(points.size()) - 1)];
-		center.get<0>() += ggo::rand<float>(-0.5f, 0.5f);
-		center.get<1>() += ggo::rand<float>(-0.5f, 0.5f);
+		center.x() += ggo::rand<float>(-0.5f, 0.5f);
+		center.y() += ggo::rand<float>(-0.5f, 0.5f);
 		
 		float angle = ggo::rand<float>(0, angle_amplitude);
 
@@ -261,9 +261,9 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 
       ggo::rgb_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step());
 
-			c_8u._r = uint8_t(std::min(255, c_8u._r + val));
-			c_8u._g = uint8_t(std::min(255, c_8u._g + val));
-			c_8u._b = uint8_t(std::min(255, c_8u._b + val));
+			c_8u.r() = uint8_t(std::min(255, c_8u.r() + val));
+			c_8u.g() = uint8_t(std::min(255, c_8u.g() + val));
+			c_8u.b() = uint8_t(std::min(255, c_8u.b() + val));
 			
       ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
     }

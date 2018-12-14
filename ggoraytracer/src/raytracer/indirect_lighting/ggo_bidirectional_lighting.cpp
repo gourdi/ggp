@@ -42,8 +42,7 @@ namespace ggo
 
       // Create a ray from camera hit object to light hit object that will close the path.
       ggo::vec3f diff(light_hit_object->_intersection._world_normal.pos() - camera_world_normal.pos());
-      float length = diff.get_length();
-      ggo::vec3f dir(diff / length);
+      ggo::vec3f dir = normalize(diff);
       ggo::ray3d_float close_ray(camera_world_normal.pos(), dir, false);
 
       // Check visibility.

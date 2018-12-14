@@ -17,14 +17,9 @@ namespace ggo
   line3d<data_t>::line3d(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, bool normalize)
   :
   _pos(pos),
-  _dir(dir)
+  _dir(normalize ? ggo::normalize(dir) : dir)
   {
-    if (normalize == true)
-    {
-      _dir.normalize();
-    }
   }
-
 }
 
 namespace ggo
@@ -33,8 +28,8 @@ namespace ggo
   template <typename data_t>
   bool find_closest_lines_points(const ggo::line3d<data_t> & line1, const ggo::line3d<data_t> & line2, data_t & dist1, data_t & dist2)
   {
-    GGO_ASSERT(line1.dir().is_normalized() == true);
-    GGO_ASSERT(line2.dir().is_normalized() == true);
+    GGO_ASSERT(is_normalized(line1.dir()) == true);
+    GGO_ASSERT(is_normalized(line2.dir()) == true);
 
     const ggo::vec3<data_t> diff(line2.pos() - line1.pos());
 

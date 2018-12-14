@@ -43,7 +43,7 @@ namespace
   //////////////////////////////////////////////////////////////
   ggo::rgb_32f my_material::get_color(const ggo::pos3f & pos) const
   {
-    float x = pos.get<0>() + _amplitude * std::cos(_wavelength * pos.get<2>());
+    float x = pos.x() + _amplitude * std::cos(_wavelength * pos.z());
     x = std::fmod(x, _range_large);
     if (x < 0)
     {
@@ -109,8 +109,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   
 	for (const auto & sphere : spheres)
 	{
-    ggo::vec3f dir_to_center(sphere.center() - camera.basis().pos());
-    dir_to_center.normalize();
+    ggo::vec3f dir_to_center(normalize(sphere.center() - camera.basis().pos()));
     
     if ((lights_count < 3) &&
         (ggo::dot(dir_to_center, camera.basis().z()) < -0.98) && // In the axis of the camera

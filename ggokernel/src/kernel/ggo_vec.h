@@ -1,425 +1,411 @@
 #ifndef __GGO_VEC__
 #define __GGO_VEC__
 
+#include <type_traits>
 #include <ostream>
-#include <kernel/ggo_kernel.h>
 
-//////////////////////////////////////////////////////////////////
-// Declaration.
+//////////////////////////////////////////////////////////////
+// vec_base
 namespace ggo
 {
-  template <typename data_t, int n_dims>
-  class vec
+  namespace details
   {
-  public:
-
-    vec()
+    template <typename data_t, int n_dims, int dim, typename... args>
+    constexpr void set(data_t * coefs, data_t k, args... a)
     {
+      coefs[n_dims - dim - 1] = k;
+
+      if constexpr (dim > 0)
+      {
+        details::set<data_t, n_dims, dim - 1>(coefs, a...);
+      }
+      else
+      {
+        static_assert(sizeof...(a) == 0);
+        coefs[n_dims - 1] = k;
+      }
     }
 
-    explicit vec(const data_t & v)
+    template <typename data_t, int n_dims, int dim>
+    struct in_place_op
     {
-      ggo::fill<n_dims>(_coords, v);
+      static void mul(data_t * coefs, const data_t * coefs2)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::mul(coefs, coefs2);
+        coefs[dim] *= coefs2[dim];
+      }
+
+      static void div(data_t * coefs, const data_t * coefs2)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::div(coefs, coefs2);
+        coefs[dim] /= coefs2[dim];
+      }
+
+      static void add(data_t * coefs, const data_t * coefs2)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::add(coefs, coefs2);
+        coefs[dim] += coefs2[dim];
+      }
+
+      static void sub(data_t * coefs, const data_t * coefs2)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::sub(coefs, coefs2);
+        coefs[dim] -= coefs2[dim];
+      }
+
+      static void mul(data_t * coefs, data_t k)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::mul(coefs, k);
+        coefs[dim] *= k;
+      }
+
+      static void div(data_t * coefs, data_t k)
+      {
+        in_place_op<data_t, n_dims, dim - 1>::div(coefs, k);
+        coefs[dim] /= k;
+      }
+    };
+
+    template <typename data_t, int n_dims>
+    struct in_place_op<data_t, n_dims, 0>
+    {
+      static void mul(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] *= coefs2[0];
+      }
+
+      static void div(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] /= coefs2[0];
+      }
+
+      static void add(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] += coefs2[0];
+      }
+
+      static void sub(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] -= coefs2[0];
+      }
+
+      static void mul(data_t * coefs, data_t k)
+      {
+        coefs[0] *= k;
+      }
+
+      static void div(data_t * coefs, data_t k)
+      {
+        coefs[0] /= k;
+      }
+    };
+  }
+
+  template <typename data_t, int n_dims>
+  struct vec_base
+  {
+    using _data_t = data_t;
+    static constexpr int _n_dims = n_dims;
+
+    // Constructors.
+    constexpr vec_base() = default;
+    constexpr vec_base(const vec_base & v) = default;
+
+    constexpr vec_base(data_t k1, data_t k2) : _coefs()
+    {
+      static_assert(n_dims == 2);
+      details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2);
     }
 
     template <typename... args>
-    vec(const data_t & v1, const data_t & v2, args... a)
+    constexpr vec_base(data_t k1, data_t k2, args... a) : _coefs()
     {
-      static_assert(sizeof...(a) + 2 == n_dims, "invalid number of arguments");
-      ggo::set<data_t>(_coords, v1, v2, a...);
+      static_assert(n_dims > 2 && sizeof...(a) == n_dims - 2);
+      details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2, a...);
     }
 
-    vec(const vec<data_t, n_dims> & rhs)
+    constexpr vec_base(data_t k) : _coefs()
     {
-      ggo::copy<n_dims, data_t>(_coords, rhs._coords);
+      for (int i = 0; i < n_dims; ++i) { _coefs[i] = k; }
     }
 
-    const vec<data_t, n_dims> &	operator=(const vec<data_t, n_dims> & rhs) { ggo::copy<n_dims, data_t>(_coords, rhs._coords); return *this; }
+    // In-place arithmetics operators.
+    void operator*=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::mul(this->_coefs, v._coefs); }
+    void operator/=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::div(this->_coefs, v._coefs); }
+    void operator+=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::add(this->_coefs, v._coefs); }
+    void operator-=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::sub(this->_coefs, v._coefs); }
 
-    // Run-time access.
-    data_t & get(int index) { return _coords[index]; }
+    void operator*=(data_t k) { details::in_place_op<data_t, n_dims, n_dims - 1>::mul(this->_coefs, k); }
+    void operator/=(data_t k) { details::in_place_op<data_t, n_dims, n_dims - 1>::div(this->_coefs, k); }
 
-    const data_t & get(int index) const { return _coords[index]; }
-
-    // Compile-time access.
-    template <int index>
-    data_t & get() { static_assert(index >= 0 && index < n_dims, "invalid index"); return _coords[index]; }
-
-    template <int index>
-    const data_t & get() const { static_assert(index >= 0 && index < n_dims, "invalid index"); return _coords[index]; }
-
-    template <int index>
-    void set(const data_t & v) { static_assert(index >= 0 && index < n_dims, "invalid index"); _coords[index] = v; }
-
-    template <typename... args>
-    void set(args... a) { static_assert(sizeof...(a) == n_dims, "invalid number of arguments"); ggo::set(_coords, a...); }
-
-    bool                        operator==(const vec<data_t, n_dims> & rhs) const { return ggo::compare<n_dims>(_coords, rhs._coords); }
-    bool                        operator!=(const vec<data_t, n_dims> & rhs) const { return !ggo::compare<n_dims>(_coords, rhs._coords); }
-
-    vec<data_t, n_dims>         operator-() const;
-
-    void            		        operator*=(const vec<data_t, n_dims> & rhs);
-    void            		        operator+=(const vec<data_t, n_dims> & rhs);
-    void            		        operator-=(const vec<data_t, n_dims> & rhs);
-                                
-    void            		        operator*=(data_t k);
-    void            		        operator/=(data_t k);
-                                
-    data_t *                    data() { return _coords; }
-    const data_t *              data() const { return _coords; }
-                                
-    data_t                      get_hypot() const;
-    void				                set_length(data_t length);
-
-    template <typename real_t = data_t>
-    real_t                      get_length() const
-    {
-      static_assert(std::is_floating_point<real_t>::value);
-      return std::sqrt(static_cast<real_t>(get_hypot()));
-    }
-
-    void				                normalize();
-    bool				                is_normalized(data_t epsilon = data_t(0.001)) const;
-    vec<data_t, n_dims>  get_normalized() const;
-
-    void                        flip();
-
-    template <typename... args>
-    void                        move(args... a)
-    {
-      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
-      ggo::add(_coords, a...);
-    }
-
-    const data_t & x() const  { static_assert(n_dims >= 1 && n_dims <= 3); return _coords[0]; }
-          data_t & x()        { static_assert(n_dims >= 1 && n_dims <= 3); return _coords[0]; }
-    const data_t & y() const  { static_assert(n_dims >= 2 && n_dims <= 3); return _coords[1]; }
-          data_t & y()        { static_assert(n_dims >= 2 && n_dims <= 3); return _coords[1]; }
-    const data_t & z() const  { static_assert(n_dims == 3); return _coords[2]; }
-          data_t & z()        { static_assert(n_dims == 3); return _coords[2]; }
-
-  private:
-
-    data_t  _coords[n_dims];
+    data_t _coefs[n_dims];
   };
 }
 
-//////////////////////////////////////////////////////////////////
-// Aliases.
+//////////////////////////////////////////////////////////////
+// I/O.
 namespace ggo
 {
-  template <typename data_t> using pos2 = vec<data_t, 2>;
-  template <typename data_t> using vec2 = vec<data_t, 2>;
-  using pos2i = vec<int, 2>;
-  using vec2i = vec<int, 2>;
-  using pos2f = vec<float, 2>;
-  using vec2f = vec<float, 2>;
-  using pos2d = vec<double, 2>;
-  using vec2d = vec<double, 2>;
-
-  template <typename data_t> using pos3 = vec<data_t, 3>;
-  template <typename data_t> using vec3 = vec<data_t, 3>;
-  using pos3f = vec<float, 3>;
-  using vec3f = vec<float, 3>;
-  using pos3d = vec<double, 3>;
-  using vec3d = vec<double, 3>;
-}
-
-//////////////////////////////////////////////////////////////////
-// Global functions.
-namespace ggo
-{
-  template <typename data_t, int n_dims>
-  data_t dot(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
+  namespace details
   {
-    return ggo::dot<n_dims>(v1.data(), v2.data());
+    template <typename data_t, int n_dims, int dim>
+    struct dump_t
+    {
+      static void call(std::ostream & os, const vec_base<data_t, n_dims> & v)
+      {
+        dump_t<data_t, n_dims, dim - 1>::call(os, v);
+        os << "; " << v._coefs[dim];
+      }
+    };
+
+    template <typename data_t, int n_dims>
+    struct dump_t<data_t, n_dims, 0>
+    {
+      static void call(std::ostream & os, const vec_base<data_t, n_dims> & v)
+      {
+        os << v._coefs[0];
+      }
+    };
   }
 
   template <typename data_t, int n_dims>
-  bool compare(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2, data_t tolerance)
+  std::ostream & operator<<(std::ostream & os, const ggo::vec_base<data_t, n_dims> & v)
   {
-    return ggo::compare<n_dims>(v1.data(), v2.data(), tolerance);
-  }
-
-  template <typename data_t, int n_dims>
-  std::ostream & operator<<(std::ostream & os, const ggo::vec<data_t, n_dims> & v)
-  {
-    ggo::dump<n_dims>(v.data(), os);
+    os << '(';
+    details::dump_t<data_t, n_dims, n_dims - 1>::call(os, v);
+    os << ')';
     return os;
   }
 }
 
-//////////////////////////////////////////////////////////////////
-// Arithmetic global operators.
+//////////////////////////////////////////////////////////////
+// Equality.
 namespace ggo
 {
-  template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator*(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
+  namespace details
   {
-    ggo::vec<data_t, n_dims> r;
-    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 * src2; });
-    return r;
+    template <typename data_t, int n_dims, int dim>
+    struct vec_eq
+    {
+      static constexpr bool call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
+      {
+        return vec_eq<data_t, n_dims, dim - 1>::call(v1, v2) && (v1._coefs[dim] == v2._coefs[dim]);
+      }
+    };
+
+    template <typename data_t, int n_dims>
+    struct vec_eq<data_t, n_dims, 0>
+    {
+      static constexpr bool call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
+      {
+        return v1._coefs[0] == v2._coefs[0];
+      }
+    };
   }
 
   template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator+(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
+  constexpr bool operator==(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
   {
-    ggo::vec<data_t, n_dims> r;
-    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
-    return r;
+    return details::vec_eq<data_t, n_dims, n_dims - 1>::call(v1, v2);
   }
 
   template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator-(const ggo::vec<data_t, n_dims> & v1, const ggo::vec<data_t, n_dims> & v2)
+  constexpr bool operator!=(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
   {
-    ggo::vec<data_t, n_dims> r;
-    ggo::binary_operation<n_dims>(r.data(), v1.data(), v2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
-    return r;
-  }
-
-  template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator*(data_t k, const ggo::vec<data_t, n_dims> & v)
-  {
-    ggo::vec<data_t, n_dims> r;
-    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = k * src; });
-    return r;
-  }
-
-  template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator*(const ggo::vec<data_t, n_dims> & v, data_t k)
-  {
-    ggo::vec<data_t, n_dims> r;
-    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = src * k; });
-    return r;
-  }
-
-  template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> operator/(const ggo::vec<data_t, n_dims> & v, data_t k)
-  {
-    GGO_ASSERT(k != 0);
-    ggo::vec<data_t, n_dims> r;
-    ggo::unary_operation<n_dims>(r.data(), v.data(), [&](data_t & dst, const data_t & src) { dst = src / k; });
-    return r;
+    return !operator==(v1, v2);
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-// 2D only functions.
+//////////////////////////////////////////////////////////////
+// Arithmetic.
 namespace ggo
 {
-  template <typename data_t>
-  ggo::vec<data_t, 2> rotate(const ggo::vec<data_t, 2> & v, data_t angle)
+  namespace details
   {
-    data_t cos_tmp = std::cos(angle);
-    data_t sin_tmp = std::sin(angle);
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_mul(const vec_t & v1, const vec_t & v2, std::index_sequence<indices...>)
+    {
+      return vec_t((v1._coefs[indices] * v2._coefs[indices])...);
+    }
 
-    ggo::vec<data_t, 2> r;
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_div(const vec_t & v1, const vec_t & v2, std::index_sequence<indices...>)
+    {
+      return vec_t((v1._coefs[indices] / v2._coefs[indices])...);
+    }
 
-    r.x() = v.x() * cos_tmp - v.y() * sin_tmp;
-    r.y() = v.x() * sin_tmp + v.y() * cos_tmp;
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_add(const vec_t & v1, const vec_t & v2, std::index_sequence<indices...>)
+    {
+      return vec_t((v1._coefs[indices] + v2._coefs[indices])...);
+    }
 
-    return r;
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_sub(const vec_t & v1, const vec_t & v2, std::index_sequence<indices...>)
+    {
+      return vec_t((v1._coefs[indices] - v2._coefs[indices])...);
+    }
+
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_mul(const vec_t & v, data_t k, std::index_sequence<indices...>)
+    {
+      return vec_t((v._coefs[indices] * k)...);
+    }
+
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_div(const vec_t & v, data_t k, std::index_sequence<indices...>)
+    {
+      return vec_t((v._coefs[indices] / k)...);
+    }
+
+    template <typename vec_t, typename data_t, int n_dims, std::size_t... indices>
+    constexpr vec_t vec_neg(const vec_t & v, std::index_sequence<indices...>)
+    {
+      return vec_t((-v._coefs[indices])...);
+    }
   }
 
-  template <typename data_t>
-  ggo::vec<data_t, 2> rotate(const ggo::vec<data_t, 2> & v, const ggo::vec<data_t, 2> & center, data_t angle)
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator*(const vec_t & v1, const vec_t & v2)
   {
-    static_assert(std::is_floating_point<data_t>::value);
-
-    ggo::vec<data_t, 2> rotated(v); // We have to use a temporary in case &center == this.
-
-    rotated -= center;
-    rotated = ggo::rotate(rotated, angle);
-
-    return center + rotated;
+    return details::vec_mul<vec_t, data_t, n_dims>(v1, v2, std::make_index_sequence<n_dims>{});
   }
 
-  template <typename data_t>
-  data_t ortho_dot(const ggo::vec<data_t, 2> & v1, const ggo::vec<data_t, 2> & v2)
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator/(const vec_t & v1, const vec_t & v2)
   {
-    return v1.y() * v2.x() - v1.x() * v2.y();
+    return details::vec_div<vec_t, data_t, n_dims>(v1, v2, std::make_index_sequence<n_dims>{});
   }
 
-  template <typename data_t>
-  ggo::vec<data_t, 2> from_polar(data_t angle, data_t length)
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator+(const vec_t & v1, const vec_t & v2)
   {
-    static_assert(std::is_floating_point<data_t>::value);
-    return ggo::vec<data_t, 2>(length * std::cos(angle), length * std::sin(angle));
+    return details::vec_add<vec_t, data_t, n_dims>(v1, v2, std::make_index_sequence<n_dims>{});
   }
 
-  template <typename data_t>
-  data_t get_angle(const ggo::vec<data_t, 2> & v)
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator-(const vec_t & v1, const vec_t & v2)
   {
-    return std::atan2(v.y(), v.x());
+    return details::vec_sub<vec_t, data_t, n_dims>(v1, v2, std::make_index_sequence<n_dims>{});
   }
 
-  template <typename data_t>
-  data_t get_angle(const ggo::vec<data_t, 2> & v1, const ggo::vec<data_t, 2> & v2)
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator*(const vec_t & v, data_t k)
   {
-    GGO_ASSERT(v1.get_hypot() > 0 && v2.get_hypot() > 0);
-    return std::abs(std::acos(ggo::dot(v1, v2) / (v1.get_length() * v2.get_length())));
+    return details::vec_mul<vec_t, data_t, n_dims>(v, k, std::make_index_sequence<n_dims>{});
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator*(data_t k, const vec_t & v)
+  {
+    return details::vec_mul<vec_t, data_t, n_dims>(v, k, std::make_index_sequence<n_dims>{});
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator/(const vec_t & v, data_t k)
+  {
+    return details::vec_div<vec_t, data_t, n_dims>(v, k, std::make_index_sequence<n_dims>{});
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator-(const vec_t & v)
+  {
+    return details::vec_neg<vec_t, data_t, n_dims>(v, std::make_index_sequence<n_dims>{});
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-// 3D only functions.
+//////////////////////////////////////////////////////////////
+// Global functions.
 namespace ggo
 {
-  template <typename data_t>
-  ggo::vec<data_t, 3> cross(const ggo::vec<data_t, 3> & v1, const ggo::vec<data_t, 3> & v2)
+  namespace details
   {
-    return ggo::vec<data_t, 3>(
-      v1.y()*v2.z() - v1.z()*v2.y(),
-      v1.z()*v2.x() - v1.x()*v2.z(),
-      v1.x()*v2.y() - v1.y()*v2.x());
-  }
-
-  template <typename data_t>
-  bool is_basis(const ggo::vec<data_t, 3> & v1, const ggo::vec<data_t, 3> & v2, const ggo::vec<data_t, 3> & v3)
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-
-    if (v1.is_normalized() == false || v2.is_normalized() == false || v3.is_normalized() == false)
+    template <typename data_t, int n_dims, int dim>
+    struct vec_dot
     {
-      return false;
-    }
+      static constexpr data_t call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
+      {
+        return vec_dot<data_t, n_dims, dim - 1>::call(v1, v2) + v1._coefs[dim] * v2._coefs[dim];
+      }
+    };
 
-    // v3 should be equal to cross(v1, v2).
-    auto c = ggo::cross(v1, v2);
-
-    if (std::abs(v3.x() - c.x()) > static_cast<data_t>(0.0001) ||
-        std::abs(v3.y() - c.y()) > static_cast<data_t>(0.0001) ||
-        std::abs(v3.z() - c.z()) > static_cast<data_t>(0.0001))
+    template <typename data_t, int n_dims>
+    struct vec_dot<data_t, n_dims, 0>
     {
-      return false;
-    }
-
-    return true;
-  }
-
-  template <typename data_t>
-  std::pair<ggo::vec<data_t, 3>, ggo::vec<data_t, 3>> build_basis(const ggo::vec<data_t, 3> & v)
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-
-    GGO_ASSERT(v.is_normalized() == true);
-
-    // Get 2 orthogonal vectors.
-    data_t x = std::abs(v.x());
-    data_t y = std::abs(v.y());
-    data_t z = std::abs(v.z());
-
-    std::pair<ggo::vec<data_t, 3>, ggo::vec<data_t, 3>> basis;
-
-    if ((x <= y) && (x <= z)) // Mininum is X.
-    {
-      data_t inv_norm = 1 / std::sqrt(v.z() * v.z() + v.y() * v.y());
-      basis.first.set(data_t(0), v.z() * inv_norm, -v.y() * inv_norm);
-    }
-    else if ((y <= x) && (y <= z)) // Mininum is Y.
-    {
-      data_t inv_norm = 1 / std::sqrt(v.z() * v.z() + v.x() * v.x());
-      basis.first.set(v.z() * inv_norm, data_t(0), -v.x() * inv_norm);
-    }
-    else // Mininum is Z.
-    {
-      data_t inv_norm = 1 / std::sqrt(v.y() * v.y() + v.x() * v.x());
-      basis.first.set(v.y() * inv_norm, -v.x() * inv_norm, data_t(0));
-    }
-
-    basis.second = ggo::cross(v, basis.first);
-
-    GGO_ASSERT(ggo::is_basis(v, basis.first, basis.second));
-
-    return basis;
-  }
-}
-
-//////////////////////////////////////////////////////////////////
-// Implementation.
-namespace ggo
-{
-  template <typename data_t, int n_dims>
-  vec<data_t, n_dims> vec<data_t, n_dims>::operator-() const
-  {
-    vec<data_t, n_dims> v;
-    ggo::unary_operation<n_dims>(v._coords, _coords, [](data_t & dst, const data_t & src) { dst = -src; });
-    return v;
+      static constexpr data_t call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
+      {
+        return v1._coefs[0] * v2._coefs[0];
+      }
+    };
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::operator*=(const vec<data_t, n_dims> & rhs)
+  constexpr data_t dot(const vec_base<data_t, n_dims> & v1, const vec_base<data_t, n_dims> & v2)
   {
-    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst *= src; });
+    return details::vec_dot<data_t, n_dims, n_dims - 1>::call(v1, v2);
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::operator+=(const vec<data_t, n_dims> & rhs)
+  constexpr data_t hypot(const vec_base<data_t, n_dims> & v)
   {
-    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst += src; });
+    return dot(v, v);
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::operator-=(const vec<data_t, n_dims> & rhs)
+  constexpr data_t hypot(const vec_base<data_t, n_dims> & v1, const vec_base<data_t, n_dims> & v2)
   {
-    ggo::unary_operation<n_dims>(_coords, rhs._coords, [](data_t & dst, const data_t & src) { dst -= src; });
+    return hypot(v2 - v1);
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::operator*=(data_t k)
+  data_t length(const vec_base<data_t, n_dims> & v)
   {
-    ggo::for_each<n_dims>(_coords, [&](data_t & d) { d *= k; });
+    static_assert(std::is_floating_point_v<data_t>);
+    return std::sqrt(hypot(v));
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::operator/=(data_t k)
+  data_t distance(const vec_base<data_t, n_dims> & v1, const vec_base<data_t, n_dims> & v2)
   {
-    GGO_ASSERT(k != 0);
-    ggo::for_each<n_dims>(_coords, [&](data_t & d) { return d /= k; });
+    return length(v2 - v1);
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    vec_t normalize(const vec_t & v)
+  {
+    return v / length(v);
   }
 
   template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::flip()
+  bool is_normalized(const vec_base<data_t, n_dims> & v, data_t tolerance = data_t(0.001))
   {
-    ggo::for_each<n_dims>(_coords, [](data_t & d) { d = -d; });
+    static_assert(std::is_floating_point_v<data_t>);
+    return std::abs(hypot(v) - 1) < tolerance;
   }
 
   template <typename data_t, int n_dims>
-  data_t vec<data_t, n_dims>::get_hypot() const
+  bool compare(const vec_base<data_t, n_dims> & v1, const vec_base<data_t, n_dims> & v2, data_t tolerance = data_t(0.001))
   {
-    return ggo::dot<n_dims>(_coords, _coords);
-  }
-
-  template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::set_length(data_t length)
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-    GGO_ASSERT(get_hypot() > data_t(0));
-    this->operator*=(length / get_length());
-  }
-
-  template <typename data_t, int n_dims>
-  void vec<data_t, n_dims>::normalize()
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-    set_length(1);
-  }
-
-  template <typename data_t, int n_dims>
-  bool vec<data_t, n_dims>::is_normalized(data_t epsilon) const
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-    return std::abs(get_hypot() - 1) < epsilon;
-  }
-
-  template <typename data_t, int n_dims>
-  ggo::vec<data_t, n_dims> vec<data_t, n_dims>::get_normalized() const
-  {
-    static_assert(std::is_floating_point<data_t>::value);
-    ggo::vec<data_t, n_dims> r(*this);
-    r.normalize(); 
-    return r;
+    static_assert(std::is_floating_point_v<data_t>);
+    return hypot(v2 - v1) < tolerance;
   }
 }
 

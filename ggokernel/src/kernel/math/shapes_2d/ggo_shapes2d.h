@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <kernel/ggo_kernel.h>
-#include <kernel/ggo_vec.h>
+#include <kernel/ggo_vec2.h>
 #include <kernel/math/ggo_quadratic.h>
 #include <kernel/math/ggo_distance.h>
 #include <kernel/math/shapes_2d/ggo_rect_data.h>

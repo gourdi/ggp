@@ -12,18 +12,18 @@ GGO_TEST(box3d, ray_intersection)
   ggo::ray3d_float ray;
 
   // Top -> down rays.
-  ray.set_pos(2, 0, 4);
-  ray.set_normalized_dir(0, 0, -1);
+  ray.pos() = { 2, 0, 4 };
+  ray.set_normalized_dir({ 0, 0, -1 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, 0, 1);
-  ray.set_normalized_dir(0, 0, -1);
+  ray.pos() = { 0, 0, 1 };
+  ray.set_normalized_dir({ 0, 0, -1 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, 0, 8);
-  ray.set_normalized_dir(0, 0, -1);
+  ray.pos() = { 0, 0, 8 };
+  ray.set_normalized_dir({ 0, 0, -1 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 3);
@@ -35,18 +35,18 @@ GGO_TEST(box3d, ray_intersection)
   GGO_CHECK_FLOAT_EQ(normal.dir().z(), 1);
 
   // Bottom -> up rays.
-  ray.set_pos(2, 0, 1);
-  ray.set_normalized_dir(0, 0, 1);
+  ray.pos() = { 2, 0, 1 };
+  ray.set_normalized_dir({ 0, 0, 1 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, 0, 6);
-  ray.set_normalized_dir(0, 0, 1);
+  ray.pos() = { 0, 0, 6 };
+  ray.set_normalized_dir({ 0, 0, 1 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, 0, 0);
-  ray.set_normalized_dir(0, 0, 1);
+  ray.pos() = { 0, 0, 0 };
+  ray.set_normalized_dir({ 0, 0, 1 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 2);
@@ -58,18 +58,18 @@ GGO_TEST(box3d, ray_intersection)
   GGO_CHECK_FLOAT_EQ(normal.dir().z(), -1);
 
   // Left -> right rays.
-  ray.set_pos(0, 3, 4);
-  ray.set_normalized_dir(0, 1, 0);
+  ray.pos() = { 0, 3, 4 };
+  ray.set_normalized_dir({ 0, 1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(2, 0, 1);
-  ray.set_normalized_dir(0, 1, 0);
+  ray.pos() = { 2, 0, 1 };
+  ray.set_normalized_dir({ 0, 1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, -5, 4);
-  ray.set_normalized_dir(0, 1, 0);
+  ray.pos() = { 0, -5, 4 };
+  ray.set_normalized_dir({ 0, 1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 4);
@@ -81,18 +81,18 @@ GGO_TEST(box3d, ray_intersection)
   GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0);
 
   // Right -> left rays.
-  ray.set_pos(0, -2, 4);
-  ray.set_normalized_dir(0, -1, 0);
+  ray.pos() = { 0, -2, 4 };
+  ray.set_normalized_dir({ 0, -1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(2, 4, 1);
-  ray.set_normalized_dir(0, -1, 0);
+  ray.pos() = { 2, 4, 1 };
+  ray.set_normalized_dir({ 0, -1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(0, 10, 4);
-  ray.set_normalized_dir(0, -1, 0);
+  ray.pos() = { 0, 10, 4 };
+  ray.set_normalized_dir({ 0, -1, 0 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 8);
@@ -104,18 +104,18 @@ GGO_TEST(box3d, ray_intersection)
   GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0);
 
   // Far -> near rays.
-  ray.set_pos(-2, 10, 10);
-  ray.set_normalized_dir(1, 0, 0);
+  ray.pos() = { -2, 10, 10 };
+  ray.set_normalized_dir({ 1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(2, 0, 3);
-  ray.set_normalized_dir(1, 0, 0);
+  ray.pos() = { 2, 0, 3 };
+  ray.set_normalized_dir({ 1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(-2, 1, 3);
-  ray.set_normalized_dir(1, 0, 0);
+  ray.pos() = { -2, 1, 3 };
+  ray.set_normalized_dir({ 1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 1);
@@ -127,18 +127,18 @@ GGO_TEST(box3d, ray_intersection)
   GGO_CHECK_FLOAT_EQ(normal.dir().z(), 0);
 
   // Near -> far rays.
-  ray.set_pos(2, 10, 10);
-  ray.set_normalized_dir(-1, 0, 0);
+  ray.pos() = { 2, 10, 10 };
+  ray.set_normalized_dir({ -1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(-2, 0, 3);
-  ray.set_normalized_dir(-1, 0, 0);
+  ray.pos() = { -2, 0, 3 };
+  ray.set_normalized_dir({ -1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == false);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == false);
 
-  ray.set_pos(8, 1, 3);
-  ray.set_normalized_dir(-1, 0, 0);
+  ray.pos() = { 8, 1, 3 };
+  ray.set_normalized_dir({ -1, 0, 0 });
   GGO_CHECK(box.intersect_ray(ray) == true);
   GGO_CHECK(box.intersect_ray(ray, dist, normal) == true);
   GGO_CHECK_FLOAT_EQ(dist, 7);

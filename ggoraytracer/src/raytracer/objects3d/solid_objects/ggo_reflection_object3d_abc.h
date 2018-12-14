@@ -44,7 +44,7 @@ namespace ggo
   ggo::ray3d_float reflection_object3d_abc<flags, shape_t>::get_reflected_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float random_variable1, float random_variable2) const
   {
     ggo::pos3f reflected_dir(ray.dir() - 2 * ggo::dot(normal.dir(), ray.dir()) * normal.dir());
-    GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+    GGO_ASSERT(ggo::is_normalized(reflected_dir, 0.001f) == true);
     GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
     if constexpr((flags & discard_roughness) != 0)
@@ -66,7 +66,7 @@ namespace ggo
         }
       }
 
-      GGO_ASSERT(reflected_dir.is_normalized(0.001f) == true);
+      GGO_ASSERT(ggo::is_normalized(reflected_dir, 0.001f) == true);
       GGO_ASSERT_GE(ggo::dot(reflected_dir, normal.dir()), -0.001f);
 
       return ggo::ray3d_float(normal.pos(), reflected_dir, false);
@@ -94,10 +94,9 @@ namespace ggo
     for (const auto & light_sample : light_samples)
     {
       ggo::vec3f reflection_dir(2 * ggo::dot(intersection._world_normal.dir(), light_sample._ray_to_light.dir()) * intersection._world_normal.dir() - light_sample._ray_to_light.dir());
-      GGO_ASSERT(reflection_dir.is_normalized(0.0001f));
+      GGO_ASSERT(ggo::is_normalized(reflection_dir, 0.0001f));
 
-      ggo::vec3f viewer_dir(ray.pos() - intersection._world_normal.pos());
-      viewer_dir.normalize();
+      ggo::vec3f viewer_dir(ggo::normalize(ray.pos() - intersection._world_normal.pos()));
 
       float phong = ggo::dot(reflection_dir, viewer_dir);
       if (phong > 0)

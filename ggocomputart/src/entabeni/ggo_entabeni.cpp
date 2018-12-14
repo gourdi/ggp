@@ -111,10 +111,10 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
 
   auto project = [&](const ggo::pos3f & v)
   {
-    float radius = 1.1f - v.get<2>();
-    float x_3d = radius * std::cos(angle + v.get<0>());
-    float y_3d = radius * std::sin(angle + v.get<0>());
-    float z_3d = v.get<1>();
+    float radius = 1.1f - v.z();
+    float x_3d = radius * std::cos(angle + v.x());
+    float y_3d = radius * std::sin(angle + v.x());
+    float z_3d = v.y();
 
     ggo::pos3f pos3d(x_3d, y_3d, z_3d);
     ggo::pos2f proj = basis.project(pos3d, 0.25f, width, height);
@@ -129,7 +129,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     auto p1 = project(v1);
     auto p2 = project(v2);
     auto p3 = project(v3);
-    if (std::get<0>(p1).get<2>() >= z || std::get<0>(p2).get<2>() >= z || std::get<0>(p3).get<2>() >= z)
+    if (std::get<0>(p1).z() >= z || std::get<0>(p2).z() >= z || std::get<0>(p3).z() >= z)
     {
       return; // Triangle behind the camera.
     }
@@ -137,13 +137,13 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     ggo::pos3f center = (std::get<0>(p1) + std::get<0>(p2) + std::get<0>(p3)) / 3.f;
     ggo::vec3f diff = center - basis.pos();
 
-    float dist = diff.get_length();
+    float dist = ggo::length(diff);
     if (dist > far)
     {
       return;
     }
     
-    float altitude = ggo::hypot(center.get<0>(), center.get<1>());
+    float altitude = ggo::hypot(ggo::pos2f(center.x(), center.y()));
 
     ggo::rgb_8u triangle_color = ggo::convert_color_to<ggo::rgb_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black_32f()));
     ggo::triangle2d_float triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));

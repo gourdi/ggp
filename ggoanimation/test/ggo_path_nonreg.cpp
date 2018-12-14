@@ -1,4 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_kernel.h>
 #include <animation/paths/ggo_velocity_path.h>
 #include <animation/paths/ggo_spiral_path.h>
 

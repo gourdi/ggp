@@ -155,9 +155,9 @@ namespace
     for (int i = 0; i < 4; ++i)
     {
       ggo::rgb_32f candidate(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
-      float diff_cur = std::abs(candidate._r - color1._r) +
-                       std::abs(candidate._g - color1._g) +
-                       std::abs(candidate._b - color1._b);
+      float diff_cur = std::abs(candidate.r() - color1.r()) +
+                       std::abs(candidate.g() - color1.g()) +
+                       std::abs(candidate.b() - color1.b());
       if (diff_cur > diff)
       {
         diff = diff_cur;
@@ -172,8 +172,8 @@ namespace
     {
       voronoi_node node;
       node._parent_node = &voronoi_tree;
-      node._position.get<0>() = ggo::rand<float>(0.f, static_cast<float>(width));
-      node._position.get<1>() = ggo::rand<float>(0.f, static_cast<float>(height));
+      node._position.x() = ggo::rand<float>(0.f, static_cast<float>(width));
+      node._position.y() = ggo::rand<float>(0.f, static_cast<float>(height));
       node._color = ggo::black<ggo::rgb_8u>();
 
       voronoi_tree.create_leaf(node);
@@ -185,7 +185,7 @@ namespace
     {
       ggo::pos2f point(ggo::rand<float>(0.f, static_cast<float>(width)), ggo::rand<float>(0.f, static_cast<float>(height)));
 
-      auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.get<0>(), point.get<1>());
+      auto voronoi_leaf = find_voronoi_leaf(voronoi_tree, point.x(), point.y());
 
       subpoints[voronoi_leaf].push_back(point);
     }

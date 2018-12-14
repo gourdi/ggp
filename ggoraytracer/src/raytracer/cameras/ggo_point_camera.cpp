@@ -169,13 +169,13 @@ namespace ggo
     {
       // Focus point.
       ggo::pos3f focus_point(_center_focus_point);
-      focus_point += ((x_f + focus_samples2d[i].get<0>()) * _opti) * _basis.x();
-      focus_point += ((y_f + focus_samples2d[i].get<1>()) * _opti) * _basis.y();
+      focus_point += ((x_f + focus_samples2d[i].x()) * _opti) * _basis.x();
+      focus_point += ((y_f + focus_samples2d[i].y()) * _opti) * _basis.y();
 
       // Eye point.
       ggo::pos3f eye_point(_basis.pos());
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<0>()) * _basis.x();
-      eye_point += (_depth_of_field_factor * eye_samples2d[i].get<1>()) * _basis.y();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].x()) * _basis.x();
+      eye_point += (_depth_of_field_factor * eye_samples2d[i].y()) * _basis.y();
 
       rays.emplace_back(eye_point, focus_point - eye_point);
     }

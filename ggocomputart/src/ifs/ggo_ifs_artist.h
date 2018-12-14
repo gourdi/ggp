@@ -2,6 +2,7 @@
 #define __GGO_IFS_ARTIST__
 
 #include <ggo_artist.h>
+#include <kernel/ggo_vec3.h>
 #include <kernel/memory/ggo_array.h>
 
 namespace ggo

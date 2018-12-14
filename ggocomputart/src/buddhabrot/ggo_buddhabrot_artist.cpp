@@ -109,8 +109,8 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 	
 			point = map_fit(point, -1, 1);
 
-			int x = ggo::round_to<int>(point.get<0>());
-			int y = ggo::round_to<int>(point.get<1>());
+			int x = ggo::round_to<int>(point.x());
+			int y = ggo::round_to<int>(point.y());
 			if ((x >= 0) && (x < width()) &&
 		    	(y >= 0) && (y < height()))
 			{

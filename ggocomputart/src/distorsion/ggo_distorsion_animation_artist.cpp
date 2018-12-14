@@ -90,10 +90,7 @@ _transforms(32)
     transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * width;
     transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * height;
     transform._variance = 0.05f * ggo::square(min_size());
-
-    float angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
-    float length = 0.5f * min_size();
-    transform._disp = ggo::from_polar(angle, length);
+    transform._disp = 0.5f * min_size() * ggo::pos2f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
   }
 
   float x = 0;

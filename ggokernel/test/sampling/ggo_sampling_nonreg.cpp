@@ -1,4 +1,5 @@
 #include "../ggo_kernel_nonreg.h"
+#include <kernel/ggo_vec2.h>
 #include <kernel/math/sampling/shape_sampling/ggo_grid_sampling.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_halton.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
@@ -118,7 +119,7 @@ GGO_TEST(sampling, halton)
   {
     float x = ggo::halton_disc_2d_table_2_3[i].x();
     float y = ggo::halton_disc_2d_table_2_3[i].y();
-    float dist = ggo::distance(x, y);
+    float dist = ggo::length(ggo::vec2f(x, y));
     GGO_CHECK(dist <= 0.5f);
   }
 }

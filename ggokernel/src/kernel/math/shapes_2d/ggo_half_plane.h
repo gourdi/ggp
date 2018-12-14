@@ -16,7 +16,7 @@ namespace ggo
     using distancable_shape2d_abc<data_t>::dist_to_point;
 
                               // The normal points towards the outside of the half-plane.
-                              half_plane(const ggo::pos2<data_t> & normal, data_t dist_to_origin) : _normal(normal.get_normalized()), _dist_to_origin(dist_to_origin) {}
+                              half_plane(const ggo::pos2<data_t> & normal, data_t dist_to_origin) : _normal(normalize(normal)), _dist_to_origin(dist_to_origin) {}
 
     bool                      is_point_inside(const ggo::pos2<data_t> & p) const override;
     data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;

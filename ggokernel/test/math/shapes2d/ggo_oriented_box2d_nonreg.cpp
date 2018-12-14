@@ -6,10 +6,10 @@ GGO_TEST(oriented_box, construction)
   ggo::oriented_box<float> box({ 3.f, 2.f }, { 2.f, 0.f }, 2.f, 1.f);
 
   // Check second direction.
-  GGO_CHECK(box.dir().is_normalized());
+  GGO_CHECK(ggo::is_normalized(box.dir()));
 
   // Check second direction.
-  GGO_CHECK(box.dir2().is_normalized());
+  GGO_CHECK(ggo::is_normalized(box.dir2()));
   GGO_CHECK_FLOAT_EQ(ggo::dot(box.dir(), box.dir2()), 0.f);
 }
 

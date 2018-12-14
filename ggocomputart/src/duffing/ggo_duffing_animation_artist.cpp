@@ -30,10 +30,7 @@ animation_artist_abc(width, height, line_step, format)
   {
     ggo::pos2f point = duffing.update(0.002f);
 
-    float angle = atan2(point.y(), point.x()) + angle_offset;
-    float dist = point.get_length();
-
-    point.set(dist * std::cos(angle), dist * std::sin(angle));
+    point = ggo::rotate(point, angle_offset);
     point = map_fit(point, -1.7f, 1.7f);
 
     _points.push_back(point);

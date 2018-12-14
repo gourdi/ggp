@@ -12,13 +12,11 @@ namespace ggo
   template <typename data_t>
   data_t disc<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
   {
-    ggo::vec2<data_t> diff  = _center - p;
-    data_t hypot	          = diff.get_hypot();
-    data_t sqrd_radius      = _radius * _radius;
+    data_t sq_dist = hypot(_center - p);
 
-    if (hypot > sqrd_radius)
+    if (sq_dist > _radius * _radius)
     {
-      return std::sqrt(hypot) - _radius;
+      return std::sqrt(sq_dist) - _radius;
     }
     else
     {
@@ -39,10 +37,7 @@ namespace ggo
   template <typename data_t>
   bool disc<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    vec2<data_t> diff = _center - p;
-    data_t hypot	    = diff.get_hypot();
-
-    return hypot <= _radius * _radius;
+    return hypot(_center - p) <= _radius * _radius;
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -100,7 +95,7 @@ namespace ggo
   ggo::disc<data_t> from_local_to_world(const ggo::disc<data_t> & local_disc, const orthogonal_basis2d<data_t, orthonormal, cross_product_up> & basis)
   {
     auto center = basis.point_from_local_to_world(local_disc.center());
-    auto radius = basis.x().get_length() * local_disc.radius();
+    auto radius = length(basis.x()) * local_disc.radius();
     return ggo::disc<data_t>(center, radius);
   }
 }

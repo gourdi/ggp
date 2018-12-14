@@ -86,8 +86,8 @@ namespace ggo
       return color;
     }
 
-    GGO_ASSERT_FLOAT_EQ(hit->_intersection._local_normal.dir().get_length(), 1.f);
-    GGO_ASSERT_FLOAT_EQ(hit->_intersection._world_normal.dir().get_length(), 1.f);
+    GGO_ASSERT(ggo::is_normalized(hit->_intersection._local_normal.dir()));
+    GGO_ASSERT(ggo::is_normalized(hit->_intersection._world_normal.dir()));
 
     ggo::rgb_32f output_color = hit->_object->process_ray(ray, hit->_intersection, *this, depth, indirect_lighting, random_variable1, random_variable2);
 

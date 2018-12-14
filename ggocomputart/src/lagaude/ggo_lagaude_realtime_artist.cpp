@@ -15,7 +15,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
     ggo::lagaude_realtime_artist::bkgd_disc bkgd_disc;
     bkgd_disc._pos.x() = ggo::rand<float>(-1, 3);
     bkgd_disc._pos.y() = ggo::rand<float>(-1, 3);
-    bkgd_disc._vel = ggo::from_polar(ggo::rand<float>(0, 2 * ggo::pi<float>()), 0.001f);
+    bkgd_disc._vel = 0.001f * ggo::vec2f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
     bkgd_disc._radius = 0.75;
 
     _bkgd_discs.push_back(bkgd_disc);
@@ -160,7 +160,7 @@ bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2
     {
       float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.count();
 
-      auto * particle = new ggo::lagaude_realtime_artist::particle(pos + ggo::from_polar(angle, 0.02f * _scale), new ggo::velocity_path(0.02f * _scale, angle));
+      auto * particle = new ggo::lagaude_realtime_artist::particle(pos + 0.02f * _scale * ggo::vec2f::from_angle(angle), new ggo::velocity_path(0.02f * _scale, angle));
       particle->_angle = angle;
       particle->_dangle = _dangle;
       particle->_radius = 0.025f * _scale;
@@ -205,9 +205,9 @@ bool ggo::lagaude_realtime_artist::particle::update(int frame_index, const ggo::
 void ggo::lagaude_realtime_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
   const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
 {
-	ggo::pos2f p1 = ggo::map_fit(ggo::from_polar(_angle, _radius), 0.f, 1.f, width, height);
-	ggo::pos2f p2 = ggo::map_fit(ggo::from_polar(_angle + 2 * ggo::pi<float>() / 3, _radius), 0.f, 1.f, width, height);
-	ggo::pos2f p3 = ggo::map_fit(ggo::from_polar(_angle + 4 * ggo::pi<float>() / 3, _radius), 0.f, 1.f, width, height);
+	ggo::pos2f p1 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle), 0.f, 1.f, width, height);
+	ggo::pos2f p2 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle + 2 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
+	ggo::pos2f p3 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle + 4 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
     
   ggo::vec2f disp(pos.x() * width, pos.y() * height);
   p1 += disp;

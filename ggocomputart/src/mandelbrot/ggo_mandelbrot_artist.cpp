@@ -230,9 +230,9 @@ void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 				for (int i = 0; i < 16; ++i)
 				{
 					int index = std::min(static_cast<int>(palette.size() - 1), iterations[i]);
-					r += palette[index]._r;
-          g += palette[index]._g;
-          b += palette[index]._b;
+					r += palette[index].r();
+          g += palette[index].g();
+          b += palette[index].b();
 				}
 
         ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
