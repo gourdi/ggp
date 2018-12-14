@@ -6,6 +6,7 @@ group_sources(${sources})
 add_library(ggoraytracer STATIC ${sources})
 target_include_directories(ggoraytracer PUBLIC "src/")
 target_link_libraries(ggoraytracer PUBLIC ggo2d)
+add_dependencies(ggoraytracer ggo2d_nonreg)
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

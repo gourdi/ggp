@@ -6,6 +6,7 @@ group_sources(${sources})
 add_library(ggoanimation STATIC ${sources})
 target_include_directories(ggoanimation PUBLIC "src/")
 target_link_libraries(ggoanimation ggo2d)
+add_dependencies(ggo2d ggokernel_nonreg)
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

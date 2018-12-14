@@ -6,6 +6,7 @@ group_sources(${sources})
 add_library(ggocomputart STATIC ${sources})
 target_include_directories(ggocomputart PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_link_libraries(ggocomputart ggokernel ggo2d ggoraytracer ggoanimation)
+add_dependencies(ggocomputart ggoraytracer_nonreg ggoanimation_nonreg)
 
 # The executables.
 add_executable(ggocomputartbitmap ggo_computart_bitmap.cpp)
