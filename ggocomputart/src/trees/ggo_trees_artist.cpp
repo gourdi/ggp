@@ -36,7 +36,7 @@ namespace
     float				get_top_width() const { return ggo::distance(_top_points[0], _top_points[1]); }
     float				height() const { return ggo::distance(get_top_point(), get_bottom_point()); }
     ggo::vec2f	get_diff() const { return get_top_point() - get_bottom_point(); }
-    float				get_angle() const { ggo::vec2f diff(get_diff()); return std::atan2(diff.get<1>(), diff.get<0>()); }
+    float				get_angle() const { ggo::vec2f diff(get_diff()); return ggo::angle(diff); }
 
     ggo::pos2f  _bottom_points[2];
     ggo::pos2f  _top_points[2];
@@ -112,9 +112,8 @@ namespace
           float leaf_height = leaf.height() * scale_height;
           float leaf_width = leaf.get_top_width() * scale_width;
 
-          ggo::vec2f vert_disp = ggo::from_polar(leaf_angle, leaf_height);
-          ggo::vec2f delta(vert_disp);
-          delta.set_length(0.5f * leaf_width);
+          ggo::vec2f vert_disp = ggo::vec2f::from_angle(leaf_angle) * leaf_height;
+          ggo::vec2f delta = normalize(vert_disp) * (0.5f * leaf_width);
           delta = ggo::rotate(delta, ggo::pi<float>() / 2);
 
           new_leaf._bottom_points[0] = leaf._top_points[0];

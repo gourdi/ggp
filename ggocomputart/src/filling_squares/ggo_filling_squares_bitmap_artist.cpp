@@ -27,10 +27,10 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
 		for (const auto & colored_square : multi_square._squares)
 		{
 			float half_size = colored_square._size / 2;
-      float left      = multi_square._pos.get<0>() - half_size;
-      float right     = multi_square._pos.get<0>() + half_size;
-      float bottom    = multi_square._pos.get<1>() - half_size;
-      float top       = multi_square._pos.get<1>() + half_size;
+      float left      = multi_square._pos.x() - half_size;
+      float right     = multi_square._pos.x() + half_size;
+      float bottom    = multi_square._pos.y() - half_size;
+      float top       = multi_square._pos.y() + half_size;
       
       ggo::polygon2d_float square;
       square.add_point(left, bottom);

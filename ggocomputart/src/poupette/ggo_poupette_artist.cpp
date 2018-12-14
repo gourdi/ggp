@@ -19,7 +19,7 @@ namespace
 
     auto color_mod = [](const ggo::rgb_32f & c)
     {
-      return ggo::rgb_32f(ggo::pos_mod(c._r, 255.f), ggo::pos_mod(c._g, 255.f), ggo::pos_mod(c._b, 255.f));
+      return ggo::rgb_32f(ggo::pos_mod(c.r(), 255.f), ggo::pos_mod(c.g(), 255.f), ggo::pos_mod(c.b(), 255.f));
     };
 
     // Optmized version of the 2x2 sampling used for the real time rendering.
@@ -55,9 +55,9 @@ namespace
             color_mod(w2 * colors_left[1] + ww2 * colors_right[1]);
           pixel_color /= 4.f;
 
-          int r = ggo::round_to<int>(pixel_color._r);
-          int g = ggo::round_to<int>(pixel_color._g);
-          int b = ggo::round_to<int>(pixel_color._b);
+          int r = ggo::round_to<int>(pixel_color.r());
+          int g = ggo::round_to<int>(pixel_color.g());
+          int b = ggo::round_to<int>(pixel_color.b());
           ggo::write_pixel<format>(ptr, { uint8_t(r), uint8_t(g), uint8_t(b) });
 
           ptr += ggo::image_format_traits<format>::pixel_byte_size;
@@ -84,9 +84,9 @@ namespace
 
           pixel_color /= ggo::sampler<sampling>::samples_count;
 
-          int r = ggo::round_to<int>(pixel_color._r);
-          int g = ggo::round_to<int>(pixel_color._g);
-          int b = ggo::round_to<int>(pixel_color._b);
+          int r = ggo::round_to<int>(pixel_color.r());
+          int g = ggo::round_to<int>(pixel_color.g());
+          int b = ggo::round_to<int>(pixel_color.b());
           ggo::write_pixel<format>(ptr, { uint8_t(r), uint8_t(g), uint8_t(b) });
 
           ptr += ggo::image_format_traits<format>::pixel_byte_size;
@@ -113,9 +113,9 @@ ggo::poupette_artist::poupette_artist()
       return (sup - inf) * v + inf;
     };
 
-    c._r = stretch(c._r);
-    c._g = stretch(c._g);
-    c._b = stretch(c._b);
+    c.r() = stretch(c.r());
+    c.g() = stretch(c.g());
+    c.b() = stretch(c.b());
 
     return c;
   };

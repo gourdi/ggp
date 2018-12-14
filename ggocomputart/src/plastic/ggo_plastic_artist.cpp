@@ -1,4 +1,5 @@
 #include "ggo_plastic_artist.h"
+#include <kernel/ggo_vec3.h>
 
 //////////////////////////////////////////////////////////////
 ggo::plastic_artist::plastic_artist(int width, int height, int line_step, ggo::image_format format)
@@ -42,10 +43,9 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
       const float dy = y2 - y1;
       const ggo::vec3f v1(dx, dy, z22 - z11);
       const ggo::vec3f v2(dx, -dy, z21 - z12);
-      ggo::vec3f normal = ggo::cross(v1, v2);
-      normal.normalize();
+      const ggo::vec3f normal = ggo::normalize(ggo::cross(v1, v2));
 
-      const ggo::rgb_32f pixel_color = color * (altitude_factor + std::abs(normal.get<2>()) / altitude_factor);
+      const ggo::rgb_32f pixel_color = color * (altitude_factor + std::abs(normal.z()) / altitude_factor);
 
       ggo::write_pixel<format>(buffer, ggo::convert_color_to<ggo::rgb_8u>(pixel_color));
 

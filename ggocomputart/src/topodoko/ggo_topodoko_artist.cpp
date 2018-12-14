@@ -107,14 +107,14 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 					color_square color_square;
 					
 					ggo::pos2f square_center(block_center);
-					square_center.get<0>() += (x - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
-					square_center.get<1>() += (y - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
+					square_center.x() += (x - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
+					square_center.y() += (y - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
 					
 					float dangle = ggo::rand<float>(-0.1f, 0.1f);
-					color_square._square.add_point(square_center + ggo::from_polar(    ggo::pi<float>() / 4 + dangle, 0.5f * square_size * ggo::sqrt2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(3 * ggo::pi<float>() / 4 + dangle, 0.5f * square_size * ggo::sqrt2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(5 * ggo::pi<float>() / 4 + dangle, 0.5f * square_size * ggo::sqrt2<float>()));
-					color_square._square.add_point(square_center + ggo::from_polar(7 * ggo::pi<float>() / 4 + dangle, 0.5f * square_size * ggo::sqrt2<float>()));
+					color_square._square.add_point(square_center + ggo::vec2f::from_angle(    ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2f::from_angle(3 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2f::from_angle(5 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2f::from_angle(7 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
 
 					if (ggo::rand<int>(0, 8) == 0)
 					{
@@ -125,9 +125,9 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 						color_square._color = color;
 					}
 					
-					color_square._color._r = ggo::clamp(color_square._color._r + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
-					color_square._color._g = ggo::clamp(color_square._color._g + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
-					color_square._color._b = ggo::clamp(color_square._color._b + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
+					color_square._color.r() = ggo::clamp(color_square._color.r() + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
+					color_square._color.g() = ggo::clamp(color_square._color.g() + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
+					color_square._color.b() = ggo::clamp(color_square._color.b() + ggo::rand<float>(-0.15f, 0.15f), 0.f, 1.f);
 					
 					if (ggo::rand<int>(0, 20) != 0)
 					{

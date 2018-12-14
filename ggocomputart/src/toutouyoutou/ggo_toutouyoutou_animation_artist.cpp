@@ -53,13 +53,13 @@ _background(new uint8_t[height * line_step])
   _emitter1._x = 0;
   _emitter1._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter1._y_sup = _emitter1._y_inf + 0.12f;
-  _emitter1._speed = ggo::from_polar(ggo::rand<float>(0, ggo::pi<float>() / 4), ggo::rand<float>(5, 15));
+  _emitter1._speed = ggo::vec2f::from_angle(ggo::rand<float>(0, ggo::pi<float>() / 4)) * ggo::rand<float>(5, 15);
   _emitter1._temperature = 0;
 
   _emitter2._x = get_view_width();
   _emitter2._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter2._y_sup = _emitter2._y_inf + 0.12f;
-  _emitter2._speed = ggo::from_polar(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>()), ggo::rand<float>(5, 15));
+  _emitter2._speed = ggo::vec2f::from_angle(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>())) * ggo::rand<float>(5, 15);
   _emitter2._temperature = 1;
 
   if (ggo::rand<bool>())
@@ -186,7 +186,7 @@ void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
  
       // Viscosity.
       ggo::vec2f dspeed = particle._speed - particle2._speed;
-      float u = dspeed.get<0>() * dpos.get<0>() + dspeed.get<1>() * dpos.get<1>();
+      float u = dspeed.x() * dpos.x() + dspeed.y() * dpos.y();
       if (u > 0)
       {
         u /= neighbour._dist;
@@ -246,7 +246,7 @@ void ggo::toutouyoutou_animation_artist::apply_body_forces()
 {
   for (auto & particle : _particles)
   {
-    particle._speed.get<1>() -= _gravity * delta_time;
+    particle._speed.y() -= _gravity * delta_time;
   }
 }
 
@@ -257,29 +257,29 @@ void ggo::toutouyoutou_animation_artist::resolve_collisions()
   {
     // Left wall.
     {
-      float dist = particle._cur_pos.get<0>();
+      float dist = particle._cur_pos.x();
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.get<0>() += (particle_radius - dist) / delta_time;
+        particle._speed.x() += (particle_radius - dist) / delta_time;
       }
     }
     // Right wall.
     {
-      float dist = get_view_width() - particle._cur_pos.get<0>();
+      float dist = get_view_width() - particle._cur_pos.x();
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.get<0>() -= (particle_radius - dist) / delta_time;
+        particle._speed.x() -= (particle_radius - dist) / delta_time;
       }
     }
     // Bottom wall.
     {
-      float dist = particle._cur_pos.get<1>();
+      float dist = particle._cur_pos.y();
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.get<1>() += (particle_radius - dist) / delta_time;
+        particle._speed.y() += (particle_radius - dist) / delta_time;
       }
     }
   }
@@ -462,8 +462,8 @@ float ggo::toutouyoutou_animation_artist::get_potiental(float render_x, float re
     {
       for (const auto * particle : _grid(x, y))
       {
-        float dx = particle->_cur_pos.get<0>() - view_x;
-        float dy = particle->_cur_pos.get<1>() - view_y;
+        float dx = particle->_cur_pos.x() - view_x;
+        float dy = particle->_cur_pos.y() - view_y;
         float hypot = dx * dx + dy * dy;
         if (hypot <= influence_radius * influence_radius)
         {
@@ -495,8 +495,8 @@ float ggo::toutouyoutou_animation_artist::get_temperature(float render_x, float 
     {
       for (const auto * particle : _grid(x, y))
       {
-        float dx = particle->_cur_pos.get<0>() - view_x;
-        float dy = particle->_cur_pos.get<1>() - view_y;
+        float dx = particle->_cur_pos.x() - view_x;
+        float dy = particle->_cur_pos.y() - view_y;
         float hypot = dx * dx + dy * dy;
         if (hypot <= influence_radius * influence_radius)
         {

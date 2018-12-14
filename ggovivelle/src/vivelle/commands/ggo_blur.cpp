@@ -41,7 +41,7 @@ namespace ggo
     {
       using format_traits = ggo::image_format_traits<format>;
 
-      if constexpr(std::is_same<format_traits::color_t, ggo::color_8u>::value == true)
+      if constexpr(std::is_same<format_traits::color_t, ggo::rgb_8u>::value == true)
       {
         using helper = gaussian_blur_helper<typename format_traits::color_t>;
         using color_aux_t = typename helper::color_t;
