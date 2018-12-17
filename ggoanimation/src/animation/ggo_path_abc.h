@@ -11,7 +11,7 @@ namespace ggo
 
     virtual 			     ~path_abc() {}
 
-    virtual	ggo::pos2f  get_pos(int counter) = 0;
+    virtual	ggo::pos2_f  get_pos(int counter) = 0;
   };
 }
 

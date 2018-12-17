@@ -60,8 +60,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using basis3d_double = basis3d<double>;
-  using basis3d_float  = basis3d<float>;
+  using basis3d_d = basis3d<double>;
+  using basis3d_f  = basis3d<float>;
 }
 
 //////////////////////////////////////////////////////////////////

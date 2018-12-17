@@ -12,7 +12,7 @@ namespace ggo
 
     struct vortex
     {
-      ggo::pos2f  _pos;
+      ggo::pos2_f _pos;
       float				_angle;
       float				_speed;
       float				_power;

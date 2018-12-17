@@ -16,8 +16,8 @@ ggo::metaballs_artist::params::params()
 	_threshold = ggo::rand<float>(0.8f, 0.9f);
 	_phong_factor = ggo::rand<float>(2, 4);
 	_phong_shininess = ggo::rand<float>(10, 100);
-	_light1 = ggo::pos3f(0.f, 0.f, 1000.f);
-	_light2 = ggo::pos3f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
+	_light1 = ggo::pos3_f(0.f, 0.f, 1000.f);
+	_light2 = ggo::pos3_f(1000 * std::cos(angle), 1000 * std::sin(angle), 1000.f);
 	_background_color = ggo::rgb_32f(ggo::rand<float>(0.2f, 0.8f));
 }
 
@@ -34,7 +34,7 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, 
   ggo::metaball<float> metaball(params._threshold);
   for (const auto & center : params._centers)
   {
-    std::shared_ptr<ggo::influence_shape3d_abc<float>> shape(new ggo::sphere3d_float(center, 0.7f));
+    std::shared_ptr<ggo::influence_shape3d_abc<float>> shape(new ggo::sphere3d_f(center, 0.7f));
     metaball.add_influence_data(shape, 1.0f);
   }
   constexpr uint32_t flags = ggo::discard_reflection | ggo::discard_basis | ggo::discard_roughness;

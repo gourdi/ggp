@@ -6,14 +6,14 @@
 
 namespace ggo
 {
-  std::vector<ggo::pos2f> best_candidate_sequence_2d(int count);
+  std::vector<ggo::pos2_f> best_candidate_sequence_2d(int count);
 }
 
 #define GGO_BEST_CANDITATE_TABLE_SIZE 1000
 
 namespace ggo
 {
-  const std::vector<ggo::pos2f> best_candidate_table {
+  const std::vector<ggo::pos2_f> best_candidate_table {
     { 0.0754634f, 0.645212f },
     { 0.739848f, 0.162f },
     { 0.220326f, 0.128471f },

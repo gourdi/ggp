@@ -5,7 +5,7 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_animation_artist::animated_square::animated_square(const ggo::pos2f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square)
+ggo::filling_squares_animation_artist::animated_square::animated_square(const ggo::pos2_f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square)
 :
 ggo::position_animate_abc(pos, start_offset),
 _angle(angle),
@@ -14,14 +14,14 @@ _colored_square(colored_square)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::filling_squares_animation_artist::animated_square::update(int frame_index, const ggo::pos2f & pos)
+bool ggo::filling_squares_animation_artist::animated_square::update(int frame_index, const ggo::pos2_f & pos)
 {
   return true;
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::filling_squares_animation_artist::animated_square::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
   constexpr int fade_in_anim_duration = 25;
 
@@ -31,7 +31,7 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
   float half_size = _colored_square._size / 2;
   half_size = ggo::ease_in(frame_index, fade_in_anim_duration, 5.f * half_size, half_size);
 
-  ggo::polygon2d_float square;
+  ggo::polygon2d_f square;
   square.add_point(-half_size, -half_size);
   square.add_point(-half_size, half_size);
   square.add_point(half_size, half_size);
@@ -39,7 +39,7 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 
   // Apply rotation.
   float angle = ggo::ease_in(frame_index, fade_in_anim_duration, _angle, 0.f);
-  square.rotate(angle, ggo::pos2f(0.f, 0.f));
+  square.rotate(angle, ggo::pos2_f(0.f, 0.f));
 
   // Apply translation.
   float translation = ggo::ease_in(frame_index, fade_in_anim_duration, 1.f, 0.f);

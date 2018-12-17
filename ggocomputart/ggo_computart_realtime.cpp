@@ -124,7 +124,7 @@ void main_loop()
     thread_id <<= 1;
   }
 
-  ggo::pos2i cursor_pos;
+  ggo::pos2_i cursor_pos;
   SDL_GetMouseState(&cursor_pos.x(), &cursor_pos.y());
   bool fullscreen = false;
 

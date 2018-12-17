@@ -44,7 +44,7 @@ bool ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::intersect_ray_x(con
     return false;
   }
 
-  normal.set_normalized_dir(normal_x, normal_y, normal_z);
+  normal.set_normalized_dir({ normal_x, normal_y, normal_z });
 
   return true;
 }
@@ -75,7 +75,7 @@ bool ggo::rectangle3d<normal_x, normal_y, normal_z, data_t>::intersect_ray_y(con
     return false;
   }
 
-  normal.set_normalized_dir(normal_x, normal_y, normal_z);
+  normal.set_normalized_dir({ normal_x, normal_y, normal_z });
 
   return true;
 }

@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(coordinates_conversions, from_pixel_to_math_point)
 {
-  ggo::pos2f p = ggo::from_pixel_to_math<float>({ -1, 2 });
+  ggo::pos2_f p = ggo::from_pixel_to_math<float>({ -1, 2 });
 
   GGO_CHECK_FLOAT_EQ(p.x(), -0.5f);
   GGO_CHECK_FLOAT_EQ(p.y(), 2.5f);
@@ -13,15 +13,15 @@ GGO_TEST(coordinates_conversions, from_pixel_to_math_point)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(coordinates_conversions, from_math_to_pixel_point)
 {
-  ggo::pos2i p1 = ggo::from_math_to_pixel(ggo::pos2f(-1.1f, 2.9f));
+  ggo::pos2_i p1 = ggo::from_math_to_pixel(ggo::pos2_f(-1.1f, 2.9f));
   GGO_CHECK_EQ(p1.x(), -2);
   GGO_CHECK_EQ(p1.y(), 2);
 
-  ggo::pos2i p2 = ggo::from_math_to_pixel(ggo::pos2f(-0.4f, 3.1f));
+  ggo::pos2_i p2 = ggo::from_math_to_pixel(ggo::pos2_f(-0.4f, 3.1f));
   GGO_CHECK_EQ(p2.x(), -1);
   GGO_CHECK_EQ(p2.y(), 3);
 
-  ggo::pos2i p3 = ggo::from_math_to_pixel(ggo::pos2f(-2.9f, 3.9f));
+  ggo::pos2_i p3 = ggo::from_math_to_pixel(ggo::pos2_f(-2.9f, 3.9f));
   GGO_CHECK_EQ(p3.x(), -3);
   GGO_CHECK_EQ(p3.y(), 3);
 }

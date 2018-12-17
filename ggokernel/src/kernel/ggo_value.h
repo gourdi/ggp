@@ -65,7 +65,7 @@ namespace ggo
       ~buffer() { delete[] _buffer; }
     };
 
-    std::variant<int, float, pos2f, buffer<int>, buffer<float>, buffer<pos2f>> _variant;
+    std::variant<int, float, pos2_f, buffer<int>, buffer<float>, buffer<pos2_f>> _variant;
   };
 }
 

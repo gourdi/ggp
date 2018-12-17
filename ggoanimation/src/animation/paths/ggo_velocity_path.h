@@ -10,13 +10,13 @@ namespace ggo
   public:
 
                 velocity_path(float delta, float angle);
-                velocity_path(const ggo::vec2f & velocity) : _velocity(velocity) {};
+                velocity_path(const ggo::vec2_f & velocity) : _velocity(velocity) {};
 
-    ggo::pos2f  get_pos(int counter) override;
+    ggo::pos2_f  get_pos(int counter) override;
 
   private:
 
-    ggo::vec2f _velocity;
+    ggo::vec2_f _velocity;
   };
 }
 

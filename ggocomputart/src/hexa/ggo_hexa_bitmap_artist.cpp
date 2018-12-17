@@ -28,7 +28,7 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #endif
 
   // The camera.
-  const ggo::basis3d_float camera_basis = artist.generate_camera_basis(1.f);
+  const ggo::basis3d_f camera_basis = artist.generate_camera_basis(1.f);
   const float camera_aperture = 0.15f;
 
 #ifdef GGO_PREVIEW

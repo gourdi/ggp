@@ -18,7 +18,7 @@ namespace ggo
 
                   hexa_artist(bool enable_roughness);
 
-    basis3d_float generate_camera_basis(float progress) const;
+    basis3d_f generate_camera_basis(float progress) const;
 
     void          render(void * buffer, int width, int height, int line_step, ggo::image_format format,
                          float progress, ggo::renderer_abc & renderer) const;

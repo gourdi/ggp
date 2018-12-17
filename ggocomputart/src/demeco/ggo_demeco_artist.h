@@ -22,7 +22,7 @@ namespace ggo
   private:
 
     int   min_size() const { return std::min(_width, _height); }
-    pos2f center() const { return { static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2 }; }
+    pos2_f center() const { return { static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2 }; }
 
     static typename image_format_traits<format>::color_t from_8u(const ggo::rgb_8u & c);
 
@@ -33,19 +33,19 @@ namespace ggo
 
     struct demeco
     {
-      demeco(const ggo::pos2f & pos, float radius, int counter) : _pos(pos), _radius(radius), _counter(counter) {}
+      demeco(const ggo::pos2_f & pos, float radius, int counter) : _pos(pos), _radius(radius), _counter(counter) {}
 
       virtual typename paint_shapes_t get_paint_shapes() const = 0;
       virtual bool finished() const = 0;
 
-      ggo::pos2f _pos;
+      ggo::pos2_f _pos;
       float _radius;
       int _counter;
     };
 
     struct demeco1 : public demeco
     {
-      demeco1(const ggo::pos2f & pos, float radius, int counter, const palette_t & palette);
+      demeco1(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
       typename paint_shapes_t get_paint_shapes() const override;
       bool finished() const override;
@@ -70,7 +70,7 @@ namespace ggo
 
     struct demeco2 : public demeco
     {
-      demeco2(const ggo::pos2f & pos, float radius, int counter, const palette_t & palette);
+      demeco2(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
       typename paint_shapes_t get_paint_shapes() const override;
       bool finished() const override;
@@ -96,7 +96,7 @@ namespace ggo
 
     struct demeco3 : public demeco
     {
-      demeco3(const ggo::pos2f & pos, float radius, int counter, const palette_t & palette);
+      demeco3(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
       typename paint_shapes_t get_paint_shapes() const override;
       bool finished() const override;

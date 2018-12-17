@@ -22,11 +22,11 @@ namespace
 
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
+      ggo::disc_f({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
 
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
+      ggo::disc_f({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
     
     ggo::gaussian_blur2d<format>(buffer, line_step, { width, height }, 5.f);
 
@@ -87,11 +87,11 @@ GGO_TEST(blur, gaussian_y_8u_yu)
 
   ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), 0xff);
+    ggo::disc_f({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), 0xff);
 
   ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
+    ggo::disc_f({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
 
   ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 5.f);
 
@@ -122,7 +122,7 @@ GGO_TEST(blur, gaussian_rgb_8u_clipping)
 
   ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
+    ggo::disc_f({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
 
   ggo::gaussian_blur2d<ggo::rgb_8u_yu>(buffer.data(), line_step, { width, height }, 5.f, clipping);
 
@@ -133,7 +133,7 @@ GGO_TEST(blur, gaussian_rgb_8u_clipping)
 
   ggo::paint<ggo::rgb_8u_yd, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
+    ggo::disc_f({ 10.f, 0.5f * height }, 0.5f * height - 8.f), ggo::red_8u());
 
   ggo::gaussian_blur2d<ggo::rgb_8u_yd>(buffer.data(), line_step, { width, height }, 5.f, clipping);
 
@@ -149,11 +149,11 @@ namespace
 
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
+      ggo::disc_f({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
 
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, width, height, line_step,
-      ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
+      ggo::disc_f({ 0.f, 0.f }, 0.25f * std::min(width, height)), ggo::green<ggo::rgb_8u>());
     
     ggo::mean_box_blur2d<format>(buffer, line_step, { width, height }, 9);
 
@@ -214,11 +214,11 @@ GGO_TEST(blur, mean_box_y_8u_yu)
 
   ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), 0xff);
+    ggo::disc_f({ 0.5f * width, 0.5f * height }, 0.25f * std::min(width, height)), 0xff);
 
   ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(
     buffer.data(), width, height, line_step,
-    ggo::disc_float({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
+    ggo::disc_f({ 0.f, 0.f }, 0.25f * std::min(width, height)), 0xff);
 
   ggo::mean_box_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 9);
 

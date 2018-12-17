@@ -9,20 +9,20 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <ggo::image_format format>
-  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping)
+  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping)
   {
     const float radius = 0.01f * artist.min_size();
 
-    ggo::pos2f pos = artist.map_fit(0.8f * point_pos, -1, 1);
+    ggo::pos2_f pos = artist.map_fit(0.8f * point_pos, -1, 1);
 
-    ggo::disc_float disc1(pos, radius);
+    ggo::disc_f disc1(pos, radius);
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), artist.line_step(),
       disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
 
     pos.x() = artist.width() - pos.x() - 1;
 
-    ggo::disc_float disc2(pos, radius);
+    ggo::disc_f disc2(pos, radius);
     ggo::paint<format, ggo::sampling_4x4>(
       buffer, artist.width(), artist.height(), artist.line_step(),
       disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
@@ -43,7 +43,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   if ((frame_index % 100) == 0)
   {
@@ -58,8 +58,8 @@ void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events,
     _radius_prv = _radius_cur;
     _radius_cur += velocity + force;
 
-    _points[substep] = _radius_cur * ggo::vec2f::from_angle(_angle);
-    _attractor_points[substep] = _radius_attractor * ggo::vec2f::from_angle(_angle);
+    _points[substep] = _radius_cur * ggo::vec2_f::from_angle(_angle);
+    _attractor_points[substep] = _radius_attractor * ggo::vec2_f::from_angle(_angle);
 
     _angle += 0.001f;
   }
@@ -96,7 +96,7 @@ void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::re
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
+void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
 {
   switch (format())
   {

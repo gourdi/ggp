@@ -31,10 +31,10 @@ namespace ggo
 
     struct particle
     {
-      ggo::pos2f	                    _cur_pos;
-      ggo::pos2f	                    _prv_pos;
-      ggo::pos2f	                    _relaxed_pos;
-      ggo::vec2f	                    _speed;
+      ggo::pos2_f	                    _cur_pos;
+      ggo::pos2_f	                    _prv_pos;
+      ggo::pos2_f	                    _relaxed_pos;
+      ggo::vec2_f	                    _speed;
       float                           _pressure;
       float                           _near_pressure;
       int                             _grid_x;
@@ -46,12 +46,12 @@ namespace ggo
 
     struct particle_emitter
     {
-      float      _x;
-      float      _y_inf;
-      float      _y_sup;
-      ggo::vec2f _speed;
-      int        _counter;
-      float      _temperature;
+      float       _x;
+      float       _y_inf;
+      float       _y_sup;
+      ggo::vec2_f _speed;
+      int         _counter;
+      float       _temperature;
 
       void  create_particles(std::vector<particle> & particles);
     };

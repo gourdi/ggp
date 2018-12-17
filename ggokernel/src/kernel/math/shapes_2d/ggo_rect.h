@@ -45,7 +45,7 @@ namespace ggo
     void              inflate(data_t extent);
     void              inflate(data_t horz_extent, data_t vert_extent);
 
-    void              extend(const ggo::pos2f & p);
+    void              extend(const ggo::pos2_f & p);
   
     // Interfaces.  
     void				      move(const ggo::vec2<data_t> & m) override { _rect_data._pos += m; }
@@ -67,6 +67,6 @@ namespace ggo
 
 namespace ggo
 {
-  using rect_float    = rect<float>;
-  using rect_double   = rect<double>;
+  using rect_f = rect<float>;
+  using rect_d = rect<double>;
 }

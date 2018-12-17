@@ -31,7 +31,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
       float right = (x + 1) * cell_size + _threshold_dist;
       float bottom = y * cell_size - _threshold_dist;
       float top = (y + 1) * cell_size + _threshold_dist;
-      _grid(x, y)._rect = ggo::rect_float::from_left_right_bottom_top(left, right, bottom, top);
+      _grid(x, y)._rect = ggo::rect_f::from_left_right_bottom_top(left, right, bottom, top);
     }
   }
 
@@ -45,7 +45,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 //////////////////////////////////////////////////////////////
 void ggo::aggregation_animation_artist::update()
 {
-  ggo::pos2f p = get_random_point();
+  ggo::pos2_f p = get_random_point();
   int count = 0;
 
   while (true)
@@ -80,7 +80,7 @@ void ggo::aggregation_animation_artist::update()
     }
 
     // Move the point.
-    p += _threshold_dist * ggo::vec2f::from_angle(ggo::rand<float>(0.f, 2.f * ggo::pi<float>()));
+    p += _threshold_dist * ggo::vec2_f::from_angle(ggo::rand<float>(0.f, 2.f * ggo::pi<float>()));
     p.x() = ggo::pos_mod(p.x(), static_cast<float>(width()));
     p.y() = ggo::pos_mod(p.y(), static_cast<float>(height()));
 
@@ -112,13 +112,13 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color, ggo::rect_int::from_size(size()));
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::rgb_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_f, ggo::rgb_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
       for (const auto & point : cell._points)
       {
-        shapes.emplace_back(ggo::disc_float(point._pos, 2.f * _threshold_dist), ggo::black_8u());
+        shapes.emplace_back(ggo::disc_f(point._pos, 2.f * _threshold_dist), ggo::black_8u());
       }
     }
 
@@ -130,7 +130,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   ggo::gaussian_blur2d<format>(buffer, line_step(), size(), stddev);
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_float, ggo::rgb_8u>> shapes;
+    std::vector<ggo::static_paint_shape<ggo::disc_f, ggo::rgb_8u>> shapes;
 
     for (const auto & cell : _grid)
     {
@@ -139,7 +139,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
         float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
         float sat = point._sat - 0.0015f * point._counter;
         ggo::rgb_8u c = ggo::from_hsv<ggo::rgb_8u>(hue, sat, point._val);
-        shapes.emplace_back(ggo::disc_float(point._pos, _threshold_dist), c);
+        shapes.emplace_back(ggo::disc_f(point._pos, _threshold_dist), c);
       }
     }
 
@@ -183,9 +183,9 @@ void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_in
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_animation_artist::register_point(const ggo::pos2f & pos, float hue, float sat, float val)
+void ggo::aggregation_animation_artist::register_point(const ggo::pos2_f & pos, float hue, float sat, float val)
 {
-  std::vector<ggo::pos2f> loop_pos{
+  std::vector<ggo::pos2_f> loop_pos{
     pos,
   { pos.x() - width(), pos.y() },{ pos.x() + width(), pos.y() },
   { pos.x(), pos.y() - height() },{ pos.x(), pos.y() + height() },

@@ -28,7 +28,7 @@ animation_artist_abc(width, height, line_step, format)
 
   for (int i = 0; i < iterations_count; ++i)
   {
-    ggo::pos2f point = duffing.update(0.002f);
+    ggo::pos2_f point = duffing.update(0.002f);
 
     point = ggo::rotate(point, angle_offset);
     point = map_fit(point, -1.7f, 1.7f);
@@ -108,13 +108,13 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
       float opacity = 0.02f * (i - first_point) / visible_points_count;
 
       // Offset the shadow.
-      ggo::pos2f render_pt = _points[i];
+      ggo::pos2_f render_pt = _points[i];
       render_pt.x() += 0.05f * min_size();
       render_pt.y() += 0.05f * min_size();
 
       ggo::paint<ggo::y_32f_yu, ggo::sampling_2x2>(
         shadow_buffer.data(), width(), height(), sizeof(float) * width(),
-        ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(opacity));
+        ggo::disc_f(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(opacity));
     }
   }
 
@@ -138,7 +138,7 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
 
       ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
         buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-        ggo::disc_float(_points[i], radius), ggo::make_solid_brush(color), ggo::alpha_blender_rgb32f(opacity));
+        ggo::disc_f(_points[i], radius), ggo::make_solid_brush(color), ggo::alpha_blender_rgb32f(opacity));
     }
   }
 

@@ -1,6 +1,197 @@
 #ifndef __GGO_TEMPLATE_POINTER__
 #define __GGO_TEMPLATE_POINTER__
 
+// Set a buffer.
+namespace ggo
+{
+  namespace details
+  {
+    template <typename data_t, int count, int index, typename... args>
+    constexpr void set(data_t * coefs, data_t k, args... a)
+    {
+      coefs[count - index - 1] = k;
+
+      if constexpr (index > 0)
+      {
+        ggo::details::set<data_t, count, index - 1>(coefs, a...);
+      }
+      else
+      {
+        static_assert(sizeof...(a) == 0);
+        coefs[count - 1] = k;
+      }
+    }
+  }
+}
+
+// Egality.
+namespace ggo
+{
+  namespace details
+  {
+    template <typename data_t, int count, int index>
+    struct eq_t
+    {
+      static constexpr bool call(const data_t * ptr1, const data_t * ptr2)
+      {
+        return eq_t<data_t, count, index - 1>::call(ptr1, ptr2) && (ptr1[index] == ptr2[index]);
+      }
+    };
+
+    template <typename data_t, int count>
+    struct eq_t<data_t, count, 0>
+    {
+      static constexpr bool call(const data_t * ptr1, const data_t * ptr2)
+      {
+        return ptr1[0] == ptr2[0];
+      }
+    };
+
+    template <typename data_t, int count>
+    constexpr bool eq(const data_t * ptr1, const data_t * ptr2)
+    {
+      return eq_t<data_t, count, count - 1>::call(ptr1, ptr2);
+    }
+  }
+}
+
+// In-place operations.
+namespace ggo
+{
+  namespace details
+  {
+    template <typename data_t, int count, int index>
+    struct inplace_t
+    {
+      static void mul(data_t * coefs, const data_t * coefs2)
+      {
+        inplace_t<data_t, count, index - 1>::mul(coefs, coefs2);
+        coefs[index] *= coefs2[index];
+      }
+
+      static void div(data_t * coefs, const data_t * coefs2)
+      {
+        inplace_t<data_t, count, index - 1>::div(coefs, coefs2);
+        coefs[index] /= coefs2[index];
+      }
+
+      static void add(data_t * coefs, const data_t * coefs2)
+      {
+        inplace_t<data_t, count, index - 1>::add(coefs, coefs2);
+        coefs[index] += coefs2[index];
+      }
+
+      static void sub(data_t * coefs, const data_t * coefs2)
+      {
+        inplace_t<data_t, count, index - 1>::sub(coefs, coefs2);
+        coefs[index] -= coefs2[index];
+      }
+
+      static void mul(data_t * coefs, data_t k)
+      {
+        inplace_t<data_t, count, index - 1>::mul(coefs, k);
+        coefs[index] *= k;
+      }
+
+      static void div(data_t * coefs, data_t k)
+      {
+        inplace_t<data_t, count, index - 1>::mul(coefs, k);
+        coefs[index] /= k;
+      }
+
+      static void set(data_t * coefs, const data_t * coefs2)
+      {
+        inplace_t<data_t, count, index - 1>::set(coefs, coefs2);
+        coefs[index] = coefs[index];
+      }
+    };
+
+    template <typename data_t, int count>
+    struct inplace_t<data_t, count, 0>
+    {
+      static void mul(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] *= coefs2[0];
+      }
+
+      static void div(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] /= coefs2[0];
+      }
+
+      static void add(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] += coefs2[0];
+      }
+
+      static void sub(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] -= coefs2[0];
+      }
+
+      static void mul(data_t * coefs, data_t k)
+      {
+        coefs[0] *= k;
+      }
+
+      static void div(data_t * coefs, data_t k)
+      {
+        coefs[0] /= k;
+      }
+
+      static void set(data_t * coefs, const data_t * coefs2)
+      {
+        coefs[0] = coefs[0];
+      }
+    };
+
+    template <int count, typename data_t>
+    void mul(data_t * coefs, const data_t * coefs2)
+    {
+      inplace_t<data_t, count, count - 1>::mul(coefs, coefs2);
+    }
+
+    template <int count, typename data_t>
+    void div(data_t * coefs, const data_t * coefs2)
+    {
+      inplace_t<data_t, count, count - 1>::div(coefs, coefs2);
+    }
+
+    template <int count, typename data_t>
+    void add(data_t * coefs, const data_t * coefs2)
+    {
+      inplace_t<data_t, count, count - 1>::add(coefs, coefs2);
+    }
+
+    template <int count, typename data_t>
+    void sub(data_t * coefs, const data_t * coefs2)
+    {
+      inplace_t<data_t, count, count - 1>::div(coefs, coefs2);
+    }
+
+    template <int count, typename data_t>
+    void mul(data_t * coefs, data_t k)
+    {
+      inplace_t<data_t, count, count - 1>::mul(coefs, k);
+    }
+
+    template <int count, typename data_t>
+    void div(data_t * coefs, data_t k)
+    {
+      inplace_t<data_t, count, count - 1>::div(coefs, k);
+    }
+
+    template <int count, typename data_t>
+    void set(data_t * coefs, const data_t * coefs2)
+    {
+      inplace_t<data_t, count, count - 1>::set(coefs, coefs2);
+    }
+  }
+}
+
+
+
+
 namespace ggo
 {
   // Accumulate.

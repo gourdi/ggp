@@ -14,7 +14,7 @@ namespace ggo
 
   private:
 
-    void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     bool finished(int frame_index) const override;
 
@@ -27,9 +27,9 @@ namespace ggo
     struct point
     {
       point(float x, float y, const ggo::rgb_8u & color) : _pos(x, y), _color(color) {}
-      point(const ggo::pos2f & p, const ggo::rgb_8u & color) : _pos(p), _color(color) {}
+      point(const ggo::pos2_f & p, const ggo::rgb_8u & color) : _pos(p), _color(color) {}
 
-      ggo::pos2f _pos;
+      ggo::pos2_f _pos;
       ggo::rgb_8u _color;
       float _opacity = 0.f;
       int _counter = 0;
@@ -52,9 +52,9 @@ namespace ggo
 
     struct paint_point
     {
-      paint_point(const ggo::pos2f & p, const ggo::rgb_8u & color, float opacity) : _pos(p), _color(color), _opacity(opacity) {}
+      paint_point(const ggo::pos2_f & p, const ggo::rgb_8u & color, float opacity) : _pos(p), _color(color), _opacity(opacity) {}
 
-      const ggo::pos2f _pos;
+      const ggo::pos2_f _pos;
       const ggo::rgb_8u _color;
       const float _opacity;
     };

@@ -3,17 +3,17 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  sphere_glow::sphere_glow(const ggo::pos3f & pos, float radius, float opacity, const ggo::rgb_32f & color)
+  sphere_glow::sphere_glow(const ggo::pos3_f & pos, float radius, float opacity, const ggo::rgb_32f & color)
     :_sphere(pos, radius), _opacity(opacity), _color(color)
   {
 
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f sphere_glow::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const
+  ggo::rgb_32f sphere_glow::process_segment(const ggo::pos3_f & p1, const ggo::pos3_f & p2, const ggo::rgb_32f & color) const
   {
     float dist = distance(p1, p2);
-    ggo::vec3f dir = (p2 - p1) / dist;
+    ggo::vec3_f dir = (p2 - p1) / dist;
 
     ggo::line3d<float> line(p1, dir, false);
 
@@ -42,7 +42,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f sphere_glow::process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const
+  ggo::rgb_32f sphere_glow::process_background_ray(const ggo::ray3d_f & ray, const ggo::rgb_32f & color) const
   {
     ggo::line3d<float> line(ray.pos(), ray.dir(), false);
 

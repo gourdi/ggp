@@ -64,7 +64,7 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
 				
 			float t = u1 - u2 / k;
 		
-			ggo::pos2f next_pt;
+			ggo::pos2_f next_pt;
 			next_pt.x() = 1 + u0 * (particle._pos.x() * cos(t) - particle._pos.y() * sin(t));
 			next_pt.y() =     u0 * (particle._pos.x() * sin(t) - particle._pos.y() * cos(t));
 
@@ -77,14 +77,14 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index)
       }
 			
 			// Paint the point.
-			ggo::pos2f point = map_fill(particle._pos, -_range, _range);
+			ggo::pos2_f point = map_fill(particle._pos, -_range, _range);
 				
 			float radius = 0.0025f * particle._radius * max_size();
 			radius = std::max(1.5f, radius);
 
       ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
-        ggo::disc_float(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.1f));
+        ggo::disc_f(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.1f));
 				
 			// Move points slowly.
 			particle._pos.x() += 0.0025f * (next_pt.x() - particle._pos.x());

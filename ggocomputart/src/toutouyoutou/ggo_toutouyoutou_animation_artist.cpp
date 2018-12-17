@@ -15,7 +15,7 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
       ggo::toutouyoutou_animation_artist::particle particle;
       float x = _x;
       float y = ggo::map(static_cast<float>(i), 0.f, static_cast<float>(particles_count - 1), static_cast<float>(_y_inf), static_cast<float>(_y_sup)) * view_height;
-      particle._cur_pos = particle._prv_pos = ggo::pos2f(x, y);
+      particle._cur_pos = particle._prv_pos = ggo::pos2_f(x, y);
       particle._speed = _speed;
       particle._prv_temperature = _temperature;
       particle._cur_temperature = _temperature;
@@ -53,13 +53,13 @@ _background(new uint8_t[height * line_step])
   _emitter1._x = 0;
   _emitter1._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter1._y_sup = _emitter1._y_inf + 0.12f;
-  _emitter1._speed = ggo::vec2f::from_angle(ggo::rand<float>(0, ggo::pi<float>() / 4)) * ggo::rand<float>(5, 15);
+  _emitter1._speed = ggo::vec2_f::from_angle(ggo::rand<float>(0, ggo::pi<float>() / 4)) * ggo::rand<float>(5, 15);
   _emitter1._temperature = 0;
 
   _emitter2._x = get_view_width();
   _emitter2._y_inf = ggo::rand<float>(0.3f, 0.7f);
   _emitter2._y_sup = _emitter2._y_inf + 0.12f;
-  _emitter2._speed = ggo::vec2f::from_angle(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>())) * ggo::rand<float>(5, 15);
+  _emitter2._speed = ggo::vec2_f::from_angle(ggo::rand<float>(3 * ggo::pi<float>() / 4, ggo::pi<float>())) * ggo::rand<float>(5, 15);
   _emitter2._temperature = 1;
 
   if (ggo::rand<bool>())
@@ -174,7 +174,7 @@ void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
       float influence_pow2 = influence * influence;
       float influence_pow3 = influence * influence_pow2;
     
-      ggo::vec2f dpos(particle2._cur_pos - particle._cur_pos);
+      ggo::vec2_f dpos(particle2._cur_pos - particle._cur_pos);
       
       // Relax.
       float d = delta_time_pow2 * ((particle._near_pressure + particle2._near_pressure) * influence_pow3 * near_norm +
@@ -185,7 +185,7 @@ void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
       particle._relaxed_pos += (_surface_tension / _particle_mass) * _particle_mass * influence_pow2 * norm * dpos;
  
       // Viscosity.
-      ggo::vec2f dspeed = particle._speed - particle2._speed;
+      ggo::vec2_f dspeed = particle._speed - particle2._speed;
       float u = dspeed.x() * dpos.x() + dspeed.y() * dpos.y();
       if (u > 0)
       {
@@ -434,7 +434,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
 #if 0
   for (const auto & particle : _particles)
   {
-    ggo::pos2f center = particle._cur_pos;
+    ggo::pos2_f center = particle._cur_pos;
     center *= height() / view_height;
     
     ggo_disc_float disc(center, 0.001 * height());

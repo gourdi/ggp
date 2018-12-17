@@ -41,9 +41,9 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
       // Render the slope.
       const float dx = x2 - x1;
       const float dy = y2 - y1;
-      const ggo::vec3f v1(dx, dy, z22 - z11);
-      const ggo::vec3f v2(dx, -dy, z21 - z12);
-      const ggo::vec3f normal = ggo::normalize(ggo::cross(v1, v2));
+      const ggo::vec3_f v1(dx, dy, z22 - z11);
+      const ggo::vec3_f v2(dx, -dy, z21 - z12);
+      const ggo::vec3_f normal = ggo::normalize(ggo::cross(v1, v2));
 
       const ggo::rgb_32f pixel_color = color * (altitude_factor + std::abs(normal.z()) / altitude_factor);
 

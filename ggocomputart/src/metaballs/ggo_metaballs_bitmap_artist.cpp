@@ -21,7 +21,7 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 	ggo::metaballs_artist::params params;
 
   const float camera_aperture = 0.1f;
-  const ggo::basis3d_float camera_basis({ 0.f, 0.f, 25.f });
+  const ggo::basis3d_f camera_basis({ 0.f, 0.f, 25.f });
 
 #ifdef MONO_SAMPLING
   ggo::mono_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture);
@@ -31,7 +31,7 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 
 	while (params._centers.size() < 200)
 	{
-		ggo::pos3f center(ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size));
+		ggo::pos3_f center(ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size), ggo::rand<float>(-ball_size, ball_size));
 		if (ggo::length(center) < ball_size)
 		{
 			params._centers.push_back(center);

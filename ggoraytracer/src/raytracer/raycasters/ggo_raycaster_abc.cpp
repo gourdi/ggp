@@ -4,11 +4,11 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::optional<hit_data> raycaster_abc::hit_test(const ggo::ray3d_float & ray, const ggo::object3d_abc * exclude_object1, const ggo::object3d_abc * exclude_object2) const
+  std::optional<hit_data> raycaster_abc::hit_test(const ggo::ray3d_f & ray, const ggo::object3d_abc * exclude_object1, const ggo::object3d_abc * exclude_object2) const
   {
     const ggo::object3d_abc * hit_object = nullptr;
     float dist = std::numeric_limits<float>::max();
-    ggo::ray3d_float local_normal, world_normal;
+    ggo::ray3d_f local_normal, world_normal;
 
     auto func = [&](const ggo::object3d_abc * object)
     {
@@ -31,11 +31,11 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool raycaster_abc::check_visibility(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::object3d_abc * exclude_object1, const ggo::object3d_abc * exclude_object2) const
+  bool raycaster_abc::check_visibility(const ggo::pos3_f & p1, const ggo::pos3_f & p2, const ggo::object3d_abc * exclude_object1, const ggo::object3d_abc * exclude_object2) const
   {
-    ggo::vec3f diff = p2 - p1;
+    ggo::vec3_f diff = p2 - p1;
     float length = ggo::length(diff);
-    ggo::vec3f dir = diff / length;
+    ggo::vec3_f dir = diff / length;
 
     bool visible = true;
 

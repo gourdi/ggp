@@ -46,7 +46,7 @@ namespace ggo
 
 namespace ggo
 {
-  using capsule_float    = capsule<float>;
+  using capsule_f = capsule<float>;
 }
 
 namespace ggo

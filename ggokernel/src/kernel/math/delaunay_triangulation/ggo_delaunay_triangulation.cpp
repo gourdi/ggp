@@ -413,7 +413,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename T>
-  std::list<ggo::delaunay_triangle<T>> delaunay_triangulation_T(const std::vector<ggo::pos2<T>> & input_points)
+  std::list<ggo::delaunay_triangle<T>> delaunay_triangulation_t(const std::vector<ggo::pos2<T>> & input_points)
   {
     if (input_points.size() < 2)
     {
@@ -494,14 +494,14 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::list<delaunay_triangle<double>> delaunay_triangulation(const std::vector<ggo::pos2d> & input_points)
+  std::list<delaunay_triangle<float>> delaunay_triangulation(const std::vector<ggo::pos2_f> & input_points)
   {
-    return delaunay_triangulation_T<double>(input_points);
+    return delaunay_triangulation_t<float>(input_points);
   }
 
   //////////////////////////////////////////////////////////////
-  std::list<delaunay_triangle<float>> delaunay_triangulation(const std::vector<ggo::pos2f> & input_points)
+  std::list<delaunay_triangle<double>> delaunay_triangulation(const std::vector<ggo::pos2_d> & input_points)
   {
-    return delaunay_triangulation_T<float>(input_points);
+    return delaunay_triangulation_t<double>(input_points);
   }
 }

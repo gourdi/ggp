@@ -21,13 +21,13 @@ namespace ggo
 
   private:
 
-    ggo::cubic_curve_float  _hue_curve;
-    ggo::cubic_curve_float  _sat_curve;
-    ggo::cubic_curve_float  _val_curve1;
-    ggo::cubic_curve_float  _val_curve2;
-    ggo::cubic_curve_float  _val_curve3;
-    ggo::cubic_curve_float  _val_curve4;
-    std::vector<ggo::pos2f> _points;
+    ggo::cubic_curve_float    _hue_curve;
+    ggo::cubic_curve_float    _sat_curve;
+    ggo::cubic_curve_float    _val_curve1;
+    ggo::cubic_curve_float    _val_curve2;
+    ggo::cubic_curve_float    _val_curve3;
+    ggo::cubic_curve_float    _val_curve4;
+    std::vector<ggo::pos2_f>  _points;
   };
 }
 

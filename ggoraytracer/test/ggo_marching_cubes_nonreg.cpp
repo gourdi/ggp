@@ -14,9 +14,9 @@ GGO_TEST(marching_cubes, test)
   const int width = 512;
   const int height = 512;
 
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 15.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 4);
-  camera_basis.rotate(ggo::ray3d_float::O_Z(), -ggo::pi<float>() / 4);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 15.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), ggo::pi<float>() / 4);
+  camera_basis.rotate(ggo::ray3d_f::O_Z(), -ggo::pi<float>() / 4);
   ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
 
   // The scene.
@@ -26,7 +26,7 @@ GGO_TEST(marching_cubes, test)
   scene.add_point_light(ggo::white_32f(), camera.basis().pos());
   
   // Objects.
-  auto cells = ggo::marching_cubes([](float x, float y, float z) { return x * x + y * y + z * z - 1; }, ggo::pos3f(-2.f, -2.f, -2.f), 10, 0.4f);
+  auto cells = ggo::marching_cubes([](float x, float y, float z) { return x * x + y * y + z * z - 1; }, ggo::pos3_f(-2.f, -2.f, -2.f), 10, 0.4f);
 
   for (const auto & cell : cells)
   {

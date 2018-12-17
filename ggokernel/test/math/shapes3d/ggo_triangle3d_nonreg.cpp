@@ -7,7 +7,7 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
   {
     ggo::triangle3d<float, false> triangle({ 1.f, 2.f, 5.f }, { 2.f, 2.f, 5.f }, { 1.f, 4.f, 5.f });
     float dist = 0;
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
 
     GGO_CHECK_FLOAT_EQ(triangle.area(), 1);
 
@@ -24,7 +24,7 @@ GGO_TEST(triangle3d, not_double_sided_ray_intersection)
   {
     ggo::triangle3d<float, false> triangle({ 1.f, 4.f, 5.f }, { 2.f, 2.f, 5.f }, { 1.f, 2.f, 5.f });
     float dist = 0;
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
 
     GGO_CHECK(triangle.intersect_ray({ { 1.5, 2.5, 10 }, { 0, 0, -1 } }, dist, normal) == false);
 
@@ -46,7 +46,7 @@ GGO_TEST(triangle3d, double_sided_ray_intersection)
 {
   ggo::triangle3d<float, true> triangle({ 1.f, 2.f, 5.f }, { 2.f, 2.f, 5.f }, { 1.f, 4.f, 6.f });
 
-  ggo::basis3d_float basis({ 0.f, 0.f, 1.f });
+  ggo::basis3d_f basis({ 0.f, 0.f, 1.f });
   basis.rotate_z(ggo::pi<float>() / 2);
   auto aabb = triangle.get_bounding_box(basis);
   GGO_CHECK(aabb.has_value() == true);

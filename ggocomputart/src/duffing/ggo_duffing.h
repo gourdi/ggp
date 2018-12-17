@@ -19,7 +19,7 @@ namespace ggo
 
     }
 
-    ggo::pos2f update(const float dt)
+    ggo::pos2_f update(const float dt)
     {
       float	x = _pos.x();
       float	y = _pos.y();
@@ -36,7 +36,7 @@ namespace ggo
     const float	_a;
     const float	_b;
     float _t = 0.f;
-    ggo::pos2f _pos;
+    ggo::pos2_f _pos;
   };
 }
 

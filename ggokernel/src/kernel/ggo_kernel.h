@@ -301,7 +301,6 @@ namespace ggo
 }
 
 #include <kernel/ggo_template_variadic.h>
-#include <kernel/ggo_template_pointer.h>
 #include <kernel/ggo_container_helpers.h>
 
 //////////////////////////////////////////////////////////////

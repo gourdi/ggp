@@ -12,9 +12,9 @@ GGO_TEST(cylinder, test)
   const int height = 480;
 
   // The camera.
-  ggo::basis3d_float camera_basis({ 0.0f, 0.f, 30.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 0.5f);
-  camera_basis.rotate(ggo::ray3d_float::O_Z(), 0.5f);
+  ggo::basis3d_f camera_basis({ 0.0f, 0.f, 30.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 0.5f);
+  camera_basis.rotate(ggo::ray3d_f::O_Z(), 0.5f);
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
 
   // The scene.
@@ -24,8 +24,8 @@ GGO_TEST(cylinder, test)
   scene.add_point_light(ggo::white_32f(), { -100.f, -100.f, 50.f });
 
   // Objects.
-  scene.add_diffuse_object<ggo::discard_all>(ggo::cylinder3d_float({ 0.f, 0.f, 2.f }, { 0.f, 0.f, 1.f }, 1.f, 0.5f), ggo::white_material());
-  scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, 0.f), ggo::yellow_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::cylinder3d_f({ 0.f, 0.f, 2.f }, { 0.f, 0.f, 1.f }, 1.f, 0.5f), ggo::white_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_f({ 0.f, 0.f, 1.f }, 0.f), ggo::yellow_material());
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);

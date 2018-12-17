@@ -4,9 +4,9 @@
 GGO_TEST(capsule, get_bounding_rect)
 {
   {
-    ggo::capsule_float capsule(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
+    ggo::capsule_f capsule(ggo::pos2_f(2.f, 1.f), ggo::pos2_f(6.f, 2.f), 1.f);
 
-    ggo::rect_float rect = capsule.get_bounding_rect();
+    ggo::rect_f rect = capsule.get_bounding_rect();
     GGO_CHECK_FLOAT_EQ(rect.left(), 1);
     GGO_CHECK_FLOAT_EQ(rect.right(), 7);
     GGO_CHECK_FLOAT_EQ(rect.top(), 3);
@@ -14,9 +14,9 @@ GGO_TEST(capsule, get_bounding_rect)
   }
 
   {
-    ggo::capsule_float capsule(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
+    ggo::capsule_f capsule(ggo::pos2_f(6.f, 5.f), ggo::pos2_f(3.f, 2.f), std::sqrt(2.f));
 
-    ggo::rect_float rect = capsule.get_bounding_rect();
+    ggo::rect_f rect = capsule.get_bounding_rect();
     GGO_CHECK_FLOAT_EQ(rect.left(), 3 - std::sqrt(2));
     GGO_CHECK_FLOAT_EQ(rect.right(), 6 + std::sqrt(2));
     GGO_CHECK_FLOAT_EQ(rect.top(), 5 + std::sqrt(2));
@@ -28,7 +28,7 @@ GGO_TEST(capsule, get_bounding_rect)
 GGO_TEST(capsule, is_point_inside)
 {
   {
-    ggo::capsule_float capsule(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
+    ggo::capsule_f capsule(ggo::pos2_f(2.f, 1.f), ggo::pos2_f(6.f, 2.f), 1.f);
 
     GGO_CHECK(capsule.is_point_inside({ 1.2f, 1 }) == true);
     GGO_CHECK(capsule.is_point_inside({ 4, 2 }) == true);
@@ -43,7 +43,7 @@ GGO_TEST(capsule, is_point_inside)
   {
 
     // Point inside.
-    ggo::capsule_float capsule(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
+    ggo::capsule_f capsule(ggo::pos2_f(6.f, 5.f), ggo::pos2_f(3.f, 2.f), std::sqrt(2.f));
 
     GGO_CHECK(capsule.is_point_inside({ 2, 2 }) == true);
     GGO_CHECK(capsule.is_point_inside({ 5, 3 }) == true);
@@ -58,7 +58,7 @@ GGO_TEST(capsule, is_point_inside)
 GGO_TEST(capsule, dist_to_point)
 {
   {
-    ggo::capsule_float capsule(ggo::pos2f(2.f, 1.f), ggo::pos2f(6.f, 2.f), 1.f);
+    ggo::capsule_f capsule(ggo::pos2_f(2.f, 1.f), ggo::pos2_f(6.f, 2.f), 1.f);
 
     GGO_CHECK_FLOAT_EQ(capsule.dist_to_point({ 1.2f, 1 }), 0);
     GGO_CHECK_FLOAT_EQ(capsule.dist_to_point({ 4, 2 }), 0);
@@ -69,7 +69,7 @@ GGO_TEST(capsule, dist_to_point)
   }
 
   {
-    ggo::capsule_float capsule(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
+    ggo::capsule_f capsule(ggo::pos2_f(6.f, 5.f), ggo::pos2_f(3.f, 2.f), std::sqrt(2.f));
 
     GGO_CHECK_FLOAT_EQ(capsule.dist_to_point({ 2, 2 }), 0);
     GGO_CHECK_FLOAT_EQ(capsule.dist_to_point({ 5, 3 }), 0);
@@ -84,7 +84,7 @@ GGO_TEST(capsule, dist_to_point)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(capsule, rect_intersection)
 {
-  ggo::capsule_float capsule(ggo::pos2f(6.f, 5.f), ggo::pos2f(3.f, 2.f), std::sqrt(2.f));
+  ggo::capsule_f capsule(ggo::pos2_f(6.f, 5.f), ggo::pos2_f(3.f, 2.f), std::sqrt(2.f));
 
   GGO_CHECK_RECT_INTERSECTION(capsule, 3, 4, 2, 3, ggo::rect_intersection::rect_in_shape);
   GGO_CHECK_RECT_INTERSECTION(capsule, 0, 10, 0, 10, ggo::rect_intersection::shape_in_rect);

@@ -12,7 +12,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f checker_3d_material::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f checker_3d_material::get_color(const ggo::pos3_f & pos) const
   {
     int x = ggo::round_to<int>(pos.x() / _tile_size);
     int y = ggo::round_to<int>(pos.y() / _tile_size);
@@ -23,7 +23,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f checker_xy_material::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f checker_xy_material::get_color(const ggo::pos3_f & pos) const
   {
     int x = ggo::round_to<int>(pos.x() / _tile_size);
     int y = ggo::round_to<int>(pos.y() / _tile_size);

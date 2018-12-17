@@ -50,7 +50,7 @@ void ggo::bubbles_artist::render_bitmap(void * buffer) const
     curve.push_point(0.5f * height(), generate_color());
     curve.push_point(1.0f * height(), generate_color());
 
-    ggo::disc_float bubble;
+    ggo::disc_f bubble;
     bubble.set_radius(ggo::rand<float>(0.003f, 0.006f) * min_size());
     bubble.set_center({ ggo::rand<float>(-0.1f, 1.1f) * width(), -0.1f * height() });
 

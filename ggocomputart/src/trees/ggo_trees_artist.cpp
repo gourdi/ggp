@@ -31,20 +31,20 @@ namespace
   {
     ggo_leaf() : _dead(false) {}
 
-    ggo::pos2f	get_top_point() const { return 0.5f * (_top_points[0] + _top_points[1]); }
-    ggo::pos2f	get_bottom_point() const { return 0.5f * (_bottom_points[0] + _bottom_points[1]); }
+    ggo::pos2_f	get_top_point() const { return 0.5f * (_top_points[0] + _top_points[1]); }
+    ggo::pos2_f	get_bottom_point() const { return 0.5f * (_bottom_points[0] + _bottom_points[1]); }
     float				get_top_width() const { return ggo::distance(_top_points[0], _top_points[1]); }
     float				height() const { return ggo::distance(get_top_point(), get_bottom_point()); }
-    ggo::vec2f	get_diff() const { return get_top_point() - get_bottom_point(); }
-    float				get_angle() const { ggo::vec2f diff(get_diff()); return ggo::angle(diff); }
+    ggo::vec2_f	get_diff() const { return get_top_point() - get_bottom_point(); }
+    float				get_angle() const { ggo::vec2_f diff(get_diff()); return ggo::angle(diff); }
 
-    ggo::pos2f  _bottom_points[2];
-    ggo::pos2f  _top_points[2];
+    ggo::pos2_f  _bottom_points[2];
+    ggo::pos2_f  _top_points[2];
     bool				_dead;
   };
 
   ////////////////////////////////////////////////////////////////
-  std::vector<ggo::polygon2d_float> create_tree(const ggo::bitmap_artist_abc & artist, const std::vector<ggo_rule> & rules, int max_depth, float y)
+  std::vector<ggo::polygon2d_f> create_tree(const ggo::bitmap_artist_abc & artist, const std::vector<ggo_rule> & rules, int max_depth, float y)
   {
     // Create tree with first leaf.        
     float height = 0.1f * artist.min_size();
@@ -52,17 +52,17 @@ namespace
     float x = ggo::rand<float>(-0.2f * artist.width(), 1.2f * artist.width());
 
     ggo_leaf leaf;
-    leaf._bottom_points[0] = ggo::pos2f(x - dx, y);
-    leaf._bottom_points[1] = ggo::pos2f(x + dx, y);
-    leaf._top_points[0] = ggo::pos2f(x - dx, y + height);
-    leaf._top_points[1] = ggo::pos2f(x + dx, y + height);
+    leaf._bottom_points[0] = ggo::pos2_f(x - dx, y);
+    leaf._bottom_points[1] = ggo::pos2_f(x + dx, y);
+    leaf._top_points[0] = ggo::pos2_f(x - dx, y + height);
+    leaf._top_points[1] = ggo::pos2_f(x + dx, y + height);
 
     ggo::tree<ggo_leaf> tree(leaf);
 
-    std::vector<ggo::polygon2d_float> polygons;
+    std::vector<ggo::polygon2d_f> polygons;
 
     // Create first polygon.        
-    ggo::polygon2d_float polygon;
+    ggo::polygon2d_f polygon;
     polygon.add_point(artist.horz_mirror(leaf._top_points[0]));
     polygon.add_point(artist.horz_mirror(leaf._top_points[1]));
     polygon.add_point(artist.horz_mirror(leaf._bottom_points[1]));
@@ -112,8 +112,8 @@ namespace
           float leaf_height = leaf.height() * scale_height;
           float leaf_width = leaf.get_top_width() * scale_width;
 
-          ggo::vec2f vert_disp = ggo::vec2f::from_angle(leaf_angle) * leaf_height;
-          ggo::vec2f delta = normalize(vert_disp) * (0.5f * leaf_width);
+          ggo::vec2_f vert_disp = ggo::vec2_f::from_angle(leaf_angle) * leaf_height;
+          ggo::vec2_f delta = normalize(vert_disp) * (0.5f * leaf_width);
           delta = ggo::rotate(delta, ggo::pi<float>() / 2);
 
           new_leaf._bottom_points[0] = leaf._top_points[0];
@@ -123,7 +123,7 @@ namespace
 
           if (std::fabs(offset - 1) < 0.01)
           {
-            ggo::vec2f dy = leaf.get_top_point() - leaf.get_bottom_point();
+            ggo::vec2_f dy = leaf.get_top_point() - leaf.get_bottom_point();
 
             dy *= (1 - offset);
 
@@ -136,7 +136,7 @@ namespace
           leaf_tree.create_leaf(new_leaf);
 
           // Create the matching polygon too.
-          ggo::polygon2d_float polygon;
+          ggo::polygon2d_f polygon;
           polygon.add_point(artist.horz_mirror(new_leaf._top_points[0]));
           polygon.add_point(artist.horz_mirror(new_leaf._top_points[1]));
           polygon.add_point(artist.horz_mirror(new_leaf._bottom_points[1]));
@@ -150,22 +150,22 @@ namespace
   }
 
   ////////////////////////////////////////////////////////////////
-  void render_tree(const ggo::bitmap_artist_abc & artist, void * buffer, const std::vector<ggo::polygon2d_float> & tree_polygons, float hue, float dhue, float val)
+  void render_tree(const ggo::bitmap_artist_abc & artist, void * buffer, const std::vector<ggo::polygon2d_f> & tree_polygons, float hue, float dhue, float val)
   {
-    ggo::multi_shape_float paint_polygons;
-    ggo::multi_shape_float paint_borders;
+    ggo::multi_shape_f paint_polygons;
+    ggo::multi_shape_f paint_borders;
 
     // Create the border extended segments.
     for (const auto & polygon : tree_polygons)
     {
       for (int i = 0; i < polygon.get_points_count(); ++i)
       {
-        const ggo::pos2f & p1 = polygon.get_point(i);
-        const ggo::pos2f & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
-        paint_borders.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, 0.002f * artist.min_size()));
+        const ggo::pos2_f & p1 = polygon.get_point(i);
+        const ggo::pos2_f & p2 = polygon.get_point((i + 1) % polygon.get_points_count());
+        paint_borders.add_shape(std::make_shared<ggo::capsule_f>(p1, p2, 0.002f * artist.min_size()));
       }
 
-      paint_polygons.add_shape(std::make_shared<ggo::polygon2d_float>(polygon));
+      paint_polygons.add_shape(std::make_shared<ggo::polygon2d_f>(polygon));
     }
 
     // Paint everything.

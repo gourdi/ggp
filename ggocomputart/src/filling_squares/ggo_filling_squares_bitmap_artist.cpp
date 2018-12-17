@@ -32,7 +32,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
       float bottom    = multi_square._pos.y() - half_size;
       float top       = multi_square._pos.y() + half_size;
       
-      ggo::polygon2d_float square;
+      ggo::polygon2d_f square;
       square.add_point(left, bottom);
       square.add_point(right, bottom);
       square.add_point(right, top);

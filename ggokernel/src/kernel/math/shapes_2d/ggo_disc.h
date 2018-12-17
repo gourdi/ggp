@@ -50,8 +50,8 @@ namespace ggo
 
 namespace ggo
 {
-  using disc_float  = disc<float>;
-  using disc_double = disc<double>;
+  using disc_f = disc<float>;
+  using disc_d = disc<double>;
 }
 
 namespace ggo

@@ -4,19 +4,19 @@
 GGO_TEST(polygon, construction)
 {
   // Move on contruction.
-  std::vector<ggo::pos2f> points1{ { 0.f, 1.f },{ 2.f, 3.f },{ 4.f, 5.f } };
-  ggo::polygon2d_float polygon(std::move(points1));
+  std::vector<ggo::pos2_f> points1{ { 0.f, 1.f },{ 2.f, 3.f },{ 4.f, 5.f } };
+  ggo::polygon2d_f polygon(std::move(points1));
   GGO_CHECK(points1.empty() == true);
   GGO_CHECK(polygon.get_points_count() == 3);
 
   // Move on setting points.
-  std::vector<ggo::pos2f> points2{ { 0.f, 1.f },{ 2.f, 3.f } };
+  std::vector<ggo::pos2_f> points2{ { 0.f, 1.f },{ 2.f, 3.f } };
   polygon.set_points(std::move(points2));
   GGO_CHECK(points2.empty() == true);
   GGO_CHECK(polygon.get_points_count() == 2);
 
   // Copy points.
-  std::vector<ggo::pos2f> points3{ { 0.f, 1.f },{ 2.f, 3.f },{ 4.f, 5.f } };
+  std::vector<ggo::pos2_f> points3{ { 0.f, 1.f },{ 2.f, 3.f },{ 4.f, 5.f } };
   polygon.set_points(points3);
   GGO_CHECK(points3.size() == 3);
   GGO_CHECK(polygon.get_points_count() == 3);
@@ -25,10 +25,10 @@ GGO_TEST(polygon, construction)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(polygon, add_get)
 {
-  ggo::polygon2d_float polygon;
-  ggo::pos2f p1(1.f, 2.f);
-  ggo::pos2f p2(3.f, 4.f);
-  ggo::pos2f p3(5.f, 6.f);
+  ggo::polygon2d_f polygon;
+  ggo::pos2_f p1(1.f, 2.f);
+  ggo::pos2_f p2(3.f, 4.f);
+  ggo::pos2_f p3(5.f, 6.f);
   polygon.add_points(p1, p2, p3);
 
   GGO_CHECK(polygon.get_points_count() == 3);
@@ -44,7 +44,7 @@ GGO_TEST(polygon, add_get)
 GGO_TEST(polygon, is_point_inside)
 {
   {
-    ggo::polygon2d_float triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
+    ggo::polygon2d_f triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
 
     GGO_CHECK(triangle.is_point_inside({ 0.1f, 0.1f }) == true);
     GGO_CHECK(triangle.is_point_inside({ 0.8f, 0.1f }) == true);
@@ -55,7 +55,7 @@ GGO_TEST(polygon, is_point_inside)
   }
 
   {
-    ggo::polygon2d_float polygon({ {0, 0}, {5, 0}, {1, 1}, {5, 5},{0, 5} });
+    ggo::polygon2d_f polygon({ {0, 0}, {5, 0}, {1, 1}, {5, 5},{0, 5} });
 
     GGO_CHECK(polygon.is_point_inside({ 2, 0.1f }) == true);
     GGO_CHECK(polygon.is_point_inside({ 0.1f, 0.1f }) == true);
@@ -74,7 +74,7 @@ GGO_TEST(polygon, is_point_inside)
 GGO_TEST(polygon, dist_to_point)
 {
   {
-    ggo::polygon2d_float triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
+    ggo::polygon2d_f triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
 
     GGO_CHECK_FLOAT_EQ(triangle.dist_to_point({ 0.1f, 0.1f }), 0);
     GGO_CHECK_FLOAT_EQ(triangle.dist_to_point({ -1, 0 }), 1);
@@ -87,7 +87,7 @@ GGO_TEST(polygon, dist_to_point)
   }
 
   {
-    ggo::polygon2d_float polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
+    ggo::polygon2d_f polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
 
     GGO_CHECK_FLOAT_EQ(polygon.dist_to_point({ 1, 4 }), 0);
     GGO_CHECK_FLOAT_EQ(polygon.dist_to_point({ 0.1f, 2 }), 0);
@@ -100,7 +100,7 @@ GGO_TEST(polygon, dist_to_point)
 GGO_TEST(polygon, dist_to_segment)
 {
   {
-    ggo::polygon2d_float triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
+    ggo::polygon2d_f triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
 
     GGO_CHECK_FLOAT_EQ(triangle.dist_to_segment({ -1.f, 0.5f }, { 1.f, 0.5f }), 0);
     GGO_CHECK_FLOAT_EQ(triangle.dist_to_segment({ 0.5f, 1.f }, { 0.1f, 0.1f }), 0);
@@ -114,7 +114,7 @@ GGO_TEST(polygon, dist_to_segment)
   }
 
   {
-    ggo::polygon2d_float polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
+    ggo::polygon2d_f polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
 
     GGO_CHECK_FLOAT_EQ(polygon.dist_to_segment({ 0.5f, 0.5f }, { 0.5f, 4.5f }), 0);
     GGO_CHECK_FLOAT_EQ(polygon.dist_to_segment({ 0.5f, 4.5f }, { 4.f, 4.5f }), 0);
@@ -135,7 +135,7 @@ GGO_TEST(polygon, dist_to_segment)
 GGO_TEST(polygon, rect_intersection)
 {
   {
-    ggo::polygon2d_float triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
+    ggo::polygon2d_f triangle({ { 0, 0 },{ 0, 1 },{ 1, 0 } });
 
     GGO_CHECK_RECT_INTERSECTION(triangle, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(triangle, -1.f, 2, -1.f, 2, ggo::rect_intersection::shape_in_rect);
@@ -159,7 +159,7 @@ GGO_TEST(polygon, rect_intersection)
   }
 
   {
-    ggo::polygon2d_float polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
+    ggo::polygon2d_f polygon({ { 0, 0 },{ 5, 0 },{ 1, 1 },{ 5, 5 },{ 0, 5 } });
 
     GGO_CHECK_RECT_INTERSECTION(polygon, 0.1f, 0.2f, 0.1f, 0.2f, ggo::rect_intersection::rect_in_shape);
     GGO_CHECK_RECT_INTERSECTION(polygon, 1, 2, 3, 4, ggo::rect_intersection::rect_in_shape);

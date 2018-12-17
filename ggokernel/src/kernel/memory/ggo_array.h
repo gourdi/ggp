@@ -2,6 +2,7 @@
 #define __GGO_ARRAY__
 
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_details.h>
 
 namespace ggo
 {
@@ -27,7 +28,7 @@ namespace ggo
     array(const array<data_t, n_dims> & rhs)
     {
       int count = rhs.count();
-      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+      ggo::details::set<n_dims>(_dimensions, rhs._dimensions);
       _buffer = new data_t[count];
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
     }
@@ -35,7 +36,7 @@ namespace ggo
     // Move constructor.
     array(array<data_t, n_dims> && rhs)
     {
-      ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+      ggo::details::set<n_dims>(_dimensions, rhs._dimensions);
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
@@ -341,8 +342,8 @@ namespace ggo
 // Usefull aliases.
 namespace ggo
 {
-  using array_char    = array<char, 1>;
-  using array_int     = array<int, 1>;
+  using array_c       = array<char, 1>;
+  using array_i       = array<int, 1>;
   using array_8u      = array<uint8_t, 1>;
   using array_32f     = array<float, 1>;
 

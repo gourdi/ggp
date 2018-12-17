@@ -17,10 +17,10 @@ GGO_TEST(triangular_interpolation, function)
 
   image.for_each_pixel([&](int x, int y)
   {
-    const ggo::pos2f p = ggo::from_pixel_to_math<float>(ggo::pos2i(x, y));
-    const ggo::pos2f p0(50.f, 50.f);
-    const ggo::pos2f p1(150.f, 50.f);
-    const ggo::pos2f p2(50.f, 150.f);
+    const ggo::pos2_f p = ggo::from_pixel_to_math<float>(ggo::pos2_i(x, y));
+    const ggo::pos2_f p0(50.f, 50.f);
+    const ggo::pos2_f p1(150.f, 50.f);
+    const ggo::pos2_f p2(50.f, 150.f);
     
     auto c = ggo::triangular_interpolation(p0, ggo::red_32f(), p1, ggo::green_32f(), p2, ggo::blue_32f(), p);
     if (c.has_value() == true)

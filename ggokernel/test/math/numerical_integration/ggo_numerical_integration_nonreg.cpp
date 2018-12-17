@@ -35,13 +35,13 @@ GGO_TEST(numerical_integration, explicit_euler_freefall)
 {
   // Here v.x == vertical position, v.y == speed
   // Therefore, dv/dt = (velocity, accleration) == (v.y, F/m). 
-  auto velocity = [](ggo::vec2f v) { return ggo::vec2f(v.y(), -1.f); };
+  auto velocity = [](ggo::vec2_f v) { return ggo::vec2_f(v.y(), -1.f); };
 
-  ggo::vec2f v0 = { 0.f, 1.f }; // Starting at 0 altitude, with a upward speed of 1.
-  ggo::vec2f v1 = ggo::explicit_euler(v0, 0.5f, velocity);
-  ggo::vec2f v2 = ggo::explicit_euler(v1, 0.5f, velocity);
-  ggo::vec2f v3 = ggo::explicit_euler(v2, 0.5f, velocity);
-  ggo::vec2f v4 = ggo::explicit_euler(v3, 0.5f, velocity);
+  ggo::vec2_f v0 = { 0.f, 1.f }; // Starting at 0 altitude, with a upward speed of 1.
+  ggo::vec2_f v1 = ggo::explicit_euler(v0, 0.5f, velocity);
+  ggo::vec2_f v2 = ggo::explicit_euler(v1, 0.5f, velocity);
+  ggo::vec2_f v3 = ggo::explicit_euler(v2, 0.5f, velocity);
+  ggo::vec2_f v4 = ggo::explicit_euler(v3, 0.5f, velocity);
 
   // The particule goes up because of initial speed, then falls.
   GGO_CHECK_FLOAT_EQ(v1.x(), 0.5f);
@@ -59,13 +59,13 @@ GGO_TEST(numerical_integration, runge_kutta_freefall)
 {
   // Here v.x == vertical position, v.y == speed
   // Therefore, dv/dt = (velocity, accleration) == (v.y, F/m). 
-  auto velocity = [](ggo::vec2f v) { return ggo::vec2f(v.y(), -1.f); };
+  auto velocity = [](ggo::vec2_f v) { return ggo::vec2_f(v.y(), -1.f); };
 
-  ggo::vec2f v0 = { 0.f, 1.f }; // Starting at 0 altitude, with a upward speed of 1.
-  ggo::vec2f v1 = ggo::runge_kutta(v0, 0.5f, velocity);
-  ggo::vec2f v2 = ggo::runge_kutta(v1, 0.5f, velocity);
-  ggo::vec2f v3 = ggo::runge_kutta(v2, 0.5f, velocity);
-  ggo::vec2f v4 = ggo::runge_kutta(v3, 0.5f, velocity);
+  ggo::vec2_f v0 = { 0.f, 1.f }; // Starting at 0 altitude, with a upward speed of 1.
+  ggo::vec2_f v1 = ggo::runge_kutta(v0, 0.5f, velocity);
+  ggo::vec2_f v2 = ggo::runge_kutta(v1, 0.5f, velocity);
+  ggo::vec2_f v3 = ggo::runge_kutta(v2, 0.5f, velocity);
+  ggo::vec2_f v4 = ggo::runge_kutta(v3, 0.5f, velocity);
 
   // The particule goes up because of initial speed, then falls.
   GGO_CHECK_FLOAT_EQ(v1.x(), 0.375f);

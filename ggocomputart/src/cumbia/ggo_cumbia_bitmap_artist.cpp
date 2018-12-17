@@ -13,7 +13,7 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::cumbia_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::basis3d_float camera_basis;
+  ggo::basis3d_f camera_basis;
   float aperture = 0.f;
   float depth_of_field = 0.f;
   float depth_of_field_factor = 0.f;

@@ -7,17 +7,17 @@ struct contact
 {
   const ggo::rigid_body * _body1;
   const ggo::rigid_body * _body2;
-  ggo::pos2f _pos;
-  ggo::vec2f _normal; // From body2 to body1.
+  ggo::pos2_f _pos;
+  ggo::vec2_f _normal; // From body2 to body1.
   float _relative_velocity;
 };
 
 ggo::array<float, 2> build_lcp_matrix(const std::vector<contact> & contacts)
 {
-  auto compute_velocity = [](const ggo::pos2f & p, const ggo::pos2f & center_of_mass, const ggo::vec2f & linear_velocity, float angular_velocity)
+  auto compute_velocity = [](const ggo::pos2_f & p, const ggo::pos2_f & center_of_mass, const ggo::vec2_f & linear_velocity, float angular_velocity)
   {
-    const ggo::vec2f diff = p - center_of_mass;
-    const ggo::vec2f ortho(-diff.y(), diff.x());
+    const ggo::vec2_f diff = p - center_of_mass;
+    const ggo::vec2_f ortho(-diff.y(), diff.x());
     return linear_velocity + angular_velocity * ortho;
   };
 
@@ -28,15 +28,15 @@ ggo::array<float, 2> build_lcp_matrix(const std::vector<contact> & contacts)
     auto impulse1 = contacts[i]._body1->compute_impulse(contacts[i]._pos, contacts[i]._normal);
     auto impulse2 = contacts[i]._body2->compute_impulse(contacts[i]._pos, -contacts[i]._normal);
 
-    ggo::vec2f linear_velocity1 = contacts[i]._body1->_linear_velocity + impulse1._linear_velocity;
-    ggo::vec2f linear_velocity2 = contacts[i]._body2->_linear_velocity + impulse2._linear_velocity;
+    ggo::vec2_f linear_velocity1 = contacts[i]._body1->_linear_velocity + impulse1._linear_velocity;
+    ggo::vec2_f linear_velocity2 = contacts[i]._body2->_linear_velocity + impulse2._linear_velocity;
     float angular_velocity1 = contacts[i]._body1->_angular_velocity + impulse1._angular_velocity;
     float angular_velocity2 = contacts[i]._body2->_angular_velocity + impulse2._angular_velocity;
 
     for (int j = i; j < int(contacts.size()); ++j)
     {
-      ggo::vec2f v1 = compute_velocity(contacts[j]._pos, contacts[j]._body1->get_center_of_mass(), linear_velocity1, angular_velocity1);
-      ggo::vec2f v2 = compute_velocity(contacts[j]._pos, contacts[j]._body2->get_center_of_mass(), linear_velocity2, angular_velocity2);
+      ggo::vec2_f v1 = compute_velocity(contacts[j]._pos, contacts[j]._body1->get_center_of_mass(), linear_velocity1, angular_velocity1);
+      ggo::vec2_f v2 = compute_velocity(contacts[j]._pos, contacts[j]._body2->get_center_of_mass(), linear_velocity2, angular_velocity2);
 
       float relative_velocity = ggo::dot(v1 - v2, contacts[j]._normal);
 

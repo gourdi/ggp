@@ -17,7 +17,7 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
-		ggo::pos2f particle;
+		ggo::pos2_f particle;
 
 		particle.x() = ggo::rand<float>(-0.1f * width, 1.1f * width);
 		particle.y() = ggo::rand<float>(-0.1f * height, 1.1f * height);
@@ -45,7 +45,7 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
 		for (int i = 0; i < moves_count; ++i)
 		{
 			// Apply the vortices.
-			ggo::vec2f move(0.f, 0.f);
+			ggo::vec2_f move(0.f, 0.f);
 			for (const auto & vortex : params._vortices)
 			{
 				float dx	= particle.x() - vortex._pos.x();

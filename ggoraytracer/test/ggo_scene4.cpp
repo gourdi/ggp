@@ -21,14 +21,14 @@ GGO_TEST(test_scene, scene4)
 
   // Objects.
   scene.add_diffuse_object<ggo::discard_all>(ggo::sphere3d<float>({ 0.f, 0.f, 0.f }, 1.f), ggo::red_material());
-  scene.add_diffuse_object<ggo::discard_all>(ggo::box3d_float(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f), ggo::white_material());
+  scene.add_diffuse_object<ggo::discard_all>(ggo::box3d_f(-5.f, 5.f, -5.f, 5.f, -2.f, -1.f), ggo::white_material());
 
   // Rendering.
   const int width = 400;
   const int height = 400;
 
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.2f);
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
 
   ggo::mono_sampling_renderer renderer(camera);

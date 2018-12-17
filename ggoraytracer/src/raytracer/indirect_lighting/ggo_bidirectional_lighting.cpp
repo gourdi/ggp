@@ -14,8 +14,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f bidirectional_lighting::process(const ggo::ray3d_float & ray,
-                                               const ggo::ray3d_float & world_normal,
+  ggo::rgb_32f bidirectional_lighting::process(const ggo::ray3d_f & ray,
+                                               const ggo::ray3d_f & world_normal,
                                                const ggo::object3d_abc & hit_object,
                                                const ggo::rgb_32f & hit_color,
                                                float random_variable1,
@@ -36,14 +36,14 @@ namespace ggo
       }
 
       // Handle self-intersection
-      ggo::ray3d_float camera_world_normal(world_normal);
+      ggo::ray3d_f camera_world_normal(world_normal);
       auto exclude_light_object = light_hit_object->_object->handle_self_intersection(light_hit_object->_intersection._world_normal);
       auto exclude_camera_object = hit_object.handle_self_intersection(camera_world_normal);
 
       // Create a ray from camera hit object to light hit object that will close the path.
-      ggo::vec3f diff(light_hit_object->_intersection._world_normal.pos() - camera_world_normal.pos());
-      ggo::vec3f dir = normalize(diff);
-      ggo::ray3d_float close_ray(camera_world_normal.pos(), dir, false);
+      ggo::vec3_f diff(light_hit_object->_intersection._world_normal.pos() - camera_world_normal.pos());
+      ggo::vec3_f dir = normalize(diff);
+      ggo::ray3d_f close_ray(camera_world_normal.pos(), dir, false);
 
       // Check visibility.
       if (_raycaster.check_visibility(close_ray.pos(), close_ray.pos() + diff, exclude_light_object, exclude_camera_object) == true)

@@ -25,8 +25,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using disc3d_double = disc3d<double>;
-  using disc3d_float  = disc3d<float>;
+  using disc3d_d = disc3d<double>;
+  using disc3d_f = disc3d<float>;
 }
 
 //////////////////////////////////////////////////////////////

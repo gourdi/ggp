@@ -59,7 +59,7 @@ namespace ggo
     ggo::size rect_size = parse_size(*size_param, image_size);
 
     // Parse position.
-    ggo::pos2i left_bottom = parse_margins(params, "pos", image_size, rect_size);
+    ggo::pos2_i left_bottom = parse_margins(params, "pos", image_size, rect_size);
 
     // The output rect.
     int left    = left_bottom.x();
@@ -70,7 +70,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  ggo::pos2i parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size)
+  ggo::pos2_i parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size)
   {
     auto margins_param = params.get({ key });
     if (!margins_param || margins_param->empty() == true)

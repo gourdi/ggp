@@ -28,8 +28,8 @@ namespace ggo
   };
 
   //////////////////////////////////////////////////////////////
-  std::list<delaunay_triangle<double>> delaunay_triangulation(const std::vector<ggo::pos2d> & input_points);
-  std::list<delaunay_triangle<float>>  delaunay_triangulation(const std::vector<ggo::pos2f> & input_points);
+  std::list<delaunay_triangle<float>>   delaunay_triangulation(const std::vector<ggo::pos2_f> & input_points);
+  std::list<delaunay_triangle<double>>  delaunay_triangulation(const std::vector<ggo::pos2_d> & input_points);
 }
   
 #endif

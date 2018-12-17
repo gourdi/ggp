@@ -16,7 +16,7 @@ namespace ggo
 
     void  render_frame(void * buffer, int frame_index) override;
 
-    void  register_point(const ggo::pos2f & pos, float hue, float sat, float val);
+    void  register_point(const ggo::pos2_f & pos, float hue, float sat, float val);
     void  update();
     void  update(int points_count);
     int   get_final_points_count() const;
@@ -28,7 +28,7 @@ namespace ggo
 
     struct point
     {
-      ggo::pos2f  _pos;
+      ggo::pos2_f _pos;
       float       _hue;
       float       _sat;
       float       _val;
@@ -38,7 +38,7 @@ namespace ggo
     struct cell
     {
       std::vector<point>  _points;
-      ggo::rect_float     _rect;
+      ggo::rect_f         _rect;
     };
 
     ggo::rgb_8u         _background_color;

@@ -18,8 +18,8 @@ GGO_TEST(caustics, test)
   const int photons_count = 1 << 15;
 
   // The camera.
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 5.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 0.8f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 5.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 0.8f);
   ggo::multi_sampling_point_camera camera(width, height, camera_basis, 0.5f, 2.5f, 0.01f);
 
   // The scene.
@@ -29,8 +29,8 @@ GGO_TEST(caustics, test)
   auto & light = scene.add_sphere_light(ggo::rgb_32f(0.9f), { 0.f, 0.f, 20.f }, 1.f);
 
   // Objects.
-  auto & plane = scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), ggo::red_material());
-  auto & sphere = scene.add_transparent_object<ggo::discard_all>(ggo::sphere3d_float({ 0.f, 0.f, 1.f }, 1.f), ggo::white_32f(), 1.1f);
+  auto & plane = scene.add_diffuse_object<ggo::discard_all>(ggo::plane3d_f({ 0.f, 0.f, 1.f }, -1.f), ggo::red_material());
+  auto & sphere = scene.add_transparent_object<ggo::discard_all>(ggo::sphere3d_f({ 0.f, 0.f, 1.f }, 1.f), ggo::white_32f(), 1.1f);
   sphere.set_phong(5.0f, 100.f);
 
   // Rendering.
@@ -42,7 +42,7 @@ GGO_TEST(caustics, test)
   ggo::save_bmp("caustics_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 
   // With indirect lighting.
-  std::vector<ggo::pos3f> target_samples;
+  std::vector<ggo::pos3_f> target_samples;
   for (int i = 0; i < photons_count; ++i)
   {
     float x = ggo::rand<float>(-1, 1);

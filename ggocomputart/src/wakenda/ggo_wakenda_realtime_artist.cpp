@@ -106,12 +106,12 @@ void ggo::wakenda_realtime_artist::paint_points(void * buffer, const ggo::rect_i
 
   for (const auto & p : _paint_points)
   {
-    paint<format, ggo::sampling_8x8>(buffer, ggo::disc_float(p._pos, radius), p._color, p._opacity, clipping);
+    paint<format, ggo::sampling_8x8>(buffer, ggo::disc_f(p._pos, radius), p._color, p._opacity, clipping);
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   constexpr int substeps_count = 10;
   constexpr int points_creations_per_subframe = 1;
@@ -124,7 +124,7 @@ void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
 
   _paint_points.clear();
 
-  auto eval = [&](const ggo::pos2f & p, const auto & transforms)
+  auto eval = [&](const ggo::pos2_f & p, const auto & transforms)
   {
     auto safe_pow = [](float v, float exp)
     {

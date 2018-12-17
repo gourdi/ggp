@@ -64,7 +64,7 @@ void ggo::dupecheck_animation_artist::render_frame(void * buffer, int frame_inde
   }
 
   // Create new anim item.
-  ggo::pos2f pos = get_position(frame_index);
+  ggo::pos2_f pos = get_position(frame_index);
   ggo::rgb_8u color = get_color(frame_index);
   if ((frame_index < counter_max) && ((frame_index % 4) == 0))
   {
@@ -135,14 +135,14 @@ void ggo::dupecheck_animation_artist::render_frame(void * buffer, int frame_inde
 }
 
 //////////////////////////////////////////////////////////////
-ggo::pos2f ggo::dupecheck_animation_artist::get_position(int frame_index)
+ggo::pos2_f ggo::dupecheck_animation_artist::get_position(int frame_index)
 {
 	const float scale = 0.015f;
 	
 	// Compute current position.
 	float t = std::fmod(scale * frame_index, 1.f);
 	
-	ggo::pos2f p;
+	ggo::pos2_f p;
 	p  = t*t*t*(-1.f*_points[0] +  3.f*_points[1] + -3.f*_points[2] + _points[3]);
 	p +=   t*t*( 3.f*_points[0] + -6.f*_points[1] +  3.f*_points[2]);
 	p +=     t*(-3.f*_points[0]                   +  3.f*_points[2]);
@@ -196,7 +196,7 @@ ggo::rgb_8u ggo::dupecheck_animation_artist::get_color(int frame_index)
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::dupecheck_animate_abc::dupecheck_animate_abc(ggo::pos2f pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::dupecheck_animate_abc::dupecheck_animate_abc(ggo::pos2_f pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
 :
 ggo::path_animate_abc(pos, path)
 {
@@ -207,7 +207,7 @@ ggo::path_animate_abc(pos, path)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(int frame_index, const ggo::pos2f & pos)
+bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(int frame_index, const ggo::pos2_f & pos)
 {
 	if (frame_index > 30) 
 	{
@@ -227,7 +227,7 @@ bool ggo::dupecheck_animation_artist::dupecheck_animate_abc::update(int frame_in
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate1::animate1(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate1::animate1(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -239,7 +239,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 
 //////////////////////////////////////////////////////////////
 void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
 	if (buffer != nullptr)
 	{
@@ -248,8 +248,8 @@ void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width,
 			float radius = _radius - i * _distance;
 			if (radius > 0)
 			{
-        auto disc1 = std::make_shared<ggo::disc_float>(pos, radius + 0.5f * _width);
-        auto disc2 = std::make_shared<ggo::disc_float>(pos, radius - 0.5f * _width);
+        auto disc1 = std::make_shared<ggo::disc_f>(pos, radius + 0.5f * _width);
+        auto disc2 = std::make_shared<ggo::disc_f>(pos, radius - 0.5f * _width);
 
         ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> opened_disc;
         opened_disc.add_shape(disc1);
@@ -263,7 +263,7 @@ void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width,
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate2::animate2(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate2::animate2(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -272,7 +272,7 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 
 //////////////////////////////////////////////////////////////
 void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
 	if (buffer != nullptr)
 	{
@@ -285,7 +285,7 @@ void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width,
 		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
 		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
 
-    ggo::multi_shape_float multi_shape;
+    ggo::multi_shape_f multi_shape;
 
     for (int i = 0; i <= samples; ++i)
     {
@@ -294,10 +294,10 @@ void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width,
       float radius1 = _radius + harmonic_curve.evaluate(angle1);
       float radius2 = _radius + harmonic_curve.evaluate(angle2);
 
-      ggo::pos2f p1 = pos + radius1 * ggo::vec2f::from_angle(angle1);
-      ggo::pos2f p2 = pos + radius2 * ggo::vec2f::from_angle(angle2);
+      ggo::pos2_f p1 = pos + radius1 * ggo::vec2_f::from_angle(angle1);
+      ggo::pos2_f p2 = pos + radius2 * ggo::vec2_f::from_angle(angle2);
 
-      auto segment = std::make_shared<ggo::capsule_float>(p1, p2, _width);
+      auto segment = std::make_shared<ggo::capsule_f>(p1, p2, _width);
 
       multi_shape.add_shape(segment);
     }
@@ -308,7 +308,7 @@ void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width,
 }
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::animate3::animate3(const ggo::pos2f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
+ggo::dupecheck_animation_artist::animate3::animate3(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size)
 :
 dupecheck_animate_abc(pos, path, color, render_min_size)
 {
@@ -330,21 +330,21 @@ void ggo::dupecheck_animation_artist::animate3::update()
 
 //////////////////////////////////////////////////////////////
 void ggo::dupecheck_animation_artist::animate3::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
 	if (buffer != nullptr)
 	{
 		for (int i = 0; i < _shapes_count; ++i)
 		{
 			float angle_shape = _angle + i * 2 * ggo::pi<float>() / _shapes_count;
-			ggo::pos2f shape_pos = pos + _radius * ggo::vec2f::from_angle(angle_shape);
+			ggo::pos2_f shape_pos = pos + _radius * ggo::vec2_f::from_angle(angle_shape);
 
-      ggo::polygon2d_float shape;
+      ggo::polygon2d_f shape;
 
 			for (int j = 0; j < _vertices_count; ++j)
 			{
 				float angle_vertex = _angle_shape + j * 2 * ggo::pi<float>() / _vertices_count;
-				ggo::pos2f vertex = shape_pos + _shape_size * ggo::vec2f::from_angle(angle_vertex);
+				ggo::pos2_f vertex = shape_pos + _shape_size * ggo::vec2_f::from_angle(angle_vertex);
 
 				shape.add_point(vertex);
 			}

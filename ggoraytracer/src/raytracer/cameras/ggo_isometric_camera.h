@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-          isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span);
+          isometric_camera(int width, int height, const ggo::basis3d_f & basis, float span);
 
   protected:
 
@@ -27,11 +27,11 @@ namespace ggo
   {
   public:
 
-                      mono_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span);
+                      mono_sampling_isometric_camera(int width, int height, const ggo::basis3d_f & basis, float span);
     
   private:
 
-    ggo::ray3d_float  get_ray(int x, int y) const override;
+    ggo::ray3d_f  get_ray(int x, int y) const override;
     
   private:
     
@@ -48,11 +48,11 @@ namespace ggo
   {
   public:
 
-                                  multi_sampling_isometric_camera(int width, int height, const ggo::basis3d_float & basis, float span, float depth_of_field, float depth_of_field_factor);
+                                  multi_sampling_isometric_camera(int width, int height, const ggo::basis3d_f & basis, float span, float depth_of_field, float depth_of_field_factor);
 
   private:
 
-    std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const override;
+    std::vector<ggo::ray3d_f> get_rays(int x, int y, int samples_count) const override;
     
   private:
 

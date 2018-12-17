@@ -5,10 +5,10 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scalar_field2d, shape_field2d)
 {
-  ggo::shape_field2d<ggo::disc_float> field;
+  ggo::shape_field2d<ggo::disc_f> field;
   
   field._shape.radius() = 2;
-  field._shape.center() = ggo::pos2f(1.f, 1.f);
+  field._shape.center() = ggo::pos2_f(1.f, 1.f);
   
   GGO_CHECK_FLOAT_EQ(field.sample(1, 0), 1);
   GGO_CHECK_FLOAT_EQ(field.sample(3, -3), 0);

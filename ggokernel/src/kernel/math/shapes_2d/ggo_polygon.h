@@ -75,6 +75,6 @@ namespace ggo
 
 namespace ggo
 {
-  using polygon2d_float   = polygon2d<float>;
-  using polygon2d_double  = polygon2d<double>;
+  using polygon2d_f = polygon2d<float>;
+  using polygon2d_d = polygon2d<double>;
 }

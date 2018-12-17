@@ -30,7 +30,7 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::vector<ggo::marching_square_cell> marching_squares(ggo::func2d func, ggo::pos2f inf, int steps, float step_size)
+  std::vector<ggo::marching_square_cell> marching_squares(ggo::func2d func, ggo::pos2_f inf, int steps, float step_size)
   {
     std::vector<ggo::marching_square_cell> cells;
 
@@ -58,8 +58,8 @@ namespace ggo
         if ((v00 <= 0.f && v10 >= 0.f && v01 >= 0.f && v11 >= 0.f) ||
             (v00 >= 0.f && v10 <= 0.f && v01 <= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
-          ggo::pos2f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
+          ggo::pos2_f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
+          ggo::pos2_f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -70,8 +70,8 @@ namespace ggo
         if ((v00 >= 0.f && v10 <= 0.f && v01 >= 0.f && v11 >= 0.f) ||
             (v00 <= 0.f && v10 >= 0.f && v01 <= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
-          ggo::pos2f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
+          ggo::pos2_f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
+          ggo::pos2_f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -82,8 +82,8 @@ namespace ggo
         if ((v00 >= 0.f && v10 >= 0.f && v01 <= 0.f && v11 >= 0.f) ||
             (v00 <= 0.f && v10 <= 0.f && v01 >= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v01, x_sup, v11), y_sup };
-          ggo::pos2f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
+          ggo::pos2_f p1{ interpolate(x_inf, v01, x_sup, v11), y_sup };
+          ggo::pos2_f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -94,8 +94,8 @@ namespace ggo
         if ((v00 >= 0.f && v10 >= 0.f && v01 >= 0.f && v11 <= 0.f) ||
             (v00 <= 0.f && v10 <= 0.f && v01 <= 0.f && v11 >= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v01, x_sup, v11), y_sup };
-          ggo::pos2f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
+          ggo::pos2_f p1{ interpolate(x_inf, v01, x_sup, v11), y_sup };
+          ggo::pos2_f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -106,8 +106,8 @@ namespace ggo
         if ((v00 <= 0.f && v10 >= 0.f && v01 <= 0.f && v11 >= 0.f) ||
             (v00 >= 0.f && v10 <= 0.f && v01 >= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
-          ggo::pos2f p2{ interpolate(x_inf, v01, x_sup, v11), y_sup };
+          ggo::pos2_f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
+          ggo::pos2_f p2{ interpolate(x_inf, v01, x_sup, v11), y_sup };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -118,8 +118,8 @@ namespace ggo
         if ((v00 <= 0.f && v10 <= 0.f && v01 >= 0.f && v11 >= 0.f) ||
             (v00 >= 0.f && v10 >= 0.f && v01 <= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
-          ggo::pos2f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
+          ggo::pos2_f p1{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
+          ggo::pos2_f p2{ x_sup, interpolate(y_inf, v10, y_sup, v11) };
           cell._segments.emplace_back(p1, p2);
           cells.push_back(cell);
           continue;
@@ -134,12 +134,12 @@ namespace ggo
         if ((v00 >= 0.f && v10 <= 0.f && v01 <= 0.f && v11 >= 0.f) ||
             (v00 <= 0.f && v10 >= 0.f && v01 >= 0.f && v11 <= 0.f))
         {
-          ggo::pos2f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
-          ggo::pos2f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
+          ggo::pos2_f p1{ interpolate(x_inf, v00, x_sup, v10), y_inf };
+          ggo::pos2_f p2{ x_inf, interpolate(y_inf, v00, y_sup, v01) };
           cell._segments.emplace_back(p1, p2);
 
-          ggo::pos2f p3{ interpolate(x_inf, v01, x_sup, v11), y_sup };
-          ggo::pos2f p4{ x_sup, interpolate(y_inf, v01, y_sup, v01) };
+          ggo::pos2_f p3{ interpolate(x_inf, v01, x_sup, v11), y_sup };
+          ggo::pos2_f p4{ x_sup, interpolate(y_inf, v01, y_sup, v01) };
           cell._segments.emplace_back(p3, p4);
 
           cells.push_back(cell);

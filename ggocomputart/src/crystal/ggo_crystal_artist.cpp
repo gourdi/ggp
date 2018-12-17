@@ -34,7 +34,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
 //////////////////////////////////////////////////////////////
 void ggo::crystal_artist::render_transform(float * buffer, int width, int height, const params & params)
 {
-	ggo::pos2f pt;
+	ggo::pos2_f pt;
 	
 	pt.x() = ggo::rand<float>(-1, 1);
 	pt.y() = ggo::rand<float>(-1, 1);
@@ -48,7 +48,7 @@ void ggo::crystal_artist::render_transform(float * buffer, int width, int height
 		pt.y() = params._coefs[i][3]*pt.x() + params._coefs[i][4]*pt.y() + params._coefs[i][5];
 
 		// Render point.
-		ggo::pos2f render_pt = ggo::map_fit(pt, -5.f, 5.f, width, height);
+		ggo::pos2_f render_pt = ggo::map_fit(pt, -5.f, 5.f, width, height);
 		int x = ggo::round_to<int>(render_pt.x());
 		int y = ggo::round_to<int>(render_pt.y());
 

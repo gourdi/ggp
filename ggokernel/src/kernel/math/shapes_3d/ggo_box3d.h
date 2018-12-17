@@ -68,7 +68,7 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using box3d_float   = box3d<float>;
-  using box3d_double  = box3d<double>;
+  using box3d_f = box3d<float>;
+  using box3d_d = box3d<double>;
 }
 

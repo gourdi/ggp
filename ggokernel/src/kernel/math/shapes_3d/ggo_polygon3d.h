@@ -42,6 +42,6 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using polygon3d_double  = polygon3d<double>;
-  using polygon3d_float   = polygon3d<float>;
+  using polygon3d_d = polygon3d<double>;
+  using polygon3d_f = polygon3d<float>;
 }

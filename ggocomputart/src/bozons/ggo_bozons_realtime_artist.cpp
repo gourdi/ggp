@@ -50,7 +50,7 @@ void ggo::bozons_realtime_artist::create_bozon()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
   {
@@ -90,7 +90,7 @@ void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cur
       bozon_it->_speed *= 0.99f;
       bozon_it->_radius *= 0.995f;
       bozon_it->_prv_pos = bozon_it->_cur_pos;
-      bozon_it->_cur_pos += bozon_it->_speed * ggo::vec2f::from_angle(bozon_it->_angle);
+      bozon_it->_cur_pos += bozon_it->_speed * ggo::vec2_f::from_angle(bozon_it->_angle);
 
       ++bozon_it;
     }

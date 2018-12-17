@@ -35,8 +35,8 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  bool triangle_intersect_other_triangles(const ggo::pos2f & new_vertex,
-                                          const std::vector<ggo::pos2f> & points,
+  bool triangle_intersect_other_triangles(const ggo::pos2_f & new_vertex,
+                                          const std::vector<ggo::pos2_f> & points,
                                           const std::tuple<int, int> & edge,
                                           const std::vector<std::tuple<int, int, int>> & triangles)
   {
@@ -47,9 +47,9 @@ namespace
       int v3 = -1;
       if (is_edge_from_triangle(edge, triangle_tuple, v3) == true)
       {
-        ggo::vec2f edge_diff(points[std::get<1>(edge)] - points[std::get<0>(edge)]);
-        ggo::vec2f diff1(points[v3] - points[std::get<0>(edge)]);
-        ggo::vec2f diff2(new_vertex - points[std::get<0>(edge)]);
+        ggo::vec2_f edge_diff(points[std::get<1>(edge)] - points[std::get<0>(edge)]);
+        ggo::vec2_f diff1(points[v3] - points[std::get<0>(edge)]);
+        ggo::vec2_f diff2(new_vertex - points[std::get<0>(edge)]);
 
         if (ggo::ortho_dot(edge_diff, diff1) * ggo::ortho_dot(edge_diff, diff2) >= 0.f)
         {
@@ -58,8 +58,8 @@ namespace
       }
       else
       {
-        ggo::triangle2d_float new_triangle(points[std::get<0>(edge)], points[std::get<1>(edge)], new_vertex);
-        ggo::triangle2d_float cur_triangle(points[std::get<0>(triangle_tuple)], points[std::get<1>(triangle_tuple)], points[std::get<2>(triangle_tuple)]);
+        ggo::triangle2d_f new_triangle(points[std::get<0>(edge)], points[std::get<1>(edge)], new_vertex);
+        ggo::triangle2d_f cur_triangle(points[std::get<0>(triangle_tuple)], points[std::get<1>(triangle_tuple)], points[std::get<2>(triangle_tuple)]);
 
         if (ggo::get_triangle_intersection(new_triangle, cur_triangle) != ggo::triangle_intersection::disjoints)
         {
@@ -72,10 +72,10 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  float compute_score(const ggo::pos2f & v1, const ggo::pos2f & v2, const ggo::pos2f & v3, float reference_area)
+  float compute_score(const ggo::pos2_f & v1, const ggo::pos2_f & v2, const ggo::pos2_f & v3, float reference_area)
   {
     // An area score of 0 implies that the candidate have the same area than the reference one.
-    float area = ggo::triangle2d_float(v1, v2, v3).area();
+    float area = ggo::triangle2d_f(v1, v2, v3).area();
     float area_score = area / reference_area;
     if (area_score < 1.f)
     {
@@ -95,21 +95,21 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  std::vector<ggo::triangle2d_float> compute_triangles()
+  std::vector<ggo::triangle2d_f> compute_triangles()
   {
-    std::vector<ggo::pos2f> points;
+    std::vector<ggo::pos2_f> points;
     std::vector<std::tuple<int, int>> available_edges;
     std::vector<std::tuple<int, int, int>> triangles;
 
-    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 0.f));
-    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 2.f * ggo::pi<float>() / 3.f));
-    points.emplace_back(ggo::rotate<ggo::pos2f>({ 0.f, 1.f }, 4.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 0.f));
+    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 2.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 4.f * ggo::pi<float>() / 3.f));
 
     available_edges.push_back(std::make_tuple(0, 1));
     available_edges.push_back(std::make_tuple(1, 2));
     available_edges.push_back(std::make_tuple(2, 0));
 
-    float reference_area = ggo::triangle2d_float(points[0], points[1], points[2]).area();
+    float reference_area = ggo::triangle2d_f(points[0], points[1], points[2]).area();
 
     triangles.push_back(std::make_tuple(0, 1, 2));
 
@@ -121,13 +121,13 @@ namespace
 
       // Find a triangle that does not intersect other triangles and which is the less flat as possible.
       float score = std::numeric_limits<float>::max();
-      std::unique_ptr<ggo::triangle2d_float> triangle;
+      std::unique_ptr<ggo::triangle2d_f> triangle;
       for (int j = 0; j < 128; ++j)
       {
-        ggo::pos2f edge_center = 0.5f * (points[std::get<0>(edge)] + points[std::get<1>(edge)]);
+        ggo::pos2_f edge_center = 0.5f * (points[std::get<0>(edge)] + points[std::get<1>(edge)]);
         float edge_length = ggo::distance(points[std::get<0>(edge)], points[std::get<1>(edge)]);
 
-        ggo::pos2f new_vertex(ggo::disc_uniform_sampling(edge_center, 2.f * edge_length));
+        ggo::pos2_f new_vertex(ggo::disc_uniform_sampling(edge_center, 2.f * edge_length));
 
         // Check if the candidate triangle intersect other triangles.
         if (triangle_intersect_other_triangles(new_vertex, points, edge, triangles) == false)
@@ -136,7 +136,7 @@ namespace
           if (current_score < score)
           {
             score = current_score;
-            triangle.reset(new ggo::triangle2d_float(new_vertex, points[std::get<0>(edge)], points[std::get<1>(edge)]));
+            triangle.reset(new ggo::triangle2d_f(new_vertex, points[std::get<0>(edge)], points[std::get<1>(edge)]));
           }
         }
       }
@@ -170,7 +170,7 @@ namespace
     }
 
     // Convert to ggo::triangle2f
-    std::vector<ggo::triangle2d_float> result;
+    std::vector<ggo::triangle2d_f> result;
     for (const auto & triangle_tuple : triangles)
     {
       result.emplace_back(points[std::get<0>(triangle_tuple)], points[std::get<1>(triangle_tuple)], points[std::get<2>(triangle_tuple)]);
@@ -190,7 +190,7 @@ namespace
 
     // Map triangles to the rendering dimensions.
     // Get triangles bounding box.
-    ggo::rect_float bounding_box(0.f, 0.f, 0.f, 0.f);
+    ggo::rect_f bounding_box(0.f, 0.f, 0.f, 0.f);
     for (const auto & triangle : triangles)
     {
       bounding_box.extend(triangle.v1());
@@ -200,7 +200,7 @@ namespace
 
     // Scale and move triangles.
     const float ratio = 0.75f * artist.min_size() / (std::max(bounding_box.width(), bounding_box.height()));
-    const ggo::vec2f offset(0.5f * artist.width(), 0.5f * artist.height());
+    const ggo::vec2_f offset(0.5f * artist.width(), 0.5f * artist.height());
     for (auto & triangle : triangles)
     {
       triangle.v1() -= bounding_box.center();
@@ -217,11 +217,11 @@ namespace
     }
 
     // Paint shadows.
-    std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u>> shadows;
-    const ggo::vec2f shadow_offset(0.01f * artist.min_size(), -0.01f * artist.min_size());
+    std::vector<ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>> shadows;
+    const ggo::vec2_f shadow_offset(0.01f * artist.min_size(), -0.01f * artist.min_size());
     for (auto triangle : triangles)
     {
-      ggo::triangle2d_float shadow_triangle(triangle);
+      ggo::triangle2d_f shadow_triangle(triangle);
       shadow_triangle.v1() += shadow_offset;
       shadow_triangle.v2() += shadow_offset;
       shadow_triangle.v3() += shadow_offset;
@@ -241,14 +241,14 @@ namespace
 
     for (const auto & triangle : triangles)
     {
-      using paint_triangle_t = ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u>;
+      using paint_triangle_t = ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>;
       auto paint_triangle = std::make_unique<paint_triangle_t>(triangle, ggo::rgb_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
       shapes.push_back(std::move(paint_triangle));
 
-      auto create_segment = [&](const ggo::pos2f & p1, const ggo::pos2f & p2)
+      auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
       {
-        using paint_extended_segment_t = ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u>;
-        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::capsule_float(p1, p2, border_size), ggo::black_8u());
+        using paint_extended_segment_t = ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u>;
+        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
         shapes.push_back(std::move(paint_extented_segment));
       };
 

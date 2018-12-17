@@ -30,17 +30,17 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
       angle1 += ggo::pi<float>() / 2;
       angle2 += ggo::pi<float>() / 2;
       
-      ggo::pos2f p1 = get_center() + radius * ggo::vec2f::from_angle(angle1);
-      ggo::pos2f p2 = get_center() + radius * ggo::vec2f::from_angle(angle2);
+      ggo::pos2_f p1 = get_center() + radius * ggo::vec2_f::from_angle(angle1);
+      ggo::pos2_f p2 = get_center() + radius * ggo::vec2_f::from_angle(angle2);
       
-      ggo::pos2f middle = (p1 + p2) / 2.f;
-      ggo::vec2f diff = p2 - p1;
+      ggo::pos2_f middle = (p1 + p2) / 2.f;
+      ggo::vec2_f diff = p2 - p1;
       p1 = middle + 1000.f * diff;
       p2 = middle - 1000.f * diff;
 
       // Paint the segment.
       ggo::paint<y_32f_yu, sampling_2x2>(buffer_32f.data(), width(), height(), line_step(),
-        ggo::capsule_float(p1, p2, 0.005f * radius),
+        ggo::capsule_f(p1, p2, 0.005f * radius),
         ggo::solid_color_brush<float>(1.f), ggo::add_blender<float>());
     }
   }

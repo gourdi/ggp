@@ -10,8 +10,8 @@ namespace ggo
   {
   public:
 
-    virtual ggo::rgb_32f  process(const ggo::ray3d_float & ray,
-                                  const ggo::ray3d_float & world_normal,
+    virtual ggo::rgb_32f  process(const ggo::ray3d_f & ray,
+                                  const ggo::ray3d_f & world_normal,
                                   const ggo::object3d_abc & hit_object,
                                   const ggo::rgb_32f & hit_color,
                                   float random_variable1,

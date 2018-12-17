@@ -109,9 +109,9 @@ ggo::cells_artist::cell::cell(float left, float right, float top, float bottom, 
 	_inv_width	= 1.f / width;
 	_inv_height	= 1.f / height;
 	
-	_centers[0] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
-	_centers[1] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
-	_centers[2] = ggo::pos2f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
+	_centers[0] = ggo::pos2_f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
+	_centers[1] = ggo::pos2_f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
+	_centers[2] = ggo::pos2_f(ggo::rand<float>(left, right), ggo::rand<float>(bottom, top));
 }
 
 //////////////////////////////////////////////////////////////
@@ -147,9 +147,9 @@ bool ggo::cells_artist::cell::is_point_inside(float x, float y) const
 	float x_map = x * _inv_width;
 	float y_map = y * _inv_height;
 
-	potential += 100 / (1 + 100 * ggo::distance(_centers[0], ggo::pos2f(x_map, y_map)));
-	potential += 100 / (1 + 100 * ggo::distance(_centers[1], ggo::pos2f(x_map, y_map)));
-	potential += 100 / (1 + 100 * ggo::distance(_centers[2], ggo::pos2f(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[0], ggo::pos2_f(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[1], ggo::pos2_f(x_map, y_map)));
+	potential += 100 / (1 + 100 * ggo::distance(_centers[2], ggo::pos2_f(x_map, y_map)));
 
 	return potential > 110 && potential < 120;
 }

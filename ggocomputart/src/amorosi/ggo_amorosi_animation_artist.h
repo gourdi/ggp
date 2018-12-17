@@ -16,7 +16,7 @@ namespace ggo
 
     struct opacity_point
     {
-      ggo::pos2f  _pos;
+      ggo::pos2_f _pos;
       float       _opacity = 0.f;
     };
 
@@ -50,7 +50,7 @@ namespace ggo
       random_angle_interpolator                 _angle_interpolator;
       random_angle_interpolator                 _subangle_interpolator;
       random_width_interpolator                 _width_interpolator;
-      ggo::pos2f                                _prv_pos;
+      ggo::pos2_f                               _prv_pos;
       float                                     _prv_subangle = 0.f;
       float                                     _prv_width = 0.f;
       float                                     _speed = 0.f;

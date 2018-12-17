@@ -26,11 +26,11 @@ namespace
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(octree, single_object)
 {
-  const ggo::sphere3d_float sphere({ 2.f, 2.f, 0.f }, 1.f);
+  const ggo::sphere3d_f sphere({ 2.f, 2.f, 0.f }, 1.f);
   auto tree = build_octree({ sphere });
 
   GGO_CHECK_EQ(tree.get_depth(), 1);
-  GGO_CHECK_EQ(tree.bounding_box(), *sphere.get_bounding_box(ggo::basis3d_float()));
+  GGO_CHECK_EQ(tree.bounding_box(), *sphere.get_bounding_box(ggo::basis3d_f()));
   GGO_CHECK_EQ(tree.data().size(), 1);
   GGO_CHECK_EQ(tree.data()[0], sphere);
 }
@@ -39,8 +39,8 @@ GGO_TEST(octree, single_object)
 GGO_TEST(octree, two_non_separable_objects)
 {
   const float sqrt2 = std::sqrt(2.0f);
-  const ggo::sphere3d_float sphere1({ 1.f, 1.f, 0.f }, sqrt2);
-  const ggo::sphere3d_float sphere2({ -1.f, -1.f, 0.f }, sqrt2);
+  const ggo::sphere3d_f sphere1({ 1.f, 1.f, 0.f }, sqrt2);
+  const ggo::sphere3d_f sphere2({ -1.f, -1.f, 0.f }, sqrt2);
   auto tree = build_octree({ sphere1, sphere2 });
 
   GGO_CHECK_EQ(tree.get_depth(), 1);
@@ -53,8 +53,8 @@ GGO_TEST(octree, two_non_separable_objects)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(octree, two_separable_objects)
 {
-  const ggo::sphere3d_float sphere1({ 2.f, 2.f, 0.f }, 1.f);
-  const ggo::sphere3d_float sphere2({ -2.f, -2.f, 0.f }, 1.f);
+  const ggo::sphere3d_f sphere1({ 2.f, 2.f, 0.f }, 1.f);
+  const ggo::sphere3d_f sphere2({ -2.f, -2.f, 0.f }, 1.f);
   auto tree = build_octree({ sphere1, sphere2 });
 
   GGO_CHECK_EQ(tree.get_depth(), 2);
@@ -62,8 +62,8 @@ GGO_TEST(octree, two_separable_objects)
   GGO_CHECK(tree.data().empty());
   
   GGO_CHECK(
-    tree[0].bounding_box() == sphere1.get_bounding_box(ggo::basis3d_float()) ||
-    tree[0].bounding_box() == sphere2.get_bounding_box(ggo::basis3d_float()));
+    tree[0].bounding_box() == sphere1.get_bounding_box(ggo::basis3d_f()) ||
+    tree[0].bounding_box() == sphere2.get_bounding_box(ggo::basis3d_f()));
   GGO_CHECK_EQ(tree[0].data().size(), 1);
   GGO_CHECK_EQ(tree[1].data().size(), 1);
   GGO_CHECK(tree[0].data()[0] == sphere1 || tree[1].data()[0] == sphere2);

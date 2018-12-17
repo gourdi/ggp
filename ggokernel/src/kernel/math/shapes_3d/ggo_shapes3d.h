@@ -65,7 +65,7 @@ namespace ggo
   template <typename data_t>
   bool raytracable_shape3d_abc<data_t>::intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const
   {
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
     float dist = 0.f;
     if (intersect_ray({ pos, dir, false }, dist, normal) == false)
     {

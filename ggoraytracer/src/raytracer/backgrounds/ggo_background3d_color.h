@@ -11,7 +11,7 @@ namespace ggo
 
                           background3d_color(const ggo::rgb_32f & color = ggo::black<ggo::rgb_32f>()) : _color(color) {}
                         
-    virtual	ggo::rgb_32f  get_color(const ggo::ray3d_float & ray) const { return _color; }
+    virtual	ggo::rgb_32f  get_color(const ggo::ray3d_f & ray) const { return _color; }
     
     ggo::rgb_32f &			  color() { return _color; }
     const ggo::rgb_32f &	color() const { return _color; }

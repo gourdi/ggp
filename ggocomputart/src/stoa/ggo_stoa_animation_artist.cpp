@@ -24,9 +24,9 @@ void ggo::stoa_animation_artist::render_frame(void * buffer, int frame_index)
   // The camera.
   const float camera_aperture = 0.1f;
 
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 40.f });
   float range = ggo::pi<float>() / 6.f;
-  camera_basis.rotate(ggo::ray3d_float::O_Y(), ggo::ease_inout(frame_index, frames_count(), -range, range));
+  camera_basis.rotate(ggo::ray3d_f::O_Y(), ggo::ease_inout(frame_index, frames_count(), -range, range));
 
 #ifdef MONO_SAMPLING
   ggo::mono_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture);
@@ -37,8 +37,8 @@ void ggo::stoa_animation_artist::render_frame(void * buffer, int frame_index)
   // Lights.
   float angle1 = ggo::ease_inout(frame_index, frames_count(), _light1_angle_start, _light1_angle_end);
   float angle2 = ggo::ease_inout(frame_index, frames_count(), _light2_angle_start, _light2_angle_end);
-  const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
-  const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
+  const ggo::pos3_f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
+  const ggo::pos3_f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
   // Rendering.
 #ifdef MONO_SAMPLING

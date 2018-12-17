@@ -14,7 +14,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f linear_fog::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const
+  ggo::rgb_32f linear_fog::process_segment(const ggo::pos3_f & p1, const ggo::pos3_f & p2, const ggo::rgb_32f & color) const
   {
     float dist = ggo::distance(p1, p2);
 
@@ -33,7 +33,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f linear_fog::process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const
+  ggo::rgb_32f linear_fog::process_background_ray(const ggo::ray3d_f & ray, const ggo::rgb_32f & color) const
   {
     return _color;
   }

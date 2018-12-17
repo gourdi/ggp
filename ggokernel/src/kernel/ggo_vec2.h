@@ -36,12 +36,12 @@ namespace ggo
   template <typename data_t>
   using pos2  = vec2<data_t>;
 
-  using vec2i = vec2<int>;
-  using pos2i = vec2<int>;
-  using vec2f = vec2<float>;
-  using pos2f = vec2<float>;
-  using vec2d = vec2<double>;
-  using pos2d = vec2<double>;
+  using vec2_i = vec2<int>;
+  using pos2_i = vec2<int>;
+  using vec2_f = vec2<float>;
+  using pos2_f = vec2<float>;
+  using vec2_d = vec2<double>;
+  using pos2_d = vec2<double>;
 }
 
 //////////////////////////////////////////////////////////////

@@ -20,7 +20,7 @@ namespace ggo
 
     struct particle
     {
-      ggo::pos2f    _pos;
+      ggo::pos2_f   _pos;
       ggo::rgb_8u  	_color;
       float				  _radius;
     };

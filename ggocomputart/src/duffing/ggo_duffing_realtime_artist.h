@@ -14,7 +14,7 @@ namespace ggo
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 1500; }
 
@@ -22,7 +22,7 @@ namespace ggo
 
     ggo::duffing                _duffing;
     float                       _radius;
-    std::array<ggo::pos2f, 16>  _points;
+    std::array<ggo::pos2_f, 16> _points;
     ggo::rgb_8u                 _bkgd_color;
     float                       _hue;
     ggo::rgb_8u                 _paint_color;

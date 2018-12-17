@@ -29,7 +29,7 @@ void ggo::hexa_animation_artist::render_frame(void * buffer, int frame_index)
   progress = ggo::ease_inout(progress);
 
   // The camera.
-  const ggo::basis3d_float camera_basis = _artist->generate_camera_basis(progress);
+  const ggo::basis3d_f camera_basis = _artist->generate_camera_basis(progress);
   const float camera_aperture = 0.15f;
 
 #ifdef GGO_PREVIEW

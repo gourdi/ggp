@@ -5,11 +5,11 @@
 GGO_TEST(plane3d, ray_intersection)
 {
   {
-    ggo::plane3d_float plane({ 0.f, 0.f, 1.f }, -1.f); // z = -1
+    ggo::plane3d_f plane({ 0.f, 0.f, 1.f }, -1.f); // z = -1
     float dist = 0;
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
 
-    ggo::ray3d_float ray1(ggo::pos3f(2.f, 3.f, 5.f), ggo::vec3f(0.f, 0.f, -1.f));
+    ggo::ray3d_f ray1(ggo::pos3_f(2.f, 3.f, 5.f), ggo::vec3_f(0.f, 0.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray1, dist, normal) == true);
     GGO_CHECK_FLOAT_EQ(dist, 6);
     GGO_CHECK_FLOAT_EQ(normal.pos().x(), 2);
@@ -19,19 +19,19 @@ GGO_TEST(plane3d, ray_intersection)
     GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
     GGO_CHECK_FLOAT_EQ(normal.dir().z(), 1);
 
-    ggo::ray3d_float ray2(ggo::pos3f(2.f, 4.f, -2.f), ggo::vec3f(-1.f, 2.f, -1.f));
+    ggo::ray3d_f ray2(ggo::pos3_f(2.f, 4.f, -2.f), ggo::vec3_f(-1.f, 2.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
 
-    ggo::ray3d_float ray3(ggo::pos3f(1.f, 5.f, -2.f), ggo::vec3f(0.f, 0.f, 1.f));
+    ggo::ray3d_f ray3(ggo::pos3_f(1.f, 5.f, -2.f), ggo::vec3_f(0.f, 0.f, 1.f));
     GGO_CHECK(plane.intersect_ray(ray3, dist, normal) == false);
   }
 
   {
-    ggo::plane3d_float plane({ 1.f, 2.f, -1.f }, 1 / std::sqrt(6.f));
+    ggo::plane3d_f plane({ 1.f, 2.f, -1.f }, 1 / std::sqrt(6.f));
     float dist = 0;
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
 
-    ggo::ray3d_float ray(ggo::pos3f(1.f, 3.f, 2.f), ggo::vec3f(1.f, -2.f, 1.f));
+    ggo::ray3d_f ray(ggo::pos3_f(1.f, 3.f, 2.f), ggo::vec3_f(1.f, -2.f, 1.f));
     GGO_CHECK(plane.intersect_ray(ray, dist, normal) == true);
     GGO_CHECK_FLOAT_EQ(dist, std::sqrt(6));
     GGO_CHECK_FLOAT_EQ(normal.pos().x(), 2);
@@ -49,9 +49,9 @@ GGO_TEST(const_plane3d, ray_intersection)
   {
     ggo::const_plane3d<float, 0, 0, 1, -1> plane; // z = -1
     float dist = 0;
-    ggo::ray3d_float normal;
+    ggo::ray3d_f normal;
 
-    ggo::ray3d_float ray1(ggo::pos3f(2.f, 3.f, 5.f), ggo::vec3f(0.f, 0.f, -1.f));
+    ggo::ray3d_f ray1(ggo::pos3_f(2.f, 3.f, 5.f), ggo::vec3_f(0.f, 0.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray1, dist, normal) == true);
     GGO_CHECK_FLOAT_EQ(dist, 6);
     GGO_CHECK_FLOAT_EQ(normal.pos().x(), 2);
@@ -61,10 +61,10 @@ GGO_TEST(const_plane3d, ray_intersection)
     GGO_CHECK_FLOAT_EQ(normal.dir().y(), 0);
     GGO_CHECK_FLOAT_EQ(normal.dir().z(), 1);
 
-    ggo::ray3d_float ray2(ggo::pos3f(2.f, 4.f, -2.f), ggo::vec3f(-1.f, 2.f, -1.f));
+    ggo::ray3d_f ray2(ggo::pos3_f(2.f, 4.f, -2.f), ggo::vec3_f(-1.f, 2.f, -1.f));
     GGO_CHECK(plane.intersect_ray(ray2, dist, normal) == false);
 
-    ggo::ray3d_float ray3(ggo::pos3f(1.f, 5.f, -2.f), ggo::vec3f(0.f, 0.f, 1.f));
+    ggo::ray3d_f ray3(ggo::pos3_f(1.f, 5.f, -2.f), ggo::vec3_f(0.f, 0.f, 1.f));
     GGO_CHECK(plane.intersect_ray(ray3, dist, normal) == false);
   }
 }

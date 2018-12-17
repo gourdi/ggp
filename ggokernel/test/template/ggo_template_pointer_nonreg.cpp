@@ -2,6 +2,9 @@
 #include <kernel/ggo_kernel.h>
 #include <array>
 
+#if 0
+
+
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(template_pointer, copy)
 {
@@ -147,3 +150,4 @@ GGO_TEST(template_pointer, fill)
   GGO_CHECK_EQ(a[2], 1);
 }
 
+#endif

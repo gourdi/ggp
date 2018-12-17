@@ -3,9 +3,9 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(disc, get_bounding_rect)
 {
-  ggo::disc_float disc(ggo::pos2f(2.f, 12.f), 10.f);
+  ggo::disc_f disc(ggo::pos2_f(2.f, 12.f), 10.f);
 
-  ggo::rect_float rect = disc.get_bounding_rect();
+  ggo::rect_f rect = disc.get_bounding_rect();
   GGO_CHECK_FLOAT_EQ(rect.left(), -8);
   GGO_CHECK_FLOAT_EQ(rect.right(), 12);
   GGO_CHECK_FLOAT_EQ(rect.top(), 22);
@@ -15,7 +15,7 @@ GGO_TEST(disc, get_bounding_rect)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(disc, is_point_inside)
 {
-  ggo::disc_float disc(ggo::pos2f(2.f, 12.f), 10.f);
+  ggo::disc_f disc(ggo::pos2_f(2.f, 12.f), 10.f);
 
   GGO_CHECK(disc.is_point_inside(disc.center()) == true);
   GGO_CHECK(disc.is_point_inside({ 0, 10 }) == true);
@@ -30,7 +30,7 @@ GGO_TEST(disc, is_point_inside)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(disc, dist_to_point)
 {
-  ggo::disc_float disc(ggo::pos2f(2.f, 12.f), 10.f);
+  ggo::disc_f disc(ggo::pos2_f(2.f, 12.f), 10.f);
 
   GGO_CHECK_FLOAT_EQ(disc.dist_to_point(disc.center()), 0);
   GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 0, 10 }), 0);
@@ -39,15 +39,15 @@ GGO_TEST(disc, dist_to_point)
   GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 2, 0 }), 2);
   GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 2, 24 }), 2);
   GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 2, 24 }), 2);
-  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 22, 36 }), ggo::distance(disc.center(), ggo::pos2f(22.f, 36.f)) - disc.radius());
-  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ -10, 100 }), ggo::distance(disc.center(), ggo::pos2f(-10.f, 100.f)) - disc.radius());
-  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 0, -50 }), ggo::distance(disc.center(), ggo::pos2f(0.f, -50.f)) - disc.radius());
+  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 22, 36 }), ggo::distance(disc.center(), ggo::pos2_f(22.f, 36.f)) - disc.radius());
+  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ -10, 100 }), ggo::distance(disc.center(), ggo::pos2_f(-10.f, 100.f)) - disc.radius());
+  GGO_CHECK_FLOAT_EQ(disc.dist_to_point({ 0, -50 }), ggo::distance(disc.center(), ggo::pos2_f(0.f, -50.f)) - disc.radius());
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(disc, rect_intersection)
 {
-  ggo::disc_float disc(ggo::pos2f(2.f, 12.f), 10.f);
+  ggo::disc_f disc(ggo::pos2_f(2.f, 12.f), 10.f);
 
   GGO_CHECK_RECT_INTERSECTION(disc, 0, 1, 11, 12, ggo::rect_intersection::rect_in_shape);
   GGO_CHECK_RECT_INTERSECTION(disc, -20, 20, 0, 40, ggo::rect_intersection::shape_in_rect);
@@ -84,7 +84,7 @@ GGO_TEST(disc, rect_intersection)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(disc, basis)
 {
-  auto world_disc = ggo::from_local_to_world(ggo::disc_float({ 2.f, 1.f }, 2.f), ggo::orthogonal_basis2d<float>({ 3.0f, 1.f }, { 2.0f, 0.f }));
+  auto world_disc = ggo::from_local_to_world(ggo::disc_f({ 2.f, 1.f }, 2.f), ggo::orthogonal_basis2d<float>({ 3.0f, 1.f }, { 2.0f, 0.f }));
   GGO_CHECK_FLOAT_EQ(world_disc.center().x(), 7.f);
   GGO_CHECK_FLOAT_EQ(world_disc.center().y(), 3.f);
   GGO_CHECK_FLOAT_EQ(world_disc.radius(), 4.f);

@@ -3,7 +3,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rectangle, construction)
 {
-  ggo::rect_float rect(ggo::rect_data<float>{ {1.f, 2.f}, 3.f, 4.f });
+  ggo::rect_f rect(ggo::rect_data<float>{ {1.f, 2.f}, 3.f, 4.f });
   GGO_CHECK_FLOAT_EQ(rect.left(), 1);
   GGO_CHECK_FLOAT_EQ(rect.bottom(), 2);
   GGO_CHECK_FLOAT_EQ(rect.width(), 3);
@@ -13,7 +13,7 @@ GGO_TEST(rectangle, construction)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rectangle, is_point_inside)
 {
-  ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
+  ggo::rect_f rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
   GGO_CHECK(rect.is_point_inside({ 4, 2 }) == true);
   GGO_CHECK(rect.is_point_inside({ 2, 2 }) == false);
@@ -29,7 +29,7 @@ GGO_TEST(rectangle, is_point_inside)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rectangle, dist_to_point)
 {
-  ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
+  ggo::rect_f rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
   GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 4, 2 }), 0);
   GGO_CHECK_FLOAT_EQ(rect.dist_to_point({ 0, 2 }), 3);
@@ -45,7 +45,7 @@ GGO_TEST(rectangle, dist_to_point)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rectangle, rect_intersection)
 {
-  ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
+  ggo::rect_f rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
   GGO_CHECK_RECT_INTERSECTION(rect, 4, 5, 1.5, 2.5, ggo::rect_intersection::rect_in_shape);
   GGO_CHECK_RECT_INTERSECTION(rect, 0, 10, 0, 4, ggo::rect_intersection::shape_in_rect);
@@ -78,11 +78,11 @@ GGO_TEST(rectangle, rect_intersection)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rectangle, extend)
 {
-  ggo::rect_float rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
+  ggo::rect_f rect(ggo::rect_data<float>{ {3.f, 1.f}, 3.f, 2.f });
 
-  auto check_extend = [&](const ggo::rect_float & rect, const ggo::pos2f & p, const ggo::rect_float & expected_rect)
+  auto check_extend = [&](const ggo::rect_f & rect, const ggo::pos2_f & p, const ggo::rect_f & expected_rect)
   {
-    ggo::rect_float extended_rect(rect);
+    ggo::rect_f extended_rect(rect);
     extended_rect.extend(p);
 
     GGO_CHECK_FLOAT_EQ(extended_rect.left(), expected_rect.left());
@@ -91,6 +91,6 @@ GGO_TEST(rectangle, extend)
     GGO_CHECK_FLOAT_EQ(extended_rect.height(), expected_rect.height());
   };
   check_extend(rect, { 4.f, 2.f }, rect);
-  check_extend(rect, { 1.f, 4.f }, ggo::rect_float::from_left_right_bottom_top(1.f, 6.f, 1.f, 4.f));
-  check_extend(rect, { 7.f, -1.f }, ggo::rect_float::from_left_right_bottom_top(3.f, 7.f, -1.f, 3.f));
+  check_extend(rect, { 1.f, 4.f }, ggo::rect_f::from_left_right_bottom_top(1.f, 6.f, 1.f, 4.f));
+  check_extend(rect, { 7.f, -1.f }, ggo::rect_f::from_left_right_bottom_top(3.f, 7.f, -1.f, 3.f));
 }

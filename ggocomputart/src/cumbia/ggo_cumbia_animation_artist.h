@@ -18,7 +18,7 @@ namespace ggo
 
   private:
 
-    ggo::basis3d_float  _camera_basis;
+    ggo::basis3d_f      _camera_basis;
     float               _camera_aperture;
     ggo::cumbia_artist  _artist;
   };

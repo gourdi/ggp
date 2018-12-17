@@ -38,10 +38,10 @@ namespace ggo
               void  paint(void * buffer, int width, int height, float focus_dist) const;
               bool  is_alive(int width, int height, float focus_dist) const;
 
-      virtual void fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const = 0;
+      virtual void fill_multi_shapes(ggo::multi_shape_f & borders, ggo::multi_shape_f & bodies, int min_size) const = 0;
 
       ggo_vertical_offset_interpolator  _vertical_offset_interpolator;
-      ggo::pos2f                        _pos;
+      ggo::pos2_f                        _pos;
       ggo::rgb_8u                       _color;
       float                             _angle = 0.f;
       float                             _dist = 0.f;
@@ -54,7 +54,7 @@ namespace ggo
             particle1(int width, int height, float focus_dist);
 
       void  update(int min_size) override;
-      void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
+      void  fill_multi_shapes(ggo::multi_shape_f & borders, ggo::multi_shape_f & bodies, int min_size) const override;
 
       struct ggo_radius_interpolator : public ggo::random_interpolator_abc<float, float>
       {
@@ -66,7 +66,7 @@ namespace ggo
       };
 
       ggo::array<ggo_radius_interpolator, 1>  _radius_interpolators;
-      std::shared_ptr<ggo::polygon2d_float>   _polygon;
+      std::shared_ptr<ggo::polygon2d_f>   _polygon;
     };
 
     //////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ namespace ggo
     {
             particle2(int width, int height, float focus_dist);
 
-      void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
+      void  fill_multi_shapes(ggo::multi_shape_f & borders, ggo::multi_shape_f & bodies, int min_size) const override;
 
       int _point_count;
     };
@@ -86,7 +86,7 @@ namespace ggo
     {
             particle3(int width, int height, float focus_dist);
 
-      void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
+      void  fill_multi_shapes(ggo::multi_shape_f & borders, ggo::multi_shape_f & bodies, int min_size) const override;
       void  update(int min_size) override;
 
       struct ggo_radius_interpolator : public ggo::random_interpolator_abc<float, float>
@@ -110,7 +110,7 @@ namespace ggo
     {
             particle4(int width, int height, float focus_dist);
 
-      void  fill_multi_shapes(ggo::multi_shape_float & borders, ggo::multi_shape_float & bodies, int min_size) const override;
+      void  fill_multi_shapes(ggo::multi_shape_f & borders, ggo::multi_shape_f & bodies, int min_size) const override;
     };
 
     struct focus_dist_interpolator : public ggo::random_interpolator_abc<float, float>

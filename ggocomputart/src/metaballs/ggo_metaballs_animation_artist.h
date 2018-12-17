@@ -16,7 +16,7 @@ namespace ggo
 
     struct moving_center
     {
-      ggo::pos3f  _center;
+      ggo::pos3_f _center;
       float				_radius = 0.f;
       float				_start_angle1 = 0.f;
       float				_start_angle2 = 0.f;
@@ -32,7 +32,7 @@ namespace ggo
 
     ggo::metaballs_artist::params   _params;
     std::vector<moving_center>      _centers;
-    ggo::basis3d_float              _camera_basis;
+    ggo::basis3d_f              _camera_basis;
   };
 }
 

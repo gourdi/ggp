@@ -3,7 +3,7 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  camera_abc::camera_abc(int width, int height, const ggo::basis3d_float & basis)
+  camera_abc::camera_abc(int width, int height, const ggo::basis3d_f & basis)
   :
   _width(width),
   _height(height),

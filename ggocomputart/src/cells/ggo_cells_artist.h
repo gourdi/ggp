@@ -30,7 +30,7 @@ namespace ggo
 
     private:
 
-      ggo::pos2f	_centers[3];
+      ggo::pos2_f	_centers[3];
       float			  _inv_width;
       float			  _inv_height;
     };

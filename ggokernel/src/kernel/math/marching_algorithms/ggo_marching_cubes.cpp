@@ -8,12 +8,12 @@ namespace
   //////////////////////////////////////////////////////////////////
   struct grid_cell
   {
-    std::array<ggo::pos3f, 8> _pos;
+    std::array<ggo::pos3_f, 8> _pos;
     std::array<float, 8>      _val;
   };
 
   //////////////////////////////////////////////////////////////////
-  ggo::pos3f vertex_interpolate(const ggo::pos3f & p1, const ggo::pos3f & p2, float val1, float val2)
+  ggo::pos3_f vertex_interpolate(const ggo::pos3_f & p1, const ggo::pos3_f & p2, float val1, float val2)
   {
     if (std::abs(val1) < 0.00001f)
     {
@@ -40,7 +40,7 @@ namespace
   // will be loaded up with the vertices at most 5 triangular facets.
   // 0 will be returned if the grid cell is either totally above
   // of totally below the isolevel.
-  std::vector<ggo::triangle3d_float> polygonise_cell(const grid_cell & cell)
+  std::vector<ggo::triangle3d_f> polygonise_cell(const grid_cell & cell)
   {
     int edge_table[256] = {
       0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
@@ -349,11 +349,11 @@ namespace
     // Cube is entirely in/out of the surface.
     if (edge_table[cube_index] == 0)
     {
-      return std::vector<ggo::triangle3d_float>();
+      return std::vector<ggo::triangle3d_f>();
     }
 
     // Find the vertices where the surface intersects the cube.
-    std::array<ggo::pos3f, 12> vert_list;
+    std::array<ggo::pos3_f, 12> vert_list;
     
     if (edge_table[cube_index] & 1)
     {
@@ -405,7 +405,7 @@ namespace
     }
           
     // Create the triangles.
-    std::vector<ggo::triangle3d_float> triangles;
+    std::vector<ggo::triangle3d_f> triangles;
     for (int i = 0; tri_table[cube_index][i] != -1; i += 3)
     {
       triangles.emplace_back(vert_list[tri_table[cube_index][i  ]], vert_list[tri_table[cube_index][i+1]], vert_list[tri_table[cube_index][i+2]]);
@@ -418,7 +418,7 @@ namespace
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::pos3f inf, int steps, float step_size)
+  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::pos3_f inf, int steps, float step_size)
   {
     std::vector<ggo::marching_cube_cell> result;
 

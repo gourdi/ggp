@@ -15,7 +15,7 @@ GGO_TEST(bidirectional_lighting, test)
   const int direct_lighting_samples_count = 96;
   
   // The camera.
-  ggo::multi_sampling_point_camera camera(width, height, ggo::basis3d_float({ 0.f, 0.f, 2.5f }), 0.5f, 2.5f, 0.01f);
+  ggo::multi_sampling_point_camera camera(width, height, ggo::basis3d_f({ 0.f, 0.f, 2.5f }), 0.5f, 2.5f, 0.01f);
   
   // The scene.
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::blue_32f()));
@@ -25,12 +25,12 @@ GGO_TEST(bidirectional_lighting, test)
 
   // Objects.
   constexpr uint32_t flags = ggo::discard_all;
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 1.f,  0.f, 0.f}, -1.f), ggo::red_material());
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({-1.f,  0.f, 0.f}, -1.f), ggo::green_material());
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f,  0.f, 1.f}, -1.f), ggo::white_material());
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f,  1.f, 0.f}, -1.f), ggo::white_material());
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f, -1.f, 0.f }, -1.f), ggo::white_material());
-  scene.add_diffuse_object<flags>(ggo::plane3d_float({ 0.f, -0.6f, 0.f }, 0.4f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({ 1.f,  0.f, 0.f}, -1.f), ggo::red_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({-1.f,  0.f, 0.f}, -1.f), ggo::green_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({ 0.f,  0.f, 1.f}, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({ 0.f,  1.f, 0.f}, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({ 0.f, -1.f, 0.f }, -1.f), ggo::white_material());
+  scene.add_diffuse_object<flags>(ggo::plane3d_f({ 0.f, -0.6f, 0.f }, 0.4f), ggo::white_material());
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_count);

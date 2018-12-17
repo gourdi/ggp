@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(path, velocity)
 {
-  ggo::velocity_path path(ggo::vec2f(1.f, 2.f));
+  ggo::velocity_path path(ggo::vec2_f(1.f, 2.f));
 
   const auto p1 = path.get_pos(0);
   GGO_CHECK_FLOAT_EQ(p1.x(), 0.f);

@@ -28,7 +28,7 @@ namespace ggo
 
                   checker_3d_material(const ggo::rgb_32f & color1, const ggo::rgb_32f & color2, float tile_size) : checker_material_abc(color1, color2, tile_size) {}
 
-    ggo::rgb_32f  get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f  get_color(const ggo::pos3_f & pos) const override;
   };
 
   class checker_xy_material : public checker_material_abc
@@ -37,7 +37,7 @@ namespace ggo
 
                   checker_xy_material(const ggo::rgb_32f & color1, const ggo::rgb_32f & color2, float tile_size) : checker_material_abc(color1, color2, tile_size) {}
 
-    ggo::rgb_32f	get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f	get_color(const ggo::pos3_f & pos) const override;
   };
 }
 

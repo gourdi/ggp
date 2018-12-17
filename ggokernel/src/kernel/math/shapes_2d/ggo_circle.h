@@ -38,6 +38,6 @@ namespace ggo
 
 namespace ggo
 {
-  using circle_float  = circle<float>;
-  using circle_double = circle<double>;
+  using circle_f = circle<float>;
+  using circle_d = circle<double>;
 }

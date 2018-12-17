@@ -3,104 +3,12 @@
 
 #include <type_traits>
 #include <ostream>
+#include <kernel/ggo_details.h>
 
 //////////////////////////////////////////////////////////////
 // vec_base
 namespace ggo
 {
-  namespace details
-  {
-    template <typename data_t, int n_dims, int dim, typename... args>
-    constexpr void set(data_t * coefs, data_t k, args... a)
-    {
-      coefs[n_dims - dim - 1] = k;
-
-      if constexpr (dim > 0)
-      {
-        details::set<data_t, n_dims, dim - 1>(coefs, a...);
-      }
-      else
-      {
-        static_assert(sizeof...(a) == 0);
-        coefs[n_dims - 1] = k;
-      }
-    }
-
-    template <typename data_t, int n_dims, int dim>
-    struct in_place_op
-    {
-      static void mul(data_t * coefs, const data_t * coefs2)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::mul(coefs, coefs2);
-        coefs[dim] *= coefs2[dim];
-      }
-
-      static void div(data_t * coefs, const data_t * coefs2)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::div(coefs, coefs2);
-        coefs[dim] /= coefs2[dim];
-      }
-
-      static void add(data_t * coefs, const data_t * coefs2)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::add(coefs, coefs2);
-        coefs[dim] += coefs2[dim];
-      }
-
-      static void sub(data_t * coefs, const data_t * coefs2)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::sub(coefs, coefs2);
-        coefs[dim] -= coefs2[dim];
-      }
-
-      static void mul(data_t * coefs, data_t k)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::mul(coefs, k);
-        coefs[dim] *= k;
-      }
-
-      static void div(data_t * coefs, data_t k)
-      {
-        in_place_op<data_t, n_dims, dim - 1>::div(coefs, k);
-        coefs[dim] /= k;
-      }
-    };
-
-    template <typename data_t, int n_dims>
-    struct in_place_op<data_t, n_dims, 0>
-    {
-      static void mul(data_t * coefs, const data_t * coefs2)
-      {
-        coefs[0] *= coefs2[0];
-      }
-
-      static void div(data_t * coefs, const data_t * coefs2)
-      {
-        coefs[0] /= coefs2[0];
-      }
-
-      static void add(data_t * coefs, const data_t * coefs2)
-      {
-        coefs[0] += coefs2[0];
-      }
-
-      static void sub(data_t * coefs, const data_t * coefs2)
-      {
-        coefs[0] -= coefs2[0];
-      }
-
-      static void mul(data_t * coefs, data_t k)
-      {
-        coefs[0] *= k;
-      }
-
-      static void div(data_t * coefs, data_t k)
-      {
-        coefs[0] /= k;
-      }
-    };
-  }
-
   template <typename data_t, int n_dims>
   struct vec_base
   {
@@ -114,14 +22,14 @@ namespace ggo
     constexpr vec_base(data_t k1, data_t k2) : _coefs()
     {
       static_assert(n_dims == 2);
-      details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2);
+      ggo::details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2);
     }
 
     template <typename... args>
     constexpr vec_base(data_t k1, data_t k2, args... a) : _coefs()
     {
       static_assert(n_dims > 2 && sizeof...(a) == n_dims - 2);
-      details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2, a...);
+      ggo::details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2, a...);
     }
 
     constexpr vec_base(data_t k) : _coefs()
@@ -130,13 +38,13 @@ namespace ggo
     }
 
     // In-place arithmetics operators.
-    void operator*=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::mul(this->_coefs, v._coefs); }
-    void operator/=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::div(this->_coefs, v._coefs); }
-    void operator+=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::add(this->_coefs, v._coefs); }
-    void operator-=(const vec_base<data_t, n_dims> & v) { details::in_place_op<data_t, n_dims, n_dims - 1>::sub(this->_coefs, v._coefs); }
+    void operator*=(const vec_base<data_t, n_dims> & v) { details::mul<n_dims>(this->_coefs, v._coefs); }
+    void operator/=(const vec_base<data_t, n_dims> & v) { details::div<n_dims>(this->_coefs, v._coefs); }
+    void operator+=(const vec_base<data_t, n_dims> & v) { details::add<n_dims>(this->_coefs, v._coefs); }
+    void operator-=(const vec_base<data_t, n_dims> & v) { details::sub<n_dims>(this->_coefs, v._coefs); }
 
-    void operator*=(data_t k) { details::in_place_op<data_t, n_dims, n_dims - 1>::mul(this->_coefs, k); }
-    void operator/=(data_t k) { details::in_place_op<data_t, n_dims, n_dims - 1>::div(this->_coefs, k); }
+    void operator*=(data_t k) { details::mul<n_dims>(this->_coefs, k); }
+    void operator/=(data_t k) { details::div<n_dims>(this->_coefs, k); }
 
     data_t _coefs[n_dims];
   };
@@ -182,31 +90,10 @@ namespace ggo
 // Equality.
 namespace ggo
 {
-  namespace details
-  {
-    template <typename data_t, int n_dims, int dim>
-    struct vec_eq
-    {
-      static constexpr bool call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
-      {
-        return vec_eq<data_t, n_dims, dim - 1>::call(v1, v2) && (v1._coefs[dim] == v2._coefs[dim]);
-      }
-    };
-
-    template <typename data_t, int n_dims>
-    struct vec_eq<data_t, n_dims, 0>
-    {
-      static constexpr bool call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
-      {
-        return v1._coefs[0] == v2._coefs[0];
-      }
-    };
-  }
-
   template <typename data_t, int n_dims>
   constexpr bool operator==(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
   {
-    return details::vec_eq<data_t, n_dims, n_dims - 1>::call(v1, v2);
+    return ggo::details::eq<data_t, n_dims>(v1._coefs, v2._coefs);
   }
 
   template <typename data_t, int n_dims>

@@ -3,11 +3,11 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(multi_shape, shape_union)
 {
-  ggo::multi_shape_float multi_shape;
-  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(ggo::pos2f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_float>(ggo::pos2f(5.f, 3.f), 2.f));
+  ggo::multi_shape_f multi_shape;
+  multi_shape.add_shapes(std::make_shared<ggo::disc_f>(ggo::pos2_f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_f>(ggo::pos2_f(5.f, 3.f), 2.f));
 
   // Bounding rectangle.
-  ggo::rect_float rect = multi_shape.get_bounding_rect();
+  ggo::rect_f rect = multi_shape.get_bounding_rect();
   GGO_CHECK_FLOAT_EQ(rect.left(), -1);
   GGO_CHECK_FLOAT_EQ(rect.right(), 7);
   GGO_CHECK_FLOAT_EQ(rect.bottom(), -2);
@@ -31,10 +31,10 @@ GGO_TEST(multi_shape, shape_union)
 GGO_TEST(multi_shape, shape_intersection)
 {
   ggo::multi_shape<float, ggo::boolean_mode::INTERSECTION> multi_shape;
-  multi_shape.add_shapes(std::make_shared<ggo::disc_float>(ggo::pos2f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_float>(ggo::pos2f(3.f, 3.f), 2.f));
+  multi_shape.add_shapes(std::make_shared<ggo::disc_f>(ggo::pos2_f(2.f, 1.f), 3.f), std::make_shared<ggo::disc_f>(ggo::pos2_f(3.f, 3.f), 2.f));
 
   // Bounding rectangle.
-  ggo::rect_float rect = multi_shape.get_bounding_rect();
+  ggo::rect_f rect = multi_shape.get_bounding_rect();
   GGO_CHECK_FLOAT_EQ(rect.left(), 1);
   GGO_CHECK_FLOAT_EQ(rect.right(), 5);
   GGO_CHECK_FLOAT_EQ(rect.bottom(), 1);
@@ -60,13 +60,13 @@ GGO_TEST(multi_shape, shape_intersection)
 GGO_TEST(multi_shape, shape_difference)
 {
   ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> multi_shape;
-  auto rect1 = std::make_shared<ggo::rect_float>(ggo::rect_data<float>{ {2.f, 1.f}, 7.f, 7.f });
-  auto rect2 = std::make_shared<ggo::rect_float>(ggo::rect_data<float>{ {3.f, 4.f}, 3.f, 3.f });
-  auto rect3 = std::make_shared<ggo::rect_float>(ggo::rect_data<float>{ {7.f, 2.f}, 5.f, 5.f });
+  auto rect1 = std::make_shared<ggo::rect_f>(ggo::rect_data<float>{ {2.f, 1.f}, 7.f, 7.f });
+  auto rect2 = std::make_shared<ggo::rect_f>(ggo::rect_data<float>{ {3.f, 4.f}, 3.f, 3.f });
+  auto rect3 = std::make_shared<ggo::rect_f>(ggo::rect_data<float>{ {7.f, 2.f}, 5.f, 5.f });
   multi_shape.add_shapes(rect1, rect2, rect3);
 
   // Bounding rectangle.
-  ggo::rect_float rect = multi_shape.get_bounding_rect();
+  ggo::rect_f rect = multi_shape.get_bounding_rect();
   GGO_CHECK_FLOAT_EQ(rect.left(), 2);
   GGO_CHECK_FLOAT_EQ(rect.right(), 9);
   GGO_CHECK_FLOAT_EQ(rect.bottom(), 1);

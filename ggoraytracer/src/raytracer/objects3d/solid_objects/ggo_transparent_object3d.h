@@ -12,18 +12,18 @@ namespace ggo
 
     transparent_object3d(const shape_t & shape, const ggo::rgb_32f & color, float density) : reflection_object3d_abc<flags, shape_t>(shape), _color(color), _density(density) {}
 
-    static float                            compute_reflection_factor(const ggo::ray3d_float& ray, const ggo::ray3d_float& world_normal, float current_density, float next_density);
-    static std::optional<ggo::ray3d_float>  transmit_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float current_density, float next_density);
+    static float                            compute_reflection_factor(const ggo::ray3d_f& ray, const ggo::ray3d_f& world_normal, float current_density, float next_density);
+    static std::optional<ggo::ray3d_f>  transmit_ray(const ggo::ray3d_f & ray, const ggo::ray3d_f & normal, float current_density, float next_density);
 
   private:
 
     // 'object3d_abc' interface.
-    ggo::rgb_32f      get_color(const ggo::pos3f & pos) const override;
+    ggo::rgb_32f      get_color(const ggo::pos3_f & pos) const override;
     ggo::rgb_32f      get_emissive_color() const override { return ggo::black_32f(); }
-    ggo::rgb_32f      process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
-    transmission_data compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const override;
+    ggo::rgb_32f      process_ray(const ggo::ray3d_f & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const override;
+    transmission_data compute_transmission(const ggo::ray3d_f & ray, const ggo::ray3d_f & normal, int & depth) const override;
 
-    ggo::rgb_32f      compute_transmitted_color(ggo::ray3d_float ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
+    ggo::rgb_32f      compute_transmitted_color(ggo::ray3d_f ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const;
 
   private:
 
@@ -36,7 +36,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::rgb_32f transparent_object3d<flags, shape_t>::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::get_color(const ggo::pos3_f & pos) const
   {
     GGO_FAIL();
     return ggo::black_32f();
@@ -44,7 +44,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  float transparent_object3d<flags, shape_t>::compute_reflection_factor(const ggo::ray3d_float& ray, const ggo::ray3d_float& world_normal, float current_density, float next_density)
+  float transparent_object3d<flags, shape_t>::compute_reflection_factor(const ggo::ray3d_f& ray, const ggo::ray3d_f& world_normal, float current_density, float next_density)
   {
     float cos_input = ggo::dot(ray.dir(), world_normal.dir());
     float num = current_density - next_density;
@@ -58,7 +58,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  std::optional<ggo::ray3d_float> transparent_object3d<flags, shape_t>::transmit_ray(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, float current_density, float next_density)
+  std::optional<ggo::ray3d_f> transparent_object3d<flags, shape_t>::transmit_ray(const ggo::ray3d_f & ray, const ggo::ray3d_f & normal, float current_density, float next_density)
   {
     float cos_input = ggo::dot(ray.dir(), normal.dir());
     GGO_ASSERT(cos_input <= 0.001f); // Expected negative dot product.
@@ -74,14 +74,14 @@ namespace ggo
     }
 
     // Transmission: the ray passes thgough.
-    ggo::vec3f parallel_dir = ray.dir() - cos_input * normal.dir();
-    parallel_dir.set_length(sin_output);
+    ggo::vec3_f parallel_dir = ray.dir() - cos_input * normal.dir();
+    parallel_dir = sin_output * normalize(parallel_dir);
 
     float cos_output = std::sqrt(1 - ggo::square(sin_output));
-    ggo::vec3f orthogonal_dir = -normal.dir();
-    orthogonal_dir.set_length(cos_output);
+    ggo::vec3_f orthogonal_dir = -normal.dir();
+    orthogonal_dir = cos_output * normalize(orthogonal_dir);
 
-    ggo::ray3d_float transmitted_ray;
+    ggo::ray3d_f transmitted_ray;
     transmitted_ray.set_dir(parallel_dir + orthogonal_dir);
     transmitted_ray.pos() = normal.pos() + 0.001f * transmitted_ray.dir(); // Avoid self-intersection.
 
@@ -93,7 +93,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::transmission_data transparent_object3d<flags, shape_t>::compute_transmission(const ggo::ray3d_float & ray, const ggo::ray3d_float & normal, int & depth) const
+  ggo::transmission_data transparent_object3d<flags, shape_t>::compute_transmission(const ggo::ray3d_f & ray, const ggo::ray3d_f & normal, int & depth) const
   {
     // Try to transmit the ray into the current object.
     auto inner_ray = transmit_ray(ray, normal, 1.0f, _density);
@@ -121,7 +121,7 @@ namespace ggo
 
       // Find intersection between the current ray and the current object.
       float dist = -1.f;
-      ggo::ray3d_float normal;
+      ggo::ray3d_f normal;
 
       if (_shape.intersect_ray(*inner_ray, dist, normal) == false)
       {
@@ -142,11 +142,11 @@ namespace ggo
       }
 
       // Internal reflection.
-      ggo::vec3f reflected_dir(inner_ray->dir() - 2 * ggo::dot(normal.dir(), inner_ray->dir()) * normal.dir());
+      ggo::vec3_f reflected_dir(inner_ray->dir() - 2 * ggo::dot(normal.dir(), inner_ray->dir()) * normal.dir());
       GGO_ASSERT(ggo::is_normalized(reflected_dir, 0.001f) == true);
       GGO_ASSERT(ggo::dot(reflected_dir, normal.dir()) >= -0.001f); // Because of rounding errors, the dot product can be a little bit negative.
 
-      inner_ray = ggo::ray3d_float(normal.pos(), reflected_dir, false);
+      inner_ray = ggo::ray3d_f(normal.pos(), reflected_dir, false);
     }
 
     GGO_FAIL();
@@ -155,7 +155,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::rgb_32f transparent_object3d<flags, shape_t>::compute_transmitted_color(ggo::ray3d_float ray,
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::compute_transmitted_color(ggo::ray3d_f ray,
     const intersection_data & intersection,
     const ggo::raytracer & raytracer,
     int depth,
@@ -176,7 +176,7 @@ namespace ggo
 
     case transmission_type::full_reflection:
     {
-      ray3d_float reflection_ray = get_reflected_ray(ray, intersection._world_normal, random_variable1, random_variable2);
+      ray3d_f reflection_ray = get_reflected_ray(ray, intersection._world_normal, random_variable1, random_variable2);
 
       const object3d_abc * exclude_object = handle_self_intersection(reflection_ray);
 
@@ -185,14 +185,14 @@ namespace ggo
 
     case transmission_type::partial_transmission:
     {
-      ggo::ray3d_float transmitted_ray(transmission._ray);
+      ggo::ray3d_f transmitted_ray(transmission._ray);
       const object3d_abc * exclude_object = handle_self_intersection(transmitted_ray);
 
       // Compute transmitted ray and color by bouncing ray internally until it leaves the current object.
       const ggo::rgb_32f transmitted_color = raytracer.process(transmitted_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
 
       // Compute reflected ray.
-      const ggo::ray3d_float & reflected_ray = get_reflected_ray(ray, intersection._world_normal, random_variable1, random_variable2);
+      const ggo::ray3d_f & reflected_ray = get_reflected_ray(ray, intersection._world_normal, random_variable1, random_variable2);
       const ggo::rgb_32f reflected_color = raytracer.process(reflected_ray, depth - 1, indirect_lighting, random_variable1, random_variable2, exclude_object);
 
       // Compute final color.
@@ -205,7 +205,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <uint32_t flags, typename shape_t>
-  ggo::rgb_32f transparent_object3d<flags, shape_t>::process_ray(const ggo::ray3d_float & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
+  ggo::rgb_32f transparent_object3d<flags, shape_t>::process_ray(const ggo::ray3d_f & ray, const intersection_data & intersection, const ggo::raytracer & raytracer, int depth, const ggo::indirect_lighting_abc * indirect_lighting, float random_variable1, float random_variable2) const
   {
     auto light_samples = raytracer.sample_lights(intersection._world_normal, this, random_variable1, random_variable2);
 

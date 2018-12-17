@@ -6,11 +6,11 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   photon_mapping::photon_mapping(const std::vector<const ggo::object3d_abc *> & lights,
-                                 const std::vector<ggo::pos3f> & target_samples,
+                                 const std::vector<ggo::pos3_f> & target_samples,
                                  const ggo::object3d_abc & object,
                                  const ggo::raycaster_abc & raycaster)
   {
-    using color_point = ggo::kdtree<ggo::rgb_32f, ggo::vec3f>::data_point;
+    using color_point = ggo::kdtree<ggo::rgb_32f, ggo::vec3_f>::data_point;
     
     std::vector<color_point> photons;
 
@@ -24,10 +24,10 @@ namespace ggo
         float random_variable1 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].x();
         float random_variable2 = ggo::best_candidate_table[i % GGO_BEST_CANDITATE_TABLE_SIZE].y();
 
-        ggo::pos3f target_sample = target_samples[i];
-        ggo::pos3f light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
+        ggo::pos3_f target_sample = target_samples[i];
+        ggo::pos3_f light_sample = light->sample_point(target_sample, random_variable1, random_variable2);
 
-        ggo::ray3d_float ray(light_sample, target_sample - light_sample);
+        ggo::ray3d_f ray(light_sample, target_sample - light_sample);
 
         // Check if the built ray hits the object.
         auto intersection = object.intersect_ray(ray);
@@ -57,7 +57,7 @@ namespace ggo
           const float intensity = ggo::dot(hit->_intersection._world_normal.dir(), transmission._ray.dir());
           GGO_ASSERT_LE(intensity, 0.001f);
           ggo::rgb_32f photon_color = -intensity * (light->get_emissive_color() * hit->_object->get_color(hit->_intersection._world_normal.pos()));
-          ggo::pos3f photon_pos = transmission._ray.pos() + hit->_intersection._dist * transmission._ray.dir();
+          ggo::pos3_f photon_pos = transmission._ray.pos() + hit->_intersection._dist * transmission._ray.dir();
           current_light_photons.push_back({ { photon_pos.x(), photon_pos.y(), photon_pos.z() }, photon_color });
         }
       }
@@ -71,12 +71,12 @@ namespace ggo
       }
     }
 
-    _tree.reset(new ggo::kdtree<ggo::rgb_32f, vec3f>(photons));
+    _tree.reset(new ggo::kdtree<ggo::rgb_32f, vec3_f>(photons));
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f photon_mapping::process(const ggo::ray3d_float & ray,
-                                       const ggo::ray3d_float & world_normal,
+  ggo::rgb_32f photon_mapping::process(const ggo::ray3d_f & ray,
+                                       const ggo::ray3d_f & world_normal,
                                        const ggo::object3d_abc & hit_object,
                                        const ggo::rgb_32f & hit_color,
                                        float random_variable1,

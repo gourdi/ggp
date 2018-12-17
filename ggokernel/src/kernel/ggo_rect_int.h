@@ -46,7 +46,7 @@ namespace ggo
       }
     }
 
-    bool is_inside(const ggo::pos2i & p) const;
+    bool is_inside(const ggo::pos2_i & p) const;
 
     void vertical_flip(int height);
 
@@ -174,7 +174,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  inline bool rect_int::is_inside(const ggo::pos2i & p) const
+  inline bool rect_int::is_inside(const ggo::pos2_i & p) const
   {
     return p.x() >= _left && p.x() <= _right && p.y() >= _bottom && p.y() <= _top;
   }

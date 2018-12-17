@@ -23,20 +23,20 @@ namespace ggo
 
     struct animated_transform
     {
-      ggo::pos2f  _center_start;
-      ggo::pos2f  _center_end;
-      ggo::vec2f  _disp;
+      ggo::pos2_f _center_start;
+      ggo::pos2_f _center_end;
+      ggo::vec2_f _disp;
       float       _variance;
     };
 
     struct fixed_transform
     {
-      fixed_transform(const ggo::pos2f & center, const ggo::pos2f & disp, float variance)
+      fixed_transform(const ggo::pos2_f & center, const ggo::pos2_f & disp, float variance)
         :
         _center(center), _disp(disp), _variance(variance) {}
 
-      ggo::pos2f  _center;
-      ggo::vec2f  _disp;
+      ggo::pos2_f _center;
+      ggo::vec2_f _disp;
       float       _variance;
     };
 

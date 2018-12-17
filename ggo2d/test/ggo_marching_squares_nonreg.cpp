@@ -14,15 +14,15 @@ GGO_TEST(marching_squares, circle)
   auto cells = ggo::marching_squares(func, { -2.f, -2.f }, 40, 0.1f);
 
   const int size = 400;
-  const ggo::pos2f offset(0.5f * size, 0.5f * size);
+  const ggo::pos2_f offset(0.5f * size, 0.5f * size);
 
-  using color_capsule = ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u>;
+  using color_capsule = ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u>;
   std::vector<color_capsule> segments;
   for (const auto & cell : cells)
   {
     for (const auto & segment : cell._segments)
     {
-      ggo::capsule_float capsule(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
+      ggo::capsule_f capsule(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
       segments.emplace_back(capsule, ggo::white<ggo::rgb_8u>());
     }
   }

@@ -27,8 +27,8 @@ namespace ggo
 
 namespace ggo
 {
-  using parallelogram3d_float   = parallelogram3d<float>;
-  using parallelogram3d_double  = parallelogram3d<double>;
+  using parallelogram3d_f = parallelogram3d<float>;
+  using parallelogram3d_d = parallelogram3d<double>;
 }
 
 namespace ggo

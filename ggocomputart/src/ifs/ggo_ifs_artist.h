@@ -17,7 +17,7 @@ namespace ggo
 
   private:
 
-    void  update(ggo::pos3f & point, const float transform[4]) const;
+    void  update(ggo::pos3_f & point, const float transform[4]) const;
 
     void  paint_buffer(void * buffer, uint8_t color, const ggo::array_32f & accumul_buffer) const;
   };

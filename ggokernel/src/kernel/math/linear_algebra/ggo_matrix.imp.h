@@ -33,47 +33,29 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, int size_y, int size_x>
-  matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
-  {
-    matrix<data_t, size_y, size_x> result;
+  //template <typename data_t, int size_y, int size_x>
+  //matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
+  //{
+  //  matrix<data_t, size_y, size_x> result;
 
-    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
+  //  ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 + src2; });
 
-    return result;
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t, int size_y, int size_x>
-  matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
-  {
-    matrix<data_t, size_y, size_x> result;
-
-    ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
-
-    return result;
-  }
+  //  return result;
+  //}
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, int size_1, int size_2, int size_3>
-  matrix<data_t, size_1, size_3> operator*(const matrix<data_t, size_1, size_2> & m1, const matrix<data_t, size_2, size_3> & m2)
-  {
-    matrix<data_t, size_1, size_3> result;
-    
-    for (int y = 0; y < size_1; ++y)
-    {
-      for (int x = 0; x < size_3; ++x)
-      {
-        result(y, x) = 0;
-        for (int j = 0; j < size_2; ++j)
-        {
-          result(y, x) += m1(y, j) * m2(j, x);
-        }
-      }
-    }
-    
-    return result;
-  }
+  //template <typename data_t, int size_y, int size_x>
+  //matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2)
+  //{
+  //  matrix<data_t, size_y, size_x> result;
+
+  //  ggo::binary_operation<size_x * size_y>(result.data(), m1.data(), m2.data(), [](data_t & dst, const data_t & src1, const data_t & src2) { dst = src1 - src2; });
+
+  //  return result;
+  //}
+
+  /////////////////////////////////////////////////////////////////////
+
 }
 
 /////////////////////////////////////////////////////////////////////

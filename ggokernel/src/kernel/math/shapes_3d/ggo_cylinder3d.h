@@ -32,8 +32,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using cylinder3d_float  = cylinder3d<float>;
-  using cylinder3d_double = cylinder3d<double>;
+  using cylinder3d_f = cylinder3d<float>;
+  using cylinder3d_d = cylinder3d<double>;
 }
 
 //////////////////////////////////////////////////////////////

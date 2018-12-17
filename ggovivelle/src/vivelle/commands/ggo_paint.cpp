@@ -18,7 +18,7 @@ namespace ggo
     float y = ggo::to<float>(params[1]);
     float radius = ggo::to<float>(params[2]);
 
-    return std::make_unique<const ggo::disc_float>(ggo::pos2f(x, y), radius);
+    return std::make_unique<const ggo::disc_f>(ggo::pos2_f(x, y), radius);
   }
 
   std::unique_ptr<const ggo::paintable_shape2d_abc<float>> get_shape(const parameters & params)

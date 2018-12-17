@@ -21,7 +21,7 @@ namespace
     float progress,
     ggo::scene & scene)
   {
-    float dist = ggo::length(ggo::pos2f(x, y));
+    float dist = ggo::length(ggo::pos2_f(x, y));
     if (dist < radius)
     {
       float height = std::sqrt(radius * radius - dist * dist);
@@ -29,7 +29,7 @@ namespace
       float scale = 0.f;
       for (const auto & sinusoid : sinusoids)
       {
-        ggo::vec2f dir(std::cos(sinusoid._angle), std::sin(sinusoid._angle));
+        ggo::vec2_f dir(std::cos(sinusoid._angle), std::sin(sinusoid._angle));
         float proj = ggo::dot(dir, { x, y });
         float phase = sinusoid._phase_inf + ggo::ease_inout(progress) * (sinusoid._phase_sup - sinusoid._phase_inf);
         scale += sinusoid._amplitude * (1.f + std::cos(phase + 2.f * ggo::pi<float>() * proj / sinusoid._wave_length));
@@ -100,14 +100,14 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::basis3d_float ggo::hexa_artist::generate_camera_basis(float progress) const
+ggo::basis3d_f ggo::hexa_artist::generate_camera_basis(float progress) const
 {
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, camera_dist });
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, camera_dist });
 
   float angle = ggo::linear_interpolation(0.f, _camera_angle_start, 1.f, _camera_angle_end, progress);
 
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.1f);
-  camera_basis.rotate(ggo::ray3d_float::O_Z(), angle);
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.1f);
+  camera_basis.rotate(ggo::ray3d_f::O_Z(), angle);
 
   return camera_basis;
 }

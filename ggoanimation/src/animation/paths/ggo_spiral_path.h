@@ -11,7 +11,7 @@ namespace ggo
 
                 spiral_path(float angle_speed, float radius_speed) : _angle_speed(angle_speed), _radius_speed(radius_speed) {};
 
-    ggo::pos2f  get_pos(int counter) override;
+    ggo::pos2_f  get_pos(int counter) override;
 
   private:
 

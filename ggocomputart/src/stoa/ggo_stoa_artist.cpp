@@ -11,14 +11,14 @@ namespace
 {
   //////////////////////////////////////////////////////////////
   template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
-  bool compare_point(const ggo::pos3f & p1, const ggo::pos3f & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  bool compare_point(const ggo::pos3_f & p1, const ggo::pos3_f & p2, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
   {
     return cmp_x(p1.x(), p2.x()) && cmp_y(p1.y(), p2.y()) && cmp_z(p1.z(), p2.z());
   }
 
   //////////////////////////////////////////////////////////////
   template <typename cmp_x_func, typename cmp_y_func, typename cmp_z_func>
-  bool compare_face(const ggo::face3d<float, true> & f, const ggo::pos3f & p, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
+  bool compare_face(const ggo::face3d<float, true> & f, const ggo::pos3_f & p, cmp_x_func cmp_x, cmp_y_func cmp_y, cmp_z_func cmp_z)
   {
     return compare_point(f.v1()._pos, p, cmp_x, cmp_y, cmp_z) ||
            compare_point(f.v2()._pos, p, cmp_x, cmp_y, cmp_z) ||
@@ -36,7 +36,7 @@ namespace
 
       float angle1 = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
       float angle2 = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
-      ggo::vec3f axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
+      ggo::vec3_f axis(std::cos(angle1) * std::sin(angle2), std::sin(angle1) * std::sin(angle2), std::cos(angle2));
       ggo::fill_rotation_matrix(axis, ggo::rand<float>(0, 2 * ggo::pi<float>()), _rotation);
 
       for (auto & value : _noise3d)
@@ -67,7 +67,7 @@ namespace
 
   //////////////////////////////////////////////////////////////
   template <typename DensityFunc>
-  ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::pos3f & p)
+  ggo::vertex<float> compute_vertex(DensityFunc density, const ggo::pos3_f & p)
   {
     const float epsilon = 0.01f;
     float dx = density(p.x() + epsilon, p.y(), p.z()) - density(p.x() - epsilon, p.y(), p.z());
@@ -112,7 +112,7 @@ ggo::stoa_artist::stoa_artist(int steps)
   };
 
   const float range = 3.2f;
-  auto cells = ggo::marching_cubes(density_func, ggo::pos3f(-range, -range, -range), steps, 2 * range / steps);
+  auto cells = ggo::marching_cubes(density_func, ggo::pos3_f(-range, -range, -range), steps, 2 * range / steps);
 
   for (const auto & cell : cells)
   {
@@ -129,7 +129,7 @@ ggo::stoa_artist::stoa_artist(int steps)
 
 //////////////////////////////////////////////////////////////
 void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format, float hue,
-                              const ggo::pos3f & light_pos1, const ggo::pos3f & light_pos2,
+                              const ggo::pos3_f & light_pos1, const ggo::pos3_f & light_pos2,
                               ggo::renderer_abc & renderer) const
 {
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::rgb_32f>(hue, 1.f, 1.f)));

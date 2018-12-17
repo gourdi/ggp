@@ -11,9 +11,9 @@ namespace ggo
   {
   public:
 
-                                camera_abc(int width, int height, const ggo::basis3d_float & basis);
+                                camera_abc(int width, int height, const ggo::basis3d_f & basis);
 
-    const ggo::basis3d_float &  basis() const { return _basis; }
+    const ggo::basis3d_f &  basis() const { return _basis; }
 
     int                         width() const { return _width; }
     int                         height() const { return _height; }
@@ -22,7 +22,7 @@ namespace ggo
 
     const int                 _width;
     const int                 _height;
-    const ggo::basis3d_float  _basis;
+    const ggo::basis3d_f  _basis;
   };
 
   //////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ namespace ggo
   {
   public:
 
-    virtual ggo::ray3d_float  get_ray(int x, int y) const = 0;
+    virtual ggo::ray3d_f  get_ray(int x, int y) const = 0;
   };
 
   //////////////////////////////////////////////////////////////
@@ -38,8 +38,8 @@ namespace ggo
   {
   public:
 
-    virtual std::array<ggo::ray3d_float, 4>   get_first_pass_rays(int x, int y) const = 0;
-    virtual std::array<ggo::ray3d_float, 12>  get_second_pass_rays(int x, int y) const = 0;
+    virtual std::array<ggo::ray3d_f, 4>   get_first_pass_rays(int x, int y) const = 0;
+    virtual std::array<ggo::ray3d_f, 12>  get_second_pass_rays(int x, int y) const = 0;
   };
 
   //////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ namespace ggo
   {
   public:
 
-    virtual std::vector<ggo::ray3d_float> get_rays(int x, int y, int samples_count) const = 0;
+    virtual std::vector<ggo::ray3d_f> get_rays(int x, int y, int samples_count) const = 0;
   };
 }
 

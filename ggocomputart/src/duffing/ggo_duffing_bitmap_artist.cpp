@@ -22,7 +22,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	// Compute the points.
 	std::cout << "Computing points" << std::endl;
 	
-	std::vector<ggo::pos2f>	points;
+	std::vector<ggo::pos2_f>	points;
 
   ggo::duffing duffing;
 
@@ -30,12 +30,12 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
   
 	for (int i = 0; i < iterations_count; ++i)
 	{
-    ggo::pos2f point = duffing.update(0.002f);
+    ggo::pos2_f point = duffing.update(0.002f);
 
 		float angle = atan2(point.y(), point.x()) + angle_offset;
 		float dist = ggo::length(point);
 
-    point = dist * ggo::vec2f::from_angle(angle);
+    point = dist * ggo::vec2_f::from_angle(angle);
     point = map_fit(point, -1.7f, 1.7f);
 		
 		points.push_back(point);
@@ -62,13 +62,13 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	for (const auto & point : points)
 	{
 		// Offset the shadow.
-		ggo::pos2f render_pt = point;
+		ggo::pos2_f render_pt = point;
 		render_pt.x() += 0.05f * min_size();
 		render_pt.y() += 0.05f * min_size();
 
 		ggo::paint<ggo::y_32f_yu, ggo::sampling_2x2>(
       shadow_buffer.data(), width(), height(), sizeof(float) * width(),
-      ggo::disc_float(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(0.2f));
+      ggo::disc_f(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(0.2f));
 	}
 
 	// Blur and blend the shadow.
@@ -99,7 +99,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 
     ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
       buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-      ggo::disc_float(points[i], radius), ggo::make_solid_brush<rgb_32f>(color), ggo::alpha_blender_rgb32f(0.02f));
+      ggo::disc_f(points[i], radius), ggo::make_solid_brush<rgb_32f>(color), ggo::alpha_blender_rgb32f(0.02f));
 	}
 
 	// From float to uint8_t.

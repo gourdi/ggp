@@ -149,7 +149,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  void rect<data_t>::extend(const ggo::pos2f & p)
+  void rect<data_t>::extend(const ggo::pos2_f & p)
   {
     data_t left   = _rect_data._pos.x();
     data_t bottom = _rect_data._pos.y();

@@ -16,13 +16,13 @@ namespace ggo
     {
       params();
 
-      std::vector<ggo::pos3f> _centers;
-      float 							    _threshold;
-      float					          _phong_factor;
-      float					          _phong_shininess;
-      ggo::pos3f				      _light1;
-      ggo::pos3f				      _light2;
-      ggo::rgb_32f            _background_color;
+      std::vector<ggo::pos3_f>  _centers;
+      float 							      _threshold;
+      float					            _phong_factor;
+      float					            _phong_shininess;
+      ggo::pos3_f				        _light1;
+      ggo::pos3_f				        _light2;
+      ggo::rgb_32f              _background_color;
     };
 
     void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,

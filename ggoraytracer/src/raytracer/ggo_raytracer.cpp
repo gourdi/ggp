@@ -15,7 +15,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::vector<light_sample> raytracer::sample_lights(const ggo::ray3d_float & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const
+  std::vector<light_sample> raytracer::sample_lights(const ggo::ray3d_f & world_normal, const ggo::object3d_abc * hit_object, float random_variable1, float random_variable2) const
   {
     std::vector<light_sample> result;
 
@@ -28,15 +28,15 @@ namespace ggo
       }
 
       // Check light position.
-      ggo::pos3f light_pos = light->sample_point(world_normal.pos(), random_variable1, random_variable2);
-      ggo::vec3f dir_to_light(light_pos - world_normal.pos());
+      ggo::pos3_f light_pos = light->sample_point(world_normal.pos(), random_variable1, random_variable2);
+      ggo::vec3_f dir_to_light(light_pos - world_normal.pos());
       if (ggo::dot(world_normal.dir(), dir_to_light) < 0)
       {
         continue;
       }
 
       // Get light ray, starting from the hit point and pointing to the light.
-      ggo::ray3d_float ray_to_light = ggo::ray3d_float(world_normal.pos(), dir_to_light);
+      ggo::ray3d_f ray_to_light = ggo::ray3d_f(world_normal.pos(), dir_to_light);
 
       // Handle self-intersection properly.
       const ggo::object3d_abc * exclude_object = hit_object->handle_self_intersection(ray_to_light);
@@ -61,7 +61,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f raytracer::process(const ggo::ray3d_float & ray,
+  ggo::rgb_32f raytracer::process(const ggo::ray3d_f & ray,
                                   int depth,
                                   const ggo::indirect_lighting_abc * indirect_lighting,
                                   float random_variable1,

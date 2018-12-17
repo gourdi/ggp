@@ -49,8 +49,8 @@ namespace ggo
 
 namespace ggo
 {
-  using triangle2d_float  = triangle2d<float>;
-  using triangle2d_double = triangle2d<double>;
+  using triangle2d_f = triangle2d<float>;
+  using triangle2d_d = triangle2d<double>;
 }
 
 namespace ggo

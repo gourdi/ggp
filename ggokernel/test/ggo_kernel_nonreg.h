@@ -6,7 +6,7 @@
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 
 /////////////////////////////////////////////////////////////////////
-inline bool find_point(const std::vector<ggo::pos2f> & v, const ggo::pos2f & p)
+inline bool find_point(const std::vector<ggo::pos2_f> & v, const ggo::pos2_f & p)
 {
   for (const auto & pp : v)
   {
@@ -20,13 +20,13 @@ inline bool find_point(const std::vector<ggo::pos2f> & v, const ggo::pos2f & p)
 }
 
 /////////////////////////////////////////////////////////////////////
-inline bool find_point(const std::vector<ggo::pos2f> & v, float x, float y)
+inline bool find_point(const std::vector<ggo::pos2_f> & v, float x, float y)
 {
-  return find_point(v, ggo::pos2f(x, y));
+  return find_point(v, ggo::pos2_f(x, y));
 }
 
 /////////////////////////////////////////////////////////////////////
-inline bool compare_segment(const ggo::segment_float & s1, const ggo::segment_float & s2)
+inline bool compare_segment(const ggo::segment_f & s1, const ggo::segment_f & s2)
 {
   if (ggo::compare(s1.p1(), s2.p1()) == true && ggo::compare(s1.p2(), s2.p2()) == true)
   {
@@ -42,7 +42,7 @@ inline bool compare_segment(const ggo::segment_float & s1, const ggo::segment_fl
 }
 
 /////////////////////////////////////////////////////////////////////
-inline bool find_segment(const std::vector<ggo::segment_float> & v, const ggo::segment_float & s)
+inline bool find_segment(const std::vector<ggo::segment_f> & v, const ggo::segment_f & s)
 {
   for (const auto & ss : v)
   {

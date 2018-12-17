@@ -31,15 +31,15 @@ GGO_TEST(shape_sampling, disc_uniform_sampling)
 GGO_TEST(shape_sampling, disc_poisson_sampling)
 {
   const int size = 500;
-  const ggo::pos2f center(float(size) / 2, float(size) / 2);
+  const ggo::pos2_f center(float(size) / 2, float(size) / 2);
   
-  auto samples = ggo::poisson_sampling<ggo::pos2f, float>(
+  auto samples = ggo::poisson_sampling<ggo::pos2_f, float>(
     [&]()
     {
       auto sample = ggo::disc_uniform_sampling<float>();
       return center + sample * float(size) * 0.4f;
     },
-    [](const ggo::pos2f & p1, const ggo::pos2f & p2)
+    [](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
     {
       return ggo::distance(p1, p2);
     },
@@ -49,7 +49,7 @@ GGO_TEST(shape_sampling, disc_poisson_sampling)
 
   for (const auto & sample : samples)
   {
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), size, size, 3 * size, ggo::disc_float(sample, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_8x8>(buffer.data(), size, size, 3 * size, ggo::disc_f(sample, 2.f), ggo::white_8u());
   }
   
   ggo::save_bmp("test_disc_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
@@ -72,7 +72,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     x_f = 0.2f * size * x_f + size / 4.f;
     y_f = 0.2f * size * y_f + size / 4.f;
     
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_f({ x_f, y_f }, 2.f), ggo::white_8u());
   }
   
   for (int i = 0; i < (1<<20); ++i)
@@ -132,12 +132,12 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
   const int size = 500;
   const float angle = 1.2f;
   
-  auto samples = ggo::poisson_sampling<ggo::pos3f, float>(
+  auto samples = ggo::poisson_sampling<ggo::pos3_f, float>(
     []()
     {
         return ggo::hemisphere_uniform_sampling<float>();
     },
-    [](const ggo::pos3f & p1, const ggo::pos3f & p2)
+    [](const ggo::pos3_f & p1, const ggo::pos3_f & p2)
     {
         return ggo::distance(p1, p2);
     },
@@ -153,7 +153,7 @@ GGO_TEST(shape_sampling, hemisphere_poisson_sampling)
     x_f = 0.4f * size * x_f + size / 2;
     y_f = 0.4f * size * y_f + size / 2;
     
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_float({ x_f, y_f }, 2.f), ggo::white_8u());
+    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_16x16>(buffer.data(), size, size, 3 * size, ggo::disc_f({ x_f, y_f }, 2.f), ggo::white_8u());
   }
   
   ggo::save_bmp("test_hemisphere_poisson_sampling.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);

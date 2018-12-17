@@ -17,7 +17,7 @@ bitmap_artist_abc(width, height, line_step, format)
 void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
 {
   // The camera.
-  const ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });
+  const ggo::basis3d_f camera_basis({ 0.f, 0.f, 40.f });
   const float camera_aperture = 0.1f;
 #ifdef MONO_SAMPLING
   ggo::mono_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture);
@@ -28,8 +28,8 @@ void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
   // Lights.
   float angle1 = ggo::rand<float>(0, ggo::pi<float>());
   float angle2 = ggo::rand<float>(0, ggo::pi<float>());
-  const ggo::pos3f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
-  const ggo::pos3f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
+  const ggo::pos3_f light_pos1(30.f * std::cos(angle1), 30.f * std::sin(angle1), 30.f);
+  const ggo::pos3_f light_pos2(30.f * std::cos(angle2), 30.f * std::sin(angle2), 30.f);
 
   // Rendering.
 #ifdef MONO_SAMPLING

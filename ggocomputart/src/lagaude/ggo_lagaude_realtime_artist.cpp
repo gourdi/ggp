@@ -15,7 +15,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
     ggo::lagaude_realtime_artist::bkgd_disc bkgd_disc;
     bkgd_disc._pos.x() = ggo::rand<float>(-1, 3);
     bkgd_disc._pos.y() = ggo::rand<float>(-1, 3);
-    bkgd_disc._vel = 0.001f * ggo::vec2f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+    bkgd_disc._vel = 0.001f * ggo::vec2_f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
     bkgd_disc._radius = 0.75;
 
     _bkgd_discs.push_back(bkgd_disc);
@@ -24,7 +24,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
   for (int i = 0; i < 1000; ++i)
   {
     float scale = ggo::rand<float>(0.5, 1);
-    ggo::pos2f pos(ggo::rand<float>(-2, 2), ggo::rand<float>(-0.1f, 1.1f));
+    ggo::pos2_f pos(ggo::rand<float>(-2, 2), ggo::rand<float>(-0.1f, 1.1f));
 
     auto * path = new ggo::lagaude_realtime_artist::sinuoid_path();
     path->_amplitude = ggo::rand<float>(0.01f, 0.02f);
@@ -43,7 +43,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   // Update background.
   for (auto & bkgd_disc : _bkgd_discs)
@@ -55,7 +55,7 @@ void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
   if ((frame_index % 10 == 0) && (frame_index < 350))
   {
     float scale = ggo::rand<float>(0.5, 1);
-    ggo::pos2f pos(ggo::rand<float>(), ggo::rand<float>());
+    ggo::pos2_f pos(ggo::rand<float>(), ggo::rand<float>());
     ggo::path_abc * path = new ggo::velocity_path(scale * ggo::rand<float>(0.002f, 0.005f), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 
     insert_scale_animator(new ggo::lagaude_realtime_artist::seed(pos, path, scale, _hue));
@@ -89,12 +89,12 @@ void ggo::lagaude_realtime_artist::render_tile(void * buffer, int frame_index, c
     case ggo::rgb_8u_yu:
       ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
-        ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
+        ggo::disc_f({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
       break;
     case ggo::bgrx_8u_yd:
       ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
         buffer, width(), height(), line_step(),
-        ggo::disc_float({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
+        ggo::disc_f({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
       break;
     }
   }
@@ -134,7 +134,7 @@ void ggo::lagaude_realtime_artist::angle_generator::get_random_data(float & data
 }
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_realtime_artist::seed::seed(const ggo::pos2f & pos, ggo::path_abc * path, float scale, float hue)
+ggo::lagaude_realtime_artist::seed::seed(const ggo::pos2_f & pos, ggo::path_abc * path, float scale, float hue)
 :
 scale_animate_abc(pos, path, scale)
 {
@@ -145,7 +145,7 @@ scale_animate_abc(pos, path, scale)
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2f & pos)
+bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2_f & pos)
 {
   // Create the particles if not dead.
   float opacity = 1;
@@ -160,7 +160,7 @@ bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2
     {
       float angle = _angle_generators(i).update(1) + 2 * ggo::pi<float>() * i / _angle_generators.count();
 
-      auto * particle = new ggo::lagaude_realtime_artist::particle(pos + 0.02f * _scale * ggo::vec2f::from_angle(angle), new ggo::velocity_path(0.02f * _scale, angle));
+      auto * particle = new ggo::lagaude_realtime_artist::particle(pos + 0.02f * _scale * ggo::vec2_f::from_angle(angle), new ggo::velocity_path(0.02f * _scale, angle));
       particle->_angle = angle;
       particle->_dangle = _dangle;
       particle->_radius = 0.025f * _scale;
@@ -179,20 +179,20 @@ bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_realtime_artist::seed::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
 	_particles_animator.render(buffer, width, height, line_step, format, clipping);
 }
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_realtime_artist::particle::particle(const ggo::pos2f & pos, ggo::velocity_path * path)
+ggo::lagaude_realtime_artist::particle::particle(const ggo::pos2_f & pos, ggo::velocity_path * path)
 :
 ggo::path_animate_abc(pos, path)
 {
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_realtime_artist::particle::update(int frame_index, const ggo::pos2f & pos)
+bool ggo::lagaude_realtime_artist::particle::update(int frame_index, const ggo::pos2_f & pos)
 {
   _angle -= _dangle;
   _radius -= _dradius;
@@ -203,23 +203,23 @@ bool ggo::lagaude_realtime_artist::particle::update(int frame_index, const ggo::
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_realtime_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	ggo::pos2f p1 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle), 0.f, 1.f, width, height);
-	ggo::pos2f p2 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle + 2 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
-	ggo::pos2f p3 = ggo::map_fit(_radius * ggo::vec2f::from_angle(_angle + 4 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
+	ggo::pos2_f p1 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle), 0.f, 1.f, width, height);
+	ggo::pos2_f p2 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 2 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
+	ggo::pos2_f p3 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 4 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
     
-  ggo::vec2f disp(pos.x() * width, pos.y() * height);
+  ggo::vec2_f disp(pos.x() * width, pos.y() * height);
   p1 += disp;
   p2 += disp;
   p3 += disp;    
 	
-  ggo::multi_shape_float multi_shape;
+  ggo::multi_shape_f multi_shape;
   
   float size = 0.003f * std::min(width, height);
-  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p1, p2, size));
-  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p2, p3, size));
-  multi_shape.add_shape(std::make_shared<ggo::capsule_float>(p3, p1, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p1, p2, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p2, p3, size));
+  multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p3, p1, size));
 
   switch (format)
   {
@@ -235,7 +235,7 @@ void ggo::lagaude_realtime_artist::particle::render(void * buffer, int width, in
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::lagaude_realtime_artist::dust::update(int frame_index, const ggo::pos2f & pos)
+bool ggo::lagaude_realtime_artist::dust::update(int frame_index, const ggo::pos2_f & pos)
 {
   if (pos.x() > 1.1f)
   {
@@ -247,14 +247,14 @@ bool ggo::lagaude_realtime_artist::dust::update(int frame_index, const ggo::pos2
 
 //////////////////////////////////////////////////////////////
 void ggo::lagaude_realtime_artist::dust::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const
+  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-  ggo::pos2f center(width * pos.x(), height * pos.y());
+  ggo::pos2_f center(width * pos.x(), height * pos.y());
   float disc_radius = std::min(width, height) * _radius;
   float disc_width = std::min(width, height) * _width;
 
-  auto disc1 = std::make_shared<ggo::disc_float>(center, disc_radius + 0.5f * disc_width);
-  auto disc2 = std::make_shared<ggo::disc_float>(center, disc_radius - 0.5f * disc_width);
+  auto disc1 = std::make_shared<ggo::disc_f>(center, disc_radius + 0.5f * disc_width);
+  auto disc2 = std::make_shared<ggo::disc_f>(center, disc_radius - 0.5f * disc_width);
 
   ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> opened_disc;
   opened_disc.add_shapes(disc1, disc2);

@@ -13,7 +13,7 @@ namespace ggo
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 500; }
 
@@ -24,12 +24,12 @@ namespace ggo
 
     static constexpr int substeps_count = 8;
 
-    std::vector<std::array<ggo::pos2f, substeps_count>> _particles;
-    ggo::pos2f        		                              _attractor;
-    int							                                    _timer_max;
-    ggo::rgb_8u 	                                      _parts_color;
-    int							                                    _attractor_counter;
-    int							                                    _shake_counter;
+    std::vector<std::array<ggo::pos2_f, substeps_count>>  _particles;
+    ggo::pos2_f        		                                _attractor;
+    int							                                      _timer_max;
+    ggo::rgb_8u 	                                        _parts_color;
+    int							                                      _attractor_counter;
+    int							                                      _shake_counter;
   };
 }
 

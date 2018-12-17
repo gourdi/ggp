@@ -9,7 +9,7 @@ namespace
 {
   struct color_square
   {
-    ggo::polygon2d_float	_square;
+    ggo::polygon2d_f	_square;
     ggo::rgb_32f          _color;
   };
 
@@ -31,14 +31,14 @@ namespace
     std::vector<uint8_t> shadow_buffer(artist.width() * artist.height(), 0xff);
 
     float shadow_offset_scalar = 0.25f * square_size;
-    ggo::pos2f shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
+    ggo::pos2_f shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
 
     for (const auto & color_square : color_squares)
     {
-      ggo::polygon2d_float square(4);
+      ggo::polygon2d_f square(4);
       for (int i = 0; i < 4; ++i)
       {
-        ggo::pos2f point = artist.map_fit(color_square._square.get_point(i) + shadow_offset, 0, 1);
+        ggo::pos2_f point = artist.map_fit(color_square._square.get_point(i) + shadow_offset, 0, 1);
 
         square.add_point(point);
       }
@@ -57,10 +57,10 @@ namespace
     // Render the coloured squares.
     for (const auto & color_square : color_squares)
     {
-      ggo::polygon2d_float square(4);
+      ggo::polygon2d_f square(4);
       for (int i = 0; i < 4; ++i)
       {
-        ggo::pos2f point = color_square._square.get_point(i);
+        ggo::pos2_f point = color_square._square.get_point(i);
         point = artist.map_fit(point, 0, 1);
         square.add_point(point);
       }
@@ -96,7 +96,7 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 	{
 		for (int block_x = 0; block_x < blocks; ++block_x)
 		{
-			ggo::pos2f block_center((1 + 2 * block_x) / (2.f * blocks), (1 + 2 * block_y) / (2.f * blocks));
+			ggo::pos2_f block_center((1 + 2 * block_x) / (2.f * blocks), (1 + 2 * block_y) / (2.f * blocks));
 			
 			ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<bool>() ? hue1 : hue2, 0.75, 1);
 			
@@ -106,15 +106,15 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 				{
 					color_square color_square;
 					
-					ggo::pos2f square_center(block_center);
+					ggo::pos2_f square_center(block_center);
 					square_center.x() += (x - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
 					square_center.y() += (y - 0.5f * sub_blocks + 0.5f) * square_dist + (square_dist - square_size) * ggo::rand<float>(-1, 1);
 					
 					float dangle = ggo::rand<float>(-0.1f, 0.1f);
-					color_square._square.add_point(square_center + ggo::vec2f::from_angle(    ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
-					color_square._square.add_point(square_center + ggo::vec2f::from_angle(3 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
-					color_square._square.add_point(square_center + ggo::vec2f::from_angle(5 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
-					color_square._square.add_point(square_center + ggo::vec2f::from_angle(7 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2_f::from_angle(    ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2_f::from_angle(3 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2_f::from_angle(5 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
+					color_square._square.add_point(square_center + ggo::vec2_f::from_angle(7 * ggo::pi<float>() / 4 + dangle) * 0.5f * square_size * ggo::sqrt2<float>());
 
 					if (ggo::rand<int>(0, 8) == 0)
 					{

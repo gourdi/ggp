@@ -33,12 +33,12 @@ namespace ggo
   template <typename data_t>
   using pos3  = vec3<data_t>;
 
-  using vec3i = vec3<int>;
-  using pos3i = vec3<int>;
-  using vec3f = vec3<float>;
-  using pos3f = vec3<float>;
-  using vec3d = vec3<double>;
-  using pos3d = vec3<double>;
+  using vec3_i = vec3<int>;
+  using pos3_i = vec3<int>;
+  using vec3_f = vec3<float>;
+  using pos3_f = vec3<float>;
+  using vec3_d = vec3<double>;
+  using pos3_d = vec3<double>;
 }
 
 /////////////////////////////////////////////////////////////////////

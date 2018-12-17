@@ -37,7 +37,7 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
       int pos_x = ggo::rand<int>(0, width());
       int pos_y = ggo::rand<int>(0, height());
         
-			ggo::pos2f pt;
+			ggo::pos2_f pt;
 			pt.x() = pos_x + ggo::rand<float>(0, 0.1f * min_size());
 			pt.y() = pos_y + ggo::rand<float>(0, 0.1f * min_size());
 			spline.add_control_point(pt);
@@ -46,19 +46,19 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 		// Build the extended segments.
 		int segments_count = 5 + 10 * counter / counter_max;
 		auto points = spline.evaluate(segments_count);
-    ggo::multi_shape_float extended_segments_inside;
-    ggo::multi_shape_float extended_segments_border;
+    ggo::multi_shape_f extended_segments_inside;
+    ggo::multi_shape_f extended_segments_border;
 
 		for (int i = 1; i < points.size(); ++i)
 		{
-			const ggo::pos2f & p1 = points[i - 1];
-			const ggo::pos2f & p2 = points[i];
+			const ggo::pos2_f & p1 = points[i - 1];
+			const ggo::pos2_f & p2 = points[i];
 
 			float inside_width = 0.003f * min_size();
       float border_width = 0.005f * min_size();
         
-      auto inside_segment = std::make_shared<ggo::capsule_float>(p1, p2, inside_width);
-      auto border_segment = std::make_shared<ggo::capsule_float>(p1, p2, border_width);
+      auto inside_segment = std::make_shared<ggo::capsule_f>(p1, p2, inside_width);
+      auto border_segment = std::make_shared<ggo::capsule_f>(p1, p2, border_width);
 			
 			extended_segments_inside.add_shape(inside_segment);
 			extended_segments_border.add_shape(border_segment);

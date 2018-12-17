@@ -13,10 +13,10 @@ namespace ggo
   {
     int                             _x;
     int                             _y;
-    std::vector<ggo::segment_float> _segments;
+    std::vector<ggo::segment_f> _segments;
   };
 
-  std::vector<ggo::marching_square_cell> marching_squares(ggo::func2d func, ggo::pos2f inf, int steps, float step_size);
+  std::vector<ggo::marching_square_cell> marching_squares(ggo::func2d func, ggo::pos2_f inf, int steps, float step_size);
 }
 
 #endif

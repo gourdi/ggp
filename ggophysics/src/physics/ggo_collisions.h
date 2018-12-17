@@ -8,10 +8,10 @@ namespace ggo
   // The output normal is the one of the first shape parameter.
 
   bool test_collision(const ggo::half_plane<float> & half_plane, const ggo::oriented_box<float> & box,
-                      ggo::pos2f & pos, ggo::vec2f & normal);
+                      ggo::pos2_f & pos, ggo::vec2_f & normal);
 
   bool test_collision(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2,
-                      ggo::pos2f & pos, ggo::vec2f & normal);
+                      ggo::pos2_f & pos, ggo::vec2_f & normal);
 }
 
 #endif

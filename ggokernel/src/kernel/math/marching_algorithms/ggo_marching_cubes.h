@@ -11,7 +11,7 @@ namespace ggo
 
   struct marching_cube_cell
   {
-    marching_cube_cell(int x, int y, int z, const box3d_data<float> & cell_box, std::vector<ggo::triangle3d_float> triangles)
+    marching_cube_cell(int x, int y, int z, const box3d_data<float> & cell_box, std::vector<ggo::triangle3d_f> triangles)
       :
       _x(x), _y(y), _z(z), _cell_box(cell_box), _triangles(std::move(triangles))
     {}
@@ -19,11 +19,11 @@ namespace ggo
     int                                 _x;
     int                                 _y;
     int                                 _z;
-    ggo::box3d_float                    _cell_box; // Might be larger than the bouding box of the triangles.
-    std::vector<ggo::triangle3d_float>  _triangles;
+    ggo::box3d_f                    _cell_box; // Might be larger than the bouding box of the triangles.
+    std::vector<ggo::triangle3d_f>  _triangles;
   };
 
-  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::pos3f inf, int steps, float step_size);
+  std::vector<ggo::marching_cube_cell> marching_cubes(ggo::func3d func, ggo::pos3_f inf, int steps, float step_size);
 }
 
 #endif

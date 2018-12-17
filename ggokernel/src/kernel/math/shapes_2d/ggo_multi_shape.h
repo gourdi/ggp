@@ -58,6 +58,6 @@ namespace ggo
 
 namespace ggo
 {
-  using multi_shape_float   = multi_shape<float>;
-  using multi_shape_double  = multi_shape<double>;
+  using multi_shape_f = multi_shape<float>;
+  using multi_shape_d = multi_shape<double>;
 }

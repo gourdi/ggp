@@ -60,7 +60,7 @@ namespace ggo
 
 namespace ggo
 {
-  using oriented_box_float  = oriented_box<float>;
-  using oriented_box_double = oriented_box<double>;
+  using oriented_box_f = oriented_box<float>;
+  using oriented_box_d = oriented_box<double>;
 }
 

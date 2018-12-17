@@ -33,7 +33,7 @@ namespace ggo
 
 namespace ggo
 {
-  using half_plane_float  = half_plane<float>;
-  using half_plane_double = half_plane<double>;
+  using half_plane_f = half_plane<float>;
+  using half_plane_d = half_plane<double>;
 }
 

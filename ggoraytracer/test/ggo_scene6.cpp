@@ -18,7 +18,7 @@ GGO_TEST(test_scene, scene6)
   // Objects.
   for (int i = -2; i <= 5; ++i)
   {
-    ggo::sphere3d_float sphere({ static_cast<float>(i), 2.f * static_cast<float>(i), 0.f }, 0.5f);
+    ggo::sphere3d_f sphere({ static_cast<float>(i), 2.f * static_cast<float>(i), 0.f }, 0.5f);
     scene.add_diffuse_object<ggo::discard_all>(sphere, ggo::yellow_material());
   }
 
@@ -27,8 +27,8 @@ GGO_TEST(test_scene, scene6)
   const int height = 240;
   const int samples_count = 48;
 
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.5);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.5);
   ggo::multi_sampling_isometric_camera camera(width, height, camera_basis, 3.f, 50.f, 2.f);
 
   ggo::global_sampling_renderer renderer(camera, samples_count);

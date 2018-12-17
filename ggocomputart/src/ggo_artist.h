@@ -20,14 +20,14 @@ namespace ggo
     artist(int width, int height, int line_step, image_format format) : _width(width), _height(height), _line_step(line_step), _format(format) {}
 
     // Static methods.
-    static ggo::pos2f	map_fill(const ggo::pos2f & point, float inf, float sup, int render_width, int render_height);
+    static ggo::pos2_f  map_fill(const ggo::pos2_f & point, float inf, float sup, int render_width, int render_height);
 
-    static ggo::pos2f get_random_point(int render_width, int render_height);
-    static ggo::pos2f get_random_point(float margin, int render_width, int render_height);
-    static ggo::pos2f	get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom, int render_width, int render_height);
+    static ggo::pos2_f  get_random_point(int render_width, int render_height);
+    static ggo::pos2_f  get_random_point(float margin, int render_width, int render_height);
+    static ggo::pos2_f	get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom, int render_width, int render_height);
 
-    static ggo::pos2f horz_mirror(const ggo::pos2f & p, int render_height);
-    static ggo::pos2f vert_mirror(const ggo::pos2f & p, int render_width);
+    static ggo::pos2_f  horz_mirror(const ggo::pos2_f & p, int render_height);
+    static ggo::pos2_f  vert_mirror(const ggo::pos2_f & p, int render_width);
 
     // Accessors.
     int                       width() const { return _width; }
@@ -40,26 +40,26 @@ namespace ggo
     ggo::image_format         format() const { return _format; }
 
 
-    ggo::pos2f                get_random_point() const { return get_random_point(_width, _height); }
-    ggo::pos2f                get_random_point(float margin) const { return get_random_point(margin, _width, _height); }
-    ggo::pos2f                get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
+    ggo::pos2_f                get_random_point() const { return get_random_point(_width, _height); }
+    ggo::pos2_f                get_random_point(float margin) const { return get_random_point(margin, _width, _height); }
+    ggo::pos2_f                get_random_point(float margin_left, float margin_right, float margin_top, float margin_bottom) const {
       return get_random_point(margin_left, margin_right, margin_top, margin_bottom, _width, _height);
     }
 
     // Mapping onto static methods.
-    ggo::pos2f	              map_fill(const ggo::pos2f & point, float inf, float sup) const;
+    ggo::pos2_f	              map_fill(const ggo::pos2_f & point, float inf, float sup) const;
 
     float                     map_fit(float value, float inf, float sup) const;
-    ggo::pos2f                map_fit(const ggo::pos2f & point, float inf, float sup) const;
-    void	                    map_fit(ggo::rect_float & rect, float inf, float sup) const;
-    void	                    map_fit(ggo::disc_float & disc, float inf, float sup) const;
+    ggo::pos2_f               map_fit(const ggo::pos2_f & point, float inf, float sup) const;
+    void	                    map_fit(ggo::rect_f & rect, float inf, float sup) const;
+    void	                    map_fit(ggo::disc_f & disc, float inf, float sup) const;
 
-    void	                    map_fit(ggo::disc_double & disc, double inf, double sup) const;
+    void	                    map_fit(ggo::disc_d & disc, double inf, double sup) const;
 
-    ggo::pos2f                get_center() const;
+    ggo::pos2_f               get_center() const;
 
-    ggo::pos2f                horz_mirror(const ggo::pos2f & p) const { return horz_mirror(p, _height); }
-    ggo::pos2f                vert_mirror(const ggo::pos2f & p) const { return vert_mirror(p, _width); }
+    ggo::pos2_f               horz_mirror(const ggo::pos2_f & p) const { return horz_mirror(p, _height); }
+    ggo::pos2_f               vert_mirror(const ggo::pos2_f & p) const { return vert_mirror(p, _width); }
 
     template <image_format format, sampling smp, typename shape_t>
     void paint(void * buffer, const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity) const

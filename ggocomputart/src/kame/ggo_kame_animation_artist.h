@@ -24,12 +24,12 @@ namespace ggo
 
     struct timed_vertex
     {
-      timed_vertex(const ggo::pos3f & v) : _prv(v), _cur(v), _laplacian(v), _smoothed(v) {}
+      timed_vertex(const ggo::pos3_f & v) : _prv(v), _cur(v), _laplacian(v), _smoothed(v) {}
       
-      ggo::pos3f _prv;
-      ggo::pos3f _cur;
-      ggo::pos3f _laplacian;
-      ggo::pos3f _smoothed;
+      ggo::pos3_f _prv;
+      ggo::pos3_f _cur;
+      ggo::pos3_f _laplacian;
+      ggo::pos3_f _smoothed;
 
       void set_length(float l)
       {
@@ -48,20 +48,20 @@ namespace ggo
       const timed_vertex * _v2;
       const timed_vertex * _v3;
 
-      ggo::vec3f get_normal() const
+      ggo::vec3_f get_normal() const
       {
-        const ggo::triangle3d_float triangle(_v1->_prv, _v2->_prv, _v3->_prv);
+        const ggo::triangle3d_f triangle(_v1->_prv, _v2->_prv, _v3->_prv);
         return triangle.get_normal();
       }
     };
 
-    class disp_interpolator : public random_interpolator_abc<ggo::pos2f, float>
+    class disp_interpolator : public random_interpolator_abc<ggo::pos2_f, float>
     {
-      void get_random_data(ggo::pos2f & data, float & dt) override
+      void get_random_data(ggo::pos2_f & data, float & dt) override
       {
         float angle = ggo::rand<float>(0.f, 2 * ggo::pi<float>());
         float radius = ggo::rand<float>(0.f, 1.f);
-        data = radius * ggo::vec2f::from_angle(angle);
+        data = radius * ggo::vec2_f::from_angle(angle);
         dt = ggo::rand<float>(25, 50);
       }
     };
@@ -73,11 +73,11 @@ namespace ggo
       std::map<const timed_vertex *, std::vector<const timed_vertex *>> _neighbors;
       float                                                             _scale;
       float                                                             _thickness;
-      ggo::pos2f                                                        _center;
+      ggo::pos2_f                                                       _center;
       disp_interpolator                                                 _disp_interpolator;
-      ggo::vec2f                                                        _disp;
+      ggo::vec2_f                                                       _disp;
 
-      ggo::pos2f  proj(const ggo::pos2f & p) const;
+      ggo::pos2_f proj(const ggo::pos2_f & p) const;
       void        update();
       void        paint(void * buffer, const animation_artist_abc & artist) const;
     };

@@ -18,32 +18,32 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
   _shake_counter = 5;
 
   // Create the particles.
-  ggo::pos2f pos(ggo::rand<float>(0.3f, 0.7f), ggo::rand<float>(0.3f, 0.7f));
+  ggo::pos2_f pos(ggo::rand<float>(0.3f, 0.7f), ggo::rand<float>(0.3f, 0.7f));
 
   for (int i = 0; i < 400; ++i)
   {
     const float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
     const float l = ggo::rand<float>(0.f, 0.02f);
 
-    std::array<ggo::pos2f, substeps_count> particle;
-    particle.fill(pos + ggo::vec2f(l * cos(a), l * sin(a)));
+    std::array<ggo::pos2_f, substeps_count> particle;
+    particle.fill(pos + ggo::vec2_f(l * cos(a), l * sin(a)));
     _particles.push_back(particle);
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   // Update the particles system.
   for (auto & particle : _particles)
   {
-    ggo::pos2f cur_pos = particle[particle.size() - 1];
-    ggo::pos2f prv_pos = particle[particle.size() - 2];
+    ggo::pos2_f cur_pos = particle[particle.size() - 1];
+    ggo::pos2_f prv_pos = particle[particle.size() - 2];
 
     for (int substep = 0; substep < substeps_count; ++substep)
     {
       // The further the attractor, the more the particle is attracted.
-      ggo::vec2f force = _attractor - cur_pos;
+      ggo::vec2_f force = _attractor - cur_pos;
 
       // Clamp force.
       float l = length(force);
@@ -69,7 +69,7 @@ void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t curs
       particle[particle.size() - 2] = particle[particle.size() - 1];
       float a = ggo::rand<float>(0, 2 * ggo::pi<float>());
       float l = ggo::rand<float>(0.8f, 1 / 0.8f) * 0.00005f;
-      particle[particle.size() - 1] = particle[particle.size() - 2] + ggo::vec2f(l * cos(a), l * sin(a));
+      particle[particle.size() - 1] = particle[particle.size() - 2] + ggo::vec2_f(l * cos(a), l * sin(a));
     }
 
     _shake_counter = ggo::rand<int>(30, 80);
@@ -79,10 +79,10 @@ void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t curs
   if (--_attractor_counter <= 0)
   {
     float hypot_max = 0.f;
-    ggo::pos2f new_attractor;
+    ggo::pos2_f new_attractor;
     for (int i = 0; i < 4; ++i)
     {
-      ggo::pos2f pos{ ggo::rand<float>(), ggo::rand<float>() };
+      ggo::pos2_f pos{ ggo::rand<float>(), ggo::rand<float>() };
       float hypot_cur = ggo::hypot(_particles.front().back(), _attractor);
       if (hypot_cur > hypot_max)
       {
@@ -113,10 +113,10 @@ void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, c
   {
     for (const auto & pos : particle)
     {
-      ggo::pos2f render_pt = map_fit(pos, 0, 1);
+      ggo::pos2_f render_pt = map_fit(pos, 0, 1);
 
       ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
-        ggo::disc_float(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
+        ggo::disc_f(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
     }
   }
 }

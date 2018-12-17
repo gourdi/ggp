@@ -17,7 +17,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f solid_color_material::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f solid_color_material::get_color(const ggo::pos3_f & pos) const
   {
     return _color;
   }

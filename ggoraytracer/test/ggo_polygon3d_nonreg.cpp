@@ -12,8 +12,8 @@ void test_polygon3d()
   const int height = 400;
   
   // The camera.
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), ggo::pi<float>() / 2);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), ggo::pi<float>() / 2);
   ggo::mono_sampling_point_camera camera(width, height, camera_basis, 0.1f);
   
   // The scene.
@@ -24,7 +24,7 @@ void test_polygon3d()
   scene.add_point_light(ggo::white_32f(), { 50.f, 0.f, 0.f });
 
   // Objects.
-  auto sphere = ggo::polygon3d_float::create_sphere(2, 16, 8);
+  auto sphere = ggo::polygon3d_f::create_sphere(2, 16, 8);
   scene.add_diffuse_object<ggo::discard_all>(sphere, ggo::red_material());
   
   // Rendering.

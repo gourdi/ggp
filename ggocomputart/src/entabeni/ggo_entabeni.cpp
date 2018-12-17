@@ -104,27 +104,27 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
                                   float z,
                                   float angle)
 {
-  ggo::basis3d_float basis;
+  ggo::basis3d_f basis;
   basis.move(0.f, 0.f, z);
 
   const float far = 100.0f;
 
-  auto project = [&](const ggo::pos3f & v)
+  auto project = [&](const ggo::pos3_f & v)
   {
     float radius = 1.1f - v.z();
     float x_3d = radius * std::cos(angle + v.x());
     float y_3d = radius * std::sin(angle + v.x());
     float z_3d = v.y();
 
-    ggo::pos3f pos3d(x_3d, y_3d, z_3d);
-    ggo::pos2f proj = basis.project(pos3d, 0.25f, width, height);
+    ggo::pos3_f pos3d(x_3d, y_3d, z_3d);
+    ggo::pos2_f proj = basis.project(pos3d, 0.25f, width, height);
 
     return std::make_tuple(pos3d, proj);
   };
 
-  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u>> shapes;
+  std::vector<ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>> shapes;
 
-  auto paint_triangle = [&](const ggo::pos3f & v1, const ggo::pos3f & v2, const ggo::pos3f & v3)
+  auto paint_triangle = [&](const ggo::pos3_f & v1, const ggo::pos3_f & v2, const ggo::pos3_f & v3)
   {
     auto p1 = project(v1);
     auto p2 = project(v2);
@@ -134,8 +134,8 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
       return; // Triangle behind the camera.
     }
 
-    ggo::pos3f center = (std::get<0>(p1) + std::get<0>(p2) + std::get<0>(p3)) / 3.f;
-    ggo::vec3f diff = center - basis.pos();
+    ggo::pos3_f center = (std::get<0>(p1) + std::get<0>(p2) + std::get<0>(p3)) / 3.f;
+    ggo::vec3_f diff = center - basis.pos();
 
     float dist = ggo::length(diff);
     if (dist > far)
@@ -143,10 +143,10 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
       return;
     }
     
-    float altitude = ggo::hypot(ggo::pos2f(center.x(), center.y()));
+    float altitude = ggo::hypot(ggo::pos2_f(center.x(), center.y()));
 
     ggo::rgb_8u triangle_color = ggo::convert_color_to<ggo::rgb_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black_32f()));
-    ggo::triangle2d_float triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
+    ggo::triangle2d_f triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
     shapes.emplace_back(triangle, triangle_color);
   };
 
@@ -156,11 +156,11 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
   {
     for (int x = 0; x < grid.width() - 1; ++x)
     {
-      ggo::pos3f v1(delta * x, -delta * y, grid(x, y));
-      ggo::pos3f v2(delta * x, -delta * (y + 1), grid(x, y + 1));
-      ggo::pos3f v3(delta * (x + 1), -delta * y, grid(x + 1, y));
-      ggo::pos3f v4(delta * (x + 1), -delta * (y + 1), grid(x + 1, y + 1));
-      ggo::pos3f v5(delta * (x + 0.5f), -delta * (y + 0.5f), 0.25f * (grid(x, y) + grid(x, y + 1) + grid(x + 1, y) + grid(x + 1, y + 1)));
+      ggo::pos3_f v1(delta * x, -delta * y, grid(x, y));
+      ggo::pos3_f v2(delta * x, -delta * (y + 1), grid(x, y + 1));
+      ggo::pos3_f v3(delta * (x + 1), -delta * y, grid(x + 1, y));
+      ggo::pos3_f v4(delta * (x + 1), -delta * (y + 1), grid(x + 1, y + 1));
+      ggo::pos3_f v5(delta * (x + 0.5f), -delta * (y + 0.5f), 0.25f * (grid(x, y) + grid(x, y + 1) + grid(x + 1, y) + grid(x + 1, y + 1)));
 
       paint_triangle(v5, v2, v4);
       paint_triangle(v5, v1, v2);

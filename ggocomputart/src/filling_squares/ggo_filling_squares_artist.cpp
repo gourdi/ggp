@@ -12,8 +12,8 @@ std::vector<ggo::filling_squares_artist::multi_square> ggo::filling_squares_arti
 	
 	hue = ggo::rand<float>();
 	
-	ggo::pos2f center(static_cast<float>(width) / 2.f, static_cast<float>(height) / 2.f);
-	std::vector<ggo::pos2f> centers;
+	ggo::pos2_f center(static_cast<float>(width) / 2.f, static_cast<float>(height) / 2.f);
+	std::vector<ggo::pos2_f> centers;
 	centers.push_back(center);
 	
 	for (int i = 0; i < count; ++i)
@@ -24,7 +24,7 @@ std::vector<ggo::filling_squares_artist::multi_square> ggo::filling_squares_arti
 		int index = ggo::rand<int>(0, static_cast<int>(centers.size()) - 1);
 		multi_square._pos = centers[index];
 
-		ggo::pos2f new_center(centers[index]);
+		ggo::pos2_f new_center(centers[index]);
 		new_center.x() += ggo::rand<float>(-range, range);
 		new_center.y() += ggo::rand<float>(-range, range);
 		

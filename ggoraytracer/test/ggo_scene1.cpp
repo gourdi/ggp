@@ -16,18 +16,18 @@ GGO_TEST(test_scene, scene1)
   scene.add_point_light(ggo::white_32f(), { -20.f, -20.f, 50.f });
 
   // Objects.
-  ggo::sphere3d_float sphere({ -2.f, 0.f, 0.f }, 1.f);
+  ggo::sphere3d_f sphere({ -2.f, 0.f, 0.f }, 1.f);
   auto & sphere_object = scene.add_diffuse_object<ggo::discard_basis | ggo::discard_roughness | ggo::discard_reflection>(sphere, ggo::red_material());
   sphere_object.set_phong(4, 250);
   
-  ggo::box3d_float box_shape(-0.7f, 0.7f, -0.8f, 0.8f, -0.9f, 0.9f);
+  ggo::box3d_f box_shape(-0.7f, 0.7f, -0.8f, 0.8f, -0.9f, 0.9f);
   auto & box_object = scene.add_diffuse_object<ggo::discard_phong | ggo::discard_reflection | ggo::discard_roughness>(box_shape, ggo::green_material());
-  box_object.basis().rotate(ggo::ray3d_float::O_X(), 0.1f);
-  box_object.basis().rotate(ggo::ray3d_float::O_Y(), 0.2f);
-  box_object.basis().rotate(ggo::ray3d_float::O_Z(), 0.3f);
+  box_object.basis().rotate(ggo::ray3d_f::O_X(), 0.1f);
+  box_object.basis().rotate(ggo::ray3d_f::O_Y(), 0.2f);
+  box_object.basis().rotate(ggo::ray3d_f::O_Z(), 0.3f);
   box_object.basis().move(2, 0, 1);
 
-  ggo::plane3d_float plane({ 0.f, 0.f, 1.f }, -1.f);
+  ggo::plane3d_f plane({ 0.f, 0.f, 1.f }, -1.f);
   scene.add_diffuse_object<ggo::discard_all>(plane, ggo::white_material());
 
   // Rendering.
@@ -35,8 +35,8 @@ GGO_TEST(test_scene, scene1)
   const int height = 480;
   const int samples_count = 92;
 
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.5f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.5f);
 
   ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);

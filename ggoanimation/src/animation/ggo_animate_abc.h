@@ -41,22 +41,22 @@ namespace ggo
   {
   public:
 
-                position_animate_abc(const ggo::pos2f & pos, int start_offset = 0) : animate_abc(start_offset), _pos(pos) {};
+                position_animate_abc(const ggo::pos2_f & pos, int start_offset = 0) : animate_abc(start_offset), _pos(pos) {};
 
-    ggo::pos2f	get_position() const { return _pos; }
-    void        set_position(const ggo::pos2f & pos) { _pos = pos; }
+    ggo::pos2_f	get_position() const { return _pos; }
+    void        set_position(const ggo::pos2_f & pos) { _pos = pos; }
 
   private:
 
             bool  update(int frame_index) override;
-    virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
+    virtual bool  update(int frame_index, const ggo::pos2_f & pos) = 0;
 
             void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const override;
-    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const = 0;
+    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const = 0;
 
   private:
 
-    ggo::pos2f	_pos;
+    ggo::pos2_f	_pos;
   };
 }
 
@@ -68,25 +68,25 @@ namespace ggo
   {
   public:
 
-                        path_animate_abc(const ggo::pos2f & pos, ggo::path_abc * path, int start_offset = 0) : ggo::animate_abc(start_offset), _start_pos(pos), _path(path) {};
+                        path_animate_abc(const ggo::pos2_f & pos, ggo::path_abc * path, int start_offset = 0) : ggo::animate_abc(start_offset), _start_pos(pos), _path(path) {};
     virtual		   			 ~path_animate_abc() { delete _path; }
 
-            ggo::pos2f  get_position() const { return _start_pos; };
-            void        set_position(const ggo::pos2f & pos) { _start_pos = pos; };
+            ggo::pos2_f  get_position() const { return _start_pos; };
+            void        set_position(const ggo::pos2_f & pos) { _start_pos = pos; };
             void        set_position(float x, float y) { _start_pos.x() = x; _start_pos.y() = y; };
 
   private:
 
             bool  update(int frame_index) override;
-    virtual bool  update(int frame_index, const ggo::pos2f & pos) = 0;
+    virtual bool  update(int frame_index, const ggo::pos2_f & pos) = 0;
 
             void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index) const override;
-    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2f & pos) const = 0;
+    virtual void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const = 0;
 
   private:
 
-    ggo::pos2f	    _start_pos;
-    ggo::pos2f	    _cur_pos;
+    ggo::pos2_f	    _start_pos;
+    ggo::pos2_f	    _cur_pos;
     ggo::path_abc *	_path;
   };
 }

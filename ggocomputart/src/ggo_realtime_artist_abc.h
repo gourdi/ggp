@@ -20,13 +20,13 @@ namespace ggo
 
     static realtime_artist_abc * create(realtime_artist_id artist_id, int width, int height, int line_step, ggo::image_format format);
 
-    void preprocess_frame(uint32_t cursor_events, ggo::pos2i cursor_pos);
+    void preprocess_frame(uint32_t cursor_events, ggo::pos2_i cursor_pos);
     void render_tile(void * buffer, const ggo::rect_int & clipping);
     bool finished();
 
   private:
 
-    virtual void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) = 0;
+    virtual void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) = 0;
     virtual void render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) = 0;
     virtual bool finished(int frame_index) const = 0;
 

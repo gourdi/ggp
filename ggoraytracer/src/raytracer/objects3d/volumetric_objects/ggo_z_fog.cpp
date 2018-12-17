@@ -14,7 +14,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f z_fog::process_segment(const ggo::pos3f & p1, const ggo::pos3f & p2, const ggo::rgb_32f & color) const
+  ggo::rgb_32f z_fog::process_segment(const ggo::pos3_f & p1, const ggo::pos3_f & p2, const ggo::rgb_32f & color) const
   {
     if (p1.z() >= _z_sup && p2.z() >= _z_sup)
     {
@@ -27,8 +27,8 @@ namespace ggo
     else
     {
       // Sort input points.
-      const ggo::pos3f & p_inf = p1.z() <= p2.z() ? p1 : p2;
-      const ggo::pos3f & p_sup = p1.z() >= p2.z() ? p1 : p2;
+      const ggo::pos3_f & p_inf = p1.z() <= p2.z() ? p1 : p2;
+      const ggo::pos3_f & p_sup = p1.z() >= p2.z() ? p1 : p2;
       GGO_ASSERT(p_inf.z() <= p_sup.z());
 
       if (p_inf.z() >= _z_inf && p_sup.z() <= _z_sup)
@@ -41,7 +41,7 @@ namespace ggo
       }
       else
       {
-        ggo::vec3f dir = normalize(p_sup - p_inf);
+        ggo::vec3_f dir = normalize(p_sup - p_inf);
           
         if (p_sup.z() <= _z_sup)
         {
@@ -49,7 +49,7 @@ namespace ggo
           GGO_ASSERT(p_inf.z() <= _z_inf && p_sup.z() >= _z_inf && p_sup.z() <= _z_sup);
               
           float t = (_z_inf - p_inf.z()) / dir.z();
-          ggo::pos3f p = p_inf + t * dir;
+          ggo::pos3_f p = p_inf + t * dir;
               
           GGO_ASSERT(std::abs(p.z() - _z_inf) <= 0.001f);
             
@@ -62,7 +62,7 @@ namespace ggo
           GGO_ASSERT(p_sup.z() >= _z_sup && p_inf.z() >= _z_inf && p_inf.z() <= _z_sup);
               
           float t = (_z_sup - p_inf.z()) / dir.z();
-          ggo::pos3f p = p_inf + t * dir;
+          ggo::pos3_f p = p_inf + t * dir;
               
           GGO_ASSERT(std::abs(p.z() - _z_sup) <= 0.001f);
               
@@ -75,8 +75,8 @@ namespace ggo
               
           float t1 = (_z_inf - p_inf.z()) / dir.z();
           float t2 = (_z_sup - p_inf.z()) / dir.z();
-          ggo::pos3f p1 = p_inf + t1 * dir;
-          ggo::pos3f p2 = p_inf + t2 * dir;
+          ggo::pos3_f p1 = p_inf + t1 * dir;
+          ggo::pos3_f p2 = p_inf + t2 * dir;
               
           GGO_ASSERT(std::abs(p1.z() -_z_inf) < 0.001f);
           GGO_ASSERT(std::abs(p2.z() -_z_sup) < 0.001f);
@@ -88,7 +88,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f z_fog::process_background_ray(const ggo::ray3d_float & ray, const ggo::rgb_32f & color) const
+  ggo::rgb_32f z_fog::process_background_ray(const ggo::ray3d_f & ray, const ggo::rgb_32f & color) const
   {
     if (std::abs(ray.dir().z()) < 0.001)
     {
@@ -113,14 +113,14 @@ namespace ggo
       else
       if (t_inf <= 0 && t_sup >= 0)
       {
-        ggo::pos3f p = ray.pos() + t_sup * ray.dir();
+        ggo::pos3_f p = ray.pos() + t_sup * ray.dir();
             
         return map_color(color, p, ray.pos());
       }
       else
       if (t_inf >= 0 && t_sup <= 0)
       {
-        ggo::pos3f p = ray.pos() + t_inf * ray.dir();
+        ggo::pos3_f p = ray.pos() + t_inf * ray.dir();
             
         return map_color(color, p, ray.pos());
       }
@@ -128,8 +128,8 @@ namespace ggo
       {
         GGO_ASSERT(t_inf >= 0 && t_sup >= 0);
            
-        ggo::pos3f p1 = ray.pos() + t_inf * ray.dir();
-        ggo::pos3f p2 = ray.pos() + t_sup * ray.dir();
+        ggo::pos3_f p1 = ray.pos() + t_inf * ray.dir();
+        ggo::pos3_f p2 = ray.pos() + t_sup * ray.dir();
             
         return map_color(color, p1, p2);
       }
@@ -137,7 +137,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f z_fog::map_color(const ggo::rgb_32f & color, const ggo::pos3f & p1, const ggo::pos3f & p2) const
+  ggo::rgb_32f z_fog::map_color(const ggo::rgb_32f & color, const ggo::pos3_f & p1, const ggo::pos3_f & p2) const
   {
     float dist = ggo::distance(p1, p2);
 

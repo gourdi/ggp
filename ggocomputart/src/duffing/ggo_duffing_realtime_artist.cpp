@@ -17,7 +17,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   _paint_color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.0f, 0.75f);
   _hue += 0.0005f;
@@ -90,7 +90,7 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
   for (const auto & point : _points)
   {
     ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
-      ggo::disc_float(point, _radius), brush, blender, clipping);
+      ggo::disc_f(point, _radius), brush, blender, clipping);
   }
 }
 

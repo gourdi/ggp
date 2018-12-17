@@ -11,9 +11,9 @@ GGO_TEST(rectangle3d, test)
   const int size = 400;
 
   // The camera.
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 50.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.1f);
-  camera_basis.rotate(ggo::ray3d_float::O_Z(), 0.5f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 50.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.1f);
+  camera_basis.rotate(ggo::ray3d_f::O_Z(), 0.5f);
   ggo::multi_sampling_point_camera camera(size, size, camera_basis, 0.1f, 50.f, 1.f);
 
   // The scene.

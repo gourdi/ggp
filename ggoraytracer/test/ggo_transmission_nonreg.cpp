@@ -16,8 +16,8 @@ GGO_TEST(transmission, test)
   const int samples_count = 56;
 
   // The camera.
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 40.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.3f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 40.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.3f);
   ggo::multi_sampling_point_camera camera(width, height, camera_basis, 0.1f, 40.f, 0.1f);
 
   // The scene.
@@ -31,13 +31,13 @@ GGO_TEST(transmission, test)
   auto densities_it = densities.cbegin();
   for (int i = -2; i <= 2; ++i)
   {
-    scene.add_transparent_object<ggo::discard_basis>(ggo::sphere3d_float({ 2.f * static_cast<float>(i), 0.f, 0.f }, 1.f), ggo::white_32f(), *densities_it++);
+    scene.add_transparent_object<ggo::discard_basis>(ggo::sphere3d_f({ 2.f * static_cast<float>(i), 0.f, 0.f }, 1.f), ggo::white_32f(), *densities_it++);
   }
 
-  scene.add_diffuse_object<ggo::discard_basis>(ggo::box3d_float(-6.f, 6.f, 5.f, 5.5f, -1.f, -0.5f), ggo::red_material());
+  scene.add_diffuse_object<ggo::discard_basis>(ggo::box3d_f(-6.f, 6.f, 5.f, 5.5f, -1.f, -0.5f), ggo::red_material());
 
   ggo::checker_xy_material checker_material(ggo::white_32f(), ggo::gray_32f(), 0.5f);
-  scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_float({ 0.f, 0.f, 1.f }, -1.f), checker_material);
+  scene.add_diffuse_object<ggo::discard_basis>(ggo::plane3d_f({ 0.f, 0.f, 1.f }, -1.f), checker_material);
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, samples_count);

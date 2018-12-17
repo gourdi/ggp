@@ -90,7 +90,7 @@ _transforms(32)
     transform._center_end.x() = ggo::rand<float>(-0.25, 1.25) * width;
     transform._center_end.y() = ggo::rand<float>(-0.25, 1.25) * height;
     transform._variance = 0.05f * ggo::square(min_size());
-    transform._disp = 0.5f * min_size() * ggo::pos2f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
+    transform._disp = 0.5f * min_size() * ggo::pos2_f::from_angle(ggo::rand<float>(0, 2 * ggo::pi<float>()));
   }
 
   float x = 0;
@@ -120,7 +120,7 @@ void ggo::distorsion_animation_artist::render_frame(void * buffer, int frame_ind
   {
     transforms.emplace_back(
       ggo::ease_inout(frame_index, frames_count(), transform._center_start, transform._center_end),
-      ggo::ease_inout(frame_index, frames_count(), ggo::vec2f(0.f, 0.f), transform._disp),
+      ggo::ease_inout(frame_index, frames_count(), ggo::vec2_f(0.f, 0.f), transform._disp),
       transform._variance);
   }
 

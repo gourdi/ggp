@@ -12,7 +12,7 @@ namespace ggo
     
     virtual              ~material_abc() {}
       
-    virtual	ggo::rgb_32f  get_color(const ggo::pos3f & pos) const = 0;
+    virtual	ggo::rgb_32f  get_color(const ggo::pos3_f & pos) const = 0;
   };
 }
 

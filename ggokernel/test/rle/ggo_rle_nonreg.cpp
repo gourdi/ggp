@@ -8,7 +8,7 @@ GGO_TEST(rle, same_value)
   GGO_CHECK(rle_data[0].first == 1);
   GGO_CHECK(rle_data[0].second == 4);
 
-  ggo::array_int decoded(4);
+  ggo::array_i decoded(4);
   ggo::rle_decode(rle_data, decoded);
   GGO_CHECK(decoded(0) == 1);
   GGO_CHECK(decoded(1) == 1);
@@ -29,7 +29,7 @@ GGO_TEST(rle, single_values)
   GGO_CHECK(rle_data[3].first == 4);
   GGO_CHECK(rle_data[3].second == 1);
 
-  ggo::array_int decoded(4);
+  ggo::array_i decoded(4);
   ggo::rle_decode(rle_data, decoded);
   GGO_CHECK(decoded(0) == 1);
   GGO_CHECK(decoded(1) == 3);

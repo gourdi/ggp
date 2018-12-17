@@ -24,15 +24,15 @@ namespace ggo
 
     struct fluid_source
     {
-      ggo::disc_double  _disc;
-      double				    _speed;
-      double				    _angle;
-      double				    _angle_amplitude;
-      double				    _angle_offset;
-      double				    _wave_length;
-      int					      _timer1;
-      int					      _timer2;
-      double				    _opacity;
+      ggo::disc_d _disc;
+      double			_speed;
+      double			_angle;
+      double			_angle_amplitude;
+      double			_angle_offset;
+      double			_wave_length;
+      int					_timer1;
+      int					_timer2;
+      double			_opacity;
     };
 
     double                      _cell_size;

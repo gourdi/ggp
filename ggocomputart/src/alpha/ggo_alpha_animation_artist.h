@@ -22,7 +22,7 @@ namespace ggo
     {
     public:
 
-            line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color);
+            line(const ggo::pos2_f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color);
 
       bool	update(int width, int height);
       void	draw(void * buffer, int width, int height) const;
@@ -32,14 +32,14 @@ namespace ggo
     private:
 
       int				    _counter = 0;
-      ggo::pos2f    _center;
+      ggo::pos2_f   _center;
       float			    _angle = 0.f;
       float			    _angle_offset = 0.f;
       float			    _inner_radius = 0.f;
       float			    _outter_radius = 0.f;
       ggo::rgb_8u   _color;
-      ggo::pos2f    _p1;
-      ggo::pos2f    _p2;
+      ggo::pos2_f   _p1;
+      ggo::pos2_f   _p2;
       float 		    _opacity = 0.f;
       float			    _blur = 0.f;
     };
@@ -48,16 +48,16 @@ namespace ggo
     {
     public:
 
-                        item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
+                        item(const ggo::pos2_f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
 
       bool						  update(int width, int height);
       void						  draw(void * buffer, int width, int height) const;
-      const ggo::pos2f  get_center() const { return _center; };
+      const ggo::pos2_f  get_center() const { return _center; };
 
     private:
 
       std::vector<line> _lines;
-      ggo::pos2f        _center;
+      ggo::pos2_f        _center;
     };
 
     class oscillo

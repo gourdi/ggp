@@ -32,7 +32,7 @@ void ggo::alpha_animation_artist::add_new_item()
 {
   float margin = 0.1f * min_size();
 
-  ggo::pos2f center = get_random_point(margin);
+  ggo::pos2_f center = get_random_point(margin);
 
   // Try to create an item far away from the other already created items.
   if (_items.empty() == false)
@@ -40,7 +40,7 @@ void ggo::alpha_animation_artist::add_new_item()
     float dist = 0;
     for (int i = 0; i < 5; ++i)
     {
-      ggo::pos2f center_cur = get_random_point(margin);
+      ggo::pos2_f center_cur = get_random_point(margin);
       float dist_cur = ggo::distance(_items.front().get_center(), center_cur);
       for (const auto & item : _items)
       {
@@ -181,7 +181,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
   }
   ggo::dct(freq.data(), spat.data(), oscillo_size);
 
-  ggo::multi_shape_float multi_shape;
+  ggo::multi_shape_f multi_shape;
   for (int i = 1; i < oscillo_size; ++i)
   {
     float x1 = (i - 1) * width / float(oscillo_size);
@@ -190,7 +190,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
     float x2 = i * width / float(oscillo_size);
     float y2 = _y + 0.025f * spat(i) * min_size;
 
-    multi_shape.add_shape(std::make_shared<ggo::capsule_float>(ggo::pos2f(x1, y1), ggo::pos2f(x2, y2), 0.001f * min_size));
+    multi_shape.add_shape(std::make_shared<ggo::capsule_f>(ggo::pos2_f(x1, y1), ggo::pos2_f(x2, y2), 0.001f * min_size));
   }
 
   ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
@@ -201,7 +201,7 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
 // ggo_item
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::item::item(const ggo::pos2f & center, float inner_radius, float outter_radius, float hue, float sat, float val)
+ggo::alpha_animation_artist::item::item(const ggo::pos2_f & center, float inner_radius, float outter_radius, float hue, float sat, float val)
   :
   _center(center)
 {
@@ -236,7 +236,7 @@ void ggo::alpha_animation_artist::item::draw(void * buffer, int width, int heigh
 // line
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::line::line(const ggo::pos2f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color)
+ggo::alpha_animation_artist::line::line(const ggo::pos2_f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color)
 {
   _center = center;
   _angle = angle;
@@ -268,13 +268,13 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
   float outter_radius = _outter_radius * (1 + 10 * start_factor);
   float angle = _angle + _angle_offset * start_factor;
 
-  ggo::vec2f offset1 = inner_radius * ggo::vec2f::from_angle(angle);
-  ggo::vec2f offset2 = outter_radius * ggo::vec2f::from_angle(angle);
+  ggo::vec2_f offset1 = inner_radius * ggo::vec2_f::from_angle(angle);
+  ggo::vec2_f offset2 = outter_radius * ggo::vec2_f::from_angle(angle);
 
   const int END_COUNTER = 100;
   if (_counter >= END_COUNTER)
   {
-    ggo::vec2f line_center = 0.5f * (offset1 + offset2);
+    ggo::vec2_f line_center = 0.5f * (offset1 + offset2);
 
     float end_factor = std::pow(0.1f * (_counter - END_COUNTER), 2.5f);
     float dist = ggo::distance(offset1, offset2);
@@ -282,8 +282,8 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
 
     angle = _angle + end_factor;
     line_center *= (1 + end_factor);
-    offset1 = line_center + ggo::vec2f::from_angle(angle) * dist / 2.f;
-    offset2 = line_center - ggo::vec2f::from_angle(angle) * dist / 2.f;
+    offset1 = line_center + ggo::vec2_f::from_angle(angle) * dist / 2.f;
+    offset2 = line_center - ggo::vec2_f::from_angle(angle) * dist / 2.f;
 
     _opacity -= 0.1f * end_factor;
     if (_opacity <= 0)
@@ -306,7 +306,7 @@ void ggo::alpha_animation_artist::line::draw(void * buffer, int width, int heigh
     int min_size = std::min(width, height);
     float line_width = 0.0015f * min_size + 0.1f * min_size * get_start_factor();
 
-    ggo::capsule_float capsule(_p1, _p2, line_width);
+    ggo::capsule_f capsule(_p1, _p2, line_width);
 
     ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
       buffer, width, height, 3 * width, capsule,

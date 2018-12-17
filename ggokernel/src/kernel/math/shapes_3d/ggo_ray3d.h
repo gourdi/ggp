@@ -35,8 +35,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using ray3d_float   = ray3d<float>;
-  using ray3d_double  = ray3d<double>;
+  using ray3d_f = ray3d<float>;
+  using ray3d_d = ray3d<double>;
 }
 //////////////////////////////////////////////////////////////////
 // I/O

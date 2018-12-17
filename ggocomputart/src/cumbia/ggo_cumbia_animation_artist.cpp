@@ -12,7 +12,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
 //////////////////////////////////////////////////////////////
 void ggo::cumbia_animation_artist::render_frame(void * buffer, int frame_index)
 {
-  _camera_basis.rotate(ggo::ray3d_float::O_Z(), 2 * ggo::pi<float>() / frames_count());
+  _camera_basis.rotate(ggo::ray3d_f::O_Z(), 2 * ggo::pi<float>() / frames_count());
 
   ggo::antialiasing_point_camera	camera(width(), height(), _camera_basis, _camera_aperture);
 

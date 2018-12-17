@@ -18,7 +18,7 @@ namespace ggo
 
     scene(std::shared_ptr<const ggo::background3d_abc> background, std::shared_ptr<const ggo::indirect_lighting_abc> indirect_lighting = nullptr);
 
-    point_light & add_point_light(const ggo::rgb_32f & color, const ggo::pos3f & pos);
+    point_light & add_point_light(const ggo::rgb_32f & color, const ggo::pos3_f & pos);
 
     template <uint32_t flags, typename shape_t>
     auto & add_shape_light(const shape_t & shape, const ggo::rgb_32f & color)
@@ -33,11 +33,11 @@ namespace ggo
       return *object;
     }
 
-    auto & add_sphere_light(const ggo::rgb_32f & color, const ggo::pos3f & center, float radius)
+    auto & add_sphere_light(const ggo::rgb_32f & color, const ggo::pos3_f & center, float radius)
     {
       constexpr int flags = ggo::discard_roughness | ggo::discard_phong | ggo::discard_reflection;
 
-      auto & object = add_shape_light<flags>(ggo::centered_sphere3d_float(radius), color);
+      auto & object = add_shape_light<flags>(ggo::centered_sphere3d_f(radius), color);
       object.basis().pos() = center;
 
       return object;

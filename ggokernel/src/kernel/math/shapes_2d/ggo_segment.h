@@ -54,8 +54,8 @@ namespace ggo
 
 namespace ggo
 {
-  using segment_float   = segment<float>;
-  using segment_double  = segment<double>;
+  using segment_f = segment<float>;
+  using segment_d = segment<double>;
 }
 
 namespace ggo

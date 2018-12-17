@@ -26,6 +26,6 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using segment3d_float   = segment3d<float>;
-  using segment3d_double  = segment3d<double>;
+  using segment3d_f = segment3d<float>;
+  using segment3d_d = segment3d<double>;
 }

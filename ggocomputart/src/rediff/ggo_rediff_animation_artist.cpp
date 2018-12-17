@@ -28,7 +28,7 @@ _life(width, height)
   {
     for (int x = 0; x < width; ++x)
     {
-      float dist = ggo::distance(get_center(), ggo::pos2f(static_cast<float>(x), static_cast<float>(y))) / min_size();
+      float dist = ggo::distance(get_center(), ggo::pos2_f(static_cast<float>(x), static_cast<float>(y))) / min_size();
 
       _feed_map(x, y) = ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2);
       _kill_map(x, y) = ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2);
@@ -42,7 +42,7 @@ _life(width, height)
   {
     ggo::paint<ggo::y_32f_yu, ggo::sampling_4x4>(
       _life.data(), width, height, sizeof(float) * height,
-      ggo::disc_float(get_random_point(), 0.01f * min_size()), 1.0f);
+      ggo::disc_f(get_random_point(), 0.01f * min_size()), 1.0f);
   }
 }
 
@@ -98,7 +98,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
   val_map.push_point(x3, 0.0f);
   val_map.push_point(1.0f, 0.0f);
 
-  ggo::vec3f light_dir(0.f, -0.05f, -1.f);
+  ggo::vec3_f light_dir(0.f, -0.05f, -1.f);
   light_dir = ggo::normalize(light_dir);
 
   for (int y = 0; y < height(); ++y)
@@ -106,15 +106,15 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
     for (int x = 0; x < width(); ++x)
     {
       // Compute the normal by computing 4 point around the current pixel.
-      ggo::pos3f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x - 1, y - 1)); // Bottom left
-      ggo::pos3f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x + 1, y + 1)); // Top right
-      ggo::vec3f v1(p_tr - p_bl);
+      ggo::pos3_f p_bl(0.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x - 1, y - 1)); // Bottom left
+      ggo::pos3_f p_tr(1.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x + 1, y + 1)); // Top right
+      ggo::vec3_f v1(p_tr - p_bl);
 
-      ggo::pos3f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x - 1, y + 1)); // Top left.
-      ggo::pos3f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x + 1, y - 1)); // Bottom right.
-      ggo::vec3f v2(p_tl - p_br);
+      ggo::pos3_f p_tl(0.f, 1.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x - 1, y) + _life.at_loop(x, y + 1)) + 0.15f * _life.at_loop(x - 1, y + 1)); // Top left.
+      ggo::pos3_f p_br(1.f, 0.f, 0.45f * _life(x, y) + 0.2f * (_life.at_loop(x + 1, y) + _life.at_loop(x, y - 1)) + 0.15f * _life.at_loop(x + 1, y - 1)); // Bottom right.
+      ggo::vec3_f v2(p_tl - p_br);
 
-      ggo::vec3f normal = ggo::cross(v1, v2);
+      ggo::vec3_f normal = ggo::cross(v1, v2);
       float dot = -ggo::dot(normalize(normal), light_dir);
 
       // Apply lighting.

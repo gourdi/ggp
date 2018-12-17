@@ -45,9 +45,9 @@ namespace ggo
   }
   
   /////////////////////////////////////////////////////////////////////
-  std::vector<ggo::pos2f> halton_2d(int base1, int base2, int count)
+  std::vector<ggo::pos2_f> halton_2d(int base1, int base2, int count)
   {
-    std::vector<ggo::pos2f> result;
+    std::vector<ggo::pos2_f> result;
     
     auto result1 = halton_1d(base1, count);
     auto result2 = halton_1d(base2, count);

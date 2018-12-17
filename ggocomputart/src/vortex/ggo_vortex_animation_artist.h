@@ -21,8 +21,8 @@ namespace ggo
 
     struct vortex_path
     {
-      ggo::pos2f	_start_pos;
-      ggo::pos2f	_end_pos;
+      ggo::pos2_f	_start_pos;
+      ggo::pos2_f	_end_pos;
     };
 
     std::map<ggo::vortex_artist::vortex *, vortex_path> _vortices_paths;

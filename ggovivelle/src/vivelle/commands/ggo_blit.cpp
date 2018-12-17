@@ -33,7 +33,7 @@ namespace ggo
 
     auto blit_image = load_image(*file);
 
-    ggo::pos2i pos = parse_margins(params, "margins", image.size(), blit_image.size());
+    ggo::pos2_i pos = parse_margins(params, "margins", image.size(), blit_image.size());
 
     ggo::dispatch_image_format<blit_dispatch>(blit_image.format(), image.format(),
       blit_image.data(), blit_image.width(), blit_image.height(), blit_image.line_byte_step(),

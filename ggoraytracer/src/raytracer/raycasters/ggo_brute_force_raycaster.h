@@ -14,12 +14,12 @@ namespace ggo
     brute_force_raycaster(std::vector<const ggo::object3d_abc *> objects);
     brute_force_raycaster(const std::vector<std::shared_ptr<const ggo::object3d_abc>> & objects);
 
-    void  process_ray(const ggo::ray3d_float & ray,
+    void  process_ray(const ggo::ray3d_f & ray,
                       std::function<bool(const ggo::object3d_abc *)> func,
                       const ggo::object3d_abc * exclude_object1 = nullptr,
                       const ggo::object3d_abc * exclude_object2 = nullptr) const override;
 
-    void  process_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length,
+    void  process_segment(const ggo::pos3_f & pos, const ggo::vec3_f & dir, float length,
                           std::function<bool(const ggo::object3d_abc *)> func,
                           const ggo::object3d_abc * exclude_object1 = nullptr,
                           const ggo::object3d_abc * exclude_object2 = nullptr) const override;

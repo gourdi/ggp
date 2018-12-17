@@ -52,8 +52,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using sphere3d_double   = sphere3d<double>;
-  using sphere3d_float    = sphere3d<float>;
+  using sphere3d_d = sphere3d<double>;
+  using sphere3d_f = sphere3d<float>;
 }
 
 //////////////////////////////////////////////////////////////

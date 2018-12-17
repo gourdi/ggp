@@ -8,13 +8,13 @@ namespace ggo
   struct oriented_box_body;
 
   float compute_impulse(const ggo::oriented_box_body & body,
-                        const ggo::vec2f & pos,
-                        const ggo::vec2f & normal);
+                        const ggo::vec2_f & pos,
+                        const ggo::vec2_f & normal);
 
   float compute_impulse(const ggo::oriented_box_body & body1,
                         const ggo::oriented_box_body & body2,
-                        const ggo::vec2f & pos,
-                        const ggo::vec2f & normal);
+                        const ggo::vec2_f & pos,
+                        const ggo::vec2_f & normal);
 }
 
 #endif

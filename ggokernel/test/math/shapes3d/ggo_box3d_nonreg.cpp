@@ -4,12 +4,12 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(box3d, ray_intersection)
 {
-  ggo::box3d_float box(-1, 1, -1, 2, 2, 5);
+  ggo::box3d_f box(-1, 1, -1, 2, 2, 5);
 
-  ggo::ray3d_float normal;
+  ggo::ray3d_f normal;
   float dist = 0;
 
-  ggo::ray3d_float ray;
+  ggo::ray3d_f ray;
 
   // Top -> down rays.
   ray.pos() = { 2, 0, 4 };
@@ -153,7 +153,7 @@ GGO_TEST(box3d, ray_intersection)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(box3d, segment_intersection)
 {
-  ggo::box3d_float box(-1, 1, -1, 1, -1, 1);
+  ggo::box3d_f box(-1, 1, -1, 1, -1, 1);
 
   GGO_CHECK(box.intersect_segment({ 0.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 0.1f) == true);
   GGO_CHECK(box.intersect_segment({ -2.f, 0.f, 0.f }, { 1.f, 0.f, 0.f }, 0.1f) == false);
@@ -164,7 +164,7 @@ GGO_TEST(box3d, segment_intersection)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(box3d, get_union)
 {
-  auto box = ggo::get_union(ggo::box3d_float(-1, 1, -1, 2, 2, 5), ggo::box3d_float(-3, -2, -10, 20, 3, 4));
+  auto box = ggo::get_union(ggo::box3d_f(-1, 1, -1, 2, 2, 5), ggo::box3d_f(-3, -2, -10, 20, 3, 4));
 
   GGO_CHECK_FLOAT_EQ(box.x_min(), -3);
   GGO_CHECK_FLOAT_EQ(box.x_max(), 1);
@@ -177,7 +177,7 @@ GGO_TEST(box3d, get_union)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(box3d, intersection)
 {
-  const std::vector<std::tuple<ggo::box3d_float, ggo::box3d_float, bool>> intersect_tests{
+  const std::vector<std::tuple<ggo::box3d_f, ggo::box3d_f, bool>> intersect_tests{
     { { 0, 1, 1, 2, 2, 3 },{ 2, 3, 3, 4, 4, 5 }, false },
     { { 2, 3, 3, 4, 4, 5 },{ 0, 1, 1, 2, 2, 3 }, false },
     { { 0, 1, 0, 1, 0, 1 },{ 0, 1, 0, 1, 2, 3 }, false },

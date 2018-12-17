@@ -17,7 +17,7 @@ namespace
 		
                     my_material(float sphere_size);
 		
-		ggo::rgb_32f    get_color(const ggo::pos3f & pos) const override;
+		ggo::rgb_32f    get_color(const ggo::pos3_f & pos) const override;
 		
 	private:
 		
@@ -41,7 +41,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::rgb_32f my_material::get_color(const ggo::pos3f & pos) const
+  ggo::rgb_32f my_material::get_color(const ggo::pos3_f & pos) const
   {
     float x = pos.x() + _amplitude * std::cos(_wavelength * pos.z());
     x = std::fmod(x, _range_large);
@@ -72,8 +72,8 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   scene.emplace_volumetric_object<ggo::linear_fog>(ggo::rgb_32f(0.5f), 0.f, 25.f);
 
 	// Setup the camera.
-  ggo::basis3d_float camera_basis({ 0.f, 0.f, 10.f });
-  camera_basis.rotate(ggo::ray3d_float::O_X(), 1.2f);
+  ggo::basis3d_f camera_basis({ 0.f, 0.f, 10.f });
+  camera_basis.rotate(ggo::ray3d_f::O_X(), 1.2f);
 	ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
 
 	// Floor plane.
@@ -83,11 +83,11 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   floor.set_roughness(0.1f);
 
 	// Create the spheres.
-	std::vector<ggo::sphere3d_float> spheres;
+	std::vector<ggo::sphere3d_f> spheres;
   while (spheres.size() < 128)
 	{
 		float radius = ggo::rand<float>(0.2f, 0.8f);
-		ggo::sphere3d_float sphere(ggo::pos3f(ggo::rand<float>(-4, 4), ggo::rand<float>(-8, 8), radius), radius);
+		ggo::sphere3d_f sphere(ggo::pos3_f(ggo::rand<float>(-4, 4), ggo::rand<float>(-8, 8), radius), radius);
 		
 		bool ok = true;
 		for (const auto & sphere_cur : spheres)
@@ -109,7 +109,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   
 	for (const auto & sphere : spheres)
 	{
-    ggo::vec3f dir_to_center(normalize(sphere.center() - camera.basis().pos()));
+    ggo::vec3_f dir_to_center(normalize(sphere.center() - camera.basis().pos()));
     
     if ((lights_count < 3) &&
         (ggo::dot(dir_to_center, camera.basis().z()) < -0.98) && // In the axis of the camera
@@ -121,7 +121,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
     else
     {
       const uint32_t flags = ggo::discard_reflection | ggo::discard_roughness;
-      auto & object = scene.add_diffuse_object<flags>(ggo::centered_sphere3d_float(sphere.radius()), my_material(sphere.radius()));
+      auto & object = scene.add_diffuse_object<flags>(ggo::centered_sphere3d_f(sphere.radius()), my_material(sphere.radius()));
 
       object.set_phong(ggo::rand<float>(3, 5), ggo::rand<float>(250, 500));
       object.basis().rotate_x(ggo::rand<float>(0, 2 * ggo::pi<float>()));

@@ -16,29 +16,29 @@ namespace ggo
     struct storni
     {
       storni() = default;
-      storni(const ggo::pos2f & pos, const ggo::vec2f & vel, const ggo::rgb_8u & c) : _pos(pos), _vel(vel), _color(c) {}
+      storni(const ggo::pos2_f & pos, const ggo::vec2_f & vel, const ggo::rgb_8u & c) : _pos(pos), _vel(vel), _color(c) {}
 
-      void avoid_obstacles(int width, int height, const std::vector<ggo::pos2f> & obstacles);
+      void avoid_obstacles(int width, int height, const std::vector<ggo::pos2_f> & obstacles);
       void avoid_stornis(int width, int height, const std::vector<storni> & stornis, float influence_hypot, float weight);
-      void avoid_cursor(int width, int height, ggo::pos2i cursor_pos, float influence_hypot, float weight);
+      void avoid_cursor(int width, int height, ggo::pos2_i cursor_pos, float influence_hypot, float weight);
       void avoid_borders(int width, int height, float margin);
       void clamp_velocity(float velocity_hypot_max);
 
-      ggo::vec2f    _vel;
-      ggo::pos2f    _pos;
-      ggo::rgb_8u   _color;
+      ggo::vec2_f _vel;
+      ggo::pos2_f _pos;
+      ggo::rgb_8u _color;
     };
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 800; }
 
     float get_velocity_hypot_max() const { return ggo::square(0.004f * min_size()); }
 
     void update_predators(float velocity_hypot_max, float border_margin);
-    void update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2i cursor_pos);
+    void update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2_i cursor_pos);
 
     template <ggo::image_format format> void fade_background_to_white(const ggo::rect_int & clipping);
     template <ggo::image_format format, ggo::sampling smp> void paint_stornies_background(const ggo::rect_int & clipping);
@@ -48,11 +48,11 @@ namespace ggo
 
     static float get_obstacle_hypot(int width, int height) { return ggo::square(0.05f) * width * height; }
 
-    float                   _hue;
-    std::vector<storni>     _stornis;
-    std::vector<storni>     _predators;
-    std::vector<ggo::pos2f> _obstacles;
-    std::vector<uint8_t>    _background_buffer;
+    float                     _hue;
+    std::vector<storni>       _stornis;
+    std::vector<storni>       _predators;
+    std::vector<ggo::pos2_f>  _obstacles;
+    std::vector<uint8_t>      _background_buffer;
   };
 }
 

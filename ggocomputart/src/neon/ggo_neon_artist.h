@@ -13,11 +13,11 @@ namespace ggo
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 900; }
 
-    void	paint_point(void * buffer, const ggo::pos2f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const;
+    void	paint_point(void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const;
 
   private:
 
@@ -28,8 +28,8 @@ namespace ggo
     float	_radius_cur;
     float	_radius_attractor;
     ggo::rgb_8u _attractor_color;
-    std::array<ggo::pos2f, substeps_count> _attractor_points;
-    std::array<ggo::pos2f, substeps_count> _points;
+    std::array<ggo::pos2_f, substeps_count> _attractor_points;
+    std::array<ggo::pos2_f, substeps_count> _points;
   };
 }
 

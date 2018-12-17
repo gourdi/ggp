@@ -11,7 +11,7 @@ artist(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::update(ggo::pos3f & point, const float transform[4]) const
+void ggo::ifs_artist::update(ggo::pos3_f & point, const float transform[4]) const
 {
 	float x_fp	= point.x();
 	float y_fp	= point.y();
@@ -39,7 +39,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 	for (int counter= 0; counter < counter_max; ++counter)
 	{
 		// Get a starting point
-		ggo::pos3f point;
+		ggo::pos3_f point;
 		point.x() = ggo::rand<float>(-1, 1);
 		point.y() = ggo::rand<float>(-1, 1);
 		point.z() = ggo::rand<float>(-1, 1);
@@ -59,7 +59,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 			point.x() = x;
 			point.y() = y;
 			
-			ggo::pos2f render_point(cos2 * point.x() - sin2 * point.z(), sin2 * point.x() + cos2 * point.z());
+			ggo::pos2_f render_point(cos2 * point.x() - sin2 * point.z(), sin2 * point.x() + cos2 * point.z());
 			render_point = map_fit(render_point, -2, 2);
 
 			int x_i = ggo::round_to<int>(render_point.x());

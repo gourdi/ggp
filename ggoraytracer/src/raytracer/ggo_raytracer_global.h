@@ -22,30 +22,30 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct light_sample
   {
-    light_sample(const ggo::ray3d_float &ray_to_light, const ggo::rgb_32f & color) : _ray_to_light(ray_to_light), _color(color) {}
+    light_sample(const ggo::ray3d_f &ray_to_light, const ggo::rgb_32f & color) : _ray_to_light(ray_to_light), _color(color) {}
 
-    ggo::ray3d_float  _ray_to_light;
+    ggo::ray3d_f  _ray_to_light;
     ggo::rgb_32f      _color;
   };
 
   //////////////////////////////////////////////////////////////
   struct intersection_data
   {
-    intersection_data(float dist, const ggo::ray3d_float & local_normal, const ggo::ray3d_float & world_normal)
+    intersection_data(float dist, const ggo::ray3d_f & local_normal, const ggo::ray3d_f & world_normal)
       :
       _dist(dist), _local_normal(local_normal), _world_normal(world_normal)
     {
     }
 
     float _dist;
-    ggo::ray3d_float _local_normal;
-    ggo::ray3d_float _world_normal;
+    ggo::ray3d_f _local_normal;
+    ggo::ray3d_f _world_normal;
   };
 
   //////////////////////////////////////////////////////////////
   struct hit_data
   {
-    hit_data(const object3d_abc * object, float dist, const ggo::ray3d_float & local_normal, const ggo::ray3d_float & world_normal)
+    hit_data(const object3d_abc * object, float dist, const ggo::ray3d_f & local_normal, const ggo::ray3d_f & world_normal)
       :
       _object(object),
       _intersection(dist, local_normal, world_normal)
@@ -76,10 +76,10 @@ namespace ggo
   struct transmission_data
   {
     transmission_data(transmission_type type) : _type(type) {}
-    transmission_data(const ggo::ray3d_float & transmitted_ray) : _type(transmission_type::partial_transmission), _ray(transmitted_ray) {}
+    transmission_data(const ggo::ray3d_f & transmitted_ray) : _type(transmission_type::partial_transmission), _ray(transmitted_ray) {}
 
     transmission_type _type;
-    ggo::ray3d_float  _ray;
+    ggo::ray3d_f  _ray;
   };
 }
 

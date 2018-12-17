@@ -46,8 +46,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using plane3d_double  = plane3d<double>;
-  using plane3d_float   = plane3d<float>;
+  using plane3d_d = plane3d<double>;
+  using plane3d_f = plane3d<float>;
 }
 //////////////////////////////////////////////////////////////
 namespace ggo

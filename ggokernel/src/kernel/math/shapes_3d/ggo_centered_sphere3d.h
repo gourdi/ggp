@@ -29,8 +29,8 @@ namespace ggo
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  using centered_sphere3d_double = centered_sphere3d<double>;
-  using centered_sphere3d_float  = centered_sphere3d<float>;
+  using centered_sphere3d_d = centered_sphere3d<double>;
+  using centered_sphere3d_f = centered_sphere3d<float>;
 }
 
 //////////////////////////////////////////////////////////////

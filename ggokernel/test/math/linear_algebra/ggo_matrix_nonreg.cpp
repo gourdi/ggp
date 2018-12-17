@@ -3,22 +3,78 @@
 #include <kernel/math/linear_algebra/ggo_matrix.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(matrix, access)
+GGO_TEST(matrix, constuction)
 {
-  ggo::matrix<int, 3, 2> m;
+#ifndef _MSC_VER
+  constexpr ggo::matrix<int, 3, 2> m({
+    { 3, 2 },
+    { 5, 7 },
+    { 8, 1 } });
 
-  m(0, 0) = -4; m(0, 1) = 2;
-  m(1, 0) =  1; m(1, 1) = 6;
-  m(2, 0) =  2; m(2, 1) = 1;
+  // First column.
+  static_assert(m(0, 0) == 3);
+  static_assert(m(1, 0) == 5);
+  static_assert(m(2, 0) == 8);
 
-  GGO_CHECK((m.get<0, 0>() == -4));
-  GGO_CHECK((m.get<1, 0>() ==  1));
-  GGO_CHECK((m.get<2, 0>() ==  2));
-  GGO_CHECK((m.get<0, 1>() ==  2));
-  GGO_CHECK((m.get<1, 1>() ==  6));
-  GGO_CHECK((m.get<2, 1>() ==  1));
+  // Second column.
+  static_assert(m(0, 1) == 2);
+  static_assert(m(1, 1) == 7);
+  static_assert(m(2, 1) == 1);
+#endif
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(matrix, equality)
+{
+#ifndef _MSC_VER
+  constexpr ggo::matrix<int, 2, 3> m1({
+    { 4, 2, 3 },
+    { 1, 3, 2 } });
+
+  constexpr ggo::matrix<int, 2, 3> m2({
+    { 4, 2, 3 },
+    { 1, 3, 2 } });
+
+  constexpr ggo::matrix<int, 2, 3> m3({
+    { 0, 2, 3 },
+    { 1, 3, 2 } });
+
+  constexpr ggo::matrix<int, 2, 3> m4({
+    { 4, 2, 3 },
+    { 1, 3, 0 } });
+
+  static_assert(m1 == m2);
+  static_assert(m1 != m3);
+  static_assert(m1 != m4);
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(matrix, multiplication)
+{
+#ifndef _MSC_VER
+  constexpr ggo::matrix<int, 4, 3> m1({
+    { 14,  9,  3 },
+    {  2, 11, 15 },
+    {  0, 12, 17 },
+    {  5,  2,  3 } });
+
+  constexpr ggo::matrix<int, 3, 2> m2({
+    { 12, 25 },
+    {  9, 10 },
+    {  8,  5 } });
+
+  constexpr ggo::matrix<int, 4, 2> m({
+    { 273, 455 },
+    { 243, 235 },
+    { 244, 205 },
+    { 102, 160 } });
+
+  static_assert(m == m1 * m2);
+#endif
+}
+
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(matrix, addition)
 {
@@ -174,3 +230,6 @@ GGO_TEST(matrix, matrix_rotation)
   //GGO_CHECK_FLOAT_EQ(v.get<0>(), 0.f);
   //GGO_CHECK_FLOAT_EQ(v.get<1>(), 1.f);
 }
+
+
+#endif

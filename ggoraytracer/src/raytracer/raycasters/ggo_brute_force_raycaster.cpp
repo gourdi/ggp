@@ -22,7 +22,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void brute_force_raycaster::process_ray(const ggo::ray3d_float & ray,
+  void brute_force_raycaster::process_ray(const ggo::ray3d_f & ray,
                                           std::function<bool(const ggo::object3d_abc *)> func,
                                           const ggo::object3d_abc * exclude_object1,
                                           const ggo::object3d_abc * exclude_object2) const
@@ -42,7 +42,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void brute_force_raycaster::process_segment(const ggo::pos3f & pos, const ggo::vec3f & dir, float length,
+  void brute_force_raycaster::process_segment(const ggo::pos3_f & pos, const ggo::vec3_f & dir, float length,
                                               std::function<bool(const ggo::object3d_abc *)> func,
                                               const ggo::object3d_abc * exclude_object1,
                                               const ggo::object3d_abc * exclude_object2) const
@@ -64,13 +64,13 @@ namespace ggo
 
 #if 0
   //////////////////////////////////////////////////////////////
-  std::optional<hit_data> brute_force_raycaster::hit_test(const ggo::ray3d_float & ray,
+  std::optional<hit_data> brute_force_raycaster::hit_test(const ggo::ray3d_f & ray,
                                                           const ggo::object3d_abc * exclude_object1,
                                                           const ggo::object3d_abc * exclude_object2) const
   {
     const ggo::object3d_abc * hit_object = nullptr;
     float dist = std::numeric_limits<float>::max();
-    ggo::ray3d_float local_normal, world_normal;
+    ggo::ray3d_f local_normal, world_normal;
 
     for (const auto * object : _visible_objects)
     {
@@ -94,7 +94,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool brute_force_raycaster::check_visibility(const ggo::ray3d_float & ray,
+  bool brute_force_raycaster::check_visibility(const ggo::ray3d_f & ray,
                                                float dist_max,
                                                const ggo::object3d_abc * exclude_object1,
                                                const ggo::object3d_abc * exclude_object2) const

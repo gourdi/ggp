@@ -12,7 +12,7 @@ namespace ggo
 
           bozons_realtime_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos) override;
+    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     bool  finished(int frame_index) const override;
 
@@ -27,14 +27,14 @@ namespace ggo
 
     struct bozon
     {
-      ggo::pos2f    _prv_pos;
-      ggo::pos2f    _cur_pos;
-      ggo::rgb_8u   _color;
-      float				  _angle;
-      float				  _dangle;
-      int           _counter;
-      float				  _speed;
-      float         _radius;
+      ggo::pos2_f _prv_pos;
+      ggo::pos2_f _cur_pos;
+      ggo::rgb_8u _color;
+      float				_angle;
+      float				_dangle;
+      int         _counter;
+      float				_speed;
+      float       _radius;
     };
 
     std::list<bozon>  _bozons;
@@ -57,7 +57,7 @@ namespace ggo
     for (const auto & bozon : _bozons)
     {
       ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
-        ggo::capsule_float(bozon._prv_pos, bozon._cur_pos, bozon._radius),
+        ggo::capsule_f(bozon._prv_pos, bozon._cur_pos, bozon._radius),
         ggo::solid_color_brush<ggo::rgb_8u>(bozon._color), ggo::overwrite_blender<rgb_8u>(), clipping);
     }
   }

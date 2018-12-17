@@ -50,7 +50,7 @@ std::vector<std::unique_ptr<ggo::kame_animation_artist::timed_triangle>> ggo::ka
   std::vector<std::unique_ptr<timed_triangle>> result;
 
   // Find a create a vertex.
-  auto new_vertex = [&](const ggo::pos3f & p)
+  auto new_vertex = [&](const ggo::pos3_f & p)
   {
     for (const auto & vertex : vertices)
     {
@@ -99,20 +99,20 @@ std::unique_ptr<ggo::kame_animation_artist::kame> ggo::kame_animation_artist::cr
   // Vertices.
   const float phi = (1.f + std::sqrt(5.f)) / 2.f;
 
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, +1.f, 0.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, +1.f, 0.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+phi, -1.f, 0.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-phi, -1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(+phi, +1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(-phi, +1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(+phi, -1.f, 0.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(-phi, -1.f, 0.f)));
 
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, +phi)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(+1.f, 0.f, -phi)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, +phi)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(-1.f, 0.f, -phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(+1.f, 0.f, +phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(+1.f, 0.f, -phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(-1.f, 0.f, +phi)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(-1.f, 0.f, -phi)));
 
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, +1.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, +1.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, +phi, -1.f)));
-  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3f(0.f, -phi, -1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(0.f, +phi, +1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(0.f, -phi, +1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(0.f, +phi, -1.f)));
+  new_kame->_vertices.push_back(std::make_unique<timed_vertex>(ggo::pos3_f(0.f, -phi, -1.f)));
 
   // Triangles.
   new_kame->_triangles.push_back(std::make_unique<timed_triangle>(new_kame->_vertices[0].get(), new_kame->_vertices[2].get(), new_kame->_vertices[4].get()));
@@ -159,7 +159,7 @@ std::unique_ptr<ggo::kame_animation_artist::kame> ggo::kame_animation_artist::cr
   // Add some random bump.
   for (int i = 0; i < 2; ++i)
   {
-    ggo::vec3f main_dir{ ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f) };
+    ggo::vec3_f main_dir{ ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f), ggo::rand<float>(-1.f, 1.f) };
     main_dir = normalize(main_dir);
 
     const float scale_max = ggo::rand(0.3f, 0.6f);
@@ -202,7 +202,7 @@ std::unique_ptr<ggo::kame_animation_artist::kame> ggo::kame_animation_artist::cr
 }
 
 //////////////////////////////////////////////////////////////
-ggo::pos2f ggo::kame_animation_artist::kame::proj(const ggo::pos2f & p) const
+ggo::pos2_f ggo::kame_animation_artist::kame::proj(const ggo::pos2_f & p) const
 {
   return _center + _scale * (p + _disp);
 }
@@ -254,17 +254,17 @@ void ggo::kame_animation_artist::kame::update()
 //////////////////////////////////////////////////////////////
 void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_artist_abc & artist) const
 {
-  std::vector<ggo::link<const pos3f *>> edges;
+  std::vector<ggo::link<const pos3_f *>> edges;
 
-  std::vector<ggo::static_paint_shape<ggo::triangle2d_float, uint8_t>> triangles;
+  std::vector<ggo::static_paint_shape<ggo::triangle2d_f, uint8_t>> triangles;
 
   for (const auto & triangle : _triangles)
   {
     if (triangle->get_normal().z() > 0.0f)
     {
-      ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v1->_prv, &triangle->_v2->_prv));
-      ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v2->_prv, &triangle->_v3->_prv));
-      ggo::push_once(edges, ggo::link<const pos3f *>(&triangle->_v3->_prv, &triangle->_v1->_prv));
+      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v1->_prv, &triangle->_v2->_prv));
+      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v2->_prv, &triangle->_v3->_prv));
+      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v3->_prv, &triangle->_v1->_prv));
 
       auto proj1 = proj({ triangle->_v1->_prv.x(), triangle->_v1->_prv.y() });
       auto proj2 = proj({ triangle->_v2->_prv.x(), triangle->_v2->_prv.y() });
@@ -273,13 +273,13 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
       auto normal = ggo::normalize(ggo::cross(triangle->_v1->_prv - triangle->_v3->_prv, triangle->_v2->_prv - triangle->_v3->_prv));
       uint8_t color = ggo::round_to<uint8_t>(std::pow(std::abs(normal.z()), 0.5f) * 0xff);
 
-      triangles.emplace_back(ggo::triangle2d_float(proj1, proj2, proj3), color);
+      triangles.emplace_back(ggo::triangle2d_f(proj1, proj2, proj3), color);
     }
   }
 
   ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.width(), triangles);
 
-  using paint_shape_t = ggo::static_paint_shape<ggo::capsule_float, uint8_t>;
+  using paint_shape_t = ggo::static_paint_shape<ggo::capsule_f, uint8_t>;
 
   std::vector<paint_shape_t> shapes;
   for (const auto & edge : edges)

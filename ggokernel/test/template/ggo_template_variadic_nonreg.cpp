@@ -1,6 +1,8 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
 
+#if 0
+
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(template_variadic, accumulate)
 {
@@ -67,3 +69,5 @@ GGO_TEST(template_variadic, average)
   int a5 = ggo::average(-1, -1, -1, 0);
   GGO_CHECK_EQ(a5, -1);
 }
+
+#endif

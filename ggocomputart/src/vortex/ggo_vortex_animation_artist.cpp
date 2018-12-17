@@ -39,8 +39,8 @@ void ggo::vortex_animation_artist::render_frame(void * buffer, int frame_index)
   float interp = ggo::ease_inout_to<float>(frame_index, frames_count());
   for (auto & vortex : _params._vortices)
   {
-    const ggo::pos2f & start_pos = _vortices_paths[&vortex]._start_pos;
-    const ggo::pos2f & end_pos = _vortices_paths[&vortex]._end_pos;
+    const ggo::pos2_f & start_pos = _vortices_paths[&vortex]._start_pos;
+    const ggo::pos2_f & end_pos = _vortices_paths[&vortex]._end_pos;
 
     vortex._pos = ggo::linear_interpolation(0.f, start_pos, 1.f, end_pos, interp);
   }

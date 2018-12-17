@@ -43,7 +43,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 	{
 		std::cout << "Rendering petal " << (counter + 1) << " out of " << petals_count << std::endl; 
 		
-		ggo::pos2f center(0.5f * width(), 0.9f * height());
+		ggo::pos2_f center(0.5f * width(), 0.9f * height());
 
 		float ratio 		    = counter / float(petals_count);
 		float petal_height	= 0.8f * height() * counter / petals_count;
@@ -73,7 +73,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 
 				ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
           render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
-          ggo::disc_float({ x, y }, 0.001f * min_size()),
+          ggo::disc_f({ x, y }, 0.001f * min_size()),
           ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_32f>());
 			}
 

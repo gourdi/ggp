@@ -32,14 +32,14 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::storni::avoid_obstacles(int width, int height, const std::vector<ggo::pos2f> & obstacles)
+void ggo::storni_realtime_artist::storni::avoid_obstacles(int width, int height, const std::vector<ggo::pos2_f> & obstacles)
 {
   const float obstacle_influence_hypot = get_obstacle_hypot(width, height);
 
-  ggo::vec2f obstacle_force{ 0.f, 0.f };
+  ggo::vec2_f obstacle_force{ 0.f, 0.f };
   for (const auto & obstacle : obstacles)
   {
-    const ggo::vec2f diff_obstacle(obstacle - _pos);
+    const ggo::vec2_f diff_obstacle(obstacle - _pos);
     const float hypot_obstacle = ggo::hypot(diff_obstacle);
     if (hypot_obstacle < obstacle_influence_hypot)
     {
@@ -56,14 +56,14 @@ void ggo::storni_realtime_artist::storni::avoid_obstacles(int width, int height,
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::storni::avoid_cursor(int width, int height, ggo::pos2i cursor_pos, float influence_hypot, float weight)
+void ggo::storni_realtime_artist::storni::avoid_cursor(int width, int height, ggo::pos2_i cursor_pos, float influence_hypot, float weight)
 {
-  const ggo::vec2f diff(ggo::from_pixel_to_math<float>(cursor_pos) - _pos);
+  const ggo::vec2_f diff(ggo::from_pixel_to_math<float>(cursor_pos) - _pos);
   const float hypot = ggo::hypot(diff);
 
   if (hypot < influence_hypot)
   {
-    const ggo::vec2f force = weight * std::min(width, height) * ggo::normalize(diff);
+    const ggo::vec2_f force = weight * std::min(width, height) * ggo::normalize(diff);
     _vel -= force;
   }
 }
@@ -71,12 +71,12 @@ void ggo::storni_realtime_artist::storni::avoid_cursor(int width, int height, gg
 //////////////////////////////////////////////////////////////
 void ggo::storni_realtime_artist::storni::avoid_stornis(int width, int height, const std::vector<storni> & stornis, float influence_hypot, float weight)
 {
-  ggo::vec2f force{ 0.f, 0.f };
+  ggo::vec2_f force{ 0.f, 0.f };
   for (const auto & storni : stornis)
   {
     if (&storni != this)
     {
-      const ggo::vec2f diff(storni._pos - _pos);
+      const ggo::vec2_f diff(storni._pos - _pos);
       const float hypot = ggo::hypot(diff);
       if (hypot < influence_hypot)
       {
@@ -141,7 +141,7 @@ _background_buffer(height * line_step)
 
   auto create_storni = [&](std::vector<storni> & container, ggo::rgb_8u c)
   {
-    container.emplace_back(get_random_point(), velocity * ggo::vec2f::from_angle(ggo::rand(0.f, 2 * ggo::pi<float>())), c);
+    container.emplace_back(get_random_point(), velocity * ggo::vec2_f::from_angle(ggo::rand(0.f, 2 * ggo::pi<float>())), c);
   };
 
   for (int i = 0; i < 256; ++i)
@@ -158,7 +158,7 @@ _background_buffer(height * line_step)
   {
     while (true)
     {
-      const ggo::pos2f new_obstacle = get_random_point(0.1f * min_size());
+      const ggo::pos2_f new_obstacle = get_random_point(0.1f * min_size());
 
       bool inserted = true;
       for (const auto & obstacle : _obstacles)
@@ -187,12 +187,12 @@ void ggo::storni_realtime_artist::update_predators(float velocity_hypot_max, flo
 
   for (auto & predator : _predators)
   {
-    ggo::vec2f attraction(0.f, 0.f);
+    ggo::vec2_f attraction(0.f, 0.f);
 
     for (const auto & pray : _stornis)
     {
       // Check if pray is visible.
-      const ggo::vec2f diff = pray._pos - predator._pos;
+      const ggo::vec2_f diff = pray._pos - predator._pos;
       const float angle = ggo::angle(predator._vel);
       const float angle2 = ggo::angle(diff);
       if (compare_angles(angle, angle2, 120.f) == false)
@@ -228,7 +228,7 @@ void ggo::storni_realtime_artist::update_predators(float velocity_hypot_max, flo
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2i cursor_pos)
+void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2_i cursor_pos)
 {
   const float repulsion_influence_hypot = ggo::square(0.02f) * width() * height();
   const float alignment_influence_hypot = ggo::square(0.04f) * width() * height();
@@ -238,9 +238,9 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 
   for (auto & storni : _stornis)
   {
-    ggo::vec2f repulsion(0.f, 0.f);
-    ggo::vec2f alignment(0.f, 0.f);
-    ggo::vec2f attraction(0.f, 0.f);
+    ggo::vec2_f repulsion(0.f, 0.f);
+    ggo::vec2_f alignment(0.f, 0.f);
+    ggo::vec2_f attraction(0.f, 0.f);
 
     for (const auto & storni2 : _stornis)
     {
@@ -251,7 +251,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
       }
 
       // Check if visible.
-      const ggo::vec2f diff = storni2._pos - storni._pos;
+      const ggo::vec2_f diff = storni2._pos - storni._pos;
       const float angle = ggo::angle(storni._vel);
       const float angle2 = ggo::angle(diff);
       if (compare_angles(angle, angle2, 120.f) == false)
@@ -320,7 +320,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2i cursor_pos)
+void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   // Update items.
   const float velocity_hypot_max = get_velocity_hypot_max();
@@ -410,11 +410,11 @@ void ggo::storni_realtime_artist::paint_stornies_background(const ggo::rect_int 
   {
     // Paint 2 stamps.
     ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
-      ggo::disc_float(storni._pos, storni_radius),
+      ggo::disc_f(storni._pos, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
 
     ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
-      ggo::disc_float(storni._pos - 0.5f * storni._vel, storni_radius),
+      ggo::disc_f(storni._pos - 0.5f * storni._vel, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
   }
 }
@@ -449,16 +449,16 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
   {
     if (storni._vel.x() != 0.f || storni._vel.y() != 0.f)
     {
-      const ggo::vec2f direction = ggo::normalize(storni._vel) * size;
+      const ggo::vec2_f direction = ggo::normalize(storni._vel) * size;
 
-      const ggo::vec2f v1{ storni._pos + direction };
-      const ggo::vec2f v2{ storni._pos + 0.5f * ggo::vec2f(direction.y(), -direction.x()) };
-      const ggo::vec2f v3{ storni._pos + 0.5f * ggo::vec2f(-direction.y(), direction.x()) };
+      const ggo::vec2_f v1{ storni._pos + direction };
+      const ggo::vec2_f v2{ storni._pos + 0.5f * ggo::vec2_f(direction.y(), -direction.x()) };
+      const ggo::vec2_f v3{ storni._pos + 0.5f * ggo::vec2_f(-direction.y(), direction.x()) };
 
-      ggo::static_paint_shape<ggo::triangle2d_float, ggo::rgb_8u> triangle({ v1, v2, v3 }, storni._color);
-      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border1({ v1, v2, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border2({ v2, v3, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_float, ggo::rgb_8u> border3({ v3, v1, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u> triangle({ v1, v2, v3 }, storni._color);
+      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border1({ v1, v2, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border2({ v2, v3, border_size }, ggo::black_8u());
+      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border3({ v3, v1, border_size }, ggo::black_8u());
 
       const std::vector<const ggo::paint_shape_abc<float, ggo::rgb_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 

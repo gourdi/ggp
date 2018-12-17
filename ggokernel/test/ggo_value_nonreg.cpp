@@ -14,9 +14,9 @@ GGO_TEST(value, basic)
     GGO_CHECK_FLOAT_EQ(v.to<int>(), 1);
   }
   {
-    ggo::value v(ggo::pos2f(1.f, 2.f));
-    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2f>().x(), 1.f);
-    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2f>().y(), 2.f);
+    ggo::value v(ggo::pos2_f(1.f, 2.f));
+    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2_f>().x(), 1.f);
+    GGO_CHECK_FLOAT_EQ(v.to<ggo::pos2_f>().y(), 2.f);
   }
 }
 
@@ -34,11 +34,11 @@ GGO_TEST(value, array)
     }
   }
   {
-    std::list<ggo::pos2f> a{ { 1.f, 2.f },{ 3.f, 4.f } };
+    std::list<ggo::pos2_f> a{ { 1.f, 2.f },{ 3.f, 4.f } };
     ggo::value val(a.begin(), a.end());
 
     int i = 0;
-    for (auto v : val.to_range_of<ggo::pos2f>())
+    for (auto v : val.to_range_of<ggo::pos2_f>())
     {
       GGO_CHECK_FLOAT_EQ(v.x(), i == 0 ? 1.f : 3.0f);
       GGO_CHECK_FLOAT_EQ(v.y(), i == 0 ? 2.f : 4.0f);
