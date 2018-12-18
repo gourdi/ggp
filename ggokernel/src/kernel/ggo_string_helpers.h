@@ -6,27 +6,12 @@
 #include <stdexcept>
 #include <iterator>
 #include <vector>
+#include <optional>
 
+//////////////////////////////////////////////////////////////
+// join - split
 namespace ggo
 {
-  //////////////////////////////////////////////////////////////
-  template <typename output_t>
-  output_t to(const std::string & str)
-  {
-    output_t result;
-
-    std::istringstream iss(str);
-
-    iss >> result;
-
-    if (iss.fail() || !iss.eof())
-    {
-      throw std::runtime_error("string conversion failed");
-    }
-
-    return result;
-  }
-
   //////////////////////////////////////////////////////////////
   template <typename it_t>
   void join(std::ostream & os, it_t begin, it_t end, const std::string & delim)
@@ -73,7 +58,12 @@ namespace ggo
     }
     return tokens;
   }
+}
 
+//////////////////////////////////////////////////////////////
+// bin_dump
+namespace ggo
+{
   //////////////////////////////////////////////////////////////
   template<typename data_t>
   std::string bin_dump(data_t value)
@@ -87,6 +77,53 @@ namespace ggo
 
     return text;
   }
+}
+
+//////////////////////////////////////////////////////////////
+// string to value
+namespace ggo
+{
+  template <typename data_t>
+  std::optional<data_t> to(const std::string & str)
+  {
+    return {};
+  }
+
+  template <> inline
+  std::optional<bool> to(const std::string & str)
+  {
+    if (str == "true")
+    {
+      return true;
+    }
+    if (str == "false")
+    {
+      return false;
+    }
+    return {};
+  }
+
+  template <> inline
+  std::optional<int> to(const std::string & str)
+  {
+    std::optional<int> val;
+    try
+    {
+      val = stoi(str);
+    }
+    catch (...)
+    {
+
+    }
+    return val;
+  }
+}
+
+//////////////////////////////////////////////////////////////
+// Literals
+inline constexpr uint8_t operator "" _u8(unsigned long long v) noexcept
+{
+  return static_cast<uint8_t>(v);
 }
 
 #endif

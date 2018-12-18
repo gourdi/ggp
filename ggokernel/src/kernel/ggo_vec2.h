@@ -10,7 +10,7 @@ namespace ggo
   template <typename data_t>
   struct vec2 : public vec_base<data_t, 2>
   {
-    constexpr vec2() {}
+    constexpr vec2() : vec_base<data_t, 2>() {}
     constexpr vec2(const vec2<data_t> & v) : vec_base<data_t, 2>(v) {}
     constexpr vec2(data_t k1, data_t k2) : vec_base<data_t, 2>(k1, k2) {}
     constexpr vec2(data_t k) : vec_base<data_t, 2>(k) {}

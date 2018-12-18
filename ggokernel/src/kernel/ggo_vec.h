@@ -46,6 +46,9 @@ namespace ggo
     void operator*=(data_t k) { details::mul<n_dims>(this->_coefs, k); }
     void operator/=(data_t k) { details::div<n_dims>(this->_coefs, k); }
 
+    constexpr const data_t &  operator[](int i) const { return _coefs[i]; }
+    constexpr data_t &        operator[](int i) { return _coefs[i]; }
+
     data_t _coefs[n_dims];
   };
 }

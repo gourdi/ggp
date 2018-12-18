@@ -1,4 +1,5 @@
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_string_helpers.h>
 #include <kernel/nonreg/ggo_nonreg.h>
 
 /////////////////////////////////////////////////////////////////////
@@ -126,6 +127,18 @@ GGO_TEST(base, clamp_and_round)
   static_assert(ggo::clamp_and_round_to<int8_t>(-128.9f) == -128);
   static_assert(ggo::clamp_and_round_to<int8_t>(-129.1f) == -128);
   static_assert(ggo::clamp_and_round_to<int8_t>(-999.0f) == -128);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, variadic)
+{
+  static_assert(ggo::max(3, 5, 2, 4) == 5);
+  static_assert(ggo::min(3, 5, 2, 4) == 2);
+
+  static_assert(ggo::sum(1_u8, 4_u8, 3_u8) == 8_u8);
+  static_assert(ggo::sum(1, 4, 3) == 8);
+
+  static_assert(ggo::average(1_u8, 2_u8, 2_u8, 2_u8) == 2_u8);
 }
 
 /////////////////////////////////////////////////////////////////////

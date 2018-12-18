@@ -2,11 +2,11 @@
 #define GGO_MATRIX_H_
 
 #include <functional>
-//#include <kernel/ggo_vec.h>
-//#include <kernel/ggo_details.h>
+#include <kernel/ggo_details.h>
+#include <kernel/math/linear_algebra/ggo_linear_algebra.h>
 
 //////////////////////////////////////////////////////////////
-// Matrices. Dimensions are known at compile - time.
+// Matrices. Dimensions are known at compile-time.
 
 //////////////////////////////////////////////////////////////
 // General matrices.
@@ -37,16 +37,10 @@ namespace ggo
     matrix &                  operator=(const matrix<data_t, size_y, size_x> & m) = default;
     matrix &                  operator=(matrix<data_t, size_y, size_x> && m) = default;
 
-
-    //void			      operator*=(data_t k);
-
     constexpr bool  operator==(const matrix<data_t, size_y, size_x> & m) const { return details::eq<data_t, size_y * size_x>(this->_data, m._data); }
     constexpr bool  operator!=(const matrix<data_t, size_y, size_x> & m) const { return !this->operator==(m); }
 
-    //data_t *        data() { return _data.data(); };
-    //const data_t *  data() const { return _data.data(); };
-
-  protected:
+  private:
     
     data_t _data[size_x * size_y];
   };
@@ -56,13 +50,6 @@ namespace ggo
 // Matrix operators.
 namespace ggo
 {
-  //template <typename data_t, int size_y, int size_x>
-  //matrix<data_t, size_y, size_x> operator+(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2);
-
-  //template <typename data_t, int size_y, int size_x>
-  //matrix<data_t, size_y, size_x> operator-(const matrix<data_t, size_y, size_x> & m1, const matrix<data_t, size_y, size_x> & m2);
-
-#ifndef _MSC_VER
   template <typename data_t, int size_1, int size_2, int size_3>
   constexpr matrix<data_t, size_1, size_3> operator*(const matrix<data_t, size_1, size_2> & m1, const matrix<data_t, size_2, size_3> & m2)
   {
@@ -82,53 +69,53 @@ namespace ggo
 
     return result;
   }
-#endif
 }
 
-///////////////////////////////////////////////////////////////////////
-//// Scalar operators.
-//namespace ggo
-//{
-//  template <int size_x, int size_y, typename data_t>
-//  matrix<data_t, size_y, size_x> operator*(const matrix<data_t, size_y, size_x> & m, data_t k);
-//
-//  template <int size_x, int size_y, typename data_t>
-//  matrix<data_t, size_y, size_x> operator*(data_t k, const matrix<data_t, size_y, size_x> & m);
-//}
-//
-///////////////////////////////////////////////////////////////////////
-//// Square matrix.
-//namespace ggo
-//{
-//  template <typename data_t, int size>
-//  class square_matrix : public matrix<data_t, size, size>
-//  {
-//  public:
-//
-//    bool 	is_diagonally_dominant() const;
-//
-//    bool  is_symmetric() const;
-//
-//    template <typename compare_func>
-//    bool  is_symmetric(compare_func compare) const;
-//  };
-//}
-//
-///////////////////////////////////////////////////////////////////////
-//// Square matrix 2D.
-//namespace ggo
-//{
-//  template <typename data_t>
-//  class square_matrix2d : public square_matrix<data_t, 2>
-//  {
-//  public:
-//      
-//    data_t  det() const;
-//    
-//    void    set_rotation(float angle);
-//  };
-//}
-//
-//#include <kernel/math/linear_algebra/ggo_matrix.imp.h>
+/////////////////////////////////////////////////////////////////////
+// Square matrix.
+namespace ggo
+{
+  template <typename data_t, int size>
+  using square_matrix = matrix<data_t, size, size>;
+
+  template <typename data_t, int size>
+  constexpr bool is_symmetric(const square_matrix<data_t, size> & m)
+  {
+    return is_symmetric(m, size);
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+    constexpr vec_t operator*(const square_matrix<data_t, n_dims> & m, const vec_t & v)
+  {
+    vec_t result;
+
+    for (int y = 0; y < n_dims; ++y)
+    {
+      result[y] = 0;
+      for (int x = 0; x < n_dims; ++x)
+      {
+        result[y] += m(y, x) * v[x];
+      }
+    }
+
+    return result;
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// Square matrix 2D.
+namespace ggo
+{
+  template <typename data_t>
+  using square_matrix2d = square_matrix<data_t, 2>;
+
+  template <typename data_t>
+  constexpr data_t det(const square_matrix2d<data_t> & m)
+  {
+    return m(0, 0) * m(1, 1) - m(0, 1) * m(1, 0);
+  }
+}
 
 #endif

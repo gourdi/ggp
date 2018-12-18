@@ -10,7 +10,7 @@
 namespace ggo
 {
   template <typename input, typename compare_func>
-  bool is_matrix_symmetric(const input & m, int size, compare_func compare)
+  constexpr bool is_symmetric(const input & m, int size, compare_func compare)
   {
     for (int y = 0; y < size; ++y)
     {
@@ -27,30 +27,11 @@ namespace ggo
     
     return true;
   }
-  
-  template <typename data_t, typename input>
-  bool is_matrix_diagonally_dominant(const input & m, int size)
+
+  template <typename input>
+  constexpr bool is_symmetric(const input & m, int size)
   {
-    for (int y = 0; y < size; ++y)
-    {
-      data_t v2 = 0;
-      for (int x = 0; x < size; ++x)
-      {
-        if (x != y)
-        {
-          v2 += std::abs(m(y, x));
-        }
-      }
-      
-      data_t v1 = std::abs(m(y, y));
-      
-      if (v2 > v1)
-      {
-        return false;
-      }
-    }
-    
-    return true;
+    return is_symmetric(m, size, [](auto v1, auto v2) { return v1 == v2; });
   }
 }
 
