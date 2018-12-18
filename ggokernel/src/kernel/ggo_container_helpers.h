@@ -125,8 +125,6 @@ namespace ggo
 
       void operator--() { --_it; }
       void operator++() { ++_it; }
-      iterator operator++(int) { auto tmp = *this; ++_it; return tmp; }
-      iterator operator--(int) { auto tmp = *this; --_it; return tmp; }
       bool operator==(const iterator & it) { return _it == it._it; }
       bool operator!=(const iterator & it) { return _it != it._it; }
 

@@ -289,7 +289,6 @@ GGO_TEST(base, adaptor)
   std::vector<int> v2;
   for (const auto & k : adaptor)
   {
-    printf("%d\n", k);
     v2.push_back(k);
   }
 

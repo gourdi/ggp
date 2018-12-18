@@ -29,9 +29,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename container_t>
-  void join(std::ostream & os, const container_t & c, const std::string & delim)
+  void join(std::ostream & os, const container_t & container, const std::string & delim)
   {
-    join(os, c.begin(), c.end(), delim);
+    join(os, container.begin(), container.end(), delim);
   }
 
   //////////////////////////////////////////////////////////////

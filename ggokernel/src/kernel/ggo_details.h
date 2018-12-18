@@ -6,19 +6,14 @@ namespace ggo
 {
   namespace details
   {
-    template <typename data_t, int count, int index, typename... args>
+    template <typename data_t, typename... args>
     constexpr void set(data_t * coefs, data_t k, args... a)
     {
-      coefs[count - index - 1] = k;
+      *coefs = k;
 
-      if constexpr (index > 0)
+      if constexpr (sizeof...(a) > 0)
       {
-        ggo::details::set<data_t, count, index - 1>(coefs, a...);
-      }
-      else
-      {
-        static_assert(sizeof...(a) == 0);
-        coefs[count - 1] = k;
+        ggo::details::set(coefs + 1, a...);
       }
     }
   }
@@ -95,14 +90,14 @@ namespace ggo
 
       static void div(data_t * coefs, data_t k)
       {
-        inplace_t<data_t, count, index - 1>::mul(coefs, k);
+        inplace_t<data_t, count, index - 1>::div(coefs, k);
         coefs[index] /= k;
       }
 
       static void set(data_t * coefs, const data_t * coefs2)
       {
         inplace_t<data_t, count, index - 1>::set(coefs, coefs2);
-        coefs[index] = coefs[index];
+        coefs[index] = coefs2[index];
       }
     };
 
@@ -141,7 +136,7 @@ namespace ggo
 
       static void set(data_t * coefs, const data_t * coefs2)
       {
-        coefs[0] = coefs[0];
+        coefs[0] = coefs2[0];
       }
     };
 
@@ -166,7 +161,7 @@ namespace ggo
     template <int count, typename data_t>
     void sub(data_t * coefs, const data_t * coefs2)
     {
-      inplace_t<data_t, count, count - 1>::div(coefs, coefs2);
+      inplace_t<data_t, count, count - 1>::sub(coefs, coefs2);
     }
 
     template <int count, typename data_t>
@@ -188,9 +183,6 @@ namespace ggo
     }
   }
 }
-
-
-
 
 namespace ggo
 {

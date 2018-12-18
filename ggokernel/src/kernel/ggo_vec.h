@@ -22,14 +22,14 @@ namespace ggo
     constexpr vec_base(data_t k1, data_t k2) : _coefs()
     {
       static_assert(n_dims == 2);
-      ggo::details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2);
+      ggo::details::set(_coefs, k1, k2);
     }
 
     template <typename... args>
     constexpr vec_base(data_t k1, data_t k2, args... a) : _coefs()
     {
       static_assert(n_dims > 2 && sizeof...(a) == n_dims - 2);
-      ggo::details::set<data_t, n_dims, n_dims - 1>(_coefs, k1, k2, a...);
+      ggo::details::set(_coefs, k1, k2, a...);
     }
 
     constexpr vec_base(data_t k) : _coefs()
