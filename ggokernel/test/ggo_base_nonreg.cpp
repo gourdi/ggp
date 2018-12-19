@@ -130,18 +130,6 @@ GGO_TEST(base, clamp_and_round)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(base, variadic)
-{
-  static_assert(ggo::max(3, 5, 2, 4) == 5);
-  static_assert(ggo::min(3, 5, 2, 4) == 2);
-
-  static_assert(ggo::sum(1_u8, 4_u8, 3_u8) == 8_u8);
-  static_assert(ggo::sum(1, 4, 3) == 8);
-
-  static_assert(ggo::average(1_u8, 2_u8, 2_u8, 2_u8) == 2_u8);
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(base, remove_first_if)
 {
   {

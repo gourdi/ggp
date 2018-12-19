@@ -3,7 +3,10 @@
 
 #include <type_traits>
 #include <ostream>
-#include <kernel/ggo_details.h>
+#include <kernel/ggo_assign.h>
+#include <kernel/ggo_arithmetics.h>
+#include <kernel/ggo_compare.h>
+#include <kernel/ggo_string_helpers.h>
 
 //////////////////////////////////////////////////////////////
 // vec_base
@@ -22,14 +25,14 @@ namespace ggo
     constexpr vec_base(data_t k1, data_t k2) : _coefs()
     {
       static_assert(n_dims == 2);
-      ggo::details::set(_coefs, k1, k2);
+      ggo::assign(_coefs, k1, k2);
     }
 
     template <typename... args>
     constexpr vec_base(data_t k1, data_t k2, args... a) : _coefs()
     {
       static_assert(n_dims > 2 && sizeof...(a) == n_dims - 2);
-      ggo::details::set(_coefs, k1, k2, a...);
+      ggo::assign(_coefs, k1, k2, a...);
     }
 
     constexpr vec_base(data_t k) : _coefs()
@@ -38,13 +41,13 @@ namespace ggo
     }
 
     // In-place arithmetics operators.
-    void operator*=(const vec_base<data_t, n_dims> & v) { details::mul<n_dims>(this->_coefs, v._coefs); }
-    void operator/=(const vec_base<data_t, n_dims> & v) { details::div<n_dims>(this->_coefs, v._coefs); }
-    void operator+=(const vec_base<data_t, n_dims> & v) { details::add<n_dims>(this->_coefs, v._coefs); }
-    void operator-=(const vec_base<data_t, n_dims> & v) { details::sub<n_dims>(this->_coefs, v._coefs); }
+    void operator*=(const vec_base<data_t, n_dims> & v) { ggo::mul(this->_coefs, v._coefs); }
+    void operator/=(const vec_base<data_t, n_dims> & v) { ggo::div(this->_coefs, v._coefs); }
+    void operator+=(const vec_base<data_t, n_dims> & v) { ggo::add(this->_coefs, v._coefs); }
+    void operator-=(const vec_base<data_t, n_dims> & v) { ggo::sub(this->_coefs, v._coefs); }
 
-    void operator*=(data_t k) { details::mul<n_dims>(this->_coefs, k); }
-    void operator/=(data_t k) { details::div<n_dims>(this->_coefs, k); }
+    void operator*=(data_t k) { ggo::mul<n_dims>(this->_coefs, k); }
+    void operator/=(data_t k) { ggo::div<n_dims>(this->_coefs, k); }
 
     constexpr const data_t &  operator[](int i) const { return _coefs[i]; }
     constexpr data_t &        operator[](int i) { return _coefs[i]; }
@@ -57,34 +60,10 @@ namespace ggo
 // I/O.
 namespace ggo
 {
-  namespace details
-  {
-    template <typename data_t, int n_dims, int dim>
-    struct dump_t
-    {
-      static void call(std::ostream & os, const vec_base<data_t, n_dims> & v)
-      {
-        dump_t<data_t, n_dims, dim - 1>::call(os, v);
-        os << "; " << v._coefs[dim];
-      }
-    };
-
-    template <typename data_t, int n_dims>
-    struct dump_t<data_t, n_dims, 0>
-    {
-      static void call(std::ostream & os, const vec_base<data_t, n_dims> & v)
-      {
-        os << v._coefs[0];
-      }
-    };
-  }
-
   template <typename data_t, int n_dims>
   std::ostream & operator<<(std::ostream & os, const ggo::vec_base<data_t, n_dims> & v)
   {
-    os << '(';
-    details::dump_t<data_t, n_dims, n_dims - 1>::call(os, v);
-    os << ')';
+    ggo::dump(v._coefs, os);
     return os;
   }
 }
@@ -96,7 +75,7 @@ namespace ggo
   template <typename data_t, int n_dims>
   constexpr bool operator==(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
   {
-    return ggo::details::eq<data_t, n_dims>(v1._coefs, v2._coefs);
+    return ggo::compare(v1._coefs, v2._coefs);
   }
 
   template <typename data_t, int n_dims>
@@ -224,31 +203,10 @@ namespace ggo
 // Global functions.
 namespace ggo
 {
-  namespace details
-  {
-    template <typename data_t, int n_dims, int dim>
-    struct vec_dot
-    {
-      static constexpr data_t call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
-      {
-        return vec_dot<data_t, n_dims, dim - 1>::call(v1, v2) + v1._coefs[dim] * v2._coefs[dim];
-      }
-    };
-
-    template <typename data_t, int n_dims>
-    struct vec_dot<data_t, n_dims, 0>
-    {
-      static constexpr data_t call(const ggo::vec_base<data_t, n_dims> & v1, const ggo::vec_base<data_t, n_dims> & v2)
-      {
-        return v1._coefs[0] * v2._coefs[0];
-      }
-    };
-  }
-
   template <typename data_t, int n_dims>
   constexpr data_t dot(const vec_base<data_t, n_dims> & v1, const vec_base<data_t, n_dims> & v2)
   {
-    return details::vec_dot<data_t, n_dims, n_dims - 1>::call(v1, v2);
+    return ggo::dot(v1._coefs, v2._coefs);
   }
 
   template <typename data_t, int n_dims>

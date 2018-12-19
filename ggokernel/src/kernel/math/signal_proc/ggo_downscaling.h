@@ -2,6 +2,7 @@
 #define __GGO_DOWNSCALING__
 
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_reduce.h>
 
 namespace ggo
 {

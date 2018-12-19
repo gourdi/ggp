@@ -80,7 +80,50 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// string to value
+// Dump.
+namespace ggo
+{
+  namespace details
+  {
+    template <typename data_t, int count>
+    struct dump_t
+    {
+      static void dump(const data_t * ptr, std::ostream & os)
+      {
+        os << ptr[0] << "; ";
+        ggo::details::dump_t<data_t, count - 1>::dump(ptr + 1, os);
+      }
+    };
+
+    template <typename data_t>
+    struct dump_t<data_t, 1>
+    {
+      static void dump(const data_t * ptr, std::ostream & os)
+      {
+        os << ptr[0];
+      }
+    };
+  }
+
+  template <int size, typename data_t>
+  void dump(const data_t * ptr, std::ostream & os)
+  {
+    os << "(";
+    ggo::details::dump_t<data_t, size>::dump(ptr, os);
+    os << ")";
+  }
+
+  template <int size, typename data_t>
+  void dump(data_t const (&ptr)[size], std::ostream & os)
+  {
+    os << "(";
+    ggo::details::dump_t<data_t, size>::dump(ptr, os);
+    os << ")";
+  }
+}
+
+//////////////////////////////////////////////////////////////
+// String to value.
 namespace ggo
 {
   template <typename data_t>

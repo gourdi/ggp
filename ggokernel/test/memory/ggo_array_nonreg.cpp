@@ -123,15 +123,6 @@ GGO_TEST(ggo_array, construction_and_fill)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, resize)
-{
-  ggo::array<uint8_t, 2> a(2, 3);
-  a.resize(10, 5);
-  GGO_CHECK_EQ(a.width(), 10);
-  GGO_CHECK_EQ(a.height(), 5);
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(ggo_array, access)
 {
   {

@@ -103,7 +103,7 @@ namespace ggo
 
         dictionary.back()._key_index = y + 1; // Keys are 'w' variables.
 
-        dictionary.back()._coefs.resize(2 * M.width() + 2);
+        dictionary.back()._coefs = ggo::array<scalar_t, 1>(2 * M.width() + 2);
 
         dictionary.back()._coefs[0] = q(0, y); // Constants 'q'
         dictionary.back()._coefs[M.width() + 1] = 1; // Auxiliary variables 'z0'
@@ -225,8 +225,8 @@ namespace ggo
       }
 
       // Store solution.
-      w.resize(1, static_cast<int>(dictionary.size()));
-      z.resize(1, static_cast<int>(dictionary.size()));
+      w = ggo::array<scalar_t, 2>(1, static_cast<int>(dictionary.size()));
+      z = ggo::array<scalar_t, 2>(1, static_cast<int>(dictionary.size()));
 
       w.fill(0.f);
       z.fill(0.f);

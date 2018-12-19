@@ -2,7 +2,9 @@
 #define __GGO_ARRAY__
 
 #include <kernel/ggo_kernel.h>
-#include <kernel/ggo_details.h>
+#include <kernel/ggo_assign.h>
+#include <kernel/ggo_compare.h>
+#include <kernel/ggo_reduce.h>
 
 namespace ggo
 {
@@ -28,7 +30,7 @@ namespace ggo
     array(const array<data_t, n_dims> & rhs)
     {
       int count = rhs.count();
-      ggo::details::set<n_dims>(_dimensions, rhs._dimensions);
+      ggo::assign(_dimensions, rhs._dimensions);
       _buffer = new data_t[count];
       std::copy(rhs._buffer, rhs._buffer + count, _buffer);
     }
@@ -36,7 +38,7 @@ namespace ggo
     // Move constructor.
     array(array<data_t, n_dims> && rhs)
     {
-      ggo::details::set<n_dims>(_dimensions, rhs._dimensions);
+      ggo::assign(_dimensions, rhs._dimensions);
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
@@ -49,7 +51,7 @@ namespace ggo
       static_assert(n_dims == 1);
       _dimensions[0] = n;
       _buffer = new data_t[n];
-      ggo::copy<n>(_buffer, coefs);
+      std::copy(coefs, coefs + n, _buffer);
     }
 
     template <size_t h, size_t w, typename = std::enable_if_t<n_dims == 2>>
@@ -59,9 +61,10 @@ namespace ggo
       _dimensions[0] = w;
       _dimensions[1] = h;
       _buffer = new data_t[h * w];
+
       for (int row = 0; row < h; ++row)
       {
-        ggo::copy<w>(_buffer + row * w, coefs[row]);
+        std::copy(coefs[row], coefs[row] + w, _buffer + row * w);
       }
     }
 
@@ -79,7 +82,7 @@ namespace ggo
         delete[] _buffer;
 
         int count = rhs.count();
-        ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+        ggo::assign(_dimensions, rhs._dimensions);
         _buffer = new data_t[count];
         std::copy(rhs._buffer, rhs._buffer + count, _buffer);
       }
@@ -91,9 +94,9 @@ namespace ggo
     {
       if (this != &rhs)
       {
-        delete _buffer;
+        delete[] _buffer;
 
-        ggo::copy<n_dims>(_dimensions, rhs._dimensions);
+        ggo::assign(_dimensions, rhs._dimensions);
         _buffer = rhs._buffer;
 
         rhs._buffer = nullptr;
@@ -132,23 +135,13 @@ namespace ggo
     // Returns the full number of elements inside the array.
     int count() const
     {
-      return ggo::multiply_all<n_dims>(_dimensions);
-    }
-
-    // Resizes the current array. Current data is lost.
-    template <typename... args>
-    void resize(args... a)
-    {
-      static_assert(sizeof...(a) == n_dims, "invalid number of arguments");
-
-      delete[] _buffer;
-      array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, a...);
+      return ggo::mul(_dimensions);
     }
 
     // Comparison.
     bool operator==(const array<data_t, n_dims> & rhs) const
     {
-      if (compare<n_dims>(_dimensions, rhs._dimensions) == false)
+      if (compare(_dimensions, rhs._dimensions) == false)
       {
         return false;
       }
@@ -228,7 +221,7 @@ namespace ggo
     // Fill the array with a given value.
     void fill(const data_t & v)
     {
-      std::fill(_buffer, _buffer + ggo::multiply_all<n_dims>(_dimensions), v);
+      std::fill(_buffer, _buffer + ggo::mul(_dimensions), v);
     }
 
     // Operator[] (1D only)
@@ -246,7 +239,7 @@ namespace ggo
       template <typename... args>
       static void process_args(int * dimensions, data_t ** buffer, int dim, args... a)
       {
-        static_assert(dim_remaining <= dim_count, "error");
+        static_assert(dim_remaining <= dim_count);
         dimensions[dim_count - dim_remaining] = dim;
         array_builder<dim_remaining - 1, dim_count>::process_args(dimensions, buffer, a...);
       }
@@ -258,14 +251,14 @@ namespace ggo
       template <typename fill_t>
       static void process_args(int * dimensions, data_t ** buffer, const fill_t & fill_value)
       {
-        int count = ggo::multiply_all<dim_count>(dimensions);
+        int count = ggo::mul<dim_count>(dimensions);
         *buffer = new data_t[count];
         std::fill(*buffer, *buffer + count, fill_value);
       }
 
       static void process_args(int * dimensions, data_t ** buffer)
       {
-        int count = ggo::multiply_all<dim_count>(dimensions);
+        int count = ggo::mul<dim_count>(dimensions);
         *buffer = new data_t[count];
       }
     };

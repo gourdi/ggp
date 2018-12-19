@@ -2,7 +2,6 @@
 #define GGO_MATRIX_H_
 
 #include <functional>
-#include <kernel/ggo_details.h>
 #include <kernel/math/linear_algebra/ggo_linear_algebra.h>
 
 //////////////////////////////////////////////////////////////
