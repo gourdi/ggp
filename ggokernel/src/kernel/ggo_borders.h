@@ -6,6 +6,12 @@
 
 namespace ggo
 {
+  constexpr inline int loop_index(int i, int size) { return pos_mod(i, size); }
+  constexpr inline int mirror_index(int i, int size) { i = pos_mod(i, 2 * size); return i < size ? i : 2 * size - i - 1; }
+}
+
+namespace ggo
+{
   enum class border_mode
   {
     mirror,
@@ -13,66 +19,48 @@ namespace ggo
     loop
   };
 
-  template <border_mode mode, typename int_t>
-  int_t handle_border_inf(int_t inf, int_t size)
+  template <border_mode mode>
+  constexpr int inf_index(int inf, int size)
   {
-    static_assert(std::is_integral<int_t>::value);
-    static_assert(std::is_signed<int_t>::value);
-
-    if constexpr(mode == border_mode::mirror)
+    if (inf < 0)
     {
-      if (inf < 0)
+      if constexpr (mode == border_mode::mirror)
       {
-        inf = -inf - 1;
+        inf = ggo::mirror_index(inf, size);
       }
-    }
 
-    if constexpr(mode == border_mode::duplicate_edge)
-    {
-      if (inf < 0)
+      if constexpr (mode == border_mode::duplicate_edge)
       {
         inf = 0;
       }
-    }
 
-    if constexpr(mode == border_mode::loop)
-    {
-      if (inf < 0)
+      if constexpr (mode == border_mode::loop)
       {
-        inf += size;
+        inf = ggo::loop_index(inf, size);
       }
     }
 
     return inf;
   }
 
-  template <border_mode mode, typename int_t>
-  int_t handle_border_sup(int_t sup, int_t size)
+  template <border_mode mode>
+  constexpr int sup_index(int sup, int size)
   {
-    static_assert(std::is_integral<int_t>::value);
-    static_assert(std::is_signed<int_t>::value);
-
-    if constexpr(mode == border_mode::mirror)
+    if (sup >= size)
     {
-      if (sup >= size)
+      if constexpr (mode == border_mode::mirror)
       {
-        sup = 2 * size - sup - 1;
+        sup = ggo::mirror_index(sup, size);
       }
-    }
 
-    if constexpr(mode == border_mode::duplicate_edge)
-    {
-      if (sup >= size)
+      if constexpr (mode == border_mode::duplicate_edge)
       {
         sup = size - 1;
       }
-    }
 
-    if constexpr(mode == border_mode::loop)
-    {
-      if (sup >= size)
+      if constexpr (mode == border_mode::loop)
       {
-        sup -= size;
+        sup = ggo::loop_index(sup, size);
       }
     }
 
@@ -132,8 +120,8 @@ namespace ggo
   template <typename get2d_t>
   auto get2d_mirror(get2d_t get2d, int x, int y, int width, int height)
   {
-    x = mirror_index_edge_duplicated(x, width);
-    y = mirror_index_edge_duplicated(y, height);
+    x = mirror_index(x, width);
+    y = mirror_index(y, height);
     return get2d(x, y);
   }
 
@@ -156,8 +144,8 @@ namespace ggo
   template <ggo::memory_lines_order lines_order, typename data_t>
   const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
   {
-    x = mirror_index_edge_duplicated(x, width);
-    y = mirror_index_edge_duplicated(y, height);
+    x = mirror_index(x, width);
+    y = mirror_index(y, height);
 
     auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
     ptr = ptr_offset(ptr, x * sizeof(data_t));

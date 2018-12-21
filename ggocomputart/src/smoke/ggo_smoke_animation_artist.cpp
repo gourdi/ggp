@@ -305,14 +305,14 @@ void ggo::smoke_animation_artist::diffuse()
   float stddev_opacity = 0.0001f * std::sqrt(float(width() * height()));
   float stddev_velocity = 0.0001f * std::sqrt(float(width() * height()));
 
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
-    _opacity_cur->data(), sizeof(double) * _opacity_cur->width(), { _opacity_cur->width(), _opacity_cur->height() }, stddev_opacity);
+  ggo::gaussian_blur<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _opacity_cur->data(), { _opacity_cur->width(), _opacity_cur->height() }, sizeof(double) * _opacity_cur->width(), stddev_opacity);
 
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
-    _velocity_x_cur->data(), sizeof(double) * _velocity_x_cur->width(), { _velocity_x_cur->width(), _velocity_x_cur->height() }, stddev_velocity);
+  ggo::gaussian_blur<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _velocity_x_cur->data(), { _velocity_x_cur->width(), _velocity_x_cur->height() }, sizeof(double) * _velocity_x_cur->width(), stddev_velocity);
 
-  ggo::gaussian_blur2d<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
-    _velocity_y_cur->data(), sizeof(double) * _velocity_y_cur->width(), { _velocity_y_cur->width(), _velocity_y_cur->height() }, stddev_velocity);
+  ggo::gaussian_blur<ggo::image_format::y_64f_yd, ggo::border_mode::loop>(
+    _velocity_y_cur->data(), { _velocity_y_cur->width(), _velocity_y_cur->height() }, sizeof(double) * _velocity_y_cur->width(), stddev_velocity);
 }
 
 //////////////////////////////////////////////////////////////

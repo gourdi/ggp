@@ -21,7 +21,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
   int grid_size_x = ggo::round_to<int>(width / cell_size);
   int grid_size_y = ggo::round_to<int>(height / cell_size);
 
-  _grid.resize(grid_size_x, grid_size_y);
+  _grid = ggo::array<cell, 2>(grid_size_x, grid_size_y);
 
   for (int y = 0; y < _grid.height(); ++y)
   {
@@ -127,7 +127,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
   }
 
   float stddev = 0.001f * min_size();
-  ggo::gaussian_blur2d<format>(buffer, line_step(), size(), stddev);
+  ggo::gaussian_blur<format>(buffer, size(), line_step(), stddev);
 
   {
     std::vector<ggo::static_paint_shape<ggo::disc_f, ggo::rgb_8u>> shapes;

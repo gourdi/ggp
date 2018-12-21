@@ -107,7 +107,7 @@ particle(width, height, focus_dist),
 _polygon(std::make_shared<ggo::polygon2d_f>())
 {    
   int points_count = ggo::rand<int>(3, 6);
-  _radius_interpolators.resize(points_count);
+  _radius_interpolators = ggo::array<ggo_radius_interpolator, 1>(points_count);
   for (int i = 0; i < points_count; ++i)
   {
     _polygon->add_point(0, 0);

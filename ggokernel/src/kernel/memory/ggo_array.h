@@ -5,6 +5,7 @@
 #include <kernel/ggo_assign.h>
 #include <kernel/ggo_compare.h>
 #include <kernel/ggo_reduce.h>
+#include <kernel/ggo_borders.h>
 
 namespace ggo
 {
@@ -287,7 +288,7 @@ namespace ggo
       static int compute_mirror(const int * dimensions, int index, args... a)
       {
         static_assert(remaining <= count && remaining > 1, "error");
-        index = ggo::mirror_index_edge_duplicated(index, dimensions[count - remaining]);
+        index = ggo::mirror_index(index, dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_mirror(dimensions, a...);
       }
     };
@@ -309,7 +310,7 @@ namespace ggo
 
       static int compute_mirror(const int * dimensions, int index)
       {
-        index = ggo::mirror_index_edge_duplicated(index, dimensions[count - 1]);
+        index = ggo::mirror_index(index, dimensions[count - 1]);
         return index;
       }
     };

@@ -98,7 +98,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     {
       float stddev = 0.0005f * min_size();
       
-      gaussian_blur2d<rgb_8u_yu>(buffer, line_step(), size(), stddev);
+      gaussian_blur<rgb_8u_yu>(buffer, size(), line_step(), stddev);
     }
 	}
 }

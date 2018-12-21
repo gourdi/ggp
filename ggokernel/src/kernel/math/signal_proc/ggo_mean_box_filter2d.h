@@ -3,8 +3,8 @@
 
 #include <kernel/ggo_size.h>
 #include <kernel/ggo_rect_int.h>
+#include <kernel/ggo_borders.h>
 #include <kernel/memory/ggo_circular_buffer.h>
-#include <kernel/memory/ggo_edges_management.h>
 
 /////////////////////////////////////////////////////////////////////
 // Horizontal.
@@ -40,7 +40,7 @@ namespace ggo
 
       for (int x = -box_radius; x <= 0; ++x)
       {
-        int i = handle_border_inf<border_mode>(clipping.left() + x, size.width());
+        int i = inf_index<border_mode>(clipping.left() + x, size.width());
         const auto v = read(ptr_offset(input_line, i * input_item_byte_step));
         cb.push(v);
         sum += v;
@@ -67,7 +67,7 @@ namespace ggo
 
       for (int x = clipping.left() + 1; x <= clipping.right(); ++x)
       {
-        int i = handle_border_sup<border_mode>(x + box_radius, size.width());
+        int i = sup_index<border_mode>(x + box_radius, size.width());
 
         const auto v1 = cb.pop();
         sum -= v1;

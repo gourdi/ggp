@@ -138,7 +138,7 @@ ggo::lagaude_realtime_artist::seed::seed(const ggo::pos2_f & pos, ggo::path_abc 
 :
 scale_animate_abc(pos, path, scale)
 {
-	_angle_generators.resize(ggo::rand<int>(3, 5));
+	_angle_generators = ggo::array<angle_generator, 1>(ggo::rand<int>(3, 5));
 	_life = ggo::rand<int>(80, 120);
 	_dangle = ggo::rand<float>(-0.1f, 0.1f);
 	_color = ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(0.5f, 1), ggo::rand<float>(0.5f, 1));

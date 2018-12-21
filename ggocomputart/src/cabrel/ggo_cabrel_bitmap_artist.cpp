@@ -231,7 +231,7 @@ namespace
     ggo::paint_shapes<format, ggo::sampling_4x4>(buffer, artist.width(), artist.height(), artist.line_step(), shadows);
 
     float stddev = 0.01f * artist.min_size();
-    ggo::gaussian_blur2d<format>(buffer, artist.line_step(), artist.size(), stddev);
+    ggo::gaussian_blur<format>(buffer, artist.size(), artist.line_step(), stddev);
 
     // Paint the triangles.
     using paint_shape_t = ggo::paint_shape_abc<float, ggo::rgb_8u, ggo::rgb_8u>;

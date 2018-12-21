@@ -100,7 +100,7 @@ namespace ggo
     }
     if (env_str != nullptr)
     {
-      auto value = str_to<int>(env_str);
+      auto value = to<int>(env_str);
       if (value)
       {
         threads_count = *value;

@@ -56,8 +56,8 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
   {
     diffused_food = _food;
     diffused_life = _life;
-    ggo::gaussian_blur2d<ggo::y_32f_yu, ggo::border_mode::loop>(_food.data(), sizeof(float) * width(), size(), _food_stddev);
-    ggo::gaussian_blur2d<ggo::y_32f_yu, ggo::border_mode::loop>(_life.data(), sizeof(float) * width(), size(), _life_stddev);
+    ggo::gaussian_blur<ggo::y_32f_yu, ggo::border_mode::loop>(_food.data(), size(), sizeof(float) * width(), _food_stddev);
+    ggo::gaussian_blur<ggo::y_32f_yu, ggo::border_mode::loop>(_life.data(), size(), sizeof(float) * width(), _life_stddev);
 
     for (int y = 0; y < height(); ++y)
     {

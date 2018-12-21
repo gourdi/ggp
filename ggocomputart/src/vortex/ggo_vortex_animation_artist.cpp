@@ -15,7 +15,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 250)
   _params._split_horz = ggo::rand<float>(0.4f * width, 0.6f * width);
   _params._split_vert = ggo::rand<float>(0.4f * height, 0.6f * height);
 
-  _params._vortices.resize(vortices_count);
+  _params._vortices = ggo::array<vortex_artist::vortex, 1>(vortices_count);
   for (auto & vortex : _params._vortices)
   {
     vortex._angle = ggo::rand<float>(ggo::pi<float>() / 2, ggo::pi<float>() / 2 + 0.5f);

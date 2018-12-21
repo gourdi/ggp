@@ -14,7 +14,7 @@ void ggo::vortex_bitmap_artist::render_bitmap(void * buffer) const
   const int vortices_count = 20;
 
 	ggo::vortex_artist::params params;
-	params._vortices.resize(vortices_count);
+	params._vortices = ggo::array<vortex_artist::vortex, 1>(vortices_count);
 	params._color1 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
 	params._color2 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);
 	params._color3 = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(0.4f, 0.6f), 1);

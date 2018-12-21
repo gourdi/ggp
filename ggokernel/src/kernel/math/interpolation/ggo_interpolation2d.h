@@ -1,7 +1,7 @@
 #ifndef __GGO_INTERPOLATION_2D__
 #define __GGO_INTERPOLATION_2D__
 
-#include <kernel/memory/ggo_edges_management.h>
+#include <kernel/ggo_borders.h>
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 /////////////////////////////////////////////////////////////////////

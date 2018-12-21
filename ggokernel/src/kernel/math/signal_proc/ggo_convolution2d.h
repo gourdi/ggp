@@ -1,11 +1,13 @@
 #ifndef __GGO_CONVOLUTION_2D__
 #define __GGO_CONVOLUTION_2D__
 
+#if 0
+
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_size.h>
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_data_traits.h>
-#include <kernel/memory/ggo_edges_management.h>
+#include <kernel/ggo_borders.h>
 #include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <kernel/memory/ggo_sparse_buffer2d.h>
 
@@ -58,10 +60,10 @@ namespace ggo
 
         for (int i = 1; i < static_cast<int>(kernel_radius); ++i)
         {
-          int left_i = handle_border_inf<border_mode>(x - i, size.width());
+          int left_i = inf_index<border_mode>(x - i, size.width());
           auto left_v = read(ptr_offset(input_ptr, left_i * data_traits::input_item_byte_size));
 
-          int right_i = handle_border_sup<border_mode>(x + i, size.width());
+          int right_i = sup_index<border_mode>(x + i, size.width());
           auto right_v = read(ptr_offset(input_ptr, right_i * data_traits::input_item_byte_size));
 
           v += (left_v + right_v) * kernel[i];
@@ -172,10 +174,10 @@ namespace ggo
 
         for (int i = 1; i < static_cast<int>(kernel_radius); ++i)
         {
-          int bottom_i = handle_border_inf<border_mode>(y - i, size.height());
+          int bottom_i = inf_index<border_mode>(y - i, size.height());
           auto bottom_v = read(input_ptr(x, bottom_i));
 
-          int top_i = handle_border_sup<border_mode>(y + i, size.height());
+          int top_i = sup_index<border_mode>(y + i, size.height());
           auto top_v = read(input_ptr(x, top_i));
 
           v += (bottom_v + top_v) * kernel[i];
@@ -263,10 +265,10 @@ namespace ggo
 
           for (int i = 1; i < static_cast<int>(kernel_radius); ++i)
           {
-            int left_i = handle_border_inf<border_mode>(x - i, size.width());
+            int left_i = inf_index<border_mode>(x - i, int(size.width()));
             auto left_v = input_data(ptr_offset(input_ptr, left_i * data_traits::input_item_byte_size));
 
-            int right_i = handle_border_sup<border_mode>(x + i, size.width());
+            int right_i = sup_index<border_mode>(x + i, int(size.width()));
             auto right_v = input_data(ptr_offset(input_ptr, right_i * data_traits::input_item_byte_size));
 
             v += (left_v + right_v) * kernel[i];
@@ -300,10 +302,10 @@ namespace ggo
 
           for (int i = 1; i < static_cast<int>(kernel_radius); ++i)
           {
-            int bottom_i = handle_border_inf<border_mode>(y - i, size.height());
+            int bottom_i = inf_index<border_mode>(y - i, size.height());
             auto bottom_v = input_data(x, bottom_i);
 
-            int top_i = handle_border_sup<border_mode>(y + i, size.height());
+            int top_i = sup_index<border_mode>(y + i, size.height());
             auto top_v = input_data(x, top_i);
 
             v += (bottom_v + top_v) * kernel[i];
@@ -356,4 +358,5 @@ namespace ggo
   }
 }
 
+#endif
 #endif

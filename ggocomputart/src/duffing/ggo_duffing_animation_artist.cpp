@@ -119,7 +119,7 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
   }
 
   // Blur and blend the shadow.
-  ggo::gaussian_blur2d<ggo::y_32f_yu>(shadow_buffer.data(), sizeof(float) * width(), size(), 0.4f * min_size());
+  ggo::gaussian_blur<ggo::y_32f_yu>(shadow_buffer.data(), size(), sizeof(float) * width(), 0.4f * min_size());
 
   apply_shadow(buffer_float.data(), shadow_buffer.data());
 

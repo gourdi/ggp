@@ -292,16 +292,7 @@ namespace ggo
     return 0;
   }
 }
-
-//////////////////////////////////////////////////////////////
-// Edges functions.
-namespace ggo
-{
-  constexpr inline int loop_index(int i, int w)                   { return pos_mod(i, w); }
-  constexpr inline int mirror_index_edge_duplicated(int i, int w) { i = pos_mod(i, 2 * w); return i < w ? i : 2 * w - i - 1; }
-  constexpr inline int mirror_index_single_edge(int i, int w)     { i = pos_mod(i, 2 * w - 2) ; return i < w ? i : 2 * w - i- 2; }
-}
-
+  
 #include <kernel/ggo_container_helpers.h>
 
 //////////////////////////////////////////////////////////////

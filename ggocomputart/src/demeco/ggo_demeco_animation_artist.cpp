@@ -57,7 +57,7 @@ void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, 
 
   // Blur shadow.
   float stddev = min_size() / 100.f;
-  gaussian_blur2d<shadow_format>(_shadow_image.data(), _shadow_image.line_byte_step(), _shadow_image.size(), stddev);
+  gaussian_blur<shadow_format>(_shadow_image.data(), _shadow_image.size(), _shadow_image.line_byte_step(), stddev);
   
   // Blit shadow and render buffers into output buffer.
   blit<shadow_format, ggo::rgb_8u_yu>(_shadow_image.data(), _shadow_image.width(), _shadow_image.height(), _shadow_image.line_byte_step(),

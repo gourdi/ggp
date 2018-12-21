@@ -1,6 +1,5 @@
 #include <array>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_edges_management.h>
 #include <kernel/math/interpolation/ggo_interpolation2d.h>
 #include <2d/io/ggo_bmp.h>
 

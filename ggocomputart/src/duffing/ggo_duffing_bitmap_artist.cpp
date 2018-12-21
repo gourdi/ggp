@@ -74,7 +74,7 @@ void ggo::duffing_bitmap_artist::render_bitmap(void * buffer) const
 	// Blur and blend the shadow.
 	std::cout << "Blurring the shadow" << std::endl;
 	
-  ggo::gaussian_blur2d<ggo::y_32f_yu>(shadow_buffer.data(), sizeof(float) * width(), size(), 0.4f * min_size());
+  ggo::gaussian_blur<ggo::y_32f_yu>(shadow_buffer.data(), size(), sizeof(float) * width(), 0.4f * min_size());
 
 	std::cout << "Blending the shadow" << std::endl;
 
