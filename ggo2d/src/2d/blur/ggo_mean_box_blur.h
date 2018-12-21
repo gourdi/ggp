@@ -1,7 +1,6 @@
 #ifndef __GGO_2D_MEAN_BOX_BLUR__
 #define __GGO_2D_MEAN_BOX_BLUR__
 
-#include <kernel/math/signal_proc/ggo_convolution2d.h>
 #include <kernel/math/signal_proc/ggo_mean_box_filter2d.h>
 #include <2d/ggo_image_format.h>
 

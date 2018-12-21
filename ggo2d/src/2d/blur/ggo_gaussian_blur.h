@@ -5,7 +5,6 @@
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_borders.h>
 #include <kernel/math/signal_proc/ggo_convolution1d.h>
-#include <kernel/math/signal_proc/ggo_convolution2d.h>
 #include <kernel/math/signal_proc/ggo_gaussian_blur.h>
 #include <2d/ggo_image_format.h>
 #include <2d/ggo_color.h>
