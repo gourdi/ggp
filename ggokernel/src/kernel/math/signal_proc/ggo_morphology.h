@@ -19,7 +19,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("in-place dilatation not supported");
     }
 
     auto in = [&](int x, int y){ return ggo::ptr_offset(input, y * line_byte_step)[x]; };
@@ -34,7 +34,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("in-place dilatation not supported");
     }
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
@@ -49,7 +49,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("in-place erosion not supported");
     }
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
@@ -64,7 +64,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("in-place erosion not supported");
     }
 
     auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };

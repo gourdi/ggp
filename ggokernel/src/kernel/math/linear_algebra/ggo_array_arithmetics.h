@@ -14,7 +14,7 @@ namespace ggo
   {
     if (m1.width() != m2.height())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     ggo::array<data_t, 2> r(m2.width(), m1.height());
@@ -52,7 +52,7 @@ namespace ggo
   {
     if (m1.width() != m2.width() || m1.height() != m2.height())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     ggo::array<data_t, 2> r(m1.width(), m2.height());
@@ -70,7 +70,7 @@ namespace ggo
   {
     if (m1.width() != m2.width() || m1.height() != m2.height())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     ggo::array<data_t, 2> r(m1.width(), m2.height());

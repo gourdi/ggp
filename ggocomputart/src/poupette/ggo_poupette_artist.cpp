@@ -22,7 +22,7 @@ namespace
       return ggo::rgb_32f(ggo::pos_mod(c.r(), 255.f), ggo::pos_mod(c.g(), 255.f), ggo::pos_mod(c.b(), 255.f));
     };
 
-    // Optmized version of the 2x2 sampling used for the real time rendering.
+    // Optimized version of the 2x2 sampling used for the real time rendering.
     if constexpr (sampling == ggo::sampling_2x2)
     {
       for (int y = clipping.bottom(); y <= clipping.top(); ++y)

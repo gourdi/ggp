@@ -44,7 +44,7 @@ namespace ggo
     hexa,
     chryzode,
     stoa,
-    sonson__REMOVED,
+    sonson,
     rediff, // 40
     entabeni,
     cabrel,

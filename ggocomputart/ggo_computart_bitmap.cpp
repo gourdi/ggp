@@ -89,7 +89,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 		
 		if (i == 1)
 		{
-      auto artist_id = ggo::str_to<int>(arg);
+      auto artist_id = ggo::to<int>(arg);
 
 			if (!artist_id)
 			{
@@ -119,7 +119,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-      auto frame_from = ggo::str_to<int>(argv[i]);
+      auto frame_from = ggo::to<int>(argv[i]);
 			if (!frame_from || *frame_from < 0)
 			{
 				std::cerr << "Error : invalid range argument" << std::endl;
@@ -133,7 +133,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-      auto frame_to = ggo::str_to<int>(argv[i]);
+      auto frame_to = ggo::to<int>(argv[i]);
       if (!frame_to || *frame_to < 0)
         {
 				std::cerr << "Error : invalid range argument" << std::endl;
@@ -150,7 +150,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing width parameter" << std::endl;
 				return false;
 			}
-      auto width = ggo::str_to<int>(argv[i]);
+      auto width = ggo::to<int>(argv[i]);
 			if (!width || *width <= 0)
 			{
 				std::cerr << "Error : invalid width argument" << std::endl;
@@ -164,7 +164,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing height parameter" << std::endl;
 				return false;
 			}
-      auto height = ggo::str_to<int>(argv[i]);
+      auto height = ggo::to<int>(argv[i]);
       if (!height || *height <= 0)
       {
 				std::cerr << "Error : invalid height argument" << std::endl;
@@ -181,7 +181,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing threads count parameter" << std::endl;
 				return false;
 			}
-      auto threads_count = ggo::str_to<int>(argv[i]);
+      auto threads_count = ggo::to<int>(argv[i]);
 			if (!threads_count || *threads_count <= 0)
 			{
 				std::cerr << "Error : invalid threads count argument" << std::endl;

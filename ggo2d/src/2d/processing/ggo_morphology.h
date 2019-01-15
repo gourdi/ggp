@@ -68,7 +68,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("inplace unsupported");
     }
 
     using format_traits = image_format_traits<format>;
@@ -87,7 +87,7 @@ namespace ggo
   {
     if (input == output)
     {
-      throw inplace_exception();
+      throw std::runtime_error("inplace unsupported");
     }
 
     using format_traits = image_format_traits<format>;

@@ -4,7 +4,7 @@
 #include <kernel/math/signal_proc/ggo_mean_box_filter2d.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, horizontal_duplicate_edge)
+GGO_TEST(mean_box_filter2d, horizontal_duplicate_edge)
 {
   float data[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
 
@@ -18,7 +18,7 @@ GGO_TEST(mean_box_filter, horizontal_duplicate_edge)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, horizontal_mirror)
+GGO_TEST(mean_box_filter2d, horizontal_mirror)
 {
   const float input[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
   float output[] = { 0.f, 0.f, 0.f, 0.f, 0.f};
@@ -33,7 +33,7 @@ GGO_TEST(mean_box_filter, horizontal_mirror)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, horizontal_loop)
+GGO_TEST(mean_box_filter2d, horizontal_loop)
 {
   const float input[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
   float output[] = { 0.f, 0.f, 0.f, 0.f, 0.f };
@@ -48,7 +48,7 @@ GGO_TEST(mean_box_filter, horizontal_loop)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, horizontal_duplicate_edge_clipping)
+GGO_TEST(mean_box_filter2d, horizontal_duplicate_edge_clipping)
 {
   float data[] = { 1.f, 2.f, 3.f, 4.f, 5.f };
 
@@ -62,7 +62,7 @@ GGO_TEST(mean_box_filter, horizontal_duplicate_edge_clipping)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, vertical_duplicate_edge)
+GGO_TEST(mean_box_filter2d, vertical_duplicate_edge)
 {
   float data[] = {
     0.f, 1.f, 0.f, 0.f,
@@ -89,7 +89,7 @@ GGO_TEST(mean_box_filter, vertical_duplicate_edge)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(mean_box_filter, vertical_duplicate_edge_clipping)
+GGO_TEST(mean_box_filter2d, vertical_duplicate_edge_clipping)
 {
   float data[] = {
     1.f, 0.f,

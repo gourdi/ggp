@@ -1,5 +1,5 @@
-#ifndef __GGO_MEAN_BOX_FILTER__
-#define __GGO_MEAN_BOX_FILTER__
+#ifndef __GGO_MEAN_BOX_FILTER_2D__
+#define __GGO_MEAN_BOX_FILTER_2D__
 
 #include <kernel/ggo_size.h>
 #include <kernel/ggo_rect_int.h>

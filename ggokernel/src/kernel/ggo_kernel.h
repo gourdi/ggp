@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <time.h>
 #include <string>
 #include <cmath>
@@ -12,7 +11,6 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
-#include <exception>
 #include <numeric>
 #include <optional>
 
@@ -294,15 +292,6 @@ namespace ggo
 }
   
 #include <kernel/ggo_container_helpers.h>
-
-//////////////////////////////////////////////////////////////
-// Exceptions.
-namespace ggo
-{
-  class dimension_mismatch_exception : public std::exception {};
-  class inplace_exception : public std::exception {};
-  class invalid_parameter_exception : public std::exception {};
-}
 
 //////////////////////////////////////////////////////////////
 // Constants.

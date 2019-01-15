@@ -63,15 +63,15 @@ namespace ggo
   {
     if (a.width() != a.height())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
     if (a.width() != b.size())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
     if (a.width() != s.size())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     auto lambda_a = [&](int x, int y) { return a(x, y); };
