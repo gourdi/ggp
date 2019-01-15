@@ -182,7 +182,7 @@ namespace ggo
     data_t dy2 = segment._p2.y() - segment._p1.y();
 
     data_t det = dx1 * dy2 - dy1 * dx2;
-    if (std::fabs(det) < data_t(0.00001))
+    if (det == 0)
     {
       return {};
     }
