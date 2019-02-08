@@ -4,19 +4,21 @@ $artist = $_GET["artist"];
 
 include_once("helpers.php");
 
-html_header($artist, "artists/$artist/00000001.jpg");
+//////////////////////////////////////////////////////////////
+function process_images_videos($artist)
+{
+  $cells = array();
 
-$cells = array();
-
-// Process videos.
-for ($i = 1; true; ++$i) {
-    
+  // Process videos.
+  for ($i = 1; true; ++$i)
+  { 
     $filename_mp4 = sprintf("artists/$artist/video/%08d.mp4", $i);
     $filename_thumbnail = sprintf("artists/$artist/video/%08d-video-thumbnail.jpg", $i);
     $filename_preview = sprintf("artists/$artist/video/%08d-video-preview.jpg", $i);
     
-    if (!file_exists($filename_mp4) || !file_exists($filename_thumbnail) || !file_exists($filename_preview)) {
-        break;
+    if (!file_exists($filename_mp4) || !file_exists($filename_thumbnail) || !file_exists($filename_preview))
+    {
+      break;
     } 
     
     $video = sprintf("%08d", $i);
@@ -27,55 +29,100 @@ for ($i = 1; true; ++$i) {
            "</div>";
 
     array_push($cells, "<a href=\"video.php?artist=$artist&video=$video\">$div</a>");
-}
+  }
 
-// Process images.
- for ($i = 1; true; ++$i) {
-    
+  // Process images.
+  for ($i = 1; true; ++$i)
+  {
     $filename = sprintf("artists/$artist/image/%08d.jpg", $i);
     $filename_fullscreen = sprintf("artists/$artist/image/%08d-fullscreen.jpg", $i);
 
-    if (!file_exists($filename) || !file_exists($filename_fullscreen)) {
-        break;
+    if (!file_exists($filename) || !file_exists($filename_fullscreen))
+    {
+      break;
     }
 
     $image = sprintf("%08d", $i);
 
     array_push($cells, "<a href=\"image.php?artist=$artist&image=$image\"><img src=\"$filename\" class=\"common\"/></a>");
-}
+  }
 
-// Make sure we have an even number of cells.
-if ((count($cells) % 2) == 1) {
+  // Make sure we have an even number of cells.
+  if ((count($cells) % 2) == 1)
+  {
     array_pop($cells);
+  }
+  
+  // Now we can generate the HTML.
+  html_header($artist, "artists/$artist/images/00000001.jpg");
+
+  echo "<body>\n";
+  echo "<table class=\"common\">\n";
+
+  $i = 0;
+  foreach ($cells as $cell)
+  {
+    if (($i % 2) == 0)
+    {
+      echo "<tr>\n";
+    }
+
+    echo "<td class=\"common\">$cell</td>\n";
+     
+    if (($i % 2) == 1)
+    {
+      echo "</tr>\n";
+    }
+
+    $i += 1;
+  }
+
+  echo "</table>\n";
+  social_footer("http://www.gourdi.net/artist.php?artist=$artist");
+  echo "\n</body></html>";
 }
 
-echo "<body>\n";
+//////////////////////////////////////////////////////////////
+function process_script($artist)
+{
+echo "  <!DOCTYPE html>
+<html>
+";
 
 include_once("analyticstracking.php");
 
-echo "<table class=\"common\">\n";
+echo "
+<head>
+  <style>
+    * { margin:0; padding:0; }
+    html, body { width:100%; height:100%; }
+    canvas { display:block; }
+  </style>
+</head>
 
-$i = 0;
- foreach ($cells as $cell) {
-    
-     if (($i % 2) == 0) {
-         echo "<tr>\n";
-     }
+<body> 
+<canvas id='canvas'></canvas>
+</body>
 
-     echo "<td class=\"common\">$cell</td>\n";
-	 
-     if (($i % 2) == 1) {
-         echo "</tr>\n";
-     }
+<script type='text/javascript'>
+";
 
-     $i += 1;
- }
+include_once("helpers.js");
+include_once("artists/$artist/script/script.js");
+echo "
 
-echo "</table>\n";
+</script>
+</html>";
+}
 
-// Footer.
-social_footer("http://www.gourdi.net/artist.php?artist=$artist");
-
-echo "</body></html>";
+//////////////////////////////////////////////////////////////
+if (file_exists("artists/$artist/script/script.js"))
+{
+  process_script($artist);
+}
+else
+{
+  process_images_videos($artist);
+}
 
 ?>
