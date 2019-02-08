@@ -90,10 +90,10 @@ namespace ggo
     {
       for (int y = rect.bottom(); y <= rect.top(); ++y)
       {
-        void * ptr = ptr_offset(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
-        void * end = ptr_offset(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
+        void * ptr = move_ptr(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), rect.left() * pixel_byte_size);
+        void * end = move_ptr(get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step), (rect.right() + 1) * pixel_byte_size);
 
-        for (; ptr != end; ptr = ptr_offset<pixel_byte_size>(ptr))
+        for (; ptr != end; ptr = move_ptr<pixel_byte_size>(ptr))
         {
           write_pixel<format>(ptr, c);
         }

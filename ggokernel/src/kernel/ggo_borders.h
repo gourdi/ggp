@@ -148,7 +148,7 @@ namespace ggo
     y = mirror_index(y, height);
 
     auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
-    ptr = ptr_offset(ptr, x * sizeof(data_t));
+    ptr = move_ptr(ptr, x * sizeof(data_t));
 
     return *ptr;
   }
@@ -163,7 +163,7 @@ namespace ggo
     }
 
     auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
-    ptr = ptr_offset(ptr, x * sizeof(data_t));
+    ptr = move_ptr(ptr, x * sizeof(data_t));
 
     return *ptr;
   }

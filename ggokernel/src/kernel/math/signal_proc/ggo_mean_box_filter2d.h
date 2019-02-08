@@ -31,8 +31,8 @@ namespace ggo
 
     for (int y = clipping.bottom(); y <= clipping.top(); ++y)
     {
-      const void * input_line = ptr_offset(input, y * input_line_byte_step);
-      void * output_line = ptr_offset(output, y * output_line_byte_step);
+      const void * input_line = move_ptr(input, y * input_line_byte_step);
+      void * output_line = move_ptr(output, y * output_line_byte_step);
 
       circular_buffer<data_t> cb(box_radius + 1);
 
@@ -41,7 +41,7 @@ namespace ggo
       for (int x = -box_radius; x <= 0; ++x)
       {
         int i = inf_index<border_mode>(clipping.left() + x, size.width());
-        const auto v = read(ptr_offset(input_line, i * input_item_byte_step));
+        const auto v = read(move_ptr(input_line, i * input_item_byte_step));
         cb.push(v);
         sum += v;
 #ifdef DEBUG_MEAN_BOX_FILTER
@@ -52,7 +52,7 @@ namespace ggo
       for (int x = 1; x <= box_radius; ++x)
       {
         int i = clipping.left() + x;
-        const auto v = read(ptr_offset(input_line, i * input_item_byte_step));
+        const auto v = read(move_ptr(input_line, i * input_item_byte_step));
         sum += v;
 #ifdef DEBUG_MEAN_BOX_FILTER
         std::cout << "reading " << v << " at " << x << ", sum is " << sum << std::endl;
@@ -60,7 +60,7 @@ namespace ggo
       }
 
       const auto v = divide(sum);
-      write(ptr_offset(output_line, clipping.left() * output_item_byte_step), v);
+      write(move_ptr(output_line, clipping.left() * output_item_byte_step), v);
 #ifdef DEBUG_MEAN_BOX_FILTER
       std::cout << "writing " << v << " at " << clipping.left() << std::endl << std::endl;
 #endif
@@ -76,20 +76,20 @@ namespace ggo
         std::cout << "popping " << v1 << " from circular buffer: " << cb << ", sum is " << sum << std::endl;
 #endif
 
-        const auto v2 = read(ptr_offset(input_line, x * input_item_byte_step));
+        const auto v2 = read(move_ptr(input_line, x * input_item_byte_step));
         cb.push(v2);
 #ifdef DEBUG_MEAN_BOX_FILTER
         std::cout << "reading " << v2 << " at " << x << " and pushing it in the circular buffer: " << cb << ", sum is " << sum << std::endl;
 #endif
 
-        const auto v3 = read(ptr_offset(input_line, i * input_item_byte_step));
+        const auto v3 = read(move_ptr(input_line, i * input_item_byte_step));
         sum += v3;
 #ifdef DEBUG_MEAN_BOX_FILTER
         std::cout << "reading " << v3 << " at " << i << ", sum is " << sum << std::endl;
 #endif
 
         const auto v4 = divide(sum);
-        write(ptr_offset(output_line, x * output_item_byte_step), v4);
+        write(move_ptr(output_line, x * output_item_byte_step), v4);
 #ifdef DEBUG_MEAN_BOX_FILTER
         std::cout << "writing " << v4 << " at " << x << std::endl << std::endl;
 #endif

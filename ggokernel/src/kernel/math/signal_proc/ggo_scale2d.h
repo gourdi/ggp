@@ -79,12 +79,12 @@ namespace ggo
 
     auto in = [&](int x, int y)
     {
-      return ggo::ptr_offset(input, y * static_cast<int>(line_byte_step_in))[x];
+      return ggo::move_ptr(input, y * static_cast<int>(line_byte_step_in))[x];
     };
 
     auto out = [&](int x, int y, data_t v)
     {
-      ggo::ptr_offset(output, y * static_cast<int>(line_byte_step_out))[x] = v;
+      ggo::move_ptr(output, y * static_cast<int>(line_byte_step_out))[x] = v;
     };
 
     scale_2d<horz_algo, vert_algo, data_t, data_t>(

@@ -60,7 +60,7 @@ namespace
           *out_ptr++ = rgb.g();
           *out_ptr++ = rgb.r();
 
-          in_ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(in_ptr);
+          in_ptr = ggo::move_ptr<format_traits::pixel_byte_size>(in_ptr);
         }
 
         ofs.write(reinterpret_cast<char *>(padded_line.data()), padded_line_size);

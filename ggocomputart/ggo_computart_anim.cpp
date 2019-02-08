@@ -31,7 +31,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 
     if (i == 1)
     {
-      auto artist_id = ggo::str_to<int>(arg);
+      auto artist_id = ggo::to<int>(arg);
 
       if (artist_id.has_value() == false || *artist_id < 0)
       {
@@ -59,7 +59,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
         std::cout << "Error : missing width parameter" << std::endl;
         return false;
       }
-      auto width = ggo::str_to<int>(argv[i]);
+      auto width = ggo::to<int>(argv[i]);
       if (width.has_value() == false || *width <= 0)
       {
         std::cout << "Error : invalid width argument" << std::endl;
@@ -73,7 +73,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
         std::cout << "Error : missing height parameter" << std::endl;
         return false;
       }
-      auto height = ggo::str_to<int>(argv[i]);
+      auto height = ggo::to<int>(argv[i]);
       if (height.has_value() == false || *height <= 0)
       {
         std::cout << "Error : invalid height argument" << std::endl;

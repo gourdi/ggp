@@ -97,7 +97,7 @@ namespace
       using format_traits = ggo::image_format_traits<format>;
 
       ptr = ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
-      ptr = ggo::ptr_offset(ptr, x * format_traits::pixel_byte_size);
+      ptr = ggo::move_ptr(ptr, x * format_traits::pixel_byte_size);
 
       return ptr;
     }
@@ -108,7 +108,7 @@ namespace
       using format_traits = ggo::image_format_traits<format>;
 
       ptr = ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
-      ptr = ggo::ptr_offset(ptr, x * format_traits::pixel_byte_size);
+      ptr = ggo::move_ptr(ptr, x * format_traits::pixel_byte_size);
 
       return ptr;
     }

@@ -15,12 +15,12 @@ auto make_image(int width, int height, std::initializer_list<typename ggo::image
   auto it = pixels.begin();
   for (int y = 0; y < height; ++y)
   {
-    void * ptr = ggo::ptr_offset(image.data(), y * image.line_byte_step());
+    void * ptr = ggo::move_ptr(image.data(), y * image.line_byte_step());
 
     for (int x = 0; x < width; ++x)
     {
       ggo::write_pixel<format>(ptr, *it++);
-      ptr = ggo::ptr_offset<ggo::image_format_traits<format>::pixel_byte_size>(ptr);
+      ptr = ggo::move_ptr<ggo::image_format_traits<format>::pixel_byte_size>(ptr);
     }
   }
 

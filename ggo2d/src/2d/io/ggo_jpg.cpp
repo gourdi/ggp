@@ -116,7 +116,7 @@ namespace
           *out_ptr++ = rgb.g();
           *out_ptr++ = rgb.b();
 
-          in_ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(in_ptr);
+          in_ptr = ggo::move_ptr<format_traits::pixel_byte_size>(in_ptr);
         }
 
         uint8_t * ptr = line.data();
@@ -159,7 +159,7 @@ namespace ggo
     while (decompressor._cinfo.output_scanline < decompressor._cinfo.output_height)
     {
       jpeg_read_scanlines(&decompressor._cinfo, &line_ptr, 1);
-      line_ptr = ptr_offset(line_ptr, line_byte_step);
+      line_ptr = move_ptr(line_ptr, line_byte_step);
     }
 
     jpeg_finish_decompress(&decompressor._cinfo);

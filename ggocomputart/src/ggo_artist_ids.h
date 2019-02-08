@@ -44,7 +44,7 @@ namespace ggo
     hexa,
     chryzode,
     stoa,
-    sonson,
+    sonson__REMOVED,
     rediff, // 40
     entabeni,
     cabrel,
@@ -69,7 +69,7 @@ namespace ggo
     rubiks_cube,
     smoke, // 10
     poupette,
-    newton__REMOVED,
+    sonson,
     alpha,
     dupecheck,
     lagaude, // 15
@@ -107,7 +107,8 @@ namespace ggo
     duffing, // 5
     demeco,
     wakenda,
-    poupette
+    poupette,
+    sonson
   };
 }
 

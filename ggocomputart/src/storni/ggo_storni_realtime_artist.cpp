@@ -384,10 +384,10 @@ void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int &
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     void * ptr_line = ggo::get_line_ptr<format_traits::lines_order>(_background_buffer.data(), y, height(), line_step());
-    void * ptr_left = ptr_offset(ptr_line, clipping.left() * format_traits::pixel_byte_size);
-    void * ptr_right = ptr_offset(ptr_line, clipping.right() * format_traits::pixel_byte_size);
+    void * ptr_left = move_ptr(ptr_line, clipping.left() * format_traits::pixel_byte_size);
+    void * ptr_right = move_ptr(ptr_line, clipping.right() * format_traits::pixel_byte_size);
 
-    for (void * ptr = ptr_left; ptr <= ptr_right; ptr = ptr_offset(ptr, format_traits::pixel_byte_size))
+    for (void * ptr = ptr_left; ptr <= ptr_right; ptr = move_ptr(ptr, format_traits::pixel_byte_size))
     {
       auto pixel = ggo::read_pixel<format>(ptr);
 
@@ -430,10 +430,10 @@ void ggo::storni_realtime_artist::blit_background(void * buffer, const ggo::rect
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     const void * ptr_in = ggo::get_line_ptr<format_traits::lines_order>(_background_buffer.data(), y, height(), line_step());
-    ptr_in = ptr_offset(ptr_in, clipping.left() * format_traits::pixel_byte_size);
+    ptr_in = move_ptr(ptr_in, clipping.left() * format_traits::pixel_byte_size);
 
     void * ptr_out = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height(), line_step());
-    ptr_out = ptr_offset(ptr_out, clipping.left() * format_traits::pixel_byte_size);
+    ptr_out = move_ptr(ptr_out, clipping.left() * format_traits::pixel_byte_size);
 
     memcpy(ptr_out, ptr_in, clipped_line_byte_size);
   }

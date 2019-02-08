@@ -420,19 +420,19 @@ namespace ggo
 {
   // Pointer to pixel.
   template <image_format format>
-  void * get_pixel_ptr(void * ptr, const int x, const int y, const int height, const int line_step)
+  void * get_pixel_ptr(void * ptr, int x, int y, int height, int line_step)
   {
     using format_traits = ggo::image_format_traits<format>;
 
-    return ptr_offset(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
+    return move_ptr(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
   }
 
   template <image_format format>
-  const void * get_pixel_ptr(const void * ptr, const int x, const int y, const int height, const int line_step)
+  const void * get_pixel_ptr(const void * ptr, int x, int y, int height, int line_step)
   {
     using format_traits = ggo::image_format_traits<format>;
 
-    return ptr_offset(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
+    return move_ptr(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
   }
 
   // Set pixel to pointer.
@@ -444,7 +444,7 @@ namespace ggo
 
   // Set pixel to pointer with coordinates.
   template <image_format format>
-  void write_pixel(void * ptr, const int x, const int y, const int height, const int line_step, const typename image_format_traits<format>::color_t & c)
+  void write_pixel(void * ptr, int x, int y, int height, int line_step, const typename image_format_traits<format>::color_t & c)
   {
     ptr = get_pixel_ptr<format>(ptr, x, y, height, line_step);
 
@@ -460,7 +460,7 @@ namespace ggo
 
   // Get pixel from pointer and coordinates.
   template <image_format format>
-  typename image_format_traits<format>::color_t read_pixel(const void * ptr, const int x, const int y, const int height, const int line_step)
+  typename image_format_traits<format>::color_t read_pixel(const void * ptr, int x, int y, int height, int line_step)
   {
     ptr = get_pixel_ptr<format>(ptr, x, y, height, line_step);
 

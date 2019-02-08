@@ -26,7 +26,7 @@ void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, in
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, c_8u);
 
       ptr_in += 3;
-      ptr_out = ggo::ptr_offset<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
+      ptr_out = ggo::move_ptr<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
     }
 	}
 }

@@ -69,7 +69,7 @@ namespace
           ggo::write_pixel<format>(buffer, acc.div<16>());
         }
 
-        buffer = ggo::ptr_offset<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
+        buffer = ggo::move_ptr<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
       }
     }
   }

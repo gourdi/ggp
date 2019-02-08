@@ -61,7 +61,7 @@ namespace ggo
     {
       if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
       {
-        input = ggo::ptr_offset(input, -bottom * input_line_step);
+        input = ggo::move_ptr(input, -bottom * input_line_step);
       }
       input_height = input_height + bottom;
       bottom = 0;
@@ -72,14 +72,14 @@ namespace ggo
     {
       if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
       {
-        input = ggo::ptr_offset(input, (top - output_height + 1) * input_line_step);
+        input = ggo::move_ptr(input, (top - output_height + 1) * input_line_step);
       }
       input_height = output_height - bottom;
     }
 
     if (left < 0)
     {
-      input = ggo::ptr_offset(input, -left * format_traits_in::pixel_byte_size);
+      input = ggo::move_ptr(input, -left * format_traits_in::pixel_byte_size);
       input_width = input_width + left;
       left = 0;
     }
@@ -105,14 +105,14 @@ namespace ggo
 
         ggo::write_pixel<format_out>(output_ptr, color_blended);
 
-        input_ptr = ggo::ptr_offset<format_traits_in::pixel_byte_size>(input_ptr);
+        input_ptr = ggo::move_ptr<format_traits_in::pixel_byte_size>(input_ptr);
 
         if (input_ptr == input_end)
         {
           break;
         }
 
-        output_ptr = ggo::ptr_offset<format_traits_out::pixel_byte_size>(output_ptr);
+        output_ptr = ggo::move_ptr<format_traits_out::pixel_byte_size>(output_ptr);
       }
     }
   }

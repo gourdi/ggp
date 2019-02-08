@@ -103,7 +103,7 @@ void ggo::ifs_artist::paint_buffer(void * buffer, uint8_t color, const ggo::arra
       ggo::write_pixel<ggo::rgb_8u_yu>(ptr_dst, c_8u);
 
       ptr_src++;
-      ptr_dst = ggo::ptr_offset<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_dst);
+      ptr_dst = ggo::move_ptr<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_dst);
     }
 	}
 }

@@ -50,8 +50,8 @@ void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, 
       auto pixel = read_pixel<render_format>(src);
       write_pixel<shadow_format>(dst, 0xff - pixel.a());
       
-      src = ggo::ptr_offset<render_format_traits::pixel_byte_size>(src);
-      dst = ggo::ptr_offset<shadow_format_traits::pixel_byte_size>(dst);
+      src = ggo::move_ptr<render_format_traits::pixel_byte_size>(src);
+      dst = ggo::move_ptr<shadow_format_traits::pixel_byte_size>(dst);
     }
   }
 

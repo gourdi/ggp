@@ -29,6 +29,7 @@
 #include "kame/ggo_kame_animation_artist.h"
 #include "demeco/ggo_demeco_animation_artist.h"
 #include "poupette/ggo_poupette_animation_artist.h"
+#include "sonson/ggo_sonson_realtime_artist.h"
 
 //////////////////////////////////////////////////////////////
 // REALTIME ARTISTS WRAPPER
@@ -158,6 +159,8 @@ namespace ggo
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_step, format);
     case ggo::animation_artist_id::wakenda:
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_step, format);
+    case ggo::animation_artist_id::sonson:
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_step, format);
 
     default:
       GGO_FAIL();

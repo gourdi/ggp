@@ -43,7 +43,7 @@ namespace
           ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
           ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
           ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
-          ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(ptr);
+          ptr = ggo::move_ptr<format_traits::pixel_byte_size>(ptr);
         }
       }
     }

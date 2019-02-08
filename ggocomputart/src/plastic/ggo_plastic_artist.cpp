@@ -49,7 +49,7 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
 
       ggo::write_pixel<format>(buffer, ggo::convert_color_to<ggo::rgb_8u>(pixel_color));
 
-      buffer = ggo::ptr_offset<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
+      buffer = ggo::move_ptr<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
     }
   }
 }

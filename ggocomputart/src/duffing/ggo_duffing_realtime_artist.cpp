@@ -70,7 +70,7 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
       void * ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.left(), y, height(), line_step());
       void * last_ptr = ggo::get_pixel_ptr<ggo::bgrx_8u_yd>(buffer, clipping.right(), y, height(), line_step());
 
-      for (; ptr <= last_ptr; ptr = ggo::ptr_offset<format_traits::pixel_byte_size>(ptr))
+      for (; ptr <= last_ptr; ptr = ggo::move_ptr<format_traits::pixel_byte_size>(ptr))
       {
         const ggo::rgb_8u pixel = ggo::read_pixel<ggo::bgrx_8u_yd>(ptr);
 

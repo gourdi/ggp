@@ -56,7 +56,7 @@ namespace ggo
       for (int x = 0; x < _width; ++x)
       {
         ggo::write_pixel<image_format>(ptr, c);
-        ptr = ptr_offset<format_traits::pixel_byte_size>(ptr);
+        ptr = move_ptr<format_traits::pixel_byte_size>(ptr);
       }
     }
   }

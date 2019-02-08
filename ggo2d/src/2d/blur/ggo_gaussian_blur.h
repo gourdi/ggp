@@ -119,7 +119,7 @@ namespace ggo
         // Copy line.
         for (int x = 0; x < size.width(); ++x)
         {
-          line[x] = ggo::read_pixel<format>(ggo::ptr_offset(buffer_ptr, x * image_format_traits<format>::pixel_byte_size));
+          line[x] = ggo::read_pixel<format>(ggo::move_ptr(buffer_ptr, x * image_format_traits<format>::pixel_byte_size));
         }
 
         // Convolution.
@@ -129,7 +129,7 @@ namespace ggo
         };
         auto write = [&](int x, processing_t c)
         { 
-          write_pixel<format>(ggo::ptr_offset(buffer_ptr, x * image_format_traits<format>::pixel_byte_size), helper::convert(c));
+          write_pixel<format>(ggo::move_ptr(buffer_ptr, x * image_format_traits<format>::pixel_byte_size), helper::convert(c));
         };
 
         ggo::symmetric_convolution<border>(read, write, size.width(), clipping.left(), clipping.right(), kernel.data(), int(kernel.size()));

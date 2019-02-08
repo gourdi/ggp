@@ -22,8 +22,8 @@ namespace ggo
       throw std::runtime_error("in-place dilatation not supported");
     }
 
-    auto in = [&](int x, int y){ return ggo::ptr_offset(input, y * line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
+    auto in = [&](int x, int y){ return ggo::move_ptr(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
@@ -37,8 +37,8 @@ namespace ggo
       throw std::runtime_error("in-place dilatation not supported");
     }
 
-    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
+    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
 
     morpho_disc(in, out, width, height, radius, pred);
@@ -52,8 +52,8 @@ namespace ggo
       throw std::runtime_error("in-place erosion not supported");
     }
 
-    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * line_byte_step)[x] = v; };
+    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
 
     morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);

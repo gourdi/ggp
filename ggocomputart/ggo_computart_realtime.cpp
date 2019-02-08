@@ -38,15 +38,16 @@ ggo::realtime_artist_abc * create_artist()
   };
 #else
   const std::vector<ggo::realtime_artist_id> ids{
-    ggo::realtime_artist_id::bozons,
-    ggo::realtime_artist_id::duffing,
-    ggo::realtime_artist_id::kanji,
-    ggo::realtime_artist_id::neon,
-    ggo::realtime_artist_id::storni,
-    ggo::realtime_artist_id::lagaude,
-    ggo::realtime_artist_id::demeco,
-    ggo::realtime_artist_id::wakenda,
-    ggo::realtime_artist_id::poupette
+    //ggo::realtime_artist_id::bozons,
+    //ggo::realtime_artist_id::duffing,
+    //ggo::realtime_artist_id::kanji,
+    //ggo::realtime_artist_id::neon,
+    //ggo::realtime_artist_id::storni,
+    //ggo::realtime_artist_id::lagaude,
+    //ggo::realtime_artist_id::demeco,
+    //ggo::realtime_artist_id::wakenda,
+    //ggo::realtime_artist_id::poupette,
+    ggo::realtime_artist_id::sonson
   };
 #endif
 
