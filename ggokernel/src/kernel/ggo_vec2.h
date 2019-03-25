@@ -94,4 +94,32 @@ namespace ggo
   }
 }
 
+//////////////////////////////////////////////////////////////
+// Container helpers.
+namespace ggo
+{
+  template <typename it, typename data_t>
+  bool find(it begin, it end, ggo::vec2<data_t> point, data_t tolerance)
+  {
+    auto cmp = [&](const vec2<data_t> & p)
+    {
+      return std::abs(p.x() - point.x()) < tolerance && std::abs(p.y() - point.y()) < tolerance;
+    };
+    return std::find_if(begin, end, cmp) != end;
+  }
+
+  template <typename data_t>
+  bool find(const std::vector<ggo::vec2<data_t>> & points, ggo::vec2<data_t> point, data_t tolerance)
+  {
+    return ggo::find(points.begin(), points.end(), point, tolerance);
+  }
+
+  template <typename data_t, size_t size>
+  bool find(const std::array<ggo::vec2<data_t>, size> & points, ggo::vec2<data_t> point, data_t tolerance)
+  {
+    return ggo::find(points.begin(), points.end(), point, tolerance);
+  }
+}
+
+
 #endif 

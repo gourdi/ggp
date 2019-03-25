@@ -1,6 +1,8 @@
 #ifndef __GGO_CONTAINER_HELPERS__
 #define __GGO_CONTAINER_HELPERS__
 
+#include <array>
+
 namespace ggo
 {
   template <typename container_t, typename data_t>
@@ -52,6 +54,18 @@ namespace ggo
 
   template <typename container_t, typename data_t>
   bool find(const container_t & container, const data_t & v)
+  {
+    return std::find(container.begin(), container.end(), v) != container.end();
+  }
+
+  template <typename data_t, size_t size>
+  bool find(const std::array<data_t, size> & container, const data_t & v)
+  {
+    return std::find(container.begin(), container.end(), v) != container.end();
+  }
+
+  template <typename data_t>
+  bool find(const std::vector<data_t> & container, const data_t & v)
   {
     return std::find(container.begin(), container.end(), v) != container.end();
   }

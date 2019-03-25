@@ -11,8 +11,6 @@ GGO_TEST(reduce, variadic)
   static_assert(ggo::sum(1, 4, 3) == 8);
 
   static_assert(ggo::mul(1, 4, 3) == 12);
-
-  static_assert(ggo::average(150_u8, 200_u8, 250_u8) == 200_u8);
 }
 
 /////////////////////////////////////////////////////////////////////

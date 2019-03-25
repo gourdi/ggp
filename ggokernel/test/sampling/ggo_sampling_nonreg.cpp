@@ -1,5 +1,6 @@
 #include "../ggo_kernel_nonreg.h"
 #include <kernel/ggo_vec2.h>
+#include <kernel/ggo_kernel.h>
 #include <kernel/math/sampling/shape_sampling/ggo_grid_sampling.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_halton.h>
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
@@ -14,20 +15,20 @@ GGO_TEST(sampling, disc)
 
     GGO_CHECK(samples.size() == 12);
 
-    GGO_CHECK(find_point(samples, 0.5, 0.5));
-    GGO_CHECK(find_point(samples, 0.5, -0.5));
-    GGO_CHECK(find_point(samples, -0.5, 0.5));
-    GGO_CHECK(find_point(samples, -0.5, -0.5));
+    GGO_CHECK(find(samples, { 0.5f, 0.5f }));
+    GGO_CHECK(find(samples, { 0.5f, -0.5f }));
+    GGO_CHECK(find(samples, { -0.5f, 0.5f }));
+    GGO_CHECK(find(samples, { -0.5f, -0.5f }));
 
-    GGO_CHECK(find_point(samples, 1.5, 0.5));
-    GGO_CHECK(find_point(samples, 1.5, -0.5));
-    GGO_CHECK(find_point(samples, -1.5, 0.5));
-    GGO_CHECK(find_point(samples, -1.5, -0.5));
+    GGO_CHECK(find(samples, { 1.5f, 0.5f }));
+    GGO_CHECK(find(samples, { 1.5f, -0.5f }));
+    GGO_CHECK(find(samples, { -1.5f, 0.5f }));
+    GGO_CHECK(find(samples, { -1.5f, -0.5f }));
 
-    GGO_CHECK(find_point(samples, 0.5, 1.5));
-    GGO_CHECK(find_point(samples, 0.5, -1.5));
-    GGO_CHECK(find_point(samples, -0.5, 1.5));
-    GGO_CHECK(find_point(samples, -0.5, -1.5));
+    GGO_CHECK(find(samples, { 0.5f, 1.5f }));
+    GGO_CHECK(find(samples, { 0.5f, -1.5f }));
+    GGO_CHECK(find(samples, { -0.5f, 1.5f }));
+    GGO_CHECK(find(samples, { -0.5f, -1.5f }));
   }
 
   {
@@ -36,10 +37,10 @@ GGO_TEST(sampling, disc)
 
     GGO_CHECK(samples.size() == 4);
 
-    GGO_CHECK(find_point(samples, 3, 2));
-    GGO_CHECK(find_point(samples, 3, 1));
-    GGO_CHECK(find_point(samples, 2, 2));
-    GGO_CHECK(find_point(samples, 2, 1));
+    GGO_CHECK(find_point(samples, { 3, 2 }));
+    GGO_CHECK(find_point(samples, { 3, 1 }));
+    GGO_CHECK(find_point(samples, { 2, 2 }));
+    GGO_CHECK(find_point(samples, { 2, 1 }));
   }
 
   // Samples count sampling.
@@ -49,10 +50,10 @@ GGO_TEST(sampling, disc)
 
     GGO_CHECK(samples.size() == 4);
 
-    GGO_CHECK(find_point(samples, 4 + 1 / std::sqrt(2.f), 3 + 1 / std::sqrt(2.f)));
-    GGO_CHECK(find_point(samples, 4 + 1 / std::sqrt(2.f), 3 - 1 / std::sqrt(2.f)));
-    GGO_CHECK(find_point(samples, 4 - 1 / std::sqrt(2.f), 3 + 1 / std::sqrt(2.f)));
-    GGO_CHECK(find_point(samples, 4 - 1 / std::sqrt(2.f), 3 - 1 / std::sqrt(2.f)));
+    GGO_CHECK(find(samples, { 4 + 1 / std::sqrt(2.f), 3 + 1 / std::sqrt(2.f) } ));
+    GGO_CHECK(find(samples, { 4 + 1 / std::sqrt(2.f), 3 - 1 / std::sqrt(2.f) } ));
+    GGO_CHECK(find(samples, { 4 - 1 / std::sqrt(2.f), 3 + 1 / std::sqrt(2.f) } ));
+    GGO_CHECK(find(samples, { 4 - 1 / std::sqrt(2.f), 3 - 1 / std::sqrt(2.f) } ));
   }
 
   {

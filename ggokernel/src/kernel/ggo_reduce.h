@@ -165,45 +165,5 @@ namespace ggo
   }
 }
 
-// Average.
-namespace ggo
-{
-  template <typename data_t, typename... args>
-  constexpr data_t average(data_t v, args... a)
-  {
-    if constexpr (std::is_integral<data_t>::value == true)
-    {
-      if constexpr (std::is_unsigned<data_t>::value == true)
-      {
-        return (sum(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
-      }
-      else
-      {
-        auto s = sum(v, a...);
-        if (s > 0)
-        {
-          return (s + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
-        }
-        else
-        {
-          data_t num = s - (1 + sizeof...(a)) / 2;
-          data_t den = 1 + sizeof...(a); // Force conversion to signed type.
-          return num / den;
-        }
-      }
-    }
-    else
-    {
-      return sum(v, a...) / (1 + sizeof...(a));
-    }
-  }
-
-  template <typename... args>
-  constexpr uint8_t average(uint8_t v, args... a)
-  {
-    return static_cast<uint8_t>((sum_to<uint32_t>(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a)));
-  }
-}
-
 #endif
 

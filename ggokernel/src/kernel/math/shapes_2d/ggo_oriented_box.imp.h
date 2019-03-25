@@ -7,13 +7,13 @@ namespace ggo
     switch (i)
     {
     case 0:
-      return _pos + _size1 * _dir + _size2 * dir2();
+      return _pos + _size_x * _dir_x + _size_y * dir2();
     case 1:
-      return _pos + _size1 * _dir - _size2 * dir2();
+      return _pos + _size_x * _dir_x - _size_y * dir2();
     case 2:
-      return _pos - _size1 * _dir - _size2 * dir2();
+      return _pos - _size_x * _dir_x - _size_y * dir2();
     case 3:
-      return _pos - _size1 * _dir + _size2 * dir2();
+      return _pos - _size_x * _dir_x + _size_y * dir2();
     default:
       GGO_FAIL();
       return ggo::pos2<data_t>(0.f, 0.f);
@@ -25,17 +25,17 @@ namespace ggo
   void oriented_box<data_t>::rotate(data_t angle, const ggo::pos2<data_t> & center)
   {
     _pos = ggo::rotate(_pos, center, angle);
-    _dir = ggo::rotate(_dir, angle);
+    _dir_x = ggo::rotate(_dir_x, angle);
   }
   
   //////////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::vector<ggo::pos2<data_t>> oriented_box<data_t>::get_points() const
+  std::array<ggo::pos2<data_t>, 4> oriented_box<data_t>::get_points() const
   {
-    return std::vector<ggo::pos2<data_t>> { _pos + _size1 * _dir + _size2 * dir2(),
-                                            _pos + _size1 * _dir - _size2 * dir2(),
-                                            _pos - _size1 * _dir - _size2 * dir2(),
-                                            _pos - _size1 * _dir + _size2 * dir2() };
+    return { _pos + _size_x * _dir_x + _size_y * dir_y(),
+             _pos + _size_x * _dir_x - _size_y * dir_y(),
+             _pos - _size_x * _dir_x - _size_y * dir_y(),
+             _pos - _size_x * _dir_x + _size_y * dir_y() };
   }
 
   //////////////////////////////////////////////////////////////////
@@ -44,14 +44,14 @@ namespace ggo
   {
     ggo::pos2<data_t> diff = p - _pos;
 
-    data_t dot1 = ggo::dot(diff, _dir);
-    if (std::abs(dot1) > _size1)
+    data_t dot1 = ggo::dot(diff, _dir_x);
+    if (std::abs(dot1) > _size_x)
     {
       return false;
     }
 
-    data_t dot2 = ggo::dot(diff, dir2());
-    if (std::abs(dot2) > _size2)
+    data_t dot2 = ggo::dot(diff, dir_y());
+    if (std::abs(dot2) > _size_y)
     {
       return false;
     }
@@ -63,10 +63,10 @@ namespace ggo
   template <typename data_t>
   rect_data<data_t> oriented_box<data_t>::get_bounding_rect() const
   {
-    auto p1 = _pos + _size1 * _dir + _size2 * dir2();
-    auto p2 = _pos + _size1 * _dir - _size2 * dir2();
-    auto p3 = _pos - _size1 * _dir - _size2 * dir2();
-    auto p4 = _pos - _size1 * _dir + _size2 * dir2();
+    auto p1 = _pos + _size_x * _dir_x + _size_y * dir_y();
+    auto p2 = _pos + _size_x * _dir_x - _size_y * dir_y();
+    auto p3 = _pos - _size_x * _dir_x - _size_y * dir_y();
+    auto p4 = _pos - _size_x * _dir_x + _size_y * dir_y();
 
     auto x_inf = ggo::min(p1.x(), p2.x(), p3.x(), p4.x());
     auto x_sup = ggo::max(p1.x(), p2.x(), p3.x(), p4.x());
@@ -80,9 +80,8 @@ namespace ggo
   template <typename data_t>
   rect_intersection oriented_box<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    auto dir2 = this->dir2();
-    auto offset1 = _size1 * _dir;
-    auto offset2 = _size2 * dir2;
+    auto offset1 = _size_x * _dir_x;
+    auto offset2 = _size_y * dir_y();
 
     // Shape in rect?
     auto obb_p1 = _pos + offset1 + offset2;
@@ -135,28 +134,28 @@ namespace ggo
       return rect_intersection::disjoints;
     }
 
-    auto dot1 = ggo::dot(_dir, rect_p1 - _pos);
-    auto dot2 = ggo::dot(_dir, rect_p2 - _pos);
-    auto dot3 = ggo::dot(_dir, rect_p3 - _pos);
-    auto dot4 = ggo::dot(_dir, rect_p4 - _pos);
-    if (dot1 > _size1 && dot2 > _size1 && dot3 > _size1 && dot4 > _size1)
+    auto dot1 = ggo::dot(_dir_x, rect_p1 - _pos);
+    auto dot2 = ggo::dot(_dir_x, rect_p2 - _pos);
+    auto dot3 = ggo::dot(_dir_x, rect_p3 - _pos);
+    auto dot4 = ggo::dot(_dir_x, rect_p4 - _pos);
+    if (dot1 > _size_x && dot2 > _size_x && dot3 > _size_x && dot4 > _size_x)
     {
       return rect_intersection::disjoints;
     }
-    if (dot1 < -_size1 && dot2 < -_size1 && dot3 < -_size1 && dot4 < -_size1)
+    if (dot1 < -_size_x && dot2 < -_size_x && dot3 < -_size_x && dot4 < -_size_x)
     {
       return rect_intersection::disjoints;
     }
 
-    dot1 = ggo::dot(dir2, rect_p1 - _pos);
-    dot2 = ggo::dot(dir2, rect_p2 - _pos);
-    dot3 = ggo::dot(dir2, rect_p3 - _pos);
-    dot4 = ggo::dot(dir2, rect_p4 - _pos);
-    if (dot1 > _size2 && dot2 > _size2 && dot3 > _size2 && dot4 > _size2)
+    dot1 = ggo::dot(dir_y(), rect_p1 - _pos);
+    dot2 = ggo::dot(dir_y(), rect_p2 - _pos);
+    dot3 = ggo::dot(dir_y(), rect_p3 - _pos);
+    dot4 = ggo::dot(dir_y(), rect_p4 - _pos);
+    if (dot1 > _size_y && dot2 > _size_y && dot3 > _size_y && dot4 > _size_y)
     {
       return rect_intersection::disjoints;
     }
-    if (dot1 < -_size2 && dot2 < -_size2 && dot3 < -_size2 && dot4 < -_size2)
+    if (dot1 < -_size_y && dot2 < -_size_y && dot3 < -_size_y && dot4 < -_size_y)
     {
       return rect_intersection::disjoints;
     }

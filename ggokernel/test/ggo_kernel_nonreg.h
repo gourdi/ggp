@@ -20,12 +20,6 @@ inline bool find_point(const std::vector<ggo::pos2_f> & v, const ggo::pos2_f & p
 }
 
 /////////////////////////////////////////////////////////////////////
-inline bool find_point(const std::vector<ggo::pos2_f> & v, float x, float y)
-{
-  return find_point(v, ggo::pos2_f(x, y));
-}
-
-/////////////////////////////////////////////////////////////////////
 inline bool compare_segment(const ggo::segment_f & s1, const ggo::segment_f & s2)
 {
   if (ggo::compare(s1.p1(), s2.p1()) == true && ggo::compare(s1.p2(), s2.p2()) == true)

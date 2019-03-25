@@ -290,6 +290,76 @@ namespace ggo
     return 0;
   }
 }
+
+//////////////////////////////////////////////////////////////
+// Average.
+namespace ggo
+{
+  template <typename data_t, typename... args>
+  constexpr data_t average(data_t v, args... a)
+  {
+    if constexpr (std::is_integral<data_t>::value == true)
+    {
+      if constexpr (std::is_unsigned<data_t>::value == true)
+      {
+        return (sum(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
+      }
+      else
+      {
+        auto s = sum(v, a...);
+        if (s > 0)
+        {
+          return (s + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a));
+        }
+        else
+        {
+          data_t num = s - (1 + sizeof...(a)) / 2;
+          data_t den = 1 + sizeof...(a); // Force conversion to signed type.
+          return num / den;
+        }
+      }
+    }
+    else
+    {
+      return sum(v, a...) / (1 + sizeof...(a));
+    }
+  }
+
+  template <typename... args>
+  constexpr uint8_t average(uint8_t v, args... a)
+  {
+    return static_cast<uint8_t>((sum_to<uint32_t>(v, a...) + (1 + sizeof...(a)) / 2) / (1 + sizeof...(a)));
+  }
+}
+
+//////////////////////////////////////////////////////////////
+// MinMax.
+namespace ggo
+{
+  template <typename data_t>
+  constexpr std::pair<data_t, data_t> minmax(data_t v1, data_t v2)
+  {
+    return v1 < v2 ? std::make_pair(v1, v2) : std::make_pair(v2, v1);
+  }
+
+  template <typename data_t, typename... args>
+  constexpr std::pair<data_t, data_t> minmax(data_t v1, data_t v2, args... a)
+  {
+    auto result = minmax(v2, a...);
+    if (v1 < result.first)
+    {
+      return std::make_pair(v1, result.second);
+    }
+    else if (v2 > result.second)
+    {
+      return std::make_pair(result.first, v2);
+    }
+    else
+    {
+      return result;
+    }
+  }
+}
   
 #include <kernel/ggo_container_helpers.h>
 
@@ -306,6 +376,20 @@ namespace ggo
     top_down,
     bottom_up
   };
+}
+
+//////////////////////////////////////////////////////////////
+// Range.
+namespace ggo
+{
+  template <typename data_t>
+  struct range
+  {
+    data_t _inf;
+    data_t _sup;
+  };
+
+  using range_f = range<float>;
 }
 
 #endif

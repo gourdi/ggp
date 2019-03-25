@@ -1,4 +1,5 @@
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_reduce.h>
 #include <kernel/ggo_string_helpers.h>
 #include <kernel/nonreg/ggo_nonreg.h>
 
@@ -224,6 +225,21 @@ GGO_TEST(base, adaptor)
   GGO_CHECK_EQ(v2[2], 6);
   GGO_CHECK_EQ(v2[3], 8);
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, average)
+{
+  static_assert(ggo::average(150_u8, 200_u8, 250_u8) == 200_u8);
+  static_assert(ggo::average(1, -5, -2) == -2);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, minmax)
+{
+  static_assert(ggo::minmax(3, 1, 5, 4).first == 1);
+  static_assert(ggo::minmax(3, 1, 5, 4).second == 5);
+}
+
 
 
 

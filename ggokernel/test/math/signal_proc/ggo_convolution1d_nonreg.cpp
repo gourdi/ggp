@@ -52,7 +52,7 @@ GGO_TEST(convolution1d, clipping_close_to_borders)
   GGO_CHECK_EQ(out[1], 13);
   GGO_CHECK_EQ(out[2], 17);
   GGO_CHECK_EQ(out[3], 21);
-  GGO_CHECK_EQ(out[4], 18);
+  GGO_CHECK_EQ(out[4], 0);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -74,6 +74,5 @@ GGO_TEST(convolution1d, clipping_inside_data)
   GGO_CHECK_EQ(out[5], 0);
   GGO_CHECK_EQ(out[6], 0);
   GGO_CHECK_EQ(out[7], 0);
-
 }
 
