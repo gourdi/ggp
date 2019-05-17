@@ -1,5 +1,6 @@
 #include "ggo_kame_animation_artist.h"
 #include <kernel/memory/ggo_array.h>
+#include <kernel/ggo_unordered_pair.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/ggo_color.h>
@@ -254,7 +255,7 @@ void ggo::kame_animation_artist::kame::update()
 //////////////////////////////////////////////////////////////
 void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_artist_abc & artist) const
 {
-  std::vector<ggo::link<const pos3_f *>> edges;
+  std::vector<ggo::unordered_pair<const pos3_f *>> edges;
 
   std::vector<ggo::static_paint_shape<ggo::triangle2d_f, uint8_t>> triangles;
 
@@ -262,9 +263,9 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
   {
     if (triangle->get_normal().z() > 0.0f)
     {
-      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v1->_prv, &triangle->_v2->_prv));
-      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v2->_prv, &triangle->_v3->_prv));
-      ggo::push_once(edges, ggo::link<const pos3_f *>(&triangle->_v3->_prv, &triangle->_v1->_prv));
+      ggo::push_once(edges, ggo::unordered_pair<const pos3_f *>(&triangle->_v1->_prv, &triangle->_v2->_prv));
+      ggo::push_once(edges, ggo::unordered_pair<const pos3_f *>(&triangle->_v2->_prv, &triangle->_v3->_prv));
+      ggo::push_once(edges, ggo::unordered_pair<const pos3_f *>(&triangle->_v3->_prv, &triangle->_v1->_prv));
 
       auto proj1 = proj({ triangle->_v1->_prv.x(), triangle->_v1->_prv.y() });
       auto proj2 = proj({ triangle->_v2->_prv.x(), triangle->_v2->_prv.y() });
@@ -284,8 +285,8 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
   std::vector<paint_shape_t> shapes;
   for (const auto & edge : edges)
   {
-    auto proj1 = proj({ edge._v1->x(), edge._v1->y() });
-    auto proj2 = proj({ edge._v2->x(), edge._v2->y() });
+    auto proj1 = proj({ edge._first->x(), edge._first->y() });
+    auto proj2 = proj({ edge._second->x(), edge._second->y() });
 
     shapes.push_back(paint_shape_t({ proj1, proj2, _thickness }, 0x00));
   }

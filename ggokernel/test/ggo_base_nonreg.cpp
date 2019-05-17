@@ -240,6 +240,23 @@ GGO_TEST(base, minmax)
   static_assert(ggo::minmax(3, 1, 5, 4).second == 5);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, range_intersection)
+{
+  GGO_CHECK(ggo::get_range_intersection<int>({ 1, 2 }, { 3, 4 }).has_value() == false);
+  GGO_CHECK(ggo::get_range_intersection<int>({ 3, 4 }, { 1, 2 }).has_value() == false);
+
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 1, 3 }, { 2, 4 })->_inf, 2);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 1, 3 }, { 2, 4 })->_sup, 3);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 4 }, { 1, 3 })->_inf, 2);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 4 }, { 1, 3 })->_sup, 3);
+
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 1, 4 }, { 2, 3 })->_inf, 2);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 1, 4 }, { 2, 3 })->_sup, 3);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 3 }, { 1, 4 })->_inf, 2);
+  GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 3 }, { 1, 4 })->_sup, 3);
+}
+
 
 
 

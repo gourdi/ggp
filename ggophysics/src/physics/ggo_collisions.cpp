@@ -1,142 +1,183 @@
 #include "ggo_collisions.h"
 #include <vector>
+#include <map>
 #include <numeric>
 
 namespace ggo
 {
-  //////////////////////////////////////////////////////////////////
-  bool test_collision(const ggo::half_plane<float> & half_plane, const ggo::oriented_box<float> & box,
-                      ggo::pos2_f & pos, ggo::vec2_f & normal)
+  std::optional<ggo::separation_data> find_minimum_penetration_separating_axis(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2)
   {
-    // Check if points of the current box are inside the half-plane.
-    std::vector<ggo::pos2_f> inside_points;
-    for (int i = 0; i < 4; ++i)
+    auto check_separation = [](box_id reference_box_id,
+      const ggo::oriented_box_f & reference_box,
+      const ggo::oriented_box_f::edge & reference_edge,
+      const ggo::oriented_box_f & incident_box,
+      std::optional<separation_data> separation) -> std::optional<ggo::separation_data>
     {
-      float dist = ggo::dot(half_plane.normal(), box[i]) - half_plane.dist_to_origin();
-      if (dist < 0)
+      float reference_box_size_normal = 0.f;
+      float reference_box_size_side = 0.f;
+      switch (reference_edge._id)
       {
-        inside_points.push_back(box[i]);
+      case ggo::oriented_box_edge_id::left:
+      case ggo::oriented_box_edge_id::right:
+        reference_box_size_normal = reference_box.half_size_x();
+        reference_box_size_side = reference_box.half_size_y();
+        break;
+      case ggo::oriented_box_edge_id::bottom:
+      case ggo::oriented_box_edge_id::top:
+        reference_box_size_normal = reference_box.half_size_y();
+        reference_box_size_side = reference_box.half_size_x();
+        break;
+      }
+
+      float proj_incident = project(incident_box, reference_edge._normal)._inf;
+      float proj_reference = ggo::dot(reference_edge._normal, reference_box.pos()) + reference_box_size_normal;
+      float penetration = proj_reference - proj_incident;
+      if (penetration < 0)
+      {
+        return {};
+      }
+      if (separation && penetration > separation->_penetration)
+      {
+        return separation;
+      }
+
+      return { { penetration, reference_edge, reference_box_size_normal, reference_box_size_side, reference_box_id, &reference_box, &incident_box } };
+    };
+
+    const auto box1_edges = box1.get_edges();
+    const auto box2_edges = box2.get_edges();
+
+    std::optional<separation_data> separation;
+
+    for (const auto & edge : box1_edges)
+    {
+      separation = check_separation(box_id::box1, box1, edge, box2, separation);
+      if (!separation)
+      {
+        return {};
       }
     }
 
-    // If at least one point is inside => collision.
-    if (inside_points.empty() == true)
+    for (const auto & edge : box2_edges)
     {
-      return false;
+      separation = check_separation(box_id::box2, box2, edge, box1, separation);
+      if (!separation)
+      {
+        return {};
+      }
     }
 
-    normal = half_plane.normal();
-
-    // Average inside points in case there is more than one.
-    pos = { 0.f, 0.f };
-    for (const auto & point : inside_points)
-    {
-      pos += point + half_plane.normal() * (half_plane.dist_to_origin() - ggo::dot(half_plane.normal(), point));
-    }
-    pos /= static_cast<float>(inside_points.size());
-
-    return true;
+    return separation;
   }
 
-  namespace
+  std::array<ggo::oriented_box_f::vertex, 2> find_incident_edge(ggo::vec2_f reference_normal, const ggo::oriented_box<float> & incident_box)
   {
-    void find_collision_info(const ggo::oriented_box_f & box, const std::vector<ggo::pos2_f> & inside_points, ggo::pos2_f & pos, ggo::vec2_f & normal)
+    auto incident_edges = incident_box.get_edges();
+
+    std::array<ggo::oriented_box_f::vertex, 2> result;
+
+    float proj_min = std::numeric_limits<float>::max();
+    for (const auto & edge : incident_edges)
     {
-      std::vector<std::pair<float, float>> dots;
-      for (const auto & point : inside_points)
-      {
-        GGO_ASSERT(box.is_point_inside(point) == true);
+      float proj_cur = ggo::dot(reference_normal, edge._normal);
 
-        ggo::vec2_f diff(point - box.get_center());
-        dots.push_back(std::make_pair(ggo::dot(box.dir(), diff), ggo::dot(box.dir2(), diff)));
+      if (proj_cur < proj_min)
+      {
+        proj_min = proj_cur;
+        result = edge._vertices;
       }
+    }
 
-      float front_dist1 = 0.f;
-      float back_dist1  = 0.f;
-      float front_dist2 = 0.f;
-      float back_dist2  = 0.f;
-      for (const auto & dot : dots)
-      {
-        GGO_ASSERT(box.size1() - dot.first >= -0.001f);
-        GGO_ASSERT(box.size1() + dot.first >= -0.001f);
-        GGO_ASSERT(box.size2() - dot.second >= -0.001f);
-        GGO_ASSERT(box.size2() + dot.second >= -0.001f);
-        front_dist1 += box.size1() - dot.first;
-        back_dist1  += box.size1() + dot.first;
-        front_dist2 += box.size2() - dot.second;
-        back_dist2  += box.size2() + dot.second;
-      }
+    return result;
+  }
 
-      auto offset_dir1 = [&]() { return std::accumulate(dots.begin(), dots.end(), 0.f, [](float acc, const std::pair<float, float> dots_pair) { return acc + dots_pair.first; }); };
-      auto offset_dir2 = [&]() { return std::accumulate(dots.begin(), dots.end(), 0.f, [](float acc, const std::pair<float, float> dots_pair) { return acc + dots_pair.second; }); };
+  std::array<ggo::oriented_box_f::vertex, 2> clip_incident_edge(ggo::vec2_f reference_normal,
+    ggo::pos2_f reference_box_center,
+    float reference_dist_side,
+    std::array<ggo::oriented_box_f::vertex, 2> incident_edge)
+  {
+    auto clip = [&](ggo::pos2_f p, ggo::pos2_f p2, ggo::vec2_f normal)
+    {
+      ggo::orthonormal_basis2d<float> basis(reference_box_center, reference_normal);
 
-      if (front_dist1 <= back_dist1  && front_dist1 <= front_dist2 && front_dist1 <= back_dist2)
+      ggo::pos2_f p_local = basis.point_from_world_to_local(p);
+      ggo::pos2_f p2_local = basis.point_from_world_to_local(p2);
+      ggo::vec2_f diff = p2_local - p_local;
+
+      if (p_local.y() < -reference_dist_side)
       {
-        pos = box.get_center() + box.size1() * box.dir() + offset_dir2() * box.dir2();
-        normal = box.dir();
+        float x = p_local.x() - (p_local.y() + reference_dist_side) * diff.x() / diff.y();
+        ggo::pos2_f p_clipped_local = { x, -reference_dist_side };
+        return basis.point_from_local_to_world(p_clipped_local);
       }
-      else if (back_dist1 <= front_dist1  && back_dist1 <= front_dist2 && back_dist1 <= back_dist2)
+      else if (p_local.y() > reference_dist_side)
       {
-        pos = box.get_center() - box.size1() * box.dir() + offset_dir2() * box.dir2();
-        normal = -box.dir();
-      }
-      else if (front_dist2 <= front_dist1  && front_dist2 <= back_dist1 && front_dist2 <= back_dist2)
-      {
-        pos = box.get_center() + box.size2() * box.dir2() + offset_dir1() * box.dir();
-        normal = box.dir2();
+        float x = p_local.x() - (p_local.y() - reference_dist_side) * diff.x() / diff.y();
+        ggo::pos2_f p_clipped_local = { x, reference_dist_side };
+        return basis.point_from_local_to_world(p_clipped_local);
       }
       else
       {
-        GGO_ASSERT(back_dist2 <= front_dist1  && back_dist2 <= back_dist1 && back_dist2 <= front_dist2);
-        pos = box.get_center() - box.size2() * box.dir2() + offset_dir1() * box.dir();
-        normal = -box.dir2();
+        return p;
       }
-    }
+    };
+
+    std::array<ggo::oriented_box_f::vertex, 2> result = incident_edge;
+
+    result[0]._pos = clip(incident_edge[0]._pos, incident_edge[1]._pos, reference_normal);
+    result[1]._pos = clip(incident_edge[1]._pos, incident_edge[0]._pos, reference_normal);
+
+    return result;
   }
 
-  // This collision detection algorithm expect boxes to move slowly enough so that 
-  // you just need to check for points inside one or another box to detect collision.
-  // This is a simplification, since in the general case, this test is not enough.
-  bool test_collision(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2,
-                      ggo::pos2_f & pos, ggo::vec2_f & normal)
+  incident_vertices discard_outside_contacts(ggo::pos2_f box_center,
+    ggo::vec2_f normal, float dist_normal,
+    const std::array<ggo::oriented_box_f::vertex, 2> & incident_edge)
   {
-    std::vector<ggo::pos2_f> inside_box1;
-    std::vector<ggo::pos2_f> inside_box2;
+    incident_vertices result;
+    result._count = 0;
 
-    for (const auto & point : box2.get_points())
+    result._vertices[result._count]._penetration = dist_normal - ggo::dot(incident_edge[0]._pos - box_center, normal);
+    if (result._vertices[result._count]._penetration > 0.f)
     {
-      if (box1.is_point_inside(point) == true)
-      {
-        inside_box1.push_back(point);
-      }
+      result._vertices[result._count]._vertex = incident_edge[0];
+      result._count++;
     }
 
-    for (const auto & point : box1.get_points())
+    result._vertices[result._count]._penetration = dist_normal - ggo::dot(incident_edge[1]._pos - box_center, normal);
+    if (result._vertices[result._count]._penetration > 0.f)
     {
-      if (box2.is_point_inside(point) == true)
-      {
-        inside_box2.push_back(point);
-      }
+      result._vertices[result._count]._vertex = incident_edge[1];
+      result._count++;
     }
 
-    if (inside_box1.empty() == true && inside_box2.empty() == true)
+    return result;
+  }
+
+  collision_data collide(const ggo::oriented_box<float> & box1, const ggo::oriented_box<float> & box2)
+  {
+    auto separating_axis_data = find_minimum_penetration_separating_axis(box1, box2);
+    if (!separating_axis_data)
     {
-      return false;
+      return {};
     }
 
-    if (inside_box1.empty() == false)
-    {
-      find_collision_info(box1, inside_box1, pos, normal);
-      return true;
-    }
+    auto incident_edge = find_incident_edge(separating_axis_data->_reference_edge._normal,
+      *separating_axis_data->_incident_box);
 
-    if (inside_box2.empty() == false)
-    {
-      find_collision_info(box2, inside_box2, pos, normal);
-      normal = -normal; // Invert normal since it is relative to box1.
-      return true;
-    }
+    incident_edge = clip_incident_edge(separating_axis_data->_reference_edge._normal,
+      separating_axis_data->_reference_box->pos(),
+      separating_axis_data->_reference_box_size_side,
+      incident_edge);
 
-    return false;
+    collision_data collision;
+    collision._reference_box_id = separating_axis_data->_reference_box_id;
+    collision._reference_edge = separating_axis_data->_reference_edge;
+    collision._incident_vertices = discard_outside_contacts(separating_axis_data->_reference_box->pos(),
+      separating_axis_data->_reference_edge._normal,
+      separating_axis_data->_reference_box_size_normal,
+      incident_edge);
+
+    return collision;
   }
 }

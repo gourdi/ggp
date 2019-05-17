@@ -1,79 +1,54 @@
-#include <physics/ggo_physics.h>
+#include <physics/ggo_contact.h>
+#include <physics/ggo_rigid_body.h>
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_array.h>
-#include <kernel/math/lcp/lemke.h>
 
-struct contact
+GGO_TEST(contact, update_case1)
 {
-  const ggo::rigid_body * _body1;
-  const ggo::rigid_body * _body2;
-  ggo::pos2_f _pos;
-  ggo::vec2_f _normal; // From body2 to body1.
-  float _relative_velocity;
-};
+  ggo::rigid_body body1(0.f, 0.f, 0.f, 0.f);
+  ggo::rigid_body body2(0.f, 0.f, 0.f, 0.f);
 
-ggo::array<float, 2> build_lcp_matrix(const std::vector<contact> & contacts)
-{
-  auto compute_velocity = [](const ggo::pos2_f & p, const ggo::pos2_f & center_of_mass, const ggo::vec2_f & linear_velocity, float angular_velocity)
-  {
-    const ggo::vec2_f diff = p - center_of_mass;
-    const ggo::vec2_f ortho(-diff.y(), diff.x());
-    return linear_velocity + angular_velocity * ortho;
-  };
+  ggo::collision_data collision;
+  collision._reference_box_id = ggo::box_id::box1;
+  collision._reference_edge._id = ggo::oriented_box_edge_id::left;
+  collision._reference_edge._normal = { 1.f, 0.f };
+  collision._reference_edge._vertices[0] = { { 0.f, 0.f }, ggo::oriented_box_vertex_id::left_bottom };
+  collision._reference_edge._vertices[1] = { { 2.f, 0.f }, ggo::oriented_box_vertex_id::left_top };
+  collision._incident_vertices._count = 2;
+  collision._incident_vertices._vertices[0] = { 10.f, { { 1.f, 2.f }, ggo::oriented_box_vertex_id::right_bottom } };
+  collision._incident_vertices._vertices[1] = { 11.f, { { 3.f, 4.f }, ggo::oriented_box_vertex_id::left_bottom } };
 
-  ggo::array<float, 2> lcp_matrix(int(contacts.size()), int(contacts.size()));
+  ggo::contact contact;
+  contact._reference_body = &body1;
+  contact._incident_body = &body2;
+  contact._reference_edge._id = ggo::oriented_box_edge_id::left;
+  contact._reference_edge._normal = { 1.f, 0.f };
+  contact._reference_edge._vertices[0] = { { 0.f, 0.f }, ggo::oriented_box_vertex_id::left_bottom };
+  contact._reference_edge._vertices[1] = { { 2.f, 0.f }, ggo::oriented_box_vertex_id::left_top };
+  contact._points_count = 1;
+  contact._points[0]._normal_impulse = 5.f;
+  contact._points[0]._tangent_impulse = 6.f;
+  contact._points[0]._penetration = 1.2f;
+  contact._points[0]._vertex = { { 7.f, 8.f }, ggo::oriented_box_vertex_id::left_bottom };
 
-  for (int i = 0; i < int(contacts.size()); ++i)
-  {
-    auto impulse1 = contacts[i]._body1->compute_impulse(contacts[i]._pos, contacts[i]._normal);
-    auto impulse2 = contacts[i]._body2->compute_impulse(contacts[i]._pos, -contacts[i]._normal);
+  contact = ggo::update_contact(contact, collision, &body1, &body2);
 
-    ggo::vec2_f linear_velocity1 = contacts[i]._body1->_linear_velocity + impulse1._linear_velocity;
-    ggo::vec2_f linear_velocity2 = contacts[i]._body2->_linear_velocity + impulse2._linear_velocity;
-    float angular_velocity1 = contacts[i]._body1->_angular_velocity + impulse1._angular_velocity;
-    float angular_velocity2 = contacts[i]._body2->_angular_velocity + impulse2._angular_velocity;
-
-    for (int j = i; j < int(contacts.size()); ++j)
-    {
-      ggo::vec2_f v1 = compute_velocity(contacts[j]._pos, contacts[j]._body1->get_center_of_mass(), linear_velocity1, angular_velocity1);
-      ggo::vec2_f v2 = compute_velocity(contacts[j]._pos, contacts[j]._body2->get_center_of_mass(), linear_velocity2, angular_velocity2);
-
-      float relative_velocity = ggo::dot(v1 - v2, contacts[j]._normal);
-
-      lcp_matrix(i, j) = lcp_matrix(j, i) = relative_velocity - contacts[j]._relative_velocity;
-    }
-  }
-
-  return lcp_matrix;
+  GGO_CHECK_EQ(contact._reference_body, &body1);
+  GGO_CHECK_EQ(contact._incident_body, &body2);
+  GGO_CHECK_EQ(contact._reference_edge._id, ggo::oriented_box_edge_id::left);
+  GGO_CHECK(ggo::compare(contact._reference_edge._normal, { 1.f, 0.f }));
+  GGO_CHECK_EQ(contact._reference_edge._vertices[0]._id, ggo::oriented_box_vertex_id::left_bottom);
+  GGO_CHECK(ggo::compare(contact._reference_edge._vertices[0]._pos, { 0.f, 0.f }));
+  GGO_CHECK_EQ(contact._reference_edge._vertices[1]._id, ggo::oriented_box_vertex_id::left_top);
+  GGO_CHECK(ggo::compare(contact._reference_edge._vertices[1]._pos, { 2.f, 0.f }));
+  GGO_CHECK_EQ(contact._points_count, 2);
+  GGO_CHECK_FLOAT_EQ(contact._points[0]._penetration, 10.f);
+  GGO_CHECK_FLOAT_EQ(contact._points[0]._normal_impulse, 0.f);
+  GGO_CHECK_FLOAT_EQ(contact._points[0]._tangent_impulse, 0.f);
+  GGO_CHECK_EQ(contact._points[0]._vertex._id, ggo::oriented_box_vertex_id::right_bottom);
+  GGO_CHECK(ggo::compare(contact._points[0]._vertex._pos, { 1.f, 2.f }));
+  GGO_CHECK_FLOAT_EQ(contact._points[1]._penetration, 11.f);
+  GGO_CHECK_FLOAT_EQ(contact._points[1]._normal_impulse, 5.f); // Previous value is not lost.
+  GGO_CHECK_FLOAT_EQ(contact._points[1]._tangent_impulse, 6.f); // Previous value is not lost.
+  GGO_CHECK_EQ(contact._points[1]._vertex._id, ggo::oriented_box_vertex_id::left_bottom);
+  GGO_CHECK(ggo::compare(contact._points[1]._vertex._pos, { 3.f, 4.f }));
 }
-
-GGO_TEST(contact, test1)
-{
-  ggo::oriented_box_body body1({ { 0.f, 1.f }, { 0.f, 1.f }, 1.f, 1.f });
-  ggo::half_plane_body body2({ 0.f, 1.f }, 0.f);
-
-  contact contact1;
-  contact1._body1 = &body1;
-  contact1._body2 = &body2;
-  contact1._normal = { 0.f, 1.f };
-  contact1._pos = { -1.f, 0.f };
-  contact1._relative_velocity = -1.f;
-
-  contact contact2;
-  contact2._body1 = &body1;
-  contact2._body2 = &body2;
-  contact2._normal = { 0.f, 1.f };
-  contact2._pos = { 1.f, 0.f };
-  contact2._relative_velocity = -1.f;
-
-  auto lcp_matrix = build_lcp_matrix({ contact1, contact2 });
-
-  ggo::array<float, 2> previous_vel(1, 2);
-  previous_vel(0, 0) = -1.f;
-  previous_vel(0, 1) = -1.f;
-  ggo::array<float, 2> after_vel(1, 2);
-  ggo::array<float, 2> z(1, 2);
-
-  ggo::lemke::solve(lcp_matrix, previous_vel, after_vel, z);
-}
-

@@ -16,8 +16,6 @@ add_executable(ggocomputartanim ggo_computart_anim.cpp)
 target_link_libraries(ggocomputartanim ggocomputart)
 
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_link_libraries(ggocomputartrealtime ggocomputart)
-target_link_libraries(ggocomputartrealtime "${PROJECT_SOURCE_DIR}/3rdparty/SDL2-2.0.8/lib/SDL2.lib")
-target_link_libraries(ggocomputartrealtime "${PROJECT_SOURCE_DIR}/3rdparty/SDL2-2.0.8/lib/SDL2main.lib")
-target_include_directories(ggocomputartrealtime PUBLIC "${PROJECT_SOURCE_DIR}/3rdparty/SDL2-2.0.8/include")
+target_link_libraries(ggocomputartrealtime ggocomputart ${SDL2_LIBRARIES})
+target_include_directories(ggocomputartrealtime PUBLIC ${SDL2_INCLUDE_DIRS})
 

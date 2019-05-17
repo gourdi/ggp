@@ -4,7 +4,6 @@
 #include "ggo_animation_artist_abc.h"
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
 #include <kernel/ggo_random_interpolator_abc.h>
-#include <kernel/ggo_link.h>
 #include <memory>
 #include <map>
 

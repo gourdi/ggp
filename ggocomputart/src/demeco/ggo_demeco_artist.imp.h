@@ -305,9 +305,6 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
   }
 
   // Boxes animation.
-  ggo::vec2_f dir1 = ggo::vec2_f::from_angle(angle);
-  ggo::vec2_f dir2{ dir1.y(), -dir1.x() };
-
   float main_size = _animations[0]._size;
 
   // Animation 2.
@@ -317,7 +314,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim2_counter_start, _anim2_counter_end, main_size, main_size + _animations[1]._size);
     auto shape_color = from_8u(_animations[1]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, dir1, main_size, size), shape_color));
+    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle, main_size, size), shape_color));
   }
 
   // Animation 3.
@@ -327,7 +324,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim3_counter_start, _anim3_counter_end, main_size, main_size + _animations[2]._size);
     auto shape_color = from_8u(_animations[2]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, dir2, main_size, size), shape_color));
+    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color));
   }
 
   // Animation 1. Must be last.
@@ -337,7 +334,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim1_counter_start, _anim1_counter_end, 0.f, main_size);
     auto shape_color = from_8u(_animations[0]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, dir2, main_size, size), shape_color));
+    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color));
   }
 
   return paint_boxes;

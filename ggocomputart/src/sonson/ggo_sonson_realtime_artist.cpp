@@ -4,9 +4,9 @@
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <ggo::image_format format>
+  template <ggo::image_format format, int channel>
   void paint_glowing_circle(const ggo::sonson_realtime_artist::glowing_circle & circle, ggo::vec2_f center_offset,
-    void * buffer, int width, int height, int line_step, const ggo::rect_int & clipping, int channel)
+    void * buffer, int width, int height, int line_step, const ggo::rect_int & clipping)
   {
     const float radius[4] = {
       circle._radius - circle._outter_size - circle._inner_size,
@@ -117,9 +117,9 @@ void ggo::sonson_realtime_artist::render_tile_t(void * buffer, const ggo::rect_i
 
   for (auto & circle : _circles)
   {
-    paint_glowing_circle<format>(circle, r_offset, buffer, width(), height(), line_step(), clipping, 0);
-    paint_glowing_circle<format>(circle, g_offset, buffer, width(), height(), line_step(), clipping, 1);
-    paint_glowing_circle<format>(circle, b_offset, buffer, width(), height(), line_step(), clipping, 2);
+    paint_glowing_circle<format, 0>(circle, r_offset, buffer, width(), height(), line_step(), clipping);
+    paint_glowing_circle<format, 1>(circle, g_offset, buffer, width(), height(), line_step(), clipping);
+    paint_glowing_circle<format, 2>(circle, b_offset, buffer, width(), height(), line_step(), clipping);
   }
 }
 

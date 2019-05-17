@@ -74,6 +74,22 @@ namespace ggo
     return center + v;
   }
 
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, 2>, vec_t>>>
+    constexpr vec_t ortho_ccw(vec_t v)
+  {
+    return { -v._coefs[1], v._coefs[0] };
+  }
+
+  template <typename vec_t,
+    typename data_t = typename vec_t::_data_t,
+    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, 2>, vec_t>>>
+    constexpr vec_t ortho_cw(vec_t v)
+  {
+    return { v._coefs[1], -v._coefs[0] };
+  }
+
   template <typename data_t>
   constexpr data_t ortho_dot(const ggo::vec_base<data_t, 2> & v1, const ggo::vec_base<data_t, 2> & v2)
   {

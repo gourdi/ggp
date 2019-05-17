@@ -1,5 +1,5 @@
 #include "ggo_delaunay_triangulation.h"
-#include <kernel/ggo_link.h>
+#include <kernel/ggo_unordered_pair.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 
@@ -37,7 +37,7 @@ namespace ggo
   }
 
   template<class T>
-  using edge = ggo::link<const ggo::pos2<T> *>;
+  using edge = ggo::unordered_pair<const ggo::pos2<T> *>;
 } 
 
 namespace
@@ -102,10 +102,10 @@ namespace
   template <typename T>
   T compute_opposite_angle(const ggo::delaunay_triangle<T> & triangle, const ggo::edge<T> & opposite_edge)
   {
-    GGO_ASSERT(opposite_edge._v1 != opposite_edge._v2);
+    GGO_ASSERT(opposite_edge._first != opposite_edge._second);
     GGO_ASSERT(triangle.is_valid());
-    GGO_ASSERT((triangle._v1 == opposite_edge._v1) || (triangle._v2 == opposite_edge._v1) || (triangle._v3 == opposite_edge._v1));
-    GGO_ASSERT((triangle._v1 == opposite_edge._v2) || (triangle._v2 == opposite_edge._v2) || (triangle._v3 == opposite_edge._v2));
+    GGO_ASSERT((triangle._v1 == opposite_edge._first) || (triangle._v2 == opposite_edge._first) || (triangle._v3 == opposite_edge._first));
+    GGO_ASSERT((triangle._v1 == opposite_edge._second) || (triangle._v2 == opposite_edge._second) || (triangle._v3 == opposite_edge._second));
     
     if (ggo::edge<T>(triangle._v1, triangle._v2) == opposite_edge)
     {
@@ -151,33 +151,33 @@ namespace
     GGO_ASSERT(triangle1.compare(triangle2) == false);
     GGO_ASSERT(triangle1.is_valid() == true);
     GGO_ASSERT(triangle2.is_valid() == true);
-    GGO_ASSERT(common_edge._v1 != common_edge._v2);
-    GGO_ASSERT((triangle1._v1 == common_edge._v1) || (triangle1._v2 == common_edge._v1) || (triangle1._v3 == common_edge._v1));
-    GGO_ASSERT((triangle1._v1 == common_edge._v2) || (triangle1._v2 == common_edge._v2) || (triangle1._v3 == common_edge._v2));
-    GGO_ASSERT((triangle2._v1 == common_edge._v1) || (triangle2._v2 == common_edge._v1) || (triangle2._v3 == common_edge._v1));
-    GGO_ASSERT((triangle2._v1 == common_edge._v2) || (triangle2._v2 == common_edge._v2) || (triangle2._v3 == common_edge._v2));
+    GGO_ASSERT(common_edge._first != common_edge._second);
+    GGO_ASSERT((triangle1._v1 == common_edge._first) || (triangle1._v2 == common_edge._first) || (triangle1._v3 == common_edge._first));
+    GGO_ASSERT((triangle1._v1 == common_edge._second) || (triangle1._v2 == common_edge._second) || (triangle1._v3 == common_edge._second));
+    GGO_ASSERT((triangle2._v1 == common_edge._first) || (triangle2._v2 == common_edge._first) || (triangle2._v3 == common_edge._first));
+    GGO_ASSERT((triangle2._v1 == common_edge._second) || (triangle2._v2 == common_edge._second) || (triangle2._v3 == common_edge._second));
 
     const ggo::pos2<T> * opposite1 = NULL;
     const ggo::pos2<T> * opposite2 = NULL;
 
     // Build new triangles.
-    if ((triangle1._v1 != common_edge._v1) && (triangle1._v1 != common_edge._v2)) { opposite1 = triangle1._v1; }
-    if ((triangle1._v2 != common_edge._v1) && (triangle1._v2 != common_edge._v2)) { opposite1 = triangle1._v2; }
-    if ((triangle1._v3 != common_edge._v1) && (triangle1._v3 != common_edge._v2)) { opposite1 = triangle1._v3; }
+    if ((triangle1._v1 != common_edge._first) && (triangle1._v1 != common_edge._second)) { opposite1 = triangle1._v1; }
+    if ((triangle1._v2 != common_edge._first) && (triangle1._v2 != common_edge._second)) { opposite1 = triangle1._v2; }
+    if ((triangle1._v3 != common_edge._first) && (triangle1._v3 != common_edge._second)) { opposite1 = triangle1._v3; }
 
-    if ((triangle2._v1 != common_edge._v1) && (triangle2._v1 != common_edge._v2)) { opposite2 = triangle2._v1; }
-    if ((triangle2._v2 != common_edge._v1) && (triangle2._v2 != common_edge._v2)) { opposite2 = triangle2._v2; }
-    if ((triangle2._v3 != common_edge._v1) && (triangle2._v3 != common_edge._v2)) { opposite2 = triangle2._v3; }
+    if ((triangle2._v1 != common_edge._first) && (triangle2._v1 != common_edge._second)) { opposite2 = triangle2._v1; }
+    if ((triangle2._v2 != common_edge._first) && (triangle2._v2 != common_edge._second)) { opposite2 = triangle2._v2; }
+    if ((triangle2._v3 != common_edge._first) && (triangle2._v3 != common_edge._second)) { opposite2 = triangle2._v3; }
 
     GGO_ASSERT(opposite1 != NULL);
     GGO_ASSERT(opposite2 != NULL);
     GGO_ASSERT(opposite1 != opposite2);
 
-    triangle1._v1 = common_edge._v1;
+    triangle1._v1 = common_edge._first;
     triangle1._v2 = opposite1;
     triangle1._v3 = opposite2;
 
-    triangle2._v1 = common_edge._v2;
+    triangle2._v1 = common_edge._second;
     triangle2._v2 = opposite1;
     triangle2._v3 = opposite2;
 
@@ -322,14 +322,14 @@ namespace
         edge2 = ggo::edge<T>(it_triangle->_v2, it_triangle->_v3);
       }
       
-      if (current_edge._v1 != nullptr && current_edge._v2 != nullptr)
+      if (current_edge._first != nullptr && current_edge._second != nullptr)
       {
-        GGO_ASSERT(edge1._v1 != nullptr);
-        GGO_ASSERT(edge1._v2 != nullptr);
-        GGO_ASSERT(edge2._v1 != nullptr);
-        GGO_ASSERT(edge2._v2 != nullptr);
+        GGO_ASSERT(edge1._first != nullptr);
+        GGO_ASSERT(edge1._second != nullptr);
+        GGO_ASSERT(edge2._first != nullptr);
+        GGO_ASSERT(edge2._second != nullptr);
 
-        if (edge._v1 != nullptr && edge._v2 != nullptr && current_edge != edge)
+        if (edge._first != nullptr && edge._second != nullptr && current_edge != edge)
         {
           GGO_TRACE("vertex detected to be on several edges, discarding it\n");
           return;
@@ -338,8 +338,8 @@ namespace
         edge = current_edge;
           
         // Add new triangles.
-        ggo::delaunay_triangle<T> triangle1(edge1._v1, edge1._v2, new_vertex);
-        ggo::delaunay_triangle<T> triangle2(edge2._v1, edge2._v2, new_vertex);
+        ggo::delaunay_triangle<T> triangle1(edge1._first, edge1._second, new_vertex);
+        ggo::delaunay_triangle<T> triangle2(edge2._first, edge2._second, new_vertex);
         GGO_ASSERT(find_triangle(triangles, triangle1) == false);
         GGO_ASSERT(find_triangle(triangles, triangle2) == false);
         new_triangles.push_back(triangle1);

@@ -209,3 +209,11 @@ GGO_TEST(vec, dump)
 
   GGO_CHECK(oss.str() == "(1; 2)");
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(vec, ortho)
+{
+  static_assert(ggo::ortho_ccw<ggo::vec2_i>({ 2, 1 }) == ggo::vec2_i(-1, 2));
+  static_assert(ggo::ortho_cw<ggo::vec2_i>({ 2, 1 }) == ggo::vec2_i(1, -2));
+}
+

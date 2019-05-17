@@ -1,5 +1,5 @@
 #include "ggo_rex_artist.h"
-#include <kernel/ggo_link.h>
+#include <kernel/ggo_unordered_pair.h>
 #include <kernel/memory/ggo_array.h>
 #include <kernel/math/delaunay_triangulation/ggo_delaunay_triangulation.h>
 #include <2d/paint/ggo_paint.h>
@@ -9,7 +9,7 @@
 
 namespace
 {  
-  using rex_edge = ggo::link<const ggo::pos2_f *>;
+  using rex_edge = ggo::unordered_pair<const ggo::pos2_f *>;
 
   using color_triangle_rgb8u = ggo::solid_color_triangle<float, ggo::rgb_8u>;
 
@@ -187,21 +187,21 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
     if (std::find(built_edges.begin(), built_edges.end(), edge) == built_edges.end())
     {
       built_edges.push_back(edge);
-      edges.push_back(ggo::segment_f(*edge._v1, *edge._v2));
+      edges.push_back(ggo::segment_f(*edge._first, *edge._second));
     }
 
     edge = rex_edge(triangle._v2, triangle._v3);
     if (std::find(built_edges.begin(), built_edges.end(), edge) == built_edges.end())
     {
       built_edges.push_back(edge);
-      edges.push_back(ggo::segment_f(*edge._v1, *edge._v2));
+      edges.push_back(ggo::segment_f(*edge._first, *edge._second));
     }
 
     edge = rex_edge(triangle._v3, triangle._v1);
     if (std::find(built_edges.begin(), built_edges.end(), edge) == built_edges.end())
     {
       built_edges.push_back(edge);
-      edges.push_back(ggo::segment_f(*edge._v1, *edge._v2));
+      edges.push_back(ggo::segment_f(*edge._first, *edge._second));
     }
 
     // Save the triangles.

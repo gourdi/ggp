@@ -7,13 +7,13 @@ namespace ggo
     switch (i)
     {
     case 0:
-      return _pos + _size_x * _dir_x + _size_y * dir2();
+      return _pos + _size_x * dir_x() + _size_y * dir_y();
     case 1:
-      return _pos + _size_x * _dir_x - _size_y * dir2();
+      return _pos + _size_x * dir_x() - _size_y * dir_y();
     case 2:
-      return _pos - _size_x * _dir_x - _size_y * dir2();
+      return _pos - _size_x * dir_x() - _size_y * dir_y();
     case 3:
-      return _pos - _size_x * _dir_x + _size_y * dir2();
+      return _pos - _size_x * dir_x() + _size_y * dir_y();
     default:
       GGO_FAIL();
       return ggo::pos2<data_t>(0.f, 0.f);
@@ -25,33 +25,85 @@ namespace ggo
   void oriented_box<data_t>::rotate(data_t angle, const ggo::pos2<data_t> & center)
   {
     _pos = ggo::rotate(_pos, center, angle);
-    _dir_x = ggo::rotate(_dir_x, angle);
+    _angle += angle;
   }
   
   //////////////////////////////////////////////////////////////////
   template <typename data_t>
   std::array<ggo::pos2<data_t>, 4> oriented_box<data_t>::get_points() const
   {
-    return { _pos + _size_x * _dir_x + _size_y * dir_y(),
-             _pos + _size_x * _dir_x - _size_y * dir_y(),
-             _pos - _size_x * _dir_x - _size_y * dir_y(),
-             _pos - _size_x * _dir_x + _size_y * dir_y() };
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
+
+    const ggo::vec2<data_t> x = { cos, sin };
+    const ggo::vec2<data_t> y = { -sin, cos };
+
+    return { _pos + _half_size_x * x + _half_size_y * y,
+             _pos + _half_size_x * x - _half_size_y * y,
+             _pos - _half_size_x * x - _half_size_y * y,
+             _pos - _half_size_x * x + _half_size_y * y };
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::array<typename oriented_box<data_t>::vertex, 4> oriented_box<data_t>::get_vertices() const
+  {
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
+
+    const ggo::vec2<data_t> x = {  _half_size_x * cos, _half_size_x * sin };
+    const ggo::vec2<data_t> y = { -_half_size_y * sin, _half_size_y * cos };
+
+    return { { { _pos + x + y, vertex_id::right_top },
+               { _pos + x - y, vertex_id::right_bottom },
+               { _pos - x + y, vertex_id::left_top },
+               { _pos - x - y, vertex_id::left_bottom } } };
+  }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  std::array<typename oriented_box<data_t>::edge, 4> oriented_box<data_t>::get_edges() const
+  {
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
+
+    const ggo::vec2<data_t> x_norm = {  cos, sin };
+    const ggo::vec2<data_t> y_norm = { -sin, cos };
+
+    const ggo::vec2<data_t> x = _half_size_x * x_norm;
+    const ggo::vec2<data_t> y = _half_size_y * y_norm;
+
+    const vertex right_top    = { _pos + x + y, oriented_box_vertex_id::right_top };
+    const vertex right_bottom = { _pos + x - y, oriented_box_vertex_id::right_bottom };
+    const vertex left_top     = { _pos - x + y, oriented_box_vertex_id::left_top };
+    const vertex left_bottom  = { _pos - x - y, oriented_box_vertex_id::left_bottom };
+
+    return { { { left_bottom,  left_top,     -x_norm, oriented_box_edge_id::left },
+               { right_bottom, right_top,     x_norm, oriented_box_edge_id::right },
+               { left_bottom,  right_bottom, -y_norm, oriented_box_edge_id::bottom },
+               { left_top,     right_top,     y_norm, oriented_box_edge_id::top } } };
   }
 
   //////////////////////////////////////////////////////////////////
   template <typename data_t>
   bool oriented_box<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
   {
-    ggo::pos2<data_t> diff = p - _pos;
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
 
-    data_t dot1 = ggo::dot(diff, _dir_x);
-    if (std::abs(dot1) > _size_x)
+    const ggo::vec2<data_t> x{ cos, sin };
+    const ggo::vec2<data_t> y{ -sin, cos };
+
+    const ggo::vec2<data_t> diff = p - _pos;
+
+    data_t dot1 = ggo::dot(diff, x);
+    if (std::abs(dot1) > _half_size_x)
     {
       return false;
     }
 
-    data_t dot2 = ggo::dot(diff, dir_y());
-    if (std::abs(dot2) > _size_y)
+    data_t dot2 = ggo::dot(diff, y);
+    if (std::abs(dot2) > _half_size_y)
     {
       return false;
     }
@@ -63,10 +115,16 @@ namespace ggo
   template <typename data_t>
   rect_data<data_t> oriented_box<data_t>::get_bounding_rect() const
   {
-    auto p1 = _pos + _size_x * _dir_x + _size_y * dir_y();
-    auto p2 = _pos + _size_x * _dir_x - _size_y * dir_y();
-    auto p3 = _pos - _size_x * _dir_x - _size_y * dir_y();
-    auto p4 = _pos - _size_x * _dir_x + _size_y * dir_y();
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
+
+    const ggo::vec2<data_t> x{ cos, sin };
+    const ggo::vec2<data_t> y{ -sin, cos };
+
+    auto p1 = _pos + _half_size_x * x + _half_size_y * y;
+    auto p2 = _pos + _half_size_x * x - _half_size_y * y;
+    auto p3 = _pos - _half_size_x * x - _half_size_y * y;
+    auto p4 = _pos - _half_size_x * x + _half_size_y * y;
 
     auto x_inf = ggo::min(p1.x(), p2.x(), p3.x(), p4.x());
     auto x_sup = ggo::max(p1.x(), p2.x(), p3.x(), p4.x());
@@ -80,8 +138,14 @@ namespace ggo
   template <typename data_t>
   rect_intersection oriented_box<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
   {
-    auto offset1 = _size_x * _dir_x;
-    auto offset2 = _size_y * dir_y();
+    const data_t cos = std::cos(_angle);
+    const data_t sin = std::sin(_angle);
+
+    const ggo::vec2<data_t> x{ cos, sin };
+    const ggo::vec2<data_t> y{ -sin, cos };
+
+    auto offset1 = _half_size_x * x;
+    auto offset2 = _half_size_y * y;
 
     // Shape in rect?
     auto obb_p1 = _pos + offset1 + offset2;
@@ -134,28 +198,28 @@ namespace ggo
       return rect_intersection::disjoints;
     }
 
-    auto dot1 = ggo::dot(_dir_x, rect_p1 - _pos);
-    auto dot2 = ggo::dot(_dir_x, rect_p2 - _pos);
-    auto dot3 = ggo::dot(_dir_x, rect_p3 - _pos);
-    auto dot4 = ggo::dot(_dir_x, rect_p4 - _pos);
-    if (dot1 > _size_x && dot2 > _size_x && dot3 > _size_x && dot4 > _size_x)
+    auto dot1 = ggo::dot(x, rect_p1 - _pos);
+    auto dot2 = ggo::dot(x, rect_p2 - _pos);
+    auto dot3 = ggo::dot(x, rect_p3 - _pos);
+    auto dot4 = ggo::dot(x, rect_p4 - _pos);
+    if (dot1 > _half_size_x && dot2 > _half_size_x && dot3 > _half_size_x && dot4 > _half_size_x)
     {
       return rect_intersection::disjoints;
     }
-    if (dot1 < -_size_x && dot2 < -_size_x && dot3 < -_size_x && dot4 < -_size_x)
+    if (dot1 < -_half_size_x && dot2 < -_half_size_x && dot3 < -_half_size_x && dot4 < -_half_size_x)
     {
       return rect_intersection::disjoints;
     }
 
-    dot1 = ggo::dot(dir_y(), rect_p1 - _pos);
-    dot2 = ggo::dot(dir_y(), rect_p2 - _pos);
-    dot3 = ggo::dot(dir_y(), rect_p3 - _pos);
-    dot4 = ggo::dot(dir_y(), rect_p4 - _pos);
-    if (dot1 > _size_y && dot2 > _size_y && dot3 > _size_y && dot4 > _size_y)
+    dot1 = ggo::dot(y, rect_p1 - _pos);
+    dot2 = ggo::dot(y, rect_p2 - _pos);
+    dot3 = ggo::dot(y, rect_p3 - _pos);
+    dot4 = ggo::dot(y, rect_p4 - _pos);
+    if (dot1 > _half_size_y && dot2 > _half_size_y && dot3 > _half_size_y && dot4 > _half_size_y)
     {
       return rect_intersection::disjoints;
     }
-    if (dot1 < -_size_y && dot2 < -_size_y && dot3 < -_size_y && dot4 < -_size_y)
+    if (dot1 < -_half_size_y && dot2 < -_half_size_y && dot3 < -_half_size_y && dot4 < -_half_size_y)
     {
       return rect_intersection::disjoints;
     }

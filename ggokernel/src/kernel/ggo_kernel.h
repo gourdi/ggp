@@ -371,6 +371,9 @@ namespace ggo
   template<typename T> constexpr T inv_sqrt2() { return static_cast<T>(0.707106781186547524); }
   template<typename T> constexpr T sqrt2() { return static_cast<T>(1.414213562373095049); }
 
+  constexpr float   pi_f = pi<float>();
+  constexpr double  pi_d = pi<double>();
+
   enum class memory_lines_order
   {
     top_down,
@@ -385,11 +388,22 @@ namespace ggo
   template <typename data_t>
   struct range
   {
+    range(data_t inf, data_t sup) : _inf(inf), _sup(sup) {}
     data_t _inf;
     data_t _sup;
   };
 
   using range_f = range<float>;
+
+  template <typename data_t>
+  std::optional<range<data_t>> get_range_intersection(range<data_t> r1, range<data_t> r2)
+  {
+    if (r1._sup < r2._inf || r2._sup < r1._inf)
+    {
+      return {};
+    }
+    return range<data_t>(std::max(r1._inf, r2._inf), std::min(r1._sup, r2._sup));
+  }
 }
 
 #endif
