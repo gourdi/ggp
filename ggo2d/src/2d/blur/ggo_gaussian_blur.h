@@ -8,6 +8,7 @@
 #include <kernel/math/signal_proc/ggo_gaussian_blur.h>
 #include <2d/ggo_image_format.h>
 #include <2d/ggo_color.h>
+#include <cassert>
 
 namespace ggo
 {
@@ -96,7 +97,7 @@ namespace ggo
   }
 
   template <image_format format, border_mode border = border_mode::mirror>
-  void gaussian_blur(void * buffer, const ggo::size & size, int line_byte_step, const ggo::rect_int & clipping, float stddev)
+  void gaussian_blur(const void * input, int input_line_byte_step, void * output, int output_line_byte_step, const ggo::size & size, float stddev)
   {
     using color_t = image_format_traits<format>::color_t;
     using helper = gaussian_blur_details::helper<color_t>;
@@ -105,60 +106,83 @@ namespace ggo
     auto kernel = helper::build_kernel(stddev);
     if (kernel.size() == 1)
     {
+      assert(input != output); // In-place not handled for now.
       return;
     }
+    int kernel_half_size = static_cast<int>(kernel.size());
 
     // Horizontal pass.
     {
-      ggo::array<color_t, 1> line(size.width());
+      ggo::array<color_t, 1> line(size.width() + 2 * (kernel_half_size - 1));
 
-      for (int y = clipping.bottom(); y <= clipping.top(); ++y)
+      for (int y = 0; y < size.height(); ++y)
       {
-        void * buffer_ptr = get_line_ptr<image_format_traits<format>::lines_order>(buffer, y, size.height(), line_byte_step);
-
         // Copy line.
-        for (int x = 0; x < size.width(); ++x)
         {
-          line[x] = ggo::read_pixel<format>(ggo::move_ptr(buffer_ptr, x * image_format_traits<format>::pixel_byte_size));
+          const void * input_ptr = get_line_ptr<image_format_traits<format>::lines_order>(input, y, size.height(), input_line_byte_step);
+          color_t * line_ptr = line.data();
+          int begin = -kernel_half_size + 1;
+          int end = size.width() + kernel_half_size - 1;
+          for (int x = begin; x < end; ++x)
+          {
+            int xx = index<border>(x, size.width());
+            const void * pixel_ptr = ggo::move_ptr(input_ptr, xx * image_format_traits<format>::pixel_byte_size);
+            *line_ptr++ = ggo::read_pixel<format>(pixel_ptr);
+          }
+          GGO_ASSERT(line_ptr == line.end());
         }
 
         // Convolution.
-        auto read = [&](int x)
-        { 
-          return helper::convert(line[x]);
-        };
-        auto write = [&](int x, processing_t c)
-        { 
-          write_pixel<format>(ggo::move_ptr(buffer_ptr, x * image_format_traits<format>::pixel_byte_size), helper::convert(c));
-        };
+        {
+          const color_t * line_ptr = line.data() + kernel_half_size - 1;
+          void * output_ptr = get_line_ptr<image_format_traits<format>::lines_order>(output, y, size.height(), output_line_byte_step);
 
-        ggo::symmetric_convolution<border>(read, write, size.width(), clipping.left(), clipping.right(), kernel.data(), int(kernel.size()));
+          auto read = [&](int x)
+          {
+            return helper::convert(line_ptr[x]);
+          };
+          auto write = [&](int x, processing_t c)
+          {
+            write_pixel<format>(ggo::move_ptr(output_ptr, x * image_format_traits<format>::pixel_byte_size), helper::convert(c));
+          };
+
+          ggo::symmetric_convolution<border_mode::in_memory>(read, write, size.width(), 0, size.width() - 1, kernel.data(), int(kernel.size()));
+        }
       }
     }
 
     // Vertical pass.
     {
-      ggo::array<color_t, 1> column(size.height());
+      ggo::array<color_t, 1> column(size.height() + 2 * (kernel_half_size - 1));
 
-      for (int x = clipping.left(); x <= clipping.right(); ++x)
+      for (int x = 0; x < size.width(); ++x)
       {
         // Copy column.
-        for (int y = 0; y < size.height(); ++y)
         {
-          column[y] = read_pixel<format>(buffer, x, y, size.height(), line_byte_step);
+          color_t * column_ptr = column.data();
+          int begin = -kernel_half_size + 1;
+          int end = size.height() + kernel_half_size - 1;
+          for (int y = begin; y < end; ++y)
+          {
+            int yy = index<border>(y, size.height());
+            *column_ptr++ = ggo::read_pixel<format>(output, x, yy, size.height(), output_line_byte_step);
+          }
+          GGO_ASSERT(column_ptr == column.end());
         }
 
         // Convolution.
+        const color_t * column_ptr = column.data() + kernel_half_size - 1;
+
         auto read = [&](int y)
         {
-          return helper::convert(column[y]);
+          return helper::convert(column_ptr[y]);
         };
         auto write = [&](int y, processing_t c)
         {
-          write_pixel<format>(buffer, x, y, size.height(), line_byte_step, helper::convert(c));
+          write_pixel<format>(output, x, y, size.height(), output_line_byte_step, helper::convert(c));
         };
 
-        ggo::symmetric_convolution<border>(read, write, size.height(), clipping.bottom(), clipping.top(), kernel.data(), int(kernel.size()));
+        ggo::symmetric_convolution<border_mode::in_memory>(read, write, size.height(), 0, size.height() - 1, kernel.data(), int(kernel.size()));
       }
     }
   }
@@ -166,7 +190,7 @@ namespace ggo
   template <image_format format, border_mode border = border_mode::mirror>
   void gaussian_blur(void * buffer, const ggo::size & size, int line_byte_step, float stddev)
   {
-    gaussian_blur<format, border>(buffer, size, line_byte_step, ggo::rect_int::from_size(size), stddev);
+    gaussian_blur<format, border>(buffer, line_byte_step, buffer, line_byte_step, size, stddev);
   }
 }
 
