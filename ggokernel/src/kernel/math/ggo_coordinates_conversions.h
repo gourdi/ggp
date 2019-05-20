@@ -9,7 +9,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  int from_math_to_pixel(data_t v)
+  int from_continuous_to_pixel(data_t v)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -18,7 +18,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t from_pixel_to_math(int v)
+  data_t from_pixel_to_continuous(int v)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -27,25 +27,25 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::pos2_i from_math_to_pixel(const ggo::pos2<data_t> & p)
+  ggo::pos2_i from_continuous_to_pixel(const ggo::pos2<data_t> & p)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
-    return { ggo::from_math_to_pixel(p.x()), ggo::from_math_to_pixel(p.y()) };
+    return { ggo::from_continuous_to_pixel(p.x()), ggo::from_continuous_to_pixel(p.y()) };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::pos2<data_t> from_pixel_to_math(const pos2_i & p)
+  ggo::pos2<data_t> from_pixel_to_continuous(const pos2_i & p)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
-    return { ggo::from_pixel_to_math<data_t>(p.x()), ggo::from_pixel_to_math<data_t>(p.y()) };
+    return { ggo::from_pixel_to_continuous<data_t>(p.x()), ggo::from_pixel_to_continuous<data_t>(p.y()) };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  rect_int from_math_to_pixel_exclusive(const ggo::rect_data<data_t> & rect)
+  rect_int from_continuous_to_pixel_exclusive(const ggo::rect_data<data_t> & rect)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -59,7 +59,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<rect_int> from_math_to_pixel_inclusive(const ggo::rect_data<data_t> & rect)
+  std::optional<rect_int> from_continuous_to_pixel_inclusive(const ggo::rect_data<data_t> & rect)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -78,7 +78,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::rect_data<data_t> from_pixel_to_math(const ggo::rect_int & rect)
+  ggo::rect_data<data_t> from_pixel_to_continuous(const ggo::rect_int & rect)
   {
     static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
 
@@ -95,72 +95,91 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t map_fit(data_t value, data_t inf, data_t sup, int render_width, int render_height)
+  [[nodiscard]] data_t map_fit(data_t l, ggo::rect<data_t> roi, ggo::size render_size)
   {
-    if (render_width >= render_height)
+    static_assert(std::is_floating_point_v<data_t>);
+
+    data_t ratio_roi = roi.width() / roi.height();
+    data_t ratio_render = static_cast<data_t>(render_size.width()) / static_cast<data_t>(render_size.height());
+
+    data_t scale = 0.f;
+    if (ratio_render > ratio_roi)
     {
-      return ggo::map(value, inf, sup, data_t(0), data_t(render_height));
+      return l * render_size.height() / roi.height();
     }
     else
     {
-      return ggo::map(value, inf, sup, data_t(0), data_t(render_width));
+      return l * render_size.width() / roi.width();
     }
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::pos2<data_t> map_fit(const ggo::pos2<data_t> & point, data_t inf, data_t sup, int render_width, int render_height)
+  [[nodiscard]] ggo::pos2<data_t> map_fit(ggo::pos2<data_t> p, ggo::rect<data_t> roi, ggo::size render_size)
   {
-    ggo::pos2<data_t> result;
+    static_assert(std::is_floating_point_v<data_t>);
 
-    if (render_width >= render_height)
+    data_t ratio_roi = roi.width() / roi.height();
+    data_t ratio_render = static_cast<data_t>(render_size.width()) / static_cast<data_t>(render_size.height());
+
+    data_t scale = 0.f;
+    data_t offset_x = 0.f;
+    data_t offset_y = 0.f;
+    if (ratio_render > ratio_roi)
     {
-      result.x() = ggo::map(point.x(), inf, sup, data_t(0), data_t(render_height));
-      result.y() = ggo::map(point.y(), inf, sup, data_t(0), data_t(render_height));
-
-      result.x() += (render_width - render_height) / data_t(2);
+      scale = render_size.height() / roi.height();
+      offset_x = (render_size.width() - roi.width() * scale) / 2;
     }
     else
     {
-      result.x() = ggo::map(point.x(), inf, sup, data_t(0), data_t(render_width));
-      result.y() = ggo::map(point.y(), inf, sup, data_t(0), data_t(render_width));
-
-      result.y() += (render_height - render_width) / data_t(2);
+      scale = render_size.width() / roi.width();
+      offset_y = (render_size.height() - roi.height() * scale) / 2;
     }
 
-    return result;
+    data_t x = scale * (p.x() - roi.left()) + offset_x;
+    data_t y = scale * (p.y() - roi.bottom()) + offset_y;
+    return { x, y };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void map_fit(ggo::rect<data_t> & rect, data_t inf, data_t sup, int render_width, int render_height)
+  [[nodiscard]] data_t map_fit(data_t l, data_t inf, data_t sup, int render_width, int render_height)
   {
-    if (render_width >= render_height)
-    {
-      rect.left() = ggo::map(rect.left(), inf, sup, data_t(0), data_t(render_height));
-      rect.bottom() = ggo::map(rect.bottom(), inf, sup, data_t(0), data_t(render_height));
-      rect.width() = ggo::map(rect.width(), inf, sup, data_t(0), data_t(render_height));
-      rect.height() = ggo::map(rect.height(), inf, sup, data_t(0), data_t(render_height));
-
-      rect.left() += (render_width - render_height) / data_t(2);
-    }
-    else
-    {
-      rect.left() = ggo::map(rect.left(), inf, sup, 0.f, data_t(render_width));
-      rect.bottom() = ggo::map(rect.bottom(), inf, sup, 0.f, data_t(render_width));
-      rect.width() = ggo::map(rect.width(), inf, sup, 0.f, data_t(render_width));
-      rect.height() = ggo::map(rect.height(), inf, sup, 0.f, data_t(render_width));
-
-      rect.bottom() += 0.5f * (render_height - render_width);
-    }
+    return map_fit(l, ggo::rect<data_t>::from_left_right_bottom_top(inf, sup, inf, sup), ggo::size(render_width, render_height));
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void map_fit(ggo::disc<data_t> & disc, data_t inf, data_t sup, int render_width, int render_height)
+  [[nodiscard]] ggo::pos2<data_t> map_fit(ggo::pos2<data_t> p, data_t inf, data_t sup, int render_width, int render_height)
   {
-    disc.center() = map_fit(disc.center(), inf, sup, render_width, render_height);
-    disc.radius() = map_fit(disc.radius(), inf, sup, render_width, render_height);
+    return map_fit<data_t>(p, ggo::rect<data_t>::from_left_right_bottom_top(inf, sup, inf, sup), ggo::size(render_width, render_height));
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  [[nodiscard]] ggo::rect<data_t> map_fit(ggo::rect<data_t> rect, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    const ggo::rect<data_t> roi = ggo::rect<data_t>::from_left_right_bottom_top(inf, sup, inf, sup);
+
+    ggo::pos2<data_t> left_bottom{ rect.left(), rect.bottom() };
+    ggo::pos2<data_t> right_top{ rect.right(), rect.top() };
+    
+    left_bottom = map_fit<data_t>(left_bottom, roi, ggo::size(render_width, render_height));
+    right_top = map_fit<data_t>(right_top, roi, ggo::size(render_width, render_height));
+
+    return ggo::rect<data_t>::from_left_right_bottom_top(left_bottom.x(), right_top.x(), left_bottom.y(), right_top.y());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  [[nodiscard]] ggo::disc<data_t> map_fit(ggo::disc<data_t> disc, data_t inf, data_t sup, int render_width, int render_height)
+  {
+    const ggo::rect<data_t> roi = ggo::rect<data_t>::from_left_right_bottom_top(inf, sup, inf, sup);
+
+    ggo::pos2<data_t> center = map_fit<data_t>(disc.center(), roi, ggo::size(render_width, render_height));
+    data_t radius = map_fit<data_t>(disc.radius(), roi, ggo::size(render_width, render_height));
+
+    return ggo::disc<data_t>(center, radius);
   }
 }
 

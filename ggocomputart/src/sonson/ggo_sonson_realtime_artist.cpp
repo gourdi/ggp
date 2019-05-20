@@ -24,7 +24,7 @@ namespace
       circle._center.x() + center_offset.x() - radius[3], circle._center.x() + center_offset.x() + radius[3],
       circle._center.y() + center_offset.y() - radius[3], circle._center.y() + center_offset.y() + radius[3]);
 
-    auto bounding_rect_i = ggo::from_math_to_pixel_exclusive(bounding_rect_f.data());
+    auto bounding_rect_i = ggo::from_continuous_to_pixel_exclusive(bounding_rect_f.data());
 
     if (bounding_rect_i.clip(clipping) == false)
     {
@@ -40,7 +40,7 @@ namespace
 
     auto paint_pixel = [&](int x, int y)
     {
-      ggo::pos2_f pixel = ggo::from_pixel_to_math<float>(ggo::pos2_i(x, y));
+      ggo::pos2_f pixel = ggo::from_pixel_to_continuous<float>(ggo::pos2_i(x, y));
       float hypot = ggo::hypot(circle._center + center_offset, pixel);
 
       if (hypot > sq_radius[0] && hypot < sq_radius[3])

@@ -147,8 +147,7 @@ void ggo::smoke_animation_artist::process_sources(int frame_index)
       {
         if (source._opacity > 0)
         {
-          ggo::disc_d disc(source._disc);
-          map_fit(disc, 0., 1.);
+          ggo::disc_d disc = map_fit(ggo::disc_d(source._disc), 0., 1.);
 
           double dist = ggo::distance({ static_cast<double>(x), static_cast<double>(y) }, disc.get_center());
           if (dist < disc.radius())

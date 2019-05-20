@@ -16,7 +16,8 @@ namespace ggo
   {
     mirror,
     duplicate_edge,
-    loop
+    loop,
+    in_memory
   };
 
   template <border_mode mode>

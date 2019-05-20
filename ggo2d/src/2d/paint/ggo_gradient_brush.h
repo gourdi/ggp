@@ -36,7 +36,7 @@ namespace ggo
   template <typename color_t>
   color_t gradient_brush<color_t>::operator()(int x, int y) const
   {
-    ggo::pos2<data_t> p = from_pixel_to_math<data_t>({ x, y });
+    ggo::pos2<data_t> p = from_pixel_to_continuous<data_t>({ x, y });
     ggo::vec2<data_t> diff = p - _pos;
 
     return convert_color_to<color_t>(_curve.evaluate(ggo::dot(diff, _dir)));

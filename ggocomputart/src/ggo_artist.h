@@ -47,19 +47,19 @@ namespace ggo
     }
 
     // Mapping onto static methods.
-    ggo::pos2_f	              map_fill(const ggo::pos2_f & point, float inf, float sup) const;
+    [[nodiscard]] ggo::pos2_f	 map_fill(const ggo::pos2_f & point, float inf, float sup) const;
 
-    float                     map_fit(float value, float inf, float sup) const;
-    ggo::pos2_f               map_fit(const ggo::pos2_f & point, float inf, float sup) const;
-    void	                    map_fit(ggo::rect_f & rect, float inf, float sup) const;
-    void	                    map_fit(ggo::disc_f & disc, float inf, float sup) const;
+    [[nodiscard]] float        map_fit(float value, float inf, float sup) const;
+    [[nodiscard]] ggo::pos2_f  map_fit(const ggo::pos2_f & point, float inf, float sup) const;
+    [[nodiscard]] ggo::rect_f	 map_fit(ggo::rect_f rect, float inf, float sup) const;
+    [[nodiscard]] ggo::disc_f	 map_fit(ggo::disc_f disc, float inf, float sup) const;
 
-    void	                    map_fit(ggo::disc_d & disc, double inf, double sup) const;
+    [[nodiscard]] ggo::disc_d	 map_fit(ggo::disc_d disc, double inf, double sup) const;
 
-    ggo::pos2_f               get_center() const;
+    [[nodiscard]] ggo::pos2_f  get_center() const;
 
-    ggo::pos2_f               horz_mirror(const ggo::pos2_f & p) const { return horz_mirror(p, _height); }
-    ggo::pos2_f               vert_mirror(const ggo::pos2_f & p) const { return vert_mirror(p, _width); }
+    [[nodiscard]] ggo::pos2_f  horz_mirror(const ggo::pos2_f & p) const { return horz_mirror(p, _height); }
+    [[nodiscard]] ggo::pos2_f  vert_mirror(const ggo::pos2_f & p) const { return vert_mirror(p, _width); }
 
     template <image_format format, sampling smp, typename shape_t>
     void paint(void * buffer, const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity) const

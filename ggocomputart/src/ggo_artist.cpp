@@ -81,21 +81,21 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void artist::map_fit(ggo::rect_f & rect, float inf, float sup) const
+  ggo::rect_f artist::map_fit(ggo::rect_f rect, float inf, float sup) const
   {
-    ggo::map_fit(rect, inf, sup, _width, _height);
+    return ggo::map_fit(rect, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
-  void artist::map_fit(ggo::disc_f & disc, float inf, float sup) const
+  ggo::disc_f artist::map_fit(ggo::disc_f disc, float inf, float sup) const
   {
-    ggo::map_fit(disc, inf, sup, _width, _height);
+    return ggo::map_fit(disc, inf, sup, _width, _height);
   }
 
   //////////////////////////////////////////////////////////////
-  void artist::map_fit(ggo::disc_d & disc, double inf, double sup) const
+  ggo::disc_d artist::map_fit(ggo::disc_d disc, double inf, double sup) const
   {
-    ggo::map_fit(disc, inf, sup, _width, _height);
+    return ggo::map_fit(disc, inf, sup, _width, _height);
   }
 }
 
