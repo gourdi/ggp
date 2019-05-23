@@ -4,12 +4,9 @@
 #include <kernel/time/ggo_chronometer.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/blur/ggo_gaussian_blur.h>
-#include <2d/blur/ggo_mean_box_blur.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
-#include <string>
-#include <optional>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, y_32f)
@@ -77,7 +74,7 @@ namespace
     ggo::chronometer chronometer;
     for (int i = 0; i < 1000; ++i)
     {
-      ggo::gaussian_blur2d<format>(buffer, line_step, { width, height }, 5.f);
+      ggo::gaussian_blur<format>(buffer, { width, height }, line_step, 5.f);
     }
     std::cout << chronometer.get_display_time(true) << std::endl;
 #else
@@ -142,7 +139,7 @@ GGO_TEST(gaussian_blur, gaussian_y_8u_yu)
   ggo::chronometer chronometer;
   for (int i = 0; i < 1000; ++i)
   {
-    ggo::gaussian_blur2d<ggo::y_8u_yu>(buffer.data(), line_step, { width, height }, 5.f);
+    ggo::gaussian_blur<ggo::y_8u_yu>(buffer.data(), { width, height }, line_step, 5.f);
   }
   std::cout << chronometer.get_display_time(true) << std::endl;
 #else
