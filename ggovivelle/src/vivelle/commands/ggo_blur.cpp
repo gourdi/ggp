@@ -1,6 +1,5 @@
 #include "ggo_blur.h"
 #include <kernel/math/signal_proc/ggo_gaussian_blur.h>
-#include <kernel/math/signal_proc/ggo_convolution2d.h>
 #include <vivelle/ggo_command.h>
 #include <vivelle/ggo_parsing.h>
 #include <vivelle/ggo_threadpool.h>

@@ -100,11 +100,7 @@ namespace ggo
     }
     if (env_str != nullptr)
     {
-      auto value = to<int>(env_str);
-      if (value)
-      {
-        threads_count = *value;
-      }
+      threads_count = to<int>(env_str);
     }
     
     std::cout << "Rendering threads count: " << threads_count << std::endl;

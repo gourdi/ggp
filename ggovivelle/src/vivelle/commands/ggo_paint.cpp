@@ -1,5 +1,6 @@
 #include "ggo_paint.h"
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
+#include <kernel/ggo_string_helpers.h>
 #include <2d/paint/ggo_paint.h>
 #include <vivelle/ggo_command.h>
 #include <vivelle/ggo_parsing.h>

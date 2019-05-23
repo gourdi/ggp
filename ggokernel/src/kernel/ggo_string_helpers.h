@@ -127,38 +127,34 @@ namespace ggo
 namespace ggo
 {
   template <typename data_t>
-  std::optional<data_t> to(const std::string & str)
+  data_t to(const std::string & str)
   {
-    return {};
-  }
-
-  template <> inline
-  std::optional<bool> to(const std::string & str)
-  {
-    if (str == "true")
+    if constexpr (std::is_same_v<data_t, bool>)
     {
-      return true;
+      if (str == "true")
+      {
+        return true;
+      }
+      else if (str == "false")
+      {
+        return false;
+      }
+      else
+      {
+        throw std::runtime_error("failed converting string");
+      }
     }
-    if (str == "false")
+    else
     {
-      return false;
+      data_t v;
+      std::istringstream iss(str);
+      iss >> v;
+      if (iss.bad() || !iss.eof())
+      {
+        throw std::runtime_error("failed converting string");
+      }
+      return v;
     }
-    return {};
-  }
-
-  template <> inline
-  std::optional<int> to(const std::string & str)
-  {
-    std::optional<int> val;
-    try
-    {
-      val = stoi(str);
-    }
-    catch (...)
-    {
-
-    }
-    return val;
   }
 }
 
