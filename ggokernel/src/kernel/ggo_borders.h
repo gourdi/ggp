@@ -21,51 +21,24 @@ namespace ggo
   };
 
   template <border_mode mode>
-  constexpr int inf_index(int inf, int size)
+  constexpr int index(int i, int size)
   {
-    if (inf < 0)
+    if constexpr (mode == border_mode::mirror)
     {
-      if constexpr (mode == border_mode::mirror)
-      {
-        inf = ggo::mirror_index(inf, size);
-      }
-
-      if constexpr (mode == border_mode::duplicate_edge)
-      {
-        inf = 0;
-      }
-
-      if constexpr (mode == border_mode::loop)
-      {
-        inf = ggo::loop_index(inf, size);
-      }
+      i = ggo::mirror_index(i, size);
     }
 
-    return inf;
-  }
-
-  template <border_mode mode>
-  constexpr int sup_index(int sup, int size)
-  {
-    if (sup >= size)
+    if constexpr (mode == border_mode::duplicate_edge)
     {
-      if constexpr (mode == border_mode::mirror)
-      {
-        sup = ggo::mirror_index(sup, size);
-      }
-
-      if constexpr (mode == border_mode::duplicate_edge)
-      {
-        sup = size - 1;
-      }
-
-      if constexpr (mode == border_mode::loop)
-      {
-        sup = ggo::loop_index(sup, size);
-      }
+      i = ggo::clamp(i, 0, size - 1);
     }
 
-    return sup;
+    if constexpr (mode == border_mode::loop)
+    {
+      i = ggo::loop_index(i, size);
+    }
+
+    return i;
   }
 }
 
@@ -77,7 +50,7 @@ namespace ggo
   template <typename get1d_t>
   auto get1d_mirror(get1d_t get1d, int x, int width)
   {
-    x = mirror_index_edge_duplicated(x, width);
+    x = mirror_index(x, width);
     return get1d(x);
   }
 
