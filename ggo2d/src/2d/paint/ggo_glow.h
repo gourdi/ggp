@@ -17,7 +17,7 @@ namespace ggo
     auto bounding_rect = shape.get_bounding_rect();
     bounding_rect = extend(bounding_rect, radius);
 
-    ggo::rect_int pixel_rect = from_math_to_pixel_exclusive(bounding_rect);
+    ggo::rect_int pixel_rect = from_continuous_to_pixel_exclusive(bounding_rect);
     if (pixel_rect.clip(ggo::rect_int::from_width_height(width, height)) == false)
     {
       return;
@@ -25,7 +25,7 @@ namespace ggo
 
     pixel_rect.for_each_pixel([&](int x, int y)
     {
-      auto p = ggo::from_pixel_to_math<typename shape_t::data_t>({ x, y });
+      auto p = ggo::from_pixel_to_continuous<typename shape_t::data_t>({ x, y });
       auto dist = shape.dist_to_point(p);
       if (dist < radius)
       {

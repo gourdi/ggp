@@ -19,7 +19,7 @@ namespace ggo
     shape_bounding_rect.inflate(blur_radius);
 
     // Clip.
-    rect_int shape_pixel_rect = from_math_to_pixel_exclusive(shape_bounding_rect.data());
+    rect_int shape_pixel_rect = from_continuous_to_pixel_exclusive(shape_bounding_rect.data());
     if (shape_pixel_rect.clip(width, height) == false)
     {
       return;
@@ -29,7 +29,7 @@ namespace ggo
     real_t squared_radius = blur_radius * blur_radius;
     shape_pixel_rect.for_each_pixel([&](int x, int y)
     {
-      auto center = from_pixel_to_math<real_t>({ x, y });
+      auto center = from_pixel_to_continuous<real_t>({ x, y });
 
       int inside = 0;
       int total = 0;
