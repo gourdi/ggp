@@ -5,6 +5,18 @@ $artist = $_GET["artist"];
 include_once("helpers.php");
 
 //////////////////////////////////////////////////////////////
+function html_header($title, $meta_image)
+{
+  echo "<!DOCTYPE html>\n";
+  echo "<html itemscope itemtype=\"http://schema.org/Article\">\n";
+  echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />\n";
+  echo "<title>$title</title>\n";
+  echo "</head>\n";
+  
+  include_once("analyticstracking.php");
+}
+
+//////////////////////////////////////////////////////////////
 function process_images_videos($artist)
 {
   $cells = array();
@@ -88,8 +100,6 @@ function process_script($artist)
 echo "  <!DOCTYPE html>
 <html>
 ";
-
-include_once("analyticstracking.php");
 
 echo "
 <head>
