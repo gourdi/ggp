@@ -1,4 +1,4 @@
-#include "ggo_scaling.h"
+#include "ggo_image_scaling.h"
 #include <kernel/math/signal_proc/ggo_scale2d.h>
 
 namespace ggo

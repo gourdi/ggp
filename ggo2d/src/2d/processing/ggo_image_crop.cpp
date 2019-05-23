@@ -1,4 +1,4 @@
-#include "ggo_crop.h"
+#include "ggo_image_crop.h"
 
 namespace ggo
 {

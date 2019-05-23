@@ -1,5 +1,5 @@
 #include "ggo_ifs_artist.h"
-#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_blend.h>
 #include <iostream>
 

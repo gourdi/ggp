@@ -1,7 +1,7 @@
 #include "ggo_trees_artist.h"
 #include <iostream>
 #include <kernel/trees/ggo_tree.h>
-#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 

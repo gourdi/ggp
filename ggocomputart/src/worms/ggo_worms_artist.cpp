@@ -1,7 +1,7 @@
 #include "ggo_worms_artist.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
-#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_gaussian_blur.h>
 
 //////////////////////////////////////////////////////////////
 ggo::worms_artist::worms_artist(int width, int height, int line_step, ggo::image_format format)

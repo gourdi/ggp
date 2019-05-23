@@ -1,7 +1,7 @@
 #include "ggo_duffing_bitmap_artist.h"
 #include "ggo_duffing.h"
 #include <2d/ggo_blit.h>
-#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>

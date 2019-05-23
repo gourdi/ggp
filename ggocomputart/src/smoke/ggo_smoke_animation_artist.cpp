@@ -1,6 +1,6 @@
 #include "ggo_smoke_animation_artist.h"
 #include <kernel/ggo_kernel.h>
-#include <2d/blur/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/fill/ggo_fill.h>
 
 namespace
