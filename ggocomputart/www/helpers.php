@@ -14,10 +14,6 @@ function social_footer($url)
 	echo "<img src=\"res/facebook_logo.png\" class=\"footer\"></a><br>\n";
 	echo "<p class=\"footer\">Share on<br>Facebook</p></td>\n";
 
-	echo "<td><a href=\"https://plus.google.com/share?url=$encoded_url\">\n";
-	echo "<img src=\"res/googleplus_logo.png\" class=\"footer\"></a><br>\n";
-	echo "<p class=\"footer\">Share on<br>Google+</p></td>\n";
-
 	echo "</tr></table>\n";
 }
 
