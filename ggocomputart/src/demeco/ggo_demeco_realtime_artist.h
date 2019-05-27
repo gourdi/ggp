@@ -14,7 +14,7 @@ namespace ggo
 
   private:
 
-    void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
+    void preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
     void render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     bool finished(int frame_index) const override { return _finished; }
 

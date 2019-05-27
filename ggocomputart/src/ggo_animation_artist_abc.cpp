@@ -50,7 +50,8 @@ namespace ggo
 
     void  render_frame(void * buffer, int frame_index, bool & finished) override
     {
-      _artist->preprocess_frame(0, { 0, 0 });
+      constexpr float time_step = 1.f / 25.f; // 25fps
+      _artist->preprocess_frame(0, { 0, 0 }, time_step);
       _artist->render_tile(buffer, ggo::rect_int::from_size(size()));
       finished = _artist->finished();
     }

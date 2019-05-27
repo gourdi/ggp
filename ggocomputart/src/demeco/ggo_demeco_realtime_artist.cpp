@@ -9,7 +9,7 @@ _artist(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::demeco_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+void ggo::demeco_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   _finished = _artist.update();
 }

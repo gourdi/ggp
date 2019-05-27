@@ -21,9 +21,9 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  void realtime_artist_abc::preprocess_frame(uint32_t cursor_events, ggo::pos2_i cursor_pos)
+  void realtime_artist_abc::preprocess_frame(uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
   {
-    preprocess_frame(_frame_index, cursor_events, cursor_pos);
+    preprocess_frame(_frame_index, cursor_events, cursor_pos, time_step);
   }
 
   //////////////////////////////////////////////////////////////

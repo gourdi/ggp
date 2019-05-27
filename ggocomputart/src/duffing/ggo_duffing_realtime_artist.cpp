@@ -17,7 +17,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   _paint_color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.0f, 0.75f);
   _hue += 0.0005f;

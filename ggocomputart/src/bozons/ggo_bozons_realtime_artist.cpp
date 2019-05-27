@@ -50,7 +50,7 @@ void ggo::bozons_realtime_artist::create_bozon()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
   {

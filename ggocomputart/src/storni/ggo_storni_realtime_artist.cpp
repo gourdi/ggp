@@ -320,7 +320,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   // Update items.
   const float velocity_hypot_max = get_velocity_hypot_max();
