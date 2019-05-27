@@ -68,22 +68,31 @@ function process_images_videos($artist)
   // Now we can generate the HTML.
   html_header($artist, "artists/$artist/images/00000001.jpg");
 
-  echo "<body>\n";
-  echo "<table class=\"common\">\n";
+  echo "<body>
+<table class=\"common\"> 
+  <tr>
+    <td class=\"header-left\">
+        <a href=\"http://www.gourdi.net\" style=\"text-decoration: none\">gourdi.net</a>
+    </td>
+    <td class=\"header-right\">
+        <a href=\"mailto:g.gourdin@gmail.com\" style=\"text-decoration: none\">@</a>
+    </td>
+  </tr>
+";
 
   $i = 0;
   foreach ($cells as $cell)
   {
     if (($i % 2) == 0)
     {
-      echo "<tr>\n";
+      echo "  <tr>\n";
     }
 
-    echo "<td class=\"common\">$cell</td>\n";
+    echo "    <td class=\"common\">$cell</td>\n";
      
     if (($i % 2) == 1)
     {
-      echo "</tr>\n";
+      echo "  </tr>\n";
     }
 
     $i += 1;

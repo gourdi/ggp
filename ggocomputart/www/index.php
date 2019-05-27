@@ -2,14 +2,24 @@
 
 $artists = array_diff(scandir("artists"), array(".", ".."));
 
-echo "<!DOCTYPE html>\n";
-echo "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />\n";
-echo "<title>Gourdi - Digital art</title>\n";
-echo "<meta name=\"viewport\" content=\"width=700, user-scalable=false;\">";
-echo "<meta name=\"keywords\" content=\"Digital art, computer art, automatic art, algorithmic art, procedural images, procedural videos\">\n";
-echo "<meta name=\"descripion\" content=\"Procedurally generated images and videos\">\n";
-echo "</head><body>\n";
-echo "<table class=\"common\">\n";
+echo "<!DOCTYPE html>
+<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />
+<title>Gourdi - Digital art</title>
+<meta name=\"viewport\" content=\"width=700, user-scalable=false;\">
+<meta name=\"keywords\" content=\"Digital art, computer art, automatic art, algorithmic art, procedural images, procedural videos\">
+<meta name=\"descripion\" content=\"Procedurally generated images and videos\">
+</head>
+<body>
+<table class=\"common\"> 
+  <tr>
+    <td class=\"header-left\">
+        <a href=\"http://www.gourdi.net\" style=\"text-decoration: none\">gourdi.net</a>
+    </td>
+    <td class=\"header-right\">
+        <a href=\"mailto:g.gourdin@gmail.com\" style=\"text-decoration: none\">@</a>
+    </td>
+  </tr>
+";
 
 $i = 0;
 foreach ($artists as $artist) {
@@ -32,15 +42,6 @@ if (($i % 2) == 1) {
     echo "<td></td></tr>";
 }
 
-echo "</table><br>";
-
-// Footer.
-echo "<table class=\"common\"><tr>\n";
-echo "<td><a href=\"faq.html\"><img src=\"res/faq_logo.png\" class=\"footer\"></a><br><p class=\"footer\">FAQ</p></td>\n";
-echo "<td><a href=\"https://twitter.com/GourdiNet\"><img src=\"res/twitter_logo.png\" class=\"footer\"></a><br><p class=\"footer\">Twitter</p></td>\n";
-echo "<td><a href=\"mailto:g.gourdin@gmail.com\"><img src=\"res/email_logo.png\" class=\"footer\"></a><br><p class=\"footer\">Contact</p></td>\n";
-echo "</tr></table>\n";
-
-echo "</body></html>";
+echo "</table><br></body></html>";
 
 ?>

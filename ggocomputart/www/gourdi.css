@@ -1,4 +1,4 @@
-a:link {color:#666;}      /* unvisited link */
+a:link {color:#666}      /* unvisited link */
 a:visited {color:#666;}  /* visited link */
 a:hover {color:#ddd;}  /* mouse over link */
 a:active {color:#ddd;}  /* selected link */ 
@@ -40,6 +40,33 @@ td {
 text-align: center;
 }
 
+td.header-left {
+padding:20px;
+text-align:left;
+font-family:Arial;
+font-weight:bold;
+color:#444444;
+text-shadow:2px 2px 2px black;
+font-size:350%;
+margin-top:5px;
+margin-bottom:0px;
+}
+
+td.header-right {
+padding:20px;
+text-align:right;
+font-family:Arial;
+font-weight:bold;
+color:#444444;
+text-shadow:2px 2px 2px black;
+font-size:350%;
+margin-top:5px;
+margin-bottom:0px;
+}
+
+td.common {
+padding:20px
+}
 
 table.common {
 width:600px;
@@ -53,10 +80,6 @@ table.footer {
 width:400px;
 margin-left:auto;
 margin-right:auto;
-}
-
-td.common {
-padding:20px
 }
 
 img.common {
