@@ -168,5 +168,40 @@ GGO_TEST(oriented_box, get_edges)
   GGO_CHECK(ggo::compare(edges[3]._vertices[1]._pos, { 3.f, 7.f }));
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(oriented_box, test_intersection)
+{
+  const std::vector<ggo::oriented_box_f> boxes1{
+    { { 3, 2 }, ggo::pi_f / 4, 2 * std::sqrt(2.f), std::sqrt(2.f) },
+    { { 3, 2 }, -ggo::pi_f / 4, std::sqrt(2.f), 2 * std::sqrt(2.f) } };
+
+  const std::vector<ggo::oriented_box_f> boxes2{
+  { { 5, 7 }, 0.f, 10.f, 1.f },
+  { { 5, 7 }, ggo::pi_f / 2, 1.f, 10.f } };
+
+  for (const auto & box1 : boxes1)
+  {
+    for (const auto & box2 : boxes2)
+    {
+      GGO_CHECK(ggo::test_intersection(box1, box2) == false);
+      GGO_CHECK(ggo::test_intersection(box2, box1) == false);
+    }
+  }
+
+  const std::vector<ggo::oriented_box_f> boxes3{
+    { { 4, 5 }, 0.f, 10.f, 1.f },
+    { { 4, 5 }, ggo::pi_f / 2, 1.f, 10.f } };
+
+  for (const auto & box1 : boxes1)
+  {
+    for (const auto & box3 : boxes3)
+    {
+      GGO_CHECK(ggo::test_intersection(box1, box3) == true);
+      GGO_CHECK(ggo::test_intersection(box3, box1) == true);
+    }
+  }
+}
+
+
 
 

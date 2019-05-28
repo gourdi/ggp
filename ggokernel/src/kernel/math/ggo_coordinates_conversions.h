@@ -141,6 +141,18 @@ namespace ggo
     return { x, y };
   }
 
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  [[nodiscard]] ggo::oriented_box<data_t> map_fit(ggo::oriented_box<data_t> box, ggo::rect<data_t> roi, ggo::size render_size)
+  {
+    ggo::pos2<data_t> pos = map_fit<data_t>(box.pos(), roi, render_size);
+    data_t half_size_x = map_fit<data_t>(box.half_size_x(), roi, render_size);
+    data_t half_size_y = map_fit<data_t>(box.half_size_y(), roi, render_size);
+
+    return ggo::oriented_box<data_t>(pos, box.angle(), half_size_x, half_size_y);
+  }
+
   //////////////////////////////////////////////////////////////
   template <typename data_t>
   [[nodiscard]] data_t map_fit(data_t l, data_t inf, data_t sup, int render_width, int render_height)

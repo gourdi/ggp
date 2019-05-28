@@ -110,6 +110,14 @@ namespace ggo
 }
 
 /////////////////////////////////////////////////////////////////////
+// Intersection.
+namespace ggo
+{
+  template <typename data_t>
+  bool test_intersection(const ggo::oriented_box<data_t> & box1, const ggo::oriented_box<data_t> & box2);
+}
+
+/////////////////////////////////////////////////////////////////////
 // I/O operators.
 namespace ggo
 {

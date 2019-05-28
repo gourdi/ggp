@@ -226,4 +226,51 @@ namespace ggo
 
     return rect_intersection::partial_overlap;
   }
+
+  //////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool test_intersection(const ggo::oriented_box<data_t> & box1, const ggo::oriented_box<data_t> & box2)
+  {
+    // Separating axis: box1.x
+    {
+      data_t proj1 = ggo::dot(box1.pos(), box1.dir_x());
+      auto proj2 = project(box2, box1.dir_x());
+      if (proj2._inf > proj1 + box1.half_size_x() || proj2._sup < proj1 - box1.half_size_x())
+      {
+        return false;
+      }
+    }
+
+    // Separating axis: box1.y
+    {
+      data_t proj1 = ggo::dot(box1.pos(), box1.dir_y());
+      auto proj2 = project(box2, box1.dir_y());
+      if (proj2._inf > proj1 + box1.half_size_y() || proj2._sup < proj1 - box1.half_size_y())
+      {
+        return false;
+      }
+    }
+
+    // Separating axis: box2.x
+    {
+      data_t proj2 = ggo::dot(box2.pos(), box2.dir_x());
+      auto proj1 = project(box1, box2.dir_x());
+      if (proj1._inf > proj2 + box2.half_size_x() || proj1._sup < proj2 - box2.half_size_x())
+      {
+        return false;
+      }
+    }
+
+    // Separating axis: box2.y
+    {
+      data_t proj2 = ggo::dot(box2.pos(), box2.dir_y());
+      auto proj1 = project(box1, box2.dir_y());
+      if (proj1._inf > proj2 + box2.half_size_y() || proj1._sup < proj2 - box2.half_size_y())
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
