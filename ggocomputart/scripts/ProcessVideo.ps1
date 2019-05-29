@@ -1,6 +1,4 @@
-param([string]$InputFile, [int]$OutputIndex, [string]$Logo, [int]$PreviewFrame)
-
-$OutputBasename = $OutputIndex.ToString("00000000")
+param([string]$InputFile, [string]$OutputBasename, [string]$Logo, [int]$PreviewFrame)
 
 Write-Host " Generating TGA images ... " -ForegroundColor DarkBlue -BackgroundColor White
 ffmpeg -i $InputFile _%08d.tga

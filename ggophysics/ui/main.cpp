@@ -25,7 +25,11 @@ int SDL_main(int argc, char ** argv)
     GGO_SDL_CALL(SDL_CreateWindowAndRenderer(screen_width, screen_height, SDL_WINDOW_SHOWN, &window, &renderer));
 
     // Physics world.
-    ggo::physics_world world({ 0.f, -10.f }, 100);
+    ggo::physics_world world(100);
+    world.set_external_force([](const ggo::rigid_body& body)
+    {
+      return ggo::vec2_f(0.f, -10.f);
+    });
 
     constexpr ggo::pos2_f center_pos{ 0.5f * screen_width, 0.1f * screen_height };
     constexpr float pixel_size = 0.05f;

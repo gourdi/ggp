@@ -4,6 +4,7 @@
 #include <physics/ggo_rigid_body.h>
 #include <physics/ggo_collisions.h>
 #include <physics/ggo_contact.h>
+#include <functional>
 
 namespace ggo
 {
@@ -11,7 +12,9 @@ namespace ggo
   {
   public:
 
-    physics_world(vec2_f gravity, int iterations) : _gravity(gravity), _iterations(iterations) {}
+    physics_world(int iterations) : _iterations(iterations) {}
+
+    void set_external_force(std::function<ggo::vec2_f(const rigid_body&)> f) { _external_force = f; };
 
     void add(std::unique_ptr<rigid_body> rb) { _rigid_bodies.emplace_back(std::move(rb)); }
 
@@ -33,10 +36,10 @@ namespace ggo
 
     std::vector<contact>::iterator find_contact(rigid_body * body1, rigid_body * body2);
 
-    const ggo::vec2_f _gravity;
     const int _iterations;
     std::vector<std::unique_ptr<rigid_body>> _rigid_bodies;
     std::vector<contact> _contacts;
+    std::function<ggo::vec2_f(const rigid_body&)> _external_force = [](const rigid_body&) { return ggo::vec2_f(0.f, 0.f); };
   };
 }
 

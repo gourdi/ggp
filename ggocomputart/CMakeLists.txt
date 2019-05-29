@@ -5,7 +5,7 @@ get_sources_from_root_directory("src" sources)
 group_sources(${sources})
 add_library(ggocomputart STATIC ${sources})
 target_include_directories(ggocomputart PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(ggocomputart ggokernel ggo2d ggoraytracer ggoanimation)
+target_link_libraries(ggocomputart ggokernel ggo2d ggoraytracer ggoanimation ggophysics)
 add_dependencies(ggocomputart ggoraytracer_nonreg ggoanimation_nonreg)
 
 # The executables.

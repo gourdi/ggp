@@ -88,11 +88,11 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   void physics_world::integrate_forces(float time_step)
   {
-    for (auto & rigib_body : _rigid_bodies)
+    for (auto & body : _rigid_bodies)
     {
-      if (rigib_body->_inv_mass > 0.0f)
+      if (body->_inv_mass > 0.0f)
       {
-        rigib_body->_linear_velocity  += time_step * _gravity;
+        body->_linear_velocity  += time_step * _external_force(*body);
       }
     }
   }
