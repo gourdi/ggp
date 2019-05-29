@@ -5,7 +5,7 @@
 // Sampling structs.
 namespace ggo
 {
-  enum sampling
+  enum pixel_sampling
   {
     sampling_1,
     sampling_2x2,
@@ -14,7 +14,7 @@ namespace ggo
     sampling_16x16
   };
   
-  template <sampling smp>
+  template <pixel_sampling sampling>
   struct sampler { };
 
   template <>

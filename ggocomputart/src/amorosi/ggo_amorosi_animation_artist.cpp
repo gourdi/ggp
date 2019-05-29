@@ -162,7 +162,7 @@ ggo::rgb_32f ggo::amorosi_animation_artist::get_color() const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::amorosi_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::amorosi_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   const int frames_count = 300;
 

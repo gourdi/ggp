@@ -3,7 +3,7 @@
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sampling>::from_8u(const ggo::rgb_8u & c)
 {
   using format_traits = image_format_traits<format>;
@@ -24,7 +24,7 @@ typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sa
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 ggo::demeco_artist<format, sampling>::demeco_artist(int width, int height)
 :
 _width(width), _height(height),
@@ -105,7 +105,7 @@ _background_image(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 bool ggo::demeco_artist<format, sampling>::update()
 {
   bool finished = true;
@@ -147,7 +147,7 @@ bool ggo::demeco_artist<format, sampling>::update()
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 void ggo::demeco_artist<format, sampling>::render_tile(void * buffer, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
 {
   GGO_ASSERT_EQ(_width, _background_image.width());
@@ -178,7 +178,7 @@ void ggo::demeco_artist<format, sampling>::render_tile(void * buffer, int line_b
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 ggo::demeco_artist<format, sampling>::demeco1::demeco1(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
@@ -208,7 +208,7 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco1::get_paint_shapes() const
 {
   using format_traits = image_format_traits<format>;
@@ -244,14 +244,14 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 bool ggo::demeco_artist<format, sampling>::demeco1::finished() const
 {
   return _counter > std::max(demeco1::_angle_counter_max, demeco1::_fade_in_counter_max);
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 ggo::demeco_artist<format, sampling>::demeco2::demeco2(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
@@ -268,7 +268,7 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco2::get_paint_shapes() const
 {
   using format_traits = image_format_traits<format>;
@@ -341,14 +341,14 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 bool ggo::demeco_artist<format, sampling>::demeco2::finished() const
 {
   return _counter > _anim3_counter_end;
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 ggo::demeco_artist<format, sampling>::demeco3::demeco3(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
@@ -380,7 +380,7 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco3::get_paint_shapes() const
 {
   using format_traits = image_format_traits<format>;
@@ -426,7 +426,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling sampling>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 bool ggo::demeco_artist<format, sampling>::demeco3::finished() const
 {
   return _counter > _layer_delay * (_layers_count - 1) + _anim1_duration + _anim2_duration;

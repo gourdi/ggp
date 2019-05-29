@@ -45,7 +45,7 @@ animation_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::dupecheck_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   const int counter_max = 400;
 

@@ -148,7 +148,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   int points_count = get_final_points_count() / frames_count();
 

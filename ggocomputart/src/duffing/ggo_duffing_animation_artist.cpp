@@ -79,7 +79,7 @@ animation_artist_abc(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   int last_point = std::max(1, frame_index * points_per_frame);
   int first_point = last_point - visible_points_count;

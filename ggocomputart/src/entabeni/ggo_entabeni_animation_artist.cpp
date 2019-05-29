@@ -13,7 +13,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::entabeni_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   // Update displacement.
   _angle = _angle_interpolator.update(1);

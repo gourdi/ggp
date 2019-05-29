@@ -24,7 +24,7 @@ _shadow_image(width, height, shadow_format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   // Render demecos.
   finished = false;

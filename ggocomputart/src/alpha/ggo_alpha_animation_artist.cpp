@@ -64,7 +64,7 @@ void ggo::alpha_animation_artist::add_new_item()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   // Oscillos.
   ggo::remove_if(_oscillos, [&](oscillo & oscil) { return oscil.update() == false; });

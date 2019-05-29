@@ -12,7 +12,7 @@ namespace ggo
 
           smoke_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-     void  render_frame(void * buffer, int frame_index) override;
+     void  render_frame(void * buffer, int frame_index, float time_step) override;
 
   private:
 

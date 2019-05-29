@@ -33,7 +33,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 250)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::vortex_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   // Interpolate vortices position.
   float interp = ggo::ease_inout_to<float>(frame_index, frames_count());

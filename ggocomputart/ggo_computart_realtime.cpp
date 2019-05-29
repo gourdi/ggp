@@ -17,13 +17,14 @@
 // Rendering.
 int anim_workers_ids = 0;
 std::mutex anim_mutex;
+bool display_cpu_usage = false;
 std::condition_variable anim_condition_start;
 std::condition_variable anim_condition_done;
 std::unique_ptr<ggo::realtime_artist_abc> artist;
 
 SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
-const int nominal_frame_duration_ms = 40; // 25 fps
+const int time_step_ms = 40; // 25 fps
 bool quit = false;
 
 /////////////////////////////////////////////////////////////////////
@@ -47,7 +48,8 @@ ggo::realtime_artist_abc * create_artist()
     //ggo::realtime_artist_id::demeco,
     //ggo::realtime_artist_id::wakenda,
     //ggo::realtime_artist_id::poupette,
-    ggo::realtime_artist_id::sonson
+    //ggo::realtime_artist_id::sonson
+    ggo::realtime_artist_id::badaboum
   };
 #endif
 
@@ -197,7 +199,7 @@ void main_loop()
     }
 
     // Update display.
-    artist->preprocess_frame(cursor_flags, { cursor_pos.x(), screen_surface->h - cursor_pos.y() - 1 });
+    artist->preprocess_frame(cursor_flags, { cursor_pos.x(), screen_surface->h - cursor_pos.y() - 1 }, time_step_ms / 1000.f);
     {
       // Start current frame rendering.
       {
@@ -235,24 +237,27 @@ void main_loop()
     auto frame_duration_ms = SDL_GetTicks() - frame_start_time_ms;
     Uint32 delay_ms = 0;
 
-    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
-    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
-    ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-      ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / nominal_frame_duration_ms, 0, 10));
-
-    if (frame_duration_ms < nominal_frame_duration_ms)
+    if (display_cpu_usage == true)
     {
-      delay_ms = nominal_frame_duration_ms - frame_duration_ms;
+      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+        ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
+      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+        ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
+      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
+        ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / time_step_ms, 0, 10));
+    }
+
+    if (frame_duration_ms < time_step_ms)
+    {
+      delay_ms = time_step_ms - frame_duration_ms;
       SDL_Delay(delay_ms);
-      frame_duration_ms = nominal_frame_duration_ms;
+      frame_duration_ms = time_step_ms;
     }
 
     SDL_UpdateWindowSurface(window);
 
     std::ostringstream oss;
-    oss << "Gourdi.net - FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::round_to<int>(100.f * (1.f - float(delay_ms) / float(nominal_frame_duration_ms))) << "%";
+    oss << "Gourdi.net - FPS: " << 1000 / frame_duration_ms << ", CPU: " << ggo::round_to<int>(100.f * (1.f - float(delay_ms) / float(time_step_ms))) << "%";
     SDL_SetWindowTitle(window, oss.str().c_str());
   }
 

@@ -31,7 +31,7 @@ namespace ggo
       ggo::filling_squares_artist::colored_square _colored_square;
     };
 
-    void  render_frame(void * buffer, int frame_index) override;
+    void  render_frame(void * buffer, int frame_index, float time_step) override;
 
   private:
 

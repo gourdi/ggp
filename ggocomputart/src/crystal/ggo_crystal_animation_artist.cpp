@@ -16,7 +16,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 100)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::crystal_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
     _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);

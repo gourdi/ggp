@@ -47,7 +47,7 @@ _life(width, height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   ggo::array<float, 2> diffused_food;
   ggo::array<float, 2> diffused_life;

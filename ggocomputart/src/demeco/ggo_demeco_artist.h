@@ -9,7 +9,7 @@
 
 namespace ggo
 {
-  template <ggo::image_format format, ggo::sampling>
+  template <ggo::image_format format, ggo::pixel_sampling sampling>
   class demeco_artist
   {
   public:

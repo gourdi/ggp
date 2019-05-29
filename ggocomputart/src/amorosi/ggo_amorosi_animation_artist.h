@@ -60,7 +60,7 @@ namespace ggo
 
   private:
 
-    void render_frame(void * buffer, int frame_index, bool & finished) override;
+    void render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
     ggo::rgb_32f get_color() const;
 

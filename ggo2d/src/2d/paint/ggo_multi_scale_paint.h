@@ -11,7 +11,7 @@
 namespace ggo
 {
   // Paint a single shape.
-  template <sampling smp, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
     const shape_t & shape,
     int scale_factor, int first_scale,
@@ -20,7 +20,7 @@ namespace ggo
     const ggo::rect_int & clipping);
 
   // Paint multiple shapes.
-  template <sampling smp, typename container_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename container_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
     const container_t & paint_shapes,
     int scale_factor, int first_scale,
@@ -33,7 +33,7 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
   void paint_block_single_t(const ggo::rect_int & block_rect,
     const int scale_factor, const int current_scale,
     const shape_t & shape,
@@ -71,7 +71,7 @@ namespace ggo
       if (block_rect.is_one() == true)
       {
         // Sampling.
-        using sampler_t = ggo::sampler<smp>;
+        using sampler_t = ggo::sampler<sampling>;
         using fract_t = ggo::log2_fract<sampler_t::samples_count_log2>;
 
         fract_t fract;
@@ -98,7 +98,7 @@ namespace ggo
       // Recursion.
       auto paint_subblock = [&](const ggo::rect_int & block_rect)
       {
-        paint_block_single_t<smp>(block_rect,
+        paint_block_single_t<sampling>(block_rect,
           scale_factor, current_scale - 1,
           shape,
           brush, blend,
@@ -112,7 +112,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
     const shape_t & shape,
     int scale_factor, int first_scale,
@@ -140,7 +140,7 @@ namespace ggo
     // Process blocks.
     auto process_rect = [&](const ggo::rect_int & block_rect)
     {
-      paint_block_single_t<smp>(
+      paint_block_single_t<sampling>(
         block_rect,
         scale_factor, first_scale,
         shape,
@@ -158,7 +158,7 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename paint_shape_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename paint_shape_t, typename read_pixel_t, typename write_pixel_t>
   void paint_block_multi_t(const ggo::rect_int & block_rect,
     int scale_factor, int current_scale,
     const std::vector<const paint_shape_t *> & paint_shapes,
@@ -225,7 +225,7 @@ namespace ggo
       const auto bkgd_color = read_pixel(block_rect.left(), block_rect.bottom());
 
       ggo::accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
-      ggo::sampler<smp>::template sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
+      ggo::sampler<sampling>::template sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
       {
         auto sample_color = bkgd_color;
 
@@ -241,7 +241,7 @@ namespace ggo
         acc.add(sample_color);
       });
 
-      const auto pixel_color = acc.template div<ggo::sampler<smp>::samples_count>();
+      const auto pixel_color = acc.template div<ggo::sampler<sampling>::samples_count>();
       write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
 
       return;
@@ -250,7 +250,7 @@ namespace ggo
     // General case: recursion.
     auto paint_subblock = [&](const ggo::rect_int & block_rect)
     {
-      paint_block_multi_t<smp>(block_rect,
+      paint_block_multi_t<sampling>(block_rect,
         scale_factor, current_scale - 1,
         current_block_paint_shapes,
         read_pixel, write_pixel);
@@ -261,7 +261,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <sampling smp, typename container_t, typename read_pixel_t, typename write_pixel_t>
+  template <pixel_sampling sampling, typename container_t, typename read_pixel_t, typename write_pixel_t>
   void paint_multi_scale(int width, int height,
     const container_t & paint_shapes,
     int scale_factor, int first_scale,
@@ -321,7 +321,7 @@ namespace ggo
     // Process blocks.
     auto process_block = [&](const ggo::rect_int & block_rect)
     {
-      paint_block_multi_t<smp>(block_rect,
+      paint_block_multi_t<sampling>(block_rect,
         scale_factor, first_scale,
         clipped_paint_shapes,
         read_pixel, write_pixel);

@@ -6,7 +6,7 @@
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <ggo::image_format format, ggo::sampling sampling>
+  template <ggo::image_format format, ggo::pixel_sampling sampling>
   void render_tile_t(
     const ggo::rgb_32f & c1,
     const ggo::rgb_32f & c2,
@@ -132,7 +132,7 @@ ggo::poupette_artist::poupette_artist()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping, ggo::sampling sampling) const
+void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const
 {
   const rgb_32f c1 = ggo::ease_inout(frame_index, _frames_count, _c1_start, _c1_end);
   const rgb_32f c2 = ggo::ease_inout(frame_index, _frames_count, _c2_start, _c2_end);

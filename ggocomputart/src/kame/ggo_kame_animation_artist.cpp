@@ -295,7 +295,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::kame_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::kame_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   for (auto & kame : _kames)
   {

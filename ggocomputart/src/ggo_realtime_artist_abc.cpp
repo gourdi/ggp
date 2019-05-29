@@ -9,6 +9,7 @@
 #include "wakenda/ggo_wakenda_realtime_artist.h"
 #include "poupette/ggo_poupette_realtime_artist.h"
 #include "sonson/ggo_sonson_realtime_artist.h"
+#include "badaboum/ggo_badaboum_realtime_artist.h"
 
 namespace ggo
 {
@@ -70,6 +71,8 @@ namespace ggo
       return new poupette_realtime_artist(width, height, line_step, format);
     case realtime_artist_id::sonson:
       return new sonson_realtime_artist(width, height, line_step, format);
+    case realtime_artist_id::badaboum:
+      return new badaboum_realtime_artist(width, height, line_step, format);
 
     default:
       GGO_FAIL();

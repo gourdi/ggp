@@ -75,7 +75,7 @@ _background(new uint8_t[height * line_step])
 }
 
 ////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   for (int step = 0; step < sub_steps_count; ++step)
   {

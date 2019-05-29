@@ -13,11 +13,11 @@ namespace ggo
 
     static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::image_format format);
 
-    bool  render_frame(void * buffer);
+    bool  render_frame(void * buffer, float time_step);
 
   protected:
 
-    virtual void  render_frame(void * buffer, int frame_index, bool & finished) = 0;
+    virtual void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) = 0;
 
                   animation_artist_abc(int width, int height, int line_step, ggo::image_format format);
 
@@ -39,9 +39,9 @@ namespace ggo
 
   private:
 
-    void  render_frame(void * buffer, int frame_index, bool & finished) override;
+    void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
-    virtual void  render_frame(void * buffer, int frame_index) = 0;
+    virtual void  render_frame(void * buffer, int frame_index, float time_step) = 0;
     
   private:
 

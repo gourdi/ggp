@@ -16,7 +16,7 @@ namespace ggo
 
     poupette_artist();
 
-    void render_tile(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping, ggo::sampling sampling) const;
+    void render_tile(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const;
     bool finished(int frame_index) const;
 
   private:

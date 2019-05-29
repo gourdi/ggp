@@ -36,7 +36,7 @@ _artist(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::ifs_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   ggo::fill_4_colors<ggo::rgb_8u_yu>(
     buffer, width(), height(), line_step(), 

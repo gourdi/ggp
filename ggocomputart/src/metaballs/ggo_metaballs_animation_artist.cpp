@@ -29,7 +29,7 @@ ggo::metaballs_animation_artist::metaballs_animation_artist(int width, int heigh
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::metaballs_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   std::vector<ggo::pos3_f> centers;
 

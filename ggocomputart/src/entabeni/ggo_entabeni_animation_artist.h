@@ -16,7 +16,7 @@ namespace ggo
 
   private:
 
-    void  render_frame(void * buffer, int frame_index) override;
+    void  render_frame(void * buffer, int frame_index, float time_step) override;
 
   private:
 

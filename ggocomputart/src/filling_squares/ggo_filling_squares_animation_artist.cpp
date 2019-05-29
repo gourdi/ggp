@@ -81,7 +81,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 500)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::filling_squares_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   _animator.update();
 

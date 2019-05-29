@@ -89,14 +89,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 		
 		if (i == 1)
 		{
-      auto artist_id = ggo::to<int>(arg);
-
-			if (!artist_id)
-			{
-				std::cerr << "Error : invalid artist id argument" << std::endl;
-				return false;
-			}
-			params._artist_id = static_cast<ggo::bitmap_artist_id>(*artist_id);
+			params._artist_id = static_cast<ggo::bitmap_artist_id>(ggo::to<int>(arg));
 		}
 		else
 		if (arg == "-d")
@@ -119,13 +112,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-      auto frame_from = ggo::to<int>(argv[i]);
-			if (!frame_from || *frame_from < 0)
-			{
-				std::cerr << "Error : invalid range argument" << std::endl;
-				return false;
-			}
-      params._from = *frame_from;
+      params._from = ggo::to<int>(argv[i]);
 			
 			++i;
 			if (i >= argc)
@@ -133,13 +120,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing range parameters" << std::endl;
 				return false;
 			}
-      auto frame_to = ggo::to<int>(argv[i]);
-      if (!frame_to || *frame_to < 0)
-        {
-				std::cerr << "Error : invalid range argument" << std::endl;
-				return false;
-			}
-      params._to = *frame_to;
+      params._to = ggo::to<int>(argv[i]);
 		}
 		else
 		if (arg == "-s")
@@ -150,13 +131,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing width parameter" << std::endl;
 				return false;
 			}
-      auto width = ggo::to<int>(argv[i]);
-			if (!width || *width <= 0)
-			{
-				std::cerr << "Error : invalid width argument" << std::endl;
-				return false;
-			}
-      params._width = *width;
+      params._width = ggo::to<int>(argv[i]);
 
 			++i;
 			if (i >= argc)
@@ -164,13 +139,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing height parameter" << std::endl;
 				return false;
 			}
-      auto height = ggo::to<int>(argv[i]);
-      if (!height || *height <= 0)
-      {
-				std::cerr << "Error : invalid height argument" << std::endl;
-				return false;
-			}
-      params._height = *height;
+      params._height = ggo::to<int>(argv[i]);
 		}
     else
 		if (arg == "-t")
@@ -181,13 +150,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 				std::cerr << "Error : missing threads count parameter" << std::endl;
 				return false;
 			}
-      auto threads_count = ggo::to<int>(argv[i]);
-			if (!threads_count || *threads_count <= 0)
-			{
-				std::cerr << "Error : invalid threads count argument" << std::endl;
-				return false;
-			}
-      params._threads_count = *threads_count;
+      params._threads_count = ggo::to<int>(argv[i]);
 		}
 		else
 		{

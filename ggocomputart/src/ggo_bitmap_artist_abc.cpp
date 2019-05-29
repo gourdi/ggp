@@ -77,6 +77,8 @@ ggo::bitmap_artist_animation_wrapper::bitmap_artist_animation_wrapper(ggo::anima
 //////////////////////////////////////////////////////////////
 void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 {
+  constexpr float time_step = 1.f / 25.f;
+
   std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(_artist_id, width(), height(), line_step(), format()));
 
   if (!artist)
@@ -99,7 +101,7 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
       frame_buffer = nullptr;
     }
 
-    if (artist->render_frame(frame_buffer) == false)
+    if (artist->render_frame(frame_buffer, time_step) == false)
     {
       break;
     }

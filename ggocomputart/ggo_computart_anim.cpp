@@ -11,6 +11,7 @@ struct ggo_params
   std::string				        _output_directory;
   int						            _width;
   int						            _height;
+  float                     _time_step = 1.f / 25.f; // For now this is fixed.
 };
 
 //////////////////////////////////////////////////////////////
@@ -31,14 +32,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 
     if (i == 1)
     {
-      auto artist_id = ggo::to<int>(arg);
-
-      if (artist_id.has_value() == false || *artist_id < 0)
-      {
-        std::cerr << "Error : invalid artist id argument" << std::endl;
-        return false;
-      }
-      params._artist_id = static_cast<ggo::animation_artist_id>(*artist_id);
+      params._artist_id = static_cast<ggo::animation_artist_id>(ggo::to<int>(arg));
     }
     else if (arg.compare("-d") == 0)
     {
@@ -59,13 +53,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
         std::cout << "Error : missing width parameter" << std::endl;
         return false;
       }
-      auto width = ggo::to<int>(argv[i]);
-      if (width.has_value() == false || *width <= 0)
-      {
-        std::cout << "Error : invalid width argument" << std::endl;
-        return false;
-      }
-      params._width = *width;
+      params._width = ggo::to<int>(argv[i]);
 
       ++i;
       if (i >= argc)
@@ -73,13 +61,7 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
         std::cout << "Error : missing height parameter" << std::endl;
         return false;
       }
-      auto height = ggo::to<int>(argv[i]);
-      if (height.has_value() == false || *height <= 0)
-      {
-        std::cout << "Error : invalid height argument" << std::endl;
-        return false;
-      }
-      params._height = *height;
+      params._height = ggo::to<int>(argv[i]);
     }
     else
     {
@@ -123,7 +105,7 @@ int main(int argc, char ** argv)
   {
     ggo::chronometer frame_chronometer;
 
-    if (artist->render_frame(buffer.data()) == false)
+    if (artist->render_frame(buffer.data(), params._time_step) == false)
     {
       break;
     }

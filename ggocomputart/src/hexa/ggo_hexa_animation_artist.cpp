@@ -23,7 +23,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 } 
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::hexa_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   float progress = static_cast<float>(frame_index) / frames_count();
   progress = ggo::ease_inout(progress);

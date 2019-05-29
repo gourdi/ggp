@@ -12,7 +12,7 @@ namespace ggo
 
           alpha_animation_artist(int width, int height, int line_step, ggo::image_format format);
 
-    void  render_frame(void * buffer, int frame_index, bool & finished) override;
+    void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
     int		get_items_count() const { return static_cast<int>(_items.size()); }
 

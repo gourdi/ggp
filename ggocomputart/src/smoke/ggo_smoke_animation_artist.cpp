@@ -315,7 +315,7 @@ void ggo::smoke_animation_artist::diffuse()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::smoke_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::smoke_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   process_sources(frame_index);
   velocity_self_advection();

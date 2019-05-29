@@ -26,7 +26,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::chryzode_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   chryzode_artist artist(width(), height(), line_step(), format());
 

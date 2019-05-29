@@ -113,7 +113,7 @@ _transforms(32)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::distorsion_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::distorsion_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   std::vector<fixed_transform> transforms;
   for (auto & transform : _transforms)

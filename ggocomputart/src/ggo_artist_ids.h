@@ -77,7 +77,7 @@ namespace ggo
     ikeda,
     cumbia,
     vortex,
-    circles__REMOVED, // 20
+    badaboum, // 20
     distorsion,
     toutouyoutou,
     amorosi,
@@ -108,7 +108,8 @@ namespace ggo
     demeco,
     wakenda,
     poupette,
-    sonson
+    sonson,
+    badaboum // 10
   };
 }
 

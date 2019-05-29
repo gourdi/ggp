@@ -310,7 +310,7 @@ void ggo::rah_animation_artist::insert_particle(std::shared_ptr<particle> partic
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::rah_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::rah_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   _focus_dist = _focus_dist_interpolator.update(1);
 

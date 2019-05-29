@@ -11,7 +11,7 @@ _artist(width, height, line_step, format)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::julia_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   float angle = ggo::ease_inout(frame_index, frames_count(), _angle, _angle + ggo::pi<float>() / 8);
 

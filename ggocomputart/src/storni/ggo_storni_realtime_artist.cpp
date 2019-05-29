@@ -401,7 +401,7 @@ void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int &
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling smp>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 void ggo::storni_realtime_artist::paint_stornies_background(const ggo::rect_int & clipping)
 {
   alpha_blender_rgb8u blender(0.4f);
@@ -409,11 +409,11 @@ void ggo::storni_realtime_artist::paint_stornies_background(const ggo::rect_int 
   for (const auto & storni : _stornis)
   {
     // Paint 2 stamps.
-    ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
+    ggo::paint<format, sampling>(_background_buffer.data(), width(), height(), line_step(),
       ggo::disc_f(storni._pos, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
 
-    ggo::paint<format, smp>(_background_buffer.data(), width(), height(), line_step(),
+    ggo::paint<format, sampling>(_background_buffer.data(), width(), height(), line_step(),
       ggo::disc_f(storni._pos - 0.5f * storni._vel, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
   }
@@ -440,7 +440,7 @@ void ggo::storni_realtime_artist::blit_background(void * buffer, const ggo::rect
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::sampling smp>
+template <ggo::image_format format, ggo::pixel_sampling sampling>
 void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vector<storni> & stornis, float size, const ggo::rect_int & clipping) const
 {
   const float border_size = size * 0.05f;
@@ -462,7 +462,7 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
 
       const std::vector<const ggo::paint_shape_abc<float, ggo::rgb_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
 
-      ggo::paint<format, smp>(buffer, width(), height(), line_step(), paint_shapes, clipping);
+      ggo::paint<format, sampling>(buffer, width(), height(), line_step(), paint_shapes, clipping);
     }
   }
 }

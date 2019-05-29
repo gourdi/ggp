@@ -19,7 +19,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 150)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::stoa_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   // The camera.
   const float camera_aperture = 0.1f;

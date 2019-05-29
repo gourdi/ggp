@@ -30,6 +30,7 @@
 #include "demeco/ggo_demeco_animation_artist.h"
 #include "poupette/ggo_poupette_animation_artist.h"
 #include "sonson/ggo_sonson_realtime_artist.h"
+#include "badaboum/ggo_badaboum_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
 // REALTIME ARTISTS WRAPPER
@@ -48,9 +49,8 @@ namespace ggo
     {
     }
 
-    void  render_frame(void * buffer, int frame_index, bool & finished) override
+    void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override
     {
-      constexpr float time_step = 1.f / 25.f; // 25fps
       _artist->preprocess_frame(0, { 0, 0 }, time_step);
       _artist->render_tile(buffer, ggo::rect_int::from_size(size()));
       finished = _artist->finished();
@@ -75,10 +75,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool ggo::animation_artist_abc::render_frame(void * buffer)
+  bool ggo::animation_artist_abc::render_frame(void * buffer, float time_step)
   {
     bool finished = true;
-    render_frame(buffer, _frame_index, finished);
+    render_frame(buffer, _frame_index, time_step, finished);
     if (finished == true)
     {
       return false;
@@ -146,6 +146,8 @@ namespace ggo
       return new ggo::demeco_animation_artist(width, height, line_step, format);
     case ggo::animation_artist_id::poupette:
       return new ggo::poupette_animation_artist(width, height, line_step, format);
+    case ggo::animation_artist_id::badaboum:
+      return new ggo::badaboum_animation_artist(width, height, line_step, format);
 
     // Real-time artists.
     case ggo::animation_artist_id::kanji:
@@ -184,7 +186,7 @@ _frames_count(frames_count)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::fixed_frames_count_animation_artist_abc::render_frame(void * buffer, int frame_index, bool & finished)
+void ggo::fixed_frames_count_animation_artist_abc::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
   if (frame_index >= _frames_count)
   {
@@ -192,7 +194,7 @@ void ggo::fixed_frames_count_animation_artist_abc::render_frame(void * buffer, i
   }
   else
   {
-    render_frame(buffer, frame_index);
+    render_frame(buffer, frame_index, time_step);
 
     finished = false;
   }

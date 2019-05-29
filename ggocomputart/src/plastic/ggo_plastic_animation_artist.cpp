@@ -26,7 +26,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::plastic_animation_artist::render_frame(void * buffer, int frame_index)
+void ggo::plastic_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   for (auto & anim_params : _params)
   {
