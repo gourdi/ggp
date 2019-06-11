@@ -16,9 +16,11 @@ namespace ggo
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step);
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping);
     
-    static int frames_count() { return 900; }
+    static int frames_count() { return 400; }
 
   private:
+
+    ggo::rgb_8u new_box_color() const;
 
     template <ggo::image_format format>
     void  paint_bkgd(const std::vector<ggo::oriented_box_f> & floors);

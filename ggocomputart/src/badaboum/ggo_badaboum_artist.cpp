@@ -27,28 +27,42 @@ _bkgd(width, height, format)
   _hues[0] = ggo::rand(0.f, 1.f);
   _hues[1] = _hues[0] + ggo::rand(0.25f, 0.75f);
 
+  std::vector<ggo::oriented_box_f> walls;
+
   // Setup left, right and bottom walls.
   auto wall_bottom = std::make_unique<ggo::rigid_body>(10.f, 1.f, 0.f, friction());
   wall_bottom->_position = { 0.f, -1.f };
+  walls.push_back(wall_bottom->box());
   _world.add(std::move(wall_bottom));
 
   auto wall_left = std::make_unique<ggo::rigid_body>(1.f, 10.f, 0.f, friction());
   wall_left->_position = { -2.f, 0.f };
+  walls.push_back(wall_left->box());
   _world.add(std::move(wall_left));
 
   auto wall_right = std::make_unique<ggo::rigid_body>(1.f, 10.f, 0.f, friction());
   wall_right->_position = { 2.f, 0.f };
+  walls.push_back(wall_right->box());
   _world.add(std::move(wall_right));
 
   // Setup some random floors.
   std::vector<ggo::oriented_box_f> floors;
   while (floors.size() < 5)
   {
-    auto floor = std::make_unique<ggo::rigid_body>(ggo::rand(0.2f, 0.4f), 0.02f, 0.f, friction());
+    auto floor = std::make_unique<ggo::rigid_body>(ggo::rand(0.2f, 0.3f), ggo::rand(0.01f, 0.02f), 0.f, friction());
     floor->_position = { ggo::rand(-1.f, 1.f),  ggo::rand(0.f, 1.f) };
-    floor->_rotation = ggo::rand(-0.4f, 0.4f);
+    floor->_rotation = ggo::rand(-ggo::pi_f / 4, ggo::pi_f / 4);
 
     bool intersection = false;
+
+    for (const auto & other : walls)
+    {
+      if (test_intersection(floor->box(), other) == true)
+      {
+        intersection = true;
+        break;
+      }
+    }
     for (const auto & other : floors)
     {
       if (test_intersection(floor->box(), other) == true)
@@ -81,6 +95,15 @@ _bkgd(width, height, format)
 }
 
 //////////////////////////////////////////////////////////////
+ggo::rgb_8u ggo::badaboum_artist::new_box_color() const
+{
+  float hue = _hues[ggo::rand(0, 1)] + ggo::rand(-0.02f, 0.02f);
+  float sat = ggo::rand(0.5f, 1.f);
+
+  return ggo::from_hsv<ggo::rgb_8u>(hue, sat, 1.f);
+}
+
+//////////////////////////////////////////////////////////////
 template <ggo::image_format format>
 void ggo::badaboum_artist::paint_bkgd(const std::vector<ggo::oriented_box_f> & floors)
 {
@@ -100,7 +123,7 @@ void ggo::badaboum_artist::paint_bkgd(const std::vector<ggo::oriented_box_f> & f
   {
     auto box = map_fit(floor);
 
-    render_box<format, ggo::sampling_16x16>(_bkgd.data(), _bkgd.line_byte_step(), box, ggo::rgb_8u(0x88), ggo::rect_int::from_size(size()));
+    render_box<format, ggo::sampling_16x16>(_bkgd.data(), _bkgd.line_byte_step(), box, new_box_color(), ggo::rect_int::from_size(size()));
   }
 }
 
@@ -108,9 +131,9 @@ void ggo::badaboum_artist::paint_bkgd(const std::vector<ggo::oriented_box_f> & f
 void ggo::badaboum_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   // Create new boxes.
-  const float boxes_per_second = 10.f;
+  const float boxes_per_second = 100.f;
 
-  if (frame_index < 500)
+  if (frame_index < 200)
   {
     _new_bodies_count += boxes_per_second * time_step;
     for (; _new_bodies_count >= 1.f; _new_bodies_count -= 1.f)
@@ -120,9 +143,7 @@ void ggo::badaboum_artist::preprocess_frame(int frame_index, uint32_t cursor_eve
       body->_rotation = ggo::rand(0.f, ggo::pi<float>());
       body->_angular_velocity = ggo::rand(-10.f, 10.f);
       
-      float hue = _hues[ggo::rand(0, 1)] + ggo::rand(-0.02f, 0.02f);
-      float sat = ggo::rand(0.5f, 1.f);
-      _bodies.push_back({ body.get(), ggo::from_hsv<ggo::rgb_8u>(hue, sat, 1.f) });
+      _bodies.push_back({ body.get(), new_box_color() });
 
       _world.add(std::move(body));
     }
