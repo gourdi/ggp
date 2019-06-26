@@ -203,7 +203,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::image_format format, pixel_sampling sampling, typename paint_shape_t>
-  void paint_shapes(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes)
+  void paint(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes)
   {
     paint<format, sampling, paint_shape_t>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
   }
@@ -214,7 +214,7 @@ namespace ggo
   {
     if constexpr(std::is_pointer<paint_shape_t>::value == true)
     {
-      // I could not use an adaptator here, but by doing so, I can call the generic version of the paint_shapes function.
+      // I could not use an adaptator here, but by doing so, I can call the generic version of the paint function.
       auto adaptor = ggo::make_adaptor(shapes, [](const auto * paint_shape) { return paint_shape; });
 
       paint<format, sampling>(buffer, width, height, line_step, adaptor, clipping);

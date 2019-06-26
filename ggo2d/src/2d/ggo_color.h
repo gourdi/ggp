@@ -657,6 +657,17 @@ namespace ggo
       static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
   }
 
+  inline
+  rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, uint8_t weight_a)
+  {
+    const uint8_t weight_b = 0xff - weight_a;
+
+    return {
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.r() + weight_b * color_b.r(), 0xff)),
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.g() + weight_b * color_b.g(), 0xff)),
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.b() + weight_b * color_b.b(), 0xff)) };
+  }
+
   template <typename fract_t>
   rgba_8u linerp(rgba_8u color_a, rgba_8u color_b, const fract_t & weight_a)
   {
@@ -779,6 +790,11 @@ namespace ggo
     floating_point_color_t c(r, g, b);
 
     return convert_color_to<color_t>(c);
+  }
+
+  inline ggo::rgb_8u from_hsv_8u(float hue, float sat, float val)
+  {
+    return from_hsv<ggo::rgb_8u>(hue, sat, val);
   }
 }
 

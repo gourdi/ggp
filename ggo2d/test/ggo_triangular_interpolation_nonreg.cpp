@@ -11,7 +11,7 @@ GGO_TEST(triangular_interpolation, function)
 {
   constexpr int image_size = 200;
 
-  ggo::static_image<ggo::rgb_8u_yd> image(image_size, image_size);
+  ggo::image_t<ggo::rgb_8u_yd> image({ image_size, image_size });
 
   image.fill(ggo::black_8u());
 
@@ -48,7 +48,7 @@ GGO_TEST(paint, color_triangle)
 
   ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
 
   ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }
@@ -76,7 +76,7 @@ GGO_TEST(paint, alpha_color_triangle)
 
   ggo::array_8u buffer(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
 }

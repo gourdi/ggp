@@ -28,7 +28,7 @@ template <ggo::image_format format, ggo::pixel_sampling sampling>
 ggo::demeco_artist<format, sampling>::demeco_artist(int width, int height)
 :
 _width(width), _height(height),
-_background_image(width, height)
+_background_image({ width, height })
 {
   using format_traits = image_format_traits<format>;
   using color_t = format_traits::color_t;

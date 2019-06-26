@@ -12,7 +12,7 @@ namespace
 ggo::wakenda_realtime_artist::wakenda_realtime_artist(int width, int height, int line_step, ggo::image_format format)
 :
 realtime_artist_abc(width, height, line_step, format),
-_bkgd_image(width, height, line_step, format)
+_bkgd_image({ width, height }, line_step, format)
 {
   auto create_transforms = [](auto & transforms)
   {

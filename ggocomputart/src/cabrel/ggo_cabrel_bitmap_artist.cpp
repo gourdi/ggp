@@ -228,7 +228,7 @@ namespace
 
       shadows.emplace_back(shadow_triangle, ggo::black_8u());
     }
-    ggo::paint_shapes<format, ggo::sampling_4x4>(buffer, artist.width(), artist.height(), artist.line_step(), shadows);
+    ggo::paint<format, ggo::sampling_4x4>(buffer, artist.width(), artist.height(), artist.line_step(), shadows);
 
     float stddev = 0.01f * artist.min_size();
     ggo::gaussian_blur<format>(buffer, artist.size(), artist.line_step(), stddev);

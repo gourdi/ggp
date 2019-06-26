@@ -17,7 +17,7 @@ artist(width, height, line_step, format),
 _world(100),
 _sampling(sampling),
 _thickness(0.001f * std::min(width, height)),
-_bkgd(width, height, format)
+_bkgd({ width, height }, format)
 {
   _world.set_external_force([](const ggo::rigid_body & body)
   {

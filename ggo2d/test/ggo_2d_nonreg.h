@@ -10,7 +10,7 @@ auto make_image(int width, int height, std::initializer_list<typename ggo::image
     throw std::runtime_error("invalid pixels count");
   }
 
-  ggo::image image(width, height, format);
+  ggo::image image({ width, height }, format);
 
   auto it = pixels.begin();
   for (int y = 0; y < height; ++y)

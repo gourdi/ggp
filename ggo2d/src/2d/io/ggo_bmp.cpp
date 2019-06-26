@@ -112,7 +112,7 @@ namespace ggo
 
     // Pixels.
     int line_byte_size = ggo::pad(3 * info_header._width, 4);
-    image image(info_header._width, info_header._height, line_byte_size, ggo::bgr_8u_yu);
+    image image({ int(info_header._width), int(info_header._height) }, line_byte_size, ggo::bgr_8u_yu);
 
     ifs.read(reinterpret_cast<char *>(image.data()), info_header._height * line_byte_size);
 

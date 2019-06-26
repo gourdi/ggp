@@ -176,8 +176,8 @@ GGO_TEST(image, accumulator)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(image, move)
 {
-  ggo::image pb1(10, 30, 30, ggo::rgb_8u_yu);
-  ggo::image pb2(10, 20, 30, ggo::rgb_8u_yu);
+  ggo::image img1({ 10, 30 }, 30, ggo::rgb_8u_yu);
+  ggo::image img2({ 10, 20 }, 30, ggo::rgb_8u_yu);
 
-  pb1 = std::move(pb2);
+  img1 = std::move(img2);
 }

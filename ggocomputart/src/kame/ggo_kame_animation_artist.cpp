@@ -278,7 +278,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
     }
   }
 
-  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.width(), triangles);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_1>(buffer, artist.width(), artist.height(), artist.width(), triangles);
 
   using paint_shape_t = ggo::static_paint_shape<ggo::capsule_f, uint8_t>;
 
@@ -291,7 +291,7 @@ void ggo::kame_animation_artist::kame::paint(void * buffer, const animation_arti
     shapes.push_back(paint_shape_t({ proj1, proj2, _thickness }, 0x00));
   }
 
-  ggo::paint_shapes<ggo::y_8u_yu, ggo::sampling_16x16>(buffer, artist.width(), artist.height(), artist.width(), shapes);
+  ggo::paint<ggo::y_8u_yu, ggo::sampling_16x16>(buffer, artist.width(), artist.height(), artist.width(), shapes);
 }
 
 //////////////////////////////////////////////////////////////

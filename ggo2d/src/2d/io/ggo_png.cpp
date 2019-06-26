@@ -34,7 +34,7 @@ namespace ggo
     }
 
     int line_byte_size = PNG_IMAGE_ROW_STRIDE(png_image);
-    ggo::image image(png_image.width, png_image.height, line_byte_size, format);
+    ggo::image image({ int(png_image.width), int(png_image.height) }, line_byte_size, format);
     
     if (png_image_finish_read(&png_image, NULL, image.data(), 0, NULL) == 0)
     {
@@ -70,12 +70,12 @@ namespace ggo
       break;
     case ggo::bgr_8u_yu:
       png_image.format = PNG_FORMAT_RGB;
-      image = std::make_unique<ggo::image>(width, height, ggo::rgb_8u_yd);
+      image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::rgb_8u_yd);
       ggo::blit<ggo::bgr_8u_yu, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
       break;
     case ggo::rgb_8u_yu:
       png_image.format = PNG_FORMAT_RGB;
-      image = std::make_unique<ggo::image>(width, height, ggo::rgb_8u_yd);
+      image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::rgb_8u_yd);
       ggo::blit<ggo::rgb_8u_yu, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
       break;
 

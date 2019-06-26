@@ -27,7 +27,7 @@ namespace
   {
     constexpr int size = 100;
 
-    ggo::static_image<ggo::y_8u_yd> image(size, size);
+    ggo::image_t<ggo::y_8u_yd> image({ size, size });
     
     const std::array<uint8_t, 9> input{ {
         50, 25, 185,

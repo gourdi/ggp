@@ -176,7 +176,7 @@ GGO_TEST(paint, polygons_rectangles)
 
   ggo::array_8u buffer_polygons(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_polygons.data(), width, height, line_step, ggo::blue_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_polygons.data(), width, height, line_step, polygons);
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_polygons.data(), width, height, line_step, polygons);
 
   ggo::save_bmp("paint_polygons.bmp", buffer_polygons.data(), ggo::rgb_8u_yu, width, height, line_step);
 
@@ -189,7 +189,7 @@ GGO_TEST(paint, polygons_rectangles)
 
   ggo::array_8u buffer_rectangles(3 * width * height);
   ggo::fill_solid<ggo::rgb_8u_yu>(buffer_rectangles.data(), width, height, line_step, ggo::blue_8u());
-  ggo::paint_shapes<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rectangles.data(), width, height, line_step, rects);
+  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer_rectangles.data(), width, height, line_step, rects);
 
   ggo::save_bmp("paint_rectangles.bmp", buffer_rectangles.data(), ggo::rgb_8u_yu, width, height, line_step);
 
@@ -362,7 +362,7 @@ GGO_TEST(paint, rgba8_multishape)
   {
     paints_discs.emplace_back(ggo::disc_f({ 0.5f * width + 0.01f * i, 0.5f * height }, 5.f), ggo::rgba_8u(255, 0, 0, 255));
   }
-  ggo::paint_shapes<ggo::rgba_8u_yd, ggo::sampling_8x8>(buffer_argb.data(), width, height, line_step_argb, paints_discs);
+  ggo::paint<ggo::rgba_8u_yd, ggo::sampling_8x8>(buffer_argb.data(), width, height, line_step_argb, paints_discs);
 
   std::vector<uint8_t> buffer_rgb(line_step_rgb * height, 0xff);
   ggo::blit<ggo::rgba_8u_yd, ggo::rgb_8u_yd>(buffer_argb.data(), width, height, line_step_argb,

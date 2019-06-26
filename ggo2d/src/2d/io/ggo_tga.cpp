@@ -75,7 +75,7 @@ namespace ggo
 
     ggo::image_format format = (header._image_descriptor & (1 << 5)) ? bgr_8u_yd : bgr_8u_yu;
 
-    ggo::image image(header._width, header._height, 3 * header._width, format);
+    ggo::image image({ header._width, header._height }, format);
     ifs.read(reinterpret_cast<char *>(image.data()), image.height() * image.line_byte_step());
 
     return image;

@@ -1,6 +1,7 @@
-- factoriser rayon specular
-- obb 2d
 - utilise le blending additif pour l'artiste bubble
 - https://softologyblog.wordpress.com/2011/07/05/multi-scale-turing-patterns/
 - http://www.wblut.com/
 - Visual : raytracer -> remettre le Whole Program Optimization à Use Link Time Code Generation
+
+Physarum:
+https://www.reddit.com/r/generative/comments/bvhepm/physarum_in_3d_with_depth_of_field_rendering/

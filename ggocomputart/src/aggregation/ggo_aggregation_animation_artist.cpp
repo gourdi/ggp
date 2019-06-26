@@ -123,7 +123,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
     }
 
     ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color);
-    ggo::paint_shapes<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
+    ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
   }
 
   float stddev = 0.001f * min_size();
@@ -143,7 +143,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
       }
     }
 
-    ggo::paint_shapes<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
+    ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
   }
 }
 

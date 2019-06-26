@@ -128,7 +128,7 @@ namespace ggo
     std::vector<std::unique_ptr<demeco>> _demecos;
     paint_shapes_t _background_paint_shapes;
     paint_shapes_t _active_paint_shapes;
-    ggo::static_image<format> _background_image;
+    ggo::image_t<format> _background_image;
   };
 }
 

@@ -418,21 +418,58 @@ namespace ggo
 
 namespace ggo
 {
-  // Pointer to pixel.
-  template <image_format format>
-  void * get_pixel_ptr(void * ptr, int x, int y, int height, int line_step)
+  namespace details
   {
+    template <typename ptr_t>
+    struct line_ptr_functor
+    {
+      template <ggo::image_format format>
+      static ptr_t call(ptr_t ptr, int y, int height, int line_byte_step)
+      {
+        using format_traits = ggo::image_format_traits<format>;
+
+        return ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+      }
+    };
+
+    template <typename ptr_t>
+    struct pixel_ptr_functor
+    {
+      template <ggo::image_format format>
+      static ptr_t call(ptr_t ptr, int x, int y, int height, int line_byte_step)
+      {
+        using format_traits = ggo::image_format_traits<format>;
+
+        ptr = ggo::get_line_ptr<format_traits::lines_order>(ptr, y, height, line_byte_step);
+        ptr = ggo::move_ptr(ptr, x * format_traits::pixel_byte_size);
+
+        return ptr;
+      }
+    };
+  }
+
+  // Pointer to line.
+  template <typename ptr_t>
+  ptr_t get_line_ptr(ptr_t ptr, int y, int height, int line_byte_step, image_format format)
+  {
+    return dispatch_image_format<details::line_ptr_functor<ptr_t>>(format, ptr, y, height, line_byte_step);
+  }
+
+  // Pointer to pixel.
+  template <image_format format, typename ptr_t>
+  ptr_t get_pixel_ptr(ptr_t ptr, int x, int y, int height, int line_step)
+  {
+    static_assert(std::is_pointer_v<ptr_t>);
+
     using format_traits = ggo::image_format_traits<format>;
 
     return move_ptr(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
   }
 
-  template <image_format format>
-  const void * get_pixel_ptr(const void * ptr, int x, int y, int height, int line_step)
+  template <typename ptr_t>
+  ptr_t get_pixel_ptr(ptr_t ptr, int x, int y, int height, int line_step, image_format format)
   {
-    using format_traits = ggo::image_format_traits<format>;
-
-    return move_ptr(get_line_ptr<format_traits::lines_order>(ptr, y, height, line_step), x * format_traits::pixel_byte_size);
+    return dispatch_image_format<details::pixel_ptr_functor<ptr_t>>(format, ptr, x, y,height, line_step);
   }
 
   // Set pixel to pointer.

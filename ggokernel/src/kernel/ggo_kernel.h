@@ -63,6 +63,8 @@ namespace ggo
   template <typename data_t>
   data_t rand(data_t inf, data_t sup)
   {
+    GGO_ASSERT_LT(inf, sup);
+
     if constexpr(std::is_floating_point<data_t>::value)
     {
       return std::uniform_real_distribution<data_t>(inf, sup)(get_random_generator());

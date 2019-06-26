@@ -18,8 +18,8 @@ ggo::demeco_animation_artist::demeco_animation_artist(int width, int height, int
 :
 animation_artist_abc(width, height, line_step, format),
 _artist(width, height),
-_render_image(width, height, render_format),
-_shadow_image(width, height, shadow_format)
+_render_image({ width, height }, render_format),
+_shadow_image({ width, height }, shadow_format)
 {
 }
 
