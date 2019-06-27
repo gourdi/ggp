@@ -56,6 +56,7 @@ namespace ggo
   public:
     
     static rect_int  from_left_right_bottom_top(int left, int right, int bottom, int top);
+    static rect_int  from_left_width_bottom_height(int left, int width, int bottom, int height);
     static rect_int  from_width_height(int width, int height);
     static rect_int  from_size(const ggo::size & size);
 
@@ -101,6 +102,23 @@ namespace ggo
 
     return rect;
   }
+
+  //////////////////////////////////////////////////////////////
+  inline rect_int rect_int::from_left_width_bottom_height(int left, int width, int bottom, int height)
+  {
+    GGO_ASSERT_GT(width, 0);
+    GGO_ASSERT_GT(height, 0);
+
+    rect_int rect;
+
+    rect._left = left;
+    rect._right = left + width - 1;
+    rect._bottom = bottom;
+    rect._top = bottom + height - 1;
+
+    return rect;
+  }
+
 
   //////////////////////////////////////////////////////////////
   inline rect_int rect_int::from_width_height(int width, int height)

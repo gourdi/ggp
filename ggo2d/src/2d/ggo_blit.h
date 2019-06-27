@@ -2,6 +2,7 @@
 #define __GGO_BLIT__
 
 #include <2d/ggo_image_format.h>
+#include <2d/ggo_image.h>
 #include <2d/paint/ggo_blend.h>
 
 namespace ggo
@@ -45,74 +46,40 @@ namespace ggo
     using format_traits_in = image_format_traits<format_in>;
     using format_traits_out = image_format_traits<format_out>;
 
-    // Nothing to do.
-    if (left >= output_width || left + input_width <= 0)
+    // Create image views.
+    ggo::const_image_wrapper_t<format_in> input_img(input, { input_width, input_height }, input_line_step);
+    auto input_view = input_img.create_view(rect_int::from_left_width_bottom_height(-left, output_width, -bottom, output_height));
+    if (!input_view)
     {
       return;
     }
 
-    if (bottom >= output_height || bottom + input_height <= 0)
+    ggo::image_wrapper_t<format_out> output_img(output, { output_width, output_height }, output_line_step);
+    auto output_view = output_img.create_view(ggo::rect_int::from_left_width_bottom_height(left, input_width, bottom, input_height));
+    if (!output_view)
     {
       return;
     }
 
-    // Clip.
-    if (bottom < 0)
-    {
-      if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
-      {
-        input = ggo::move_ptr(input, -bottom * input_line_step);
-      }
-      input_height = input_height + bottom;
-      bottom = 0;
-    }
-
-    const int top = bottom + input_height - 1; // Inclusive, output coordinates.
-    if (top >= output_height)
-    {
-      if (format_traits_in::lines_order == ggo::memory_lines_order::bottom_up)
-      {
-        input = ggo::move_ptr(input, (top - output_height + 1) * input_line_step);
-      }
-      input_height = output_height - bottom;
-    }
-
-    if (left < 0)
-    {
-      input = ggo::move_ptr(input, -left * format_traits_in::pixel_byte_size);
-      input_width = input_width + left;
-      left = 0;
-    }
-
-    const int right = left + input_width - 1; // Inclusive, output coordinates.
-    if (right >= output_width)
-    {
-      input_width = output_width - left;
-    }
+    GGO_ASSERT_EQ(input_view->size(), output_view->size());
 
     // Copy pixels.
-    for (int y = 0; y < input_height; ++y)
+    int w = input_view->size().width();
+    int h = input_view->size().height();
+    int end_offset = w * format_traits_in::pixel_byte_size;
+    for (int y = 0; y < h; ++y)
     {
-      const void * input_ptr = ggo::get_line_ptr<format_traits_in::lines_order>(input, y, input_height, input_line_step);
-      const void * input_end = ggo::get_pixel_ptr<format_in>(input, input_width, y, input_height, input_line_step);
-      void * output_ptr = ggo::get_pixel_ptr<format_out>(output, left, bottom + y, output_height, output_line_step);
+      const void * in = input_view->line_ptr(y);
+      const void * end = move_ptr(in, end_offset);
+      void * out = output_view->line_ptr(y);
 
-      while (true)
+      for (; in != end; in = move_ptr(in, format_traits_in::pixel_byte_size), out = move_ptr(out, format_traits_out::pixel_byte_size))
       {
-        const auto color_in = ggo::read_pixel<format_in>(input_ptr);
-        const auto color_out = ggo::read_pixel<format_out>(output_ptr);
-          const auto color_blended = blend_func(color_out, color_in);
+        const auto color_in = ggo::read_pixel<format_in>(in);
+        const auto color_out = ggo::read_pixel<format_out>(out);
+        const auto color_blended = blend_func(color_out, color_in);
 
-        ggo::write_pixel<format_out>(output_ptr, color_blended);
-
-        input_ptr = ggo::move_ptr<format_traits_in::pixel_byte_size>(input_ptr);
-
-        if (input_ptr == input_end)
-        {
-          break;
-        }
-
-        output_ptr = ggo::move_ptr<format_traits_out::pixel_byte_size>(output_ptr);
+        ggo::write_pixel<format_out>(out, color_blended);
       }
     }
   }

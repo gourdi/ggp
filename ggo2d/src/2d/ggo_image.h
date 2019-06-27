@@ -4,6 +4,7 @@
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_size.h>
 #include <2d/ggo_image_format.h>
+#include <optional>
 
 namespace ggo
 {
@@ -70,10 +71,30 @@ namespace ggo
 
     constexpr image_format  format() const { return img_format; }
 
+    // Image view.
+    std::optional<image_wrapper_base_t<img_format, void_ptr_t>> create_view(ggo::rect_int clipping) const
+    {
+      if (clipping.clip(rect_int::from_size(_size)) == false)
+      {
+        return {};
+      }
+
+      void_ptr_t ptr = nullptr;
+      if constexpr (format_traits::lines_order == ggo::memory_lines_order::bottom_up)
+      {
+        ptr = get_pixel_ptr<img_format>(_buffer, clipping.left(), clipping.bottom(), _size.height(), _line_byte_step);
+      }
+      else
+      {
+        ptr = get_pixel_ptr<img_format>(_buffer, clipping.left(), clipping.top(), _size.height(), _line_byte_step);
+      }
+      return image_wrapper_base_t<img_format, void_ptr_t>(ptr, clipping.size(), _line_byte_step);
+    }
+
     // Read interface.
     const void *  data() const { return _buffer; }
-    const void *  line_ptr(int y) const { get_line_ptr<format_traits::lines_order>(_buffer, y, _line_byte_step); }
-    const void *  pixel_ptr(int x, int y) const { get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
+    const void *  line_ptr(int y) const { return get_line_ptr<format_traits::lines_order>(_buffer, y, height(), _line_byte_step); }
+    const void *  pixel_ptr(int x, int y) const { return get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
 
     auto          read_pixel(int x, int y) const
     {
@@ -84,9 +105,9 @@ namespace ggo
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) { get_line_ptr<format_traits::lines_order>(_buffer, y, _line_byte_step); }
+    void *        line_ptr(int y) { return get_line_ptr<format_traits::lines_order>(_buffer, y, height(), _line_byte_step); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        pixel_ptr(int x, int y) { get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
+    void *        pixel_ptr(int x, int y) { return get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
 
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void          fill(const typename color_t & c)
@@ -98,11 +119,11 @@ namespace ggo
       for (int y = 0; y < h; ++y)
       {
         void * line_ptr = ptr;
+        void * end = move_ptr(ptr, w * image_format_traits<img_format>::pixel_byte_size);
 
-        for (int x = 0; x < w; ++x)
+        for (; line_ptr != end; line_ptr = move_ptr<image_format_traits<img_format>::pixel_byte_size>(line_ptr))
         {
           ggo::write_pixel<img_format>(line_ptr, c);
-          line_ptr = move_ptr<image_format_traits<img_format>::pixel_byte_size>(line_ptr);
         }
 
         ptr = move_ptr(ptr, _line_byte_step);
@@ -113,7 +134,6 @@ namespace ggo
     void          write_pixel(int x, int y, const typename color_t & c)
     {
       ggo::write_pixel<img_format>(_buffer, x, y, _size.height(), _line_byte_step, c);
-
     }
 
   protected:

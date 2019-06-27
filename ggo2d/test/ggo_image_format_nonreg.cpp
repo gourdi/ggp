@@ -1,9 +1,9 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
-#include <2d/ggo_image.h>
+#include <2d/ggo_image_format.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, y_8u_yu)
+GGO_TEST(image_format, y_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -26,7 +26,7 @@ GGO_TEST(image, y_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, y_32f_yu)
+GGO_TEST(image_format, y_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -49,7 +49,7 @@ GGO_TEST(image, y_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, rgb_8u_yu)
+GGO_TEST(image_format, rgb_8u_yu)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -74,7 +74,7 @@ GGO_TEST(image, rgb_8u_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, rgb_32f_yu)
+GGO_TEST(image_format, rgb_32f_yu)
 {
   std::vector<float> buffer{
     10.f, 11.f, 12.f, 13.f, 14.f, 15.f, 16.f, 17.f, 18.f, 19.f,
@@ -99,7 +99,7 @@ GGO_TEST(image, rgb_32f_yu)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, bgra_8u_yd)
+GGO_TEST(image_format, bgra_8u_yd)
 {
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -124,7 +124,7 @@ GGO_TEST(image, bgra_8u_yd)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, accumulator)
+GGO_TEST(image_format, accumulator)
 {
   {
     ggo::accumulator<uint8_t> acc;
@@ -173,11 +173,3 @@ GGO_TEST(image, accumulator)
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(image, move)
-{
-  ggo::image img1({ 10, 30 }, 30, ggo::rgb_8u_yu);
-  ggo::image img2({ 10, 20 }, 30, ggo::rgb_8u_yu);
-
-  img1 = std::move(img2);
-}
