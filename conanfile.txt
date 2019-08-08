@@ -1,0 +1,6 @@
+[requires]
+libjpeg/9c@bincrafters/stable
+libpng/1.6.37@bincrafters/stable
+
+[generators]
+cmake
