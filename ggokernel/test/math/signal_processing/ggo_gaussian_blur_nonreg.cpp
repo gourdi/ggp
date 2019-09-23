@@ -13,7 +13,7 @@ GGO_TEST(gaussian_blur, kernel_floating)
     return std::accumulate(kernel.begin() + 1, kernel.end(), norm);
   };
 
-  std::vector<float> stddevs{ 1.f, 2.f, 5.f };
+  std::vector<float> stddevs{ 0.1f, 1.f, 2.f, 5.f };
 
   for (const auto & stddev : stddevs)
   {

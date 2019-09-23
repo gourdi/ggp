@@ -79,14 +79,14 @@ GGO_TEST(local_processing, array_2d_vertical)
     {4.f, 2.f} });
   ggo::array2d_32f output(input.size());
 
-  ggo::apply_vertical_processing<ggo::border_mode::zero>(input, output, 3, processing);
+  ggo::apply_vertical_processing<ggo::border_mode::mirror>(input, output, 3, processing);
 
-  GGO_CHECK_EQ(output(0, 0), 5.f / 3.f);
+  GGO_CHECK_EQ(output(0, 0), 7.f / 3.f);
   GGO_CHECK_EQ(output(0, 1), 3.f);
-  GGO_CHECK_EQ(output(0, 2), 7.f / 3.f);
-  GGO_CHECK_EQ(output(1, 0), 7.f / 3.f);
+  GGO_CHECK_EQ(output(0, 2), 11.f / 3.f);
+  GGO_CHECK_EQ(output(1, 0), 11.f / 3.f);
   GGO_CHECK_EQ(output(1, 1), 3.f);
-  GGO_CHECK_EQ(output(1, 2), 5.f / 3.f);
+  GGO_CHECK_EQ(output(1, 2), 7.f / 3.f);
 }
 
 
