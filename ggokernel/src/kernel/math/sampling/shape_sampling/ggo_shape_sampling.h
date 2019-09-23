@@ -1,6 +1,7 @@
 #ifndef __GGO_SHAPE_SAMPLING__
 #define __GGO_SHAPE_SAMPLING__
 
+#include <kernel/ggo_assert.h>
 #include <kernel/ggo_vec2.h>
 #include <kernel/ggo_vec3.h>
 #include <kernel/math/ggo_distance.h>

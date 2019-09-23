@@ -1,7 +1,7 @@
 #ifndef __GGO_SCALE2D__
 #define __GGO_SCALE2D__
 
-#include <kernel/math/signal_proc/ggo_scale1d.h>
+#include <kernel/math/signal_processing/ggo_scale1d.h>
 #include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <kernel/memory/ggo_array.h>
 

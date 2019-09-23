@@ -1,5 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/math/signal_proc/ggo_scale1d.h>
+#include <kernel/math/signal_processing/ggo_scale1d.h>
 #include <kernel/memory/ggo_array.h>
 
 /////////////////////////////////////////////////////////////////////

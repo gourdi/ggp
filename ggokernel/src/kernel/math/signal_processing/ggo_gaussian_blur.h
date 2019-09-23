@@ -6,7 +6,7 @@
 namespace ggo
 {
   template <typename kernel_t>
-  std::vector<kernel_t> build_gaussian_kernel(kernel_t stddev, kernel_t kernel_threshold)
+  std::vector<kernel_t> build_gaussian_kernel(kernel_t stddev, kernel_t truncate = 4)
   {
     static_assert(std::is_floating_point<kernel_t>::value, "expecting floating point type");
 
@@ -17,10 +17,11 @@ namespace ggo
     kernel_t i = 1;
     kernel_t norm = 1;
     kernel_t variance2 = 2 * stddev * stddev;
+    truncate = stddev * truncate;
     while (true)
     {
       kernel_t coef = std::exp(-i * i / variance2);
-      if (coef < kernel_threshold)
+      if (i > truncate)
       {
         break;
       }

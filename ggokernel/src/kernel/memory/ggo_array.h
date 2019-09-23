@@ -6,13 +6,16 @@
 #include <kernel/ggo_compare.h>
 #include <kernel/ggo_reduce.h>
 #include <kernel/ggo_borders.h>
+#include <kernel/ggo_size.h>
 
 namespace ggo
 {
-  template <typename data_t, int n_dims>
+  template <typename data_t_, int n_dims>
   class array final
   {
   public:
+
+    using data_t = typename data_t_;
 
     // Default constructor.
     array()
@@ -25,6 +28,13 @@ namespace ggo
     array(int dim1, args... a)
     {
       array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, dim1, a...);
+    }
+
+    // Constructor from a ggo::size, 2d only.
+    template <typename... args>
+    array(ggo::size s) : array(s.width(), s.height())
+    {
+      static_assert(n_dims == 2);
     }
 
     // Copy constructor.
@@ -115,10 +125,17 @@ namespace ggo
       return _dimensions[dim];
     }
 
-    int size() const
+    auto size() const
     {
-      static_assert(n_dims == 1);
-      return _dimensions[0];
+      static_assert(n_dims == 1 || n_dims == 2);
+      if constexpr (n_dims == 1)
+      {
+        return _dimensions[0];
+      }
+      else
+      {
+        return ggo::size(_dimensions[0], _dimensions[1]);
+      }
     }
 
     int width() const
@@ -340,6 +357,9 @@ namespace ggo
   using array_i       = array<int, 1>;
   using array_8u      = array<uint8_t, 1>;
   using array_32f     = array<float, 1>;
+
+  template <typename data_t>
+  using array_2       = array<data_t, 2>;
 
   using array2d_8u    = array<uint8_t, 2>;
   using array2d_32s   = array<int32_t, 2>;

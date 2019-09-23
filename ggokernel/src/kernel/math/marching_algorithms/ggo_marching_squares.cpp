@@ -1,4 +1,5 @@
 #include "ggo_marching_squares.h"
+#include <kernel/ggo_assert.h>
 
 namespace
 {

@@ -6,8 +6,11 @@
 
 namespace ggo
 {
-  constexpr inline int loop_index(int i, int size) { return pos_mod(i, size); }
-  constexpr inline int mirror_index(int i, int size) { i = pos_mod(i, 2 * size); return i < size ? i : 2 * size - i - 1; }
+  template <typename data_t>
+  constexpr data_t loop_index(data_t i, data_t size) { return pos_mod(i, size); }
+  
+  template <typename data_t>
+  constexpr data_t mirror_index(data_t i, data_t size) { i = pos_mod(i, 2 * size); return i < size ? i : 2 * size - i - 1; }
 }
 
 namespace ggo
@@ -17,28 +20,30 @@ namespace ggo
     mirror,
     duplicate_edge,
     loop,
+    zero,
     in_memory
   };
 
-  template <border_mode mode>
-  constexpr int index(int i, int size)
+  template <border_mode mode, typename data_t>
+  constexpr data_t index(data_t i, data_t size)
   {
     if constexpr (mode == border_mode::mirror)
     {
-      i = ggo::mirror_index(i, size);
+      return ggo::mirror_index(i, size);
     }
-
-    if constexpr (mode == border_mode::duplicate_edge)
+    else if constexpr (mode == border_mode::duplicate_edge)
     {
-      i = ggo::clamp(i, 0, size - 1);
+      return ggo::clamp(i, 0, size - 1);
     }
-
-    if constexpr (mode == border_mode::loop)
+    else if constexpr (mode == border_mode::loop)
     {
-      i = ggo::loop_index(i, size);
+      return ggo::loop_index(i, size);
     }
-
-    return i;
+    else
+    {
+      static_assert(mode == border_mode::in_memory);
+      return i;
+    }
   }
 }
 

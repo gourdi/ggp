@@ -2,6 +2,7 @@
 #define __GGO_SHAPES2D__
 
 #include <vector>
+#include <kernel/ggo_assert.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_reduce.h>
 #include <kernel/ggo_vec2.h>

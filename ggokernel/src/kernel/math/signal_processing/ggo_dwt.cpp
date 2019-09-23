@@ -1,5 +1,6 @@
 #include "ggo_dwt.h"
 #include <complex>
+#include <kernel/ggo_assert.h>
 #include <kernel/ggo_kernel.h>
 
 namespace
