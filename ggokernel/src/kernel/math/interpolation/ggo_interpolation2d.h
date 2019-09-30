@@ -20,25 +20,25 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, ggo::memory_lines_order lines_order>
+  template <typename data_t, ggo::lines_order memory_lines_order>
   inline data_t linear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, data_t x, data_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<lines_order>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step); };
 
     return linear_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <ggo::memory_lines_order lines_order>
+  template <ggo::lines_order memory_lines_order>
   inline uint8_t linear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_order>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step)); };
 
     return ggo::round_to<uint8_t>(linear_interpolation2d<float>(in, x, y));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, ggo::memory_lines_order lines_order = ggo::direction::down>
+  template <typename data_t, ggo::lines_order memory_lines_order = ggo::lines_order::down>
   inline data_t linear_interpolation2d_loop(const data_t * input, int width, int height, data_t x, data_t y)
   {
     auto in = [&](int x, int y) { return ggo::get2d_loop<lines_order>(input, x, y, width, height, width * sizeof(data_t)); };
@@ -47,19 +47,19 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename interpolation_t, ggo::memory_lines_order lines_order>
+  template <typename data_t, typename interpolation_t, ggo::lines_order memory_lines_order>
   inline data_t cubic_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<lines_order>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step); };
 
     return cubic_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <ggo::memory_lines_order lines_order>
+  template <ggo::lines_order memory_lines_order>
   inline uint8_t cubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<lines_order>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step)); };
 
     return ggo::round_to<uint8_t>(cubic_interpolation2d<float>(in, x, y));
   }

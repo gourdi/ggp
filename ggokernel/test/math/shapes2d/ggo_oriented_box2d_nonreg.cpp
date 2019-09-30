@@ -16,10 +16,10 @@ GGO_TEST(oriented_box, vertices)
   ggo::oriented_box_f box({ 3.f, 2.f }, 0.f, 2.f, 1.f);
 
   auto points = box.get_points();
-  GGO_CHECK(ggo::find(points, { 1.0f, 1.0f }));
-  GGO_CHECK(ggo::find(points, { 1.0f, 3.0f }));
-  GGO_CHECK(ggo::find(points, { 5.0f, 1.0f }));
-  GGO_CHECK(ggo::find(points, { 5.0f, 3.0f }));
+  GGO_CHECK(ggo::find(points, ggo::pos2_f(1.0f, 1.0f)));
+  GGO_CHECK(ggo::find(points, ggo::pos2_f(1.0f, 3.0f)));
+  GGO_CHECK(ggo::find(points, ggo::pos2_f(5.0f, 1.0f)));
+  GGO_CHECK(ggo::find(points, ggo::pos2_f(5.0f, 3.0f)));
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ GGO_TEST(oriented_box, project)
     GGO_CHECK_FLOAT_EQ(proj2._inf, 2.f);
     GGO_CHECK_FLOAT_EQ(proj2._sup, 6.f);
 
-    auto proj3 = ggo::project(box, ggo::normalize<ggo::vec2_f>({ 1.f, 1.f }));
+    auto proj3 = ggo::project(box, ggo::normalize(ggo::vec2_f(1.f, 1.f)));
     GGO_CHECK_FLOAT_EQ(proj3._inf, 3.f / std::sqrt(2.f));
     GGO_CHECK_FLOAT_EQ(proj3._sup, 9.f / std::sqrt(2.f));
   }
@@ -115,7 +115,7 @@ GGO_TEST(oriented_box, project)
     GGO_CHECK_FLOAT_EQ(proj2._inf, -1.f);
     GGO_CHECK_FLOAT_EQ(proj2._sup, 9.f);
 
-    auto proj3 = ggo::project(box, ggo::normalize<ggo::vec2_f>({ 1.f, 1.f }));
+    auto proj3 = ggo::project(box, ggo::normalize(ggo::vec2_f(1.f, 1.f)));
     GGO_CHECK_FLOAT_EQ(proj3._inf, 0.f);
     GGO_CHECK_FLOAT_EQ(proj3._sup, 14.f / std::sqrt(2.f));
   }
@@ -129,7 +129,7 @@ GGO_TEST(oriented_box, get_edges)
   auto edges = box.get_edges();
 
   GGO_CHECK_EQ(edges[0]._id, ggo::oriented_box_edge_id::left);
-  GGO_CHECK(ggo::compare(edges[0]._normal, ggo::normalize<ggo::vec2_f>({ -2, -1 })));
+  GGO_CHECK(ggo::compare(edges[0]._normal, ggo::normalize(ggo::vec2_f(-2, -1))));
 
   GGO_CHECK_EQ(edges[0]._vertices[0]._id, ggo::oriented_box_vertex_id::left_bottom);
   GGO_CHECK(ggo::compare(edges[0]._vertices[0]._pos, { 3.f, -3.f }));
@@ -139,7 +139,7 @@ GGO_TEST(oriented_box, get_edges)
 
 
   GGO_CHECK_EQ(edges[1]._id, ggo::oriented_box_edge_id::right);
-  GGO_CHECK(ggo::compare(edges[1]._normal, ggo::normalize<ggo::vec2_f>({ 2, 1 })));
+  GGO_CHECK(ggo::compare(edges[1]._normal, ggo::normalize(ggo::vec2_f(2, 1))));
 
   GGO_CHECK_EQ(edges[1]._vertices[0]._id, ggo::oriented_box_vertex_id::right_bottom);
   GGO_CHECK(ggo::compare(edges[1]._vertices[0]._pos, { 7.f, -1.f }));
@@ -149,7 +149,7 @@ GGO_TEST(oriented_box, get_edges)
 
 
   GGO_CHECK_EQ(edges[2]._id, ggo::oriented_box_edge_id::bottom);
-  GGO_CHECK(ggo::compare(edges[2]._normal, ggo::normalize<ggo::vec2_f>({ 1, -2 })));
+  GGO_CHECK(ggo::compare(edges[2]._normal, ggo::normalize(ggo::vec2_f(1, -2))));
 
   GGO_CHECK_EQ(edges[2]._vertices[0]._id, ggo::oriented_box_vertex_id::left_bottom);
   GGO_CHECK(ggo::compare(edges[2]._vertices[0]._pos, { 3.f, -3.f }));
@@ -159,7 +159,7 @@ GGO_TEST(oriented_box, get_edges)
 
 
   GGO_CHECK_EQ(edges[3]._id, ggo::oriented_box_edge_id::top);
-  GGO_CHECK(ggo::compare(edges[3]._normal, ggo::normalize<ggo::vec2_f>({ -1, 2 })));
+  GGO_CHECK(ggo::compare(edges[3]._normal, ggo::normalize(ggo::vec2_f(-1, 2))));
 
   GGO_CHECK_EQ(edges[3]._vertices[0]._id, ggo::oriented_box_vertex_id::left_top);
   GGO_CHECK(ggo::compare(edges[3]._vertices[0]._pos, { -1.f, 5.f }));

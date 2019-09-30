@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
-#include <kernel/math/signal_proc/ggo_dct.h>
+#include <kernel/math/signal_processing/ggo_dct.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(dct, dct)

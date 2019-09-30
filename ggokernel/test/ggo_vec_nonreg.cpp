@@ -140,13 +140,13 @@ GGO_TEST(vec, in_place_operators)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, global_functions)
 {
-  static_assert(ggo::dot<int, 2>({ 1, 2 }, { 2, 3 }) == 8);
-  static_assert(ggo::hypot<int, 2>({ 1, 2 }) == 5);
+  static_assert(ggo::dot(ggo::vec2_i(1, 2), ggo::vec2_i(2, 3)) == 8);
+  static_assert(ggo::hypot(ggo::vec2_i(1, 2)) == 5);
 
-  static_assert(ggo::dot<int, 3>({ 1, 2, 2 }, { 3, 1, 2 }) == 9);
-  static_assert(ggo::hypot<int, 3>({ 1, 2, 3 }) == 14);
+  static_assert(ggo::dot(ggo::vec3_i(1, 2, 2), ggo::vec3_i(3, 1, 2)) == 9);
+  static_assert(ggo::hypot(ggo::vec3_i(1, 2, 3)) == 14);
 
-  static_assert(ggo::ortho_dot<int>({ 1, 2 }, { 5, 4 }) == 6);
+  static_assert(ggo::ortho_dot(ggo::vec2_i(1, 2), ggo::vec2_i(5, 4)) == 6);
 
   static_assert(ggo::cross(ggo::vec3_i(1, 2, 3), ggo::vec3_i(2, 3, 4)) == ggo::vec3_i(-1, 2, -1));
 }
@@ -213,7 +213,7 @@ GGO_TEST(vec, dump)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(vec, ortho)
 {
-  static_assert(ggo::ortho_ccw<ggo::vec2_i>({ 2, 1 }) == ggo::vec2_i(-1, 2));
-  static_assert(ggo::ortho_cw<ggo::vec2_i>({ 2, 1 }) == ggo::vec2_i(1, -2));
+  static_assert(ggo::ortho_ccw(ggo::vec2_i(2, 1)) == ggo::vec2_i(-1, 2));
+  static_assert(ggo::ortho_cw(ggo::vec2_i(2, 1)) == ggo::vec2_i(1, -2));
 }
 

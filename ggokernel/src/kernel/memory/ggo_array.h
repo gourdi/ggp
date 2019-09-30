@@ -288,7 +288,7 @@ namespace ggo
       template <typename... args>
       static int compute(const int * dimensions, int index, args... a)
       {
-        static_assert(remaining <= count && remaining > 1, "error");
+        static_assert(remaining <= count && remaining > 1);
         GGO_ASSERT(index >= 0 && index < dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute(dimensions, a...);
       }
@@ -296,7 +296,7 @@ namespace ggo
       template <typename... args>
       static int compute_loop(const int * dimensions, int index, args... a)
       {
-        static_assert(remaining <= count && remaining > 1, "error");
+        static_assert(remaining <= count && remaining > 1);
         index = ggo::loop_index(index, dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_loop(dimensions, a...);
       }
@@ -304,7 +304,7 @@ namespace ggo
       template <typename... args>
       static int compute_mirror(const int * dimensions, int index, args... a)
       {
-        static_assert(remaining <= count && remaining > 1, "error");
+        static_assert(remaining <= count && remaining > 1);
         index = ggo::mirror_index(index, dimensions[count - remaining]);
         return index + dimensions[count - remaining] * offset<remaining - 1, count>::compute_mirror(dimensions, a...);
       }
@@ -359,7 +359,7 @@ namespace ggo
   using array_32f     = array<float, 1>;
 
   template <typename data_t>
-  using array_2       = array<data_t, 2>;
+  using array2d       = array<data_t, 2>;
 
   using array2d_8u    = array<uint8_t, 2>;
   using array2d_32s   = array<int32_t, 2>;

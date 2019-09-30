@@ -43,7 +43,7 @@ GGO_TEST(local_processing, sum_border_mirror_1d)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(local_processing, array_2d_horizontal)
+GGO_TEST(local_processing, array_2d_horizontal_up)
 {
   auto processing = [](const auto & neighborhood)
   {
@@ -55,7 +55,30 @@ GGO_TEST(local_processing, array_2d_horizontal)
     {4.f, 3.f, 2.f} });
   ggo::array2d_32f output(input.size());
 
-  ggo::apply_horizontal_processing<ggo::border_mode::zero>(input, output, 3, processing);
+  ggo::apply_horizontal_processing<ggo::border_mode::zero>(input, output, 3, processing, ggo::lines_order::up);
+
+  GGO_CHECK_EQ(output(0, 0), 5.f / 3.f);
+  GGO_CHECK_EQ(output(1, 0), 3.f);
+  GGO_CHECK_EQ(output(2, 0), 7.f / 3.f);
+  GGO_CHECK_EQ(output(0, 1), 7.f / 3.f);
+  GGO_CHECK_EQ(output(1, 1), 3.f);
+  GGO_CHECK_EQ(output(2, 1), 5.f / 3.f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(local_processing, array_2d_horizontal_down)
+{
+  auto processing = [](const auto & neighborhood)
+  {
+    return (neighborhood(-1) + neighborhood(0) + neighborhood(1)) / 3;
+  };
+
+  const ggo::array2d_32f input({
+    {2.f, 3.f, 4.f},
+    {4.f, 3.f, 2.f} });
+  ggo::array2d_32f output(input.size());
+
+  ggo::apply_horizontal_processing<ggo::border_mode::zero>(input, output, 3, processing, ggo::lines_order::down);
 
   GGO_CHECK_EQ(output(0, 0), 5.f / 3.f);
   GGO_CHECK_EQ(output(1, 0), 3.f);

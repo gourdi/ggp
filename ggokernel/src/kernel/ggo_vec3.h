@@ -9,12 +9,12 @@
 namespace ggo
 {
   template <typename data_t>
-  struct vec3 : public vec_base<data_t, 3>
+  struct vec3 : public vec_base<data_t, 3, vec3<data_t>>
   {
-    constexpr vec3() : vec_base<data_t, 3>() {}
-    constexpr vec3(const vec3<data_t> & v) : vec_base<data_t, 3>(v) {}
-    constexpr vec3(data_t k1, data_t k2, data_t k3) : vec_base<data_t, 3>(k1, k2, k3) {}
-    constexpr vec3(data_t k) : vec_base<data_t, 3>(k) {}
+    constexpr vec3() : vec_base<data_t, 3, vec3<data_t>>() {}
+    constexpr vec3(const vec3<data_t> & v) : vec_base<data_t, 3, vec3<data_t>>(v) {}
+    constexpr vec3(data_t k1, data_t k2, data_t k3) : vec_base<data_t, 3, vec3<data_t>>(k1, k2, k3) {}
+    constexpr vec3(data_t k) : vec_base<data_t, 3, vec3<data_t>>(k) {}
 
     data_t & x() { return this->_coefs[0]; }
     data_t & y() { return this->_coefs[1]; }
@@ -45,10 +45,8 @@ namespace ggo
 // 3D global functions.
 namespace ggo
 {
-  template <typename vec_t,
-    typename data_t = typename vec_t::_data_t,
-    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, 3>, vec_t>>>
-    constexpr vec_t cross(const vec_t & v1, const vec_t & v2)
+  template <typename data_t, typename subtype_t>
+  constexpr subtype_t cross(const ggo::vec_base<data_t, 3, subtype_t> & v1, const ggo::vec_base<data_t, 3, subtype_t> & v2)
   {
     return {
       v1._coefs[1] * v2._coefs[2] - v1._coefs[2] * v2._coefs[1],
@@ -56,8 +54,8 @@ namespace ggo
       v1._coefs[0] * v2._coefs[1] - v1._coefs[1] * v2._coefs[0] };
   }
 
-  template <typename data_t>
-  bool is_basis(const ggo::vec_base<data_t, 3> & v1, const ggo::vec_base<data_t, 3> & v2, const ggo::vec_base<data_t, 3> & v3)
+  template <typename data_t, typename subtype_t>
+  bool is_basis(const ggo::vec_base<data_t, 3, subtype_t> & v1, const ggo::vec_base<data_t, 3, subtype_t> & v2, const ggo::vec_base<data_t, 3, subtype_t> & v3)
   {
     static_assert(std::is_floating_point_v<data_t>);
 
@@ -70,36 +68,34 @@ namespace ggo
     return compare(ggo::cross(v1, v2), v3);
   }
 
-  template <typename vec_t,
-    typename data_t = typename vec_t::_data_t,
-    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, 3>, vec_t>>>
-    std::pair<vec_t, vec_t> build_basis(const vec_t & v)
+  template <typename data_t, typename subtype_t>
+  std::pair<subtype_t, subtype_t> build_basis(const ggo::vec_base<data_t, 3, subtype_t> & v)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
     GGO_ASSERT(is_normalized(v) == true);
 
     // Get 2 orthogonal vectors.
-    data_t x = std::abs(v.x());
-    data_t y = std::abs(v.y());
-    data_t z = std::abs(v.z());
+    data_t x = std::abs(v[0]);
+    data_t y = std::abs(v[1]);
+    data_t z = std::abs(v[2]);
 
-    std::pair<vec_t, vec_t> basis;
+    std::pair<subtype_t, subtype_t> basis;
 
     if ((x <= y) && (x <= z)) // Mininum is X.
     {
-      data_t inv_norm = 1 / std::sqrt(v.z() * v.z() + v.y() * v.y());
-      basis.first = { data_t(0), v.z() * inv_norm, -v.y() * inv_norm };
+      data_t inv_norm = 1 / std::sqrt(v[2] * v[2] + v[1] * v[1]);
+      basis.first = { data_t(0), v[2] * inv_norm, -v[1] * inv_norm };
     }
     else if ((y <= x) && (y <= z)) // Mininum is Y.
     {
-      data_t inv_norm = 1 / std::sqrt(v.z() * v.z() + v.x() * v.x());
-      basis.first = { v.z() * inv_norm, data_t(0), -v.x() * inv_norm };
+      data_t inv_norm = 1 / std::sqrt(v[2] * v[2] + v[0] * v[0]);
+      basis.first = { v[2] * inv_norm, data_t(0), -v[0] * inv_norm };
     }
     else // Mininum is Z.
     {
-      data_t inv_norm = 1 / std::sqrt(v.y() * v.y() + v.x() * v.x());
-      basis.first = { v.y() * inv_norm, -v.x() * inv_norm, data_t(0) };
+      data_t inv_norm = 1 / std::sqrt(v[1] * v[1] + v[0] * v[0]);
+      basis.first = { v[1] * inv_norm, -v[0] * inv_norm, data_t(0) };
     }
 
     basis.second = ggo::cross(v, basis.first);

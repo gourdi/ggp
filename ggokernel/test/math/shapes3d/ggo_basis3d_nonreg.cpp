@@ -7,7 +7,7 @@ GGO_TEST(basis3d, build)
   {
     ggo::vec3_f b1(1.f, 1.f, 0.f);
     b1 = ggo::normalize(b1);
-    auto basis = build_basis(b1);
+    auto basis = ggo::build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
     GGO_CHECK_FLOAT_EQ(basis.first.x(), 1 / std::sqrt(2));
@@ -21,7 +21,7 @@ GGO_TEST(basis3d, build)
   {
     ggo::vec3_f b1(1.f, 0.f, 1.f);
     b1 = ggo::normalize(b1);
-    auto basis = build_basis(b1);
+    auto basis = ggo::build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
     GGO_CHECK_FLOAT_EQ(basis.first.x(), 1 / std::sqrt(2));
@@ -35,7 +35,7 @@ GGO_TEST(basis3d, build)
   {
     ggo::vec3_f b1(0.f, 1.f, 1.f);
     b1 = ggo::normalize(b1);
-    auto basis = build_basis(b1);
+    auto basis = ggo::build_basis(b1);
 
     GGO_CHECK(ggo::is_basis(b1, basis.first, basis.second));
     GGO_CHECK_FLOAT_EQ(basis.first.x(), 0);

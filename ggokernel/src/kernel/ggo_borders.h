@@ -106,13 +106,13 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   // Helper with a typed buffer.
-  template <ggo::memory_lines_order lines_order, typename data_t>
+  template <ggo::lines_order memory_lines_order, typename data_t>
   const data_t & get2d_loop(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
   {
     x = loop_index(x, width);
     y = loop_index(y, height);
 
-    auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
+    auto ptr = get_line_ptr<memory_lines_order>(buffer, y, height, line_bytes_step);
     ptr = ptr_offset(ptr, x * sizeof(data_t));
 
     return *ptr;
@@ -120,20 +120,20 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   // Helper with a typed buffer.
-  template <ggo::memory_lines_order lines_order, typename data_t>
+  template <ggo::lines_order memory_lines_order, typename data_t>
   const data_t & get2d_mirror(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
   {
     x = mirror_index(x, width);
     y = mirror_index(y, height);
 
-    auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
+    auto ptr = get_line_ptr<memory_lines_order>(buffer, y, height, line_bytes_step);
     ptr = move_ptr(ptr, x * sizeof(data_t));
 
     return *ptr;
   }
 
   //////////////////////////////////////////////////////////////
-  template <ggo::memory_lines_order lines_order, typename data_t>
+  template <ggo::lines_order memory_lines_order, typename data_t>
   data_t get2d_zero(const data_t * buffer, int x, int y, int width, int height, int line_bytes_step)
   {
     if (x < 0 || x >= width || y < 0 || y >= height)
@@ -141,7 +141,7 @@ namespace ggo
       return data_t(0);
     }
 
-    auto ptr = get_line_ptr<lines_order>(buffer, y, height, line_bytes_step);
+    auto ptr = get_line_ptr<memory_lines_order>(buffer, y, height, line_bytes_step);
     ptr = move_ptr(ptr, x * sizeof(data_t));
 
     return *ptr;
