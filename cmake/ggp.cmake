@@ -1,7 +1,8 @@
 if (MSVC)
-  add_definitions(/std:c++latest /WX /MP /GR- -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DGGO_DEBUG") 
+  add_compile_definitions(_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS)
+  add_compile_options(/std:c++latest /WX /MP /GR- "$<$<CONFIG:Release>:/O2;/Oi>")
 endif()
+add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>") 
 
 macro(get_sources_from_root_directory root sources)
   file(GLOB_RECURSE all_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${root}/*.h" "${root}/*.cpp")

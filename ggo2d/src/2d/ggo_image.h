@@ -2,104 +2,128 @@
 #define __GGO_IMAGE__
 
 #include <kernel/ggo_rect_int.h>
-#include <kernel/ggo_size.h>
-#include <2d/ggo_image_format.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
+#include <2d/ggo_pixel_type.h>
 #include <optional>
 
 namespace ggo
 {
-  class image_data
+  template <pixel_type pixel_type_, lines_order memory_lines_order_, typename void_ptr_t, bool owns_buffer>
+  class image_base_t
   {
+    static_assert(std::is_same_v<void_ptr_t, void *> || std::is_same_v<void_ptr_t, const void *>);
+
   public:
 
-    image_data(ggo::size s, int line_byte_step) : _size(s), _line_byte_step(line_byte_step) {}
+    using color_t = typename pixel_type_traits<pixel_type_>::color_t;
+    using view_t = typename image_base_t<pixel_type_, memory_lines_order_, void_ptr_t, false>;
 
-    int       min_size() const { return std::min(_size.width(), _size.height()); }
-    ggo::size size() const { return _size; }
-    int       width() const { return _size.width(); }
-    int       height() const { return _size.height(); }
-    int       line_byte_step() const { return _line_byte_step; }
-
-    template <typename func_t>
-    void      for_each_pixel(func_t f) const
+    template <typename = typename std::enable_if_t<owns_buffer>>
+    image_base_t(const ggo::size & s, int line_byte_step)
+      : _buffer(malloc(s.height() * line_byte_step))
+      , _size(s)
+      , _line_byte_step(line_byte_step)
     {
-      int w = _size.width();
-      int h = _size.width();
+      GGO_ASSERT_LE(s.width() * pixel_byte_size(), line_byte_step);
+      static_assert(std::is_same_v<void_ptr_t, void *>);
+    }
 
-      for (int y = 0; y < h; ++y)
+    template <typename = typename std::enable_if_t<owns_buffer>>
+    image_base_t(const ggo::size & s)
+      : image_base_t(s, pixel_byte_size() * s.width())
+    {
+    }
+
+    template <typename = typename std::enable_if_t<!owns_buffer>>
+    image_base_t(void_ptr_t buffer, const ggo::size & s, int line_byte_step)
+      : _buffer(buffer)
+      , _size(s)
+      , _line_byte_step(line_byte_step)
+    {
+      GGO_ASSERT_LE(s.width() * pixel_byte_size(), line_byte_step);
+    }
+
+    template <typename = typename std::enable_if_t<!owns_buffer>>
+    image_base_t(void_ptr_t buffer, const ggo::size & s)
+      : image_base_t(buffer, s, pixel_byte_size() * s.width())
+    {
+    }
+
+    ~image_base_t()
+    {
+      if constexpr (owns_buffer == true)
       {
-        for (int x = 0; x < w; ++x)
-        {
-          f(x, y);
-        }
+        free(_buffer);
       }
     }
 
-  protected:
+    size size() const { return _size; }
+    int width() const { return _size.width(); }
+    int height() const { return _size.height(); }
+    int line_byte_step() const { return _line_byte_step; }
+    
+    static constexpr int pixel_byte_size() { return typename pixel_type_traits<pixel_type_>::pixel_byte_size; }
+    static constexpr ggo::pixel_type pixel_type() { return pixel_type_; }
+    static constexpr ggo::lines_order memory_lines_order() { return memory_lines_order_; }
 
-    ggo::size _size;
-    int       _line_byte_step;
-  };
+    // Move.
+    image_base_t(image_base_t && image)
+      : _buffer(image._buffer)
+      , _size(image._size)
+      , _line_byte_step(image._line_byte_step)
+    {
+      image._buffer = nullptr;
+    }
 
-  class image_data_format : public image_data
-  {
-  public:
+    void operator=(image_base_t && image)
+    {
+      if constexpr (owns_buffer == true)
+      {
+        free(_buffer);
+      }
 
-    image_data_format(ggo::size s, int line_byte_step, image_format format) : image_data(s, line_byte_step), _format(format) {}
+      _buffer = image._buffer;
+      _size = image._size;
+      _line_byte_step = image._line_byte_step;
 
-    image_format format() const { return _format; }
+      image._buffer = nullptr;
+    }
 
-  protected:
-
-    image_format _format;
-  };
-}
-
-namespace ggo
-{
-  template <image_format img_format, typename void_ptr_t>
-  class image_wrapper_base_t : public image_data
-  {
-  public:
-
-    static_assert(std::is_same_v<void_ptr_t, void *> || std::is_same_v<void_ptr_t, const void *>);
-
-    using format_traits = typename image_format_traits<img_format>;
-    using color_t = typename image_format_traits<img_format>::color_t;
-
-    image_wrapper_base_t(void_ptr_t buffer, ggo::size s, int line_byte_step) : image_data(s, line_byte_step), _buffer(buffer) {}
-
-    constexpr image_format  format() const { return img_format; }
+    // No copy. Use blit API instead.
+    image_base_t(const image_base_t & image) = delete;
+    void operator=(const image_base_t & image) = delete;
 
     // Image view.
-    std::optional<image_wrapper_base_t<img_format, void_ptr_t>> create_view(ggo::rect_int clipping) const
+    std::optional<image_base_t<pixel_type_, memory_lines_order_, const void *, false>> create_view(ggo::rect_int clipping) const
     {
       if (clipping.clip(rect_int::from_size(_size)) == false)
       {
         return {};
       }
 
-      void_ptr_t ptr = nullptr;
-      if constexpr (format_traits::lines_order == ggo::memory_lines_order::bottom_up)
+      const void * ptr = pixel_ptr(clipping.left(), memory_lines_order_ == ggo::lines_order::up ? clipping.bottom() : clipping.top());
+
+      return image_base_t<pixel_type_, memory_lines_order_, const void *, false>(ptr, clipping.size(), _line_byte_step);
+    }
+
+    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    std::optional<image_base_t<pixel_type_, memory_lines_order_, void *, false>> create_view(ggo::rect_int clipping)
+    {
+      if (clipping.clip(rect_int::from_size(_size)) == false)
       {
-        ptr = get_pixel_ptr<img_format>(_buffer, clipping.left(), clipping.bottom(), _size.height(), _line_byte_step);
+        return {};
       }
-      else
-      {
-        ptr = get_pixel_ptr<img_format>(_buffer, clipping.left(), clipping.top(), _size.height(), _line_byte_step);
-      }
-      return image_wrapper_base_t<img_format, void_ptr_t>(ptr, clipping.size(), _line_byte_step);
+
+      void * ptr = pixel_ptr(clipping.left(), memory_lines_order_ == ggo::lines_order::up ? clipping.bottom() : clipping.top());
+
+      return image_base_t<pixel_type_, memory_lines_order_, void *, false>(ptr, clipping.size(), _line_byte_step);
     }
 
     // Read interface.
     const void *  data() const { return _buffer; }
-    const void *  line_ptr(int y) const { return get_line_ptr<format_traits::lines_order>(_buffer, y, height(), _line_byte_step); }
-    const void *  pixel_ptr(int x, int y) const { return get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
-
-    auto          read_pixel(int x, int y) const
-    {
-      return ggo::read_pixel<img_format>(_buffer, x, y, _size.height(), _line_byte_step);
-    }
+    const void *  line_ptr(int y) const { return ggo::get_line_ptr<memory_lines_order_>(_buffer, y, _size.height(), _line_byte_step);    }
+    const void *  pixel_ptr(int x, int y) const { return ggo::get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, _size.height(), _line_byte_step); }
+    auto          read_pixel(int x, int y) const { return pixel_type_traits<pixel_type_>::read(pixel_ptr(x, y)); }
 
     // Write interface.
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
@@ -107,118 +131,209 @@ namespace ggo
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        line_ptr(int y) { return get_line_ptr<format_traits::lines_order>(_buffer, y, height(), _line_byte_step); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        pixel_ptr(int x, int y) { return get_pixel_ptr<format>(_buffer, x, y, height(), _line_byte_step); }
+    void *        pixel_ptr(int x, int y) { return get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, height(), _line_byte_step); }
+    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    void          write_pixel(int x, int y, const typename color_t & c) { pixel_type_traits<pixel_type_>::write(pixel_ptr(x, y), c); }
 
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void          fill(const typename color_t & c)
     {
-      void * ptr = _buffer;
-      int w = _size.width();
-      int h = _size.height();
+      void * ptr = _buffer.data();
+      int w = size().width();
+      int h = size().height();
 
       for (int y = 0; y < h; ++y)
       {
         void * line_ptr = ptr;
-        void * end = move_ptr(ptr, w * image_format_traits<img_format>::pixel_byte_size);
+        void * end = move_ptr(ptr, w * pixel_byte_size());
 
-        for (; line_ptr != end; line_ptr = move_ptr<image_format_traits<img_format>::pixel_byte_size>(line_ptr))
+        for (; line_ptr != end; line_ptr = move_ptr<pixel_byte_size()>(line_ptr))
         {
-          ggo::write_pixel<img_format>(line_ptr, c);
+          pixel_type_traits::write(line_ptr, c);
         }
 
         ptr = move_ptr(ptr, _line_byte_step);
       }
     }
 
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void          write_pixel(int x, int y, const typename color_t & c)
-    {
-      ggo::write_pixel<img_format>(_buffer, x, y, _size.height(), _line_byte_step, c);
-    }
+  private:
 
-  protected:
-
-    void_ptr_t _buffer;
+    void_ptr_t      _buffer;
+    const ggo::size _size;
+    const int       _line_byte_step;
   };
 
-  template <image_format img_format>
-  using const_image_wrapper_t = image_wrapper_base_t<img_format, const void *>;
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
+  using const_image_view_t = image_base_t<pixel_type, memory_lines_order, const void *, false>;
 
-  template <image_format img_format>
-  using image_wrapper_t = image_wrapper_base_t<img_format, void *>;
-
-  template <image_format img_format>
-  class image_t final : public image_wrapper_t<img_format>
-  {
-  public:
-
-    image_t(ggo::size s) : image_wrapper_t<img_format>(malloc(s.height() * s.width() * format_traits::pixel_byte_size), s, s.width() * format_traits::pixel_byte_size) {}
-    ~image_t() { free(_buffer); }
-
-    image_t(image_t && img);
-    void operator=(image_t && img);
-  };
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
+  using image_view_t = image_base_t<pixel_type, memory_lines_order, void *, false>;
+  
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
+  using image_t = image_base_t<pixel_type, memory_lines_order, void *, true>;
 }
 
 namespace ggo
 {
-  template <typename void_ptr_t>
-  class image_wrapper_base : public image_data_format
+  template <typename void_ptr_t, bool owns_buffer>
+  class image_base
   {
-  public:
-
     static_assert(std::is_same_v<void_ptr_t, void *> || std::is_same_v<void_ptr_t, const void *>);
 
-    image_wrapper_base(void_ptr_t buffer, ggo::size s, int line_byte_step, image_format format) :
-      image_data_format(s, line_byte_step, format),
-      _buffer(buffer)
-    {
+  public:
 
+    template <typename = typename std::enable_if_t<owns_buffer>>
+    image_base(const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int line_byte_step)
+      : _buffer(malloc(s.height() * line_byte_step))
+      , _size(s)
+      , _pixel_type(pixel_type)
+      , _memory_lines_order(memory_lines_order)
+      , _line_byte_step(line_byte_step)
+    {
+      GGO_ASSERT_LE(s.width() * get_pixel_byte_size(pixel_type), line_byte_step);
+      static_assert(std::is_same_v<void_ptr_t, void *>);
     }
+
+    template <typename = typename std::enable_if_t<owns_buffer>>
+    image_base(const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+      : image_base(s, pixel_type, memory_lines_order, get_pixel_byte_size(pixel_type) * s.width())
+    {
+    }
+
+    template <typename = typename std::enable_if_t<!owns_buffer>>
+    image_base(void_ptr_t buffer, const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int line_byte_step)
+      : _buffer(buffer)
+      , _size(s)
+      , _pixel_type(pixel_type)
+      , _memory_lines_order(memory_lines_order)
+      , _line_byte_step(line_byte_step)
+    {
+      GGO_ASSERT_LE(s.width() * get_pixel_byte_size(pixel_type), line_byte_step);
+    }
+
+    ~image_base()
+    {
+      if constexpr (owns_buffer == true)
+      {
+        free(_buffer);
+      }
+    }
+
+    size size() const { return _size; }
+    int width() const { return _size.width(); }
+    int height() const { return _size.height(); }
+    pixel_type pixel_type() const { return _pixel_type; }
+    lines_order memory_lines_order() const { return _memory_lines_order; }
+    int line_byte_step() const { return _line_byte_step; }
+    int pixel_byte_size() const { return get_pixel_byte_size(_pixel_type); }
+
+    // Move.
+    image_base(image_base && image)
+      : _buffer(image._buffer)
+      , _size(image._size)
+      , _memory_lines_order(image._memory_lines_order)
+      , _pixel_type(image._pixel_type)
+      , _line_byte_step(image._line_byte_step)
+    {
+      image._buffer = nullptr;
+    }
+
+    void operator=(image_base && image)
+    {
+      if constexpr (owns_buffer == true)
+      {
+        free(_buffer);
+      }
+
+      _buffer = image._buffer;
+      _size = image._size;
+      _pixel_type = image._pixel_type;
+      _memory_lines_order = image._memory_lines_order;
+      _line_byte_step = image._line_byte_step;
+
+      image._buffer = nullptr;
+    }
+
+    // No copy. Use blit API instead.
+    image_base(const image_base & image) = delete;
+    void operator=(const image_base & image) = delete;
+
 
     // Read interface.
     const void *  data() const { return _buffer; }
-    const void *  line_ptr(int y) const {
-      return get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _format);
-    }
-    const void *  pixel_ptr(int x, int y) const {
-      return get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _format);
-    }
+    const void *  line_ptr(int y) const { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _lines_order); }
+    const void *  pixel_ptr(int x, int y) const { return ggo::get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _memory_lines_order, pixel_byte_size()); }
 
     // Write interface.
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) {
-      return get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _format);
-    }
+    void *        line_ptr(int y) { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, lines_order); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        pixel_ptr(int x, int y) {
-      return get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _format);
-    }
+    void *        pixel_ptr(int x, int y) { return ggo::get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _memory_lines_order, pixel_byte_size()); }
 
-  protected:
+  private:
 
-    void_ptr_t _buffer;
+    void_ptr_t        _buffer;
+    ggo::size         _size;
+    ggo::pixel_type   _pixel_type;
+    ggo::lines_order  _memory_lines_order;
+    int               _line_byte_step;
   };
 
-  using const_image_wrapper = image_wrapper_base<const void *>;
-  using image_wrapper = image_wrapper_base<void *>;
-
-  class image final : public image_wrapper
-  {
-  public:
-
-    image(ggo::size s, image_format format);
-    image(ggo::size s, int line_byte_step, image_format format);
-    ~image();
-
-    image(image && img);
-    void operator=(image && img);
-  };
+  using const_image_view = image_base<const void *, false>;
+  using image_view = image_base<void *, false>;
+  using image = image_base<void *, true>;
 }
 
-#include <2d/ggo_image.imp.h>
+namespace ggo
+{
+  template <typename image1_t, typename image2_t>
+  std::optional<std::pair<typename image1_t::view_t, typename image2_t::view_t>> create_intersection_views(image1_t & image1, image2_t & image2, int left, int bottom)
+  {
+    auto view1 = image1.create_view(rect_int::from_left_width_bottom_height(-left, image2.width(), -bottom, image2.height()));
+    if (!view1)
+    {
+      return {};
+    }
+
+    auto view2 = image2.create_view(rect_int::from_left_width_bottom_height(left, image1.width(), bottom, image1.height()));
+    if (!view2)
+    {
+      return {};
+    }
+
+    return std::pair<typename image1_t::view_t, typename image2_t::view_t>(std::move(*view1), std::move(*view2));
+  }
+}
+
+namespace ggo
+{
+  template <lines_order memory_lines_order, typename functor>
+  struct dispatch_image_format_functor
+  {
+    template <ggo::pixel_type pixel_type, typename... args>
+    static auto call(args&&... a)
+    {
+      return functor::call<memory_lines_order, pixel_type>(std::forward<args>(a)...);
+    }
+  };
+
+  template <typename functor, typename... args>
+  auto dispatch_image_format(ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, args&&... a)
+  {
+    switch (memory_lines_order)
+    {
+    case lines_order::up:
+      return dispatch_pixel_type<dispatch_image_format_functor<lines_order::up, functor>>(pixel_type, std::forward<args>(a)...);
+    case lines_order::down:
+      return dispatch_pixel_type<dispatch_image_format_functor<lines_order::down, functor>>(pixel_type, std::forward<args>(a)...);
+    default:
+      throw std::runtime_error("invalid memory lines order");
+      break;
+    }
+  }
+}
 
 #endif
 

@@ -17,24 +17,24 @@ namespace ggo
       throw std::runtime_error("failed reading image properties");
     }
 
-    ggo::image_format format;
+    ggo::pixel_type pixel_type;
     switch (png_image.format)
     {
     case PNG_FORMAT_RGB:
-      format = ggo::rgb_8u_yd;
+      pixel_type = ggo::pixel_type::rgb_8u;
       break;
     case PNG_FORMAT_RGBA:
-      format = ggo::rgba_8u_yd;
+      pixel_type = ggo::pixel_type::rgba_8u;
       break;
     case PNG_FORMAT_GA:
-      format = ggo::ya_8u_yd;
+      pixel_type = ggo::pixel_type::ya_8u;
       break;
     default:
       throw std::runtime_error("unsupported image format");
     }
 
     int line_byte_size = PNG_IMAGE_ROW_STRIDE(png_image);
-    ggo::image image({ int(png_image.width), int(png_image.height) }, line_byte_size, format);
+    ggo::image image({ int(png_image.width), int(png_image.height) }, pixel_type, lines_order::down, line_byte_size);
     
     if (png_image_finish_read(&png_image, NULL, image.data(), 0, NULL) == 0)
     {
@@ -45,7 +45,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_png(const std::string & filename, const void * buffer, image_format format, int width, int height, int line_byte_step)
+  bool save_png(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order lines_order, int width, int height, int line_byte_step)
   {
     png_image png_image;
 
@@ -57,28 +57,42 @@ namespace ggo
 
     std::unique_ptr<image> image;
 
-    switch (format)
+    switch (lines_order)
     {
-    case ggo::rgb_8u_yd:
-      png_image.format = PNG_FORMAT_RGB;
+    case lines_order::up:
+      switch (pixel_type)
+      {
+      case ggo::pixel_type::rgb_8u:
+        png_image.format = PNG_FORMAT_RGB;
+        break;
+      case ggo::pixel_type::bgr_8u:
+        png_image.format = PNG_FORMAT_BGR;
+        break;
+      case ggo::pixel_type::rgba_8u:
+        png_image.format = PNG_FORMAT_RGBA;
+        break;
+      default:
+        return false;
+      }
       break;
-    case ggo::bgr_8u_yd:
-      png_image.format = PNG_FORMAT_BGR;
-      break;
-    case ggo::rgba_8u_yd:
-      png_image.format = PNG_FORMAT_RGBA;
-      break;
-    case ggo::bgr_8u_yu:
-      png_image.format = PNG_FORMAT_RGB;
-      image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::rgb_8u_yd);
-      ggo::blit<ggo::bgr_8u_yu, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
-      break;
-    case ggo::rgb_8u_yu:
-      png_image.format = PNG_FORMAT_RGB;
-      image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::rgb_8u_yd);
-      ggo::blit<ggo::rgb_8u_yu, ggo::rgb_8u_yd>(buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step(), 0, 0);
-      break;
-
+    case lines_order::down:
+      switch (pixel_type)
+      {
+      case ggo::pixel_type::bgr_8u:
+        png_image.format = PNG_FORMAT_RGB;
+        image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+        ggo::blit<ggo::pixel_type::bgr_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
+          buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
+        break;
+      case ggo::pixel_type::rgb_8u:
+        png_image.format = PNG_FORMAT_RGB;
+        image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+        ggo::blit<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
+          buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
+        break;
+      default:
+        return false;
+      }
     default:
       return false;
     }

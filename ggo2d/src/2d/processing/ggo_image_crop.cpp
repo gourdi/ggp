@@ -5,20 +5,20 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   struct crop_functor
   {
-    template <image_format format>
+    template <lines_order memory_lines_order, pixel_type pixel_type>
     static ggo::image call(const ggo::image & input, const ggo::rect_int & crop)
     {
-      using format_traits = image_format_traits<format>;
+      constexpr int pixel_byte_size = pixel_type_traits<pixel_type>::pixel_byte_size;
 
-      int line_byte_size = format_traits::pixel_byte_size * crop.width();
+      int line_byte_size = pixel_byte_size * crop.width();
 
-      image output(crop.size(), format);
+      image output(crop.size(), pixel_type, memory_lines_order);
 
       for (int dst_y = 0; dst_y < crop.height(); ++dst_y)
       {
         int src_y = crop.bottom() + dst_y;
-        const void * src_ptr = get_pixel_ptr<format>(input.data(), crop.left(), src_y, input.height(), input.line_byte_step());
-        void * dst_ptr = get_line_ptr<format_traits::lines_order>(output.data(), dst_y, output.height(), output.line_byte_step());
+        const void * src_ptr = get_pixel_ptr<memory_lines_order, pixel_byte_size>(input.data(), crop.left(), src_y, input.height(), input.line_byte_step());
+        void * dst_ptr = get_line_ptr<memory_lines_order>(output.data(), dst_y, output.height(), output.line_byte_step());
 
         memcpy(dst_ptr, src_ptr, line_byte_size);
       }
@@ -31,11 +31,11 @@ namespace ggo
   ggo::image crop(const ggo::image & input, const ggo::rect_int & crop)
   {
     ggo::rect_int clipped_rect(crop);
-    if (clipped_rect.clip(input.width(), input.height()) == false)
+    if (clipped_rect.clip(input.size()) == false)
     {
       throw std::runtime_error("crop rectangle does not intersect image");
     }
 
-    return dispatch_image_format<crop_functor>(input.format(), input, clipped_rect);
+    return dispatch_image_format<crop_functor>(input.pixel_type(), input.memory_lines_order(), input, clipped_rect);
   }
 }

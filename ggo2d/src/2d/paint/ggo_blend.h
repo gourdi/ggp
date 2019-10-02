@@ -155,19 +155,19 @@ namespace ggo
 namespace ggo
 {
   // Structs.
-  template <typename color_t, typename brush_color_t = color_t>
+  template <typename color_t>
   struct overwrite_blender
   {
-    static_assert(color_traits<brush_color_t>::has_alpha == false);
+    static_assert(color_traits<color_t>::has_alpha == false);
 
-    color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const
+    color_t operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const
     {
-      return convert_color_to<color_t>(brush_color);
+      return brush_color;
     }
   };
 
   template <>
-  struct overwrite_blender<rgba_8u, rgba_8u>
+  struct overwrite_blender<rgba_8u>
   {
     rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
     {

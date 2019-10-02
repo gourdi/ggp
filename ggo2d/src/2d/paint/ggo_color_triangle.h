@@ -10,12 +10,13 @@
 
 namespace ggo
 {
-  template <typename data_t, typename color_t, typename brush_color_t>
-  struct color_triangle_abc : public paint_shape_abc<data_t, color_t, brush_color_t>
+  template <typename color_t, typename brush_color_t, typename data_t = float>
+  struct color_triangle_abc : public paint_shape_abc<color_t, data_t>
   {
     using shape_t = ggo::triangle2d<data_t>;
 
-    static_assert(std::is_floating_point<data_t>::value);
+    static_assert(std::is_floating_point_v<data_t> == true);
+    static_assert(std::is_floating_point_v<ggo::color_traits<brush_color_t>::sample_t> == true);
 
     color_triangle_abc(const ggo::triangle2d<data_t> & triangle, 
       const brush_color_t & color1,
@@ -33,7 +34,7 @@ namespace ggo
     bool              is_point_inside(const ggo::pos2<data_t> & p) const override { return _triangle.is_point_inside(p); }
 
     // Brush.
-    brush_color_t brush(int x, int y) const override
+    brush_color_t brush(int x, int y) const
     {
       const ggo::pos2<data_t> p = ggo::from_pixel_to_continuous<data_t>({ x, y });
       auto c = ggo::triangular_interpolation<data_t, brush_color_t, false>(_triangle.v1(), _color1, _triangle.v2(), _color2, _triangle.v3(), _color3, p);
@@ -42,6 +43,15 @@ namespace ggo
         throw std::runtime_error("triangular interpolation failed");
       }
       return *c;
+    }
+
+    // Blend.
+    virtual color_t blend(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const = 0;
+
+    // Paint.
+    color_t paint(int x, int y, const color_t & bkgd_color) const override
+    {
+      return blend(x, y, bkgd_color, brush(x, y));
     }
 
     ggo::triangle2d<data_t> _triangle;
@@ -53,13 +63,16 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t, typename color_t, typename blender_t = ggo::overwrite_blender<color_t, typename floating_point_color_traits<color_t, data_t>::floating_point_color_t>>
+  template <typename color_t, typename blender_t = ggo::overwrite_blender<color_t>, typename data_t = float>
   struct solid_color_triangle : public color_triangle_abc<
-    data_t,
     color_t,
-    typename floating_point_color_traits<color_t, data_t>::floating_point_color_t>
+    typename floating_point_color_traits<color_t, data_t>::floating_point_color_t,
+    data_t>
   {
     using brush_color_t = typename floating_point_color_traits<color_t, data_t>::floating_point_color_t;
+
+    static_assert(ggo::color_traits<brush_color_t>::has_alpha == false);
+    static_assert(std::is_floating_point_v<ggo::color_traits<brush_color_t>::sample_t>);
 
     solid_color_triangle(const ggo::triangle2d<data_t> & triangle,
       const brush_color_t & color1, const brush_color_t & color2, const brush_color_t & color3)
@@ -70,7 +83,7 @@ namespace ggo
     // Blend.
     color_t blend(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const override
     { 
-      return _blender(x, y, bkgd_color, brush_color);
+      return _blender(x, y, bkgd_color, convert_color_to<color_t>(brush_color));
     }
 
     blender_t _blender;
@@ -79,17 +92,16 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t, typename color_t>
+  template <typename color_t, typename data_t = float>
   struct alpha_color_triangle : public color_triangle_abc<
-    data_t,
     color_t,
-    typename ggo::color_traits<typename ggo::floating_point_color_traits<color_t, data_t>::floating_point_color_t>::alpha_color_t>
+    typename ggo::color_traits<typename ggo::floating_point_color_traits<color_t, data_t>::floating_point_color_t>::alpha_color_t,
+    data_t>
   {
     using brush_color_t = typename ggo::color_traits<typename ggo::floating_point_color_traits<color_t, data_t>::floating_point_color_t>::alpha_color_t;
-    using brush_sample_t = typename ggo::color_traits<brush_color_t>::sample_t;
 
     static_assert(ggo::color_traits<brush_color_t>::has_alpha == true);
-    static_assert(std::is_floating_point<brush_sample_t>::value == true);
+    static_assert(std::is_floating_point_v<ggo::color_traits<brush_color_t>::sample_t>);
 
     alpha_color_triangle(const ggo::triangle2d<data_t> & triangle,
       const brush_color_t & color1,

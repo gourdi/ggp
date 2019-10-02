@@ -8,16 +8,16 @@ GGO_TEST(morphology, dilatation_disc)
 {
   const int width = 80;
   const int height = 60;
-  const int line_step = 3 * width;
 
-  ggo::array_8u input(line_step * height, 0);
-  ggo::fill_solid<ggo::rgb_8u_yd>(input.data(), width, height, line_step, ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(5, 30, 15, 25));
-  ggo::fill_solid<ggo::rgb_8u_yd>(input.data(), width, height, line_step, ggo::green_8u(), ggo::rect_int::from_left_right_bottom_top(35, 50, 20, 30));
+  ggo::image_t<ggo::pixel_type::rgb_8u> input({ width, height });
+  ggo::fill_black(input);
+  ggo::fill_solid(input, ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(5, 30, 15, 25));
+  ggo::fill_solid(input, ggo::green_8u(), ggo::rect_int::from_left_right_bottom_top(35, 50, 20, 30));
 
-  ggo::array_8u output(line_step * height);
-  ggo::dilatation_disc<ggo::rgb_8u_yd>(input.data(), output.data(), width, height, line_step, 10.f);
+  ggo::image_t<ggo::pixel_type::rgb_8u> output({ width, height });
+  ggo::dilatation_disc(input, output, 10.f);
 
-  ggo::save_bmp("dilatation_disc.bmp", output.data(), ggo::rgb_8u_yd, width, height, line_step);
+  ggo::save_bmp("dilatation_disc.bmp", output);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -25,13 +25,13 @@ GGO_TEST(morphology, erosion_rect)
 {
   const int width = 80;
   const int height = 60;
-  const int line_step = 3 * width;
 
-  ggo::array_8u input(line_step * height, 0xff);
-  input[3 * ((height / 2) * width + width / 2)] = 0; // Modify center pixel.
+  ggo::image_t<ggo::pixel_type::rgb_8u> input({ width, height });
+  ggo::fill_solid(input, ggo::white_8u());
+  input.write_pixel(width / 2, height / 2, ggo::red_8u()); // Modify center pixel.
 
-  ggo::array_8u output(line_step * height);
-  ggo::erosion_rectangle<ggo::rgb_8u_yd>(input.data(), output.data(), width, height, line_step, 10, 5);
+  ggo::image_t<ggo::pixel_type::rgb_8u> output({ width, height });
+  ggo::erosion_rectangle(input, output, 10, 5);
 
-  ggo::save_bmp("erosion_rectangle.bmp", output.data(), ggo::rgb_8u_yd, width, height, line_step);
+  ggo::save_bmp("erosion_rectangle.bmp", output);
 }

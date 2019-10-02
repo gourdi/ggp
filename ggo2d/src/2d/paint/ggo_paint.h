@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <kernel/ggo_kernel.h>
+#include <kernel/ggo_rect_int.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
-#include <2d/ggo_image_format.h>
+#include <2d/ggo_image.h>
 #include <2d/paint/ggo_pixel_sampling.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
@@ -14,158 +15,59 @@
 // Paint single shape.
 namespace ggo
 {
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend,
-    const ggo::rect_int & clipping, const int scale_factor, const int first_scale);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend,
-    const ggo::rect_int & clipping);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity,
-    const ggo::rect_int & clipping);
-
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c,
-    const ggo::rect_int & clipping);
-}
-
-// Paint multiple shapes.
-namespace ggo
-{
-  template <ggo::image_format format, pixel_sampling sampling, typename shapes_container_t>
-  void paint(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes);
-
-  template <ggo::image_format format, pixel_sampling sampling, typename shapes_container_t>
-  void paint(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes, const ggo::rect_int & clipping);
-
-  template <ggo::image_format format, pixel_sampling sampling, typename paint_shape_t>
-  void paint(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes);
-
-  template <ggo::image_format format, pixel_sampling sampling, typename paint_shape_t>
-  void paint(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes, const ggo::rect_int & clipping);
-}
-
-//////////////////////////////////////////////////////////////
-// Implementation.
-
-// Paint single shape.
-namespace ggo
-{
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend,
-    const ggo::rect_int & clipping, const int scale_factor, const int first_scale)
-  {
-    using format_traits = image_format_traits<format>;
-    using color_t = typename format_traits::color_t;
-
-    // Lambda to retrieve pixel color.
-    auto read_pixel_lambda = [&](int x, int y)
-    {
-      return ggo::read_pixel<format>(buffer, x, y, height, line_step);
-    };
-
-    // Lambda to set pixel color.
-    auto write_pixel_lambda = [&](int x, int y, const color_t & c)
-    {
-      ggo::write_pixel<format>(buffer, x, y, height, line_step, c);
-    };
-
-    // Call the multi-scale paint algorithm.
-    paint_multi_scale<sampling>(width, height, shape,
-      scale_factor, first_scale,
-      brush, blend,
-      read_pixel_lambda, write_pixel_lambda,
-      clipping);
-  }
-
   /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend,
+  template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
+  void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend,
     const ggo::rect_int & clipping)
   {
-    paint<format, sampling, shape_t, brush_t, blend_t>(buffer, width, height, line_step, shape, brush, blend, clipping, 8, 2);
+    paint_multi_scale<sampling>(image, shape, 8, 2, brush, blend, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t, typename brush_t, typename blend_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, brush_t brush, blend_t blend)
+  template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
+  void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend)
   {
-    paint<format, sampling, shape_t, brush_t, blend_t>(buffer, width, height, line_step, shape, brush, blend, ggo::rect_int::from_width_height(width, height));
+    paint<sampling>(image, shape, brush, blend, ggo::rect_int::from_size(image.size()));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c)
+  template <pixel_sampling sampling, typename image_t, typename shape_t>
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c, float opacity,
+    const ggo::rect_int & clipping)
   {
-    using color_t = typename image_format_traits<format>::color_t;
-
-    solid_color_brush<color_t> brush(c);
-    overwrite_blender<color_t, color_t> blender;
-
-    paint<format, sampling, shape_t, solid_color_brush<color_t>, overwrite_blender<color_t, color_t>>(buffer, width, height, line_step, shape, brush, blender);
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity)
-  {
-    using color_t = typename image_format_traits<format>::color_t;
+    using color_t = typename image_t::color_t;
 
     solid_color_brush<color_t> brush(c);
     alpha_blender<color_t> blender(opacity);
 
-    paint<format, sampling, shape_t, solid_color_brush<color_t>, alpha_blender<color_t>>(buffer, width, height, line_step, shape, brush, blender);
+    paint<sampling, image_t, shape_t, solid_color_brush<color_t>, alpha_blender<color_t>>(image, shape, brush, blender, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c, float opacity,
-    const ggo::rect_int & clipping)
+  template <pixel_sampling sampling, typename image_t, typename shape_t>
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c, float opacity)
   {
-    using color_t = typename image_format_traits<format>::color_t;
-
-    solid_color_brush<color_t> brush(c);
-    alpha_blender<color_t> blender(opacity);
-
-    paint<format, sampling, shape_t, solid_color_brush<color_t>, alpha_blender<color_t>>(buffer, width, height, line_step, shape, brush, blender, clipping);
+    paint<sampling>(image, shape, c, opacity, ggo::rect_int::from_size(image.size()));
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <image_format format, pixel_sampling sampling, typename shape_t>
-  void paint(void * buffer, int width, int height, int line_step,
-    const shape_t & shape, const typename image_format_traits<format>::color_t & c,
+  template <pixel_sampling sampling, typename image_t, typename shape_t>
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c,
     const ggo::rect_int & clipping)
   {
-    using color_t = typename image_format_traits<format>::color_t;
+    using color_t = typename image_t::color_t;
 
     solid_color_brush<color_t> brush(c);
-    overwrite_blender<color_t, color_t> blender;
+    overwrite_blender<color_t> blender;
 
-    paint<format, sampling, shape_t, solid_color_brush<color_t>, overwrite_blender<color_t, color_t>>(buffer, width, height, line_step, shape, brush, blender, clipping);
+    paint<sampling, image_t, shape_t, solid_color_brush<color_t>, overwrite_blender<color_t>>(image, shape, brush, blender, clipping);
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <pixel_sampling sampling, typename image_t, typename shape_t>
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c)
+  {
+    paint<sampling>(image, shape, c, ggo::rect_int::from_size(image.size()));
   }
 }
 
@@ -173,58 +75,17 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, pixel_sampling sampling, typename shapes_container_t>
-  void paint(void * buffer, int width, int height, int line_step, const shapes_container_t & shapes)
+  template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
+  void paint(image_t & image, const scene2d<color_t, data_t> & scene, const ggo::rect_int & clipping)
   {
-    paint<format, sampling, shapes_container_t>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
+    paint<sampling>(image, scene, 8, 2, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, pixel_sampling sampling, typename shapes_container_t>
-  void paint(void * buffer, int width, int height, int line_step, const shapes_container_t & paint_shapes, const ggo::rect_int & clipping)
+  template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
+  void paint(image_t & image, const scene2d<color_t, data_t> & scene)
   {
-    const int scale_factor = 8;
-    const int first_scale = 2;
-
-    using color_t = typename image_format_traits<format>::color_t;
-
-    auto read_pixel_func = [&](int x, int y)
-    {
-      return ggo::read_pixel<format>(buffer, x, y, height, line_step);
-    };
-
-    auto write_pixel_func = [&](int x, int y, const color_t & c)
-    {
-      ggo::write_pixel<format>(buffer, x, y, height, line_step, c);
-    };
-
-    paint_multi_scale<sampling>(width, height, paint_shapes, scale_factor, first_scale, read_pixel_func, write_pixel_func, clipping);
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, pixel_sampling sampling, typename paint_shape_t>
-  void paint(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes)
-  {
-    paint<format, sampling, paint_shape_t>(buffer, width, height, line_step, shapes, ggo::rect_int::from_width_height(width, height));
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <ggo::image_format format, pixel_sampling sampling, typename paint_shape_t>
-  void paint(void * buffer, int width, int height, int line_step, const std::vector<paint_shape_t> & shapes, const ggo::rect_int & clipping)
-  {
-    if constexpr(std::is_pointer<paint_shape_t>::value == true)
-    {
-      // I could not use an adaptator here, but by doing so, I can call the generic version of the paint function.
-      auto adaptor = ggo::make_adaptor(shapes, [](const auto * paint_shape) { return paint_shape; });
-
-      paint<format, sampling>(buffer, width, height, line_step, adaptor, clipping);
-    }
-    else
-    {
-      auto adaptor = ggo::make_adaptor(shapes, [](const auto & paint_shape) { return &paint_shape; });
-
-      paint<format, sampling>(buffer, width, height, line_step, adaptor, clipping);
-    }
+    paint_multi_scale<sampling>(image, scene, 8, 2, ggo::rect_int::from_size(image.size()));
   }
 }
 

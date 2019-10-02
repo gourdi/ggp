@@ -93,30 +93,28 @@ namespace
   // Write pixels (note that pixels are stored BGR from bottom to top).
   struct write_pixels
   {
-    template <ggo::image_format format>
+    template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type>
     static void call(const void * buffer, int width, int height, int line_byte_step, jpeg_compress_struct & cinfo)
     {
-      using format_traits = ggo::image_format_traits<format>;
-
       ggo::array_8u line(3 * width);
 
       int y = cinfo.image_height - 1; // Top to bottom.
 
       while (cinfo.next_scanline < cinfo.image_height)
       {
-        const void * in_ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step);
+        const void * in_ptr = ggo::get_line_ptr<memory_lines_order>(buffer, y, height, line_byte_step);
         uint8_t * out_ptr = line.data();
 
         for (int x = 0; x < width; ++x)
         {
-          auto c = ggo::read_pixel<format>(in_ptr);
+          auto c = ggo::pixel_type_traits<pixel_type>::read(in_ptr);
           ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
 
           *out_ptr++ = rgb.r();
           *out_ptr++ = rgb.g();
           *out_ptr++ = rgb.b();
 
-          in_ptr = ggo::move_ptr<format_traits::pixel_byte_size>(in_ptr);
+          in_ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(in_ptr);
         }
 
         uint8_t * ptr = line.data();
@@ -153,7 +151,7 @@ namespace ggo
     jpeg_start_decompress(&decompressor._cinfo);
 
     int line_byte_step = 3 * decompressor._cinfo.output_width;
-    image image({ int(decompressor._cinfo.output_width), int(decompressor._cinfo.output_height) }, line_byte_step, ggo::rgb_8u_yd);
+    image image({ int(decompressor._cinfo.output_width), int(decompressor._cinfo.output_height) }, ggo::pixel_type::rgba_8u, ggo::lines_order::down, line_byte_step);
 
     JSAMPLE * line_ptr = reinterpret_cast<JSAMPLE *>(image.data());
     while (decompressor._cinfo.output_scanline < decompressor._cinfo.output_height)
@@ -168,7 +166,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_jpg(const std::string & filename, int quality, const void * buffer, image_format format, int width, int height, int line_byte_step)
+  bool save_jpg(const std::string & filename, int quality, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int width, int height, int line_byte_step)
   {
     try
     {
@@ -184,9 +182,7 @@ namespace ggo
 
       // Go!
       jpeg_start_compress(&compressor._cinfo, TRUE);
-
-      ggo::dispatch_image_format<write_pixels>(format, buffer, width, height, line_byte_step, compressor._cinfo);
-
+      ggo::dispatch_image_format<write_pixels>(pixel_type, memory_lines_order, buffer, width, height, line_byte_step, compressor._cinfo);
       jpeg_finish_compress(&compressor._cinfo);
 
       return true;

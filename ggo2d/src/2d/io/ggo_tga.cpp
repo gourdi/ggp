@@ -27,23 +27,21 @@ namespace
   // Write pixels (note that pixels are stored BGR from top to bottom).
   struct write_pixels
   {
-    template <ggo::image_format format>
+    template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type>
     static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step)
     {
-      using format_traits = ggo::image_format_traits<format>;
-
       for (int y = 0; y < height; ++y)
       {
-        const void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, height - y - 1, height, line_byte_step);
+        const void * ptr = ggo::get_line_ptr<memory_lines_order>(buffer, height - y - 1, height, line_byte_step);
 
         for (int x = 0; x < width; ++x)
         {
-          auto c = ggo::read_pixel<format>(ptr);
+          auto c = ggo::pixel_type_traits<pixel_type>::read(ptr);
           ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
           ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
           ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
           ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
-          ptr = ggo::move_ptr<format_traits::pixel_byte_size>(ptr);
+          ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(ptr);
         }
       }
     }
@@ -73,16 +71,16 @@ namespace ggo
     // Pixels.
     ifs.seekg(header._id_length, std::ios_base::cur);
 
-    ggo::image_format format = (header._image_descriptor & (1 << 5)) ? bgr_8u_yd : bgr_8u_yu;
+    const lines_order memory_lines_order = (header._image_descriptor & (1 << 5)) ? lines_order::down : lines_order::down;
 
-    ggo::image image({ header._width, header._height }, format);
-    ifs.read(reinterpret_cast<char *>(image.data()), image.height() * image.line_byte_step());
+    ggo::image image({ header._width, header._height }, pixel_type::bgr_8u, memory_lines_order);
+    ifs.read(reinterpret_cast<char *>(image.data()), image.size().height() * image.line_byte_step());
 
     return image;
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_tga(const std::string & filename, const void * buffer, image_format format, int width, int height, int line_byte_step)
+  bool save_tga(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int width, int height, int line_byte_step)
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
@@ -100,7 +98,7 @@ namespace ggo
 
     ofs.write(reinterpret_cast<char*>(&header), sizeof(header));
 
-    ggo::dispatch_image_format<write_pixels>(format, ofs, buffer, width, height, line_byte_step);
+    dispatch_image_format<write_pixels>(pixel_type, memory_lines_order, ofs, buffer, width, height, line_byte_step);
 
     if (!ofs)
     {

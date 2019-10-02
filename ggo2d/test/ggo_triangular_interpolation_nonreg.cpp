@@ -9,48 +9,44 @@
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)
 {
-  constexpr int image_size = 200;
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down> image({ 200, 200 });
 
-  ggo::image_t<ggo::rgb_8u_yd> image({ image_size, image_size });
+  ggo::fill_black(image);
 
-  image.fill(ggo::black_8u());
-
-  image.for_each_pixel([&](int x, int y)
+  for (int y = 0; y < image.height(); ++y)
   {
-    const ggo::pos2_f p = ggo::from_pixel_to_continuous<float>(ggo::pos2_i(x, y));
-    const ggo::pos2_f p0(50.f, 50.f);
-    const ggo::pos2_f p1(150.f, 50.f);
-    const ggo::pos2_f p2(50.f, 150.f);
-    
-    auto c = ggo::triangular_interpolation(p0, ggo::red_32f(), p1, ggo::green_32f(), p2, ggo::blue_32f(), p);
-    if (c.has_value() == true)
+    for (int x = 0; x < image.width(); ++x)
     {
-      image.write_pixel(x, y, ggo::convert_color_to<ggo::rgb_8u>(*c));
+      const ggo::pos2_f p = ggo::from_pixel_to_continuous<float>(ggo::pos2_i(x, y));
+      const ggo::pos2_f p0(50.f, 50.f);
+      const ggo::pos2_f p1(150.f, 50.f);
+      const ggo::pos2_f p2(50.f, 150.f);
+
+      auto c = ggo::triangular_interpolation(p0, ggo::red_32f(), p1, ggo::green_32f(), p2, ggo::blue_32f(), p);
+      if (c.has_value() == true)
+      {
+        image.write_pixel(x, y, ggo::convert_color_to<ggo::rgb_8u>(*c));
+      }
     }
-  });
+  }
   
   ggo::save_bmp("test_triangular_interpolation_function.bmp", image);
 }
 
-
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, color_triangle)
 {
-  const int width = 120;
-  const int height = 100;
+  using color_triangle_t = ggo::solid_color_triangle<ggo::rgb_8u>;
 
-  using color_triangle_t = ggo::solid_color_triangle<float, ggo::rgb_8u>;
+  ggo::scene2d<ggo::rgb_8u> scene;
+  const auto & triangle1 = scene.add_shape(color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f()));
+  scene.add_shape(color_triangle_t({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f()));
 
-  const color_triangle_t triangle1({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f());
-  const color_triangle_t triangle2({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f());
+  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 120, 100 });
+  ggo::fill_solid(image, ggo::gray_8u());
+  ggo::paint<ggo::sampling_4x4>(image, scene);
 
-  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
-
-  ggo::array_8u buffer(3 * width * height);
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
-
-  ggo::save_bmp("paint_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  ggo::save_bmp("paint_color_triangles.bmp", image);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -59,24 +55,24 @@ GGO_TEST(paint, alpha_color_triangle)
   const int width = 120;
   const int height = 100;
 
-  using color_triangle_t = ggo::alpha_color_triangle<float, ggo::rgb_8u>;
+  using color_triangle_t = ggo::alpha_color_triangle<ggo::rgb_8u>;
   using brush_color_t = color_triangle_t::brush_color_t;
 
-  const color_triangle_t triangle1({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
+  ggo::scene2d<ggo::rgb_8u> scene;
+
+  const auto & triangle1 = scene.add_shape(color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
     brush_color_t(0.f, 1.f, 0.f, 1.f),
     brush_color_t(0.f, 1.f, 0.f, 0.75f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f));
+    brush_color_t(0.f, 1.f, 0.f, 0.5f)));
 
-  const color_triangle_t triangle2({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() },
+  scene.add_shape(color_triangle_t({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() },
     brush_color_t(0.f, 1.f, 0.f, 1.f),
     brush_color_t(0.f, 1.f, 0.f, 0.25f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f));
+    brush_color_t(0.f, 1.f, 0.f, 0.5f)));
 
-  const std::vector<const color_triangle_t *> triangles{ &triangle1, &triangle2 };
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> image({ 120, 100 });
+  ggo::fill_solid(image, ggo::gray_8u());
+  ggo::paint<ggo::sampling_4x4>(image, scene);
 
-  ggo::array_8u buffer(3 * width * height);
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer.data(), width, height, 3 * width, ggo::gray_8u());
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), width, height, 3 * width, triangles);
-
-  ggo::save_bmp("paint_alpha_color_triangles.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  ggo::save_bmp("paint_alpha_color_triangles.bmp", image);
 }

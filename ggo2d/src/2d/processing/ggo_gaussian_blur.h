@@ -3,10 +3,10 @@
 
 #include <kernel/ggo_size.h>
 #include <kernel/ggo_borders.h>
-#include <kernel/memory/ggo_forward_input_cache.h>
-#include <kernel/math/signal_proc/ggo_gaussian_blur.h>
-#include <2d/ggo_image_format.h>
+#include <kernel/math/signal_processing/ggo_gaussian_blur.h>
 #include <2d/ggo_color.h>
+#include <2d/ggo_pixel_type.h>
+#include <2d/processing/ggo_local_processing.h>
  
 namespace ggo
 {
@@ -16,7 +16,7 @@ namespace ggo
 
     inline auto build_gaussian_kernel_fp(float stddev)
     {
-      auto kernel_float = ggo::build_gaussian_kernel<float>(stddev, 0.001f);
+      auto kernel_float = ggo::build_gaussian_kernel<float>(stddev);
 
       std::vector<uint32_t> kernel;
       for (float k : kernel_float)
@@ -27,181 +27,82 @@ namespace ggo
       return kernel;
     }
 
-    template <typename data_t>
-    struct helper
+    template <typename color_t>
+    struct helpers
     {
     };
 
     template <>
-    struct helper<float>
+    struct helpers<float>
     {
-      using processing_t = float;
-
-      using memory_to_processing_convert_t = passthrough_conversion<float>;
-      using processing_to_memory_convert_t = passthrough_conversion<float>;
-
-      static auto build_kernel(float stddev)
-      {
-        return ggo::build_gaussian_kernel<float>(stddev, 0.001f);
-      }
+      static auto build_kernel(float stddev) { return ggo::build_gaussian_kernel<float>(stddev); }
+      static float convert(float v) { return v; }
     };
 
     template <>
-    struct helper<double>
+    struct helpers<double>
     {
-      using processing_t = double;
-
-      using memory_to_processing_convert_t = passthrough_conversion<double>;
-      using processing_to_memory_convert_t = passthrough_conversion<double>;
-
-      static auto build_kernel(float stddev)
-      {
-        return ggo::build_gaussian_kernel<float>(stddev, 0.001f);
-      }
+      static auto build_kernel(double stddev) { return ggo::build_gaussian_kernel<double>(stddev); }
+      static double convert(double v) { return v; }
     };
 
     template <>
-    struct helper<uint8_t>
+    struct helpers<uint8_t>
     {
-      using processing_t = uint32_t;
-
-      struct memory_to_processing_convert_t
-      {
-        using input_t = uint8_t;
-        using output_t = uint32_t;
-
-        static uint32_t convert(uint8_t c) { return static_cast<uint32_t>(c); }
-      };
-
-      struct processing_to_memory_convert_t
-      {
-        using input_t = uint32_t;
-        using output_t = uint8_t;
-
-        static uint8_t convert(uint32_t c) { return ggo::fixed_point_div<16>(c); }
-      };
-
-      static auto build_kernel(float stddev)
-      {
-        return build_gaussian_kernel_fp(stddev);
-      }
+      static auto build_kernel(float stddev) { return build_gaussian_kernel_fp(stddev); }
+      static uint32_t convert(uint8_t c) { return static_cast<uint32_t>(c); }
+      static uint8_t convert(uint32_t c) { return ggo::fixed_point_div<gaussian_blur_details::bit_shift>(c); }
     };
 
     template <>
-    struct helper<rgb_8u>
+    struct helpers<rgb_8u>
     {
-      using processing_t = ggo::rgb_32u;
-
-      struct memory_to_processing_convert_t
-      {
-        using input_t = rgb_8u;
-        using output_t = rgb_32u;
-
-        static rgb_32u convert(rgb_8u c) { return {
-            static_cast<uint32_t>(c.r()),
-            static_cast<uint32_t>(c.g()),
-            static_cast<uint32_t>(c.b()) };
-        }
-      };
-
-      struct processing_to_memory_convert_t
-      {
-        using input_t = rgb_32u;
-        using output_t = rgb_8u;
-
-        static rgb_8u convert(rgb_32u c) { return {
-          static_cast<uint8_t>(ggo::fixed_point_div<16>(c.r())),
-          static_cast<uint8_t>(ggo::fixed_point_div<16>(c.g())),
-          static_cast<uint8_t>(ggo::fixed_point_div<16>(c.b())) };
-        }
-      };
-
-      static auto build_kernel(float stddev)
-      {
-        return build_gaussian_kernel_fp(stddev);
+      static auto build_kernel(float stddev) { return build_gaussian_kernel_fp(stddev); }
+      static rgb_32u convert(rgb_8u c) { return {
+        static_cast<uint32_t>(c.r()),
+        static_cast<uint32_t>(c.g()),
+        static_cast<uint32_t>(c.b()) }; }
+      static rgb_8u convert(rgb_32u c) { return { 
+        static_cast<uint8_t>(ggo::fixed_point_div<gaussian_blur_details::bit_shift>(c.r())),
+        static_cast<uint8_t>(ggo::fixed_point_div<gaussian_blur_details::bit_shift>(c.g())),
+        static_cast<uint8_t>(ggo::fixed_point_div<gaussian_blur_details::bit_shift>(c.b())) };
       }
     };
   }
 
-  template <image_format format, border_mode border = border_mode::mirror>
-  void gaussian_blur(void * buffer, const ggo::size & size, int line_byte_step, float stddev)
+  template <pixel_type pt, lines_order lo, bool owns_buffer>
+  void gaussian_blur(image_base_t<pt, lo, void *, owns_buffer> & image, float stddev, border_mode border_mode = border_mode::mirror)
   {
-    using color_t = image_format_traits<format>::color_t;
-    using processing_t = gaussian_blur_details::helper<color_t>::processing_t;
-    using memory_to_processing_convert_t = gaussian_blur_details::helper<color_t>::memory_to_processing_convert_t;
-    using processing_to_memory_convert_t = gaussian_blur_details::helper<color_t>::processing_to_memory_convert_t;
+    using helpers = gaussian_blur_details::helpers<ggo::pixel_type_traits<pt>::color_t>;
 
-    auto kernel = gaussian_blur_details::helper<color_t>::build_kernel(stddev);
-    if (kernel.size() == 1)
+    const auto kernel = helpers::build_kernel(stddev);
+    if (kernel.size() <= 1)
     {
       return;
     }
-    int kernel_half_size = static_cast<int>(kernel.size());
-    int width = size.width();
-    int height = size.height();
 
-    // Horizontal pass.
+    int processing_size = static_cast<int>(kernel.size() - 1);
+
+    auto processing = [&](const auto & neighborhood)
     {
-      forward_input_cache<processing_t, border, color_t, memory_to_processing_convert_t> forward_input(size.width(), kernel_half_size);
-
-      for (int y = 0; y < size.height(); ++y)
+      auto out = kernel[0] * helpers::convert(neighborhood(0));
+      for (int i = 1; i < kernel.size(); ++i)
       {
-        // Set up forward input.
-        const void * line_ptr = ggo::move_ptr(buffer, y * line_byte_step);
-        auto read = [&](int x)
-        {
-          const void * pixel_ptr = ggo::move_ptr(line_ptr, x * image_format_traits<format>::pixel_byte_size);
-          return ggo::read_pixel<format>(pixel_ptr);
-        };
-        forward_input.setup(read);
-
-        // Convolution.
-        void * output_ptr = ggo::move_ptr(buffer, y * line_byte_step);
-        for (int x = 0; x < width; ++x)
-        {
-          processing_t c = kernel[0] * forward_input.read(0);
-          for (int k = 1; k < kernel_half_size; ++k)
-          {
-            c += kernel[k] * (forward_input.read(-k) + forward_input.read(k));
-          }
-          write_pixel<format>(output_ptr, processing_to_memory_convert_t::convert(c));
-
-          forward_input.move_to_next();
-          output_ptr = ggo::move_ptr(output_ptr, image_format_traits<format>::pixel_byte_size);
-        }
+        out += kernel[i] * (helpers::convert(neighborhood(-i)) + helpers::convert(neighborhood(i)));
       }
-    }
+      return helpers::convert(out);
+    };
 
-    // Vertical pass.
+    ggo::image_base_t<pt, lo, void *, true> tmp(image.size());
+
+    switch (border_mode)
     {
-      forward_input_cache<processing_t, border, color_t, memory_to_processing_convert_t> forward_input(size.height(), kernel_half_size);
-
-      for (int x = 0; x < size.width(); ++x)
-      {
-        // Set up forward input.
-        auto read = [&](int y)
-        {
-          const void * pixel_ptr = ggo::move_ptr(buffer, y * line_byte_step);
-          pixel_ptr = ggo::move_ptr(pixel_ptr, x * image_format_traits<format>::pixel_byte_size);
-          return ggo::read_pixel<format>(pixel_ptr);
-        };
-        forward_input.setup(read);
-
-        // Convolution.
-        void * output_ptr = ggo::move_ptr(buffer, x * image_format_traits<format>::pixel_byte_size);
-        for (int y = 0; y < height; ++y)
-        {
-          processing_t c = kernel[0] * forward_input.read(0);
-          for (int k = 1; k < kernel_half_size; ++k)
-          {
-            c += kernel[k] * (forward_input.read(-k) + forward_input.read(k));
-          }
-          write_pixel<format>(output_ptr, processing_to_memory_convert_t::convert(c));
-
-          forward_input.move_to_next();
-          output_ptr = ggo::move_ptr(output_ptr, line_byte_step);
-        }
-      }
+    case ggo::border_mode::mirror:
+      apply_horizontal_processing<ggo::border_mode::mirror>(image, tmp, processing_size, processing_size, processing);
+      apply_vertical_symmetric_processing<ggo::border_mode::mirror>(tmp, image, processing_size, processing);
+      break;
+    default:
+      throw std::runtime_error("unsupported border mode");
     }
   }
 }

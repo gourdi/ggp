@@ -9,7 +9,7 @@
 namespace ggo
 {
   template <typename data_t>
-  struct vec3 : public vec_base<data_t, 3, vec3<data_t>>
+  struct vec3 final : public vec_base<data_t, 3, vec3<data_t>>
   {
     constexpr vec3() : vec_base<data_t, 3, vec3<data_t>>() {}
     constexpr vec3(const vec3<data_t> & v) : vec_base<data_t, 3, vec3<data_t>>(v) {}

@@ -2,6 +2,7 @@
 #define __GGO_COMPARE__
 
 #include <cmath>
+#include <array>
 
 namespace ggo
 {
@@ -59,6 +60,12 @@ namespace ggo
   constexpr bool compare(data_t const (&buffer1)[size], data_t const (&buffer2)[size], data_t epsilon)
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(buffer1, buffer2, epsilon);
+  }
+
+  template <int size, typename data_t>
+  constexpr bool compare(const std::array<data_t, size> & array1, const std::array<data_t, size> & array2, data_t epsilon)
+  {
+    return ggo::details::compare_t<data_t, size, size - 1>::call(array1.data(), array2.data(), epsilon);
   }
 }
 

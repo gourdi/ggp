@@ -39,28 +39,26 @@ namespace
   // Write pixels (note that pixels are stored BGR from bottom to top).
   struct write_pixels
   {
-    template <ggo::image_format format>
+    template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type>
     static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step, int padded_line_size)
     {
-      using format_traits = ggo::image_format_traits<format>;
-
       ggo::array_8u padded_line(padded_line_size);
 
       for (int y = 0; y < height; ++y)
       {
-        const void * in_ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height, line_byte_step);
+        const void * in_ptr = ggo::get_line_ptr<memory_lines_order>(buffer, y, height, line_byte_step);
         uint8_t * out_ptr = padded_line.data();
 
         for (int x = 0; x < width; ++x)
         {
-          auto c = ggo::read_pixel<format>(in_ptr);
+          auto c = ggo::pixel_type_traits<pixel_type>::read(in_ptr);
           ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
 
           *out_ptr++ = rgb.b();
           *out_ptr++ = rgb.g();
           *out_ptr++ = rgb.r();
 
-          in_ptr = ggo::move_ptr<format_traits::pixel_byte_size>(in_ptr);
+          in_ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(in_ptr);
         }
 
         ofs.write(reinterpret_cast<char *>(padded_line.data()), padded_line_size);
@@ -112,7 +110,7 @@ namespace ggo
 
     // Pixels.
     int line_byte_size = ggo::pad(3 * info_header._width, 4);
-    image image({ int(info_header._width), int(info_header._height) }, line_byte_size, ggo::bgr_8u_yu);
+    image image({ int(info_header._width), int(info_header._height) }, ggo::pixel_type::bgr_8u, ggo::lines_order::up);
 
     ifs.read(reinterpret_cast<char *>(image.data()), info_header._height * line_byte_size);
 
@@ -126,7 +124,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_bmp(const std::string & filename, const void * buffer, image_format format, int width, int height, int line_byte_step)
+  bool save_bmp(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int width, int height, int line_byte_step)
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
@@ -154,8 +152,7 @@ namespace ggo
     info_header._bpp = 24;
 
     ofs.write(reinterpret_cast<char*>(&info_header), sizeof(info_header));
-
-    ggo::dispatch_image_format<write_pixels>(format, ofs, buffer, width, height, line_byte_step, padded_line_size);
+    dispatch_image_format<write_pixels>(pixel_type, memory_lines_order, ofs, buffer, width, height, line_byte_step, padded_line_size);
 
     if (!ofs)
     {

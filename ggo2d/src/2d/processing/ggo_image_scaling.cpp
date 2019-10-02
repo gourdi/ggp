@@ -1,5 +1,5 @@
 #include "ggo_image_scaling.h"
-#include <kernel/math/signal_proc/ggo_scale2d.h>
+#include <kernel/math/signal_processing/ggo_scale2d.h>
 
 namespace ggo
 {
@@ -8,28 +8,28 @@ namespace ggo
     //////////////////////////////////////////////////////////////
     struct scaler
     {
-      template <image_format format>
+      template <lines_order memory_lines_order, pixel_type pixel_type>
       static image call(const image & input, ggo::size output_size)
       {
-        using color_t = ggo::image_format_traits<format>::color_t;
+        using color_t = ggo::pixel_type_traits<pixel_type>::color_t;
         using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
 
-        image output(output_size, input.format());
+        image output(output_size, pixel_type, memory_lines_order);
 
         auto in = [&](int x, int y)
         {
-          auto c = ggo::read_pixel<format>(input.data(), x, y, input.height(), input.line_byte_step());
+          auto c = ggo::pixel_type_traits<pixel_type>::read(input.pixel_ptr(x, y));
 
           return ggo::convert_color_to<floating_point_color_t>(c);
         };
 
         auto out = [&](int x, int y, const floating_point_color_t & c)
         {
-          ggo::write_pixel<format>(output.data(), x, y, output_size.height(), output.line_byte_step(), ggo::convert_color_to<color_t>(c));
+          ggo::pixel_type_traits<pixel_type>::write(output.pixel_ptr(x, y), ggo::convert_color_to<color_t>(c));
         };
 
         ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration, floating_point_color_t, float>(
-          in, input.width(), input.height(), out, output_size.width(), output_size.height());
+          in, input.size().width(), input.size().height(), out, output_size.width(), output_size.height());
 
         return output;
       }
@@ -44,7 +44,7 @@ namespace ggo
       throw std::runtime_error("negative or null scaling output dimension");
     }
 
-    return ggo::dispatch_image_format<scaler>(input.format(), input, output_size);
+    return dispatch_image_format<scaler>(input.pixel_type(), input.memory_lines_order(), input, output_size);
   }
 }
 

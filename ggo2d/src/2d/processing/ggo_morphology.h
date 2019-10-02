@@ -1,25 +1,25 @@
 #ifndef __GGO_2D_MORPHOLOGY__
 #define __GGO_2D_MORPHOLOGY__
 
-#include <2d/ggo_image_format.h>
-#include <kernel/math/signal_proc/ggo_morphology.h>
+#include <2d/ggo_pixel_type.h>
+#include <kernel/math/signal_processing/ggo_morphology.h>
 
 // Definition.
 namespace ggo
 {
   // Dilatation.
-  template <image_format format>
-  void dilatation_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height);
+  template <typename input_image_t, typename output_image_t>
+  void dilatation_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height);
 
-  template <image_format format>
-  void dilatation_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius);
+  template <typename input_image_t, typename output_image_t>
+  void dilatation_disc(const input_image_t & input, output_image_t & output, float radius);
 
   // Erosion.
-  template <image_format format>
-  void erosion_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height);
+  template <typename input_image_t, typename output_image_t>
+  void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height);
 
-  template <image_format format>
-  void erosion_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius);
+  template <typename input_image_t, typename output_image_t>
+  void erosion_disc(const input_image_t & input, output_image_t & output, int line_byte_step, float radius);
 }
 
 // Implementation.
@@ -45,77 +45,81 @@ namespace ggo
   };
 
   // Dilatation.
-  template <image_format format>
-  void dilatation_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
+  template <typename input_image_t, typename output_image_t>
+  void dilatation_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height)
   {
-    if (input == output)
+    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+
+    using color_t = typename input_image_t::color_t;
+
+    if (input.size() != output.size())
     {
-      throw inplace_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
-    using format_info = image_format_info<format>;
-    using color_t = format_info::color_t;
-
-    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
-    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
+    morpho_rectangle(in, out, input.width(), input.height(), kernel_width, kernel_height, pred);
   }
 
-  template <image_format format>
-  void dilatation_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius)
+  template <typename input_image_t, typename output_image_t>
+  void dilatation_disc(const input_image_t & input, output_image_t & output, float radius)
   {
-    if (input == output)
+    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+
+    using color_t = typename input_image_t::color_t;
+
+    if (input.size() != output.size())
     {
-      throw std::runtime_error("inplace unsupported");
+      throw std::runtime_error("dimension mismatch");
     }
 
-    using format_traits = image_format_traits<format>;
-    using color_t = format_traits::color_t;
-
-    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
-    morpho_disc(in, out, width, height, radius, pred);
+    morpho_disc(in, out, input.width(), input.height(), radius, pred);
   }
 
   // Erosion.
-  template <image_format format>
-  void erosion_rectangle(const void * input, void * output, int width, int height, int line_byte_step, int kernel_width, int kernel_height)
+  template <typename input_image_t, typename output_image_t>
+  void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height)
   {
-    if (input == output)
+    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+
+    using color_t = typename input_image_t::color_t;
+
+    if (input.size() != output.size())
     {
-      throw std::runtime_error("inplace unsupported");
+      throw std::runtime_error("dimension mismatch");
     }
 
-    using format_traits = image_format_traits<format>;
-    using color_t = format_traits::color_t;
-
-    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
-    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
+    morpho_rectangle(in, out, input.width(), input.height(), kernel_width, kernel_height, pred);
   }
 
-  template <image_format format>
-  void erosion_disc(const void * input, void * output, int width, int height, int line_byte_step, float radius)
+  template <typename input_image_t, typename output_image_t>
+  void erosion_disc(const input_image_t & input, output_image_t & output, int line_byte_step, float radius)
   {
-    if (input == output)
+    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+
+    using color_t = typename input_image_t::color_t;
+
+    if (input.size() != output.size())
     {
-      throw inplace_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
-    using format_info = image_format_info<format>;
-    using color_t = format_info::color_t;
-
-    auto in = [&](int x, int y) { return read_pixel<format>(input, x, y, height, line_byte_step); };
-    auto out = [&](int x, int y, const color_t & c) { write_pixel<format>(output, x, y, height, line_byte_step, c); };
+    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
-    morpho_disc(in, out, width, height, radius, pred);
+    morpho_disc(in, out, input.width(), input.height(), radius, pred);
   }
 }
 

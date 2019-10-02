@@ -13,12 +13,12 @@ namespace ggo
 {
   // YA
   template <typename data_t>
-  struct ya : public vec_base<data_t, 2>
+  struct ya final : public vec_base<data_t, 2, ya<data_t>>
   {
     constexpr ya() {}
-    constexpr ya(const ya<data_t> & v) : vec_base<data_t, 2>(v) {}
-    constexpr ya(data_t y, data_t a) : vec_base<data_t, 2>(y, a) {}
-    constexpr ya(data_t k) : vec_base<data_t, 2>(k) {}
+    constexpr ya(const ya<data_t> & v) : vec_base<data_t, 2, ya<data_t>>(v) {}
+    constexpr ya(data_t y, data_t a) : vec_base<data_t, 2, ya<data_t>>(y, a) {}
+    constexpr ya(data_t k) : vec_base<data_t, 2, ya<data_t>>(k) {}
 
     data_t & y() { return this->_coefs[0]; }
     data_t & a() { return this->_coefs[1]; }
@@ -32,12 +32,12 @@ namespace ggo
 
   // RGB
   template <typename data_t>
-  struct rgb : public vec_base<data_t, 3>
+  struct rgb final : public vec_base<data_t, 3, rgb<data_t>>
   {
     constexpr rgb() {}
-    constexpr rgb(const rgb<data_t> & v) : vec_base<data_t, 3>(v) {}
-    constexpr rgb(data_t r, data_t g, data_t b) : vec_base<data_t, 3>(r, g, b) {}
-    constexpr rgb(data_t k) : vec_base<data_t, 3>(k) {}
+    constexpr rgb(const rgb<data_t> & v) : vec_base<data_t, 3, rgb<data_t>>(v) {}
+    constexpr rgb(data_t r, data_t g, data_t b) : vec_base<data_t, 3, rgb<data_t>>(r, g, b) {}
+    constexpr rgb(data_t k) : vec_base<data_t, 3, rgb<data_t>>(k) {}
 
     data_t & r() { return this->_coefs[0]; }
     data_t & g() { return this->_coefs[1]; }
@@ -55,13 +55,13 @@ namespace ggo
 
   // RGBA
   template <typename data_t>
-  struct rgba : public vec_base<data_t, 4>
+  struct rgba final : public vec_base<data_t, 4, rgba<data_t>>
   {
     constexpr rgba() {}
-    constexpr rgba(const rgba<data_t> & v) : vec_base<data_t, 4>(v) {}
-    constexpr rgba(data_t r, data_t g, data_t b, data_t a) : vec_base<data_t, 4>(r, g, b, a) {}
-    constexpr rgba(const rgb<data_t> & v, data_t a) : vec_base<data_t, 4>(v.r(), v.g(), v.b(), a) {}
-    constexpr rgba(data_t k) : vec_base<data_t, 4>(k) {}
+    constexpr rgba(const rgba<data_t> & v) : vec_base<data_t, 4, rgba<data_t>>(v) {}
+    constexpr rgba(data_t r, data_t g, data_t b, data_t a) : vec_base<data_t, 4, rgba<data_t>>(r, g, b, a) {}
+    constexpr rgba(const rgb<data_t> & v, data_t a) : vec_base<data_t, 4, rgba<data_t>>(v.r(), v.g(), v.b(), a) {}
+    constexpr rgba(data_t k) : vec_base<data_t, 4, rgba<data_t>>(k) {}
 
     data_t & r() { return this->_coefs[0]; }
     data_t & g() { return this->_coefs[1]; }
@@ -452,95 +452,129 @@ namespace ggo
 // Static variables.
 namespace ggo
 {
-  template <typename color_t> color_t white()
+  template <typename color_t> constexpr color_t white()
   { 
-    const auto v = color_traits<color_t>::max;
+    using color_traits = typename color_traits<color_t>;
+
+    if constexpr (color_traits::color_space == color_space::rgba)
+    {
+      return color_t(color_traits::max, color_traits::max, color_traits::max, color_traits::max);
+    }
+    else if constexpr (color_traits::color_space == color_space::rgb)
+    {
+      return color_t(color_traits::max, color_traits::max, color_traits::max);
+    }
+    else if constexpr (color_traits::color_space == color_space::ya)
+    {
+      return color_t(color_traits::max, color_traits::max);
+    }
+    else
+    {
+      static_assert(color_traits::color_space == color_space::y);
+      return color_t(color_traits::max);
+    }
+  }
+
+  template <typename color_t> constexpr color_t gray()
+  { 
+    constexpr auto v = color_traits<color_t>::max / 2;
     return color_t(v, v, v);
   }
 
-  template <typename color_t> color_t gray()
+  template <typename color_t> constexpr color_t black()
   { 
-    using sample_t = typename color_traits<color_t>::sample_t;
-    const sample_t v = color_traits<color_t>::max / 2;
-    return color_t(v, v, v);
+    using color_traits = typename color_traits<color_t>;
+    using sample_t = typename color_traits::sample_t;
+
+    if constexpr (color_traits::color_space == color_space::rgba)
+    {
+      return color_t(sample_t(0), sample_t(0), sample_t(0), color_traits::max);
+    }
+    else if constexpr (color_traits::color_space == color_space::rgb)
+    {
+      return color_t(sample_t(0), sample_t(0), sample_t(0));
+    }
+    else if constexpr (color_traits::color_space == color_space::ya)
+    {
+      return color_t(sample_t(0), color_traits::max);
+    }
+    else
+    {
+      static_assert(color_traits::color_space == color_space::y);
+      return color_t(sample_t(0));
+    }
   }
 
-  template <typename color_t> color_t black()
+  template <typename color_t> constexpr color_t red()
   { 
     using sample_t = typename color_traits<color_t>::sample_t;
-    return color_t(sample_t(0), sample_t(0), sample_t(0));
-  }
-
-  template <typename color_t> color_t red()
-  { 
-    using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(0), sample_t(0));
   }
 
-  template <typename color_t> color_t green()
+  template <typename color_t> constexpr color_t green()
   { 
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), v, sample_t(0));
   }
 
-  template <typename color_t> color_t blue()
+  template <typename color_t> constexpr color_t blue()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), sample_t(0), v);
   }
 
-  template <typename color_t> color_t cyan()
+  template <typename color_t> constexpr color_t cyan()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(sample_t(0), v, v);
   }
 
-  template <typename color_t> color_t magenta()
+  template <typename color_t> constexpr color_t magenta()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(0), v);
   }
 
-  template <typename color_t> color_t yellow()
+  template <typename color_t> constexpr color_t yellow()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(v, v, sample_t(0));
   }
 
-  template <typename color_t> color_t orange()
+  template <typename color_t> constexpr color_t orange()
   {
     using sample_t = typename color_traits<color_t>::sample_t;
-    const auto v = color_traits<color_t>::max;
+    constexpr auto v = color_traits<color_t>::max;
     return color_t(v, sample_t(v / 2), sample_t(0));
   }
 
-  inline ggo::rgb_8u white_8u()     { return ggo::white<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u gray_8u()      { return ggo::gray<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u black_8u()     { return ggo::black<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u red_8u()       { return ggo::red<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u green_8u()     { return ggo::green<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u blue_8u()      { return ggo::blue<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u cyan_8u()      { return ggo::cyan<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u magenta_8u()   { return ggo::magenta<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u yellow_8u()    { return ggo::yellow<ggo::rgb_8u>(); }
-  inline ggo::rgb_8u orange_8u()    { return ggo::orange<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u white_8u()     { return ggo::white<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u gray_8u()      { return ggo::gray<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u black_8u()     { return ggo::black<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u red_8u()       { return ggo::red<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u green_8u()     { return ggo::green<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u blue_8u()      { return ggo::blue<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u cyan_8u()      { return ggo::cyan<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u magenta_8u()   { return ggo::magenta<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u yellow_8u()    { return ggo::yellow<ggo::rgb_8u>(); }
+  inline constexpr ggo::rgb_8u orange_8u()    { return ggo::orange<ggo::rgb_8u>(); }
 
-  inline ggo::rgb_32f white_32f()   { return ggo::white<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f gray_32f()    { return ggo::gray<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f black_32f()   { return ggo::black<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f red_32f()     { return ggo::red<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f green_32f()   { return ggo::green<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f blue_32f()    { return ggo::blue<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f cyan_32f()    { return ggo::cyan<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f magenta_32f() { return ggo::magenta<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f yellow_32f()  { return ggo::yellow<ggo::rgb_32f>(); }
-  inline ggo::rgb_32f orange_32f()  { return ggo::orange<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f white_32f()   { return ggo::white<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f gray_32f()    { return ggo::gray<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f black_32f()   { return ggo::black<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f red_32f()     { return ggo::red<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f green_32f()   { return ggo::green<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f blue_32f()    { return ggo::blue<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f cyan_32f()    { return ggo::cyan<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f magenta_32f() { return ggo::magenta<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f yellow_32f()  { return ggo::yellow<ggo::rgb_32f>(); }
+  inline constexpr ggo::rgb_32f orange_32f()  { return ggo::orange<ggo::rgb_32f>(); }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -548,20 +582,20 @@ namespace ggo
 namespace ggo
 {
   template <typename color_t>
-  struct accumulator
+  struct color_accumulator
   {
   };
 
   template <>
-  struct accumulator<uint8_t>
+  struct color_accumulator<uint8_t>
   {
-    int _acc = 0;
+    uint32_t _acc = 0;
     void add(uint8_t c) { _acc += c; }
-    template <int count> uint8_t div() const { return (_acc + count / 2) / count; }
+    template <uint32_t count> uint8_t div() const { return (_acc + count / 2) / count; }
   };
 
   template <>
-  struct accumulator<rgb_8u>
+  struct color_accumulator<rgb_8u>
   {
     uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0;
     void add(const rgb_8u & c) { _r += c.r(); _g += c.g(); _b += c.b(); }
@@ -574,10 +608,10 @@ namespace ggo
   };
 
   template <>
-  struct accumulator<rgba_8u>
+  struct color_accumulator<rgba_8u>
   {
     uint32_t _r = 0; uint32_t _g = 0; uint32_t _b = 0; uint32_t _a = 0;
-    void add(const rgba_8u & c) { _r += c.a() * c.r(); _g += c.a() * c.g(); _b += c.a() * c.b(); _a *= c.a(); }
+    void add(const rgba_8u & c) { _r += c.a() * c.r(); _g += c.a() * c.g(); _b += c.a() * c.b(); _a += c.a(); }
     template <uint32_t count> rgba_8u div() const {
       if (_a == 0)
       {
@@ -595,7 +629,7 @@ namespace ggo
   };
 
   template <>
-  struct accumulator<float>
+  struct color_accumulator<float>
   {
     float _acc = 0.f;
     void add(float c) { _acc += c; }
@@ -603,7 +637,7 @@ namespace ggo
   };
 
   template <>
-  struct accumulator<rgb_32f>
+  struct color_accumulator<rgb_32f>
   {
     float _r = 0.f; float _g = 0.f; float _b = 0.f;
     void add(const rgb_32f & c) { _r += c.r(); _g += c.g(); _b += c.b(); }

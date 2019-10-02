@@ -11,8 +11,6 @@ GGO_TEST(kdtree, random_points)
   const int size = 500;
   const float radius = 50;
 
-  std::vector<uint8_t> buffer(3 * size * size, 0);
-
   // Create random points.
   using tree_point = ggo::kdtree<void *, ggo::vec2_f>::data_point;
   std::vector<tree_point> points;
@@ -23,11 +21,12 @@ GGO_TEST(kdtree, random_points)
     points.push_back({ { x, y }, nullptr });
   }
 
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, ggo::disc_f({ size / 2.f, size / 2.f }, radius), ggo::red_8u());
+  ggo::image_t<ggo::pixel_type::rgb_8u> image({ size, size });
+  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ size / 2.f, size / 2.f }, radius), ggo::red_8u());
 
   for (const auto & point : points)
   {
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, ggo::disc_f({ point._pos.x(), point._pos.y() }, 2.f), ggo::white_8u());
+    ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ point._pos.x(), point._pos.y() }, 2.f), ggo::white_8u());
   }
 
   ggo::kdtree<void *, ggo::vec2_f> tree(points);
@@ -35,8 +34,8 @@ GGO_TEST(kdtree, random_points)
 
   for (const auto & point : inside_points)
   {
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer.data(), size, size, 3 * size, ggo::disc_f({ point._pos.x(), point._pos.y() }, 2.f), ggo::blue_8u());
+    ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ point._pos.x(), point._pos.y() }, 2.f), ggo::blue_8u());
   }
 
-  ggo::save_bmp("kdtree.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
+  ggo::save_bmp("kdtree.bmp", image);
 }
