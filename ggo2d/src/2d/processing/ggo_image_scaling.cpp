@@ -39,7 +39,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   image scale(const image & input, ggo::size output_size)
   {
-    if (output_size.width() <= 0 || output_size.height() <= 0)
+    if (output_si ze.width() <= 0 || output_size.height() <= 0)
     {
       throw std::runtime_error("negative or null scaling output dimension");
     }

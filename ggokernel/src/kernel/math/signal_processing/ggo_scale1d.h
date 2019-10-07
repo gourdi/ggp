@@ -114,13 +114,13 @@ namespace ggo
 
     // Remove first block.
     data_t a = in(from_i + 1) - in(from_i);
-    data_t b = in(from_i) - a * from_i;
-    val -= a * (from * from - from_i * from_i) / 2 + b * (from - from_i);
+    data_t b = in(from_i) - a * static_cast<real_t>(from_i);
+    val -= a * (from * from - from_i * from_i) / static_cast<real_t>(2) + b * (from - from_i);
 
     // Remove last block.
     a = in(to_i) - in(to_i - 1);
-    b = in(to_i - 1) - a * (to_i - 1);
-    val -= a * (to_i * to_i - to * to) / 2 + b * (to_i - to);
+    b = in(to_i - 1) - a * static_cast<real_t>(to_i - 1);
+    val -= a * (to_i * to_i - to * to) / static_cast<real_t>(2) + b * (to_i - to);
 
     return val;
   }

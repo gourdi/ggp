@@ -1,34 +1,25 @@
-#include <kernel/nonreg/ggo_nonreg.h>
-#include <kernel/memory/ggo_array.h>
-#include <kernel/math/signal_processing/ggo_scale2d.h>
+#include "ggo_2d_nonreg.h"
+#include <2d/processing/ggo_scaling.h>
 #include <2d/io/ggo_bmp.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scaling, y32f)
 {
-  ggo::array2d_32f input({
-    { 1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, },
-    { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, } });
+  auto input = make_image<ggo::pixel_type::y_32f, ggo::lines_order::down>(10, 10, {
+    1.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f });
 
-  ggo::array2d_32f output(100, 100);
+  auto output_linear = ggo::scale(input, { 100, 100 }, ggo::scaling_algo::linear_integration);
+  ggo::save_bmp("scaling_linear.bmp", output_linear);
 
-  ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
-    input.data(), input.width(), input.height(), int(sizeof(float) * input.width()),
-    output.data(), output.width(), output.height(), int(sizeof(float) * output.width()));
-
-  ggo::save_bmp("scaling_linear.bmp", output.data(), ggo::pixel_type::y_32f, ggo::lines_order::up, output.width(), output.height(), int(sizeof(float) * output.width()));
-
-  ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration>(
-    input.data(), input.width(), input.height(), int(sizeof(float) * input.width()),
-    output.data(), output.width(), output.height(), int(sizeof(float) * output.width()));
-
-  ggo::save_bmp("scaling_cubic.bmp", output.data(), ggo::pixel_type::y_32f, ggo::lines_order::up, output.width(), output.height(), int(sizeof(float) * output.width()));
+  auto output_bicubic = ggo::scale(input, { 100, 100 }, ggo::scaling_algo::cubic_integration);
+  ggo::save_bmp("scaling_cubic.bmp", output_bicubic);
 }

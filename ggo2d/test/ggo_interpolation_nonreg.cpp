@@ -56,6 +56,6 @@ namespace
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(interpolation2d, test)
 {
-  test_interpolation<linear_interpolation2d>("test_bilinear.bmp");
-  test_interpolation<cubic_interpolation2d>("test_bicubic.bmp");
+  test_interpolation<linear_interpolation2d>("interpolate_bilinear.bmp");
+  test_interpolation<cubic_interpolation2d>("interpolate_bicubic.bmp");
 }
