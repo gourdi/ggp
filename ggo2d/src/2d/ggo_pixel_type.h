@@ -2,6 +2,7 @@
 #define __GGO_PIXEL_TYPE__
 
 #include <stdint.h>
+#include <kernel/memory/ggo_iterator.h>
 #include <2d/ggo_color.h>
 
 namespace ggo
@@ -340,46 +341,22 @@ namespace ggo
 // Static iterators.
 namespace ggo
 {
-  template <typename subtype_t, pixel_type pt, typename void_ptr_t> // <= curiously recurring template pattern, for easy + and - operators returning subclass types.
-  struct pixel_type_iterator_t
-  {
-    pixel_type_iterator_t(void_ptr_t ptr) : _ptr(ptr) {}
-
-    void_ptr_t _ptr;
-
-    static constexpr std::ptrdiff_t byte_offset = pixel_type_traits<pt>::pixel_byte_size;
-
-    void operator++() { _ptr = ggo::move_ptr(_ptr,  byte_offset); }
-    void operator--() { _ptr = ggo::move_ptr(_ptr, -byte_offset); }
-    bool operator==(const pixel_type_iterator_t & it) { return _ptr == it._ptr; }
-    bool operator!=(const pixel_type_iterator_t & it) { return _ptr != it._ptr; }
-
-    subtype_t operator+(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr,  byte_offset * delta)); }
-    subtype_t operator-(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr, -byte_offset * delta)); }
-  };
-
-  template <typename subtype_t, pixel_type pt, typename void_ptr_t>
-  auto distance(const pixel_type_iterator_t<subtype_t, pt, void_ptr_t> & it1, const pixel_type_iterator_t<subtype_t, pt, void_ptr_t> & it2)
-  {
-    return (static_cast<const char *>(it2._ptr) - static_cast<const char *>(it1._ptr)) / pixel_type_traits<pt>::pixel_byte_size;
-  }
-
   template <pixel_type pt>
-  struct input_pixel_type_iterator_t final : public ggo::pixel_type_iterator_t<input_pixel_type_iterator_t<pt>, pt, const void *>
+  struct input_pixel_type_iterator_t final : public ggo::void_iterator_t<input_pixel_type_iterator_t<pt>, pixel_type_traits<pt>::pixel_byte_size, const void *>
   {
     using data_t = typename pixel_type_traits<pt>::color_t;
 
-    input_pixel_type_iterator_t(const void * ptr) : pixel_type_iterator_t(ptr) {}
+    input_pixel_type_iterator_t(const void * ptr) : void_iterator_t(ptr) {}
 
-    data_t get(std::ptrdiff_t delta) const { return pixel_type_traits<pt>::read(ggo::move_ptr(_ptr, byte_offset * delta)); }
+    data_t get(std::ptrdiff_t delta) const { return pixel_type_traits<pt>::read(ggo::move_ptr(_ptr, pixel_type_traits<pt>::pixel_byte_size * delta)); }
   };
 
   template <pixel_type pt>
-  struct output_pixel_type_iterator_t final : public ggo::pixel_type_iterator_t<output_pixel_type_iterator_t<pt>, pt, void *>
+  struct output_pixel_type_iterator_t final : public ggo::void_iterator_t<output_pixel_type_iterator_t<pt>, pixel_type_traits<pt>::pixel_byte_size, void *>
   {
     using data_t = typename pixel_type_traits<pt>::color_t;
 
-    output_pixel_type_iterator_t(void * ptr) : pixel_type_iterator_t(ptr) {}
+    output_pixel_type_iterator_t(void * ptr) : void_iterator_t(ptr) {}
 
     void set(const data_t & color) { pixel_type_traits<pt>::write(_ptr, color); }
   };
@@ -388,46 +365,22 @@ namespace ggo
 // Dynamic iterators.
 namespace ggo
 {
-  template <typename subtype_t, typename void_ptr_t> // <= curiously recurring template pattern, for easy + and - operators returning subclass types.
-  struct pixel_type_iterator
-  {
-    pixel_type_iterator(void_ptr_t ptr, std::ptrdiff_t byte_offset) : _ptr(ptr), _byte_offset(byte_offset) {}
-
-    void_ptr_t _ptr;
-    const std::ptrdiff_t _byte_offset;
-
-    void operator++() { _ptr = ggo::move_ptr(_ptr,  _byte_offset); }
-    void operator--() { _ptr = ggo::move_ptr(_ptr, -_byte_offset); }
-    bool operator==(const pixel_type_iterator & it) { return _ptr == it._ptr; }
-    bool operator!=(const pixel_type_iterator & it) { return _ptr != it._ptr; }
-
-    subtype_t operator+(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr,  _byte_offset * delta), _byte_offset); }
-    subtype_t operator-(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr, -_byte_offset * delta), _byte_offset); }
-  };
-
-  template <typename subtype_t, typename void_ptr_t>
-  auto distance(const pixel_type_iterator<subtype_t, void_ptr_t> & it1, const pixel_type_iterator<subtype_t, void_ptr_t> & it2)
-  {
-    GGO_ASSERT_EQ(it1._byte_offset, it1._byte_offset);
-    return (static_cast<const char *>(it2._ptr) - static_cast<const char *>(it1._ptr)) / it1._byte_offset;
-  }
-
   template <pixel_type pt>
-  struct input_pixel_type_iterator final : public ggo::pixel_type_iterator<input_pixel_type_iterator<pt>, const void *>
+  struct input_pixel_type_iterator final : public ggo::void_iterator<input_pixel_type_iterator<pt>, const void *>
   {
     using data_t = typename pixel_type_traits<pt>::color_t;
 
-    input_pixel_type_iterator(const void * ptr, std::ptrdiff_t byte_offset) : pixel_type_iterator(ptr, byte_offset) {}
+    input_pixel_type_iterator(const void * ptr, std::ptrdiff_t byte_offset) : void_iterator(ptr, byte_offset) {}
 
     data_t get(std::ptrdiff_t delta) const { return pixel_type_traits<pt>::read(ggo::move_ptr(_ptr, _byte_offset * delta)); }
   };
 
   template <pixel_type pt>
-  struct output_pixel_type_iterator final : public ggo::pixel_type_iterator<output_pixel_type_iterator<pt>, void *>
+  struct output_pixel_type_iterator final : public ggo::void_iterator<output_pixel_type_iterator<pt>, void *>
   {
     using data_t = typename pixel_type_traits<pt>::color_t;
 
-    output_pixel_type_iterator(void * ptr, std::ptrdiff_t byte_offset) : pixel_type_iterator(ptr, byte_offset) {}
+    output_pixel_type_iterator(void * ptr, std::ptrdiff_t byte_offset) : void_iterator(ptr, byte_offset) {}
 
     void set(const data_t & color) { pixel_type_traits<pt>::write(_ptr, color); }
   };

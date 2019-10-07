@@ -50,6 +50,33 @@ namespace ggo
   }
 }
 
+// Void * static iterator.
+namespace ggo
+{
+  template <typename subtype_t, std::ptrdiff_t byte_offset, typename void_ptr_t> // <= curiously recurring template pattern, for easy + and - operators returning subclass types.
+  struct void_iterator_t
+  {
+    void_iterator_t(void_ptr_t ptr) : _ptr(ptr) {}
+
+    void_ptr_t _ptr;
+
+    void operator++() { _ptr = ggo::move_ptr(_ptr, byte_offset); }
+    void operator--() { _ptr = ggo::move_ptr(_ptr, -byte_offset); }
+    bool operator==(const void_iterator_t & it) { return _ptr == it._ptr; }
+    bool operator!=(const void_iterator_t & it) { return _ptr != it._ptr; }
+
+    subtype_t operator+(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr,  byte_offset * delta)); }
+    subtype_t operator-(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr, -byte_offset * delta)); }
+  };
+
+  template <typename subtype_t, std::ptrdiff_t byte_offset, typename void_ptr_t>
+  auto distance(const void_iterator_t<subtype_t, byte_offset, void_ptr_t> & it1, const void_iterator_t<subtype_t, byte_offset, void_ptr_t> & it2)
+  {
+    return (static_cast<const char *>(it2._ptr) - static_cast<const char *>(it1._ptr)) / byte_offset;
+  }
+}
+
+// Dynamic iterator.
 namespace ggo
 {
   template <typename subtype_t, typename ptr_t> // <= curiously recurring template pattern, for easy + and - operators returning subclass types.
@@ -97,6 +124,34 @@ namespace ggo
     GGO_ASSERT_EQ(it1._offset, it2._offset);
 
     return (it2._ptr - it1._ptr) / it1._offset;
+  }
+}
+
+// Void * dynamic iterator.
+namespace ggo
+{
+  template <typename subtype_t, typename void_ptr_t> // <= curiously recurring template pattern, for easy + and - operators returning subclass types.
+  struct void_iterator
+  {
+    void_iterator(void_ptr_t ptr, std::ptrdiff_t byte_offset) : _ptr(ptr), _byte_offset(byte_offset) {}
+
+    void_ptr_t _ptr;
+    const std::ptrdiff_t _byte_offset;
+
+    void operator++() { _ptr = ggo::move_ptr(_ptr, _byte_offset); }
+    void operator--() { _ptr = ggo::move_ptr(_ptr, -_byte_offset); }
+    bool operator==(const void_iterator & it) { return _ptr == it._ptr; }
+    bool operator!=(const void_iterator & it) { return _ptr != it._ptr; }
+
+    subtype_t operator+(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr, _byte_offset * delta), _byte_offset); }
+    subtype_t operator-(std::ptrdiff_t delta) const { return subtype_t(ggo::move_ptr(_ptr, -_byte_offset * delta), _byte_offset); }
+  };
+
+  template <typename subtype_t, typename void_ptr_t>
+  auto distance(const void_iterator<subtype_t, void_ptr_t> & it1, const void_iterator<subtype_t, void_ptr_t> & it2)
+  {
+    GGO_ASSERT_EQ(it1._byte_offset, it1._byte_offset);
+    return (static_cast<const char *>(it2._ptr) - static_cast<const char *>(it1._ptr)) / it1._byte_offset;
   }
 }
 

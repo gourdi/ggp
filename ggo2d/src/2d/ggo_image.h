@@ -257,7 +257,6 @@ namespace ggo
     image_base(const image_base & image) = delete;
     void operator=(const image_base & image) = delete;
 
-
     // Read interface.
     const void *  data() const { return _buffer; }
     const void *  line_ptr(int y) const { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _lines_order); }
