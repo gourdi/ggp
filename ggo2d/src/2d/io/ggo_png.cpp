@@ -1,6 +1,6 @@
 #include "ggo_png.h"
 #include <kernel/memory/ggo_array.h>
-#include <2d/ggo_blit.h>
+#include <2d/processing/ggo_blit.h>
 #include <png.h>
 
 namespace ggo
@@ -47,6 +47,11 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   bool save_png(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order lines_order, int width, int height, int line_byte_step)
   {
+    ggo::image i1({ 10, 10 }, ggo::pixel_type::rgb_8u, ggo::lines_order::up);
+    ggo::image i2({ 10, 10 }, ggo::pixel_type::rgb_8u, ggo::lines_order::up);
+    ggo::blit(i1, i2, 0, 0);
+
+
     png_image png_image;
 
     memset(&png_image, 0, sizeof(png_image));
@@ -75,24 +80,24 @@ namespace ggo
         return false;
       }
       break;
-    case lines_order::down:
-      switch (pixel_type)
-      {
-      case ggo::pixel_type::bgr_8u:
-        png_image.format = PNG_FORMAT_RGB;
-        image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
-        ggo::blit<ggo::pixel_type::bgr_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
-          buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
-        break;
-      case ggo::pixel_type::rgb_8u:
-        png_image.format = PNG_FORMAT_RGB;
-        image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
-        ggo::blit<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
-          buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
-        break;
-      default:
-        return false;
-      }
+    //case lines_order::down:
+    //  switch (pixel_type)
+    //  {
+    //  //case ggo::pixel_type::bgr_8u:
+    //  //  png_image.format = PNG_FORMAT_RGB;
+    //  //  image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+    //  //  ggo::blit<ggo::pixel_type::bgr_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
+    //  //    buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
+    //  //  break;
+    //  //case ggo::pixel_type::rgb_8u:
+    //  //  png_image.format = PNG_FORMAT_RGB;
+    //  //  image = std::make_unique<ggo::image>(ggo::size(width, height), ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+    //  //  ggo::blit<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::pixel_type::rgb_8u, ggo::lines_order::down>(
+    //  //    buffer, width, height, line_byte_step, image->data(), width, height, image->line_byte_step());
+    //  //  break;
+    //  default:
+    //    return false;
+    //  }
     default:
       return false;
     }

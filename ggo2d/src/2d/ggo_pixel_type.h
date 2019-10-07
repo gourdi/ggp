@@ -433,6 +433,5 @@ namespace ggo
   };
 }
 
-
 #endif
 

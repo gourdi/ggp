@@ -28,6 +28,8 @@ namespace ggo
   };
 
   using ya_8u = ggo::ya<uint8_t>;
+  using ya_16u = ggo::ya<uint16_t>;
+  using ya_32u = ggo::ya<uint32_t>;
   using ya_32f = ggo::ya<float>;
 
   // RGB
@@ -91,6 +93,13 @@ namespace ggo
     rgb,
     rgba
   };
+
+  inline constexpr color_space add_alpha(color_space cs)
+  {
+    if (cs == color_space::y) return color_space::ya;
+    if (cs == color_space::rgb) return color_space::rgba;
+    return cs;
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -105,6 +114,7 @@ namespace ggo
   {
     using floating_point_color_t = float;
     using no_alpha_color_t = uint8_t;
+    using alpha_color_t = ggo::ya_8u;
     using sample_t = uint8_t;
     static constexpr uint8_t max = 0xff;
     static constexpr color_space color_space = color_space::y;
@@ -117,6 +127,7 @@ namespace ggo
   {
     using floating_point_color_t = float;
     using no_alpha_color_t = uint16_t;
+    using alpha_color_t = ggo::ya_16u;
     using sample_t = uint16_t;
     static constexpr uint16_t max = 0xffff;
     static constexpr color_space color_space = color_space::y;
@@ -129,6 +140,7 @@ namespace ggo
   {
     using floating_point_color_t = float;
     using no_alpha_color_t = uint32_t;
+    using alpha_color_t = ggo::ya_32u;
     using sample_t = uint32_t;
     static constexpr uint32_t max = 0xffffffff;
     static constexpr color_space color_space = color_space::y;
@@ -141,6 +153,7 @@ namespace ggo
   {
     using floating_point_color_t = float;
     using no_alpha_color_t = float;
+    using alpha_color_t = ggo::ya_32f;
     using sample_t = float;
     static constexpr float max = 1.f;
     static constexpr color_space color_space = color_space::y;
@@ -153,8 +166,35 @@ namespace ggo
   {
     using floating_point_color_t = ya_32f;
     using no_alpha_color_t = uint8_t;
+    using alpha_color_t = ggo::ya_8u;
     using sample_t = uint8_t;
-    static constexpr float max = 0xff;
+    static constexpr uint8_t max = 0xff;
+    static constexpr color_space color_space = color_space::ya;
+    static constexpr int samples_count = 2;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ya_16u>
+  {
+    using floating_point_color_t = ya_32f;
+    using no_alpha_color_t = uint16_t;
+    using alpha_color_t = ggo::ya_16u;
+    using sample_t = uint16_t;
+    static constexpr uint16_t max = 0xffff;
+    static constexpr color_space color_space = color_space::ya;
+    static constexpr int samples_count = 2;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
+  struct color_traits<ya_32u>
+  {
+    using floating_point_color_t = ya_32f;
+    using no_alpha_color_t = uint32_t;
+    using alpha_color_t = ggo::ya_32u;
+    using sample_t = uint32_t;
+    static constexpr uint32_t max = 0xffffffff;
     static constexpr color_space color_space = color_space::ya;
     static constexpr int samples_count = 2;
     static constexpr bool has_alpha = true;
@@ -165,6 +205,7 @@ namespace ggo
   {
     using floating_point_color_t = ya_32f;
     using no_alpha_color_t = float;
+    using alpha_color_t = ggo::ya_32f;
     using sample_t = float;
     static constexpr float max = 1.f;
     static constexpr color_space color_space = color_space::ya;
@@ -238,6 +279,19 @@ namespace ggo
   };
 
   template <>
+  struct color_traits<ggo::rgba_16u>
+  {
+    using floating_point_color_t = ggo::rgba_32f;
+    using no_alpha_color_t = ggo::rgb_16u;
+    using alpha_color_t = ggo::rgba_16u;
+    using sample_t = uint16_t;
+    static constexpr uint16_t max = 0xffff;
+    static constexpr color_space color_space = color_space::rgba;
+    static constexpr int samples_count = 4;
+    static constexpr bool has_alpha = true;
+  };
+
+  template <>
   struct color_traits<ggo::rgba_32u>
   {
     using floating_point_color_t = ggo::rgba_32f;
@@ -262,6 +316,48 @@ namespace ggo
     static constexpr int samples_count = 4;
     static constexpr bool has_alpha = true;
   };
+}
+
+namespace ggo
+{
+  template <typename color_t>
+  using add_alpha_t = typename color_traits<color_t>::alpha_color_t;
+
+  template <typename color_t>
+  constexpr bool has_alpha_v = color_traits<color_t>::has_alpha;
+
+  template <typename color_t>
+  using sample_type_t = typename color_traits<color_t>::sample_t;
+}
+
+//
+namespace ggo
+{
+  template <color_space color_space, typename sample_t>
+  struct color_type {};
+
+  template <> struct color_type<ggo::color_space::y, uint8_t> { using type = uint8_t; };
+  template <> struct color_type<ggo::color_space::y, uint16_t> { using type = uint16_t; };
+  template <> struct color_type<ggo::color_space::y, uint32_t> { using type = uint32_t; };
+  template <> struct color_type<ggo::color_space::y, float> { using type = float; };
+
+  template <> struct color_type<ggo::color_space::ya, uint8_t> { using type = ya_8u; };
+  template <> struct color_type<ggo::color_space::ya, uint16_t> { using type = ya_16u; };
+  template <> struct color_type<ggo::color_space::ya, uint32_t> { using type = ya_32u; };
+  template <> struct color_type<ggo::color_space::ya, float> { using type = ya_32f; };
+
+  template <> struct color_type<ggo::color_space::rgb, uint8_t> { using type = rgb_8u; };
+  template <> struct color_type<ggo::color_space::rgb, uint16_t> { using type = rgb_16u; };
+  template <> struct color_type<ggo::color_space::rgb, uint32_t> { using type = rgb_32u; };
+  template <> struct color_type<ggo::color_space::rgb, float> { using type = rgb_32f; };
+
+  template <> struct color_type<ggo::color_space::rgba, uint8_t> { using type = rgba_8u; };
+  template <> struct color_type<ggo::color_space::rgba, uint16_t> { using type = rgba_16u; };
+  template <> struct color_type<ggo::color_space::rgba, uint32_t> { using type = rgba_32u; };
+  template <> struct color_type<ggo::color_space::rgba, float> { using type = rgba_32f; };
+
+  template <color_space color_space, typename sample_t>
+  using color_type_t = typename color_type<color_space, sample_t>::type;
 }
 
 // The following traits makes it possible to have a floating point color type of a given precision.
@@ -331,8 +427,8 @@ namespace ggo
   template <> inline uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
   // 32f => 16u
   template <> inline uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
-  // 32f => 32u
-  template <> inline uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  // 32f => 32u (here we need to go 'double' because of numerical imprecisions)
+  template <> inline uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(static_cast<double>(s), 0., 1.) + 0.5); }
 
   template <typename sample_t>
   sample_t rgb_to_y(sample_t r, sample_t g, sample_t b)
@@ -407,9 +503,9 @@ namespace ggo
           convert_sample_to<color_traits_out::sample_t>(c.g()),
           convert_sample_to<color_traits_out::sample_t>(c.b()) };
       }
-      else // rgb => rgb
+      else // rgb => rgba
       {
-        static_asssert(color_traits_out::color_space == color_space::rgba);
+        static_assert(color_traits_out::color_space == color_space::rgba);
         return {
           convert_sample_to<color_traits_out::sample_t>(c.r()),
           convert_sample_to<color_traits_out::sample_t>(c.g()),
@@ -422,11 +518,11 @@ namespace ggo
       static_assert(color_traits_in::color_space == color_space::rgba);
       if constexpr(color_traits_out::color_space == color_space::y) // rgba => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c.g(), c.b()));
+        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // rgba => y
       {
-        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c._t, c.g(), c.b())), color_traits_out::max };
+        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // rgba => rgb
       {

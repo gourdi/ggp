@@ -66,7 +66,7 @@ GGO_TEST(gaussian_blur, y_8u)
   GGO_CHECK(test_y_8u<ggo::lines_order::down>());
 }
 
-#define GGO_BENCH 1
+//#define GGO_BENCH 1
 
 namespace
 {

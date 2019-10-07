@@ -90,7 +90,14 @@ namespace ggo
     {
       static void dump(const data_t * ptr, std::ostream & os)
       {
-        os << ptr[0] << "; ";
+        if constexpr (std::is_same_v<data_t, uint8_t>)
+        {
+          os << static_cast<int>(ptr[0]) << "; ";
+        }
+        else
+        {
+          os << ptr[0] << "; ";
+        }
         ggo::details::dump_t<data_t, count - 1>::dump(ptr + 1, os);
       }
     };
@@ -100,7 +107,14 @@ namespace ggo
     {
       static void dump(const data_t * ptr, std::ostream & os)
       {
-        os << ptr[0];
+        if constexpr (std::is_same_v<data_t, uint8_t>)
+        {
+          os << static_cast<int>(ptr[0]);
+        }
+        else
+        {
+          os << ptr[0];
+        }
       }
     };
   }
@@ -163,6 +177,16 @@ namespace ggo
 inline constexpr uint8_t operator "" _u8(unsigned long long v) noexcept
 {
   return static_cast<uint8_t>(v);
+}
+
+inline constexpr uint16_t operator "" _u16(unsigned long long v) noexcept
+{
+  return static_cast<uint16_t>(v);
+}
+
+inline constexpr uint32_t operator "" _u32(unsigned long long v) noexcept
+{
+  return static_cast<uint32_t>(v);
 }
 
 #endif

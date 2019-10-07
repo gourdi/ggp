@@ -16,7 +16,6 @@ namespace ggo
   public:
 
     using color_t = typename pixel_type_traits<pixel_type_>::color_t;
-    using view_t = typename image_base_t<pixel_type_, memory_lines_order_, void_ptr_t, false>;
 
     template <typename = typename std::enable_if_t<owns_buffer>>
     image_base_t(const ggo::size & s, int line_byte_step)
@@ -268,7 +267,7 @@ namespace ggo
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, lines_order); }
+    void *        line_ptr(int y) { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _memory_lines_order); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        pixel_ptr(int x, int y) { return ggo::get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _memory_lines_order, pixel_byte_size()); }
 
@@ -284,27 +283,6 @@ namespace ggo
   using const_image_view = image_base<const void *, false>;
   using image_view = image_base<void *, false>;
   using image = image_base<void *, true>;
-}
-
-namespace ggo
-{
-  template <typename image1_t, typename image2_t>
-  std::optional<std::pair<typename image1_t::view_t, typename image2_t::view_t>> create_intersection_views(image1_t & image1, image2_t & image2, int left, int bottom)
-  {
-    auto view1 = image1.create_view(rect_int::from_left_width_bottom_height(-left, image2.width(), -bottom, image2.height()));
-    if (!view1)
-    {
-      return {};
-    }
-
-    auto view2 = image2.create_view(rect_int::from_left_width_bottom_height(left, image1.width(), bottom, image1.height()));
-    if (!view2)
-    {
-      return {};
-    }
-
-    return std::pair<typename image1_t::view_t, typename image2_t::view_t>(std::move(*view1), std::move(*view2));
-  }
 }
 
 namespace ggo
