@@ -39,27 +39,11 @@ namespace ggo
   {
     using color_t = typename pixel_type_traits<image_pixel_type>::color_t;
 
-    if constexpr (has_alpha_v<color_t>)
+    if constexpr (has_alpha_v<color_t> == true)
     {
       constexpr auto b = black<color_t>();
 
-      const int w = image.width();
-      const int h = image.height();
-
-      void * ptr = image.data();
-
-      for (int y = 0; y < h; ++y)
-      {
-        void * line_ptr = ptr;
-
-        for (int x = 0; x < w; ++x)
-        {
-          pixel_type_traits<image_pixel_type>::write(line_ptr, b);
-          line_ptr = move_ptr<image.pixel_byte_size()>(line_ptr);
-        }
-
-        ptr = move_ptr(ptr, image.line_byte_step());
-      }
+      fill_solid(image, b);
     }
     else
     {
@@ -82,7 +66,7 @@ namespace ggo
   {
     using color_t = typename image_type::color_t;
 
-    constexpr auto black = black<color_t>();
+    constexpr auto b = black<color_t>();
 
     const int w = image.width();
     const int h = image.height();
@@ -91,7 +75,7 @@ namespace ggo
     {
       for (int x = 0; x < w; ++x)
       {
-        image.write_pixel(x, y, black);
+        image.write_pixel(x, y, b);
       }
     }
   }

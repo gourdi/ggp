@@ -5,18 +5,21 @@
 
 namespace ggo
 {
-  template <typename color_t>
+  template <typename color_t_>
   class rle_image
   {
   public:
 
+    using color_t = color_t_;
+
                               rle_image(int width, int height, const color_t & fill_value = color_t(0), int cache_size = 8);
 
-    void                      set(int x, int y, const color_t & value);
-    color_t                   get(int x, int y) const;
+    void                      write_pixel(int x, int y, const color_t & value);
+    color_t                   read_pixel(int x, int y) const;
 
     int                       width() const { return _width; }
     int                       height() const { return static_cast<int>(_rle_lines.size()); }
+    ggo::size                 size() const { return { width(), height() }; }
 
     // No copy.
                               rle_image(const rle_image<color_t> & rhs) = delete;
@@ -53,7 +56,7 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename color_t>
-  void rle_image<color_t>::set(int x, int y, const color_t & value)
+  void rle_image<color_t>::write_pixel(int x, int y, const color_t & value)
   {
     auto & cache_line = get_cache_line(y);
 
@@ -62,7 +65,7 @@ namespace ggo
   
   /////////////////////////////////////////////////////////////////////
   template <typename color_t>
-  color_t rle_image<color_t>::get(int x, int y) const
+  color_t rle_image<color_t>::read_pixel(int x, int y) const
   {
     const auto & cache_line = get_cache_line(y);
 
@@ -75,7 +78,7 @@ namespace ggo
   {
     GGO_ASSERT_BTW(y, 0, height() - 1);
 
-    // Check if the requiredd line already is in the cache.
+    // Check if the required line already is in the cache.
     auto find_func = [&](const std::pair<int, ggo::array<color_t, 1>> & cache_line) { return cache_line.first == y; };
     auto it = std::find_if(_cache_lines.begin(), _cache_lines.end(), find_func);
 

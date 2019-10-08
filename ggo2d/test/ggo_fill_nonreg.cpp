@@ -84,54 +84,56 @@ GGO_TEST(fill, fill_solid_bgra_8u_yd)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, fill_solid_rgb_32f_yu)
 {
-  //const int line_step = 10 * sizeof(float) + 1; // 1 extra byte per line.
-  //std::vector<uint8_t> buffer(4 * line_step, 0);
+  constexpr int line_step = 10 * sizeof(float) + 1; // 1 extra byte per line.
+  std::vector<uint8_t> buffer(4 * line_step, 0);
 
-  //auto fill_line = [](float * line, float start_value)
-  //{
-  //  line[0] = start_value + 0;
-  //  line[1] = start_value + 1;
-  //  line[2] = start_value + 2;
-  //  line[3] = start_value + 3;
-  //  line[4] = start_value + 4;
-  //  line[5] = start_value + 5;
-  //  line[6] = start_value + 6;
-  //  line[7] = start_value + 7;
-  //  line[8] = start_value + 8;
-  //  line[9] = start_value + 9;
-  //};
+  auto fill_line = [](float * line, float start_value)
+  {
+    line[0] = start_value + 0;
+    line[1] = start_value + 1;
+    line[2] = start_value + 2;
+    line[3] = start_value + 3;
+    line[4] = start_value + 4;
+    line[5] = start_value + 5;
+    line[6] = start_value + 6;
+    line[7] = start_value + 7;
+    line[8] = start_value + 8;
+    line[9] = start_value + 9;
+  };
 
-  //fill_line(reinterpret_cast<float *>(buffer.data() + 0 * line_step), 10);
-  //fill_line(reinterpret_cast<float *>(buffer.data() + 1 * line_step), 20);
-  //fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
-  //fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
+  fill_line(reinterpret_cast<float *>(buffer.data() + 0 * line_step), 10);
+  fill_line(reinterpret_cast<float *>(buffer.data() + 1 * line_step), 20);
+  fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
+  fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
 
-  //ggo::fill_solid<ggo::pixel_type::rgb_32f>(buffer.data(), 3, 4, line_step, { 97.f, 98.f, 99.f });
+  ggo::image_view_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> image(buffer.data(), { 3, 4 }, line_step);
 
-  //auto compare_line = [&](float * line, const std::vector<float> & expected)
-  //{
-  //  GGO_CHECK(line[0] == expected[0]);
-  //  GGO_CHECK(line[1] == expected[1]);
-  //  GGO_CHECK(line[2] == expected[2]);
-  //  GGO_CHECK(line[3] == expected[3]);
-  //  GGO_CHECK(line[4] == expected[4]);
-  //  GGO_CHECK(line[5] == expected[5]);
-  //  GGO_CHECK(line[6] == expected[6]);
-  //  GGO_CHECK(line[7] == expected[7]);
-  //  GGO_CHECK(line[8] == expected[8]);
-  //  GGO_CHECK(line[9] == expected[9]);
-  //};
+  ggo::fill_solid(image, { 97.f, 98.f, 99.f });
 
-  //compare_line(reinterpret_cast<float *>(buffer.data() + 0 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 19.f });
-  //compare_line(reinterpret_cast<float *>(buffer.data() + 1 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 29.f });
-  //compare_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 39.f });
-  //compare_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 49.f });
+  auto compare_line = [&](float * line, const std::vector<float> & expected)
+  {
+    GGO_CHECK(line[0] == expected[0]);
+    GGO_CHECK(line[1] == expected[1]);
+    GGO_CHECK(line[2] == expected[2]);
+    GGO_CHECK(line[3] == expected[3]);
+    GGO_CHECK(line[4] == expected[4]);
+    GGO_CHECK(line[5] == expected[5]);
+    GGO_CHECK(line[6] == expected[6]);
+    GGO_CHECK(line[7] == expected[7]);
+    GGO_CHECK(line[8] == expected[8]);
+    GGO_CHECK(line[9] == expected[9]);
+  };
 
-  //// Check stride remained untouched.
-  //GGO_CHECK_EQ(buffer[1 * line_step - 1], 0);
-  //GGO_CHECK_EQ(buffer[2 * line_step - 1], 0);
-  //GGO_CHECK_EQ(buffer[3 * line_step - 1], 0);
-  //GGO_CHECK_EQ(buffer[4 * line_step - 1], 0);
+  compare_line(reinterpret_cast<float *>(buffer.data() + 0 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 19.f });
+  compare_line(reinterpret_cast<float *>(buffer.data() + 1 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 29.f });
+  compare_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 39.f });
+  compare_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), { 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 97.f, 98.f, 99.f, 49.f });
+
+  // Check stride remained untouched.
+  GGO_CHECK_EQ(buffer[1 * line_step - 1], 0);
+  GGO_CHECK_EQ(buffer[2 * line_step - 1], 0);
+  GGO_CHECK_EQ(buffer[3 * line_step - 1], 0);
+  GGO_CHECK_EQ(buffer[4 * line_step - 1], 0);
 }
 
 /////////////////////////////////////////////////////////////////////

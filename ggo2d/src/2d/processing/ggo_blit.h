@@ -20,9 +20,12 @@ namespace ggo
       throw std::runtime_error("size mismatch");
     }
 
-    for (int y = 0; y < input_image.height(); ++y)
+    const int w = input_image.width();
+    const int h = input_image.height();
+
+    for (int y = 0; y < h; ++y)
     {
-      for (int x = 0; x < input_image.width(); ++x)
+      for (int x = 0; x < w; ++x)
       {
         if constexpr (has_alpha_v<input_color_t> == true)
         {
@@ -51,22 +54,26 @@ namespace ggo
       throw std::runtime_error("size mismatch");
     }
 
+    const int h = input_image.height();
+
     if constexpr (has_alpha_v<color_t> == true)
     {
-      for (int y = 0; y < input_image.height(); ++y)
+      const int w = input_image.width();
+
+      for (int y = 0; y < h; ++y)
       {
         const void * input_ptr = input_image.line_ptr(y);
         void * output_ptr = output_image.line_ptr(y);
 
-        for (int x = 0; x < input_image.width(); ++x)
+        for (int x = 0; x < w; ++x)
         {
           auto c1 = pixel_type_traits<pixel_type>::read(input_ptr);
           auto c2 = pixel_type_traits<pixel_type>::read(output_ptr);
           auto c3 = alpha_blend<color_t>(c2, c1);
           pixel_type_traits<pixel_type>::write(output_ptr, c3);
 
-          input_ptr = ggo::move_ptr(input_ptr, input_image.pixel_byte_size());
-          output_ptr = ggo::move_ptr(output_ptr, output_image.pixel_byte_size());
+          input_ptr = ggo::move_ptr<input_image.pixel_byte_size()>(input_ptr);
+          output_ptr = ggo::move_ptr<output_image.pixel_byte_size()>(output_ptr);
         }
       }
     }
@@ -74,7 +81,7 @@ namespace ggo
     {
       const int line_byte_size = input_image.width() * input_image.pixel_byte_size();
 
-      for (int y = 0; y < input_image.height(); ++y)
+      for (int y = 0; y < h; ++y)
       {
         std::memcpy(output_image.line_ptr(y), input_image.line_ptr(y), line_byte_size);
       }

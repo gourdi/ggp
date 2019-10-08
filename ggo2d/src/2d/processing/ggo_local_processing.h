@@ -6,9 +6,12 @@
 
 namespace ggo
 {
-  template <ggo::border_mode border_mode,
-    ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t>
-    void apply_horizontal_processing(const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
+  template <
+    ggo::border_mode border_mode,
+    ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t
+  >
+    void apply_horizontal_processing(
+      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
       int processing_left_size, int processing_right_size, processing_t processing)
   {
     for (int y = 0; y < in.height(); ++y)
@@ -24,10 +27,13 @@ namespace ggo
     }
   }
 
-  template <ggo::border_mode border_mode,
+  template <
+    ggo::border_mode border_mode,
     ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2,
-    typename processing_up_t, typename processing_down_t>
-    void apply_vertical_processing(const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
+    typename processing_up_t, typename processing_down_t
+  >
+    void apply_vertical_processing(
+      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
       int processing_bottom_size, int processing_top_size, processing_up_t processing_up, processing_down_t processing_down)
   {
     for (int x = 0; x < in.width(); ++x)
@@ -50,9 +56,11 @@ namespace ggo
     }
   }
 
-  template <ggo::border_mode border_mode,
-    ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t>
-    void apply_vertical_symmetric_processing(const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
+  template <
+    ggo::border_mode border_mode, ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t
+  >
+    void apply_vertical_symmetric_processing(
+      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
       int processing_size, processing_t processing)
   {
     apply_vertical_processing<border_mode>(in, out, processing_size, processing_size, processing, processing);
