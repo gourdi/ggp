@@ -44,6 +44,7 @@ namespace ggo
 // Dynamic images.
 namespace ggo
 {
+  //////////////////////////////////////////////////////////////
   struct scaler
   {
     template <pixel_type pixel_type, lines_order memory_lines_order, typename input_image_t, typename output_image_t>

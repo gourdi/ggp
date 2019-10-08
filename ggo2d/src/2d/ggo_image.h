@@ -128,32 +128,11 @@ namespace ggo
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) { return get_line_ptr<format_traits::lines_order>(_buffer, y, height(), _line_byte_step); }
+    void *        line_ptr(int y) { return get_line_ptr<memory_lines_order_>(_buffer, y, height(), _line_byte_step); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        pixel_ptr(int x, int y) { return get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, height(), _line_byte_step); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void          write_pixel(int x, int y, const typename color_t & c) { pixel_type_traits<pixel_type_>::write(pixel_ptr(x, y), c); }
-
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void          fill(const typename color_t & c)
-    {
-      void * ptr = _buffer.data();
-      int w = size().width();
-      int h = size().height();
-
-      for (int y = 0; y < h; ++y)
-      {
-        void * line_ptr = ptr;
-        void * end = move_ptr(ptr, w * pixel_byte_size());
-
-        for (; line_ptr != end; line_ptr = move_ptr<pixel_byte_size()>(line_ptr))
-        {
-          pixel_type_traits::write(line_ptr, c);
-        }
-
-        ptr = move_ptr(ptr, _line_byte_step);
-      }
-    }
 
   private:
 

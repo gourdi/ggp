@@ -6,9 +6,9 @@
 GGO_TEST(blit, clipping)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 4, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   const ggo::array<uint8_t, 2> expected(dst.width(), dst.height(), 0);
 
@@ -29,9 +29,9 @@ GGO_TEST(blit, clipping)
 GGO_TEST(blit, y_up_fit)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 2, 1);
 
@@ -49,9 +49,9 @@ GGO_TEST(blit, y_up_fit)
 GGO_TEST(blit, y_down_fit)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 2, 1);
 
@@ -69,9 +69,9 @@ GGO_TEST(blit, y_down_fit)
 GGO_TEST(blit, y_up_bottom_left)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, -2, -1);
 
@@ -89,9 +89,9 @@ GGO_TEST(blit, y_up_bottom_left)
 GGO_TEST(blit, y_down_bottom_left)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, -2, -1);
 
@@ -109,9 +109,9 @@ GGO_TEST(blit, y_down_bottom_left)
 GGO_TEST(blit, y_up_top_right)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 4, 4);
 
@@ -129,9 +129,9 @@ GGO_TEST(blit, y_up_top_right)
 GGO_TEST(blit, y_down_top_right)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 4, 4);
 
@@ -148,11 +148,11 @@ GGO_TEST(blit, y_down_top_right)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, y_up_overlap)
 {
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 4, {
-    11, 12, 13, 14, 15, 16,
-    21, 22, 23, 24, 25, 26,
-    31, 32, 33, 34, 35, 36,
-    41, 42, 43, 44, 45, 46 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 11, 12, 13, 14, 15, 16 },
+    { 21, 22, 23, 24, 25, 26 },
+    { 31, 32, 33, 34, 35, 36 },
+    { 41, 42, 43, 44, 45, 46 } });
 
   {
     auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, 0);
@@ -184,11 +184,11 @@ GGO_TEST(blit, y_down_overlap)
 {
   ggo::array<uint8_t, 2> dst(3, 2);
 
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 4, {
-    11, 12, 13, 14, 15, 16,
-    21, 22, 23, 24, 25, 26,
-    31, 32, 33, 34, 35, 36,
-    41, 42, 43, 44, 45, 46 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 11, 12, 13, 14, 15, 16 },
+    { 21, 22, 23, 24, 25, 26 },
+    { 31, 32, 33, 34, 35, 36 },
+    { 41, 42, 43, 44, 45, 46 } });
 
   {
     auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(3, 2, 0);
@@ -219,9 +219,9 @@ GGO_TEST(blit, y_down_overlap)
 GGO_TEST(blit, dst_down_src_up_fit)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(6, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 2, 1);
 
@@ -239,9 +239,9 @@ GGO_TEST(blit, dst_down_src_up_fit)
 GGO_TEST(blit, dst_up_src_down_fit)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 5 , 0);
-  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
+     { 1, 2, 3 },
+     { 4, 5, 6 } });
 
   ggo::blit(src, dst, 2, 1);
 
@@ -259,9 +259,9 @@ GGO_TEST(blit, dst_up_src_down_fit)
 GGO_TEST(blit, brush_rgba8_background_rgb8)
 {
   auto dst = make_image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(3, 5, 0);
-  auto src = make_image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down>(2, 2, {
-    { 0xff, 0x80, 0x40, 0xff }, { 0xff, 0x80, 0x40, 0x80 },
-    { 0xff, 0x80, 0x40, 0x40 }, { 0xff, 0x80, 0x40, 0x00 } });
+  auto src = make_image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down>({
+    { { 0xff, 0x80, 0x40, 0xff }, { 0xff, 0x80, 0x40, 0x80 } },
+    { { 0xff, 0x80, 0x40, 0x40 }, { 0xff, 0x80, 0x40, 0x00 } } });
 
   ggo::blit(src, dst, 1, 2);
 
@@ -279,9 +279,9 @@ GGO_TEST(blit, brush_rgba8_background_rgb8)
 GGO_TEST(blit, dynamic_image)
 {
   auto dst = make_image<ggo::pixel_type::y_8u, ggo::lines_order::down>(6, 5, 0);
-  auto src = make_image<ggo::pixel_type::y_8u, ggo::lines_order::down>(3, 2, {
-    1, 2, 3,
-    4, 5, 6 });
+  auto src = make_image<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 1, 2, 3 },
+    { 4, 5, 6 } });
 
   ggo::blit(src, dst, 2, 1);
 
@@ -294,5 +294,3 @@ GGO_TEST(blit, dynamic_image)
 
   GGO_CHECK_IMG(dst, expected);
 }
-
-

@@ -6,66 +6,104 @@
 
 namespace ggo
 {
-  template <typename image_t>
-  void fill_solid(image_t & image, const typename image_t::color_t & c, const ggo::rect_int & clipping)
+  template <typename image_type>
+  void fill_solid(image_type & image, const typename image_type::color_t & c)
   {
     const int w = image.width();
     const int h = image.height();
 
-    for (int y = clipping.bottom(); y <= clipping.top(); ++y)
+    for (int y = 0; y < h; ++y)
     {
-      for (int x = clipping.left(); x <= clipping.right(); ++x)
+      for (int x = 0; x < w; ++x)
       {
         image.write_pixel(x, y, c);
       }
     }
   }
 
-  template <typename image_t>
-  void fill_solid(image_t & image, const typename image_t::color_t & c)
+  template <typename image_type>
+  void fill_solid(image_type & image, const typename image_type::color_t & c, const ggo::rect_int & clipping)
   {
-    fill_solid(image, c, ggo::rect_int::from_size(image.size()));
-  }
-
-  template <ggo::pixel_type pixel_type>
-  void fill_solid(void * buffer, int width, int height, int line_byte_step,
-    const typename pixel_type_traits<pixel_type>::color_t & c,
-    const ggo::rect_int & clipping)
-  {
-    ggo::image_view_t<pixel_type, ggo::lines_order::up> image(buffer, { width, height }, line_byte_step);
-
-    fill_solid(image, c, clipping);
-  }
-
-  template <ggo::pixel_type pixel_type>
-  void fill_solid(void * buffer, int width, int height, int line_byte_step,
-    const typename pixel_type_traits<pixel_type>::color_t & c)
-  {
-    fill_solid<pixel_type>(buffer, width, height, line_byte_step, c, ggo::rect_int::from_width_height(width, height));
+    auto view = image.create_view(clipping);
+    if (view)
+    {
+      fill_solid(*view, c);
+    }
   }
 }
 
 namespace ggo
 {
-  template <typename image_t>
-  void fill_black(image_t & image, const ggo::rect_int & clipping)
+  template <pixel_type image_pixel_type, lines_order image_memory_lines_orde, bool image_owns_buffer>
+  void fill_black(image_base_t<image_pixel_type, image_memory_lines_orde, void *, image_owns_buffer> & image)
   {
-    const int w = image.width();
-    const int h = image.height();
+    using color_t = typename pixel_type_traits<image_pixel_type>::color_t;
 
-    for (int y = clipping.bottom(); y <= clipping.top(); ++y)
+    if constexpr (has_alpha_v<color_t>)
     {
-      for (int x = clipping.left(); x <= clipping.right(); ++x)
+      constexpr auto b = black<color_t>();
+
+      const int w = image.width();
+      const int h = image.height();
+
+      void * ptr = image.data();
+
+      for (int y = 0; y < h; ++y)
       {
-        image.write_pixel(x, y, black<typename image_t::color_t>());
+        void * line_ptr = ptr;
+
+        for (int x = 0; x < w; ++x)
+        {
+          pixel_type_traits<image_pixel_type>::write(line_ptr, b);
+          line_ptr = move_ptr<image.pixel_byte_size()>(line_ptr);
+        }
+
+        ptr = move_ptr(ptr, image.line_byte_step());
+      }
+    }
+    else
+    {
+      const int l = image.width() * image.pixel_byte_size();
+      const int h = image.height();
+
+      void * ptr = image.data();
+
+      for (int y = 0; y < h; ++y)
+      {
+        std::memset(ptr, 0, l);
+
+        ptr = move_ptr(ptr, image.line_byte_step());
       }
     }
   }
 
-  template <typename image_t>
-  void fill_black(image_t & image)
+  template <typename image_type>
+  void fill_black(image_type & image)
   {
-    fill_black(image, ggo::rect_int::from_size(image.size()));
+    using color_t = typename image_type::color_t;
+
+    constexpr auto black = black<color_t>();
+
+    const int w = image.width();
+    const int h = image.height();
+
+    for (int y = 0; y < h; ++y)
+    {
+      for (int x = 0; x < w; ++x)
+      {
+        image.write_pixel(x, y, black);
+      }
+    }
+  }
+
+  template <typename image_type>
+  void fill_black(image_type & image, const ggo::rect_int & clipping)
+  {
+    auto view = image.create_view(clipping);
+    if (view)
+    {
+      fill_black(*view);
+    }
   }
 }
 

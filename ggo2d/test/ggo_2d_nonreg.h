@@ -3,23 +3,17 @@
 #include <2d/ggo_image.h>
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-auto make_image_t(int width, int height, std::initializer_list<typename ggo::pixel_type_traits<pixel_type>::color_t> pixels)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, size_t h, size_t w>
+auto make_image_t(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  if (width * height != pixels.size())
-  {
-    throw std::runtime_error("invalid pixels count");
-  }
-
-  ggo::image_t<pixel_type, memory_lines_order> image({ width, height });
+  ggo::image_t<pixel_type, memory_lines_order> image({ w, h });
 
   void * ptr = image.data();
-  auto it = pixels.begin();
-  for (int y = 0; y < height; ++y)
+  for (int y = 0; y < h; ++y)
   {
-    for (int x = 0; x < width; ++x)
+    for (int x = 0; x < w; ++x)
     {
-      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), *it++);
+      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), coefs[y][x]);
     }
     ptr = ggo::move_ptr(ptr, image.line_byte_step());
   }
@@ -45,26 +39,19 @@ auto make_image_t(int width, int height, typename ggo::pixel_type_traits<pixel_t
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-auto make_image(int width, int height, std::initializer_list<typename ggo::pixel_type_traits<pixel_type>::color_t> pixels)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, size_t h, size_t w>
+auto make_image(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  if (width * height != pixels.size())
+  ggo::image image({ w, h }, pixel_type, memory_lines_order);
+
+  void * ptr = image.data();
+  for (int y = 0; y < h; ++y)
   {
-    throw std::runtime_error("invalid pixels count");
-  }
-
-  ggo::image image({ width, height }, pixel_type, memory_lines_order);
-
-  auto it = pixels.begin();
-  for (int y = 0; y < height; ++y)
-  {
-    void * ptr = ggo::move_ptr(image.data(), y * image.line_byte_step());
-
-    for (int x = 0; x < width; ++x)
+    for (int x = 0; x < w; ++x)
     {
-      ggo::pixel_type_traits<pixel_type>::write(ptr, *it++);
-      ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(ptr);
+      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), coefs[y][x]);
     }
+    ptr = ggo::move_ptr(ptr, image.line_byte_step());
   }
 
   return image;
@@ -76,14 +63,14 @@ auto make_image(int width, int height, typename ggo::pixel_type_traits<pixel_typ
 {
   ggo::image image({ width, height }, pixel_type, memory_lines_order);
 
+  void * ptr = image.data();
   for (int y = 0; y < height; ++y)
   {
     for (int x = 0; x < width; ++x)
     {
-      void * ptr = image.pixel_ptr(x, y);
-
-      ggo::pixel_type_traits<pixel_type>::write(ptr, fill_value);
+      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), fill_value);
     }
+    ptr = ggo::move_ptr(ptr, image.line_byte_step());
   }
 
   return image;
