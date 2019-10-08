@@ -122,7 +122,7 @@ bool compare_images(const ggo::image_base_t<pixel_type, memory_lines_order, void
 ////////////////////////////////////////////////////////////////////
 struct compare_images_functor
 {
-  template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type, typename void_ptr_t, bool owns_buffer, typename data_t>
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer, typename data_t>
   static bool call(const ggo::image_base<void_ptr_t, owns_buffer> & image, const ggo::array2d<data_t> & pixels)
   {
     ggo::const_image_view_t<pixel_type, memory_lines_order> view(image.data(), image.size());

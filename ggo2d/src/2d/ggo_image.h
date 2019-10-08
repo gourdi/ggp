@@ -292,7 +292,7 @@ namespace ggo
     template <ggo::pixel_type pixel_type, typename... args>
     static auto call(args&&... a)
     {
-      return functor::call<memory_lines_order, pixel_type>(std::forward<args>(a)...);
+      return functor::call<pixel_type, memory_lines_order>(std::forward<args>(a)...);
     }
   };
 

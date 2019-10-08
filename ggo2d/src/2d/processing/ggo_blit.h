@@ -67,7 +67,7 @@ namespace ggo
 {
   struct dispatch_output
   {
-    template <ggo::lines_order output_memory_lines_order, ggo::pixel_type output_pixel_type, typename input_image_t, typename output_image_t>
+    template <ggo::pixel_type output_pixel_type, ggo::lines_order output_memory_lines_order, typename input_image_t, typename output_image_t>
     static void call(const input_image_t & input_image, output_image_t & output_image, int left, int bottom)
     {
       ggo::image_view_t<output_pixel_type, output_memory_lines_order> output_view(output_image.data(), output_image.size());
@@ -78,10 +78,8 @@ namespace ggo
 
   struct dispatch_input
   {
-    template <ggo::lines_order input_memory_lines_order, ggo::pixel_type input_pixel_type, typename input_image_t, bool out_owns_buffer>
-    static void call(const input_image_t & input_image,
-      image_base<void *, out_owns_buffer> & output_image,
-      int left, int bottom)
+    template <ggo::pixel_type input_pixel_type, ggo::lines_order input_memory_lines_order, typename input_image_t, bool out_owns_buffer>
+    static void call(const input_image_t & input_image, image_base<void *, out_owns_buffer> & output_image, int left, int bottom)
     {
       ggo::const_image_view_t<input_pixel_type, input_memory_lines_order> input_view(input_image.data(), input_image.size());
 

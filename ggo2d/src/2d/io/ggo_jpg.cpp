@@ -93,7 +93,7 @@ namespace
   // Write pixels (note that pixels are stored BGR from bottom to top).
   struct write_pixels
   {
-    template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type>
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void call(const void * buffer, int width, int height, int line_byte_step, jpeg_compress_struct & cinfo)
     {
       ggo::array_8u line(3 * width);
