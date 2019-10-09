@@ -17,6 +17,26 @@
 //#define GGO_BENCH
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
+{
+  constexpr int width = 6;
+  constexpr int height = 4;
+
+  std::vector<uint8_t> buffer(height * width, 0);
+  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, width);
+
+  ggo::paint<ggo::sampling_16x16>(image, ggo::rect_f(2.f, 1.f, 3.f, 1.f), 0xff);
+
+  const std::vector<uint8_t> expected{
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00,	0x00, 0xff,	0xff,	0xff,	0x00,
+    0x00,	0x00,	0x00,	0x00,	0x00,	0x00,
+    0x00,	0x00,	0x00,	0x00,	0x00,	0x00 };
+
+  GGO_CHECK(buffer == expected);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)
 {
   constexpr int width = 10;

@@ -123,6 +123,7 @@ namespace ggo
     const void *  line_ptr(int y) const { return ggo::get_line_ptr<memory_lines_order_>(_buffer, y, _size.height(), _line_byte_step);    }
     const void *  pixel_ptr(int x, int y) const { return ggo::get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, _size.height(), _line_byte_step); }
     auto          read_pixel(int x, int y) const { return pixel_type_traits<pixel_type_>::read(pixel_ptr(x, y)); }
+    auto          operator()(int x, int y) const { return read_pixel(x, y); }
 
     // Write interface.
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>

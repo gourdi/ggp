@@ -10,7 +10,7 @@ GGO_TEST(blit, clipping)
     { 1, 2, 3 },
     { 4, 5, 6 } });
 
-  const ggo::array<uint8_t, 2> expected(dst.width(), dst.height(), 0);
+  const ggo::array2d_8u expected(dst.width(), dst.height(), 0);
 
   ggo::blit(src, dst, -3, 0);
   GGO_CHECK_IMG(dst, expected);
@@ -35,7 +35,7 @@ GGO_TEST(blit, y_up_fit)
 
   ggo::blit(src, dst, 2, 1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 2, 3, 0 },
     { 0, 0, 4, 5, 6, 0 },
@@ -55,7 +55,7 @@ GGO_TEST(blit, y_down_fit)
 
   ggo::blit(src, dst, 2, 1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 2, 3, 0 },
@@ -75,7 +75,7 @@ GGO_TEST(blit, y_up_bottom_left)
 
   ggo::blit(src, dst, -2, -1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 6, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
@@ -95,7 +95,7 @@ GGO_TEST(blit, y_down_bottom_left)
 
   ggo::blit(src, dst, -2, -1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
@@ -115,7 +115,7 @@ GGO_TEST(blit, y_up_top_right)
 
   ggo::blit(src, dst, 4, 4);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
@@ -135,7 +135,7 @@ GGO_TEST(blit, y_down_top_right)
 
   ggo::blit(src, dst, 4, 4);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 4, 5 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
@@ -159,7 +159,7 @@ GGO_TEST(blit, y_up_overlap)
 
     ggo::blit(src, dst, -2, -1);
 
-    const ggo::array<uint8_t, 2> expected({
+    const ggo::array2d_8u expected({
       { 23, 24, 25 },
       { 33, 34, 35 } });
 
@@ -171,7 +171,7 @@ GGO_TEST(blit, y_up_overlap)
 
     ggo::blit(src, dst, -5, -1);
 
-    const ggo::array<uint8_t, 2> expected({
+    const ggo::array2d_8u expected({
       { 26, 0, 0 },
       { 36, 0, 0 } });
 
@@ -182,7 +182,7 @@ GGO_TEST(blit, y_up_overlap)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, y_down_overlap)
 {
-  ggo::array<uint8_t, 2> dst(3, 2);
+  ggo::array2d_8u dst(3, 2);
 
   auto src = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
     { 11, 12, 13, 14, 15, 16 },
@@ -195,7 +195,7 @@ GGO_TEST(blit, y_down_overlap)
 
     ggo::blit(src, dst, -2, -1);
 
-    const ggo::array<uint8_t, 2> expected({
+    const ggo::array2d_8u expected({
       { 23, 24, 25 },
       { 33, 34, 35 } });
 
@@ -207,7 +207,7 @@ GGO_TEST(blit, y_down_overlap)
 
     ggo::blit(src, dst, -5, -1);
 
-    const ggo::array<uint8_t, 2> expected({
+    const ggo::array2d_8u expected({
       { 26, 0, 0 },
       { 36, 0, 0 } });
 
@@ -225,7 +225,7 @@ GGO_TEST(blit, dst_down_src_up_fit)
 
   ggo::blit(src, dst, 2, 1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 2, 3, 0 },
     { 0, 0, 4, 5, 6, 0 },
@@ -245,7 +245,7 @@ GGO_TEST(blit, dst_up_src_down_fit)
 
   ggo::blit(src, dst, 2, 1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 4, 5, 6, 0 },
@@ -285,7 +285,7 @@ GGO_TEST(blit, dynamic_image)
 
   ggo::blit(src, dst, 2, 1);
 
-  const ggo::array<uint8_t, 2> expected({
+  const ggo::array2d_8u expected({
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 2, 3, 0 },

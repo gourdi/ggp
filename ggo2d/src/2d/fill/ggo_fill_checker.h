@@ -5,10 +5,10 @@
 
 namespace ggo
 {
-  template <typename image_type>
-  void fill_checker(image_type & image, 
-    const typename image_type::color_t & c1,
-    const typename image_type::color_t & c2,
+  template <typename image_t>
+  void fill_checker(image_t & image, 
+    const typename image_t::color_t & c1,
+    const typename image_t::color_t & c2,
     int tile_size)
   {
     const int w = image.width();

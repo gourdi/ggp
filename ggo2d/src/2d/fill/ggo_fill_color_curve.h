@@ -5,10 +5,10 @@
 
 namespace ggo
 {
-  template <typename image_type, typename curve_t>
-  void fill_color_curve(image_type & image, const curve_t & curve)
+  template <typename image_t, typename curve_t>
+  void fill_color_curve(image_t & image, const curve_t & curve)
   {
-    using floating_point_color_t = typename color_traits<image_type::color_t>::floating_point_color_t;
+    using floating_point_color_t = typename color_traits<image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<floating_point_color_t>::sample_t;
 
     const int w = image.width();
@@ -17,7 +17,7 @@ namespace ggo
 
     for (int y = 0; y < h; ++y)
     {
-      const auto c = convert_color_to<image_type::color_t>(curve.evaluate(y * inv_h));
+      const auto c = convert_color_to<image_t::color_t>(curve.evaluate(y * inv_h));
 
       for (int x = 0; x < w; ++x)
       {

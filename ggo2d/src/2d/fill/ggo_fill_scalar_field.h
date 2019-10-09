@@ -9,11 +9,11 @@
 
 namespace ggo
 {
-  template <typename image_type, typename scalar_field_t>
-  void fill_scalar_field2d(image_type & image, const scalar_field_t & field,
-    const typename image_type::color_t & c1, const typename image_type::color_t & c2)
+  template <typename image_t, typename scalar_field_t>
+  void fill_scalar_field2d(image_t & image, const scalar_field_t & field,
+    const typename image_t::color_t & c1, const typename image_t::color_t & c2)
   {
-    using floating_point_color_t = typename color_traits<image_type::color_t>::floating_point_color_t;
+    using floating_point_color_t = typename color_traits<image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point_v<floating_point_t>);
@@ -31,7 +31,7 @@ namespace ggo
 
         auto val = field.sample(s.x(), s.y());
 
-        image.write_pixel(x, y, ggo::convert_color_to<image_type::color_t>(val * c1_fp + (1 - val) * c2_fp));
+        image.write_pixel(x, y, ggo::convert_color_to<image_t::color_t>(val * c1_fp + (1 - val) * c2_fp));
       }
     }
   }
@@ -39,11 +39,11 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename image_type>
-  void fill_perlin(image_type & image, typename color_traits<typename color_traits<typename image_type::color_t>::floating_point_color_t>::sample_t size,
-    const typename image_type::color_t & c1, const typename image_type::color_t & c2)
+  template <typename image_t>
+  void fill_perlin(image_t & image, typename color_traits<typename color_traits<typename image_t::color_t>::floating_point_color_t>::sample_t size,
+    const typename image_t::color_t & c1, const typename image_t::color_t & c2)
   {
-    using floating_point_color_t = typename color_traits<typename image_type::color_t>::floating_point_color_t;
+    using floating_point_color_t = typename color_traits<typename image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<typename floating_point_color_t>::sample_t;
 
     ggo::perlin_noise_field2d<floating_point_t> perlin_field2d;
@@ -67,13 +67,13 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename image_type>
-  void fill_gaussian(image_type & image, 
-    typename color_traits<typename color_traits<typename image_type::color_t>::floating_point_color_t>::sample_t stddev,
-    const typename image_type::color_t & c1,
-    const typename image_type::color_t & c2)
+  template <typename image_t>
+  void fill_gaussian(image_t & image, 
+    typename color_traits<typename color_traits<typename image_t::color_t>::floating_point_color_t>::sample_t stddev,
+    const typename image_t::color_t & c1,
+    const typename image_t::color_t & c2)
   {
-    using floating_point_color_t = typename color_traits<typename image_type::color_t>::floating_point_color_t;
+    using floating_point_color_t = typename color_traits<typename image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<typename floating_point_color_t>::sample_t;
 
     ggo::gaussian_field2d<floating_point_t> gaussian_field2d;

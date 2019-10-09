@@ -6,8 +6,8 @@
 
 namespace ggo
 {
-  template <typename image_type>
-  void fill_solid(image_type & image, const typename image_type::color_t & c)
+  template <typename image_t>
+  void fill_solid(image_t & image, const typename image_t::color_t & c)
   {
     const int w = image.width();
     const int h = image.height();
@@ -21,8 +21,8 @@ namespace ggo
     }
   }
 
-  template <typename image_type>
-  void fill_solid(image_type & image, const typename image_type::color_t & c, const ggo::rect_int & clipping)
+  template <typename image_t>
+  void fill_solid(image_t & image, const typename image_t::color_t & c, const ggo::rect_int & clipping)
   {
     auto view = image.create_view(clipping);
     if (view)
@@ -61,10 +61,10 @@ namespace ggo
     }
   }
 
-  template <typename image_type>
-  void fill_black(image_type & image)
+  template <typename image_t>
+  void fill_black(image_t & image)
   {
-    using color_t = typename image_type::color_t;
+    using color_t = typename image_t::color_t;
 
     constexpr auto b = black<color_t>();
 
@@ -80,8 +80,8 @@ namespace ggo
     }
   }
 
-  template <typename image_type>
-  void fill_black(image_type & image, const ggo::rect_int & clipping)
+  template <typename image_t>
+  void fill_black(image_t & image, const ggo::rect_int & clipping)
   {
     auto view = image.create_view(clipping);
     if (view)

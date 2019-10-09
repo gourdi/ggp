@@ -764,42 +764,31 @@ namespace ggo
 // Linear interpolation.
 namespace ggo
 {
-  template <typename fract_t>
-  uint8_t linerp(uint8_t color_a, uint8_t color_b, const fract_t & weight_a)
+  template <uint32_t log2_den>
+  uint8_t linerp(uint8_t color_a, uint8_t color_b, const log2_fract<log2_den> & weight_a)
   {
-    constexpr uint32_t one = 1 << fract_t::_log2_den;
+    constexpr uint32_t one = 1 << log2_den;
 
     const uint32_t weight_b = one - weight_a._num;
     
-    return ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a + weight_b * color_b);
+    return ggo::fixed_point_div<log2_den>(weight_a._num * color_a + weight_b * color_b);
   }
 
-  template <typename fract_t>
-  rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, const fract_t & weight_a)
+  template <uint32_t log2_den>
+  rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, const log2_fract<log2_den> & weight_a)
   {
-    constexpr uint32_t one = 1 << fract_t::_log2_den;
+    constexpr uint32_t one = 1 << log2_den;
 
     const uint32_t weight_b = one - weight_a._num;
 
     return {
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
-      static_cast<uint8_t>(ggo::fixed_point_div<fract_t::_log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
+      static_cast<uint8_t>(ggo::fixed_point_div<log2_den>(weight_a._num * color_a.r() + weight_b * color_b.r())),
+      static_cast<uint8_t>(ggo::fixed_point_div<log2_den>(weight_a._num * color_a.g() + weight_b * color_b.g())),
+      static_cast<uint8_t>(ggo::fixed_point_div<log2_den>(weight_a._num * color_a.b() + weight_b * color_b.b())) };
   }
 
-  inline
-  rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, uint8_t weight_a)
-  {
-    const uint8_t weight_b = 0xff - weight_a;
-
-    return {
-      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.r() + weight_b * color_b.r(), 0xff)),
-      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.g() + weight_b * color_b.g(), 0xff)),
-      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.b() + weight_b * color_b.b(), 0xff)) };
-  }
-
-  template <typename fract_t>
-  rgba_8u linerp(rgba_8u color_a, rgba_8u color_b, const fract_t & weight_a)
+  template <uint32_t log2_den>
+  rgba_8u linerp(rgba_8u color_a, rgba_8u color_b, const log2_fract<log2_den> & weight_a)
   {
     uint32_t w_a = weight_a * color_a.a();
     uint32_t w_b = ggo::round_div<uint32_t>((0xff - w_a) * color_b.a(), 0xff);
@@ -817,8 +806,8 @@ namespace ggo
     return { static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b), static_cast<uint8_t>(a) };
   }
 
-  template <typename fract_t>
-  float linerp(float color_a, float color_b, const fract_t & weight_a)
+  template <uint32_t log2_den>
+  float linerp(float color_a, float color_b, const log2_fract<log2_den> & weight_a)
   {
     const float weight_a_32f = weight_a.to<float>();
     const float weight_b_32f = 1.f - weight_a_32f;
@@ -826,8 +815,8 @@ namespace ggo
     return weight_a_32f * color_a + weight_b_32f * color_b;
   }
 
-  template <typename fract_t>
-  rgb_32f linerp(const rgb_32f & color_a, const rgb_32f & color_b, const fract_t & weight_a)
+  template <uint32_t log2_den>
+  rgb_32f linerp(const rgb_32f & color_a, const rgb_32f & color_b, const log2_fract<log2_den> & weight_a)
   {
     const float weight_a_32f = weight_a.to<float>();
     const float weight_b_32f = 1.f - weight_a_32f;
@@ -836,6 +825,26 @@ namespace ggo
       weight_a_32f * color_a.r() + weight_b_32f * color_b.r(),
       weight_a_32f * color_a.g() + weight_b_32f * color_b.g(),
       weight_a_32f * color_a.b() + weight_b_32f * color_b.b() };
+  }
+}
+
+namespace ggo
+{
+  inline uint8_t linerp(uint8_t color_a, uint8_t color_b, uint8_t weight_a)
+  {
+    const uint8_t weight_b = 0xff - weight_a;
+
+    return static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a + weight_b * color_b, 0xff));
+  }
+
+  inline rgb_8u linerp(rgb_8u color_a, rgb_8u color_b, uint8_t weight_a)
+  {
+    const uint8_t weight_b = 0xff - weight_a;
+
+    return {
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.r() + weight_b * color_b.r(), 0xff)),
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.g() + weight_b * color_b.g(), 0xff)),
+      static_cast<uint8_t>(ggo::round_div<uint32_t>(weight_a * color_a.b() + weight_b * color_b.b(), 0xff)) };
   }
 }
 

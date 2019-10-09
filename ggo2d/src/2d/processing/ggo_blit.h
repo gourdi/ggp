@@ -9,11 +9,11 @@
 namespace ggo
 {
   // Generic function.
-  template <typename input_image_type, typename output_image_type>
-  void blit(const input_image_type & input_image, output_image_type & output_image)
+  template <typename input_image_t, typename output_image_t>
+  void blit(const input_image_t & input_image, output_image_t & output_image)
   {
-    using input_color_t = typename input_image_type::color_t;
-    using output_color_t = typename output_image_type::color_t;
+    using input_color_t = typename input_image_t::color_t;
+    using output_color_t = typename output_image_t::color_t;
 
     if (input_image.size() != output_image.size())
     {

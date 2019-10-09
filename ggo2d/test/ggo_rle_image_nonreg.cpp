@@ -1,7 +1,10 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/rle_image/ggo_rle_image.h>
 #include <2d/fill/ggo_fill.h>
+#include <2d/paint/ggo_brush.h>
+#include <2d/paint/ggo_paint.h>
 #include <2d/processing/ggo_blit.h>
+#include <2d/processing/ggo_mask.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(rle_image, y8u)
@@ -29,7 +32,7 @@ GGO_TEST(rle_image, y8u)
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(rle_image, y8u_fill)
+GGO_TEST(rle_image, fill)
 {
   constexpr int width = 15;
   constexpr int height = 15;
@@ -58,7 +61,7 @@ GGO_TEST(rle_image, y8u_fill)
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(rle_image, y8u_blit)
+GGO_TEST(rle_image, blit)
 {
   constexpr int width = 15;
   constexpr int height = 15;
@@ -84,3 +87,37 @@ GGO_TEST(rle_image, y8u_blit)
     }
   }
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(rle_image, mask)
+{
+  ggo::rle_image<uint8_t> image(3, 2, 0xff, 1);
+  auto mask = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
+    { 0x00, 0x10, 0x20 },
+    { 0x40, 0xff, 0x80 } });
+
+  ggo::apply_mask(image, mask, ggo::make_solid_brush(0x00_u8));
+
+  GGO_CHECK_EQ(image.read_pixel(0, 0), 0xbf);
+  GGO_CHECK_EQ(image.read_pixel(1, 0), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(2, 0), 0x7f);
+  GGO_CHECK_EQ(image.read_pixel(0, 1), 0xff);
+  GGO_CHECK_EQ(image.read_pixel(1, 1), 0xef);
+  GGO_CHECK_EQ(image.read_pixel(2, 1), 0xdf);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(rle_image, paint)
+{
+  ggo::rle_image<uint8_t> image(3, 2, 0x00, 1);
+
+  ggo::paint<ggo::sampling_16x16>(image, ggo::disc_f({ 0.f, 1.f }, 1.5), 0xff);
+
+  GGO_CHECK_EQ(image.read_pixel(0, 0), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(1, 0), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(2, 0), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(0, 1), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(1, 1), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(2, 1), 0x00);
+}
+
