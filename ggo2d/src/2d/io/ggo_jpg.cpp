@@ -151,7 +151,7 @@ namespace ggo
     jpeg_start_decompress(&decompressor._cinfo);
 
     int line_byte_step = 3 * decompressor._cinfo.output_width;
-    image image({ int(decompressor._cinfo.output_width), int(decompressor._cinfo.output_height) }, ggo::pixel_type::rgba_8u, ggo::lines_order::down, line_byte_step);
+    image image({ int(decompressor._cinfo.output_width), int(decompressor._cinfo.output_height) }, ggo::pixel_type::rgb_8u, ggo::lines_order::down, line_byte_step);
 
     JSAMPLE * line_ptr = reinterpret_cast<JSAMPLE *>(image.data());
     while (decompressor._cinfo.output_scanline < decompressor._cinfo.output_height)
