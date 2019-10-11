@@ -11,8 +11,8 @@ namespace ggo
 
   struct marching_square_cell
   {
-    int                             _x;
-    int                             _y;
+    int                         _x;
+    int                         _y;
     std::vector<ggo::segment_f> _segments;
   };
 

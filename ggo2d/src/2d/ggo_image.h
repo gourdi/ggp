@@ -190,6 +190,12 @@ namespace ggo
       GGO_ASSERT_LE(s.width() * get_pixel_byte_size(pixel_type), line_byte_step);
     }
 
+    template <typename = typename std::enable_if_t<!owns_buffer>>
+    image_base(void_ptr_t buffer, const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+      : image_base(buffer, s, pixel_type, memory_lines_order, get_pixel_byte_size(pixel_type) * s.width())
+    {
+    }
+
     ~image_base()
     {
       if constexpr (owns_buffer == true)

@@ -34,20 +34,6 @@ namespace ggo
     };
 
     template <>
-    struct helpers<float>
-    {
-      static auto build_kernel(float stddev) { return ggo::build_gaussian_kernel<float>(stddev); }
-      static float convert(float v) { return v; }
-    };
-
-    template <>
-    struct helpers<double>
-    {
-      static auto build_kernel(double stddev) { return ggo::build_gaussian_kernel<double>(stddev); }
-      static double convert(double v) { return v; }
-    };
-
-    template <>
     struct helpers<uint8_t>
     {
       static auto build_kernel(float stddev) { return build_gaussian_kernel_fp(stddev); }
@@ -73,10 +59,19 @@ namespace ggo
       }
     };
 
-    template <pixel_type pt, typename image_t, typename cache_t>
+    template <>
+    struct helpers<float>
+    {
+      static auto build_kernel(float stddev) { return ggo::build_gaussian_kernel<float>(stddev); }
+      static float convert(float v) { return v; }
+    };
+
+    template <typename image_t, typename cache_t>
     void gaussian_blur(image_t & image, cache_t & cache, float stddev, border_mode border_mode)
     {
-      using helpers = gaussian_blur_details::helpers<ggo::pixel_type_traits<pt>::color_t>;
+      static_assert(std::is_same_v<image_t::color_t, cache_t::color_t>);
+
+      using helpers = gaussian_blur_details::helpers<image_t::color_t>;
 
       const auto kernel = helpers::build_kernel(stddev);
       if (kernel.size() <= 1)
@@ -86,7 +81,7 @@ namespace ggo
 
       int processing_size = static_cast<int>(kernel.size() - 1);
 
-      auto processing = [&](const auto & neighborhood)
+      auto processing = [&](auto && neighborhood)
       {
         auto out = kernel[0] * helpers::convert(neighborhood(0));
         for (int i = 1; i < kernel.size(); ++i)
@@ -100,7 +95,7 @@ namespace ggo
       {
       case ggo::border_mode::mirror:
         apply_horizontal_processing<ggo::border_mode::mirror>(image, cache, processing_size, processing_size, processing);
-        apply_vertical_symmetric_processing<ggo::border_mode::mirror>(cache, image, processing_size, processing);
+        apply_vertical_processing<ggo::border_mode::mirror>(cache, image, processing_size, processing_size, processing);
         break;
       default:
         throw std::runtime_error("unsupported border mode");
@@ -115,35 +110,61 @@ namespace ggo
   template <pixel_type pt, lines_order lo, bool owns_buffer>
   void gaussian_blur(image_base_t<pt, lo, void *, owns_buffer> & image, float stddev, border_mode border_mode = border_mode::mirror)
   {
-    ggo::image_base_t<pt, lo, void *, true> cache(image.size());
+    ggo::image_t<pt, lo> cache(image.size());
 
-    gaussian_blur_details::gaussian_blur<pt>(image, cache, stddev, border_mode);
+    gaussian_blur_details::gaussian_blur(image, cache, stddev, border_mode);
   }
 }
 
 // Dynamic images.
 namespace ggo
 {
-  struct gaussian_blur_functor
+  template <pixel_type pt, bool owns_buffer>
+  void gaussian_blur_aux(image_base<void *, owns_buffer> & image, float stddev, border_mode border_mode)
   {
-    template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type>
-    static void call(ggo::size size, void * image_buffer, int image_line_byte_step, void * cache_buffer,int cache_line_byte_step,
-      float stddev, border_mode border_mode)
-    {
-      image_view_t<pixel_type, memory_lines_order> image(image_buffer, size, image_line_byte_step);
-      image_view_t<pixel_type, memory_lines_order> cache(cache_buffer, size, cache_line_byte_step);
+    GGO_ASSERT_EQ(pt, image.pixel_type());
 
-      gaussian_blur_details::gaussian_blur<pixel_type>(image, cache, stddev, border_mode);
+    switch (image.memory_lines_order())
+    {
+    case ggo::lines_order::up:
+    {
+      ggo::image_view_t<pt, ggo::lines_order::up> view(image.data(), image.size());
+
+      gaussian_blur(view, stddev, border_mode);
     }
-  };
+    break;
+    case ggo::lines_order::down:
+    {
+      ggo::image_view_t<pt, ggo::lines_order::down> view(image.data(), image.size());
+
+      gaussian_blur(view, stddev, border_mode);
+    }
+    break;
+    default:
+      throw std::runtime_error("invalid lines order");
+      break;
+    }
+  }
 
   template <bool owns_buffer>
   void gaussian_blur(image_base<void *, owns_buffer> & image, float stddev, border_mode border_mode = border_mode::mirror)
   {
-    ggo::image cache(image.size(), image.pixel_type(), image.memory_lines_order());
-
-    dispatch_image_format<gaussian_blur_functor>(image.pixel_type(), image.memory_lines_order(),
-      image.size(), image.data(), image.line_byte_step(), cache.data(), cache.line_byte_step(), stddev, border_mode);
+    // Limited dispatch for now, see later it I should implement all color types.
+    switch (image.pixel_type())
+    {
+    case ggo::pixel_type::y_8u:
+      gaussian_blur_aux<ggo::pixel_type::y_8u>(image, stddev, border_mode);
+      break;
+    case ggo::pixel_type::y_32f:
+      gaussian_blur_aux<ggo::pixel_type::y_32f>(image, stddev, border_mode);
+      break;
+    case ggo::pixel_type::rgb_8u:
+      gaussian_blur_aux<ggo::pixel_type::rgb_8u>(image, stddev, border_mode);
+      break;
+    case ggo::pixel_type::bgrx_8u:
+      gaussian_blur_aux<ggo::pixel_type::bgrx_8u>(image, stddev, border_mode);
+      break;
+    }
   }
 }
 

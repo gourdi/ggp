@@ -4,66 +4,173 @@
 #include <kernel/math/signal_processing/ggo_local_processing.h>
 #include <2d/ggo_image.h>
 
+// Generic functions.
 namespace ggo
 {
-  template <
-    ggo::border_mode border_mode,
-    ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t
-  >
-    void apply_horizontal_processing(
-      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
-      int processing_left_size, int processing_right_size, processing_t processing)
+  template <typename input_image_t, typename output_image_t, typename left_t, typename right_t, typename processing_t>
+  void apply_horizontal_processing(const input_image_t & in, output_image_t & out,
+    left_t && handle_left_border, right_t && handle_right_border,
+    int processing_left_size, int processing_right_size, processing_t && processing)
   {
-    for (int y = 0; y < in.height(); ++y)
+    if (in.size() != out.size())
     {
-      const void * input_ptr = ggo::move_ptr(in.data(), y * in.line_byte_step());
-      void * output_ptr = ggo::move_ptr(out.data(), y * out.line_byte_step());
+      throw std::runtime_error("size mismatch");
+    }
 
-      ggo::input_pixel_type_iterator_t<pt> input_begin_it(input_ptr);
-      ggo::input_pixel_type_iterator_t<pt> input_end_it = input_begin_it + in.width();
-      ggo::output_pixel_type_iterator_t<pt> output_it(output_ptr);
+    const int w = in.width();
+    const int h = in.height();
 
-      ggo::processing_1d<border_mode>(input_begin_it, input_end_it, output_it, processing_left_size, processing_right_size, processing);
+    for (int y = 0; y < h; ++y)
+    {
+      int x = 0;
+
+      {
+        auto left_input = [&](int delta)
+        {
+          auto x_delta = x + delta;
+
+          return x_delta < 0 ? handle_left_border(x_delta, y) : in.read_pixel(x_delta, y);
+        };
+
+        int x_end = processing_left_size;
+        for (; x < x_end; ++x)
+        {
+          out.write_pixel(x, y, processing(left_input));
+        }
+      }
+
+      {
+        auto center_input = [&](int delta)
+        {
+          return in.read_pixel(x + delta, y);
+        };
+
+        int x_end = w - processing_right_size;
+        for (; x < x_end; ++x)
+        {
+          out.write_pixel(x, y, processing(center_input));
+        }
+      }
+
+      {
+        auto right_input = [&](int delta)
+        {
+          auto x_delta = x + delta;
+
+          return x_delta >= w ? handle_right_border(x_delta, y) : in.read_pixel(x_delta, y);
+        };
+
+        for (; x < w; ++x)
+        {
+          out.write_pixel(x, y, processing(right_input));
+        }
+      }
     }
   }
 
-  template <
-    ggo::border_mode border_mode,
-    ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2,
-    typename processing_up_t, typename processing_down_t
-  >
-    void apply_vertical_processing(
-      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
-      int processing_bottom_size, int processing_top_size, processing_up_t processing_up, processing_down_t processing_down)
+  template <border_mode border_mode, typename input_image_t, typename output_image_t, typename processing_t>
+  void apply_horizontal_processing(const input_image_t & in, output_image_t & out,
+    int processing_left_size, int processing_right_size, processing_t && processing)
   {
-    for (int x = 0; x < in.width(); ++x)
+    const int w = in.width();
+
+    auto handle_border = [&](int x, int y)
     {
-      const void * input_ptr = ggo::move_ptr(in.data(), x * ggo::pixel_type_traits<pt>::pixel_byte_size);
-      void * output_ptr = ggo::move_ptr(out.data(), x * ggo::pixel_type_traits<pt>::pixel_byte_size);
-
-      ggo::input_pixel_type_iterator<pt> input_begin_it(input_ptr, in.line_byte_step());
-      ggo::input_pixel_type_iterator<pt> input_end_it = input_begin_it + in.height();
-      ggo::output_pixel_type_iterator<pt> output_it(output_ptr, out.line_byte_step());
-
-      if constexpr (lo == ggo::lines_order::up)
+      if constexpr (border_mode == ggo::border_mode::zero)
       {
-        ggo::processing_1d<border_mode>(input_begin_it, input_end_it, output_it, processing_bottom_size, processing_top_size, processing_up);
+        return output_image_t::color_t(0);
       }
       else
       {
-        ggo::processing_1d<border_mode>(input_begin_it, input_end_it, output_it, processing_top_size, processing_bottom_size, processing_down);
+        return in.read_pixel(index<border_mode>(x, w), y);
+      }
+    };
+
+    apply_horizontal_processing(in, out, handle_border, handle_border,
+      processing_left_size, processing_right_size, processing);
+  }
+
+  template <typename input_image_t, typename output_image_t, typename bottom_t, typename top_t, typename processing_t>
+  void apply_vertical_processing(const input_image_t & in, output_image_t & out,
+    bottom_t && handle_bottom_border, top_t && handle_top_border,
+    int processing_bottom_size, int processing_top_size, processing_t && processing)
+  {
+    if (in.size() != out.size())
+    {
+      throw std::runtime_error("size mismatch");
+    }
+
+    const int w = in.width();
+    const int h = in.height();
+
+    for (int x = 0; x < w; ++x)
+    {
+      int y = 0;
+
+      {
+        auto bottom_input = [&](int delta)
+        {
+          auto y_delta = y + delta;
+
+          return y_delta < 0 ? handle_bottom_border(x, y_delta) : in.read_pixel(x, y_delta);
+        };
+
+        int y_end = processing_bottom_size;
+        for (; y < y_end; ++y)
+        {
+          out.write_pixel(x, y, processing(bottom_input));
+        }
+      }
+
+      {
+        auto center_input = [&](int delta)
+        {
+          return in.read_pixel(x, y + delta);
+        };
+
+        int y_end = h - processing_top_size;
+        for (; y < y_end; ++y)
+        {
+          out.write_pixel(x, y, processing(center_input));
+        }
+      }
+
+      {
+        auto top_input = [&](int delta)
+        {
+          auto y_delta = y + delta;
+
+          return y_delta >= h ? handle_top_border(x, y_delta) : in.read_pixel(x, y_delta);
+        };
+
+        for (; y < h; ++y)
+        {
+          out.write_pixel(x, y, processing(top_input));
+        }
       }
     }
   }
 
-  template <
-    ggo::border_mode border_mode, ggo::pixel_type pt, ggo::lines_order lo, typename void_ptr_t1, bool ob1, typename void_ptr_t2, bool ob2, typename processing_t
-  >
-    void apply_vertical_symmetric_processing(
-      const ggo::image_base_t<pt, lo, void_ptr_t1, ob1> & in, ggo::image_base_t<pt, lo, void_ptr_t2, ob2> & out,
-      int processing_size, processing_t processing)
+  template <border_mode border_mode, typename input_image_t, typename output_image_t, typename processing_t>
+  void apply_vertical_processing(const input_image_t & in, output_image_t & out,
+    int processing_bottom_size, int processing_top_size, processing_t && processing)
   {
-    apply_vertical_processing<border_mode>(in, out, processing_size, processing_size, processing, processing);
+    const int h = in.height();
+
+    auto handle_border = [&](int x, int y)
+    {
+      if constexpr (border_mode == ggo::border_mode::zero)
+      {
+        return output_image_t::color_t(0);
+      }
+      else
+      {
+        return in.read_pixel(x, index<border_mode>(y, h));
+      }
+    };
+
+    apply_vertical_processing(in, out, handle_border, handle_border,
+      processing_bottom_size, processing_top_size, processing);
   }
 }
 

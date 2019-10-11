@@ -1,6 +1,6 @@
 //#define GGO_GAUSSIAN_DEBUG 1
 
-#include <kernel/nonreg/ggo_nonreg.h>
+#include "ggo_2d_nonreg.h"
 #include <kernel/time/ggo_chronometer.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/processing/ggo_gaussian_blur.h>
@@ -19,7 +19,7 @@ bool test_y_32f()
     1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
     1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
     1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.f,
-    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, };
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
 
   ggo::gaussian_blur(ggo::image_view_t<ggo::pixel_type::y_32f, memory_lines_order>(pixels, { width, height }), 0.5f);
 
@@ -154,4 +154,30 @@ GGO_TEST(gaussian_blur, gaussian_y_8u_yu)
   ggo::save_bmp("gaussian_blur_y_8u_yu.bmp", image);
 #endif
 }
+
+////////////////////////////////////////////////////////////////////
+GGO_TEST(gaussian_blur, dynamic_image_y_8u_down)
+{
+  constexpr int width = 7;
+  constexpr int height = 4;
+
+  float pixels[width * height] = {
+    1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    1.f, 1.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+    1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.f,
+    0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
+
+  ggo::image_view view(pixels, { width, height }, ggo::pixel_type::y_32f, ggo::lines_order::down);
+
+  ggo::gaussian_blur(view, 0.5f);
+
+  const float expected[width * height] = {
+    1.00000000f,  0.893493056f,  0.106506981f,  0.000000000f, 0.000000000f,  0.0000000000f, 0.000000000f,
+    1.00000000f,  0.893493056f,  0.106506981f,  0.000000000f, 0.0113437371f, 0.0838195086f, 0.0113437371f,
+    0.893493056f, 0.798329771f,  0.0951632485f, 0.000000000f, 0.0838195086f, 0.619347036f,  0.0838195086f,
+    0.106506981f, 0.0951632485f, 0.0113437371f, 0.000000000f, 0.0113437371f, 0.0838195086f, 0.0113437371f };
+
+  GGO_CHECK(ggo::compare(pixels, expected, 0.0001f));
+}
+
 

@@ -47,16 +47,12 @@ GGO_TEST(image_local_processing, vertical_lines_up)
   ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> input_image(input_pixels.data(), { 3, 4 });
   ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> output_image(output_pixels.data(), { 3, 4 });
 
-  auto processing_up = [](const auto & neighborhood)
+  auto processing = [](const auto & neighborhood)
   {
     return neighborhood(1) - neighborhood(0);
   };
-  auto symmetric_down = [](const auto & neighborhood)
-  {
-    return neighborhood(-1) - neighborhood(0);
-  };
 
-  ggo::apply_vertical_processing<ggo::border_mode::zero>(input_image, output_image, 0, 1, processing_up, symmetric_down);
+  ggo::apply_vertical_processing<ggo::border_mode::zero>(input_image, output_image, 0, 1, processing);
 
   const std::array<float, 12> expected_pixels{ {
       1.f, -4.f,  1.f,
@@ -80,16 +76,12 @@ GGO_TEST(image_local_processing, vertical_lines_down)
   ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> input_image(input_pixels.data(), { 3, 4 });
   ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> output_image(output_pixels.data(), { 3, 4 });
 
-  auto processing_up = [](const auto & neighborhood)
+  auto processing = [](const auto & neighborhood)
   {
     return neighborhood(1) - neighborhood(0);
   };
-  auto processing_down = [](const auto & neighborhood)
-  {
-    return neighborhood(-1) - neighborhood(0);
-  };
 
-  ggo::apply_vertical_processing<ggo::border_mode::zero>(input_image, output_image, 0, 1, processing_up, processing_down);
+  ggo::apply_vertical_processing<ggo::border_mode::zero>(input_image, output_image, 0, 1, processing);
 
   const std::array<float, 12> expected_pixels{ {
      -5.f, -1.f, -2.f,
@@ -118,7 +110,7 @@ GGO_TEST(image_local_processing, vertical_symmetric)
     return neighborhood(-1) + neighborhood(0) + neighborhood(1);
   };
 
-  ggo::apply_vertical_symmetric_processing<ggo::border_mode::mirror>(input_image, output_image, 1, processing);
+  ggo::apply_vertical_processing<ggo::border_mode::mirror>(input_image, output_image, 1, 1, processing);
 
   const std::array<float, 12> expected_pixels{ {
      12.f,  6.f,  5.f,

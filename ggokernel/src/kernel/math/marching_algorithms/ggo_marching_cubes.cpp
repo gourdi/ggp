@@ -8,8 +8,8 @@ namespace
   //////////////////////////////////////////////////////////////////
   struct grid_cell
   {
-    std::array<ggo::pos3_f, 8> _pos;
-    std::array<float, 8>      _val;
+    std::array<ggo::pos3_f, 8>  _pos;
+    std::array<float, 8>        _val;
   };
 
   //////////////////////////////////////////////////////////////////
