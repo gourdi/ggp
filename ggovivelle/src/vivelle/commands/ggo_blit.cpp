@@ -1,13 +1,15 @@
 #include "ggo_blit.h"
 #include <kernel/ggo_string_helpers.h>
 #include <2d/ggo_image.h>
+#include <2d/processing/ggo_blit.h>
 #include <2d/io/ggo_image_io.h>
-#include <2d/ggo_blit.h>
 #include <vivelle/ggo_command.h>
 #include <vivelle/ggo_parsing.h>
 
 namespace ggo
 {
+#if 0
+
   /////////////////////////////////////////////////////////////////////
   struct blit_dispatch
   {
@@ -21,10 +23,12 @@ namespace ggo
         x, y);
     }
   };
+#endif
 
   /////////////////////////////////////////////////////////////////////
   void blit(ggo::image & image, const parameters & params)
   {
+#if 0
     auto file = params.get({ "file" });
     if (!file)
     {
@@ -39,5 +43,6 @@ namespace ggo
       blit_image.data(), blit_image.width(), blit_image.height(), blit_image.line_byte_step(),
       image.data(), image.width(), image.height(), image.line_byte_step(),
       pos.x(), pos.y());
+#endif
   }
 }

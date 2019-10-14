@@ -23,19 +23,7 @@ namespace ggo
         throw std::runtime_error("missing width or height");
       }
 
-      auto format = params.get({ "format" });
-      if (!format || *format == "rgb8uyd")
-      {
-        return ggo::image(*width, *height, ggo::rgb_8u_yd);
-      }
-      else if (*format == "rgb8uyu")
-      {
-        return ggo::image(*width, *height, ggo::rgb_8u_yu);
-      }
-      else
-      {
-        throw std::runtime_error("invalid iamge format");
-      }
+      return ggo::image({ *width, *height }, ggo::pixel_type::rgb_8u, ggo::lines_order::down);
     }
   }
 }

@@ -23,7 +23,7 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  command::command(const std::string & txt, bool filename_command) : _parameters("")
+  command::command(const std::string & txt, bit_mask<policy> policies) : _parameters("")
   {
     if (txt.empty() == true)
     {
@@ -38,7 +38,7 @@ namespace ggo
     }
 
     // Handle file name command with a drive letter in it (like 'd:/foo.jpg').
-    if (filename_command == true && pos == 1)
+    if (policies.has(policy::filename) == true && pos == 1)
     {
       pos = txt.find(':', pos + 1);
     }

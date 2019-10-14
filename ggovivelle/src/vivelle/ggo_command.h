@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <optional>
+#include <kernel/ggo_kernel.h>
 #include <kernel/ggo_vec.h>
 #include <kernel/ggo_size.h>
 #include <kernel/ggo_string_helpers.h>
@@ -62,13 +63,15 @@ namespace ggo
   {
   public:
 
-                                command(const std::string & txt, bool filename_command = false);
+    enum class policy
+    {
+      filename = 1
+    };
+
+                                command(const std::string & txt, bit_mask<policy> policies = {});
 
     const std::string &         name() const { return _name; }
     const ggo::parameters &     parameters() const { return _parameters; }
-
-    bool                        empty() const { return _parameters.empty(); }
-    size_t                      size() const { return _parameters.size(); }
 
   private:
 

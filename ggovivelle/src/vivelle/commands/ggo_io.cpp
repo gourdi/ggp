@@ -19,7 +19,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   void save(const std::string & output_command, const ggo::image & image)
   {
-    command cmd(output_command, true);
+    command cmd(output_command, { command::policy::filename });
 
     bool io_success = true;
     std::string extension = std::filesystem::path(cmd.name()).extension().u8string();
@@ -29,7 +29,7 @@ namespace ggo
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_bmp(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_bmp(cmd.name(), image.data(), image.pixel_type(), image.memory_lines_order(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == ".tga")
     {
@@ -37,7 +37,7 @@ namespace ggo
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_tga(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_tga(cmd.name(), image.data(), image.pixel_type(), image.memory_lines_order(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == ".png")
     {
@@ -45,7 +45,7 @@ namespace ggo
       {
         throw std::runtime_error("invalid output command");
       }
-      io_success = ggo::save_png(cmd.name(), image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_png(cmd.name(), image.data(), image.pixel_type(), image.memory_lines_order(), image.width(), image.height(), image.line_byte_step());
     }
     else if (extension == ".jpg" || extension == ".jpeg")
     {
@@ -74,7 +74,7 @@ namespace ggo
         throw std::runtime_error("invalid output command");
         break;
       }
-      io_success = ggo::save_jpg(cmd.name(), quality, image.data(), image.format(), image.width(), image.height(), image.line_byte_step());
+      io_success = ggo::save_jpg(cmd.name(), quality, image.data(), image.pixel_type(), image.memory_lines_order(), image.width(), image.height(), image.line_byte_step());
     }
     else
     {

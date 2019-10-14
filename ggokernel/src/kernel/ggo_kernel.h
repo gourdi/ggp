@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <numeric>
 #include <optional>
+#include <bitset>
 #include <kernel/ggo_assert.h>
 
 //////////////////////////////////////////////////////////////
@@ -383,6 +384,40 @@ namespace ggo
     }
     return range<data_t>(std::max(r1._inf, r2._inf), std::min(r1._sup, r2._sup));
   }
+}
+
+//////////////////////////////////////////////////////////////
+// Bit mask.
+namespace ggo
+{
+  template <typename enum_t>
+  struct bit_mask
+  {
+    using type = std::underlying_type_t<enum_t>;
+
+    static_assert(std::is_enum_v<enum_t>);
+    static_assert(std::is_integral_v<type>);
+    static_assert(std::numeric_limits<type>::radix == 2);
+
+    type _flags;
+
+    bit_mask(std::initializer_list<enum_t> flags)
+    {
+      _flags = 0;
+
+      for (const auto & flag : flags)
+      {
+        GGO_ASSERT_GT(static_cast<type>(flag), 0);
+        GGO_ASSERT_EQ(std::bitset<std::numeric_limits<type>::digits>(static_cast<type>(flag)).count(), 1);
+        _flags |= static_cast<type>(flag);
+      }
+    }
+
+    bool has(enum_t e)
+    {
+      return (_flags & static_cast<type>(e)) != 0;
+    }
+  };
 }
 
 #endif
