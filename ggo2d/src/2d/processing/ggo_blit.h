@@ -95,13 +95,13 @@ namespace ggo
     int left, int bottom)
   {
     // Create image views.
-    auto input_view = input_image.create_view(rect_int::from_left_width_bottom_height(-left, output_image.width(), -bottom, output_image.height()));
+    auto input_view = make_image_view(input_image, rect_int::from_left_width_bottom_height(-left, output_image.width(), -bottom, output_image.height()));
     if (!input_view)
     {
       return;
     }
 
-    auto output_view = output_image.create_view(rect_int::from_left_width_bottom_height(left, input_image.width(), bottom, input_image.height()));
+    auto output_view = make_image_view(output_image, rect_int::from_left_width_bottom_height(left, input_image.width(), bottom, input_image.height()));
     if (!output_view)
     {
       return;

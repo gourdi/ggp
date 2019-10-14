@@ -24,7 +24,7 @@ namespace ggo
   template <typename image_t>
   void fill_solid(image_t & image, const typename image_t::color_t & c, const ggo::rect_int & clipping)
   {
-    auto view = image.create_view(clipping);
+    auto view = make_image_view(image, clipping);
     if (view)
     {
       fill_solid(*view, c);

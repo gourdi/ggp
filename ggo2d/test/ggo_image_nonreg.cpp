@@ -29,7 +29,7 @@ GGO_TEST(image, image_view_yd)
     { 30, 31, 32, 33, 34, 35 },
     { 40, 41, 42, 43, 44, 45 } });
 
-  auto view = img.create_view(ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
+  auto view = ggo::make_image_view(img, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
 
   GGO_CHECK_EQ(view->read_pixel(0, 0), 32);
   GGO_CHECK_EQ(view->read_pixel(1, 0), 33);
@@ -49,7 +49,7 @@ GGO_TEST(image, image_view_yu)
     { 30, 31, 32, 33, 34, 35 },
     { 40, 41, 42, 43, 44, 45 } });
 
-  auto view = img.create_view(ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
+  auto view = ggo::make_image_view(img, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
 
   GGO_CHECK_EQ(view->read_pixel(0, 0), 12);
   GGO_CHECK_EQ(view->read_pixel(1, 0), 13);
@@ -58,64 +58,3 @@ GGO_TEST(image, image_view_yu)
   GGO_CHECK_EQ(view->read_pixel(1, 1), 23);
   GGO_CHECK_EQ(view->read_pixel(2, 1), 24);
 }
-
-
-
-
-namespace ggo
-{
-  template <ggo::pixel_type pixel_type>
-  struct image_input_iterator_1d
-  {
-    using data_t = typename pixel_type_traits<pixel_type>::color_t;
-
-    image_input_iterator_1d(const void * ptr, std::ptrdiff_t pixel_offset) : _ptr(ptr), _pixel_offset(pixel_offset) {}
-
-    const void * _ptr;
-    const std::ptrdiff_t _pixel_offset;
-
-    void operator++() { _ptr = ggo::move_ptr(_ptr, _pixel_offset); }
-    void operator--() { _ptr = ggo::move_ptr(_ptr, -_pixel_offset); }
-    image_input_iterator_1d operator+(std::ptrdiff_t delta) { return image_input_iterator_1d(ggo::move_ptr(_ptr, _pixel_offset * delta)); }
-    image_input_iterator_1d operator-(std::ptrdiff_t delta) { return image_input_iterator_1d(ggo::move_ptr(_ptr, -_pixel_offset * delta)); }
-    bool operator==(const image_input_iterator_1d & it) { return _ptr == it._ptr; }
-    bool operator!=(const image_input_iterator_1d & it) { return _ptr != it._ptr; }
-    data_t operator()(std::ptrdiff_t delta) const { return  pixel_type_traits<pixel_type>::read(ggo::move_ptr(_ptr, _pixel_offset * delta)); }
-  };
-
-  template <pixel_type pixel_type, lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer>
-  auto make_image_input_line_iterator_1d(const image_base_t<pixel_type, memory_lines_order, void_ptr_t, owns_buffer> & image, int y)
-  {
-    return image_input_iterator_1d(ggo::move_ptr(image.data(), y * image.line_byte_step(), image.pixel_byte_size()));
-  }
-
-  template <typename void_ptr_t, bool owns_buffer>
-  auto make_image_input_line_iterator_1d(const image_base<void_ptr_t, owns_buffer> & image, int y)
-  {
-    return image_input_iterator_1d(ggo::move_ptr(image.data(), y * image.line_byte_step(), image.pixel_byte_size()));
-  }
-
-  template <pixel_type pixel_type, lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer>
-  auto make_image_input_column_iterator_1d(const image_base_t<pixel_type, memory_lines_order, void_ptr_t, owns_buffer> & image, int x)
-  {
-    return image_input_iterator_1d(ggo::move_ptr(image.data(), x * image.pixel_byte_size(), image.line_byte_step()));
-  }
-
-  template <typename void_ptr_t, bool owns_buffer>
-  auto make_image_input_column_iterator_1d(const image_base<void_ptr_t, owns_buffer> & image, int x)
-  {
-    return image_input_iterator_1d(ggo::move_ptr(image.data(), x * image.pixel_byte_size(), image.line_byte_step()));
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(signal_processing_1d, toto)
-{
-
-}
-
-
-
-
-
-

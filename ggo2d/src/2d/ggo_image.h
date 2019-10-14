@@ -92,32 +92,6 @@ namespace ggo
     image_base_t(const image_base_t & image) = delete;
     void operator=(const image_base_t & image) = delete;
 
-    // Image view.
-    std::optional<image_base_t<pixel_type_, memory_lines_order_, const void *, false>> create_view(ggo::rect_int clipping) const
-    {
-      if (clipping.clip(rect_int::from_size(_size)) == false)
-      {
-        return {};
-      }
-
-      const void * ptr = pixel_ptr(clipping.left(), memory_lines_order_ == ggo::lines_order::up ? clipping.bottom() : clipping.top());
-
-      return image_base_t<pixel_type_, memory_lines_order_, const void *, false>(ptr, clipping.size(), _line_byte_step);
-    }
-
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    std::optional<image_base_t<pixel_type_, memory_lines_order_, void *, false>> create_view(ggo::rect_int clipping)
-    {
-      if (clipping.clip(rect_int::from_size(_size)) == false)
-      {
-        return {};
-      }
-
-      void * ptr = pixel_ptr(clipping.left(), memory_lines_order_ == ggo::lines_order::up ? clipping.bottom() : clipping.top());
-
-      return image_base_t<pixel_type_, memory_lines_order_, void *, false>(ptr, clipping.size(), _line_byte_step);
-    }
-
     // Read interface.
     const void *  data() const { return _buffer; }
     const void *  line_ptr(int y) const { return ggo::get_line_ptr<memory_lines_order_>(_buffer, y, _size.height(), _line_byte_step);    }
@@ -270,6 +244,7 @@ namespace ggo
   using image = image_base<void *, true>;
 }
 
+// Dispatch.
 namespace ggo
 {
   template <lines_order memory_lines_order, typename functor>
@@ -295,6 +270,64 @@ namespace ggo
       throw std::runtime_error("invalid memory lines order");
       break;
     }
+  }
+}
+
+// Image view.
+namespace ggo
+{
+  template <typename image_t>
+  class generic_view
+  {
+  public:
+
+    using color_t = typename image_t::color_t;
+
+    generic_view(image_t & img, ggo::rect_int clipping) : _img(img) {}
+
+    size size() const { return _clipping.size(); }
+
+  private:
+
+    rect_int  _clipping;
+    image_t & _img;
+  };
+
+  template <typename image_t>
+  std::optional<generic_view<image_t>> make_image_view(image_t & img, rect_int clipping)
+  {
+    if (clipping.clip(rect_int::from_size(_size)) == false)
+    {
+      return {};
+    }
+
+    return generic_view<image_t>(img, clipping);
+  }
+
+  template <pixel_type pt, lines_order lo, typename void_ptr_t, bool owns_buffer>
+  std::optional<image_base_t<pt, lo, const void *, false>> make_image_view(const image_base_t<pt, lo, void_ptr_t, owns_buffer> & img, ggo::rect_int clipping)
+  {
+    if (clipping.clip(rect_int::from_size(img.size())) == false)
+    {
+      return {};
+    }
+
+    const void * ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
+
+    return image_base_t<pt, lo, const void *, false>(ptr, clipping.size(), img.line_byte_step());
+  }
+
+  template <pixel_type pt, lines_order lo, typename void_ptr_t, bool owns_buffer>
+  std::optional<image_base_t<pt, lo, void_ptr_t, false>> make_image_view(image_base_t<pt, lo, void_ptr_t, owns_buffer> & img, ggo::rect_int clipping)
+  {
+    if (clipping.clip(rect_int::from_size(img.size())) == false)
+    {
+      return {};
+    }
+
+    void_ptr_t ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
+
+    return image_base_t<pt, lo, void_ptr_t, false>(ptr, clipping.size(), img.line_byte_step());
   }
 }
 
