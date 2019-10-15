@@ -1,5 +1,6 @@
 #include "ggo_io.h"
 #include <kernel/ggo_string_helpers.h>
+#include <kernel/time/ggo_chronometer.h>
 #include <2d/io/ggo_tga.h>
 #include <2d/io/ggo_bmp.h>
 #include <2d/io/ggo_png.h>
@@ -11,14 +12,35 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::image load(const std::string & filename)
+  ggo::image open_image(const std::string & input_command)
   {
-    return load_image(filename);
+    scoped_chronometer chrono("opening image", true);
+
+    // Open a file.
+    if (std::filesystem::exists(input_command) == true)
+    {
+      return load_image(input_command);
+    }
+    else // Allocate an image.
+    {
+      const parameters params(input_command);
+
+      auto width = params.get<int>({ "w", "width" });
+      auto height = params.get<int>({ "h", "height" });
+      if (!width || !height)
+      {
+        throw std::runtime_error("missing width or height");
+      }
+
+      return ggo::image({ *width, *height }, ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+    }
   }
 
   //////////////////////////////////////////////////////////////
-  void save(const std::string & output_command, const ggo::image & image)
+  void save_image(const std::string & output_command, const ggo::image & image)
   {
+    scoped_chronometer chrono("saving image", true);
+
     command cmd(output_command, { command::policy::filename });
 
     bool io_success = true;

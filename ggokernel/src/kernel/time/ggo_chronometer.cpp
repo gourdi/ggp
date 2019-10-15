@@ -1,5 +1,6 @@
 #include "ggo_chronometer.h"
 #include <sstream>
+#include <iostream>
 
 namespace ggo
 {
@@ -93,5 +94,22 @@ namespace ggo
     }
     
     return oss.str();
+  }
+}
+
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  scoped_chronometer::scoped_chronometer(const std::string & label, bool display_ms)
+    :
+    _label(label), _display_ms(display_ms)
+  {
+
+  }
+  
+  //////////////////////////////////////////////////////////////
+  scoped_chronometer::~scoped_chronometer()
+  {
+    std::cout << _label << ": " << _chronometer.get_display_time(_display_ms) << std::endl;
   }
 }

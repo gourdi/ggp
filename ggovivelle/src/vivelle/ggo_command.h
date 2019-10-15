@@ -68,10 +68,10 @@ namespace ggo
       filename = 1
     };
 
-                                command(const std::string & txt, bit_mask<policy> policies = {});
+                            command(const std::string & txt, bit_mask<policy> policies = {});
 
-    const std::string &         name() const { return _name; }
-    const ggo::parameters &     parameters() const { return _parameters; }
+    const std::string &     name() const { return _name; }
+    const ggo::parameters & parameters() const { return _parameters; }
 
   private:
 

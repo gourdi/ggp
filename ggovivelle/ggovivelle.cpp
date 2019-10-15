@@ -1,53 +1,32 @@
 #include <kernel/ggo_string_helpers.h>
 #include <kernel/ggo_color_stream.h>
+#include <kernel/time/ggo_chronometer.h>
 #include <vivelle/ggo_command.h>
-#include <vivelle/commands/ggo_open.h>
-#include <vivelle/commands/ggo_io.h>
-#include <vivelle/commands/ggo_blit.h>
-#include <vivelle/commands/ggo_rescale.h>
-#include <vivelle/commands/ggo_crop.h>
-#include <vivelle/commands/ggo_fill.h>
-#include <vivelle/commands/ggo_paint.h>
-#include <vivelle/commands/ggo_blur.h>
+#include <vivelle/ggo_io.h>
+#include <vivelle/image_processings/ggo_image_processing_abc.h>
 
 namespace ggo
 {
-  void process_image(ggo::image & image, 
+  ggo::image process_image(ggo::image image,
     std::vector<std::string>::const_iterator begin,
     std::vector<std::string>::const_iterator end)
   {
     for (auto it = begin; it != end; ++it)
     {
       command cmd(*it);
-      if (cmd.name() == "blit")
-      {
-        blit(image, cmd.parameters());
-      }
-      else if (cmd.name() == "rescale")
-      {
-        image = rescale(image, cmd.parameters());
-      }
-      else if (cmd.name() == "crop")
-      {
-        image = crop(image, cmd.parameters());
-      }
-      else if (cmd.name() == "fill")
-      {
-        ggo::fill(image, cmd.parameters());
-      }
-      else if (cmd.name() == "paint")
-      {
-        ggo::paint(image, cmd.parameters());
-      }
-      else if (cmd.name() == "blur")
-      {
-        ggo::blur(image, cmd.parameters());
-      }
-      else
+
+      scoped_chronometer chrono(cmd.name(), true);
+
+      auto processing = image_processing_abc::create(cmd.name());
+      if (!processing)
       {
         throw std::runtime_error("unexpected command '" + cmd.name() + "'");
       }
+
+      image = processing->process(std::move(image), cmd.parameters());
     }
+
+    return image;
   }
 }
 
@@ -73,10 +52,10 @@ int main(int argc, char ** argv)
     auto image = ggo::open_image(args.front());
     image_loaded = true;
 
-    process_image(image, args.begin() + 1, args.end() - 1);
+    image = process_image(std::move(image), args.begin() + 1, args.end() - 1);
     image_processed = true;
 
-    ggo::save(args.back(), image);
+    ggo::save_image(args.back(), image);
     image_saved = true;
   }
   catch (std::exception & e)

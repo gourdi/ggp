@@ -1,4 +1,4 @@
-#include "ggo_fill.h"
+#include "ggo_fill_processing.h"
 #include <2d/fill/ggo_fill.h>
 #include <vivelle/ggo_command.h>
 #include <vivelle/ggo_parsing.h>
@@ -51,8 +51,10 @@ namespace ggo
     }
   };
 
-  void fill(ggo::image & image, const parameters & params)
+  ggo::image fill_processing::process(ggo::image img, const parameters & params) const 
   {
-    dispatch_image_format<fill_functor>(image.pixel_type(), image.memory_lines_order(), image, params);
+    dispatch_image_format<fill_functor>(img.pixel_type(), img.memory_lines_order(), img, params);
+
+    return img;
   }
 }
