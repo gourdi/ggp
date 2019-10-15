@@ -50,8 +50,8 @@ namespace ggo
     template <pixel_type pixel_type, lines_order memory_lines_order, typename input_image_t, typename output_image_t>
     static void call(const input_image_t & input, output_image_t & output, ggo::scaling_algo algo)
     {
-      const_image_view_t<pixel_type, memory_lines_order> input_view(input.data(), input.size());
-      image_view_t<pixel_type, memory_lines_order> output_view(output.data(), output.size());
+      const_image_view_t<pixel_type, memory_lines_order> input_view(input.data(), input.size(), input.line_byte_step());
+      image_view_t<pixel_type, memory_lines_order> output_view(output.data(), output.size(), output.line_byte_step());
 
       scale(input_view, output_view, algo);
     }

@@ -149,7 +149,7 @@ namespace ggo
   template <bool owns_buffer>
   void gaussian_blur(image_base<void *, owns_buffer> & image, float stddev, border_mode border_mode = border_mode::mirror)
   {
-    // Limited dispatch for now, see later it I should implement all color types.
+    // Limited dispatch for now, see later if I should implement all color types.
     switch (image.pixel_type())
     {
     case ggo::pixel_type::y_8u:
