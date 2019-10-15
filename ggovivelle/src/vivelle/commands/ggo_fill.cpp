@@ -7,26 +7,29 @@ namespace ggo
 {
   struct fill_functor
   {
-    //template <ggo::image_format format>
-    //static void fill_solid(ggo::image & image, const std::string & color_param)
-    //{
-    //  using format_traits = ggo::image_format_traits<format>;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    static void fill_solid(ggo::image & image, const std::string & color_param)
+    {
+      using color_t = pixel_type_traits<pixel_type>::color_t;
+      constexpr auto color_space = color_traits<color_t>::color_space;
 
-    //  if constexpr(std::is_same<format_traits::color_t, ggo::rgb_8u>::value == true)
-    //  {
-    //    auto color = parse_color_8u(color_param);
-    //    if (!color)
-    //    {
-    //      throw std::runtime_error("wrong solid color parameter '" + color_param + "'");
-    //    }
+      ggo::image_view_t<pixel_type, memory_lines_order> view(image.data(), image.size(), image.line_byte_step());
 
-    //    ggo::fill_solid<format>(image.data(), image.width(), image.height(), image.line_byte_step(), *color);
-    //  }
-    //  else
-    //  {
-    //    throw std::runtime_error("unsupported format when filling image");
-    //  }
-    //}
+      if constexpr (color_space == color_space::rgb)
+      {
+        auto color = parse_color<color_t>(color_param);
+        if (!color)
+        {
+          throw std::runtime_error("invalid fill color parameter");
+        }
+
+        ggo::fill_solid(view, *color);
+      }
+      else
+      {
+        throw std::runtime_error("unsupported color space for fill command");
+      }
+    }
 
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void call(ggo::image & image, const parameters & params)
@@ -39,7 +42,7 @@ namespace ggo
       auto color_param = params.get({ "solid", "color" });
       if (color_param)
       {
-        //fill_functor::fill_solid<format>(image, *color_param);
+        fill_solid<pixel_type, memory_lines_order>(image, *color_param);
       }
       else
       {

@@ -15,7 +15,38 @@ namespace ggo
   ggo::pos2_i   parse_margins(const parameters & params, const std::string & key, const ggo::size & image_size, const ggo::size & content_size);
   ggo::size     parse_scaling(const parameters & params, const std::string & key, const ggo::size & image_size);
 
-  std::optional<ggo::rgb_8u>  parse_color_8u(const std::string & color_str);
+  template <typename color_t>
+  std::optional<color_t>  parse_color(const std::string & color_str)
+  {
+    if (color_str == "black")
+    {
+      return ggo::black<color_t>();
+    }
+    else if (color_str == "gray")
+    {
+      return ggo::gray<color_t>();
+    }
+    else if (color_str == "white")
+    {
+      return ggo::white<color_t>();
+    }
+    else if (color_str == "red")
+    {
+      return ggo::red<color_t>();
+    }
+    else if (color_str == "green")
+    {
+      return ggo::green<color_t>();
+    }
+    else if (color_str == "blue")
+    {
+      return ggo::blue<color_t>();
+    }
+    else
+    {
+      return {};
+    }
+  }
 }
 
 #endif

@@ -128,14 +128,14 @@ namespace ggo
     {
     case ggo::lines_order::up:
     {
-      ggo::image_view_t<pt, ggo::lines_order::up> view(image.data(), image.size());
+      ggo::image_view_t<pt, ggo::lines_order::up> view(image.data(), image.size(), image.line_byte_step());
 
       gaussian_blur(view, stddev, border_mode);
     }
     break;
     case ggo::lines_order::down:
     {
-      ggo::image_view_t<pt, ggo::lines_order::down> view(image.data(), image.size());
+      ggo::image_view_t<pt, ggo::lines_order::down> view(image.data(), image.size(), image.line_byte_step());
 
       gaussian_blur(view, stddev, border_mode);
     }
@@ -160,6 +160,9 @@ namespace ggo
       break;
     case ggo::pixel_type::rgb_8u:
       gaussian_blur_aux<ggo::pixel_type::rgb_8u>(image, stddev, border_mode);
+      break;
+    case ggo::pixel_type::bgr_8u:
+      gaussian_blur_aux<ggo::pixel_type::bgr_8u>(image, stddev, border_mode);
       break;
     case ggo::pixel_type::bgrx_8u:
       gaussian_blur_aux<ggo::pixel_type::bgrx_8u>(image, stddev, border_mode);
