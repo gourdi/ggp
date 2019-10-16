@@ -1,8 +1,9 @@
 #ifndef __GGO_2D_MORPHOLOGY__
 #define __GGO_2D_MORPHOLOGY__
 
-#include <2d/ggo_pixel_type.h>
 #include <kernel/math/signal_processing/ggo_morphology.h>
+#include <2d/ggo_pixel_type.h>
+#include <2d/ggo_image.h>
 
 // Definition.
 namespace ggo
@@ -19,7 +20,7 @@ namespace ggo
   void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height);
 
   template <typename input_image_t, typename output_image_t>
-  void erosion_disc(const input_image_t & input, output_image_t & output, int line_byte_step, float radius);
+  void erosion_disc(const input_image_t & input, output_image_t & output, float radius);
 }
 
 // Implementation.
@@ -104,7 +105,7 @@ namespace ggo
   }
 
   template <typename input_image_t, typename output_image_t>
-  void erosion_disc(const input_image_t & input, output_image_t & output, int line_byte_step, float radius)
+  void erosion_disc(const input_image_t & input, output_image_t & output, float radius)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
@@ -120,6 +121,168 @@ namespace ggo
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
     morpho_disc(in, out, input.width(), input.height(), radius, pred);
+  }
+}
+
+// Dynamic images. For now only a subset of pixel types is supported.
+namespace ggo
+{
+  template <pixel_type pixel_type>
+  struct morphology_dispatcher
+  {
+    template <
+      typename input_void_ptr_t, bool input_owns_buffer,
+      typename output_void_ptr_t, bool output_owns_buffer
+    >
+      static void dilatation_rectangle(
+        const image_base<input_void_ptr_t, input_owns_buffer> & input,
+        image_base<output_void_ptr_t, output_owns_buffer> & output,
+        int kernel_width, int kernel_height)
+    {
+      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+
+      ggo::dilatation_rectangle(input_view, output_view, kernel_width, kernel_height);
+    }
+
+    template <
+      typename input_void_ptr_t, bool input_owns_buffer,
+      typename output_void_ptr_t, bool output_owns_buffer
+    >
+      static void dilatation_disc(
+        const image_base<input_void_ptr_t, input_owns_buffer> & input,
+        image_base<output_void_ptr_t, output_owns_buffer> & output,
+        float radius)
+    {
+      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+
+      ggo::dilatation_disc(input_view, output_view, radius);
+    }
+
+    template <
+      typename input_void_ptr_t, bool input_owns_buffer,
+      typename output_void_ptr_t, bool output_owns_buffer
+    >
+      static void erosion_rectangle(
+        const image_base<input_void_ptr_t, input_owns_buffer> & input,
+        image_base<output_void_ptr_t, output_owns_buffer> & output,
+        int kernel_width, int kernel_height)
+    {
+      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+
+      ggo::erosion_rectangle(input_view, output_view, kernel_width, kernel_height);
+    }
+
+    template <
+      typename input_void_ptr_t, bool input_owns_buffer,
+      typename output_void_ptr_t, bool output_owns_buffer
+    >
+      static void erosion_disc(
+        const image_base<input_void_ptr_t, input_owns_buffer> & input,
+        image_base<output_void_ptr_t, output_owns_buffer> & output,
+        float radius)
+    {
+      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+
+      ggo::erosion_disc(input_view, output_view, radius);
+    }
+  };
+
+  // Dilatation.
+  template <
+    typename input_void_ptr_t, bool input_owns_buffer,
+    typename output_void_ptr_t, bool output_owns_buffer
+  >
+    void dilatation_rectangle(
+      const image_base<input_void_ptr_t, input_owns_buffer> & input,
+      image_base<output_void_ptr_t, output_owns_buffer> & output,
+      int kernel_width, int kernel_height)
+  {
+    if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::rgb_8u>::dilatation_rectangle(input, output, kernel_width, kernel_height);
+    }
+    else if (input.pixel_type() == ggo::pixel_type::bgr_8u && output.pixel_type() == ggo::pixel_type::bgr_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::bgr_8u>::dilatation_rectangle(input, output, kernel_width, kernel_height);
+    }
+    else
+    {
+      throw std::runtime_error("pixel type mismatch, or unsupported");
+    }
+  }
+
+  template <
+    typename input_void_ptr_t, bool input_owns_buffer,
+    typename output_void_ptr_t, bool output_owns_buffer
+  >
+    void dilatation_disc(
+      const image_base<input_void_ptr_t, input_owns_buffer> & input,
+      image_base<output_void_ptr_t, output_owns_buffer> & output,
+      float radius)
+  {
+    if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::rgb_8u>::dilatation_disc(input, output, radius);
+    }
+    else if (input.pixel_type() == ggo::pixel_type::bgr_8u && output.pixel_type() == ggo::pixel_type::bgr_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::bgr_8u>::dilatation_disc(input, output, radius);
+    }
+    else
+    {
+      throw std::runtime_error("pixel type mismatch, or unsupported");
+    }
+  }
+
+  // Erosion.
+  template <
+    typename input_void_ptr_t, bool input_owns_buffer,
+    typename output_void_ptr_t, bool output_owns_buffer
+  >
+    void erosion_rectangle(
+      const image_base<input_void_ptr_t, input_owns_buffer> & input,
+      image_base<output_void_ptr_t, output_owns_buffer> & output,
+      int kernel_width, int kernel_height)
+  {
+    if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::rgb_8u>::erosion_rectangle(input, output, kernel_width, kernel_height);
+    }
+    else if (input.pixel_type() == ggo::pixel_type::bgr_8u && output.pixel_type() == ggo::pixel_type::bgr_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::bgr_8u>::erosion_rectangle(input, output, kernel_width, kernel_height);
+    }
+    else
+    {
+      throw std::runtime_error("pixel type mismatch, or unsupported");
+    }
+  }
+
+  template <
+    typename input_void_ptr_t, bool input_owns_buffer,
+    typename output_void_ptr_t, bool output_owns_buffer
+  >
+    void erosion_disc(
+      const image_base<input_void_ptr_t, input_owns_buffer> & input,
+      image_base<output_void_ptr_t, output_owns_buffer> & output,
+      float radius)
+  {
+    if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::rgb_8u>::erosion_disc(input, output, radius);
+    }
+    else if (input.pixel_type() == ggo::pixel_type::bgr_8u && output.pixel_type() == ggo::pixel_type::bgr_8u)
+    {
+      morphology_dispatcher<ggo::pixel_type::bgr_8u>::erosion_disc(input, output, radius);
+    }
+    else
+    {
+      throw std::runtime_error("pixel type mismatch, or unsupported");
+    }
   }
 }
 

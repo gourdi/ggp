@@ -4,6 +4,7 @@
 #include "ggo_crop_processing.h"
 #include "ggo_fill_processing.h"
 #include "ggo_rescale_processing.h"
+#include "ggo_morphology_processing.h"
 #include "../ggo_command.h"
 
 namespace ggo
@@ -29,6 +30,14 @@ namespace ggo
     else if (cmd_name == "blur")
     {
       return std::make_unique<blur_processing>();
+    }
+    else if (cmd_name == "erosion")
+    {
+      return std::make_unique<morphology_processing>(morphology_processing::type::erosion);
+    }
+    else if (cmd_name == "dilatation")
+    {
+      return std::make_unique<morphology_processing>(morphology_processing::type::dilatation);
     }
     else
     {
