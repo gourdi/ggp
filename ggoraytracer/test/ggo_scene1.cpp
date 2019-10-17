@@ -41,8 +41,7 @@ GGO_TEST(test_scene, scene1)
   ggo::antialiasing_point_camera camera(width, height, camera_basis, 0.1f);
   ggo::antialiasing_renderer renderer(camera);
 
-  ggo::array_8u buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
+  auto img = renderer.render(scene, { width, height });
 
-  ggo::save_bmp("scene1.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  ggo::save_bmp("scene1.bmp", img);
 }

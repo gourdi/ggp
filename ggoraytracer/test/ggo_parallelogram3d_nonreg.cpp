@@ -28,7 +28,6 @@ GGO_TEST(parallelogram3d, test)
   
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_8u buffer(3 * size * size);
-  renderer.render(buffer.data(), size, size, 3 * size, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("parallelogram3d.bmp", buffer.data(), ggo::rgb_8u_yu, size, size, 3 * size);
+  auto img = renderer.render(scene, { size, size });
+  ggo::save_bmp("parallelogram3d.bmp", img);
 }

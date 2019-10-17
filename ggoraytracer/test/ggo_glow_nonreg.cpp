@@ -34,11 +34,9 @@ GGO_TEST(glow, disc)
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_8u buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("glow_disc.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img = renderer.render(scene, { width, height });
+  ggo::save_bmp("glow_disc.bmp", img);
 }
-
 
 GGO_TEST(glow, sphere)
 {
@@ -65,9 +63,8 @@ GGO_TEST(glow, sphere)
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_8u buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("glow_sphere.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img = renderer.render(scene, { width, height });
+  ggo::save_bmp("glow_sphere.bmp", img);
 }
 
 

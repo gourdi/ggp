@@ -35,11 +35,10 @@ GGO_TEST(caustics, test)
 
   // Rendering.
   ggo::global_sampling_renderer renderer(camera, direct_lighting_samples_count);
-  ggo::array_8u buffer(3 * width * height);
 
   // Without indirect lighting.
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("caustics_off.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img = renderer.render(scene, { width, height });
+  ggo::save_bmp("caustics_off.bmp", img);
 
   // With indirect lighting.
   std::vector<ggo::pos3_f> target_samples;
@@ -56,6 +55,6 @@ GGO_TEST(caustics, test)
   ggo::raytrace_params raytrace_params;
   raytrace_params._indirect_lighting = &photon_mapping;
 
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, raytrace_params);
-  ggo::save_bmp("caustics_on.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  img = renderer.render(scene, { width, height }, raytrace_params);
+  ggo::save_bmp("caustics_on.bmp", img);
 }

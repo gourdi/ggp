@@ -45,18 +45,21 @@ GGO_TEST(octree, test)
   ggo::mono_sampling_renderer renderer(camera);
 
   // Brute force rendering.
-  ggo::array_8u buffer1(3 * width * height);
-  renderer.render(buffer1.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
+  auto img1 = renderer.render(scene, { width, height });
 
   // Octree rendering.
   ggo::raytrace_params params;
   ggo::octree_raycaster raycaster(scene.solid_objects());
   params._raycaster = &raycaster;
 
-  ggo::array_8u buffer2(3 * width * height);
-  renderer.render(buffer2.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene, params);
-  ggo::save_bmp("octree_raycaster.bmp", buffer2.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img2 = renderer.render(scene, { width, height }, params);
+  ggo::save_bmp("octree_raycaster.bmp", img2);
 
   // Check octree and brute force rendering.
-  GGO_CHECK(buffer1 == buffer2);
+  GGO_CHECK_EQ(img1.size(), img2.size());
+  GGO_CHECK_EQ(img1.pixel_type(), img2.pixel_type());
+  GGO_CHECK_EQ(img1.memory_lines_order(), img2.memory_lines_order());
+  GGO_CHECK_EQ(img1.line_byte_step(), 3 * width);
+  GGO_CHECK_EQ(img2.line_byte_step(), 3 * width);
+  GGO_CHECK(memcmp(img1.data(), img2.data(), img1.height() * img1.line_byte_step()) == 0);
 }

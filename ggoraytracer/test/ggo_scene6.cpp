@@ -32,7 +32,6 @@ GGO_TEST(test_scene, scene6)
   ggo::multi_sampling_isometric_camera camera(width, height, camera_basis, 3.f, 50.f, 2.f);
 
   ggo::global_sampling_renderer renderer(camera, samples_count);
-  ggo::array_8u buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("scene6.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img = renderer.render(scene, { width, height });
+  ggo::save_bmp("scene6.bmp", img);
 }

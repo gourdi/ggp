@@ -29,7 +29,6 @@ GGO_TEST(cylinder, test)
 
   // Rendering.
   ggo::mono_sampling_renderer renderer(camera);
-  ggo::array_8u buffer(3 * width * height);
-  renderer.render(buffer.data(), width, height, 3 * width, ggo::rgb_8u_yu, scene);
-  ggo::save_bmp("cylinder.bmp", buffer.data(), ggo::rgb_8u_yu, width, height, 3 * width);
+  auto img = renderer.render(scene, { width, height });
+  ggo::save_bmp("cylinder.bmp", img);
 }
