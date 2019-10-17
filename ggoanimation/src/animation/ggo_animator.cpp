@@ -29,17 +29,17 @@ void ggo::animator::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::animator::render(void * buffer, int width, int height, int line_step, ggo::image_format format) const
+void ggo::animator::render(ggo::image & img) const
 {
-  render(buffer, width, height, line_step, format, ggo::rect_int::from_width_height(width, height));
+  render(img, ggo::rect_int::from_size(img.size()));
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::animator::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping) const
+void ggo::animator::render(ggo::image & img, const ggo::rect_int & clipping) const
 {
   for (const auto & animate : _animates)
   {
-    animate->render(buffer, width, height, line_step, format, clipping);
+    animate->render(img, clipping);
   }
 }
 
