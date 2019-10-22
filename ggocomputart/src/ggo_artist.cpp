@@ -4,9 +4,9 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  artist::artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, lines_order memory_lines_order)
+  artist::artist(int width, int height)
     :
-    _width(width), _height(height), _line_byte_step(line_byte_step), _pixel_type(pixel_type), _memory_lines_order(memory_lines_order)
+    _width(width), _height(height)
   {
   }
 
@@ -58,7 +58,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::pos2_f artist::get_center() const
+  ggo::pos2_f artist::center() const
   {
     return ggo::pos2_f(static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2);
   }

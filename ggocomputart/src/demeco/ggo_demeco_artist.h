@@ -6,11 +6,12 @@
 #include <2d/ggo_image.h>
 #include <2d/paint/ggo_pixel_sampling.h>
 #include <2d/paint/ggo_paint_shape_abc.h>
+#include <2d/paint/ggo_multi_scale_paint.h>
 
 namespace ggo
 {
   template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
-  class demeco_artist
+  class demeco_artist : public artist
   {
   public:
 
@@ -20,9 +21,6 @@ namespace ggo
     void  render_tile(void * buffer, int line_byte_step, int frame_index, const ggo::rect_int & clipping);
 
   private:
-
-    int   min_size() const { return std::min(_width, _height); }
-    pos2_f center() const { return { static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2 }; }
 
     static typename pixel_type_traits<pixel_type>::color_t from_8u(const ggo::rgb_8u & c);
 
@@ -122,8 +120,6 @@ namespace ggo
       std::vector<peak> _peaks;
     };
 
-    int _width;
-    int _height;
     palette_t _palette;
     std::vector<std::unique_ptr<demeco>> _demecos;
     scene2d<typename pixel_type_traits<pixel_type>::color_t> _background_scene;

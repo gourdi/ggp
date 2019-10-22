@@ -46,7 +46,7 @@ void ggo::plastic_animation_artist::render_frame(void * buffer, int frame_index,
     bitmap_params.push_back(params);
   }
 
-  ggo::plastic_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
-  artist.render(buffer, bitmap_params, _color, _altitude_factor);
+  ggo::plastic_artist::render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(),
+    bitmap_params, _color, _altitude_factor);
 }
 

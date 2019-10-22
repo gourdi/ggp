@@ -26,7 +26,7 @@ typename ggo::pixel_type_traits<pixel_type>::color_t ggo::demeco_artist<pixel_ty
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
 ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco_artist(int width, int height)
 :
-_width(width), _height(height),
+artist(width, height),
 _background_image({ width, height })
 {
   using color_t = typename pixel_type_traits<pixel_type>::color_t;
@@ -145,10 +145,10 @@ bool ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::update()
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
 void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::render_tile(void * buffer, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
 {
-  GGO_ASSERT_EQ(_width, _background_image.width());
-  GGO_ASSERT_EQ(_height, _background_image.height());
+  GGO_ASSERT_EQ(width(), _background_image.width());
+  GGO_ASSERT_EQ(height(), _background_image.height());
 
-  image_t<pixel_type, memory_lines_order> img(buffer, { _width, _height }, line_byte_step);
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step);
 
   // Render the background demecos.
   paint<sampling>(_background_image, _background_scene, clipping);

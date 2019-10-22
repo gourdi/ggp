@@ -16,7 +16,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   realtime_artist_abc::realtime_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
   :
-  artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+  paint_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
   {
 
   }

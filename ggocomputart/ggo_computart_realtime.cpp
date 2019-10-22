@@ -54,7 +54,7 @@ ggo::realtime_artist_abc * create_artist()
   };
 #endif
 
-  auto index = ggo::rand<size_t>(0, ids.size() - 1);
+  int index = 4;// ggo::rand<size_t>(0, ids.size() - 1);
 
   std::cout << "Artist ID: " << index << std::endl;
 

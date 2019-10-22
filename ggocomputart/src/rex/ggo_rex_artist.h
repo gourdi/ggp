@@ -4,6 +4,7 @@
 #include <ggo_bitmap_artist_abc.h>
 #include <kernel/ggo_unordered_pair.h>
 #include <2d/paint/ggo_color_triangle.h>
+#include <2d/paint/ggo_multi_scale_paint.h>
 
 namespace ggo
 {
@@ -33,7 +34,7 @@ namespace ggo
 
     struct rex_opened_disc_data
     {
-      ggo::pos2_f  _center;
+      ggo::pos2_f _center;
       float       _outter_radius;
       float       _inner_radius;
     };

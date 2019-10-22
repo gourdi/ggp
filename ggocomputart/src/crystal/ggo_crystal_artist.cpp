@@ -5,6 +5,66 @@
 #include <2d/paint/ggo_blend.h>
 #include <2d/fill/ggo_fill.h>
 
+namespace
+{
+  //////////////////////////////////////////////////////////////
+  void render_transform(ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> & img, const ggo::crystal_artist::params & params)
+  {
+    ggo::pos2_f pt;
+
+    pt.x() = ggo::rand<float>(-1, 1);
+    pt.y() = ggo::rand<float>(-1, 1);
+
+    for (int points_count = 0; points_count < 4; ++points_count)
+    {
+      // Apply transform.
+      int i = ggo::rand<int>(0, ggo::crystal_artist::transforms_cout);
+
+      pt.x() = params._coefs[i][0] * pt.x() + params._coefs[i][1] * pt.y() + params._coefs[i][2];
+      pt.y() = params._coefs[i][3] * pt.x() + params._coefs[i][4] * pt.y() + params._coefs[i][5];
+
+      // Render point.
+      ggo::pos2_f render_pt = ggo::map_fit(pt, -5.f, 5.f, img.width(), img.height());
+      int x = ggo::round_to<int>(render_pt.x());
+      int y = ggo::round_to<int>(render_pt.y());
+
+      if ((x >= 0) && (x < img.width()) &&
+        (y >= 0) && (y < img.height()))
+      {
+        ggo::rgb_32f c = img.read_pixel(x, y);
+
+        float diff = 4 * (c.r() + c.g() + c.b());
+        if (x > 0)
+        {
+          ggo::rgb_32f c = img.read_pixel(x - 1, y);
+          diff -= c.r() + c.g() + c.b();
+        }
+        if (x < img.width() - 1)
+        {
+          ggo::rgb_32f c = img.read_pixel(x + 1, y);
+          diff -= c.r() + c.g() + c.b();
+        }
+        if (y > 0)
+        {
+          ggo::rgb_32f c = img.read_pixel(x, y - 1);
+          diff -= c.r() + c.g() + c.b();
+        }
+        if (y < img.height() - 1)
+        {
+          ggo::rgb_32f c = img.read_pixel(x, y + 1);
+          diff -= c.r() + c.g() + c.b();
+        }
+
+        if (diff < 0.25)
+        {
+          c += { params._dr[i], params._dg[i], params._db[i] };
+          img.write_pixel(x, y, c);
+        }
+      }
+    }
+  }
+}
+
 //////////////////////////////////////////////////////////////
 void ggo::crystal_artist::render_bitmap(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img, const params & params)
 {
@@ -24,63 +84,6 @@ void ggo::crystal_artist::render_bitmap(ggo::image_t<ggo::pixel_type::rgb_8u, gg
       const ggo::rgb_8u c_8u(add_blend(img.read_pixel(x, y), ggo::convert_color_to<ggo::rgb_8u>(c_32f)));
       img.write_pixel(x, y, c_8u);
     }
-	}
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::crystal_artist::render_transform(image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> & img, const params & params)
-{
-	ggo::pos2_f pt;
-	
-	pt.x() = ggo::rand<float>(-1, 1);
-	pt.y() = ggo::rand<float>(-1, 1);
-
-	for (int points_count = 0; points_count < 4; ++points_count)
-	{
-		// Apply transform.
-		int i = ggo::rand<int>(0, transforms_cout);
-	
-		pt.x() = params._coefs[i][0]*pt.x() + params._coefs[i][1]*pt.y() + params._coefs[i][2];
-		pt.y() = params._coefs[i][3]*pt.x() + params._coefs[i][4]*pt.y() + params._coefs[i][5];
-
-		// Render point.
-		ggo::pos2_f render_pt = ggo::map_fit(pt, -5.f, 5.f, img.width(), img.height());
-		int x = ggo::round_to<int>(render_pt.x());
-		int y = ggo::round_to<int>(render_pt.y());
-
-		if ((x >= 0) && (x < img.width()) &&
-			  (y >= 0) && (y < img.height()))
-		{
-			ggo::rgb_32f c = img.read_pixel(x, y);
-
-			float diff = 4 * (c.r() + c.g() + c.b());
-			if (x > 0)
-			{
-        ggo::rgb_32f c = img.read_pixel(x - 1, y);
-				diff -= c.r() + c.g() + c.b();
-			}
-			if (x < img.width() - 1)
-			{
-        ggo::rgb_32f c = img.read_pixel(x + 1, y);
-        diff -= c.r() + c.g() + c.b();
-			}
-			if (y > 0)
-			{
-        ggo::rgb_32f c = img.read_pixel(x, y - 1);
-        diff -= c.r() + c.g() + c.b();
-			}
-			if (y < img.height() - 1)
-			{
-        ggo::rgb_32f c = img.read_pixel(x, y + 1);
-        diff -= c.r() + c.g() + c.b();
-			}
-
-			if (diff < 0.25)
-			{
-        c += { params._dr[i], params._dg[i], params._db[i] };
-        img.write_pixel(x, y, c);
-			}
-		}
 	}
 }
 

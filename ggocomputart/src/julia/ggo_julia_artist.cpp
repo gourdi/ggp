@@ -1,11 +1,8 @@
 #include "ggo_julia_artist.h"
 #include <kernel/math/interpolation/ggo_curve.h>
-#include <2d/ggo_color.h>
 
 //////////////////////////////////////////////////////////////
-ggo::julia_artist::julia_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+ggo::julia_artist::julia_artist()
 {
 	// Build the palette.
 	float hue = ggo::rand<float>();
@@ -54,29 +51,46 @@ std::complex<float> ggo::julia_artist::pickup_seed()
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::julia_artist::render_bitmap_t(void * buffer, const std::complex<float> & seed, float range) const
+int ggo::julia_artist::iterate(float x, float y, const std::complex<float> & seed) const
 {
-  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+  std::complex<float> z(x, y);
 
-  for (int y = 0; y < height(); ++y)
+  int i = 0;
+  for (i = 0; i < static_cast<int>(_palette.size()); ++i)
   {
-    float range_x = width() > height() ? range * width() / height() : range;
-    float range_y = width() > height() ? range : range * height() / width();
+    z = z * z + seed;
 
-    float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-    float y2 = ggo::map(y - 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-    float y3 = ggo::map(y + 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-    float y4 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
+    if (z.real() * z.real() + z.imag() * z.imag() > 10)
+    {
+      break;
+    }
+  }
+
+  return i;
+}
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::julia_artist::render_bitmap_t(image_t<pixel_type, memory_lines_order> & img, const std::complex<float> & seed, float range) const
+{
+  for (int y = 0; y < img.height(); ++y)
+  {
+    float range_x = img.width() > img.height() ? range * img.width() / img.height() : range;
+    float range_y = img.width() > img.height() ? range : range * img.height() / img.width();
+
+    float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(img.height()), -range_y, range_y);
+    float y2 = ggo::map(y - 1 / 8.f, 0.f, static_cast<float>(img.height()), -range_y, range_y);
+    float y3 = ggo::map(y + 1 / 8.f, 0.f, static_cast<float>(img.height()), -range_y, range_y);
+    float y4 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(img.height()), -range_y, range_y);
     int iterations[16];
 
-    for (int x = 0; x < width(); ++x)
+    for (int x = 0; x < img.width(); ++x)
     {
       // Iterate and sample.
-      float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-      float x2 = ggo::map(x - 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-      float x3 = ggo::map(x + 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-      float x4 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
+      float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(img.width()), -range_x, range_x);
+      float x2 = ggo::map(x - 1 / 8.f, 0.f, static_cast<float>(img.width()), -range_x, range_x);
+      float x3 = ggo::map(x + 1 / 8.f, 0.f, static_cast<float>(img.width()), -range_x, range_x);
+      float x4 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(img.width()), -range_x, range_x);
 
       iterations[0] = iterate(x1, y1, seed);
       iterations[1] = iterate(x1, y4, seed);
@@ -127,42 +141,27 @@ void ggo::julia_artist::render_bitmap_t(void * buffer, const std::complex<float>
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> & seed, float range) const
+void ggo::julia_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                                      const std::complex<float> & seed, float range) const
 {
-  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, seed, range);
+    image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down> img(buffer, { width, height }, line_byte_step);
+    render_bitmap_t(img, seed, range);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, seed, range);
+    image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, { width, height }, line_byte_step);
+    render_bitmap_t(img, seed, range);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, seed, range);
+    image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down> img(buffer, { width, height }, line_byte_step);
+    render_bitmap_t(img, seed, range);
   }
   else
   {
     GGO_FAIL();
   }
-}
-
-//////////////////////////////////////////////////////////////
-int ggo::julia_artist::iterate(float x, float y, const std::complex<float> & seed) const
-{
-	std::complex<float> z(x, y);
-	
-  int i = 0;
-	for (i = 0; i < static_cast<int>(_palette.size()); ++i)
-	{
-		z = z * z + seed;
-
-		if (z.real() * z.real() + z.imag() * z.imag() > 10)
-		{
-			break;
-		}
-	}
-	
-	return i;
 }
 

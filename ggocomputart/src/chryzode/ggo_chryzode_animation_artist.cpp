@@ -28,7 +28,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_typ
 //////////////////////////////////////////////////////////////
 void ggo::chryzode_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
-  chryzode_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
+  chryzode_artist artist(width(), height());
 
   chryzode_params params;
   params._multiplier1 = ggo::ease_inout(frame_index, frames_count(), _multiplier1_start, _multiplier1_end);
@@ -40,6 +40,6 @@ void ggo::chryzode_animation_artist::render_frame(void * buffer, int frame_index
 
   float radius = ggo::ease_inout(frame_index, frames_count(), _radius_start, _radius_end);
 
-  artist.render_chryzode(buffer, radius, params, _hue_start, _hue_end);
+  artist.render_chryzode(buffer, line_byte_step(), pixel_type(), memory_lines_order(), radius, params, _hue_start, _hue_end);
 }
 

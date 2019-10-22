@@ -1,12 +1,12 @@
 #ifndef __GGO_ANIMATION_ARTIST_ABC__
 #define __GGO_ANIMATION_ARTIST_ABC__
 
-#include <ggo_artist.h>
+#include <ggo_paint_artist.h>
 #include <ggo_artist_ids.h>
 
 namespace ggo
 {
-  class animation_artist_abc : public artist
+  class animation_artist_abc : public paint_artist
   {
   public:
 

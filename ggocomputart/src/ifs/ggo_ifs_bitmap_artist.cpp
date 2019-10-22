@@ -13,8 +13,6 @@ bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 //////////////////////////////////////////////////////////////
 void ggo::ifs_bitmap_artist::render_bitmap(void * buffer) const
 {
-  ggo::ifs_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
-
 	float transform[4];
 	transform[0] = ggo::rand<float>(1, 2);
 	transform[1] = ggo::rand<float>(1, 2);
@@ -32,5 +30,7 @@ void ggo::ifs_bitmap_artist::render_bitmap(void * buffer) const
     ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>(0.5, 0.75)),
     ggo::rect_int::from_size(size()));
 
-	artist.render(buffer, transform, hue, ggo::rand<float>(0, 2 * ggo::pi<float>()), ggo::rand<float>(0, 2 * ggo::pi<float>()));
+  ggo::ifs_artist artist(width(), height());
+	artist.render(buffer, line_byte_step(), pixel_type(), memory_lines_order(),
+    transform, hue, ggo::rand<float>(0, 2 * ggo::pi<float>()), ggo::rand<float>(0, 2 * ggo::pi<float>()));
 }

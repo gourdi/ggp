@@ -120,7 +120,7 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer) const
 //////////////////////////////////////////////////////////////
 ggo::bitmap_artist_abc::bitmap_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+paint_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 
 }

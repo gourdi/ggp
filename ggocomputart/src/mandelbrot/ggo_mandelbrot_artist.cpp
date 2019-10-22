@@ -1,6 +1,6 @@
 #include "ggo_mandelbrot_artist.h"
 #include <kernel/math/interpolation/ggo_curve.h>
-#include <2d/ggo_color.h>
+#include <2d/ggo_image.h>
 #include <array>
 #include <complex>
 
@@ -163,9 +163,7 @@ void ggo::mandelbrot_artist::render_bitmap_t(void * buffer) const
 
   auto palette = setup_palette();
 
-  std::complex<double> center;
-  double range;
-  std::tie(center, range) = setup_block(static_cast<int>(palette.size()));
+  auto [center, range] = setup_block(static_cast<int>(palette.size()));
 
   for (int y = 0; y < height(); ++y)
   {

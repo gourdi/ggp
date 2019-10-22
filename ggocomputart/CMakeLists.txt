@@ -17,10 +17,9 @@ target_link_libraries(ggocomputartanim ggocomputart)
 
 include(../conanbuildinfo.cmake)
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_link_libraries(ggocomputartrealtime ggocomputart "${CONAN_SDL2_ROOT}/lib/SDL2.lib" "${CONAN_SDL2_ROOT}/lib/SDL2main.lib")
 target_include_directories(ggocomputartrealtime PRIVATE "${CONAN_SDL2_ROOT}/include/SDL2")
 if (MSVC)
-  target_link_libraries(ggocomputartrealtime "winmm.lib" "imm32.lib" "version.lib")
+  target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart "winmm.lib" "imm32.lib" "version.lib" "${CONAN_SDL2_ROOT}/lib/SDL2.lib" "${CONAN_SDL2_ROOT}/lib/SDL2main.lib")
 endif()
 
 

@@ -28,7 +28,7 @@ _life(width, height)
   {
     for (int x = 0; x < width; ++x)
     {
-      float dist = ggo::distance(get_center(), ggo::pos2_f(static_cast<float>(x), static_cast<float>(y))) / min_size();
+      float dist = ggo::distance(center(), ggo::pos2_f(static_cast<float>(x), static_cast<float>(y))) / min_size();
 
       _feed_map(x, y) = ggo::map(dist, 0.f, 1.f, feed_rate1, feed_rate2);
       _kill_map(x, y) = ggo::map(dist, 0.f, 1.f, kill_rate1, kill_rate2);

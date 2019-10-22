@@ -1,4 +1,5 @@
 #include "ggo_ifs_animation_artist.h"
+#include "ggo_ifs_artist.h"
 #include <2d/fill/ggo_fill.h>
 
 namespace
@@ -9,8 +10,7 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300),
-_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
 {
   _transform_start[0] = ggo::rand<float>(1, 2);
   _transform_start[1] = ggo::rand<float>(1, 2);
@@ -53,5 +53,6 @@ void ggo::ifs_animation_artist::render_frame(void * buffer, int frame_index, flo
 	transform[2] = ggo::map<float>(t, 0, 1, _transform_start[2], _transform_end[2]);
 	transform[3] = ggo::map<float>(t, 0, 1, _transform_start[3], _transform_end[3]);
 	
-	_artist.render(buffer, transform, _hue, angle1, angle2);
+  ggo::ifs_artist	artist(width(), height());
+  artist.render(buffer, line_byte_step(), pixel_type(), memory_lines_order(), transform, _hue, angle1, angle2);
 }

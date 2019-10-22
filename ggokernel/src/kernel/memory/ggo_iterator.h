@@ -2,6 +2,7 @@
 #define __GGO_ITERATOR__
 
 #include <kernel/ggo_assert.h>
+#include <cstddef>
 
 namespace ggo
 {

@@ -35,7 +35,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_typ
   for (int i = 256; i > 0; --i)
   {
     auto kame = create_kame();
-    kame->_center = i == 1 ? get_center() : get_random_point();
+    kame->_center = i == 1 ? center() : get_random_point();
     kame->_scale = 1.5f * min_size() / (i + 16);
     kame->_thickness = 0.01f * min_size() / (i + 16);
 

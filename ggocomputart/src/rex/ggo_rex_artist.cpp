@@ -27,7 +27,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
 
   std::vector<ggo::pos2_f> vertices;
 
-  vertices.push_back(get_center());
+  vertices.push_back(center());
   vertices.push_back({ 0.f, 0.f });
   vertices.push_back({ width() - 1.f, 0.f });
   vertices.push_back({ 0.f, height() - 1.f });
@@ -147,7 +147,7 @@ void ggo::rex_artist::render_bitmap(void * buffer) const
   {
     rex_opened_disc_data disc;
 
-    disc._center = get_center();
+    disc._center = center();
     disc._outter_radius = outter_radius;
     disc._inner_radius = inner_radius;
 

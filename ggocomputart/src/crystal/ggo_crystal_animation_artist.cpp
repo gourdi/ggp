@@ -38,5 +38,5 @@ void ggo::crystal_animation_artist::render_frame(void * buffer, int frame_index,
 		params._db[i] = ggo::ease_inout(frame_index, frames_count(), _start_params._db[i], _end_params._db[i]);
 	}
 	
-	_artist.render_bitmap(img, params);
+  ggo::crystal_artist::render_bitmap(img, params);
 }

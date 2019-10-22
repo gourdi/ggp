@@ -2,6 +2,7 @@
 #define __GGO_CHRYZODE_ARTIST__
 
 #include <ggo_artist.h>
+#include <2d/ggo_pixel_type.h>
 
 namespace ggo
 {
@@ -19,9 +20,10 @@ namespace ggo
   {
   public:
 
-    chryzode_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+    chryzode_artist(int width, int height);
 
-    void render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const;
+    void render_chryzode(void * buffer, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+      float radius, const chryzode_params & params, float hue_start, float hue_end) const;
   };
 }
 

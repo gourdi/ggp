@@ -3,6 +3,7 @@
 
 #include "ggo_animation_artist_abc.h"
 #include <memory>
+#include <2d/ggo_image.h>
 
 namespace ggo
 {

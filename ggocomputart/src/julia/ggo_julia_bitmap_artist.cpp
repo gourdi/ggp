@@ -12,7 +12,7 @@ bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 //////////////////////////////////////////////////////////////
 void ggo::julia_bitmap_artist::render_bitmap(void * buffer) const
 {	
-	ggo::julia_artist	artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
+	ggo::julia_artist	artist;
 	
-	artist.render_bitmap(buffer, ggo::julia_artist::pickup_seed());
+	artist.render_bitmap(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), ggo::julia_artist::pickup_seed());
 }

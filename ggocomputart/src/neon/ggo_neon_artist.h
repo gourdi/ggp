@@ -2,6 +2,7 @@
 #define __GGO_NEON_ARTIST__
 
 #include <ggo_realtime_artist_abc.h>
+#include <2d/ggo_image.h>
 
 namespace ggo
 {

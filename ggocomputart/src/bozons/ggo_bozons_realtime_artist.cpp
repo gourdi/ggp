@@ -32,8 +32,8 @@ void ggo::bozons_realtime_artist::create_bozon()
 {
   bozon new_bozon;
 
-  new_bozon._prv_pos = get_center();
-  new_bozon._cur_pos = get_center();
+  new_bozon._prv_pos = center();
+  new_bozon._cur_pos = center();
 
   new_bozon._color = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 

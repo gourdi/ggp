@@ -2,7 +2,6 @@
 #define __GGO_IFS_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist_abc.h>
-#include "ggo_ifs_artist.h"
 
 namespace ggo
 {
@@ -18,7 +17,6 @@ namespace ggo
 
   private:
 
-    ggo::ifs_artist	_artist;
     ggo::rgb_8u     _bkgd_colors[4];
     float			      _hue;
     float 		      _transform_start[4];

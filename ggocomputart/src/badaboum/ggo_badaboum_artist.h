@@ -1,13 +1,14 @@
 #ifndef __GGO_BADABOUM_ARTIST__
 #define __GGO_BADABOUM_ARTIST__
 
-#include <ggo_artist.h>
+#include <ggo_paint_artist.h>
 #include <2d/ggo_image.h>
+#include <2d/paint/ggo_pixel_sampling.h>
 #include <physics/ggo_physics_world.h>
 
 namespace ggo
 {
-  class badaboum_artist : public artist
+  class badaboum_artist : public paint_artist
   {
   public:
 

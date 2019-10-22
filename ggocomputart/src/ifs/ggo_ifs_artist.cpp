@@ -1,13 +1,14 @@
 #include "ggo_ifs_artist.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/processing/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_blit.h>
 #include <2d/paint/ggo_blend.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_artist::ifs_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::ifs_artist::ifs_artist(int width, int height)
 :
-artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+artist(width, height)
 {
 }
 
@@ -24,12 +25,12 @@ void ggo::ifs_artist::update(ggo::pos3_f & point, const float transform[4]) cons
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float angle1, float angle2) const
+void ggo::ifs_artist::render(void * buffer, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, float transform[4], float hue, float angle1, float angle2) const
 {
 	std::cout << "Computing points" << std::endl;
 
-	ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> accumul_buffer(size());
-	fill_black(accumul_buffer);
+	ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_accumul(size());
+	fill_black(img_accumul);
 
 	float cos1 = std::cos(angle1);
 	float sin1 = std::sin(angle1);
@@ -69,7 +70,7 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 			if ((x_i >= 0) && (x_i < width()) &&
 				  (y_i >= 0) && (y_i < height()))
 			{
-        float * ptr = static_cast<float *>(accumul_buffer.pixel_ptr(x_i, y_i));
+        float * ptr = static_cast<float *>(img_accumul.pixel_ptr(x_i, y_i));
         *ptr = std::min(1.f, *ptr + 0.00015f);
 			}
 		}
@@ -78,29 +79,31 @@ void ggo::ifs_artist::render(void * buffer, float transform[4], float hue, float
 	// Render shadow.
 	std::cout << "Rendering shadow" << std::endl;
 	
-	ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> shadow_buffer(accumul_buffer.data(), size());
-	ggo::gaussian_blur(shadow_buffer, 0.4f * min_size());
-	paint_buffer(buffer, 255, shadow_buffer);
+	ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_shadow(size());
+  ggo::blit(img_accumul, img_shadow);
+	ggo::gaussian_blur(img_shadow, 0.4f * min_size());
+	paint_buffer(buffer, line_byte_step, pixel_type, memory_lines_order, 255, img_shadow);
 
 	// Render the shape.
 	std::cout << "Rendering shape" << std::endl;
 	
-	paint_buffer(buffer, 255, accumul_buffer);
+	paint_buffer(buffer, line_byte_step, pixel_type, memory_lines_order, 255, img_accumul);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ifs_artist::paint_buffer(void * buffer, uint8_t color, const ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> & accumul_buffer) const
+void ggo::ifs_artist::paint_buffer(void * buffer, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  uint8_t color, const ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> & accumul_buffer) const
 {
   const float * ptr_src = static_cast<const float *>(accumul_buffer.data());
 
 	for (int y = 0; y < height(); ++y)
 	{
-    void * ptr_dst = ggo::get_line_ptr<ggo::lines_order::up>(buffer, y, height(), line_byte_step());
+    void * ptr_dst = ggo::get_line_ptr<ggo::lines_order::up>(buffer, y, height(), line_byte_step);
 
     for (int x = 0; x < width(); ++x)
     {
       ggo::alpha_blender_rgb8u blender(*ptr_src);
-      ggo::rgb_8u c_8u = blender(x, y, ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::read(ptr_dst), ggo::rgb_8u(color, color, color));
+      ggo::rgb_8u c_8u = blender(x, y, ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::read(ptr_dst), { color, color, color });
       ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::write(ptr_dst, c_8u);
 
       ptr_src++;

@@ -1,7 +1,7 @@
 #ifndef __GGO_REALTIME_ARTIST_ABC__
 #define __GGO_REALTIME_ARTIST_ABC__
 
-#include <ggo_artist.h>
+#include <ggo_paint_artist.h>
 #include <ggo_artist_ids.h>
 
 namespace ggo
@@ -12,7 +12,7 @@ namespace ggo
     cursor_event_up = 1 << 1
   };
 
-  class realtime_artist_abc : public artist
+  class realtime_artist_abc : public paint_artist
   {
   public:
 

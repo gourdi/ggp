@@ -4,14 +4,15 @@
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_artist::chryzode_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::chryzode_artist::chryzode_artist(int width, int height)
 :
-artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+artist(width, height)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const
+void ggo::chryzode_artist::render_chryzode(void * buffer, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  float radius, const chryzode_params & params, float hue_start, float hue_end) const
 {
   // Float buffer.
   ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_32f(size());
@@ -32,8 +33,8 @@ void ggo::chryzode_artist::render_chryzode(void * buffer, float radius, const ch
       angle1 += ggo::pi<float>() / 2;
       angle2 += ggo::pi<float>() / 2;
       
-      ggo::pos2_f p1 = get_center() + radius * ggo::vec2_f::from_angle(angle1);
-      ggo::pos2_f p2 = get_center() + radius * ggo::vec2_f::from_angle(angle2);
+      ggo::pos2_f p1 = center() + radius * ggo::vec2_f::from_angle(angle1);
+      ggo::pos2_f p2 = center() + radius * ggo::vec2_f::from_angle(angle2);
       
       ggo::pos2_f middle = (p1 + p2) / 2.f;
       ggo::vec2_f diff = p2 - p1;

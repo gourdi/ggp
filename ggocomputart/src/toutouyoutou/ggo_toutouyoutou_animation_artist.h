@@ -7,6 +7,7 @@
 
 #include <ggo_animation_artist_abc.h>
 #include <kernel/memory/ggo_array.h>
+#include <2d/ggo_image.h>
 
 namespace ggo
 {
