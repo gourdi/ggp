@@ -2,8 +2,8 @@
 #include <map>
 #include <kernel/trees/ggo_tree.h>
 #include <kernel/memory/ggo_array.h>
-#include <kernel/math/signal_proc/ggo_morphology.h>
-#include <2d/ggo_image_format.h>
+#include <kernel/math/signal_processing/ggo_morphology.h>
+#include <2d/ggo_image.h>
 #include <2d/paint/ggo_blend.h>
 
 namespace
@@ -15,10 +15,10 @@ namespace
     uint8_t * _ptr;
     int _view_width;
     int _view_height;
-    int _line_step;
+    int _line_byte_step;
 
-    uint8_t operator()(int x, int y) const { return _ptr[y * _line_step + x]; }
-    void    operator()(int x, int y, uint8_t v) { _ptr[y * _line_step + x] = v; }
+    uint8_t operator()(int x, int y) const { return _ptr[y * _line_byte_step + x]; }
+    void    operator()(int x, int y, uint8_t v) { _ptr[y * _line_byte_step + x] = v; }
   };
 
   struct const_buffer_view
@@ -26,9 +26,9 @@ namespace
     const uint8_t * _ptr;
     int _view_width;
     int _view_height;
-    int _line_step;
+    int _line_byte_step;
 
-    uint8_t operator()(int x, int y) const { return _ptr[y * _line_step + x]; }
+    uint8_t operator()(int x, int y) const { return _ptr[y * _line_byte_step + x]; }
   };
 
   struct voronoi_node
@@ -252,7 +252,7 @@ namespace
   }
 
   //////////////////////////////////////////////////////////////
-  void paint_voronoi_map(void * buffer, int width, int height, int line_step, ggo::image_format format,
+  void paint_voronoi_map(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img,
                          const ggo::tree<voronoi_node> & voronoi_tree,
                          const ggo::array<const ggo::tree<voronoi_node> *, 2> & voronoi_map, 
                          int scale_factor)
@@ -274,21 +274,21 @@ namespace
 
       mask = round_mask(mask);
       auto downsampled = downsample(mask, scale_factor);
-      GGO_ASSERT_EQ(downsampled.width(), width);
-      GGO_ASSERT_EQ(downsampled.height(), height);
+      GGO_ASSERT_EQ(downsampled.width(), img.width());
+      GGO_ASSERT_EQ(downsampled.height(), img.height());
 
-      for (int y = 0; y < height; ++y)
+      for (int y = 0; y < img.height(); ++y)
       {
-        for (int x = 0; x < width; ++x)
+        for (int x = 0; x < img.width(); ++x)
         {
           float opacity = downsampled(x, y);
 
-          auto pixel_color = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step);
+          auto pixel_color = img.read_pixel(x, y);
 
           ggo::alpha_blender_rgb8u blender(opacity);
           pixel_color = blender(pixel_color, voronoi_leaf.data()._color);
 
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, pixel_color);
+          img.write_pixel(x, y, pixel_color);
         }
       }
     };
@@ -298,9 +298,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::voronoi_artist::voronoi_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::voronoi_artist::voronoi_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::bitmap_artist_abc(width, height, line_step, format)
+ggo::bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 
 }
@@ -313,5 +313,6 @@ void ggo::voronoi_artist::render_bitmap(void * buffer) const
   auto voronoi_tree = create_voronoi_tree(scale_factor * width(), scale_factor * height());
   auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * width(), scale_factor * height(), scale_factor);
 
-  paint_voronoi_map(buffer, width(), height(), line_step(), ggo::rgb_8u_yu, voronoi_tree, voronoi_map, scale_factor);
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+  paint_voronoi_map(img, voronoi_tree, voronoi_map, scale_factor);
 }

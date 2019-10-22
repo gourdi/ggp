@@ -14,9 +14,9 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  realtime_artist_abc::realtime_artist_abc(int width, int height, int line_step, image_format format)
+  realtime_artist_abc::realtime_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
   :
-  artist(width, height, line_step, format)
+  artist(width, height, line_byte_step, pixel_type, memory_lines_order)
   {
 
   }
@@ -47,32 +47,32 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  realtime_artist_abc * realtime_artist_abc::create(realtime_artist_id artist_id, int width, int height, int line_step, ggo::image_format format)
+  realtime_artist_abc * realtime_artist_abc::create(realtime_artist_id artist_id, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
   {
     switch (artist_id)
     {
     case realtime_artist_id::kanji:
-      return new kanji_realtime_artist(width, height, line_step, format);
+      return new kanji_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::bozons:
-      return new bozons_realtime_artist(width, height, line_step, format);
+      return new bozons_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::neon:
-      return new neon_artist(width, height, line_step, format);
+      return new neon_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::storni:
-      return new storni_realtime_artist(width, height, line_step, format);
+      return new storni_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::duffing:
-      return new duffing_realtime_artist(width, height, line_step, format);
+      return new duffing_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::lagaude:
-      return new lagaude_realtime_artist(width, height, line_step, format);
+      return new lagaude_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::demeco:
-      return new demeco_realtime_artist(width, height, line_step, format);
+      return new demeco_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::wakenda:
-      return new wakenda_realtime_artist(width, height, line_step, format);
+      return new wakenda_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::poupette:
-      return new poupette_realtime_artist(width, height, line_step, format);
+      return new poupette_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::sonson:
-      return new sonson_realtime_artist(width, height, line_step, format);
+      return new sonson_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::badaboum:
-      return new badaboum_realtime_artist(width, height, line_step, format);
+      return new badaboum_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
 
     default:
       GGO_FAIL();
@@ -86,9 +86,9 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  fixed_frames_count_realtime_artist_abc::fixed_frames_count_realtime_artist_abc(int width, int height, int line_step, image_format format)
+  fixed_frames_count_realtime_artist_abc::fixed_frames_count_realtime_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
   :
-  realtime_artist_abc(width, height, line_step, format)
+  realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
   {
 
   }

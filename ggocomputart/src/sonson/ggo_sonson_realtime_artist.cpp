@@ -7,7 +7,7 @@ namespace
   //////////////////////////////////////////////////////////////
   template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int channel>
   void paint_glowing_circle(const ggo::sonson_realtime_artist::glowing_circle & circle, ggo::vec2_f center_offset,
-    void * buffer, int width, int height, int line_step, const ggo::rect_int & clipping)
+    void * buffer, int width, int height, int line_byte_step, const ggo::rect_int & clipping)
   {
     const float radius[4] = {
       circle._radius - circle._outter_size - circle._inner_size,
@@ -32,7 +32,7 @@ namespace
       return;
     }
 
-    ggo::image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_step);
+    ggo::image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
 
     auto update_pixel = [&](int x, int y, float opacity)
     {

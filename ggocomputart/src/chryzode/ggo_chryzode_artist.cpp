@@ -4,9 +4,9 @@
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_artist::chryzode_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::chryzode_artist::chryzode_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-artist(width, height, line_step, pixel_type, memory_lines_order)
+artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 

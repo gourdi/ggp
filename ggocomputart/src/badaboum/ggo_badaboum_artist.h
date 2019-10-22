@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-    badaboum_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling);
+    badaboum_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling);
 
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step);
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping);

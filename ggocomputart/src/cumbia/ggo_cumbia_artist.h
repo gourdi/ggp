@@ -21,7 +21,7 @@ namespace ggo
     void	init(ggo::basis3d_f & camera_basis, float & aperture, int boxes_count);
     void	init(ggo::basis3d_f & camera_basis, float & aperture, float & depth_of_field, float & depth_of_field_factor, int boxes_count);
 
-    void	render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::renderer_abc & renderer) const;
+    void	render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::renderer_abc & renderer) const;
 
   private:
 

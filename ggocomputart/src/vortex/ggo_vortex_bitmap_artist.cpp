@@ -2,9 +2,9 @@
 #include "ggo_vortex_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::vortex_bitmap_artist::vortex_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::vortex_bitmap_artist::vortex_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -31,7 +31,7 @@ void ggo::vortex_bitmap_artist::render_bitmap(void * buffer) const
 		vortex._power = ggo::rand<float>(6.f, 8.f);
 	}
 	
-	ggo::vortex_artist::render(buffer, width(), height(), line_step(), ggo::rgb_8u_yu, params);
+	ggo::vortex_artist::render(buffer, width(), height(), line_byte_step(), ggo::pixel_type::rgb_8u, ggo::lines_order::up, params);
 }
 
 

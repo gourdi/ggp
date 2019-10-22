@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-          distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          distorsion_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  render_frame(void * buffer, int frame_index, float time_step) override;
 

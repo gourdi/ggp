@@ -4,9 +4,9 @@
 #include <raytracer/renderers/ggo_antialiasing_renderer.h>
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::stoa_animation_artist::stoa_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 150)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 150)
 {
   _artist.reset(new ggo::stoa_artist(256));
 
@@ -47,7 +47,7 @@ void ggo::stoa_animation_artist::render_frame(void * buffer, int frame_index, fl
   ggo::antialiasing_renderer renderer(camera);
 #endif
 
-  _artist->render(buffer, width(), height(), line_step(), format(), _hue, light_pos1, light_pos2, renderer);
+  _artist->render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), _hue, light_pos1, light_pos2, renderer);
 }
 
 

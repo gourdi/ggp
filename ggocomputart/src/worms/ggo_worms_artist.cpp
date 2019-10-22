@@ -4,9 +4,9 @@
 #include <2d/processing/ggo_gaussian_blur.h>
 
 //////////////////////////////////////////////////////////////
-ggo::worms_artist::worms_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::worms_artist::worms_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -15,8 +15,8 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 {
   const int counter_max = 1500;
 
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::white_8u(), ggo::rect_int::from_width_height(width(), height()));
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+	ggo::fill_solid(img, ggo::white_8u());
 
 	float hue1 = ggo::rand<float>();
 	float hue2 = ggo::rand<float>();
@@ -66,16 +66,11 @@ void ggo::worms_artist::render_bitmap(void * buffer) const
 			
 		// Paint the spline.
     const ggo::rgb_8u color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, ggo::rand<float>(), 1);
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width(), height(), line_step(),
-      extended_segments_border, ggo::black_8u());
-
-		ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width(), height(), line_step(),
-      extended_segments_inside, color);
+    ggo::paint<ggo::sampling_4x4>(img, extended_segments_border, ggo::black_8u());
+		ggo::paint<ggo::sampling_4x4>(img, extended_segments_inside, color);
 
     // Blur the render buffer.
 		float stddev = 0.02f * min_size();
-    ggo::gaussian_blur<ggo::rgb_8u_yu>(buffer, size(), line_step(), stddev);
+    ggo::gaussian_blur(img, stddev);
 	}
 }

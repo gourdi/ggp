@@ -28,11 +28,11 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 1000),
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 1000),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
-_background(new uint8_t[height * line_step])
+_background({ width, height }, line_byte_step)
 {
   _rest_density = ggo::rand<float>(100.f, 200.f); // 150
   _stiffness = ggo::rand<float>(0.005f, 0.015f); // 0.01
@@ -97,13 +97,12 @@ void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_i
 
   if (frame_index == 0)
   {
-    ggo::fill_gaussian<ggo::rgb_8u_yu>(_background.get(), width(), height(), line_step(),
-      static_cast<float>(min_size()), ggo::white<ggo::rgb_8u>(), ggo::rgb_8u(uint8_t(0x80), uint8_t(0x80), uint8_t(0x80)));
+    ggo::fill_gaussian(_background, static_cast<float>(min_size()), ggo::white_8u(), { 0x80_u8, 0x80_u8, 0x80_u8 });
   }
 
   if (buffer != nullptr)
   {
-    memcpy(buffer, _background.get(), height() * line_step());
+    memcpy(buffer, _background.data(), height() * line_byte_step());
     paint_flow(buffer);
   }
 }
@@ -404,6 +403,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
   //}
   
   // Inside.
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
   uint8_t * ptr_sample = sample_buffer.data();
   for (int render_y = 0; render_y < height(); ++render_y)
   {
@@ -424,7 +424,7 @@ void ggo::toutouyoutou_animation_artist::paint_flow(void * buffer) const
         float val = temperature * _val1 + (1 - temperature) * _val2;
         const ggo::rgb_8u color(ggo::from_hsv<ggo::rgb_8u>(hue, sat, val));
         
-        ggo::write_pixel<ggo::rgb_8u_yu>(buffer, render_x, render_y,height(), line_step(), color);
+        img.write_pixel(render_x, render_y, color);
       }
       
       ptr_sample += 1;

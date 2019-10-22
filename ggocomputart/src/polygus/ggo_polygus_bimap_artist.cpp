@@ -115,7 +115,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
   // Image background.
   {
     auto bkgd_color = ggo::from_hsv_8u(ggo::rand<float>(), 1.f, 1.f);
-    ggo::fill_solid<format>(buffer, width(), height(), line_step(), bkgd_color);
+    ggo::fill_solid<format>(buffer, width(), height(), line_byte_step(), bkgd_color);
   }
 
   float cell_size = (width() > height() ? height() : width()) / static_cast<float>(nb_gus);
@@ -244,7 +244,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
     }
 
     ggo::gaussian_blur<mask.format()>(mask.data(), mask.size(), mask.line_byte_step(), min_size() / 100.f);
-    ggo::apply_mask<format, gray_format>(buffer, line_step(), mask.data(), mask.line_byte_step(), size(), ggo::black_brush_8u());
+    ggo::apply_mask<format, gray_format>(buffer, line_byte_step(), mask.data(), mask.line_byte_step(), size(), ggo::black_brush_8u());
   }
 
   // Heads.
@@ -275,7 +275,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
       ggo::paint<mask.format(), ggo::sampling_4x4>(mask.data(), mask.width(), mask.height(), mask.line_byte_step(), triangles);
     }
 
-    ggo::apply_mask<format, gray_format>(buffer, line_step(), mask.data(), mask.line_byte_step(), heads_bkgd.data(), heads_bkgd.line_byte_step(), size());
+    ggo::apply_mask<format, gray_format>(buffer, line_byte_step(), mask.data(), mask.line_byte_step(), heads_bkgd.data(), heads_bkgd.line_byte_step(), size());
   }
 
   // Heads border.
@@ -292,7 +292,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
         capsules.emplace_back(shape);
         p_prv = p;
       }
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), capsules);
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), capsules);
     }
   }
 
@@ -305,12 +305,12 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
         return ggo::disc_f(disc.center(), disc.radius() - shrink_factor);
       };
 
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), gus._eyes[0], ggo::black_8u());
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), gus._eyes[1], ggo::black_8u());
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shrink(gus._eyes[0], thickness), ggo::white_8u());
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shrink(gus._eyes[1], thickness), ggo::white_8u());
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), gus._pupils[0], ggo::black_8u());
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), gus._pupils[1], ggo::black_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), gus._eyes[0], ggo::black_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), gus._eyes[1], ggo::black_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), shrink(gus._eyes[0], thickness), ggo::white_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), shrink(gus._eyes[1], thickness), ggo::white_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), gus._pupils[0], ggo::black_8u());
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), gus._pupils[1], ggo::black_8u());
     }
   }
 
@@ -356,8 +356,8 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
       ggo::paint<gray_format, ggo::sampling_4x4>(inner_mask.data(), inner_mask.width(), inner_mask.height(), inner_mask.line_byte_step(), discs_inner_mask);
     }
 
-    apply_mask<format, gray_format>(buffer, line_step(), outter_mask.data(), outter_mask.line_byte_step(), outter_layer.data(), outter_layer.line_byte_step(), size());
-    apply_mask<format, gray_format>(buffer, line_step(), inner_mask.data(), inner_mask.line_byte_step(), inner_layer.data(), inner_layer.line_byte_step(), size());
+    apply_mask<format, gray_format>(buffer, line_byte_step(), outter_mask.data(), outter_mask.line_byte_step(), outter_layer.data(), outter_layer.line_byte_step(), size());
+    apply_mask<format, gray_format>(buffer, line_byte_step(), inner_mask.data(), inner_mask.line_byte_step(), inner_layer.data(), inner_layer.line_byte_step(), size());
   }
 
   // The nose.
@@ -373,7 +373,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
         triangles.emplace_back(shape);
         p_prv = p;
       }
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), triangles);
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), triangles);
 
       std::vector<ggo::static_paint_shape<capsule_f, ggo::rgb_8u>> capsules;
       p_prv = gus._nose._points.back();
@@ -384,7 +384,7 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
         capsules.emplace_back(shape);
         p_prv = p;
       }
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), capsules);
+      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_byte_step(), capsules);
 
     }
   }

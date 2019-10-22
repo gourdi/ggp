@@ -3,78 +3,12 @@
 #include <kernel/memory/ggo_array.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
-#include <2d/ggo_blit.h>
-
-namespace
-{
-  struct color_square
-  {
-    ggo::polygon2d_f	_square;
-    ggo::rgb_32f          _color;
-  };
-
-  //////////////////////////////////////////////////////////////
-  template <ggo::image_format format>
-  void render_t(void * buffer, const ggo::topodoko_artist & artist, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares)
-  {
-    const ggo::rgb_8u bkgd_color1 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::rgb_8u bkgd_color2 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::rgb_8u bkgd_color3 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
-    const ggo::rgb_8u bkgd_color4 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
-
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, artist.width(), artist.height(), artist.line_step(),
-      bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4, ggo::rect_int::from_width_height(artist.width(), artist.height()));
-
-    std::cout << "Rendering shadow" << std::endl;
-
-    // Render the shadow.
-    std::vector<uint8_t> shadow_buffer(artist.width() * artist.height(), 0xff);
-
-    float shadow_offset_scalar = 0.25f * square_size;
-    ggo::pos2_f shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
-
-    for (const auto & color_square : color_squares)
-    {
-      ggo::polygon2d_f square(4);
-      for (int i = 0; i < 4; ++i)
-      {
-        ggo::pos2_f point = artist.map_fit(color_square._square.get_point(i) + shadow_offset, 0, 1);
-
-        square.add_point(point);
-      }
-
-      ggo::paint<ggo::y_8u_yu, ggo::sampling_4x4>(
-        shadow_buffer.data(), artist.width(), artist.height(), artist.width(), square, uint8_t(0x40f));
-    }
-
-    ggo::gaussian_blur<ggo::y_8u_yu>(shadow_buffer.data(), artist.size(), artist.width(), 0.005f *  artist.min_size());
-
-    ggo::blit<ggo::y_8u_yu, format>(shadow_buffer.data(), artist.width(), artist.height(), artist.width(),
-      buffer, artist.width(), artist.height(), artist.line_step(), 0, 0);
-
-    std::cout << "Rendering squares" << std::endl;
-
-    // Render the coloured squares.
-    for (const auto & color_square : color_squares)
-    {
-      ggo::polygon2d_f square(4);
-      for (int i = 0; i < 4; ++i)
-      {
-        ggo::pos2_f point = color_square._square.get_point(i);
-        point = artist.map_fit(point, 0, 1);
-        square.add_point(point);
-      }
-
-      ggo::paint<format, ggo::sampling_16x16>(
-        buffer, artist.width(), artist.height(), artist.line_step(), square, ggo::convert_color_to<ggo::rgb_8u>(color_square._color));
-    }
-  }
-}
+#include <2d/processing/ggo_blit.h>
 
 //////////////////////////////////////////////////////////////
-ggo::topodoko_artist::topodoko_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::topodoko_artist::topodoko_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 	
 }
@@ -138,17 +72,74 @@ void ggo::topodoko_artist::render_bitmap(void * buffer) const
 		}
 	}
 
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    render_t<ggo::rgb_8u_yu>(buffer, *this, hue1, hue2, square_size, color_squares);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_t<ggo::bgrx_8u_yd>(buffer, *this, hue1, hue2, square_size, color_squares);
-    break;
-    default:
-      GGO_FAIL();
-      break;
+    render_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, hue1, hue2, square_size, color_squares);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, hue1, hue2, square_size, color_squares);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::topodoko_artist::render_t(void * buffer, float hue1, float hue2, float square_size, const std::vector<color_square> & color_squares) const
+{
+  ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+  const ggo::rgb_8u bkgd_color1 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+  const ggo::rgb_8u bkgd_color2 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+  const ggo::rgb_8u bkgd_color3 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+  const ggo::rgb_8u bkgd_color4 = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<bool>() ? hue1 : hue2, 0.5f, 0.5f);
+
+  ggo::fill_4_colors(img, bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
+
+  std::cout << "Rendering shadow" << std::endl;
+
+  // Render the shadow.
+  ggo::image_t<ggo::pixel_type::y_8u, memory_lines_order> img_shadow(size());
+  ggo::fill_solid(img_shadow, 0xff);
+
+  float shadow_offset_scalar = 0.25f * square_size;
+  ggo::pos2_f shadow_offset(shadow_offset_scalar, shadow_offset_scalar);
+
+  for (const auto & color_square : color_squares)
+  {
+    ggo::polygon2d_f square(4);
+    for (int i = 0; i < 4; ++i)
+    {
+      ggo::pos2_f point = map_fit(color_square._square.get_point(i) + shadow_offset, 0, 1);
+
+      square.add_point(point);
+    }
+
+    ggo::paint<ggo::sampling_4x4>(img_shadow, square, 0x40);
+  }
+
+  ggo::gaussian_blur(img_shadow, 0.005f * min_size());
+
+  ggo::blit(img_shadow, img);
+
+  std::cout << "Rendering squares" << std::endl;
+
+  // Render the coloured squares.
+  for (const auto & color_square : color_squares)
+  {
+    ggo::polygon2d_f square(4);
+    for (int i = 0; i < 4; ++i)
+    {
+      ggo::pos2_f point = color_square._square.get_point(i);
+      point = map_fit(point, 0, 1);
+      square.add_point(point);
+    }
+
+    ggo::paint<ggo::sampling_16x16>(img, square, ggo::convert_color_to<ggo::rgb_8u>(color_square._color));
+  }
+}
+
 

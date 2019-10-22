@@ -10,9 +10,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::realtime_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
+ggo::realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _hue = ggo::rand<float>();
   _bkgd_color1 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());

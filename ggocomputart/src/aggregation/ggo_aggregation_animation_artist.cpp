@@ -6,9 +6,9 @@
 #include <2d/paint/ggo_color_triangle.h>
 
 ////////////////////////////////////////////////////////
-ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order, 300)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
 {
   _threshold_dist = 0.00125f * std::min(width, height);
   _threshold_hypot = _threshold_dist * _threshold_dist;

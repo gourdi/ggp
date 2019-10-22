@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          bozons_realtime_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          bozons_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;

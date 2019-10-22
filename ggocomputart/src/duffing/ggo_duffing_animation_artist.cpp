@@ -15,9 +15,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::duffing_animation_artist::duffing_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::duffing_animation_artist::duffing_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
+animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   // Compute points.
   ggo::duffing duffing;

@@ -12,9 +12,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::badaboum_artist::badaboum_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling)
+ggo::badaboum_artist::badaboum_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling)
 :
-artist(width, height, line_step, pixel_type, memory_lines_order),
+artist(width, height, line_byte_step, pixel_type, memory_lines_order),
 _world(100),
 _sampling(sampling),
 _thickness(0.001f * std::min(width, height)),

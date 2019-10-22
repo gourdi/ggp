@@ -217,12 +217,12 @@ void ggo::cumbia_artist::init(ggo::basis3d_f & camera_basis, float & aperture, f
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::renderer_abc & renderer) const
+void ggo::cumbia_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::renderer_abc & renderer) const
 {
 	ggo::raytrace_params raytrace_params;
 	raytrace_params._depth = 2;
 
-  ggo::image img(buffer, { width, height }, pixel_type, memory_lines_order, line_step);
+  ggo::image img(buffer, { width, height }, pixel_type, memory_lines_order, line_byte_step);
 	renderer.render(img, *_scene, raytrace_params);
 }
 

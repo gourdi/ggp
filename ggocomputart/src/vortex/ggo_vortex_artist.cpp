@@ -1,6 +1,7 @@
 #include "ggo_vortex_artist.h"
 #include <2d/ggo_color.h>
 #include <2d/fill/ggo_fill.h>
+#include <2d/processing/ggo_blit.h>
 
 namespace
 {
@@ -8,12 +9,13 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::vortex_artist::params & params)
+void ggo::vortex_artist::render(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, const ggo::vortex_artist::params & params)
 {
   int counter_max = width * height;
   int max_size = std::max(width, height);
   
-  ggo::array<ggo::rgb_32f, 2> color_buffer(width, height, ggo::black<ggo::rgb_32f>());
+  ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> color_img({ width, height });
+  ggo::fill_black(color_img);
 	
 	for (int counter = 0; counter < counter_max; ++counter)
 	{
@@ -72,20 +74,12 @@ void ggo::vortex_artist::render(void * buffer, int width, int height, int line_s
 			if ((render_x >= 0) && (render_x < width) &&
 				  (render_y >= 0) && (render_y < height))
 			{
-				color_buffer(render_x, render_y) += color;
+        color_img.write_pixel(render_x, render_y, color_img.read_pixel(render_x, render_y) + color);
 			}
 		}
 	}
     
   // Merge render buffer from each thread.
-  for (int y = 0; y < height; ++y)
-  {
-    for (int x = 0; x < width; ++x)
-    {
-      const ggo::rgb_8u color = ggo::convert_color_to<ggo::rgb_8u>(ggo::white<ggo::rgb_32f>() - color_buffer(x, y));
-
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, line_step, color);
-    }
-	}
+  ggo::blit(color_img, ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, { width, height }, line_byte_step));
 }
 
