@@ -451,9 +451,9 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
 
       ggo::scene2d<ggo::rgb_8u> scene;
       scene.make_paint_shape(triangle2d_f({ v1, v2, v3 }), storni._color);
-      scene.make_paint_shape(triangle2d_f({ v1, v2, border_size }), ggo::black_8u());
-      scene.make_paint_shape(triangle2d_f({ v2, v3, border_size }), ggo::black_8u());
-      scene.make_paint_shape(triangle2d_f({ v3, v1, border_size }), ggo::black_8u());
+      scene.make_paint_shape(capsule_f({ v1, v2, border_size }), ggo::black_8u());
+      scene.make_paint_shape(capsule_f({ v2, v3, border_size }), ggo::black_8u());
+      scene.make_paint_shape(capsule_f({ v3, v1, border_size }), ggo::black_8u());
 
       ggo::paint<sampling>(img, scene, clipping);
     }
