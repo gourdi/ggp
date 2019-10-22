@@ -58,7 +58,7 @@ ggo::realtime_artist_abc * create_artist()
 
   std::cout << "Artist ID: " << index << std::endl;
 
- return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::pixel_type::bgrx_8u, ggo::lines_order::down);
+  return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::pixel_type::bgrx_8u, ggo::lines_order::down);
 }
 
 /////////////////////////////////////////////////////////////////////
