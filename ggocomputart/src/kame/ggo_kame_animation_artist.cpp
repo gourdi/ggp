@@ -273,7 +273,7 @@ void ggo::kame_animation_artist::kame::paint(ggo::image_t<ggo::pixel_type::y_8u,
       auto normal = ggo::normalize(ggo::cross(triangle->_v1->_prv - triangle->_v3->_prv, triangle->_v2->_prv - triangle->_v3->_prv));
       uint8_t color = ggo::round_to<uint8_t>(std::pow(std::abs(normal.z()), 0.5f) * 0xff);
 
-      triangles.make_paint_shape_t(ggo::triangle2d_f(proj1, proj2, proj3), color);
+      triangles.make_paint_shape(ggo::triangle2d_f(proj1, proj2, proj3), color);
     }
   }
   ggo::paint<ggo::sampling_1>(img, triangles);
@@ -284,7 +284,7 @@ void ggo::kame_animation_artist::kame::paint(ggo::image_t<ggo::pixel_type::y_8u,
     auto proj1 = proj({ edge._first->x(), edge._first->y() });
     auto proj2 = proj({ edge._second->x(), edge._second->y() });
 
-    capsules.make_paint_shape_t(ggo::capsule_f(proj1, proj2, _thickness), 0x00_u8);
+    capsules.make_paint_shape(ggo::capsule_f(proj1, proj2, _thickness), 0x00_u8);
   }
   ggo::paint<ggo::sampling_16x16>(img, capsules);
 }

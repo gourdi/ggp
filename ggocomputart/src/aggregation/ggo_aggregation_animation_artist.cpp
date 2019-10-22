@@ -120,7 +120,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
     {
       for (const auto & point : cell._points)
       {
-        scene.make_paint_shape_t(ggo::disc_f(point._pos, 2.f * _threshold_dist), ggo::black_8u());
+        scene.make_paint_shape(ggo::disc_f(point._pos, 2.f * _threshold_dist), ggo::black_8u());
       }
     }
 
@@ -142,7 +142,7 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
         float sat = point._sat - 0.0015f * point._counter;
         ggo::rgb_8u c = ggo::from_hsv<ggo::rgb_8u>(hue, sat, point._val);
 
-        scene.make_paint_shape_t(ggo::disc_f(point._pos, _threshold_dist), c);
+        scene.make_paint_shape(ggo::disc_f(point._pos, _threshold_dist), c);
       }
     }
 

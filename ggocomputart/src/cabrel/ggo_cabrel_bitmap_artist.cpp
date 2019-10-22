@@ -255,7 +255,7 @@ void ggo::cabrel_bitmap_artist::render_bitmap_t(void * buffer) const
     shadow_triangle.v2() += shadow_offset;
     shadow_triangle.v3() += shadow_offset;
 
-    shadows.make_shape<ggo::paint_shape_t<ggo::triangle2d_f, ggo::rgb_8u>>(shadow_triangle, ggo::black_8u());
+    shadows.make_paint_shape(shadow_triangle, ggo::black_8u());
   }
   ggo::paint<ggo::sampling_4x4>(img, shadows);
 
@@ -269,11 +269,11 @@ void ggo::cabrel_bitmap_artist::render_bitmap_t(void * buffer) const
 
   for (const auto & triangle : triangles)
   {
-    scene.make_shape<ggo::paint_shape_t<ggo::triangle2d_f, ggo::rgb_8u>>(triangle, ggo::rgb_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
+    scene.make_paint_shape(triangle, { ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>() });
 
     auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
     {
-      scene.make_shape<ggo::paint_shape_t<ggo::capsule_f, ggo::rgb_8u>>(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
+      scene.make_paint_shape(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
     };
 
     create_segment(triangle.v1(), triangle.v2());

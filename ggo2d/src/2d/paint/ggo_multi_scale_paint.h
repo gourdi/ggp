@@ -44,7 +44,7 @@ namespace ggo
     }
 
     template <typename shape_t, typename brush_t, typename blender_t = ggo::overwrite_blender<color_t>>
-    auto & make_paint_shape_t(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
+    auto & make_paint_shape(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
     {
       auto * paint_shape = new paint_shape_t<shape_t, color_t, brush_t, blender_t>(shape, brush, blender);
 
@@ -54,15 +54,15 @@ namespace ggo
     }
 
     template <typename shape_t>
-    auto & make_paint_shape_t(const shape_t & shape, const color_t & color, float opacity)
+    auto & make_paint_shape(const shape_t & shape, const color_t & color, float opacity)
     {
-      return make_paint_shape_t(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
+      return make_paint_shape(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
     }
 
     template <typename shape_t>
-    auto & make_paint_shape_t(const shape_t & shape, const color_t & color)
+    auto & make_paint_shape(const shape_t & shape, const color_t & color)
     {
-      return make_paint_shape_t(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
+      return make_paint_shape(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
     }
 
     template <typename paint_shape_t>

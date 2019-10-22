@@ -20,7 +20,7 @@ bool ggo::filling_squares_animation_artist::animated_square::update(int frame_in
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::filling_squares_animation_artist::animated_square::render(void * buffer, int width, int height, int line_byte_step, ggo::image_format format,
+void ggo::filling_squares_animation_artist::animated_square::render(image & img,
   const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
   constexpr int fade_in_anim_duration = 25;
@@ -43,21 +43,22 @@ void ggo::filling_squares_animation_artist::animated_square::render(void * buffe
 
   // Apply translation.
   float translation = ggo::ease_in(frame_index, fade_in_anim_duration, 1.f, 0.f);
-  float dx = 10 * (pos.x() - width / 2.f);
-  float dy = 10 * (pos.y() - height / 2.f);
+  float dx = 10 * (pos.x() - img.width() / 2.f);
+  float dy = 10 * (pos.y() - img.height() / 2.f);
   square.move({ pos.x() + translation * dx, pos.y() + translation * dy });
 
   // Painting.
   float opacity = ggo::ease_in(frame_index, fade_in_anim_duration, 0.f, 1.f);
 
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, 3 * width,
-    square, ggo::make_solid_brush(_colored_square._color), ggo::alpha_blender_rgb8u(opacity));
+  ggo::paint<ggo::sampling_4x4>(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(img.data(), img.size(), img.line_byte_step()),
+    square, _colored_square._color, opacity);
 }
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_byte_step, ggo::image_format format)
+ggo::filling_squares_animation_artist::filling_squares_animation_artist(int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, format, 500)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 500)
 {
   _hue = ggo::rand<float>();
   auto multi_squares = ggo::filling_squares_artist::build_squares(width, height, _hue);
@@ -85,7 +86,7 @@ void ggo::filling_squares_animation_artist::render_frame(void * buffer, int fram
 {
   _animator.update();
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_byte_step(), _bkgd_color);
+  ggo::fill_solid(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, size(), line_byte_step()), _bkgd_color);
 
-	_animator.render(buffer, width(), height(), line_byte_step(), format());
+	_animator.render(ggo::image(buffer, size(), pixel_type(), memory_lines_order(), line_byte_step()));
 }

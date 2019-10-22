@@ -206,7 +206,7 @@ void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco1::get_
 
   for (const auto & arc : _arcs)
   {
-    auto paint_arc = scene.make_paint_shape_t(multi_shape_f(), from_8u(arc._color), opacity);
+    auto paint_arc = scene.make_paint_shape(multi_shape_f(), from_8u(arc._color), opacity);
 
     for (int i = 0; i < discs_count; ++i)
     {
@@ -282,7 +282,7 @@ void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::get_
     float size = ggo::ease_inout(counter, _anim2_counter_start, _anim2_counter_end, main_size, main_size + _animations[1]._size);
     auto shape_color = from_8u(_animations[1]._color);
 
-    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle, main_size, size), shape_color);
+    scene.make_paint_shape(ggo::oriented_box_f(_pos, angle, main_size, size), shape_color);
   }
 
   // Animation 3.
@@ -292,7 +292,7 @@ void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::get_
     float size = ggo::ease_inout(counter, _anim3_counter_start, _anim3_counter_end, main_size, main_size + _animations[2]._size);
     auto shape_color = from_8u(_animations[2]._color);
 
-    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
+    scene.make_paint_shape(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
   }
 
   // Animation 1. Must be last.
@@ -302,7 +302,7 @@ void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::get_
     float size = ggo::ease_inout(counter, _anim1_counter_start, _anim1_counter_end, 0.f, main_size);
     auto shape_color = from_8u(_animations[0]._color);
 
-    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
+    scene.make_paint_shape(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
   }
 }
 
@@ -379,7 +379,7 @@ void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco3::get_
     ggo::polygon2d_f polygon({ p0, p1, p2, p3 });
     auto shape_color = from_8u(peak._color);
 
-    scene.make_paint_shape_t(polygon, shape_color);
+    scene.make_paint_shape(polygon, shape_color);
   }
 }
 

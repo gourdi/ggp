@@ -255,7 +255,7 @@ void ggo::rex_artist::render_edges(void * buffer, const std::vector<ggo::segment
 
   for (const auto & edge : edges)
   {
-    scene.make_paint_shape_t(ggo::capsule_f(edge.p1(), edge.p2(), 0.001f * min_size()), ggo::black_8u());
+    scene.make_paint_shape(ggo::capsule_f(edge.p1(), edge.p2(), 0.001f * min_size()), ggo::black_8u());
   }
 
   ggo::paint<ggo::sampling_8x8>(img, scene);

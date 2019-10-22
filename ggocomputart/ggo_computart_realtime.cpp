@@ -5,6 +5,7 @@
 #include <kernel/ggo_log.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/threading/ggo_signal.h>
+#include <2d/ggo_image.h>
 #include <2d/fill/ggo_fill.h>
 #include <ggo_realtime_artist_abc.h>
 
@@ -39,16 +40,16 @@ ggo::realtime_artist_abc * create_artist()
   };
 #else
   const std::vector<ggo::realtime_artist_id> ids{
-    //ggo::realtime_artist_id::bozons,
-    //ggo::realtime_artist_id::duffing,
-    //ggo::realtime_artist_id::kanji,
-    //ggo::realtime_artist_id::neon,
-    //ggo::realtime_artist_id::storni,
-    //ggo::realtime_artist_id::lagaude,
-    //ggo::realtime_artist_id::demeco,
-    //ggo::realtime_artist_id::wakenda,
-    //ggo::realtime_artist_id::poupette,
-    //ggo::realtime_artist_id::sonson
+    ggo::realtime_artist_id::bozons,
+    ggo::realtime_artist_id::duffing,
+    ggo::realtime_artist_id::kanji,
+    ggo::realtime_artist_id::neon,
+    ggo::realtime_artist_id::storni,
+    ggo::realtime_artist_id::lagaude,
+    ggo::realtime_artist_id::demeco,
+    ggo::realtime_artist_id::wakenda,
+    ggo::realtime_artist_id::poupette,
+    ggo::realtime_artist_id::sonson,
     ggo::realtime_artist_id::badaboum
   };
 #endif
@@ -57,7 +58,7 @@ ggo::realtime_artist_abc * create_artist()
 
   std::cout << "Artist ID: " << index << std::endl;
 
- return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::bgrx_8u_yd);
+ return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::pixel_type::bgrx_8u, ggo::lines_order::down);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -239,12 +240,11 @@ void main_loop()
 
     if (display_cpu_usage == true)
     {
-      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-        ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
-      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-        ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
-      ggo::fill_solid<ggo::bgrx_8u_yd>(screen_surface->pixels, screen_surface->w, screen_surface->h, screen_surface->pitch,
-        ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / time_step_ms, 0, 10));
+      ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down> img(screen_surface->pixels, { screen_surface->w, screen_surface->h }, screen_surface->pitch);
+
+      ggo::fill_solid(img, ggo::black_8u(), ggo::rect_int::from_left_right_bottom_top(0, screen_surface->w, 0, 10));
+      ggo::fill_solid(img, ggo::white_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100, 0, 10));
+      ggo::fill_solid(img, ggo::red_8u(), ggo::rect_int::from_left_right_bottom_top(0, 100 * frame_duration_ms / time_step_ms, 0, 10));
     }
 
     if (frame_duration_ms < time_step_ms)

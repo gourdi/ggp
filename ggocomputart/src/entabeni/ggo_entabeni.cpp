@@ -150,7 +150,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
 
     ggo::rgb_8u triangle_color = ggo::convert_color_to<ggo::rgb_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black_32f()));
     ggo::triangle2d_f triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
-    scene.make_paint_shape_t(triangle, triangle_color);
+    scene.make_paint_shape(triangle, triangle_color);
   };
 
   const float delta = 2 * ggo::pi<float>() / (grid.width() - 1);

@@ -395,7 +395,7 @@ GGO_TEST(paint, rgba8_multishape_sameshape)
 
   for (int i = 0; i < 8; ++i)
   {
-    scene.make_paint_shape_t(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
+    scene.make_paint_shape(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
   }
   ggo::paint<ggo::sampling_8x8>(image, scene);
 
@@ -415,9 +415,9 @@ GGO_TEST(paint, rgba8_multishape_discs)
 
   using paint_disc = ggo::paint_shape_t<ggo::disc_f, ggo::rgba_8u>;
 
-  scene.make_paint_shape_t(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  scene.make_paint_shape_t(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  scene.make_paint_shape_t(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  scene.make_paint_shape(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  scene.make_paint_shape(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  scene.make_paint_shape(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
 
   ggo::paint<ggo::sampling_8x8>(image, scene);
 
