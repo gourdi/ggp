@@ -78,7 +78,7 @@ namespace ggo
   template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
   void paint(image_t & image, const scene2d<color_t, data_t> & scene, const ggo::rect_int & clipping)
   {
-    paint<sampling>(image, scene, 8, 2, clipping);
+    paint_multi_scale<sampling>(image, scene, 8, 2, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
