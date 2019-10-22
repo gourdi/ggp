@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          alpha_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          alpha_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
@@ -25,7 +25,7 @@ namespace ggo
             line(const ggo::pos2_f & center, float angle, float inner_radius, float outter_radius, const ggo::rgb_8u & color);
 
       bool	update(int width, int height);
-      void	draw(void * buffer, int width, int height) const;
+      void	draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const;
 
       float get_start_factor() const;
 
@@ -51,8 +51,8 @@ namespace ggo
                         item(const ggo::pos2_f & center, float inner_radius, float outter_radius, float hue, float sat, float val);
 
       bool						  update(int width, int height);
-      void						  draw(void * buffer, int width, int height) const;
-      const ggo::pos2_f  get_center() const { return _center; };
+      void						  draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const;
+      const ggo::pos2_f get_center() const { return _center; };
 
     private:
 
@@ -68,7 +68,7 @@ namespace ggo
 
       float	y() const { return _y; };
       bool	update();
-      void	draw(void * buffer, int width, int height) const;
+      void	draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const;
 
     private:
 

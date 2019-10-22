@@ -19,12 +19,12 @@ namespace ggo
 
   public:
 
-    static void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, const params & params);
+    static void render_bitmap(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img, const params & params);
     static void randomize_params(params & params);
 
   private:
 
-    static void render_transform(float * buffer, int width, int height, const params & params);
+    static void render_transform(image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> & img, const params & params);
   };
 }
 

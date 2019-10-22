@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          bozons_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+          bozons_realtime_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
@@ -20,7 +20,7 @@ namespace ggo
 
     void create_bozon();
 
-    template <ggo::image_format format>
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     void render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const;
 
   private:
@@ -45,18 +45,19 @@ namespace ggo
     ggo::rgb_8u       _bkgd_color4; 
   };
 
-  template <ggo::image_format format>
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
   void bozons_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
   {
+    ggo::image_t<pixel_type, memory_lines_order> image(buffer, size(), line_byte_step());
+
     if (frame_index == 0)
     {
-      ggo::fill_4_colors<format>(buffer, width(), height(), line_step(),
-        _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
+      ggo::fill_4_colors(image, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
     }
 
     for (const auto & bozon : _bozons)
     {
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
+      ggo::paint<ggo::sampling_4x4>(image,
         ggo::capsule_f(bozon._prv_pos, bozon._cur_pos, bozon._radius),
         ggo::solid_color_brush<ggo::rgb_8u>(bozon._color), ggo::overwrite_blender<rgb_8u>(), clipping);
     }

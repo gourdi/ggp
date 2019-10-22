@@ -14,7 +14,7 @@ namespace ggo
   {
   public:
 
-          toutouyoutou_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          toutouyoutou_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  render_frame(void * buffer, int frame_index, float time_step) override;
 
@@ -85,25 +85,25 @@ namespace ggo
     constexpr static float near_norm = 30 / (2 * ggo::pi<float>() * influence_radius * influence_radius);
     constexpr static float view_height = 20;
 
-    std::unique_ptr<uint8_t>                      _background;
-    std::vector<particle>                         _particles;
-    ggo::array<std::vector<const particle *>, 2>  _grid;
-    particle_emitter                              _emitter1;
-    particle_emitter                              _emitter2;
-    float                                         _rest_density;
-    float                                         _stiffness;
-    float                                         _near_stiffness;
-    float                                         _surface_tension;
-    float                                         _linear_viscocity;
-    float                                         _quadratic_viscocity;
-    float                                         _particle_mass;
-    float                                         _gravity;
-    float                                         _hue1;
-    float                                         _hue2;
-    float                                         _sat1;
-    float                                         _sat2;
-    float                                         _val1;
-    float                                         _val2;
+    ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> _background;
+    std::vector<particle>                                       _particles;
+    ggo::array<std::vector<const particle *>, 2>                _grid;
+    particle_emitter                                            _emitter1;
+    particle_emitter                                            _emitter2;
+    float                                                       _rest_density;
+    float                                                       _stiffness;
+    float                                                       _near_stiffness;
+    float                                                       _surface_tension;
+    float                                                       _linear_viscocity;
+    float                                                       _quadratic_viscocity;
+    float                                                       _particle_mass;
+    float                                                       _gravity;
+    float                                                       _hue1;
+    float                                                       _hue2;
+    float                                                       _sat1;
+    float                                                       _sat2;
+    float                                                       _val1;
+    float                                                       _val2;
   };
 }
 

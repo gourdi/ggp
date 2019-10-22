@@ -40,12 +40,10 @@ namespace ggo
   }
 
   // Optimized version for image_base_t that have the same pixel type and memory lines order.
-  template <
-    pixel_type pixel_type, lines_order memory_lines_order, typename input_void_ptr_t, bool input_owns_buffer, bool output_owns_buffer
-  >
-    void blit(
-      const image_base_t<pixel_type, memory_lines_order, input_void_ptr_t, input_owns_buffer> & input_image,
-      image_base_t<pixel_type, memory_lines_order, void *, output_owns_buffer> & output_image)
+  template <pixel_type pixel_type, lines_order memory_lines_order, typename input_void_ptr_t>
+  void blit(
+    const image_base_t<pixel_type, memory_lines_order, input_void_ptr_t> & input_image,
+    image_base_t<pixel_type, memory_lines_order, void *> & output_image)
   {
     using color_t = typename pixel_type_traits<pixel_type>::color_t;
 
@@ -81,17 +79,23 @@ namespace ggo
     {
       const int line_byte_size = input_image.width() * input_image.pixel_byte_size();
 
+      const void * src_ptr = input_image.data();
+      void * dst_ptr = output_image.data();
+
       for (int y = 0; y < h; ++y)
       {
-        std::memcpy(output_image.line_ptr(y), input_image.line_ptr(y), line_byte_size);
+        std::memcpy(dst_ptr, src_ptr, line_byte_size);
+
+        src_ptr = move_ptr(src_ptr, input_image.line_byte_step());
+        dst_ptr = move_ptr(dst_ptr, output_image.line_byte_step());
       }
     }
   }
 
-  template <pixel_type in_pixel_type, lines_order in_memory_lines_order, typename in_void_ptr_t, bool in_owns_buffer,
-    pixel_type out_pixel_type, lines_order out_memory_lines_order, bool out_owns_buffer>
-  void blit(const image_base_t<in_pixel_type, in_memory_lines_order, in_void_ptr_t, in_owns_buffer> & input_image,
-    image_base_t<out_pixel_type, out_memory_lines_order, void *, out_owns_buffer> & output_image,
+  template <pixel_type in_pixel_type, lines_order in_memory_lines_order, typename in_void_ptr_t,
+    pixel_type out_pixel_type, lines_order out_memory_lines_order>
+  void blit(const image_base_t<in_pixel_type, in_memory_lines_order, in_void_ptr_t> & input_image,
+    image_base_t<out_pixel_type, out_memory_lines_order, void *> & output_image,
     int left, int bottom)
   {
     // Create image views.
@@ -121,7 +125,7 @@ namespace ggo
     template <ggo::pixel_type output_pixel_type, ggo::lines_order output_memory_lines_order, typename input_image_t, typename output_image_t>
     static void call(const input_image_t & input_image, output_image_t & output_image, int left, int bottom)
     {
-      ggo::image_view_t<output_pixel_type, output_memory_lines_order> output_view(output_image.data(), output_image.size(), output_image.line_byte_step());
+      ggo::image_t<output_pixel_type, output_memory_lines_order> output_view(output_image.data(), output_image.size(), output_image.line_byte_step());
 
       blit(input_image, output_view, left, bottom);
     }
@@ -129,20 +133,17 @@ namespace ggo
 
   struct dispatch_input
   {
-    template <ggo::pixel_type input_pixel_type, ggo::lines_order input_memory_lines_order, typename input_image_t, bool out_owns_buffer>
-    static void call(const input_image_t & input_image, image_base<void *, out_owns_buffer> & output_image, int left, int bottom)
+    template <ggo::pixel_type input_pixel_type, ggo::lines_order input_memory_lines_order, typename input_image_t>
+    static void call(const input_image_t & input_image, image_base<void *> & output_image, int left, int bottom)
     {
-      ggo::const_image_view_t<input_pixel_type, input_memory_lines_order> input_view(input_image.data(), input_image.size(), input_image.line_byte_step());
+      ggo::const_image_t<input_pixel_type, input_memory_lines_order> input_view(input_image.data(), input_image.size(), input_image.line_byte_step());
 
       dispatch_image_format<dispatch_output>(output_image.pixel_type(), output_image.memory_lines_order(), input_view, output_image, left, bottom);
     }
   };
 
-  template <typename in_void_ptr_t, bool in_owns_buffer, bool out_owns_buffer>
-  void blit(
-    const image_base<in_void_ptr_t, in_owns_buffer> & input_image,
-    image_base<void *, out_owns_buffer> & output_image,
-    int left, int bottom)
+  template <typename in_void_ptr_t>
+  void blit(const image_base<in_void_ptr_t> & input_image, image_base<void *> & output_image, int left, int bottom)
   {
     dispatch_image_format<dispatch_input>(input_image.pixel_type(), input_image.memory_lines_order(), input_image, output_image, left, bottom);
   }

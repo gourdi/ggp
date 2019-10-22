@@ -1,10 +1,10 @@
 #include "ggo_badaboum_realtime_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::badaboum_realtime_artist::badaboum_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::badaboum_realtime_artist::badaboum_realtime_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_step, format),
-_artist(width, height, line_step, format, ggo::sampling_1)
+fixed_frames_count_realtime_artist_abc(width, height, line_step, pixel_type, memory_lines_order),
+_artist(width, height, line_step, pixel_type, memory_lines_order, ggo::sampling_1)
 {
 }
 

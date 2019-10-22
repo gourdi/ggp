@@ -2,18 +2,18 @@
 #include <kernel/ggo_vec3.h>
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_artist::plastic_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::plastic_artist::plastic_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-artist(width, height, line_step, format)
+artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
-void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::plastic_artist::render_t(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const
 {
-  using format_traits = ggo::image_format_traits<format>;
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
   const float width_f = static_cast<float>(width());
   const float height_f = static_cast<float>(height());
@@ -24,8 +24,6 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
   {
     const float y1 = ggo::map(y - 3 / 8.f, 0.f, height_f, -range_y, range_y);
     const float y2 = ggo::map(y + 3 / 8.f, 0.f, height_f, -range_y, range_y);
-
-    void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height(), line_step);
 
     for (int x = 0; x < width(); ++x)
     {
@@ -47,9 +45,7 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
 
       const ggo::rgb_32f pixel_color = color * (altitude_factor + std::abs(normal.z()) / altitude_factor);
 
-      ggo::write_pixel<format>(buffer, ggo::convert_color_to<ggo::rgb_8u>(pixel_color));
-
-      buffer = ggo::move_ptr<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
+      img.write_pixel(x, y, ggo::convert_color_to<ggo::rgb_8u>(pixel_color));
     }
   }
 }
@@ -57,17 +53,21 @@ void ggo::plastic_artist::render_t(void * buffer, int line_step, const std::vect
 //////////////////////////////////////////////////////////////
 void ggo::plastic_artist::render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    render_t<ggo::rgb_8u_yu>(buffer, line_step(), params, color, altitude_factor);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_t<ggo::bgrx_8u_yd>(buffer, line_step(), params, color, altitude_factor);
-    break;
-  default:
+    render_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, params, color, altitude_factor);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, params, color, altitude_factor);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, params, color, altitude_factor);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
   }
 }
 

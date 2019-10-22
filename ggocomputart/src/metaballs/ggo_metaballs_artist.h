@@ -25,8 +25,9 @@ namespace ggo
       ggo::rgb_32f              _background_color;
     };
 
-    void render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
-      ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
+    void render_bitmap(void * buffer, int width, int height, int line_byte_step,
+                       ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                       ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params);
   };
 }
 

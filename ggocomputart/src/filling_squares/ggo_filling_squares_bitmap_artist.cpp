@@ -4,9 +4,9 @@
 #include <2d/paint/ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 	
 }
@@ -14,13 +14,13 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
 {
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(buffer, size(), line_byte_step());
+
 	float hue;
 	
   auto multi_squares = ggo::filling_squares_artist::build_squares(width(), height(), hue);
 	
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>()),
-    ggo::rect_int::from_width_height(width(), height()));
+	ggo::fill_solid(view, ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>()));
 
 	for (const auto & multi_square : multi_squares)
 	{
@@ -38,8 +38,7 @@ void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
       square.add_point(right, top);
       square.add_point(left, top);
 
-			ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>
-        (buffer, width(), height(), line_step(), square, colored_square._color);
+			ggo::paint<ggo::sampling_4x4>(view, square, colored_square._color);
 		}
 	}
 }

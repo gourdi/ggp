@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          aggregation_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -21,7 +21,7 @@ namespace ggo
     void  update(int points_count);
     int   get_final_points_count() const;
 
-    template <ggo::image_format format>
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     void  render_t(void * buffer) const;
 
   private:

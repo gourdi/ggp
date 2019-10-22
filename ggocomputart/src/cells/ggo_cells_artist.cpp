@@ -7,9 +7,9 @@
 #include <2d/paint/ggo_pixel_sampling.h>
 
 //////////////////////////////////////////////////////////////
-ggo::cells_artist::cells_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::cells_artist::cells_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
 
 }
@@ -17,6 +17,8 @@ bitmap_artist_abc(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::cells_artist::render_bitmap(void * buffer) const
 {
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
   const int cells_count = 250;
   
 	float hue1 = ggo::rand<float>();
@@ -36,7 +38,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 	polynom2._deg1 = ggo::rand<float>(-2, 2);
 	polynom2._deg0 = ggo::rand<float>(-2, 2);
 
-	ggo::fill_solid<rgb_8u_yu>(buffer, width(), height(), line_step(),
+	ggo::fill_solid(img,
     ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>()),
     ggo::rect_int::from_width_height(width(), height()));
 	
@@ -68,8 +70,8 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     auto paint_pixel = [&](int x, int y)
     {
       bool done = true;
-      const rgb_8u bkgd_color = read_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step());
-      accumulator<rgb_8u> acc;
+      const rgb_8u bkgd_color = img.read_pixel(x, y);
+      color_accumulator<rgb_8u> acc;
 
       auto sample_shape = [&](float x_f, float y_f)
       {
@@ -86,7 +88,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
 
       sample_t::sample_pixel<float>(x, y, sample_shape);
 
-      write_pixel<rgb_8u_yu>(buffer, x, y, height(), line_step(), acc.div<sample_t::samples_count>());
+      img.write_pixel(x, y, acc.div<sample_t::samples_count>());
 
       return !done;
     };
@@ -98,7 +100,7 @@ void ggo::cells_artist::render_bitmap(void * buffer) const
     {
       float stddev = 0.0005f * min_size();
       
-      gaussian_blur<rgb_8u_yu>(buffer, size(), line_step(), stddev);
+      gaussian_blur(img, stddev);
     }
 	}
 }

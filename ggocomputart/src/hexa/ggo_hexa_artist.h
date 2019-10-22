@@ -4,8 +4,7 @@
 #include <kernel/ggo_vec.h>
 #include <kernel/ggo_random_interpolator_abc.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <2d/ggo_color.h>
-#include <2d/ggo_image_format.h>
+#include <2d/ggo_pixel_type.h>
 #include <vector>
 
 namespace ggo
@@ -16,12 +15,13 @@ namespace ggo
   {
   public:
 
-                  hexa_artist(bool enable_roughness);
+              hexa_artist(bool enable_roughness);
 
     basis3d_f generate_camera_basis(float progress) const;
 
-    void          render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-                         float progress, ggo::renderer_abc & renderer) const;
+    void      render(void * buffer, int width, int height, int line_byte_step,
+                     ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                     float progress, ggo::renderer_abc & renderer) const;
 
   public:
 

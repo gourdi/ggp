@@ -3,9 +3,9 @@
 #include <2d/ggo_color.h>
 
 //////////////////////////////////////////////////////////////
-ggo::julia_artist::julia_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::julia_artist::julia_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-artist(width, height, line_step, format)
+artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 	// Build the palette.
 	float hue = ggo::rand<float>();
@@ -52,69 +52,61 @@ std::complex<float> ggo::julia_artist::pickup_seed()
 		return std::complex<float>(-1 + radius * std::cos(angle), radius * std::sin(angle));	
 	}
 }
-	
-//////////////////////////////////////////////////////////////
-void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> & seed, float range) const
-{
-	for (int y = 0; y < height(); ++y)
-	{
-		float range_x = width() > height() ? range * width() / height() : range;
-		float range_y = width() > height() ? range : range * height() / width();
 
-		float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-		float y2 = ggo::map(y - 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-		float y3 = ggo::map(y + 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-		float y4 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
-		int iterations[16];
-	
-		for (int x = 0; x < width(); ++x)
-		{
-			// Iterate and sample.
-			float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-			float x2 = ggo::map(x - 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-			float x3 = ggo::map(x + 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-			float x4 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
-		
-			iterations[0] = iterate(x1, y1, seed);
-			iterations[1] = iterate(x1, y4, seed);
-			iterations[2] = iterate(x4, y1, seed);
-			iterations[3] = iterate(x4, y4, seed);
-		
-			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
-			{
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::julia_artist::render_bitmap_t(void * buffer, const std::complex<float> & seed, float range) const
+{
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+  for (int y = 0; y < height(); ++y)
+  {
+    float range_x = width() > height() ? range * width() / height() : range;
+    float range_y = width() > height() ? range : range * height() / width();
+
+    float y1 = ggo::map(y - 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
+    float y2 = ggo::map(y - 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
+    float y3 = ggo::map(y + 1 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
+    float y4 = ggo::map(y + 3 / 8.f, 0.f, static_cast<float>(height()), -range_y, range_y);
+    int iterations[16];
+
+    for (int x = 0; x < width(); ++x)
+    {
+      // Iterate and sample.
+      float x1 = ggo::map(x - 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
+      float x2 = ggo::map(x - 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
+      float x3 = ggo::map(x + 1 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
+      float x4 = ggo::map(x + 3 / 8.f, 0.f, static_cast<float>(width()), -range_x, range_x);
+
+      iterations[0] = iterate(x1, y1, seed);
+      iterations[1] = iterate(x1, y4, seed);
+      iterations[2] = iterate(x4, y1, seed);
+      iterations[3] = iterate(x4, y4, seed);
+
+      if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
+      {
         int index = std::min(static_cast<int>(_palette.size() - 1), iterations[0]);
 
-        switch (format())
-        {
-        case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), _palette[index]);
-          break;
-        case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), _palette[index]);
-          break;
-				default:
-					GGO_FAIL();
-					break;
-        }
-			}
-			else
-			{
-				iterations[4] = iterate(x1, y2, seed);
-				iterations[5] = iterate(x1, y3, seed);
-			
-				iterations[6] = iterate(x2, y1, seed);
-				iterations[7] = iterate(x2, y2, seed);
-				iterations[8] = iterate(x2, y3, seed);
-				iterations[9] = iterate(x2, y4, seed);
-			
-				iterations[10] = iterate(x3, y1, seed);
-				iterations[11] = iterate(x3, y2, seed);
-				iterations[12] = iterate(x3, y3, seed);
-				iterations[13] = iterate(x3, y4, seed);
-			
-				iterations[14] = iterate(x4, y2, seed);
-				iterations[15] = iterate(x4, y3, seed);
-			
+        img.write_pixel(x, y, _palette[index]);
+      }
+      else
+      {
+        iterations[4] = iterate(x1, y2, seed);
+        iterations[5] = iterate(x1, y3, seed);
+
+        iterations[6] = iterate(x2, y1, seed);
+        iterations[7] = iterate(x2, y2, seed);
+        iterations[8] = iterate(x2, y3, seed);
+        iterations[9] = iterate(x2, y4, seed);
+
+        iterations[10] = iterate(x3, y1, seed);
+        iterations[11] = iterate(x3, y2, seed);
+        iterations[12] = iterate(x3, y3, seed);
+        iterations[13] = iterate(x3, y4, seed);
+
+        iterations[14] = iterate(x4, y2, seed);
+        iterations[15] = iterate(x4, y3, seed);
+
         int r = 0;
         int g = 0;
         int b = 0;
@@ -128,21 +120,31 @@ void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> &
 
         ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
 
-        switch (format())
-        {
-        case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
-          break;
-        case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), c_8u);
-          break;
-				default:
-					GGO_FAIL();
-					break;
-        }
-			}
-		}
-	}
+        img.write_pixel(x, y, c_8u);
+      }
+    }
+  }
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::julia_artist::render_bitmap(void * buffer, const std::complex<float> & seed, float range) const
+{
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, seed, range);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, seed, range);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, seed, range);
+  }
+  else
+  {
+    GGO_FAIL();
+  }
 }
 
 //////////////////////////////////////////////////////////////

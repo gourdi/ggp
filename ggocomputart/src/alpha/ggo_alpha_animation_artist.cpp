@@ -1,6 +1,6 @@
 #include "ggo_alpha_animation_artist.h"
 #include <kernel/memory/ggo_array.h>
-#include <kernel/math/signal_proc/ggo_dct.h>
+#include <kernel/math/signal_processing/ggo_dct.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>
@@ -12,9 +12,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::alpha_animation_artist::alpha_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-animation_artist_abc(width, height, line_step, format)
+animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
   _remaining_counter = 7;
   _creation_counter = ggo::rand<int>(40, 60);
@@ -66,6 +66,8 @@ void ggo::alpha_animation_artist::add_new_item()
 //////////////////////////////////////////////////////////////
 void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
 {
+  image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
   // Oscillos.
   ggo::remove_if(_oscillos, [&](oscillo & oscil) { return oscil.update() == false; });
 
@@ -114,8 +116,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, f
 
   if (buffer != nullptr)
   {
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-      _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
+    fill_4_colors(img, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4);
   }
 
   // Oscillos.
@@ -123,7 +124,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, f
   {
     for (const auto & oscillo : _oscillos)
     {
-      oscillo.draw(buffer, width(), height());
+      oscillo.draw(img);
     }
   }
 
@@ -132,7 +133,7 @@ void ggo::alpha_animation_artist::render_frame(void * buffer, int frame_index, f
   {
     for (const auto & item : _items)
     {
-      item.draw(buffer, width(), height());
+      item.draw(img);
     }
   }
 }
@@ -170,9 +171,9 @@ bool ggo::alpha_animation_artist::oscillo::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int height) const
+void ggo::alpha_animation_artist::oscillo::draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const
 {
-  int min_size = std::min(width, height);
+  int min_size = std::min(img.width(), img.height());
 
   ggo::array_32f freq(oscillo_size, 0.f), spat(oscillo_size, 0.f);
   for (int i = 0; i < _threshold; ++i)
@@ -184,17 +185,16 @@ void ggo::alpha_animation_artist::oscillo::draw(void * buffer, int width, int he
   ggo::multi_shape_f multi_shape;
   for (int i = 1; i < oscillo_size; ++i)
   {
-    float x1 = (i - 1) * width / float(oscillo_size);
+    float x1 = (i - 1) * img.width() / float(oscillo_size);
     float y1 = _y + 0.025f * spat(i - 1) * min_size;
 
-    float x2 = i * width / float(oscillo_size);
+    float x2 = i * img.width() / float(oscillo_size);
     float y2 = _y + 0.025f * spat(i) * min_size;
 
     multi_shape.add_shape(std::make_shared<ggo::capsule_f>(ggo::pos2_f(x1, y1), ggo::pos2_f(x2, y2), 0.001f * min_size));
   }
 
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-    buffer, width, height, 3 * width, multi_shape, ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(_opacity));
+  paint<ggo::sampling_4x4>(img, multi_shape, ggo::black_8u(), _opacity);
 }
 
 //////////////////////////////////////////////////////////////
@@ -224,11 +224,11 @@ bool ggo::alpha_animation_artist::item::update(int width, int height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::item::draw(void * buffer, int width, int height) const
+void ggo::alpha_animation_artist::item::draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const
 {
   for (const line & line : _lines)
   {
-    line.draw(buffer, width, height);
+    line.draw(img);
   }
 }
 
@@ -271,12 +271,12 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
   ggo::vec2_f offset1 = inner_radius * ggo::vec2_f::from_angle(angle);
   ggo::vec2_f offset2 = outter_radius * ggo::vec2_f::from_angle(angle);
 
-  const int END_COUNTER = 100;
-  if (_counter >= END_COUNTER)
+  constexpr int end_counter = 100;
+  if (_counter >= end_counter)
   {
     ggo::vec2_f line_center = 0.5f * (offset1 + offset2);
 
-    float end_factor = std::pow(0.1f * (_counter - END_COUNTER), 2.5f);
+    float end_factor = std::pow(0.1f * (_counter - end_counter), 2.5f);
     float dist = ggo::distance(offset1, offset2);
     float angle = ggo::angle(line_center);
 
@@ -299,18 +299,15 @@ bool ggo::alpha_animation_artist::line::update(int width, int height)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::alpha_animation_artist::line::draw(void * buffer, int width, int height) const
+void ggo::alpha_animation_artist::line::draw(image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img) const
 {
   if (_counter >= 0)
   {
-    int min_size = std::min(width, height);
+    int min_size = std::min(img.width(), img.height());
     float line_width = 0.0015f * min_size + 0.1f * min_size * get_start_factor();
 
     ggo::capsule_f capsule(_p1, _p2, line_width);
 
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, 3 * width, capsule,
-      ggo::make_solid_brush(_color),
-      ggo::alpha_blender_rgb8u(_opacity));
+    paint<ggo::sampling_4x4>(img, capsule, _color, _opacity);
   }
 }

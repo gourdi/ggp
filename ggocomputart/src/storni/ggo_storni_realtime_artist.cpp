@@ -1,9 +1,9 @@
 #include "ggo_storni_realtime_artist.h"
-#include <2d/ggo_blit.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 #include <2d/paint/ggo_paint.h>
+#include <2d/processing/ggo_blit.h>
 
 namespace
 {
@@ -128,10 +128,10 @@ void ggo::storni_realtime_artist::storni::clamp_velocity(float velocity_hypot_ma
 }
 
 //////////////////////////////////////////////////////////////
-ggo::storni_realtime_artist::storni_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::storni_realtime_artist::storni_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_step, format),
-_background_buffer(height * line_step)
+fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+_background_buffer(height * line_byte_step)
 {
   _hue = ggo::rand<float>();
 
@@ -346,35 +346,35 @@ void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, co
   const float storni_size = 0.01f * std::sqrt(float(width() * height()));
   const float predator_size = 0.03f * std::sqrt(float(width() * height()));
 
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    fade_background_to_white<ggo::rgb_8u_yu>(clipping);
-    paint_stornies_background<ggo::rgb_8u_yu, ggo::sampling_2x2>(clipping);
-    blit_background<ggo::rgb_8u_yu>(buffer, clipping);
-    paint_obstacles<ggo::rgb_8u_yu>(buffer, clipping, frame_index);
-    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
-    paint_stornies<ggo::rgb_8u_yu, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    fade_background_to_white<ggo::bgrx_8u_yd>(clipping);
-    paint_stornies_background<ggo::bgrx_8u_yd, ggo::sampling_2x2>(clipping);
-    blit_background<ggo::bgrx_8u_yd>(buffer, clipping);
-    paint_obstacles<ggo::bgrx_8u_yd>(buffer, clipping, frame_index);
-    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
-    paint_stornies<ggo::bgrx_8u_yd, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
-    break;
-  default:
+    fade_background_to_white<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(clipping);
+    paint_stornies_background<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(clipping);
+    blit_background<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+    paint_obstacles<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping, frame_index);
+    paint_stornies<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
+    paint_stornies<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    fade_background_to_white<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(clipping);
+    paint_stornies_background<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(clipping);
+    blit_background<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+    paint_obstacles<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping, frame_index);
+    paint_stornies<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
+    paint_stornies<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int & clipping)
 {
-  using format_traits = ggo::image_format_traits<format>;
+  ggo::image_t<pixel_type, memory_lines_order> img_bkgd(_background_buffer.data(), size(), line_byte_step());
 
   auto fade = [](uint8_t v)
   {
@@ -383,98 +383,93 @@ void ggo::storni_realtime_artist::fade_background_to_white(const ggo::rect_int &
 
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
-    void * ptr_line = ggo::get_line_ptr<format_traits::lines_order>(_background_buffer.data(), y, height(), line_step());
-    void * ptr_left = move_ptr(ptr_line, clipping.left() * format_traits::pixel_byte_size);
-    void * ptr_right = move_ptr(ptr_line, clipping.right() * format_traits::pixel_byte_size);
+    void * ptr_left = img_bkgd.pixel_ptr(clipping.left(), y);
+    void * ptr_right = img_bkgd.pixel_ptr(clipping.right(), y);
 
-    for (void * ptr = ptr_left; ptr <= ptr_right; ptr = move_ptr(ptr, format_traits::pixel_byte_size))
+    for (void * ptr = ptr_left; ptr <= ptr_right; ptr = move_ptr(ptr, pixel_type_traits<pixel_type>::pixel_byte_size))
     {
-      auto pixel = ggo::read_pixel<format>(ptr);
+      auto pixel = ggo::pixel_type_traits<pixel_type>::read(ptr);
 
       pixel.r() = fade(pixel.r());
       pixel.g() = fade(pixel.g());
       pixel.b() = fade(pixel.b());
 
-      ggo::write_pixel<format>(ptr, pixel);
+      ggo::pixel_type_traits<pixel_type>::write(ptr, pixel);
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
 void ggo::storni_realtime_artist::paint_stornies_background(const ggo::rect_int & clipping)
 {
+  ggo::image_t<pixel_type, memory_lines_order> img_bkgd(_background_buffer.data(), size(), line_byte_step());
+
   alpha_blender_rgb8u blender(0.4f);
   const float storni_radius = 0.005f * min_size();
   for (const auto & storni : _stornis)
   {
     // Paint 2 stamps.
-    ggo::paint<format, sampling>(_background_buffer.data(), width(), height(), line_step(),
-      ggo::disc_f(storni._pos, storni_radius),
+    ggo::paint<sampling>(img_bkgd, ggo::disc_f(storni._pos, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
 
-    ggo::paint<format, sampling>(_background_buffer.data(), width(), height(), line_step(),
-      ggo::disc_f(storni._pos - 0.5f * storni._vel, storni_radius),
+    ggo::paint<sampling>(img_bkgd, ggo::disc_f(storni._pos - 0.5f * storni._vel, storni_radius),
       ggo::make_solid_brush(storni._color), blender, clipping);
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::storni_realtime_artist::blit_background(void * buffer, const ggo::rect_int & clipping) const
 {
-  using format_traits = ggo::image_format_traits<format>;
+  ggo::const_image_t<pixel_type, memory_lines_order> img_bkgd(_background_buffer.data(), size(), line_byte_step());
+  ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
-  const int clipped_line_byte_size = clipping.width() * format_traits::pixel_byte_size;
+  auto bkgd_view = make_image_view(img_bkgd, clipping);
+  auto img_view = make_image_view(img, clipping);
 
-  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
-  {
-    const void * ptr_in = ggo::get_line_ptr<format_traits::lines_order>(_background_buffer.data(), y, height(), line_step());
-    ptr_in = move_ptr(ptr_in, clipping.left() * format_traits::pixel_byte_size);
-
-    void * ptr_out = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, height(), line_step());
-    ptr_out = move_ptr(ptr_out, clipping.left() * format_traits::pixel_byte_size);
-
-    memcpy(ptr_out, ptr_in, clipped_line_byte_size);
-  }
+  ggo::blit(*bkgd_view, *img_view);
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vector<storni> & stornis, float size, const ggo::rect_int & clipping) const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vector<storni> & stornis, float storni_size, const ggo::rect_int & clipping) const
 {
-  const float border_size = size * 0.05f;
+  const float border_size = storni_size * 0.05f;
 
   for (const auto & storni : stornis)
   {
     if (storni._vel.x() != 0.f || storni._vel.y() != 0.f)
     {
-      const ggo::vec2_f direction = ggo::normalize(storni._vel) * size;
+      ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+      const ggo::vec2_f direction = ggo::normalize(storni._vel) * storni_size;
 
       const ggo::vec2_f v1{ storni._pos + direction };
       const ggo::vec2_f v2{ storni._pos + 0.5f * ggo::vec2_f(direction.y(), -direction.x()) };
       const ggo::vec2_f v3{ storni._pos + 0.5f * ggo::vec2_f(-direction.y(), direction.x()) };
 
-      ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u> triangle({ v1, v2, v3 }, storni._color);
-      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border1({ v1, v2, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border2({ v2, v3, border_size }, ggo::black_8u());
-      ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u> border3({ v3, v1, border_size }, ggo::black_8u());
+      ggo::scene2d<ggo::rgb_8u> scene;
+      scene.make_paint_shape_t(triangle2d_f({ v1, v2, v3 }), storni._color);
+      scene.make_paint_shape_t(triangle2d_f({ v1, v2, border_size }), ggo::black_8u());
+      scene.make_paint_shape_t(triangle2d_f({ v2, v3, border_size }), ggo::black_8u());
+      scene.make_paint_shape_t(triangle2d_f({ v3, v1, border_size }), ggo::black_8u());
 
-      const std::vector<const ggo::paint_shape_abc<float, ggo::rgb_8u> *> paint_shapes{ &triangle, &border1, &border2, &border3 };
-
-      ggo::paint<format, sampling>(buffer, width(), height(), line_step(), paint_shapes, clipping);
+      ggo::paint<sampling>(img, scene, clipping);
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const
 {
   const float obstacle_hypot = get_obstacle_hypot(width(), height());
   const float obstacle_hypot_inv = 1.f / obstacle_hypot;
   const float phase = 0.5f * frame_index;
   const ggo::rgb_8u color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.f, 1.f);
+
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
   for (const auto & obstacle : _obstacles)
   {
@@ -496,9 +491,9 @@ void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect
           opacity *= 0.5f + 0.5f * std::sin(20.f * opacity + phase);
 
           const ggo::alpha_blender_rgb8u blender(opacity);
-          auto pixel = ggo::read_pixel<format>(buffer, x, y, height(), line_step());
+          auto pixel = img.read_pixel(x, y);
           pixel = blender(x, y, pixel, color);
-          ggo::write_pixel<format>(buffer, x, y, height(), line_step(), pixel);
+          img.write_pixel(x, y, pixel);
         }
       });
     }

@@ -1,5 +1,5 @@
 #include "ggo_dupecheck_animation_artist.h"
-#include <kernel/math/signal_proc/ggo_dct.h>
+#include <kernel/math/signal_processing/ggo_dct.h>
 #include <kernel/math/ggo_harmonic_curve.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
@@ -9,9 +9,9 @@
 #include <animation/paths/ggo_spiral_path.h>
 
 //////////////////////////////////////////////////////////////
-ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-animation_artist_abc(width, height, line_step, format)
+animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _colors[0] = ggo::rgb_32f(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
   _colors[1] = ggo::rgb_32f(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
@@ -128,10 +128,10 @@ void ggo::dupecheck_animation_artist::render_frame(void * buffer, int frame_inde
         *ptr++ = v;
       }
     }
-  }
 
-  // Render anim items.
-  _animator.render(buffer, width(), height(), line_step(), format());
+    // Render anim items.
+    _animator.render(ggo::image(buffer, size(), pixel_type(), memory_lines_order(), line_byte_step()));
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -238,28 +238,25 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate1::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::dupecheck_animation_artist::animate1::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	if (buffer != nullptr)
-	{
-		for (int i = 0; i < _count; ++i)
-		{
-			float radius = _radius - i * _distance;
-			if (radius > 0)
-			{
-        auto disc1 = std::make_shared<ggo::disc_f>(pos, radius + 0.5f * _width);
-        auto disc2 = std::make_shared<ggo::disc_f>(pos, radius - 0.5f * _width);
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(img.data(), img.size(), img.line_byte_step());
 
-        ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> opened_disc;
-        opened_disc.add_shape(disc1);
-        opened_disc.add_shape(disc2);
+  for (int i = 0; i < _count; ++i)
+  {
+    float radius = _radius - i * _distance;
+    if (radius > 0)
+    {
+      auto disc1 = std::make_shared<ggo::disc_f>(pos, radius + 0.5f * _width);
+      auto disc2 = std::make_shared<ggo::disc_f>(pos, radius - 0.5f * _width);
 
-				ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-          buffer, width, height, line_step, opened_disc, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
-			}
-		}
-	}
+      ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> opened_disc;
+      opened_disc.add_shape(disc1);
+      opened_disc.add_shape(disc2);
+
+      ggo::paint<ggo::sampling_4x4>(view, opened_disc, _color, _opacity);
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -271,40 +268,37 @@ dupecheck_animate_abc(pos, path, color, render_min_size)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate2::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::dupecheck_animation_artist::animate2::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	if (buffer != nullptr)
-	{
-		const int samples = 120;
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(img.data(), img.size(), img.line_byte_step());
 
-		ggo::harmonic_curve<float> harmonic_curve;
-	
-		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
-		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
-		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
-		harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
+  const int samples = 120;
 
-    ggo::multi_shape_f multi_shape;
+  ggo::harmonic_curve<float> harmonic_curve;
 
-    for (int i = 0; i <= samples; ++i)
-    {
-      float angle1 = i * 2 * ggo::pi<float>() / samples;
-      float angle2 = (i + 1) * 2 * ggo::pi<float>() / samples;
-      float radius1 = _radius + harmonic_curve.evaluate(angle1);
-      float radius2 = _radius + harmonic_curve.evaluate(angle2);
+  harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
+  harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
+  harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
+  harmonic_curve.set_harmonic(ggo::rand<int>(8, 16), ggo::rand<float>(0.05f, 0.1f) * _radius, ggo::rand<float>(0, 2 * ggo::pi<float>()));
 
-      ggo::pos2_f p1 = pos + radius1 * ggo::vec2_f::from_angle(angle1);
-      ggo::pos2_f p2 = pos + radius2 * ggo::vec2_f::from_angle(angle2);
+  ggo::multi_shape_f multi_shape;
 
-      auto segment = std::make_shared<ggo::capsule_f>(p1, p2, _width);
+  for (int i = 0; i <= samples; ++i)
+  {
+    float angle1 = i * 2 * ggo::pi<float>() / samples;
+    float angle2 = (i + 1) * 2 * ggo::pi<float>() / samples;
+    float radius1 = _radius + harmonic_curve.evaluate(angle1);
+    float radius2 = _radius + harmonic_curve.evaluate(angle2);
 
-      multi_shape.add_shape(segment);
-    }
-	
-		ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
-	}
+    ggo::pos2_f p1 = pos + radius1 * ggo::vec2_f::from_angle(angle1);
+    ggo::pos2_f p2 = pos + radius2 * ggo::vec2_f::from_angle(angle2);
+
+    auto segment = std::make_shared<ggo::capsule_f>(p1, p2, _width);
+
+    multi_shape.add_shape(segment);
+  }
+
+  ggo::paint<ggo::sampling_4x4>(view, multi_shape, _color, _opacity);
 }
 
 //////////////////////////////////////////////////////////////
@@ -329,28 +323,25 @@ void ggo::dupecheck_animation_artist::animate3::update()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::dupecheck_animation_artist::animate3::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::dupecheck_animation_artist::animate3::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	if (buffer != nullptr)
-	{
-		for (int i = 0; i < _shapes_count; ++i)
-		{
-			float angle_shape = _angle + i * 2 * ggo::pi<float>() / _shapes_count;
-			ggo::pos2_f shape_pos = pos + _radius * ggo::vec2_f::from_angle(angle_shape);
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(img.data(), img.size(), img.line_byte_step());
 
-      ggo::polygon2d_f shape;
+  for (int i = 0; i < _shapes_count; ++i)
+  {
+    float angle_shape = _angle + i * 2 * ggo::pi<float>() / _shapes_count;
+    ggo::pos2_f shape_pos = pos + _radius * ggo::vec2_f::from_angle(angle_shape);
 
-			for (int j = 0; j < _vertices_count; ++j)
-			{
-				float angle_vertex = _angle_shape + j * 2 * ggo::pi<float>() / _vertices_count;
-				ggo::pos2_f vertex = shape_pos + _shape_size * ggo::vec2_f::from_angle(angle_vertex);
+    ggo::polygon2d_f shape;
 
-				shape.add_point(vertex);
-			}
+    for (int j = 0; j < _vertices_count; ++j)
+    {
+      float angle_vertex = _angle_shape + j * 2 * ggo::pi<float>() / _vertices_count;
+      ggo::pos2_f vertex = shape_pos + _shape_size * ggo::vec2_f::from_angle(angle_vertex);
 
-      ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, width, height, line_step, shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity));
-		}	
-	}
+      shape.add_point(vertex);
+    }
+
+    ggo::paint<ggo::sampling_4x4>(view, shape, _color, _opacity);
+  }
 }

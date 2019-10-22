@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-    amorosi_animation_artist(int width, int height, int line_step, ggo::image_format format);
+    amorosi_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     struct opacity_point
     {
@@ -32,19 +32,21 @@ namespace ggo
       void get_random_data(float & data, float & dt) override;
     };
 
-    class curve : public ggo::artist
+    class curve
     {
     public:
 
-            curve(int width, int height, int line_step, ggo::image_format format, const ggo::rgb_32f & color);
+            curve(int width, int height, const ggo::rgb_32f & color);
 
       void  update();
-      void  paint(void * buffer) const;
+      void  paint(void * buffer, int line_byte_step) const;
             
       bool  is_dead() const;
 
     private:
 
+      const int                                 _width;
+      const int                                 _height;
       const int                                 _lines_count;
       int                                       _counter = 0;
       random_angle_interpolator                 _angle_interpolator;

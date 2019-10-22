@@ -1,21 +1,23 @@
 #include "ggo_poupette_artist.h"
 #include <kernel/ggo_ease.h>
-#include <2d/ggo_color.h>
+#include <2d/ggo_image.h>
 #include <array>
 
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <ggo::image_format format, ggo::pixel_sampling sampling>
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
   void render_tile_t(
     const ggo::rgb_32f & c1,
     const ggo::rgb_32f & c2,
     const ggo::rgb_32f & c3,
     const ggo::rgb_32f & c4,
-    void * buffer, int width, int height, int line_step, int frame_index, const ggo::rect_int & clipping)
+    void * buffer, int width, int height, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
   {
     const float h = static_cast<float>(height);
     const float w = static_cast<float>(width);
+
+    ggo::image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
 
     auto color_mod = [](const ggo::rgb_32f & c)
     {
@@ -38,8 +40,6 @@ namespace
           (y1 * c3 + (h - y1) * c4) / h,
           (y2 * c3 + (h - y2) * c4) / h };
 
-        uint8_t * ptr = static_cast<uint8_t *>(ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, height, line_step));
-
         for (int x = clipping.left(); x <= clipping.right(); ++x)
         {
           const float w1 = (x + 1.f / 4.f) / w;
@@ -58,9 +58,8 @@ namespace
           int r = ggo::round_to<int>(pixel_color.r());
           int g = ggo::round_to<int>(pixel_color.g());
           int b = ggo::round_to<int>(pixel_color.b());
-          ggo::write_pixel<format>(ptr, { uint8_t(r), uint8_t(g), uint8_t(b) });
 
-          ptr += ggo::image_format_traits<format>::pixel_byte_size;
+          img.write_pixel(x, y, { uint8_t(r), uint8_t(g), uint8_t(b) });
         }
       }
     }
@@ -68,8 +67,6 @@ namespace
     {
       for (int y = clipping.bottom(); y <= clipping.top(); ++y)
       {
-        uint8_t * ptr = static_cast<uint8_t *>(ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, height, line_step));
-
         for (int x = clipping.left(); x <= clipping.right(); ++x)
         {
           ggo::rgb_32f pixel_color{ 0.f, 0.f, 0.f };
@@ -87,9 +84,8 @@ namespace
           int r = ggo::round_to<int>(pixel_color.r());
           int g = ggo::round_to<int>(pixel_color.g());
           int b = ggo::round_to<int>(pixel_color.b());
-          ggo::write_pixel<format>(ptr, { uint8_t(r), uint8_t(g), uint8_t(b) });
 
-          ptr += ggo::image_format_traits<format>::pixel_byte_size;
+          img.write_pixel(x, y, { uint8_t(r), uint8_t(g), uint8_t(b) });
         }
       }
     }
@@ -132,78 +128,80 @@ ggo::poupette_artist::poupette_artist()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int line_step, ggo::image_format format, int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const
+void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                                       int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const
 {
   const rgb_32f c1 = ggo::ease_inout(frame_index, _frames_count, _c1_start, _c1_end);
   const rgb_32f c2 = ggo::ease_inout(frame_index, _frames_count, _c2_start, _c2_end);
   const rgb_32f c3 = ggo::ease_inout(frame_index, _frames_count, _c3_start, _c3_end);
   const rgb_32f c4 = ggo::ease_inout(frame_index, _frames_count, _c4_start, _c4_end);
 
-  switch (format)
+  if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
-  case ggo::rgb_8u_yu:
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::rgb_8u_yu, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::rgb_8u_yu, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::rgb_8u_yu, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::rgb_8u_yu, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::rgb_8u_yu, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
-
     }
-    break;
-
-  case ggo::rgb_8u_yd:
+  }
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
+  {
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::rgb_8u_yd, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::rgb_8u_yd, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::rgb_8u_yd, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::rgb_8u_yd, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::rgb_8u_yd, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     }
-    break;
-
-  case ggo::bgrx_8u_yd:
+  }
+  else if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
+  {
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::bgrx_8u_yd, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_1>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::bgrx_8u_yd, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::bgrx_8u_yd, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_4x4>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::bgrx_8u_yd, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_8x8>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::bgrx_8u_yd, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_16x16>(c1, c2, c3, c4, buffer, width, height, line_byte_step, frame_index, clipping);
       break;
     }
-    break;
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 

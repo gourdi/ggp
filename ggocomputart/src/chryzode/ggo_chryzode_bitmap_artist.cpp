@@ -3,16 +3,16 @@
 #include <2d/processing/ggo_gaussian_blur.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
 {
-  chryzode_artist artist(width(), height(), line_step(), format());
+  chryzode_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
 
   chryzode_params params;
   params._multiplier1 = ggo::rand<float>(3, 11);

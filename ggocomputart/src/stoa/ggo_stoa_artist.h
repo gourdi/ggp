@@ -19,8 +19,8 @@ namespace ggo
 
           stoa_artist(int steps);
 
-    void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, float hue,
-                 const ggo::pos3_f & light_pos1, const ggo::pos3_f & light_pos2,
+    void  render(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                 float hue, const ggo::pos3_f & light_pos1, const ggo::pos3_f & light_pos2,
                  ggo::renderer_abc & renderer) const;
 
   private:

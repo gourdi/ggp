@@ -8,8 +8,8 @@
 
 namespace ggo
 {
-  template <pixel_type pixel_type_, lines_order memory_lines_order_, typename void_ptr_t, bool owns_buffer>
-  class image_base_t
+  template <pixel_type pixel_type_, lines_order memory_lines_order_, typename void_ptr_t>
+  class image_base_t final
   {
     static_assert(std::is_same_v<void_ptr_t, void *> || std::is_same_v<void_ptr_t, const void *>);
 
@@ -17,9 +17,9 @@ namespace ggo
 
     using color_t = typename pixel_type_traits<pixel_type_>::color_t;
 
-    template <typename = typename std::enable_if_t<owns_buffer>>
     image_base_t(const ggo::size & s, int line_byte_step)
       : _buffer(malloc(s.height() * line_byte_step))
+      , _owns_buffer(true)
       , _size(s)
       , _line_byte_step(line_byte_step)
     {
@@ -27,22 +27,20 @@ namespace ggo
       static_assert(std::is_same_v<void_ptr_t, void *>);
     }
 
-    template <typename = typename std::enable_if_t<owns_buffer>>
     image_base_t(const ggo::size & s)
       : image_base_t(s, pixel_byte_size() * s.width())
     {
     }
 
-    template <typename = typename std::enable_if_t<!owns_buffer>>
     image_base_t(void_ptr_t buffer, const ggo::size & s, int line_byte_step)
       : _buffer(buffer)
+      , _owns_buffer(false)
       , _size(s)
       , _line_byte_step(line_byte_step)
     {
       GGO_ASSERT_LE(s.width() * pixel_byte_size(), line_byte_step);
     }
 
-    template <typename = typename std::enable_if_t<!owns_buffer>>
     image_base_t(void_ptr_t buffer, const ggo::size & s)
       : image_base_t(buffer, s, pixel_byte_size() * s.width())
     {
@@ -50,9 +48,12 @@ namespace ggo
 
     ~image_base_t()
     {
-      if constexpr (owns_buffer == true)
+      if constexpr (std::is_same_v<void_ptr_t, void *>)
       {
-        free(_buffer);
+        if (_owns_buffer == true)
+        {
+          free(_buffer);
+        }
       }
     }
 
@@ -68,6 +69,7 @@ namespace ggo
     // Move.
     image_base_t(image_base_t && image)
       : _buffer(image._buffer)
+      , _owns_buffer(image._owns_buffer)
       , _size(image._size)
       , _line_byte_step(image._line_byte_step)
     {
@@ -76,12 +78,13 @@ namespace ggo
 
     void operator=(image_base_t && image)
     {
-      if constexpr (owns_buffer == true)
+      if (_owns_buffer == true)
       {
         free(_buffer);
       }
 
       _buffer = image._buffer;
+      _owns_buffer = image._owns_buffer;
       _size = image._size;
       _line_byte_step = image._line_byte_step;
 
@@ -111,33 +114,31 @@ namespace ggo
 
   private:
 
-    void_ptr_t      _buffer;
-    const ggo::size _size;
-    const int       _line_byte_step;
+    void_ptr_t  _buffer;
+    bool        _owns_buffer;
+    ggo::size   _size;
+    int         _line_byte_step;
   };
 
   template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-  using const_image_view_t = image_base_t<pixel_type, memory_lines_order, const void *, false>;
+  using const_image_t = image_base_t<pixel_type, memory_lines_order, const void *>;
 
   template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-  using image_view_t = image_base_t<pixel_type, memory_lines_order, void *, false>;
-  
-  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-  using image_t = image_base_t<pixel_type, memory_lines_order, void *, true>;
+  using image_t = image_base_t<pixel_type, memory_lines_order, void *>;
 }
 
 namespace ggo
 {
-  template <typename void_ptr_t, bool owns_buffer>
-  class image_base
+  template <typename void_ptr_t>
+  class image_base final
   {
     static_assert(std::is_same_v<void_ptr_t, void *> || std::is_same_v<void_ptr_t, const void *>);
 
   public:
 
-    template <typename = typename std::enable_if_t<owns_buffer>>
     image_base(const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int line_byte_step)
       : _buffer(malloc(s.height() * line_byte_step))
+      , _owns_buffer(true)
       , _size(s)
       , _pixel_type(pixel_type)
       , _memory_lines_order(memory_lines_order)
@@ -147,15 +148,14 @@ namespace ggo
       static_assert(std::is_same_v<void_ptr_t, void *>);
     }
 
-    template <typename = typename std::enable_if_t<owns_buffer>>
     image_base(const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
       : image_base(s, pixel_type, memory_lines_order, get_pixel_byte_size(pixel_type) * s.width())
     {
     }
 
-    template <typename = typename std::enable_if_t<!owns_buffer>>
     image_base(void_ptr_t buffer, const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int line_byte_step)
       : _buffer(buffer)
+      , _owns_buffer(false)
       , _size(s)
       , _pixel_type(pixel_type)
       , _memory_lines_order(memory_lines_order)
@@ -164,7 +164,6 @@ namespace ggo
       GGO_ASSERT_LE(s.width() * get_pixel_byte_size(pixel_type), line_byte_step);
     }
 
-    template <typename = typename std::enable_if_t<!owns_buffer>>
     image_base(void_ptr_t buffer, const ggo::size & s, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
       : image_base(buffer, s, pixel_type, memory_lines_order, get_pixel_byte_size(pixel_type) * s.width())
     {
@@ -172,7 +171,7 @@ namespace ggo
 
     ~image_base()
     {
-      if constexpr (owns_buffer == true)
+      if (_owns_buffer == true)
       {
         free(_buffer);
       }
@@ -189,6 +188,7 @@ namespace ggo
     // Move.
     image_base(image_base && image)
       : _buffer(image._buffer)
+      , _owns_buffer(image._owns_buffer)
       , _size(image._size)
       , _memory_lines_order(image._memory_lines_order)
       , _pixel_type(image._pixel_type)
@@ -199,12 +199,13 @@ namespace ggo
 
     void operator=(image_base && image)
     {
-      if constexpr (owns_buffer == true)
+      if (_owns_buffer == true)
       {
         free(_buffer);
       }
 
       _buffer = image._buffer;
+      _owns_buffer = image._owns_buffer;
       _size = image._size;
       _pixel_type = image._pixel_type;
       _memory_lines_order = image._memory_lines_order;
@@ -233,15 +234,15 @@ namespace ggo
   private:
 
     void_ptr_t        _buffer;
+    bool              _owns_buffer;
     ggo::size         _size;
     ggo::pixel_type   _pixel_type;
     ggo::lines_order  _memory_lines_order;
     int               _line_byte_step;
   };
 
-  using const_image_view = image_base<const void *, false>;
-  using image_view = image_base<void *, false>;
-  using image = image_base<void *, true>;
+  using const_image = image_base<const void *>;
+  using image = image_base<void *>;
 }
 
 // Dispatch.
@@ -304,8 +305,8 @@ namespace ggo
     return generic_view<image_t>(img, clipping);
   }
 
-  template <pixel_type pt, lines_order lo, typename void_ptr_t, bool owns_buffer>
-  std::optional<image_base_t<pt, lo, const void *, false>> make_image_view(const image_base_t<pt, lo, void_ptr_t, owns_buffer> & img, ggo::rect_int clipping)
+  template <pixel_type pt, lines_order lo, typename void_ptr_t>
+  std::optional<image_base_t<pt, lo, const void *>> make_image_view(const image_base_t<pt, lo, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
@@ -314,11 +315,11 @@ namespace ggo
 
     const void * ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
 
-    return image_base_t<pt, lo, const void *, false>(ptr, clipping.size(), img.line_byte_step());
+    return image_base_t<pt, lo, const void *>(ptr, clipping.size(), img.line_byte_step());
   }
 
-  template <pixel_type pt, lines_order lo, typename void_ptr_t, bool owns_buffer>
-  std::optional<image_base_t<pt, lo, void_ptr_t, false>> make_image_view(image_base_t<pt, lo, void_ptr_t, owns_buffer> & img, ggo::rect_int clipping)
+  template <pixel_type pt, lines_order lo, typename void_ptr_t>
+  std::optional<image_base_t<pt, lo, void_ptr_t>> make_image_view(image_base_t<pt, lo, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
@@ -327,7 +328,7 @@ namespace ggo
 
     void_ptr_t ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
 
-    return image_base_t<pt, lo, void_ptr_t, false>(ptr, clipping.size(), img.line_byte_step());
+    return image_base_t<pt, lo, void_ptr_t>(ptr, clipping.size(), img.line_byte_step());
   }
 }
 

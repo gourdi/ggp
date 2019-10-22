@@ -12,7 +12,7 @@ namespace ggo
   {
   public:
 
-    filling_squares_animation_artist(int width, int height, int line_step, ggo::image_format format);
+    filling_squares_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -23,7 +23,7 @@ namespace ggo
             animated_square(const ggo::pos2_f & pos, int start_offset, float angle, filling_squares_artist::colored_square colored_square);
 
       bool  update(int frame_index, const ggo::pos2_f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     private:
 

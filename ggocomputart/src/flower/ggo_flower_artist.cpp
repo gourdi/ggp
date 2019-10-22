@@ -1,18 +1,19 @@
 #include "ggo_flower_artist.h"
 #include <kernel/memory/ggo_array.h>
 #include <kernel/math/interpolation/ggo_curve.h>
-#include <kernel/math/signal_proc/ggo_dct.h>
+#include <kernel/math/signal_processing/ggo_dct.h>
 #include <2d/ggo_color.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
-#include <2d/ggo_blit.h>
+#include <2d/processing/ggo_blit.h>
+#include <2d/fill/ggo_fill.h>
 #include <iostream>
 
 //////////////////////////////////////////////////////////////
-ggo::flower_artist::flower_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::flower_artist::flower_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -37,7 +38,8 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 	petal_shape_curve.push_point(ggo::rand<float>(0.1f, 0.5f), ggo::rand<float>(0.1f, 0.5f));
 	petal_shape_curve.push_point(ggo::rand<float>(0.5f, 0.9f), ggo::rand<float>(0.5f, 0.9f));
 		
-  std::vector<float> render_buffer(3 * width() * height(), 0.f);
+  ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> img_32f(size());
+  ggo::fill_black(img_32f);
 
 	for (int counter = 0; counter < petals_count; ++counter)
 	{
@@ -71,9 +73,7 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 				float x = center.x() + s * std::cos(t);
 				float y = center.y() + s * std::sin(t) / 3 + grow * 0.5f * height() * spat(k);
 
-				ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
-          render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
-          ggo::disc_f({ x, y }, 0.001f * min_size()),
+				ggo::paint<ggo::sampling_4x4>(img_32f, ggo::disc_f({ x, y }, 0.001f * min_size()),
           ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_32f>());
 			}
 
@@ -81,8 +81,6 @@ void ggo::flower_artist::render_bitmap(void * buffer) const
 		}
 	}
 
-  ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
-    render_buffer.data(), width(), height(), 3 * sizeof(float) * width(),
-    buffer, width(), height(), line_step(), 0, 0);
+  ggo::blit(img_32f, ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, size(), line_byte_step()));
 }
 

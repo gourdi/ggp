@@ -1,10 +1,11 @@
 #include "ggo_sonson_realtime_artist.h"
+#include <2d/ggo_image.h>
 #include <2d/fill/ggo_fill.h>
 
 namespace
 {
   //////////////////////////////////////////////////////////////
-  template <ggo::image_format format, int channel>
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int channel>
   void paint_glowing_circle(const ggo::sonson_realtime_artist::glowing_circle & circle, ggo::vec2_f center_offset,
     void * buffer, int width, int height, int line_step, const ggo::rect_int & clipping)
   {
@@ -31,10 +32,12 @@ namespace
       return;
     }
 
+    ggo::image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_step);
+
     auto update_pixel = [&](int x, int y, float opacity)
     {
       int v = ggo::round_to<int>(opacity * 255);
-      uint8_t * pixel = static_cast<uint8_t *>(ggo::get_pixel_ptr<format>(buffer, x, y, height, line_step));
+      uint8_t * pixel = static_cast<uint8_t *>(img.pixel_ptr(x, y));
       pixel[channel] = std::min(255, pixel[channel] + v);
     };
 
@@ -66,9 +69,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::sonson_realtime_artist::sonson_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::sonson_realtime_artist::sonson_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-realtime_artist_abc(width, height, line_step, format)
+realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   for (int i = 0; i < 32; ++i)
   {
@@ -105,10 +108,10 @@ void ggo::sonson_realtime_artist::preprocess_frame(int frame_index, uint32_t cur
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::sonson_realtime_artist::render_tile_t(void * buffer, const ggo::rect_int & clipping) const
 {
-  ggo::fill_solid<format>(buffer, width(), height(), line_step(), ggo::black_8u(), clipping);
+  ggo::fill_black(ggo::image_t<pixel_type, memory_lines_order>(buffer, size(), line_byte_step()), clipping);
 
   float offset_length = 0.01f * min_size();
   ggo::vec2_f r_offset = offset_length * ggo::vec2_f::from_angle(_r_angle);
@@ -117,26 +120,30 @@ void ggo::sonson_realtime_artist::render_tile_t(void * buffer, const ggo::rect_i
 
   for (auto & circle : _circles)
   {
-    paint_glowing_circle<format, 0>(circle, r_offset, buffer, width(), height(), line_step(), clipping);
-    paint_glowing_circle<format, 1>(circle, g_offset, buffer, width(), height(), line_step(), clipping);
-    paint_glowing_circle<format, 2>(circle, b_offset, buffer, width(), height(), line_step(), clipping);
+    paint_glowing_circle<pixel_type, memory_lines_order, 0>(circle, r_offset, buffer, width(), height(), line_byte_step(), clipping);
+    paint_glowing_circle<pixel_type, memory_lines_order, 1>(circle, g_offset, buffer, width(), height(), line_byte_step(), clipping);
+    paint_glowing_circle<pixel_type, memory_lines_order, 2>(circle, b_offset, buffer, width(), height(), line_byte_step(), clipping);
   }
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::sonson_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::bgrx_8u_yd:
-    render_tile_t<ggo::bgrx_8u_yd>(buffer, clipping);
-    break;
-  case ggo::rgb_8u_yu:
-    render_tile_t<ggo::rgb_8u_yu>(buffer, clipping);
-    break;
-  case ggo::rgb_8u_yd:
-    render_tile_t<ggo::rgb_8u_yd>(buffer, clipping);
-    break;
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 

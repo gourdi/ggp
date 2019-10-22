@@ -79,17 +79,18 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mosaic_artist::mosaic_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::mosaic_artist::mosaic_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 						
 //////////////////////////////////////////////////////////////
 void ggo::mosaic_artist::render_bitmap(void * buffer) const
 {
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    ggo::black_8u(), ggo::rect_int::from_width_height(width(), height()));
+  image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
+  ggo::fill_black(img, ggo::rect_int::from_width_height(width(), height()));
 	
 	// Create the seeds.
 	ggo::polygon2d_f	seed1;
@@ -219,8 +220,7 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 				float value = 0.5f + 0.5f * scale / min_size();
 
 				polygons.push_back(polygon);
-				ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-          buffer, width(), height(), line_step(), polygon, ggo::from_hsv<ggo::rgb_8u>(hue, saturation, value));
+				ggo::paint<ggo::sampling_4x4>(img, polygon, ggo::from_hsv<ggo::rgb_8u>(hue, saturation, value));
 				
 				++counter;
 			}
@@ -259,13 +259,13 @@ void ggo::mosaic_artist::render_bitmap(void * buffer) const
 			float dx = static_cast<float>(x - width()) / 2;
 			int val = ggo::round_to<uint8_t>(92 * std::exp(-(dx * dx + dy * dy ) / variance));
 
-      ggo::rgb_8u c_8u = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step());
+      ggo::rgb_8u c_8u = img.read_pixel(x, y);
 
 			c_8u.r() = uint8_t(std::min(255, c_8u.r() + val));
 			c_8u.g() = uint8_t(std::min(255, c_8u.g() + val));
 			c_8u.b() = uint8_t(std::min(255, c_8u.b() + val));
 			
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
+      img.write_pixel(x, y, c_8u);
     }
 	}
 }

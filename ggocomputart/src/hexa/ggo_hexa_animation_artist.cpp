@@ -11,9 +11,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::hexa_animation_artist::hexa_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
 {
 #ifdef GGO_PREVIEW
   _artist.reset(new ggo::hexa_artist(false));
@@ -46,5 +46,5 @@ void ggo::hexa_animation_artist::render_frame(void * buffer, int frame_index, fl
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  _artist->render(buffer, width(), height(), line_step(), format(), progress, renderer);
+  _artist->render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), progress, renderer);
 }

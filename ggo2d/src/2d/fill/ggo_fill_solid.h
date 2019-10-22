@@ -4,6 +4,7 @@
 #include <2d/ggo_image.h>
 #include <2d/ggo_color.h>
 
+// Fill solid.
 namespace ggo
 {
   template <typename image_t>
@@ -32,10 +33,11 @@ namespace ggo
   }
 }
 
+// Fill black.
 namespace ggo
 {
-  template <pixel_type image_pixel_type, lines_order image_memory_lines_orde, bool image_owns_buffer>
-  void fill_black(image_base_t<image_pixel_type, image_memory_lines_orde, void *, image_owns_buffer> & image)
+  template <pixel_type image_pixel_type, lines_order image_memory_lines_order>
+  void fill_black(image_t<image_pixel_type, image_memory_lines_order> & image)
   {
     using color_t = typename pixel_type_traits<image_pixel_type>::color_t;
 
@@ -83,7 +85,7 @@ namespace ggo
   template <typename image_t>
   void fill_black(image_t & image, const ggo::rect_int & clipping)
   {
-    auto view = image.create_view(clipping);
+    auto view = make_image_view(image, clipping);
     if (view)
     {
       fill_black(*view);

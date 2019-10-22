@@ -16,9 +16,9 @@ namespace ggo
   {
   public:
 
-    realtime_artist_abc(int width, int height, int line_step, ggo::image_format format);
+    realtime_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
-    static realtime_artist_abc * create(realtime_artist_id artist_id, int width, int height, int line_step, ggo::image_format format);
+    static realtime_artist_abc * create(realtime_artist_id artist_id, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void preprocess_frame(uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step);
     void render_tile(void * buffer, const ggo::rect_int & clipping);
@@ -42,7 +42,7 @@ namespace ggo
   {
   public:
 
-    fixed_frames_count_realtime_artist_abc(int width, int height, int line_step, ggo::image_format format);
+    fixed_frames_count_realtime_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 

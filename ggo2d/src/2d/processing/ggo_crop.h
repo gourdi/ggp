@@ -39,8 +39,8 @@ namespace ggo
 // Static images.
 namespace ggo
 {
-  template <pixel_type pixel_type, lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer>
-  auto crop(const image_base_t<pixel_type, memory_lines_order, void_ptr_t, owns_buffer> & input, const ggo::rect_int & crop_rect)
+  template <pixel_type pixel_type, lines_order memory_lines_order, typename void_ptr_t>
+  auto crop(const image_base_t<pixel_type, memory_lines_order, void_ptr_t> & input, const ggo::rect_int & crop_rect)
   {
     auto make_output_image = [](const ggo::size & crop_size)
     {
@@ -54,8 +54,8 @@ namespace ggo
 // Dynamic images.
 namespace ggo
 {
-  template <typename void_ptr_t, bool owns_buffer>
-  auto crop(const image_base<void_ptr_t, owns_buffer> & input, const ggo::rect_int & crop_rect)
+  template <typename void_ptr_t>
+  auto crop(const image_base<void_ptr_t> & input, const ggo::rect_int & crop_rect)
   {
     auto make_output_image = [&](const ggo::size & crop_size)
     {

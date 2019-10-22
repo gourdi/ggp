@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-    storni_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+    storni_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     struct storni
     {
@@ -40,11 +40,11 @@ namespace ggo
     void update_predators(float velocity_hypot_max, float border_margin);
     void update_stornis(float velocity_hypot_max, float border_margin, ggo::pos2_i cursor_pos);
 
-    template <ggo::image_format format> void fade_background_to_white(const ggo::rect_int & clipping);
-    template <ggo::image_format format, ggo::pixel_sampling sampling> void paint_stornies_background(const ggo::rect_int & clipping);
-    template <ggo::image_format format> void blit_background(void * buffer, const ggo::rect_int & clipping) const;
-    template <ggo::image_format format, ggo::pixel_sampling sampling> void paint_stornies(void * buffer, const std::vector<storni> & stornis, float size, const ggo::rect_int & clipping) const;
-    template <ggo::image_format format> void paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void fade_background_to_white(const ggo::rect_int & clipping);
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling> void paint_stornies_background(const ggo::rect_int & clipping);
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void blit_background(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling> void paint_stornies(void * buffer, const std::vector<storni> & stornis, float size, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const;
 
     static float get_obstacle_hypot(int width, int height) { return ggo::square(0.05f) * width * height; }
 

@@ -1,11 +1,11 @@
 #include "ggo_duffing_animation_artist.h"
 #include "ggo_duffing.h"
-#include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
-#include <2d/ggo_blit.h>
+#include <2d/processing/ggo_gaussian_blur.h>
+#include <2d/processing/ggo_blit.h>
 
 namespace
 {
@@ -15,9 +15,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::duffing_animation_artist::duffing_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::duffing_animation_artist::duffing_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-animation_artist_abc(width, height, line_step, format)
+animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
   // Compute points.
   ggo::duffing duffing;
@@ -85,7 +85,7 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
   int first_point = last_point - visible_points_count;
 
   float radius = min_size() / 100.f;
-  std::vector<float> buffer_float(3 * width() * height());
+  ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> img_float(size());
 
   // Render the background.
   float t = float(points_per_frame) * frame_index / _points.size();
@@ -96,11 +96,11 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
   ggo::rgb_32f color3 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve3.evaluate(t));
   ggo::rgb_32f color4 = ggo::from_hsv<ggo::rgb_32f>(hue, 0.2f, _val_curve4.evaluate(t));
 
-  ggo::fill_4_colors<ggo::rgb_32f_yu>(buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-    color1, color2, color3, color4, ggo::rect_int::from_width_height(width(), height()));
+  ggo::fill_4_colors(img_float, color1, color2, color3, color4);
 
   // Render the shadow points.
-  std::vector<float> shadow_buffer(width() * height(), 1.f);
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_shadow(size());
+  fill_solid(img_shadow, 1.f);
   for (int i = first_point; i <= last_point; ++i)
   {
     if (i >= 0 && i < _points.size())
@@ -112,16 +112,22 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
       render_pt.x() += 0.05f * min_size();
       render_pt.y() += 0.05f * min_size();
 
-      ggo::paint<ggo::y_32f_yu, ggo::sampling_2x2>(
-        shadow_buffer.data(), width(), height(), sizeof(float) * width(),
-        ggo::disc_f(render_pt, radius), ggo::make_solid_brush(0.f), ggo::alpha_blender_y32f(opacity));
+      ggo::paint<ggo::sampling_2x2>(img_shadow, ggo::disc_f(render_pt, radius), 0.f, opacity);
     }
   }
 
   // Blur and blend the shadow.
-  ggo::gaussian_blur<ggo::y_32f_yu>(shadow_buffer.data(), size(), sizeof(float) * width(), 0.4f * min_size());
+  ggo::gaussian_blur(img_shadow, 0.4f * min_size());
 
-  apply_shadow(buffer_float.data(), shadow_buffer.data());
+  for (int y = 0; y < img_float.height(); ++y)
+  {
+    for (int x = 0; x < img_float.height(); ++x)
+    {
+      ggo::rgb_32f c = img_float.read_pixel(x, y);
+      c *= img_shadow.read_pixel(x, y);
+      img_float.write_pixel(x, y, c);
+    }
+  }
 
   // Render the points.
   float point_opacity = 0.02f;
@@ -136,32 +142,12 @@ void ggo::duffing_animation_artist::render_frame(void * buffer, int frame_index,
       float sat = _sat_curve.evaluate(t);
       ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(hue, sat, 1);
 
-      ggo::paint<ggo::rgb_32f_yu, ggo::sampling_4x4>(
-        buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-        ggo::disc_f(_points[i], radius), ggo::make_solid_brush(color), ggo::alpha_blender_rgb32f(opacity));
+      ggo::paint<ggo::sampling_4x4>(img_float, ggo::disc_f(_points[i], radius), color, opacity);
     }
   }
 
   // From float to uint8_t.
-  ggo::blit<ggo::rgb_32f_yu, ggo::rgb_8u_yu>(
-    buffer_float.data(), width(), height(), 3 * sizeof(float) * width(),
-    buffer, width(), height(), line_step(), 0, 0);
+  ggo::blit(img_float, image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, size(), line_byte_step()));
 
   finished = first_point > iterations_count;
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::duffing_animation_artist::apply_shadow(float * buffer, const float * shadow_buffer) const
-{
-  int count = width() * height();
-
-  for (int i = 0; i < count; ++i)
-  {
-    buffer[0] = shadow_buffer[0] * buffer[0];
-    buffer[1] = shadow_buffer[0] * buffer[1];
-    buffer[2] = shadow_buffer[0] * buffer[2];
-
-    buffer += 3;
-    shadow_buffer += 1;
-  }
 }

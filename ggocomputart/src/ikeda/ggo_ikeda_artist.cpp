@@ -5,9 +5,9 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::ikeda_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::ikeda_artist::ikeda_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
 {
   _u0.set_harmonic(0, 0, 0);
   _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
@@ -42,9 +42,9 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 //////////////////////////////////////////////////////////////
 void ggo::ikeda_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
-	ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3],
-    ggo::rect_int::from_size(size()));
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
+	ggo::fill_4_colors(img, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3], ggo::rect_int::from_size(size()));
 	
 	std::vector<particle> particles = _seeds;
 	
@@ -82,9 +82,7 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index, float time_
 			float radius = 0.0025f * particle._radius * max_size();
 			radius = std::max(1.5f, radius);
 
-      ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, width(), height(), line_step(),
-        ggo::disc_f(point, radius), ggo::make_solid_brush(particle._color), ggo::alpha_blender_rgb8u(0.1f));
+      ggo::paint<ggo::sampling_4x4>(img, ggo::disc_f(point, radius), particle._color, 0.1f);
 				
 			// Move points slowly.
 			particle._pos.x() += 0.0025f * (next_pt.x() - particle._pos.x());

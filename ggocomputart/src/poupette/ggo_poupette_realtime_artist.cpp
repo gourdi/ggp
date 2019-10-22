@@ -1,9 +1,9 @@
 #include "ggo_poupette_realtime_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::poupette_realtime_artist::poupette_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::poupette_realtime_artist::poupette_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::realtime_artist_abc(width, height, line_step, format)
+ggo::realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 
 }
@@ -17,7 +17,7 @@ void ggo::poupette_realtime_artist::preprocess_frame(int frame_index, uint32_t c
 //////////////////////////////////////////////////////////////
 void ggo::poupette_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  _artist.render_tile(buffer, width(), height(), line_step(), format(), frame_index, clipping, ggo::sampling_2x2);
+  _artist.render_tile(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), frame_index, clipping, ggo::sampling_2x2);
 }
 
 //////////////////////////////////////////////////////////////

@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-    badaboum_artist(int width, int height, int line_step, ggo::image_format format, ggo::pixel_sampling sampling);
+    badaboum_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling);
 
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step);
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping);
@@ -22,17 +22,17 @@ namespace ggo
 
     ggo::rgb_8u new_box_color() const;
 
-    template <ggo::image_format format>
-    void  paint_bkgd(const std::vector<ggo::oriented_box_f> & floors);
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  paint_bkgd_t(const std::vector<ggo::oriented_box_f> & floors);
 
-    template <ggo::image_format format>
-    void  render_tile(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_tile_t(void * buffer, const ggo::rect_int & clipping) const;
 
-    template <ggo::image_format format, ggo::pixel_sampling sampling>
-    void  render_boxes(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_sampling sampling, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_boxes_t(image_t<pixel_type, memory_lines_order> & img, const ggo::rect_int & clipping) const;
 
-    template <ggo::image_format format, ggo::pixel_sampling sampling>
-    void  render_box(void * buffer, int line_step, const ggo::oriented_box_f & box, ggo::rgb_8u color, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_sampling sampling, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_box_t(image_t<pixel_type, memory_lines_order> & img, const ggo::oriented_box_f & box, ggo::rgb_8u color, const ggo::rect_int & clipping) const;
 
     ggo::oriented_box_f map_fit(const ggo::oriented_box_f & box) const;
 

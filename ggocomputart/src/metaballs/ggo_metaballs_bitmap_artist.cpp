@@ -7,9 +7,9 @@
 #define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo::metaballs_bitmap_artist::metaballs_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::metaballs_bitmap_artist::metaballs_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {	
 }
 
@@ -43,5 +43,5 @@ void ggo::metaballs_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, 56);
 #endif
-	ggo::metaballs_artist::render_bitmap(buffer, width(), height(), line_step(), format(), renderer, params);
+	ggo::metaballs_artist::render_bitmap(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), renderer, params);
 }

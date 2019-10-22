@@ -6,9 +6,9 @@
 #include <2d/paint/ggo_color_triangle.h>
 
 ////////////////////////////////////////////////////////
-ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
+fixed_frames_count_animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order, 300)
 {
   _threshold_dist = 0.00125f * std::min(width, height);
   _threshold_hypot = _threshold_dist * _threshold_dist;
@@ -106,31 +106,33 @@ void ggo::aggregation_animation_artist::update(int points_count)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::aggregation_animation_artist::render_t(void * buffer) const
 {
-  ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color, ggo::rect_int::from_size(size()));
+  ggo::image_t<pixel_type, memory_lines_order> view(buffer, size(), line_byte_step());
+
+  ggo::fill_solid(view, _background_color);
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_f, ggo::rgb_8u>> shapes;
+    scene2d<pixel_type_traits<pixel_type>::color_t> scene;
 
     for (const auto & cell : _grid)
     {
       for (const auto & point : cell._points)
       {
-        shapes.emplace_back(ggo::disc_f(point._pos, 2.f * _threshold_dist), ggo::black_8u());
+        scene.make_paint_shape_t(ggo::disc_f(point._pos, 2.f * _threshold_dist), ggo::black_8u());
       }
     }
 
-    ggo::fill_solid<format>(buffer, width(), height(), line_step(), _background_color);
-    ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
+    ggo::fill_solid(view, _background_color);
+    ggo::paint<ggo::sampling_4x4>(view, scene);
   }
 
   float stddev = 0.001f * min_size();
-  ggo::gaussian_blur<format>(buffer, size(), line_step(), stddev);
+  ggo::gaussian_blur(view, stddev);
 
   {
-    std::vector<ggo::static_paint_shape<ggo::disc_f, ggo::rgb_8u>> shapes;
+    scene2d<pixel_type_traits<pixel_type>::color_t> scene;
 
     for (const auto & cell : _grid)
     {
@@ -139,11 +141,12 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
         float hue = point._hue + 0.25f / (1.f + 0.25f * point._counter);
         float sat = point._sat - 0.0015f * point._counter;
         ggo::rgb_8u c = ggo::from_hsv<ggo::rgb_8u>(hue, sat, point._val);
-        shapes.emplace_back(ggo::disc_f(point._pos, _threshold_dist), c);
+
+        scene.make_paint_shape_t(ggo::disc_f(point._pos, _threshold_dist), c);
       }
     }
 
-    ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(), shapes);
+    ggo::paint<ggo::sampling_4x4>(view, scene);
   }
 }
 
@@ -165,19 +168,20 @@ void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_in
     update();
   }
 
+  // Dispatch.
   if (buffer != nullptr)
   {
-    switch (format())
+    if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
     {
-    case ggo::rgb_8u_yu:
-      render_t<ggo::rgb_8u_yu>(buffer);
-      break;
-    case ggo::bgrx_8u_yd:
-      render_t<ggo::bgrx_8u_yd>(buffer);
-      break;
-    default:
+      render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
+    }
+    else if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+    {
+      render_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
+    }
+    else
+    {
       GGO_FAIL();
-      break;
     }
   }
 }

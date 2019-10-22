@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          kanji_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+          kanji_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -17,7 +17,7 @@ namespace ggo
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 500; }
 
-    template <image_format format>
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     void  render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping);
 
   private:

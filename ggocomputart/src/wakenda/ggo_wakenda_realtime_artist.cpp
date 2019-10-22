@@ -9,10 +9,10 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::wakenda_realtime_artist::wakenda_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::wakenda_realtime_artist::wakenda_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-realtime_artist_abc(width, height, line_step, format),
-_bkgd_image({ width, height }, line_step, format)
+realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+_bkgd_image({ width, height }, pixel_type, memory_lines_order, line_byte_step)
 {
   auto create_transforms = [](auto & transforms)
   {
@@ -42,48 +42,52 @@ _bkgd_image({ width, height }, line_step, format)
   auto bkgd_color3 = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
   auto bkgd_color4 = ggo::from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
 
-  switch (format)
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    ggo::fill_4_colors<ggo::rgb_8u_yu>(_bkgd_image.data(), _bkgd_image.width(), _bkgd_image.height(), _bkgd_image.line_byte_step(),
+    fill_4_colors(ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(_bkgd_image.data(), _bkgd_image.size(), _bkgd_image.line_byte_step()),
       bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
-    break;
-  case ggo::rgb_8u_yd:
-    ggo::fill_4_colors<ggo::rgb_8u_yd>(_bkgd_image.data(), _bkgd_image.width(), _bkgd_image.height(), _bkgd_image.line_byte_step(),
+  }
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
+  {
+    fill_4_colors(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(_bkgd_image.data(), _bkgd_image.size(), _bkgd_image.line_byte_step()),
       bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
-    break;
-  case ggo::bgrx_8u_yd:
-    ggo::fill_4_colors<ggo::bgrx_8u_yd>(_bkgd_image.data(), _bkgd_image.width(), _bkgd_image.height(), _bkgd_image.line_byte_step(),
+  }
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
+  {
+    fill_4_colors(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(_bkgd_image.data(), _bkgd_image.size(), _bkgd_image.line_byte_step()),
       bkgd_color1, bkgd_color2, bkgd_color3, bkgd_color4);
-    break;
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::wakenda_realtime_artist::copy_bkgd(void * buffer, const ggo::rect_int & clipping) const
 {
-  constexpr int pixel_byte_size = image_format_traits<format>::pixel_byte_size;
+  constexpr int pixel_byte_size = pixel_type_traits<pixel_type>::pixel_byte_size;
 
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     const void * src = _bkgd_image.pixel_ptr(clipping.left(), y);
-    void * dst = ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, height(), line_step());
+    void * dst = ggo::get_pixel_ptr<memory_lines_order, pixel_byte_size>(buffer, clipping.left(), y, height(), line_byte_step());
 
     memcpy(dst, src, pixel_byte_size * clipping.width());
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format> 
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::wakenda_realtime_artist::process_bkgd(void * buffer, const ggo::rect_int & clipping) const
 {
-  constexpr int pixel_byte_size = image_format_traits<format>::pixel_byte_size;
+  constexpr int pixel_byte_size = pixel_type_traits<pixel_type>::pixel_byte_size;
 
   for (int y = clipping.bottom(); y <= clipping.top(); ++y)
   {
     const uint8_t * bkgd_ptr = static_cast<const uint8_t *>(_bkgd_image.pixel_ptr(clipping.left(), y));
-    uint8_t * output_ptr = static_cast<uint8_t *>(ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, height(), line_step()));
+    uint8_t * output_ptr = static_cast<uint8_t *>(ggo::get_pixel_ptr<memory_lines_order, pixel_byte_size>(buffer, clipping.left(), y, height(), line_byte_step()));
 
     for (int i = 0; i < pixel_byte_size * clipping.width(); ++i)
     {
@@ -99,14 +103,16 @@ void ggo::wakenda_realtime_artist::process_bkgd(void * buffer, const ggo::rect_i
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format> 
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::wakenda_realtime_artist::paint_points(void * buffer, const ggo::rect_int & clipping) const
 {
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
   const float radius = min_size() / 250.f;
 
   for (const auto & p : _paint_points)
   {
-    paint<format, ggo::sampling_8x8>(buffer, ggo::disc_f(p._pos, radius), p._color, p._opacity, clipping);
+    paint<ggo::sampling_8x8>(img, ggo::disc_f(p._pos, radius), p._color, p._opacity, clipping);
   }
 }
 
@@ -201,34 +207,42 @@ void ggo::wakenda_realtime_artist::render_tile(void * buffer, int frame_index, c
 {
   if (frame_index == 0)
   {
-    switch (format())
+    if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
     {
-    case ggo::rgb_8u_yu:
-      copy_bkgd<ggo::rgb_8u_yu>(buffer, clipping);
-      break;
-    case ggo::rgb_8u_yd:
-      copy_bkgd<ggo::rgb_8u_yd>(buffer, clipping);
-      break;
-    case ggo::bgrx_8u_yd:
-      copy_bkgd<ggo::bgrx_8u_yd>(buffer, clipping);
-      break;
+      copy_bkgd<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+    }
+    else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+    {
+      copy_bkgd<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+    }
+    else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+    {
+      copy_bkgd<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
+    }
+    else
+    {
+      GGO_FAIL();
     }
   }
 
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    process_bkgd<ggo::rgb_8u_yu>(buffer, clipping);
-    paint_points<ggo::rgb_8u_yu>(buffer, clipping);
-    break;
-  case ggo::rgb_8u_yd:
-    process_bkgd<ggo::rgb_8u_yd>(buffer, clipping);
-    paint_points<ggo::rgb_8u_yd>(buffer, clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    process_bkgd<ggo::bgrx_8u_yd>(buffer, clipping);
-    paint_points<ggo::bgrx_8u_yd>(buffer, clipping);
-    break;
+    process_bkgd<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+    paint_points<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    process_bkgd<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+    paint_points<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    process_bkgd<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
+    paint_points<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 

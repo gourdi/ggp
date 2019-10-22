@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-                  dupecheck_animation_artist(int width, int height, int line_step, ggo::image_format format);
+                  dupecheck_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void          render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
@@ -43,7 +43,7 @@ namespace ggo
 
             animate1(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     private:
 
@@ -58,7 +58,7 @@ namespace ggo
 
             animate2(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size);
       void  update() override {};
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     private:
 
@@ -71,7 +71,7 @@ namespace ggo
 
             animate3(const ggo::pos2_f & pos, ggo::path_abc * path, const ggo::rgb_8u & color, int render_min_size);
       void  update() override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     private:
 

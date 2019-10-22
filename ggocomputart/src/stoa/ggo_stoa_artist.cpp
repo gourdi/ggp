@@ -128,8 +128,8 @@ ggo::stoa_artist::stoa_artist(int steps)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::stoa_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format, float hue,
-                              const ggo::pos3_f & light_pos1, const ggo::pos3_f & light_pos2,
+void ggo::stoa_artist::render(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                              float hue, const ggo::pos3_f & light_pos1, const ggo::pos3_f & light_pos2,
                               ggo::renderer_abc & renderer) const
 {
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::from_hsv<ggo::rgb_32f>(hue, 1.f, 1.f)));
@@ -149,5 +149,5 @@ void ggo::stoa_artist::render(void * buffer, int width, int height, int line_ste
 
   ggo::raytrace_params params;
   params._raycaster = &raycaster;
-  renderer.render(buffer, width, height, line_step, format, scene, params);
+  renderer.render(image(buffer, { width, height }, pixel_type, memory_lines_order, line_byte_step), scene, params);
 }

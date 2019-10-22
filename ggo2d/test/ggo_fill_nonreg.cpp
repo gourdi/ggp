@@ -66,7 +66,7 @@ GGO_TEST(fill, fill_solid_bgra_8u_yd)
     40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
-  ggo::image_view_t<ggo::pixel_type::bgra_8u, ggo::lines_order::down> image(buffer.data(), { 2, 6 }, 10);
+  ggo::image_t<ggo::pixel_type::bgra_8u, ggo::lines_order::down> image(buffer.data(), { 2, 6 }, 10);
 
   ggo::fill_solid(image, { uint8_t(96), uint8_t(97), uint8_t(98), uint8_t(99) });
 
@@ -106,7 +106,7 @@ GGO_TEST(fill, fill_solid_rgb_32f_yu)
   fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
   fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
 
-  ggo::image_view_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> image(buffer.data(), { 3, 4 }, line_step);
+  ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> image(buffer.data(), { 3, 4 }, line_step);
 
   ggo::fill_solid(image, { 97.f, 98.f, 99.f });
 

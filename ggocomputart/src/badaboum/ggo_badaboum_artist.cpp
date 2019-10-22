@@ -1,6 +1,7 @@
 #include "ggo_badaboum_artist.h"
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
+#include <2d/processing/ggo_blit.h>
 
 namespace
 {
@@ -11,13 +12,13 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::badaboum_artist::badaboum_artist(int width, int height, int line_step, ggo::image_format format, ggo::pixel_sampling sampling)
+ggo::badaboum_artist::badaboum_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling)
 :
-artist(width, height, line_step, format),
+artist(width, height, line_step, pixel_type, memory_lines_order),
 _world(100),
 _sampling(sampling),
 _thickness(0.001f * std::min(width, height)),
-_bkgd({ width, height }, format)
+_bkgd({ width, height }, pixel_type, memory_lines_order)
 {
   _world.set_external_force([](const ggo::rigid_body & body)
   {
@@ -80,17 +81,21 @@ _bkgd({ width, height }, format)
   }
 
   // Pre-render the background.
-  switch (format)
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yd:
-    paint_bkgd<rgb_8u_yd>(floors);
-    break;
-  case ggo::rgb_8u_yu:
-    paint_bkgd<rgb_8u_yu>(floors);
-    break;
-  case ggo::bgrx_8u_yd:
-    paint_bkgd<bgrx_8u_yd>(floors);
-    break;
+    paint_bkgd_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(floors);
+  }
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
+  {
+    paint_bkgd_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(floors);
+  }
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
+  {
+    paint_bkgd_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(floors);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 
@@ -104,9 +109,11 @@ ggo::rgb_8u ggo::badaboum_artist::new_box_color() const
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
-void ggo::badaboum_artist::paint_bkgd(const std::vector<ggo::oriented_box_f> & floors)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::badaboum_artist::paint_bkgd_t(const std::vector<ggo::oriented_box_f> & floors)
 {
+  image_t<pixel_type, memory_lines_order> bkgd(_bkgd.data(), _bkgd.size(), _bkgd.line_byte_step());
+
   // Paint the background.
   auto create_color = [&]()
   {
@@ -115,15 +122,14 @@ void ggo::badaboum_artist::paint_bkgd(const std::vector<ggo::oriented_box_f> & f
     return ggo::from_hsv<ggo::rgb_8u>(hue, sat, 1.f);
   };
 
-  fill_4_colors<format>(_bkgd.data(), _bkgd.width(), _bkgd.height(), _bkgd.line_byte_step(),
-    create_color(), create_color(), create_color(), create_color());
+  fill_4_colors(bkgd, create_color(), create_color(), create_color(), create_color());
 
   // Paint the floors.
   for (const auto & floor : floors)
   {
     auto box = map_fit(floor);
 
-    render_box<format, ggo::sampling_16x16>(_bkgd.data(), _bkgd.line_byte_step(), box, new_box_color(), ggo::rect_int::from_size(size()));
+    render_box_t<ggo::sampling_16x16>(bkgd, box, new_box_color(), ggo::rect_int::from_size(size()));
   }
 }
 
@@ -177,79 +183,83 @@ void ggo::badaboum_artist::preprocess_frame(int frame_index, uint32_t cursor_eve
 //////////////////////////////////////////////////////////////
 void ggo::badaboum_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yd:
-    render_tile<ggo::rgb_8u_yd>(buffer, clipping);
-    break;
-  case ggo::rgb_8u_yu:
-    render_tile<ggo::rgb_8u_yu>(buffer, clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_tile<ggo::bgrx_8u_yd>(buffer, clipping);
-    break;
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
-void ggo::badaboum_artist::render_tile(void * buffer, const ggo::rect_int & clipping) const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::badaboum_artist::render_tile_t(void * buffer, const ggo::rect_int & clipping) const
 {
-  const int line_size = clipping.width() * ggo::image_format_traits<format>::pixel_byte_size;
-  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
-  {
-    const void * src = ggo::get_pixel_ptr<format>(_bkgd.data(), clipping.left(), y, _bkgd.height(), _bkgd.line_byte_step());
-    void * dst = ggo::get_pixel_ptr<format>(buffer, clipping.left(), y, height(), line_step());
-    memcpy(dst, src, line_size);
-  }
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+  const_image_t<pixel_type, memory_lines_order> bkgd(_bkgd.data(), _bkgd.size(), _bkgd.line_byte_step());
+
+  auto img_view = make_image_view(img, clipping);
+  auto bkgd_view = make_image_view(bkgd, clipping);
+
+  blit(*bkgd_view, *img_view);
 
   switch (_sampling)
   {
   case ggo::sampling_1:
-    render_boxes<format, ggo::sampling_1>(buffer, clipping);
+    render_boxes_t<ggo::sampling_1>(img, clipping);
     break;
   case ggo::sampling_2x2:
-    render_boxes<format, ggo::sampling_2x2>(buffer, clipping);
+    render_boxes_t<ggo::sampling_2x2>(img, clipping);
     break;
   case ggo::sampling_4x4:
-    render_boxes<format, ggo::sampling_4x4>(buffer, clipping);
+    render_boxes_t<ggo::sampling_4x4>(img, clipping);
     break;
   case ggo::sampling_8x8:
-    render_boxes<format, ggo::sampling_8x8>(buffer, clipping);
+    render_boxes_t<ggo::sampling_8x8>(img, clipping);
     break;
   case ggo::sampling_16x16:
-    render_boxes<format, ggo::sampling_16x16>(buffer, clipping);
+    render_boxes_t<ggo::sampling_16x16>(img, clipping);
     break;
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-void  ggo::badaboum_artist::render_boxes(void * buffer, const ggo::rect_int & clipping) const
+template <ggo::pixel_sampling sampling, ggo::pixel_type pixel_type_, ggo::lines_order memory_lines_order_>
+void  ggo::badaboum_artist::render_boxes_t(image_t<pixel_type_, memory_lines_order_> & img, const ggo::rect_int & clipping) const
 {
   for (const auto & box : _boxes)
   {
-    render_box<format, sampling>(buffer, line_step(), box._box, box._color, clipping);
+    render_box_t<sampling>(img, box._box, box._color, clipping);
   }
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-void  ggo::badaboum_artist::render_box(void * buffer, int line_byte_step, const ggo::oriented_box_f & box, ggo::rgb_8u color, const ggo::rect_int & clipping) const
+template <ggo::pixel_sampling sampling, ggo::pixel_type pixel_type_, ggo::lines_order memory_lines_order_>
+void  ggo::badaboum_artist::render_box_t(image_t<pixel_type_, memory_lines_order_> & img, const ggo::oriented_box_f & box, ggo::rgb_8u color, const ggo::rect_int & clipping) const
 {
-  ggo::paint<format, sampling>(buffer, width(), height(), line_byte_step, box, color, clipping);
+  ggo::paint<sampling>(img, box, color, clipping);
 
   ggo::oriented_box_f left(box.pos() - (box.half_size_x() - _thickness) * box.dir_x(), box.angle(), _thickness, box.half_size_y());
-  ggo::paint<format, sampling>(buffer, width(), height(), line_byte_step, left, ggo::black_8u(), clipping);
+  ggo::paint<sampling>(img, left, ggo::black_8u(), clipping);
 
   ggo::oriented_box_f right(box.pos() + (box.half_size_x() - _thickness) * box.dir_x(), box.angle(), _thickness, box.half_size_y());
-  ggo::paint<format, sampling>(buffer, width(), height(), line_byte_step, right, ggo::black_8u(), clipping);
+  ggo::paint<sampling>(img, right, ggo::black_8u(), clipping);
 
   ggo::oriented_box_f bottom(box.pos() - (box.half_size_y() - _thickness) * box.dir_y(), box.angle(), box.half_size_x(), _thickness);
-  ggo::paint<format, sampling>(buffer, width(), height(), line_byte_step, bottom, ggo::black_8u(), clipping);
+  ggo::paint<sampling>(img, bottom, ggo::black_8u(), clipping);
 
   ggo::oriented_box_f top(box.pos() + (box.half_size_y() - _thickness) * box.dir_y(), box.angle(), box.half_size_x(), _thickness);
-  ggo::paint<format, sampling>(buffer, width(), height(), line_byte_step, top, ggo::black_8u(), clipping);
+  ggo::paint<sampling>(img, top, ggo::black_8u(), clipping);
 }
 
 //////////////////////////////////////////////////////////////

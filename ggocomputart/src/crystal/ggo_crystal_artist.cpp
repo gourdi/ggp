@@ -3,36 +3,32 @@
 #include <kernel/math/ggo_coordinates_conversions.h>
 #include <2d/ggo_color.h>
 #include <2d/paint/ggo_blend.h>
+#include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format, const params & params)
+void ggo::crystal_artist::render_bitmap(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> & img, const params & params)
 {
-  ggo::array<float, 1> float_buffer(3 * width * height, 0.f);
+  image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> float_img(img.size());
+  fill_black(float_img);
 
-	for (int j = 0; j < 16 * width * height; ++j)
+	for (int j = 0; j < 16 * float_img.width() * float_img.height(); ++j)
 	{
-		render_transform(float_buffer.data(), width, height, params);
+		render_transform(float_img, params);
 	}
 
-	for (int y = 0; y < height; ++y)
+	for (int y = 0; y < img.height(); ++y)
 	{
-    const float * ptr_in = float_buffer.data() + 3 * y * width;
-    void * ptr_out = ggo::get_line_ptr<ggo::memory_lines_order::bottom_up>(buffer, y, height, line_step);
-
-    for (int x = 0; x < width; ++x)
+    for (int x = 0; x < img.width(); ++x)
     {
-      const ggo::rgb_32f c_32f(ptr_in[0], ptr_in[1], ptr_in[2]);
-      const ggo::rgb_8u c_8u(add_blend(read_pixel<ggo::rgb_8u_yu>(buffer), ggo::convert_color_to<ggo::rgb_8u>(c_32f)));
-      ggo::write_pixel<ggo::rgb_8u_yu>(ptr_out, c_8u);
-
-      ptr_in += 3;
-      ptr_out = ggo::move_ptr<ggo::image_format_traits<ggo::rgb_8u_yu>::pixel_byte_size>(ptr_out);
+      const ggo::rgb_32f c_32f = float_img.read_pixel(x, y);
+      const ggo::rgb_8u c_8u(add_blend(img.read_pixel(x, y), ggo::convert_color_to<ggo::rgb_8u>(c_32f)));
+      img.write_pixel(x, y, c_8u);
     }
 	}
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::crystal_artist::render_transform(float * buffer, int width, int height, const params & params)
+void ggo::crystal_artist::render_transform(image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> & img, const params & params)
 {
 	ggo::pos2_f pt;
 	
@@ -48,42 +44,41 @@ void ggo::crystal_artist::render_transform(float * buffer, int width, int height
 		pt.y() = params._coefs[i][3]*pt.x() + params._coefs[i][4]*pt.y() + params._coefs[i][5];
 
 		// Render point.
-		ggo::pos2_f render_pt = ggo::map_fit(pt, -5.f, 5.f, width, height);
+		ggo::pos2_f render_pt = ggo::map_fit(pt, -5.f, 5.f, img.width(), img.height());
 		int x = ggo::round_to<int>(render_pt.x());
 		int y = ggo::round_to<int>(render_pt.y());
 
-		if ((x >= 0) && (x < width) &&
-			  (y >= 0) && (y < height))
+		if ((x >= 0) && (x < img.width()) &&
+			  (y >= 0) && (y < img.height()))
 		{
-			float * ptr = buffer + 3 * (y * width + x);
+			ggo::rgb_32f c = img.read_pixel(x, y);
 
-			float diff = 4 * (ptr[0] + ptr[1] + ptr[2]);
+			float diff = 4 * (c.r() + c.g() + c.b());
 			if (x > 0)
 			{
-				float * it_diff = buffer + 3 * (y * width + x - 1);
-				diff -= it_diff[0] + it_diff[1] + it_diff[2];
+        ggo::rgb_32f c = img.read_pixel(x - 1, y);
+				diff -= c.r() + c.g() + c.b();
 			}
-			if (x < width - 1)
+			if (x < img.width() - 1)
 			{
-				float * it_diff = buffer + 3 * (y * width + x + 1);
-				diff -= it_diff[0]+it_diff[1]+it_diff[2];
+        ggo::rgb_32f c = img.read_pixel(x + 1, y);
+        diff -= c.r() + c.g() + c.b();
 			}
 			if (y > 0)
 			{
-				float * it_diff = buffer + 3 * ((y - 1) * width + x);
-				diff -= it_diff[0] + it_diff[1] + it_diff[2];
+        ggo::rgb_32f c = img.read_pixel(x, y - 1);
+        diff -= c.r() + c.g() + c.b();
 			}
-			if (y < height - 1)
+			if (y < img.height() - 1)
 			{
-				float * it_diff = buffer + 3 * ((y + 1) * width + x);
-				diff -= it_diff[0] + it_diff[1] + it_diff[2];
+        ggo::rgb_32f c = img.read_pixel(x, y + 1);
+        diff -= c.r() + c.g() + c.b();
 			}
 
 			if (diff < 0.25)
 			{
-				ptr[0] += params._dr[i];
-				ptr[1] += params._dg[i];
-				ptr[2] += params._db[i];
+        c += { params._dr[i], params._dg[i], params._db[i] };
+        img.write_pixel(x, y, c);
 			}
 		}
 	}

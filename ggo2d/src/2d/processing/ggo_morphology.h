@@ -130,59 +130,35 @@ namespace ggo
   template <pixel_type pixel_type>
   struct morphology_dispatcher
   {
-    template <
-      typename input_void_ptr_t, bool input_owns_buffer,
-      typename output_void_ptr_t, bool output_owns_buffer
-    >
-      static void dilatation_rectangle(
-        const image_base<input_void_ptr_t, input_owns_buffer> & input,
-        image_base<output_void_ptr_t, output_owns_buffer> & output,
-        int kernel_width, int kernel_height)
+    template <typename input_void_ptr_t>
+    static void dilatation_rectangle(const image_base<input_void_ptr_t> & input, image & output, int kernel_width, int kernel_height)
     {
-      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
-      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+      ggo::const_image_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
 
       ggo::dilatation_rectangle(input_view, output_view, kernel_width, kernel_height);
     }
 
-    template <
-      typename input_void_ptr_t, bool input_owns_buffer,
-      typename output_void_ptr_t, bool output_owns_buffer
-    >
-      static void dilatation_disc(
-        const image_base<input_void_ptr_t, input_owns_buffer> & input,
-        image_base<output_void_ptr_t, output_owns_buffer> & output,
-        float radius)
+    template <typename input_void_ptr_t>
+    static void dilatation_disc(const image_base<input_void_ptr_t> & input, image & output, float radius)
     {
-      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
-      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+      ggo::const_image_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
 
       ggo::dilatation_disc(input_view, output_view, radius);
     }
 
-    template <
-      typename input_void_ptr_t, bool input_owns_buffer,
-      typename output_void_ptr_t, bool output_owns_buffer
-    >
-      static void erosion_rectangle(
-        const image_base<input_void_ptr_t, input_owns_buffer> & input,
-        image_base<output_void_ptr_t, output_owns_buffer> & output,
-        int kernel_width, int kernel_height)
+    template <typename input_void_ptr_t>
+      static void erosion_rectangle(const image_base<input_void_ptr_t> & input, image & output, int kernel_width, int kernel_height)
     {
-      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
-      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+      ggo::const_image_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
 
       ggo::erosion_rectangle(input_view, output_view, kernel_width, kernel_height);
     }
 
-    template <
-      typename input_void_ptr_t, bool input_owns_buffer,
-      typename output_void_ptr_t, bool output_owns_buffer
-    >
-      static void erosion_disc(
-        const image_base<input_void_ptr_t, input_owns_buffer> & input,
-        image_base<output_void_ptr_t, output_owns_buffer> & output,
-        float radius)
+    template <typename input_void_ptr_t>
+    static void erosion_disc(const image_base<input_void_ptr_t> & input, image & output, float radius)
     {
       ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
       ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
@@ -192,14 +168,8 @@ namespace ggo
   };
 
   // Dilatation.
-  template <
-    typename input_void_ptr_t, bool input_owns_buffer,
-    typename output_void_ptr_t, bool output_owns_buffer
-  >
-    void dilatation_rectangle(
-      const image_base<input_void_ptr_t, input_owns_buffer> & input,
-      image_base<output_void_ptr_t, output_owns_buffer> & output,
-      int kernel_width, int kernel_height)
+  template <typename input_void_ptr_t>
+  void dilatation_rectangle(const image_base<input_void_ptr_t> & input, image & output, int kernel_width, int kernel_height)
   {
     if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
     {
@@ -215,14 +185,8 @@ namespace ggo
     }
   }
 
-  template <
-    typename input_void_ptr_t, bool input_owns_buffer,
-    typename output_void_ptr_t, bool output_owns_buffer
-  >
-    void dilatation_disc(
-      const image_base<input_void_ptr_t, input_owns_buffer> & input,
-      image_base<output_void_ptr_t, output_owns_buffer> & output,
-      float radius)
+  template <typename input_void_ptr_t>
+  void dilatation_disc(const image_base<input_void_ptr_t> & input, image & output, float radius)
   {
     if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
     {
@@ -239,14 +203,8 @@ namespace ggo
   }
 
   // Erosion.
-  template <
-    typename input_void_ptr_t, bool input_owns_buffer,
-    typename output_void_ptr_t, bool output_owns_buffer
-  >
-    void erosion_rectangle(
-      const image_base<input_void_ptr_t, input_owns_buffer> & input,
-      image_base<output_void_ptr_t, output_owns_buffer> & output,
-      int kernel_width, int kernel_height)
+  template <typename input_void_ptr_t>
+  void erosion_rectangle(const image_base<input_void_ptr_t> & input, image & output, int kernel_width, int kernel_height)
   {
     if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
     {
@@ -262,14 +220,8 @@ namespace ggo
     }
   }
 
-  template <
-    typename input_void_ptr_t, bool input_owns_buffer,
-    typename output_void_ptr_t, bool output_owns_buffer
-  >
-    void erosion_disc(
-      const image_base<input_void_ptr_t, input_owns_buffer> & input,
-      image_base<output_void_ptr_t, output_owns_buffer> & output,
-      float radius)
+  template <typename input_void_ptr_t>
+  void erosion_disc(const image_base<input_void_ptr_t> & input, image & output, float radius)
   {
     if (input.pixel_type() == ggo::pixel_type::rgb_8u && output.pixel_type() == ggo::pixel_type::rgb_8u)
     {

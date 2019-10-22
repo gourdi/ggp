@@ -1,7 +1,7 @@
 #ifndef __GGO_RAYTRACER_GLOBAL__
 #define __GGO_RAYTRACER_GLOBAL__
 
-#include <2d/ggo_color.h>
+#include <2d/ggo_pixel_type.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
 
 namespace ggo
@@ -17,6 +17,8 @@ namespace ggo
     int                           _threads_count = 1;
     const raycaster_abc *         _raycaster = nullptr;
     const indirect_lighting_abc * _indirect_lighting = nullptr;
+    ggo::pixel_type               _output_pixel_type = ggo::pixel_type::rgb_8u;
+    ggo::lines_order              _output_memory_lines_order = ggo::lines_order::up;
   };
 
   //////////////////////////////////////////////////////////////

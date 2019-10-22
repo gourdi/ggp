@@ -15,7 +15,7 @@ namespace ggo
   {
   public:
 
-           kame_animation_artist(int width, int height, int line_step, ggo::image_format format);
+           kame_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
      void  render_frame(void * buffer, int frame_index, float time_step) override;
 
@@ -78,7 +78,7 @@ namespace ggo
 
       ggo::pos2_f proj(const ggo::pos2_f & p) const;
       void        update();
-      void        paint(void * buffer, const animation_artist_abc & artist) const;
+      void        paint(ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> & img) const;
     };
 
     static  std::unique_ptr<kame>                         create_kame();

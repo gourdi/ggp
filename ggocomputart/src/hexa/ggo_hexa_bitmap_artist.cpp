@@ -12,9 +12,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_bitmap_artist::hexa_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::hexa_bitmap_artist::hexa_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -45,5 +45,5 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  artist.render(buffer, width(), height(), line_step(), format(), 1.f, renderer);
+  artist.render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), 1.f, renderer);
 }

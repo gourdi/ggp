@@ -77,8 +77,8 @@ auto make_image(int width, int height, typename ggo::pixel_type_traits<pixel_typ
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer, typename data_t>
-bool compare_images(const ggo::image_base_t<pixel_type, memory_lines_order, void_ptr_t, owns_buffer> & image, const ggo::array2d<data_t> & pixels)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, typename data_t>
+bool compare_images(const ggo::image_base_t<pixel_type, memory_lines_order, void_ptr_t> & image, const ggo::array2d<data_t> & pixels)
 {
   if (image.size() != pixels.size())
   {
@@ -109,18 +109,18 @@ bool compare_images(const ggo::image_base_t<pixel_type, memory_lines_order, void
 ////////////////////////////////////////////////////////////////////
 struct compare_images_functor
 {
-  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, bool owns_buffer, typename data_t>
-  static bool call(const ggo::image_base<void_ptr_t, owns_buffer> & image, const ggo::array2d<data_t> & pixels)
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, typename data_t>
+  static bool call(const ggo::image_base<void_ptr_t> & image, const ggo::array2d<data_t> & pixels)
   {
-    ggo::const_image_view_t<pixel_type, memory_lines_order> view(image.data(), image.size());
+    ggo::const_image_t<pixel_type, memory_lines_order> view(image.data(), image.size());
 
     return compare_images(view, pixels);
   }
 };
 
 ////////////////////////////////////////////////////////////////////
-template <typename void_ptr_t, bool owns_buffer, typename data_t>
-bool compare_images(const ggo::image_base<void_ptr_t, owns_buffer> & image, const ggo::array2d<data_t> & pixels)
+template <typename void_ptr_t, typename data_t>
+bool compare_images(const ggo::image_base<void_ptr_t> & image, const ggo::array2d<data_t> & pixels)
 {
   return ggo::dispatch_image_format<compare_images_functor>(image.pixel_type(), image.memory_lines_order(), image, pixels);
 }

@@ -11,13 +11,11 @@ namespace ggo
   {
   public:
 
-                duffing_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          duffing_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
-    void        render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
-
-    void				apply_shadow(float * buffer, const float * shadow_buffer) const;
+    void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override;
 
   private:
 

@@ -71,7 +71,7 @@ namespace ggo
                         path_animate_abc(const ggo::pos2_f & pos, ggo::path_abc * path, int start_offset = 0) : ggo::animate_abc(start_offset), _start_pos(pos), _path(path) {};
     virtual		   			 ~path_animate_abc() { delete _path; }
 
-            ggo::pos2_f  get_position() const { return _start_pos; };
+            ggo::pos2_f get_position() const { return _start_pos; };
             void        set_position(const ggo::pos2_f & pos) { _start_pos = pos; };
             void        set_position(float x, float y) { _start_pos.x() = x; _start_pos.y() = y; };
 

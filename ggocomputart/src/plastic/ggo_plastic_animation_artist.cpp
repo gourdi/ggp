@@ -1,9 +1,9 @@
 #include "ggo_plastic_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::plastic_animation_artist::plastic_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 200)
 {
   for (int i = 0; i < 50; ++i)
   {
@@ -46,7 +46,7 @@ void ggo::plastic_animation_artist::render_frame(void * buffer, int frame_index,
     bitmap_params.push_back(params);
   }
 
-  ggo::plastic_artist artist(width(), height(), line_step(), format());
+  ggo::plastic_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
   artist.render(buffer, bitmap_params, _color, _altitude_factor);
 }
 

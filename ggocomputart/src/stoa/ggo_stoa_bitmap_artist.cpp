@@ -7,9 +7,9 @@
 //#define MONO_SAMPLING
 
 //////////////////////////////////////////////////////////////
-ggo::stoa_bitmap_artist::stoa_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::stoa_bitmap_artist::stoa_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -41,5 +41,5 @@ void ggo::stoa_bitmap_artist::render_bitmap(void * buffer) const
   float hue = ggo::rand<float>();
 
   ggo::stoa_artist artist(384);
-  artist.render(buffer, width(), height(), line_step(), format(), hue, light_pos1, light_pos2, renderer);
+  artist.render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), hue, light_pos1, light_pos2, renderer);
 }

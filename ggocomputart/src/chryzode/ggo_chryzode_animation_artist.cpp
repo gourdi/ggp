@@ -2,9 +2,9 @@
 #include "ggo_chryzode_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_animation_artist::chryzode_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::chryzode_animation_artist::chryzode_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
+fixed_frames_count_animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order, 300)
 {
   const float delta = 1.001f;
 
@@ -28,7 +28,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300)
 //////////////////////////////////////////////////////////////
 void ggo::chryzode_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
-  chryzode_artist artist(width(), height(), line_step(), format());
+  chryzode_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
 
   chryzode_params params;
   params._multiplier1 = ggo::ease_inout(frame_index, frames_count(), _multiplier1_start, _multiplier1_end);

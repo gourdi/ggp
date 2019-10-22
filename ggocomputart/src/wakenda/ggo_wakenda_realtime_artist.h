@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    wakenda_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+    wakenda_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -18,9 +18,9 @@ namespace ggo
     void render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     bool finished(int frame_index) const override;
 
-    template <ggo::image_format format> void  copy_bkgd(void * buffer, const ggo::rect_int & clipping) const;
-    template <ggo::image_format format> void  process_bkgd(void * buffer, const ggo::rect_int & clipping) const;
-    template <ggo::image_format format> void  paint_points(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void  copy_bkgd(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void  process_bkgd(void * buffer, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order> void  paint_points(void * buffer, const ggo::rect_int & clipping) const;
 
   private:
 

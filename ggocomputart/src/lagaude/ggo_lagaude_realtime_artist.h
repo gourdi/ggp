@@ -14,13 +14,16 @@ namespace ggo
   {
   public:
 
-          lagaude_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+          lagaude_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 450; }
 
   private:
+
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const;
 
     //////////////////////////////////////////////////////////////
     class particle : public ggo::path_animate_abc
@@ -30,7 +33,7 @@ namespace ggo
             particle(const ggo::pos2_f & pos, ggo::velocity_path * path);
 
       bool  update(int frame_index, const ggo::pos2_f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     public:
 
@@ -70,7 +73,7 @@ namespace ggo
             seed(const ggo::pos2_f & pos, ggo::path_abc * path, float scale, float hue);
 
       bool  update(int frame_index, const ggo::pos2_f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     private:
 
@@ -89,7 +92,7 @@ namespace ggo
             dust(const ggo::pos2_f & pos, ggo::path_abc * path, float scale) : scale_animate_abc(pos, path, scale) {};
 
       bool  update(int frame_index, const ggo::pos2_f & pos) override;
-      void  render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
+      void  render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const override;
 
     public:
 

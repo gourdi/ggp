@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          chryzode_bitmap_artist(int width, int height, int line_step, ggo::image_format format);
+          chryzode_bitmap_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 

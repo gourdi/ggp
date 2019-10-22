@@ -19,7 +19,7 @@ namespace ggo
   {
   public:
 
-    chryzode_artist(int width, int height, int line_step, ggo::image_format format);
+    chryzode_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void render_chryzode(void * buffer, float radius, const chryzode_params & params, float hue_start, float hue_end) const;
   };

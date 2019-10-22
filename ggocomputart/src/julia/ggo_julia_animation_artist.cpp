@@ -1,10 +1,10 @@
 #include "ggo_julia_animation_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::julia_animation_artist::julia_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::julia_animation_artist::julia_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 500),
-_artist(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 500),
+_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _angle = ggo::rand<float>(0, 2 * ggo::pi<float>());
   _radius = ggo::rand<float>(0.254f, 0.256f);

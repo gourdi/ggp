@@ -22,7 +22,7 @@ namespace ggo
     vortex,
     plastic, //15
     mandelbrot,
-    poupette_REMOVED,
+    polygus,
     ifs,
     mosaic,
     metaballs, // 20

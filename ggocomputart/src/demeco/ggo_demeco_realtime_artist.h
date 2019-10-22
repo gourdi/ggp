@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    demeco_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+    demeco_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -20,7 +20,7 @@ namespace ggo
 
   private:
 
-    demeco_artist<ggo::bgrx_8u_yd, ggo::sampling_8x8> _artist;
+    demeco_artist<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_8x8> _artist;
     bool _finished = false;
   };
 }

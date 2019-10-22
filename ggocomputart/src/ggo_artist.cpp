@@ -4,6 +4,13 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
+  artist::artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, lines_order memory_lines_order)
+    :
+    _width(width), _height(height), _line_byte_step(line_byte_step), _pixel_type(pixel_type), _memory_lines_order(memory_lines_order)
+  {
+  }
+
+  //////////////////////////////////////////////////////////////
   ggo::pos2_f artist::map_fill(const ggo::pos2_f & point, float inf, float sup, int render_width, int render_height)
   {
     ggo::pos2_f result;

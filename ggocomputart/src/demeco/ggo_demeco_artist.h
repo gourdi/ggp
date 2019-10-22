@@ -9,7 +9,7 @@
 
 namespace ggo
 {
-  template <ggo::image_format format, ggo::pixel_sampling sampling>
+  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
   class demeco_artist
   {
   public:
@@ -24,18 +24,18 @@ namespace ggo
     int   min_size() const { return std::min(_width, _height); }
     pos2_f center() const { return { static_cast<float>(_width - 1) / 2, static_cast<float>(_height - 1) / 2 }; }
 
-    static typename image_format_traits<format>::color_t from_8u(const ggo::rgb_8u & c);
+    static typename pixel_type_traits<pixel_type>::color_t from_8u(const ggo::rgb_8u & c);
 
   private:
 
     using palette_t = std::array<ggo::rgb_8u, 8>;
-    using paint_shapes_t = std::vector<std::unique_ptr<ggo::paint_shape_abc<float, typename ggo::image_format_traits<format>::color_t>>>;
+    using scene_t = scene2d<typename pixel_type_traits<pixel_type>::color_t>;
 
     struct demeco
     {
       demeco(const ggo::pos2_f & pos, float radius, int counter) : _pos(pos), _radius(radius), _counter(counter) {}
 
-      virtual typename paint_shapes_t get_paint_shapes() const = 0;
+      virtual void get_paint_shapes(scene_t & scene) const = 0;
       virtual bool finished() const = 0;
 
       ggo::pos2_f _pos;
@@ -47,7 +47,7 @@ namespace ggo
     {
       demeco1(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
-      typename paint_shapes_t get_paint_shapes() const override;
+      void get_paint_shapes(scene_t & scene) const override;
       bool finished() const override;
 
       static const int _angle_counter_max = 50;
@@ -72,7 +72,7 @@ namespace ggo
     {
       demeco2(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
-      typename paint_shapes_t get_paint_shapes() const override;
+      void get_paint_shapes(scene_t & scene) const override;
       bool finished() const override;
 
       static const int _anim1_counter_start = 0;
@@ -98,7 +98,7 @@ namespace ggo
     {
       demeco3(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette);
 
-      typename paint_shapes_t get_paint_shapes() const override;
+      void get_paint_shapes(scene_t & scene) const override;
       bool finished() const override;
 
       const int _layer_delay = 30;
@@ -126,9 +126,9 @@ namespace ggo
     int _height;
     palette_t _palette;
     std::vector<std::unique_ptr<demeco>> _demecos;
-    paint_shapes_t _background_paint_shapes;
-    paint_shapes_t _active_paint_shapes;
-    ggo::image_t<format> _background_image;
+    scene2d<typename pixel_type_traits<pixel_type>::color_t> _background_scene;
+    scene2d<typename pixel_type_traits<pixel_type>::color_t> _active_scene;
+    ggo::image_t<pixel_type, memory_lines_order> _background_image;
   };
 }
 

@@ -98,12 +98,15 @@ ggo::cubic_curve<float, ggo::rgb_32f> ggo::entabeni::create_color_map()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
+void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line_byte_step,
+                                  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
                                   const ggo::array<float, 2> & grid,
                                   const ggo::cubic_curve<float, ggo::rgb_32f> & color_map,
                                   float z,
                                   float angle)
 {
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, { width, height }, line_byte_step);
+
   ggo::basis3d_f basis;
   basis.move(0.f, 0.f, z);
 
@@ -122,7 +125,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     return std::make_tuple(pos3d, proj);
   };
 
-  std::vector<ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>> shapes;
+  scene2d<ggo::rgb_8u> scene;
 
   auto paint_triangle = [&](const ggo::pos3_f & v1, const ggo::pos3_f & v2, const ggo::pos3_f & v3)
   {
@@ -147,7 +150,7 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
 
     ggo::rgb_8u triangle_color = ggo::convert_color_to<ggo::rgb_8u>(ggo::map(dist, 0.f, far, color_map.evaluate(altitude), ggo::black_32f()));
     ggo::triangle2d_f triangle(std::get<1>(p1), std::get<1>(p2), std::get<1>(p3));
-    shapes.emplace_back(triangle, triangle_color);
+    scene.make_paint_shape_t(triangle, triangle_color);
   };
 
   const float delta = 2 * ggo::pi<float>() / (grid.width() - 1);
@@ -169,8 +172,8 @@ void ggo::entabeni::render_bitmap(void * buffer, int width, int height, int line
     }
   }
 
-  ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width, height, line_step, ggo::black_8u());
-  ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(buffer, width, height, line_step, shapes);
+  ggo::fill_black(img);
+  ggo::paint<ggo::sampling_4x4>(img, scene);
 }
 
 

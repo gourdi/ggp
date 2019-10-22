@@ -1,13 +1,12 @@
-#include <2d/ggo_blit.h>
+#include <2d/processing/ggo_blit.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sampling>::from_8u(const ggo::rgb_8u & c)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+typename ggo::pixel_type_traits<pixel_type>::color_t ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::from_8u(const ggo::rgb_8u & c)
 {
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
+  using color_t = pixel_type_traits<pixel_type>::color_t;
 
   if constexpr(std::is_same<color_t, ggo::rgb_8u>::value)
   {
@@ -24,14 +23,13 @@ typename ggo::image_format_traits<format>::color_t ggo::demeco_artist<format, sa
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-ggo::demeco_artist<format, sampling>::demeco_artist(int width, int height)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco_artist(int width, int height)
 :
 _width(width), _height(height),
 _background_image({ width, height })
 {
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
+  using color_t = typename pixel_type_traits<pixel_type>::color_t;
 
   // Create palette.
   for (auto & c : _palette)
@@ -90,13 +88,15 @@ _background_image({ width, height })
   }
 
   // Fill background.
-  if constexpr(std::is_same<color_t, ggo::rgb_8u>::value)
+  image_t<pixel_type, memory_lines_order> background(_background_image.data(), _background_image.size(), _background_image.line_byte_step());
+
+  if constexpr(std::is_same_v<color_t, ggo::rgb_8u> == true)
   {
-    _background_image.fill(white_8u());
+    fill_solid(background, white_8u());
   }
-  else if constexpr(std::is_same<color_t, ggo::rgba_8u>::value)
+  else if constexpr(std::is_same_v<color_t, ggo::rgba_8u> == true)
   {
-    _background_image.fill({ 0, 0, 0, 0 });
+    fill_solid(background, { 0, 0, 0, 0 });
   }
   else
   {
@@ -105,13 +105,13 @@ _background_image({ width, height })
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-bool ggo::demeco_artist<format, sampling>::update()
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+bool ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::update()
 {
   bool finished = true;
   
-  _background_paint_shapes.clear();
-  _active_paint_shapes.clear();
+  _background_scene.clear();
+  _active_scene.clear();
 
   for (auto & demeco : _demecos)
   {
@@ -124,15 +124,10 @@ bool ggo::demeco_artist<format, sampling>::update()
     else
     {
       // Store paint into into either the background or active paint shapes list.
-      auto shapes = demeco->get_paint_shapes();
+      auto & scene_dst = demeco->finished() ? _background_scene : _active_scene;
+      demeco->get_paint_shapes(scene_dst);
 
       demeco->_counter++;
-
-      auto & paint_shapes_dst = demeco->finished() ? _background_paint_shapes : _active_paint_shapes;
-      for (auto & shape : shapes)
-      {
-        paint_shapes_dst.push_back(std::move(shape));
-      }
 
       if (demeco->finished() == false)
       {
@@ -147,39 +142,27 @@ bool ggo::demeco_artist<format, sampling>::update()
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-void ggo::demeco_artist<format, sampling>::render_tile(void * buffer, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::render_tile(void * buffer, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
 {
   GGO_ASSERT_EQ(_width, _background_image.width());
   GGO_ASSERT_EQ(_height, _background_image.height());
 
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
+  image_t<pixel_type, memory_lines_order> img(buffer, { _width, _height }, line_byte_step);
 
   // Render the background demecos.
-  auto adaptator_background = make_adaptor(_background_paint_shapes, [](const auto & item) { return item.get(); });
-  paint<format, sampling>(
-    _background_image.data(), _background_image.width(), _background_image.height(), _background_image.line_byte_step(),
-    adaptator_background, clipping);
+  paint<sampling>(_background_image, _background_scene, clipping);
 
   // Blit the background.
-  const int line_size = clipping.width() * format_traits::pixel_byte_size;
-  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
-  {
-    const void * src = get_pixel_ptr<format>(_background_image.data(), clipping.left(), y, _background_image.height(), _background_image.line_byte_step());
-    void * dst = get_pixel_ptr<format>(buffer, clipping.left(), y, _height, line_byte_step);
-
-    memcpy(dst, src, line_size);
-  }
+  blit(*make_image_view(_background_image, clipping), *make_image_view(img, clipping));
 
   // Render the active demecos.
-  auto adaptator_active = make_adaptor(_active_paint_shapes, [](const auto & item) { return item.get(); });
-  paint<format, sampling>(buffer, _width, _height, line_byte_step, adaptator_active, clipping);
+  paint<sampling>(img, _active_scene, clipping);
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-ggo::demeco_artist<format, sampling>::demeco1::demeco1(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco1::demeco1(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
 {
@@ -191,7 +174,7 @@ demeco(pos, radius, counter)
   bool ccw = ggo::rand<bool>();
 
   // Shuffle palette.
-  demeco_artist<format, sampling>::palette_t palette_shuffled = palette;
+  demeco_artist<pixel_type, memory_lines_order, sampling>::palette_t palette_shuffled = palette;
   ggo::shuffle(palette_shuffled);
 
   int color_index = 0;
@@ -208,12 +191,10 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco1::get_paint_shapes() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco1::get_paint_shapes(scene_t & scene) const
 {
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
-  using paint_shape_t = static_paint_shape<multi_shape_f, color_t, solid_color_brush<color_t>, alpha_blender<color_t>>;
+  using color_t = pixel_type_traits<pixel_type>::color_t;
 
   int angle_counter = std::min(_counter, _angle_counter_max);
   float max_angle = std::min(ggo::ease_inout(angle_counter, _angle_counter_max, 0.f, 2.f * ggo::pi<float>()), 2.f * ggo::pi<float>());
@@ -223,41 +204,34 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
 
   constexpr int discs_count = 96;
 
-  paint_shapes_t shapes;
-
   for (const auto & arc : _arcs)
   {
-    auto blender = ggo::alpha_blender<color_t>(opacity);
-    auto paint_arc = std::make_unique<paint_shape_t>(multi_shape_f(), from_8u(arc._color), blender);
+    auto paint_arc = scene.make_paint_shape_t(multi_shape_f(), from_8u(arc._color), opacity);
 
     for (int i = 0; i < discs_count; ++i)
     {
       float angle = arc._start_angle + (arc._ccw ? 1.f : -1) * i * max_angle / discs_count;
 
-      paint_arc->_shape.add_shape(std::make_shared<ggo::disc_f>(_pos + arc._radius * ggo::vec2_f::from_angle(angle), arc._width / 2));
+      paint_arc._shape.add_shape(std::make_shared<ggo::disc_f>(_pos + arc._radius * ggo::vec2_f::from_angle(angle), arc._width / 2));
     }
-
-    shapes.push_back(std::move(paint_arc));
   }
-
-  return shapes;
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-bool ggo::demeco_artist<format, sampling>::demeco1::finished() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+bool ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco1::finished() const
 {
   return _counter > std::max(demeco1::_angle_counter_max, demeco1::_fade_in_counter_max);
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-ggo::demeco_artist<format, sampling>::demeco2::demeco2(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::demeco2(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
 {
   // Pick up 3 colors.
-  demeco_artist<format, sampling>::palette_t palette_shuffled = palette;
+  demeco_artist<pixel_type, memory_lines_order, sampling>::palette_t palette_shuffled = palette;
   ggo::shuffle(palette_shuffled);
 
   _animations.emplace_back(palette_shuffled[0], radius * ggo::rand(0.25f, 0.4f), ggo::rand(0.f, ggo::pi<float>()));
@@ -268,15 +242,9 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco2::get_paint_shapes() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::get_paint_shapes(scene_t & scene) const
 {
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
-
-  using paint_box = static_paint_shape<ggo::oriented_box_f, color_t>;
-  paint_shapes_t paint_boxes;
-
   // Compute current angle.
   float angle = _init_angle;
   if (_counter < _anim1_counter_end)
@@ -314,7 +282,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim2_counter_start, _anim2_counter_end, main_size, main_size + _animations[1]._size);
     auto shape_color = from_8u(_animations[1]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle, main_size, size), shape_color));
+    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle, main_size, size), shape_color);
   }
 
   // Animation 3.
@@ -324,7 +292,7 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim3_counter_start, _anim3_counter_end, main_size, main_size + _animations[2]._size);
     auto shape_color = from_8u(_animations[2]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color));
+    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
   }
 
   // Animation 1. Must be last.
@@ -334,26 +302,24 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     float size = ggo::ease_inout(counter, _anim1_counter_start, _anim1_counter_end, 0.f, main_size);
     auto shape_color = from_8u(_animations[0]._color);
 
-    paint_boxes.emplace_back(std::make_unique<paint_box>(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color));
+    scene.make_paint_shape_t(ggo::oriented_box_f(_pos, angle + ggo::pi<float>() / 2, main_size, size), shape_color);
   }
-
-  return paint_boxes;
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-bool ggo::demeco_artist<format, sampling>::demeco2::finished() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+bool ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco2::finished() const
 {
   return _counter > _anim3_counter_end;
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-ggo::demeco_artist<format, sampling>::demeco3::demeco3(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco3::demeco3(const ggo::pos2_f & pos, float radius, int counter, const palette_t & palette)
 :
 demeco(pos, radius, counter)
 {
-  demeco_artist<format, sampling>::palette_t palette_shuffled = palette;
+  demeco_artist<pixel_type, memory_lines_order, sampling>::palette_t palette_shuffled = palette;
   ggo::shuffle(palette_shuffled);
 
   int count = ggo::rand(16, 24);
@@ -380,15 +346,9 @@ demeco(pos, radius, counter)
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist<format, sampling>::demeco3::get_paint_shapes() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+void ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco3::get_paint_shapes(scene_t & scene) const
 {
-  using format_traits = image_format_traits<format>;
-  using color_t = format_traits::color_t;
-
-  using paint_polygon = static_paint_shape<ggo::polygon2d_f, color_t>;
-  paint_shapes_t paint_polygons;
-
   auto curve = [&](int counter)
   {
     if (counter < _anim1_duration)
@@ -419,15 +379,13 @@ typename ggo::demeco_artist<format, sampling>::paint_shapes_t ggo::demeco_artist
     ggo::polygon2d_f polygon({ p0, p1, p2, p3 });
     auto shape_color = from_8u(peak._color);
 
-    paint_polygons.emplace_back(std::make_unique<paint_polygon>(polygon, shape_color));
+    scene.make_paint_shape_t(polygon, shape_color);
   }
-
-  return paint_polygons;
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format, ggo::pixel_sampling sampling>
-bool ggo::demeco_artist<format, sampling>::demeco3::finished() const
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
+bool ggo::demeco_artist<pixel_type, memory_lines_order, sampling>::demeco3::finished() const
 {
   return _counter > _layer_delay * (_layers_count - 1) + _anim1_duration + _anim2_duration;
 }

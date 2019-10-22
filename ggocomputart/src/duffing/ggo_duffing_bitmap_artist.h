@@ -9,13 +9,11 @@ namespace ggo
   {
   public:
 
-          duffing_bitmap_artist(int width, int height, int line_step, ggo::image_format format);
+          duffing_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
     void	render_bitmap(void * buffer) const override;
-
-    void	apply_shadow(float * buffer, const float * shadow_buffer) const;
   };
 }
 

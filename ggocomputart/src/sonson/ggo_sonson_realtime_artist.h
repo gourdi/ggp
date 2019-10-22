@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-    sonson_realtime_artist(int width, int height, int line_step, ggo::image_format format);
+    sonson_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     struct glowing_circle
     {
@@ -28,7 +28,7 @@ namespace ggo
     void render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     bool finished(int frame_index) const override;
 
-    template <ggo::image_format format>
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     void render_tile_t(void * buffer, const ggo::rect_int & clipping) const;
 
   private:

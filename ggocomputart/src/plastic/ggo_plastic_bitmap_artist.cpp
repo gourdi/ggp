@@ -1,9 +1,9 @@
 #include "ggo_plastic_bitmap_artist.h"
 
 //////////////////////////////////////////////////////////////
-ggo::plastic_bitmap_artist::plastic_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::plastic_bitmap_artist::plastic_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 
 }
@@ -28,6 +28,6 @@ void ggo::plastic_bitmap_artist::render_bitmap(void * buffer) const
 	ggo::rgb_32f color = ggo::from_hsv<ggo::rgb_32f>(ggo::rand<float>(), ggo::rand<float>(), 1);
 	float altitude_factor = ggo::rand<float>(0.04f, 0.08f);
 	
-  ggo::plastic_artist artist(width(), height(), line_step(), format());
+  ggo::plastic_artist artist(width(), height(), line_byte_step(), pixel_type(), memory_lines_order());
   artist.render(buffer, params, color, altitude_factor);
 }

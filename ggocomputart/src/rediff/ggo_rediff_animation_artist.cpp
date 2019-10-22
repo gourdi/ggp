@@ -1,14 +1,14 @@
 #include "ggo_rediff_animation_artist.h"
 #include <kernel/ggo_vec3.h>
-#include <2d/ggo_color.h>
+#include <2d/ggo_image.h>
 #include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::rediff_animation_artist::rediff_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-  fixed_frames_count_animation_artist_abc(width, height, line_step, format, 200),
+  fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 200),
 _feed_map(width, height),
 _kill_map(width, height),
 _food(width, height),
@@ -38,26 +38,30 @@ _life(width, height)
   std::fill(_food.begin(), _food.end(), 1.0f);
   std::fill(_life.begin(), _life.end(), 0.0f);
 
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_life(_life.data(), { width, height });
   for (int i = 0; i < 5; ++i)
   {
-    ggo::paint<ggo::y_32f_yu, ggo::sampling_4x4>(
-      _life.data(), width, height, sizeof(float) * height,
-      ggo::disc_f(get_random_point(), 0.01f * min_size()), 1.0f);
+    ggo::paint<ggo::sampling_4x4>(img_life, ggo::disc_f(get_random_point(), 0.01f * min_size()), 1.0f);
   }
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
   ggo::array<float, 2> diffused_food;
   ggo::array<float, 2> diffused_life;
+
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_life(_life.data(), { width(), height() });
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_food(_food.data(), { width(), height() });
 
   for (int i = 0; i < 16; ++i)
   {
     diffused_food = _food;
     diffused_life = _life;
-    ggo::gaussian_blur<ggo::y_32f_yu, ggo::border_mode::loop>(_food.data(), size(), sizeof(float) * width(), _food_stddev);
-    ggo::gaussian_blur<ggo::y_32f_yu, ggo::border_mode::loop>(_life.data(), size(), sizeof(float) * width(), _life_stddev);
+    ggo::gaussian_blur(img_food, _food_stddev, ggo::border_mode::loop);
+    ggo::gaussian_blur(img_life, _life_stddev, ggo::border_mode::loop);
 
     for (int y = 0; y < height(); ++y)
     {
@@ -77,7 +81,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index, 
 
   if (frame_index == 0)
   {
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black_8u());
+    ggo::fill_black(img);
   }
 
   const float x1 = 0.8f;
@@ -124,7 +128,7 @@ void ggo::rediff_animation_artist::render_frame(void * buffer, int frame_index, 
       ggo::rgb_32f pixel = ggo::from_hsv<ggo::rgb_32f>(_hue, sat, val);
       pixel += 0.8f * std::pow(dot, 1200.f) * ggo::white<ggo::rgb_32f>();
 
-      ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), ggo::convert_color_to<ggo::rgb_8u>(pixel));
+      img.write_pixel(x, y, ggo::convert_color_to<ggo::rgb_8u>(pixel));
     }
   }
 }

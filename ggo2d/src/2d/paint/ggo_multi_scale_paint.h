@@ -15,15 +15,14 @@ namespace ggo
 
     using color_t = color_t_;
     using data_t = data_t_;
-    using paint_shape_t = typename paint_shape_abc<color_t, data_t>;
 
     class iterator
     {
     public:
 
-      iterator(typename std::vector<std::unique_ptr<const typename paint_shape_t>>::const_iterator it) : _it(it) {}
+      iterator(typename std::vector<std::unique_ptr<const paint_shape_abc<color_t, data_t>>>::const_iterator it) : _it(it) {}
 
-      const paint_shape_t & operator*() const { return *(*_it); }
+      const paint_shape_abc<color_t, data_t> & operator*() const { return *(*_it); }
       void operator++() { ++_it; }
       void operator--() { --_it; }
       bool operator==(const iterator & it) { return _it == it._it; }
@@ -31,17 +30,39 @@ namespace ggo
 
     private:
 
-      typename std::vector<std::unique_ptr<const typename paint_shape_t>>::const_iterator _it;
+      typename std::vector<std::unique_ptr<const paint_shape_abc<color_t, data_t>>>::const_iterator _it;
     };
 
     template <typename paint_shape_t, typename... args>
-    auto & make_shape(args&&... a)
+    auto & make(args&&... a)
     {
-      paint_shape_t * shape = new paint_shape_t(std::forward<args>(a)...);
+      auto * shape = new paint_shape_t(std::forward<args>(a)...);
 
       _paint_shapes.emplace_back(shape);
 
       return *shape;
+    }
+
+    template <typename shape_t, typename brush_t, typename blender_t = ggo::overwrite_blender<color_t>>
+    auto & make_paint_shape_t(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
+    {
+      auto * paint_shape = new paint_shape_t<shape_t, color_t, brush_t, blender_t>(shape, brush, blender);
+
+      _paint_shapes.emplace_back(paint_shape);
+
+      return *paint_shape;
+    }
+
+    template <typename shape_t>
+    auto & make_paint_shape_t(const shape_t & shape, const color_t & color, float opacity)
+    {
+      return make_paint_shape_t(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
+    }
+
+    template <typename shape_t>
+    auto & make_paint_shape_t(const shape_t & shape, const color_t & color)
+    {
+      return make_paint_shape_t(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
     }
 
     template <typename paint_shape_t>
@@ -57,9 +78,11 @@ namespace ggo
     auto begin() const { return iterator(_paint_shapes.cbegin()); }
     auto end() const { return iterator(_paint_shapes.cend()); }
 
+    void clear() { _paint_shapes.clear(); }
+
   private:
 
-    std::vector<std::unique_ptr<const typename paint_shape_t>> _paint_shapes;
+    std::vector<std::unique_ptr<const paint_shape_abc<color_t, data_t>>> _paint_shapes;
   };
 }
 
@@ -290,8 +313,6 @@ namespace ggo
     int scale_factor, int first_scale,
     const ggo::rect_int & clipping)
   {
-    using paint_shape_t = typename scene2d<color_t, data_t>::paint_shape_t;
-
     // Clip.
     ggo::rect_int safe_clipping(clipping);
     if (safe_clipping.clip(image.size()) == false)
@@ -303,7 +324,7 @@ namespace ggo
     const ggo::rect_data<data_t> clipping_rect_data = from_pixel_to_continuous<data_t>(safe_clipping);
     std::optional<ggo::rect_data<data_t>> bounding_rect_data;
 
-    std::vector<const paint_shape_t *> clipped_paint_shapes;
+    std::vector<const paint_shape_abc<color_t, data_t> *> clipped_paint_shapes;
     for (const auto & paint_shape : scene)
     {
       const ggo::rect_data<data_t> cur_rect_data = paint_shape.get_bounding_rect();

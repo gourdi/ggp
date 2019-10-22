@@ -22,8 +22,9 @@ ggo::metaballs_artist::params::params()
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params)
+void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step,
+                                          ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+                                          ggo::renderer_abc & renderer, const ggo::metaballs_artist::params & params)
 {
 #ifdef GGO_METABALLS_DEBUG
 	std::cout << "Threshold: " << metaball._threshold << std::endl;
@@ -44,6 +45,6 @@ void ggo::metaballs_artist::render_bitmap(void * buffer, int width, int height, 
 	scene.add_sphere_light(ggo::rgb_32f(0.8f), params._light1, 0.1f);
   scene.add_sphere_light(ggo::rgb_32f(0.8f), params._light2, 0.1f);
 
-  renderer.render(buffer, width, height, line_step, format, scene);
+  renderer.render(ggo::image(buffer, { width, height }, pixel_type, memory_lines_order, line_byte_step), scene);
 }
 

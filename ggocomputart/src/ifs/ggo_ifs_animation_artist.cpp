@@ -7,10 +7,10 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::ifs_animation_artist::ifs_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300),
-_artist(width, height, line_step, format)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300),
+_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _transform_start[0] = ggo::rand<float>(1, 2);
   _transform_start[1] = ggo::rand<float>(1, 2);
@@ -38,9 +38,9 @@ _artist(width, height, line_step, format)
 //////////////////////////////////////////////////////////////
 void ggo::ifs_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(
-    buffer, width(), height(), line_step(), 
-    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
+  ggo::fill_4_colors(img, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 	
 	float t =  ggo::ease_inout_to<float>(frame_index, frames_count());
 	

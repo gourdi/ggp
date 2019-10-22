@@ -23,7 +23,7 @@ GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
   constexpr int height = 4;
 
   std::vector<uint8_t> buffer(height * width, 0);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, width);
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, width);
 
   ggo::paint<ggo::sampling_16x16>(image, ggo::rect_f(2.f, 1.f, 3.f, 1.f), 0xff);
 
@@ -44,7 +44,7 @@ GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::paint<ggo::sampling_1>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), 0xff);
 
@@ -80,7 +80,7 @@ GGO_TEST(paint, shape_y_8u_yu_add_sampling1)
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0x80);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::solid_color_brush<uint8_t> brush(0xff);
   ggo::add_blender<uint8_t> blender;
@@ -110,7 +110,7 @@ GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling4x4)
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), 0xff);
 
@@ -137,7 +137,7 @@ GGO_TEST(paint, shape_y_8u_yu_alpha_sampling4x4)
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), ggo::solid_color_brush<uint8_t>(0xff), ggo::alpha_blender_y8u(0.5f));
 
@@ -163,7 +163,7 @@ GGO_TEST(paint, shape_y_8u_yu_sampling16x16)
   constexpr int height = 6;
 
   std::vector<uint8_t> buffer(height * height, 0);
-  ggo::image_view_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height });
+  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height });
 
   ggo::paint<ggo::sampling_16x16>(image, ggo::disc_f({ 3.f, 3.f }, 2.5f), 0xff);
 
@@ -185,8 +185,8 @@ GGO_TEST(paint, compare_rgb_8u_yu_and_bgra_8u_yd)
   constexpr int height = 60;
   std::vector<uint8_t> buffer_rgb_8u_yu(width * height * 3, 0);
   std::vector<uint8_t> buffer_bgr_8u_yd(width * height * 4, 0);
-  ggo::image_view_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>   image_rgb_8u_yu(buffer_rgb_8u_yu.data(), { width, height });
-  ggo::image_view_t<ggo::pixel_type::bgr_8u, ggo::lines_order::down> image_bgr_8u_yd(buffer_bgr_8u_yd.data(), { width, height });
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>   image_rgb_8u_yu(buffer_rgb_8u_yu.data(), { width, height });
+  ggo::image_t<ggo::pixel_type::bgr_8u, ggo::lines_order::down> image_bgr_8u_yd(buffer_bgr_8u_yd.data(), { width, height });
 
   const ggo::disc_f disc({ 35.f, 25.f }, 15.f);
 
@@ -218,7 +218,7 @@ GGO_TEST(paint, polygons_rectangles)
   polygons.add_shape(paint_polygon({ { 90, 10 },{ 50, 10 },{ 50, 90 },{ 90, 90 } }, ggo::white_8u()));
 
   std::vector<uint8_t> buffer_polygons(width * line_byte_step);
-  ggo::image_view_t<ggo::pixel_type::rgb_8u> image_polygons(buffer_polygons.data(), { width, height });
+  ggo::image_t<ggo::pixel_type::rgb_8u> image_polygons(buffer_polygons.data(), { width, height });
 
   ggo::fill_solid(image_polygons, ggo::blue_8u());
   ggo::paint<ggo::sampling_4x4>(image_polygons, polygons);
@@ -232,7 +232,7 @@ GGO_TEST(paint, polygons_rectangles)
   rectangles.add_shape(paint_rect(ggo::rect_f::from_left_right_bottom_top(50, 90, 10, 90), ggo::white_8u()));
 
   std::vector<uint8_t> buffer_rectangles(width * line_byte_step);
-  ggo::image_view_t<ggo::pixel_type::rgb_8u> image_rectangles(buffer_rectangles.data(), { width, height });
+  ggo::image_t<ggo::pixel_type::rgb_8u> image_rectangles(buffer_rectangles.data(), { width, height });
 
   ggo::fill_solid(image_rectangles, ggo::blue_8u());
   ggo::paint<ggo::sampling_4x4>(image_rectangles, rectangles);
@@ -395,7 +395,7 @@ GGO_TEST(paint, rgba8_multishape_sameshape)
 
   for (int i = 0; i < 8; ++i)
   {
-    scene.make_shape<paint_disc>(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), ggo::rgba_8u(255, 0, 0, 255));
+    scene.make_paint_shape_t(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
   }
   ggo::paint<ggo::sampling_8x8>(image, scene);
 
@@ -415,9 +415,9 @@ GGO_TEST(paint, rgba8_multishape_discs)
 
   using paint_disc = ggo::paint_shape_t<ggo::disc_f, ggo::rgba_8u>;
 
-  scene.make_shape<paint_disc>(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), ggo::rgba_8u(0xff, 0, 0, 0x80));
-  scene.make_shape<paint_disc>(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), ggo::rgba_8u(0xff, 0, 0, 0x80));
-  scene.make_shape<paint_disc>(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), ggo::rgba_8u(0xff, 0, 0, 0x80));
+  scene.make_paint_shape_t(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  scene.make_paint_shape_t(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  scene.make_paint_shape_t(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
 
   ggo::paint<ggo::sampling_8x8>(image, scene);
 

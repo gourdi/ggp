@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          neon_artist(int width, int height, int line_step, ggo::image_format format);
+          neon_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -17,7 +17,11 @@ namespace ggo
     void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
     int   frames_count() const override { return 900; }
 
-    void	paint_point(void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const;
+
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void paint_point_t(image_t<pixel_type, memory_lines_order> & img, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const;
 
   private:
 

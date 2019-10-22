@@ -10,7 +10,7 @@ namespace ggo
   {
   public:
 
-          smoke_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          smoke_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
      void  render_frame(void * buffer, int frame_index, float time_step) override;
 
@@ -24,31 +24,31 @@ namespace ggo
 
     struct fluid_source
     {
-      ggo::disc_d _disc;
-      double			_speed;
-      double			_angle;
-      double			_angle_amplitude;
-      double			_angle_offset;
-      double			_wave_length;
+      ggo::disc_f _disc;
+      float			  _speed;
+      float			  _angle;
+      float			  _angle_amplitude;
+      float			  _angle_offset;
+      float			  _wave_length;
       int					_timer1;
       int					_timer2;
-      double			_opacity;
+      float			  _opacity;
     };
 
-    double                      _cell_size;
-    double                      _density;
-    ggo::array<double, 2>	      _velocity_x1;
-    ggo::array<double, 2>	      _velocity_x2;
-    ggo::array<double, 2>	      _velocity_y1;
-    ggo::array<double, 2>	      _velocity_y2;
-    ggo::array<double, 2> *     _velocity_x_cur;
-    ggo::array<double, 2> *     _velocity_x_tmp;
-    ggo::array<double, 2> *     _velocity_y_cur;
-    ggo::array<double, 2> *     _velocity_y_tmp;
-    ggo::array<double, 2>	      _opacity1;
-    ggo::array<double, 2>	      _opacity2;
-    ggo::array<double, 2> *     _opacity_cur;
-    ggo::array<double, 2> *     _opacity_tmp;
+    float                       _cell_size;
+    float                       _density;
+    ggo::array<float, 2>	      _velocity_x1;
+    ggo::array<float, 2>	      _velocity_x2;
+    ggo::array<float, 2>	      _velocity_y1;
+    ggo::array<float, 2>	      _velocity_y2;
+    ggo::array<float, 2> *      _velocity_x_cur;
+    ggo::array<float, 2> *      _velocity_x_tmp;
+    ggo::array<float, 2> *      _velocity_y_cur;
+    ggo::array<float, 2> *      _velocity_y_tmp;
+    ggo::array<float, 2>	      _opacity1;
+    ggo::array<float, 2>	      _opacity2;
+    ggo::array<float, 2> *      _opacity_cur;
+    ggo::array<float, 2> *      _opacity_tmp;
     ggo::array<fluid_source, 1> _sources;
     ggo::array<uint8_t, 1>			_bkgd_buffer;
     ggo::rgb_8u      	          _smoke_color;

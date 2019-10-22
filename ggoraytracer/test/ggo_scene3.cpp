@@ -40,7 +40,7 @@ GGO_TEST(test_scene, scene3)
   auto img = renderer.render(scene, { width, height });
 
   // Overlay, to check that basis::project is working as expected.
-  ggo::image_view_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(img.data(), img.size(), img.line_byte_step());
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(img.data(), img.size(), img.line_byte_step());
   ggo::pos2_f proj1 = camera.basis().project(sphere1.center(), camera.get_aperture(), width, height);
   ggo::paint<ggo::sampling_4x4>(view, ggo::disc_f(proj1, 5.f), ggo::white_8u());
   ggo::pos2_f proj2 = camera.basis().project(sphere2.center(), camera.get_aperture(), width, height);

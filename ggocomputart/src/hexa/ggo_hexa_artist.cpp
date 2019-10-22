@@ -145,7 +145,8 @@ _enable_roughness(enable_roughness)
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::hexa_artist::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
+void ggo::hexa_artist::render(void * buffer, int width, int height, int line_byte_step,
+                              ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
                               float progress, ggo::renderer_abc & renderer) const
 {
 
@@ -163,5 +164,6 @@ void ggo::hexa_artist::render(void * buffer, int width, int height, int line_ste
   raytrace_params._raycaster = &raycaster;
 
   // Rendering.
-  renderer.render(buffer, width, height, line_step, format, scene, raytrace_params);
+  ggo::image img(buffer, { width, height }, pixel_type, memory_lines_order, line_byte_step);
+  renderer.render(img, scene, raytrace_params);
 }

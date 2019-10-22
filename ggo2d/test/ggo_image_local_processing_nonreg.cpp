@@ -11,8 +11,8 @@ bool test_horizontal_lines()
   std::array<float, 10> output_pixels;
   output_pixels.fill(0.f);
 
-  ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> input_image(input_pixels.data(), { 5, 2 });
-  ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> output_image(output_pixels.data(), { 5, 2 });
+  ggo::const_image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> input_image(input_pixels.data(), { 5, 2 });
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> output_image(output_pixels.data(), { 5, 2 });
 
   auto processing = [](const auto & neighborhood)
   {
@@ -44,8 +44,8 @@ GGO_TEST(image_local_processing, vertical_lines_up)
   std::array<float, 12> output_pixels;
   output_pixels.fill(0.f);
 
-  ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> input_image(input_pixels.data(), { 3, 4 });
-  ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::up> output_image(output_pixels.data(), { 3, 4 });
+  ggo::const_image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> input_image(input_pixels.data(), { 3, 4 });
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> output_image(output_pixels.data(), { 3, 4 });
 
   auto processing = [](const auto & neighborhood)
   {
@@ -73,8 +73,8 @@ GGO_TEST(image_local_processing, vertical_lines_down)
   std::array<float, 12> output_pixels;
   output_pixels.fill(0.f);
 
-  ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> input_image(input_pixels.data(), { 3, 4 });
-  ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> output_image(output_pixels.data(), { 3, 4 });
+  ggo::const_image_t<ggo::pixel_type::y_32f, ggo::lines_order::down> input_image(input_pixels.data(), { 3, 4 });
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::down> output_image(output_pixels.data(), { 3, 4 });
 
   auto processing = [](const auto & neighborhood)
   {
@@ -102,8 +102,8 @@ GGO_TEST(image_local_processing, vertical_symmetric)
   std::array<float, 12> output_pixels;
   output_pixels.fill(0.f);
 
-  ggo::const_image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> input_image(input_pixels.data(), { 3, 4 });
-  ggo::image_view_t<ggo::pixel_type::y_32f, ggo::lines_order::down> output_image(output_pixels.data(), { 3, 4 });
+  ggo::const_image_t<ggo::pixel_type::y_32f, ggo::lines_order::down> input_image(input_pixels.data(), { 3, 4 });
+  ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::down> output_image(output_pixels.data(), { 3, 4 });
 
   auto processing = [](const auto & neighborhood)
   {

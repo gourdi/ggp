@@ -5,9 +5,9 @@
 #include <cstring>
 
 //////////////////////////////////////////////////////////////
-ggo::buddhabrot_artist::buddhabrot_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::buddhabrot_artist::buddhabrot_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {	
 
 }
@@ -123,7 +123,7 @@ void ggo::buddhabrot_artist::process(int escape_threshold, ggo::array<int, 2> & 
 //////////////////////////////////////////////////////////////
 void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 {
-	ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black_8u(), ggo::rect_int::from_width_height(width(), height()));
+	fill_black(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, size(), line_byte_step()));
 
   ggo::array<int, 2> accumulation_r(width(), height());
   ggo::array<int, 2> accumulation_g(width(), height());
@@ -133,7 +133,7 @@ void ggo::buddhabrot_artist::render_bitmap(void * buffer) const
 	accumulation_g.fill(0);
 	accumulation_b.fill(0);
     
-    // We want the sum of the 3 escape thresholds to be constant.
+  // We want the sum of the 3 escape thresholds to be constant.
 	int escape_thresholds[3];
 	escape_thresholds[0] = ggo::rand<int>(20, 10000);
 	escape_thresholds[1] = ggo::rand<int>(20, 10000 - escape_thresholds[0]);

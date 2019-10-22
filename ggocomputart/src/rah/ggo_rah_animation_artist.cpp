@@ -47,6 +47,8 @@ void ggo::rah_animation_artist::particle::update(int min_size)
 //////////////////////////////////////////////////////////////
 void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int height, float focus_dist) const
 {
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, { width, height });
+  
   int min_size = std::min(width, height);
   
   ggo::multi_shape_f backgrounds;
@@ -56,13 +58,13 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   // Paint background first.
   auto paint_border_pixel_func = [&](int x, int y, int num, int den)
   {
-    ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+    ggo::rgb_8u pixel = img.read_pixel(x, y);
 
     uint8_t r = ggo::round_div((den - num) * pixel.r(), den);
     uint8_t g = ggo::round_div((den - num) * pixel.g(), den);
     uint8_t b = ggo::round_div((den - num) * pixel.b(), den);
 
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
+    img.write_pixel(x, y, { r, g, b });
   };
 
   ggo::paint_blur_shape(backgrounds, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_border_pixel_func);
@@ -70,13 +72,13 @@ void ggo::rah_animation_artist::particle::paint(void * buffer, int width, int he
   // Paint bodies.
   auto paint_body_pixel_func = [&](int x, int y, int num, int den)
   {
-    ggo::rgb_8u pixel = ggo::read_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width);
+    ggo::rgb_8u pixel = img.read_pixel(x, y);
 
     uint8_t r = ggo::round_div(num * _color.r() + (den - num) * pixel.r(), den);
     uint8_t g = ggo::round_div(num * _color.g() + (den - num) * pixel.g(), den);
     uint8_t b = ggo::round_div(num * _color.b() + (den - num) * pixel.b(), den);
 
-    ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height, 3 * width, ggo::rgb_8u(r, g, b));
+    img.write_pixel(x, y, { r, g, b });
   };
 
   ggo::paint_blur_shape(bodies, width, height, blur_radius(min_size, focus_dist), 0.25f, paint_body_pixel_func);
@@ -293,9 +295,9 @@ void ggo::rah_animation_artist::particle4::fill_multi_shapes(ggo::multi_shape_f 
 // ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::rah_animation_artist::rah_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 500)
+fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 500)
 {
   _focus_dist_interpolator._near = near;
   _focus_dist_interpolator._far = far;
@@ -337,7 +339,7 @@ void ggo::rah_animation_artist::render_frame(void * buffer, int frame_index, flo
   // Paint background.
   if (buffer != nullptr)
   {    
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::white_8u());
+    ggo::fill_solid(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, size(), line_byte_step()), ggo::white_8u());
   }
 
   // Paint items (far from near).

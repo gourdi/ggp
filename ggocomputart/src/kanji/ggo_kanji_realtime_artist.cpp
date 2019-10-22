@@ -5,9 +5,9 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::kanji_realtime_artist::kanji_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::kanji_realtime_artist::kanji_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
+fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _parts_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
   _timer_max = ggo::rand<int>(500, 750);
@@ -97,12 +97,14 @@ void ggo::kanji_realtime_artist::preprocess_frame(int frame_index, uint32_t curs
 }
 
 //////////////////////////////////////////////////////////////
-template <ggo::image_format format>
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
+  ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
   if (frame_index == 0)
   {
-    ggo::fill_solid<format>(buffer, width(), height(), line_step(), ggo::black_8u());
+    ggo::fill_black(img);
   }
 
   const float radius = 0.0005f * min_size();
@@ -115,8 +117,7 @@ void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, c
     {
       ggo::pos2_f render_pt = map_fit(pos, 0, 1);
 
-      ggo::paint<format, ggo::sampling_4x4>(buffer, width(), height(), line_step(),
-        ggo::disc_f(render_pt, radius), brush, alpha_blender, clipping, 8, 0);
+      ggo::paint<ggo::sampling_4x4>(img, ggo::disc_f(render_pt, radius), brush, alpha_blender, clipping);
     }
   }
 }
@@ -124,17 +125,21 @@ void ggo::kanji_realtime_artist::render_tile_t(void * buffer, int frame_index, c
 //////////////////////////////////////////////////////////////
 void ggo::kanji_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    render_tile_t<ggo::rgb_8u_yu>(buffer, frame_index, clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_tile_t<ggo::bgrx_8u_yd>(buffer, frame_index, clipping);
-    break;
-  default:
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
   }
 }
 

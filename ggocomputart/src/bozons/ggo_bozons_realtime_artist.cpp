@@ -10,9 +10,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::realtime_artist_abc(width, height, line_step, format)
+ggo::realtime_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
   _hue = ggo::rand<float>();
   _bkgd_color1 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
@@ -106,20 +106,21 @@ void ggo::bozons_realtime_artist::preprocess_frame(int frame_index, uint32_t cur
 //////////////////////////////////////////////////////////////
 void ggo::bozons_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::bgrx_8u_yd:
-    render_tile_t<ggo::bgrx_8u_yd>(buffer, frame_index, clipping);
-    break;
-  case ggo::rgb_8u_yu:
-    render_tile_t<ggo::rgb_8u_yu>(buffer, frame_index, clipping);
-    break;
-  case ggo::rgb_8u_yd:
-    render_tile_t<ggo::rgb_8u_yd>(buffer, frame_index, clipping);
-    break;
-  default:
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
   }
 }
 

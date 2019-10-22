@@ -6,9 +6,9 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::lagaude_realtime_artist::lagaude_realtime_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::lagaude_realtime_artist::lagaude_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
+fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   for (int i = 0; i < 100; ++i)
   {
@@ -65,18 +65,13 @@ void ggo::lagaude_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::lagaude_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
 {
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
   // Render background.
-  switch (format())
-  {
-  case ggo::rgb_8u_yu:
-    ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::white_8u(), clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), ggo::white_8u(), clipping);
-    break;
-  }
+  ggo::fill_solid(img, ggo::white_8u(), clipping);
 
   for (auto & bkgd_disc : _bkgd_discs)
   {
@@ -84,22 +79,31 @@ void ggo::lagaude_realtime_artist::render_tile(void * buffer, int frame_index, c
     float y = height() * bkgd_disc._pos.y();
     float radius = min_size() * bkgd_disc._radius;
 
-    switch (format())
-    {
-    case ggo::rgb_8u_yu:
-      ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-        buffer, width(), height(), line_step(),
-        ggo::disc_f({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
-      break;
-    case ggo::bgrx_8u_yd:
-      ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
-        buffer, width(), height(), line_step(),
-        ggo::disc_f({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
-      break;
-    }
+    ggo::paint<ggo::sampling_4x4>(img, ggo::disc_f({ x, y }, radius), ggo::black_brush_8u(), ggo::alpha_blender_rgb8u(0.1f), clipping);
   }
 
-  _animator.render(buffer, width(), height(), line_step(), format(), clipping);
+  _animator.render(image(buffer, size(), pixel_type, memory_lines_order, line_byte_step()), clipping);
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::lagaude_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+{
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else
+  {
+    GGO_FAIL();
+  }
 }
 
 //////////////////////////////////////////////////////////////
@@ -178,10 +182,9 @@ bool ggo::lagaude_realtime_artist::seed::update(int frame_index, const ggo::pos2
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::seed::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::lagaude_realtime_artist::seed::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	_particles_animator.render(buffer, width, height, line_step, format, clipping);
+	_particles_animator.render(img, clipping);
 }
 
 //////////////////////////////////////////////////////////////
@@ -202,35 +205,42 @@ bool ggo::lagaude_realtime_artist::particle::update(int frame_index, const ggo::
 
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::particle::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::lagaude_realtime_artist::particle::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-	ggo::pos2_f p1 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle), 0.f, 1.f, width, height);
-	ggo::pos2_f p2 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 2 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
-	ggo::pos2_f p3 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 4 * ggo::pi<float>() / 3), 0.f, 1.f, width, height);
+	ggo::pos2_f p1 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle), 0.f, 1.f, img.width(), img.height());
+	ggo::pos2_f p2 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 2 * ggo::pi<float>() / 3), 0.f, 1.f, img.width(), img.height());
+	ggo::pos2_f p3 = ggo::map_fit(_radius * ggo::vec2_f::from_angle(_angle + 4 * ggo::pi<float>() / 3), 0.f, 1.f, img.width(), img.height());
     
-  ggo::vec2_f disp(pos.x() * width, pos.y() * height);
+  ggo::vec2_f disp(pos.x() * img.width(), pos.y() * img.height());
   p1 += disp;
   p2 += disp;
   p3 += disp;    
 	
   ggo::multi_shape_f multi_shape;
   
-  float size = 0.003f * std::min(width, height);
+  float size = 0.003f * std::min(img.width(), img.height());
   multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p1, p2, size));
   multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p2, p3, size));
   multi_shape.add_shape(std::make_shared<ggo::capsule_f>(p3, p1, size));
 
-  switch (format)
+  if (img.pixel_type() == ggo::pixel_type::bgrx_8u && img.memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
-      buffer, width, height, line_step, multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
-    break;
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(img.data(), img.size(), img.line_byte_step()),
+      multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
+  }
+  else if (img.pixel_type() == ggo::pixel_type::rgb_8u && img.memory_lines_order() == ggo::lines_order::up)
+  {
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(img.data(), img.size(), img.line_byte_step()),
+      multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
+  }
+  else if (img.pixel_type() == ggo::pixel_type::rgb_8u && img.memory_lines_order() == ggo::lines_order::down)
+  {
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(img.data(), img.size(), img.line_byte_step()),
+      multi_shape, ggo::make_solid_brush(_color), ggo::alpha_blender_rgb8u(_opacity), clipping);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 
@@ -246,12 +256,11 @@ bool ggo::lagaude_realtime_artist::dust::update(int frame_index, const ggo::pos2
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::lagaude_realtime_artist::dust::render(void * buffer, int width, int height, int line_step, ggo::image_format format,
-  const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
+void ggo::lagaude_realtime_artist::dust::render(ggo::image & img, const ggo::rect_int & clipping, int frame_index, const ggo::pos2_f & pos) const
 {
-  ggo::pos2_f center(width * pos.x(), height * pos.y());
-  float disc_radius = std::min(width, height) * _radius;
-  float disc_width = std::min(width, height) * _width;
+  ggo::pos2_f center(img.width() * pos.x(), img.height() * pos.y());
+  float disc_radius = std::min(img.width(), img.height()) * _radius;
+  float disc_width = std::min(img.width(), img.height()) * _width;
 
   auto disc1 = std::make_shared<ggo::disc_f>(center, disc_radius + 0.5f * disc_width);
   auto disc2 = std::make_shared<ggo::disc_f>(center, disc_radius - 0.5f * disc_width);
@@ -259,16 +268,24 @@ void ggo::lagaude_realtime_artist::dust::render(void * buffer, int width, int he
   ggo::multi_shape<float, ggo::boolean_mode::DIFFERENCE> opened_disc;
   opened_disc.add_shapes(disc1, disc2);
 
-  switch (format)
+  if (img.pixel_type() == ggo::pixel_type::bgrx_8u && img.memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    ggo::paint<ggo::rgb_8u_yu, ggo::sampling_4x4>(
-      buffer, width, height, line_step, opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    ggo::paint<ggo::bgrx_8u_yd, ggo::sampling_4x4>(
-      buffer, width, height, line_step, opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
-    break;
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(img.data(), img.size(), img.line_byte_step()),
+      opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
+  }
+  else if (img.pixel_type() == ggo::pixel_type::rgb_8u && img.memory_lines_order() == ggo::lines_order::up)
+  {
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(img.data(), img.size(), img.line_byte_step()),
+      opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
+  }
+  else if (img.pixel_type() == ggo::pixel_type::rgb_8u && img.memory_lines_order() == ggo::lines_order::down)
+  {
+    ggo::paint<ggo::sampling_4x4>(ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(img.data(), img.size(), img.line_byte_step()),
+      opened_disc, ggo::rgb_8u(ggo::round_to<uint8_t>(255.f * _val)), clipping);
+  }
+  else
+  {
+    GGO_FAIL();
   }
 }
 

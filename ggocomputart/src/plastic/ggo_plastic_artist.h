@@ -21,7 +21,7 @@ namespace ggo
 
   public:
 
-          plastic_artist(int width, int height, int line_step, ggo::image_format format);
+          plastic_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void	render(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const;
 
@@ -29,8 +29,8 @@ namespace ggo
 
     float	evaluate(float x, float y, const std::vector<ggo::plastic_artist::params> & params) const;
 
-    template <ggo::image_format format>
-    void render_t(void * buffer, int line_step, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const;
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void render_t(void * buffer, const std::vector<ggo::plastic_artist::params> & params, const ggo::rgb_32f & color, float altitude_factor) const;
   };
 }
 

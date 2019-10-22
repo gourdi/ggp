@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-    demeco_animation_artist(int width, int height, int line_step, ggo::image_format format);
+    demeco_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -19,9 +19,9 @@ namespace ggo
 
   private:
 
-    demeco_artist<ggo::rgba_8u_yd, ggo::sampling_8x8> _artist;
-    ggo::image _render_image;
-    ggo::image _shadow_image;
+    demeco_artist<ggo::pixel_type::rgba_8u, ggo::lines_order::down, ggo::sampling_8x8> _artist;
+    ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> _render_image;
+    ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::down> _shadow_image;
   };
 }
 

@@ -113,11 +113,11 @@ GGO_TEST(rle_image, paint)
 
   ggo::paint<ggo::sampling_16x16>(image, ggo::disc_f({ 0.f, 1.f }, 1.5), 0xff);
 
-  GGO_CHECK_EQ(image.read_pixel(0, 0), 0x00);
-  GGO_CHECK_EQ(image.read_pixel(1, 0), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(0, 0), 0xff);
+  GGO_CHECK_EQ(image.read_pixel(1, 0), 0x61);
   GGO_CHECK_EQ(image.read_pixel(2, 0), 0x00);
-  GGO_CHECK_EQ(image.read_pixel(0, 1), 0x00);
-  GGO_CHECK_EQ(image.read_pixel(1, 1), 0x00);
+  GGO_CHECK_EQ(image.read_pixel(0, 1), 0xff);
+  GGO_CHECK_EQ(image.read_pixel(1, 1), 0x61);
   GGO_CHECK_EQ(image.read_pixel(2, 1), 0x00);
 }
 

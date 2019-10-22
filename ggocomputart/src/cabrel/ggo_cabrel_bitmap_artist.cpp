@@ -101,9 +101,9 @@ namespace
     std::vector<std::tuple<int, int>> available_edges;
     std::vector<std::tuple<int, int, int>> triangles;
 
-    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 0.f));
-    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 2.f * ggo::pi<float>() / 3.f));
-    points.emplace_back(ggo::rotate<ggo::pos2_f>({ 0.f, 1.f }, 4.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate(ggo::pos2_f(0.f, 1.f), 0.f));
+    points.emplace_back(ggo::rotate(ggo::pos2_f(0.f, 1.f), 2.f * ggo::pi<float>() / 3.f));
+    points.emplace_back(ggo::rotate(ggo::pos2_f(0.f, 1.f), 4.f * ggo::pi<float>() / 3.f));
 
     available_edges.push_back(std::make_tuple(0, 1));
     available_edges.push_back(std::make_tuple(1, 2));
@@ -177,113 +177,110 @@ namespace
     }
     return result;
   }
-
-  //////////////////////////////////////////////////////////////
-  template <ggo::image_format format>
-  void render_bitmap_t(void * buffer, const ggo::cabrel_bitmap_artist & artist)
-  {
-    ggo::fill_solid<format>(buffer, artist.width(), artist.height(), artist.line_step(),
-      ggo::white_8u(),
-      ggo::rect_int::from_width_height(artist.width(), artist.height()));
-
-    auto triangles = compute_triangles();
-
-    // Map triangles to the rendering dimensions.
-    // Get triangles bounding box.
-    ggo::rect_f bounding_box(0.f, 0.f, 0.f, 0.f);
-    for (const auto & triangle : triangles)
-    {
-      bounding_box.extend(triangle.v1());
-      bounding_box.extend(triangle.v2());
-      bounding_box.extend(triangle.v3());
-    }
-
-    // Scale and move triangles.
-    const float ratio = 0.75f * artist.min_size() / (std::max(bounding_box.width(), bounding_box.height()));
-    const ggo::vec2_f offset(0.5f * artist.width(), 0.5f * artist.height());
-    for (auto & triangle : triangles)
-    {
-      triangle.v1() -= bounding_box.center();
-      triangle.v2() -= bounding_box.center();
-      triangle.v3() -= bounding_box.center();
-
-      triangle.v1() *= ratio;
-      triangle.v2() *= ratio;
-      triangle.v3() *= ratio;
-
-      triangle.v1() += offset;
-      triangle.v2() += offset;
-      triangle.v3() += offset;
-    }
-
-    // Paint shadows.
-    std::vector<ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>> shadows;
-    const ggo::vec2_f shadow_offset(0.01f * artist.min_size(), -0.01f * artist.min_size());
-    for (auto triangle : triangles)
-    {
-      ggo::triangle2d_f shadow_triangle(triangle);
-      shadow_triangle.v1() += shadow_offset;
-      shadow_triangle.v2() += shadow_offset;
-      shadow_triangle.v3() += shadow_offset;
-
-      shadows.emplace_back(shadow_triangle, ggo::black_8u());
-    }
-    ggo::paint<format, ggo::sampling_4x4>(buffer, artist.width(), artist.height(), artist.line_step(), shadows);
-
-    float stddev = 0.01f * artist.min_size();
-    ggo::gaussian_blur<format>(buffer, artist.size(), artist.line_step(), stddev);
-
-    // Paint the triangles.
-    using paint_shape_t = ggo::paint_shape_abc<float, ggo::rgb_8u, ggo::rgb_8u>;
-    std::vector<std::unique_ptr<paint_shape_t>> shapes;
-
-    float border_size = 0.00025f * artist.min_size();
-
-    for (const auto & triangle : triangles)
-    {
-      using paint_triangle_t = ggo::static_paint_shape<ggo::triangle2d_f, ggo::rgb_8u>;
-      auto paint_triangle = std::make_unique<paint_triangle_t>(triangle, ggo::rgb_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
-      shapes.push_back(std::move(paint_triangle));
-
-      auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
-      {
-        using paint_extended_segment_t = ggo::static_paint_shape<ggo::capsule_f, ggo::rgb_8u>;
-        auto paint_extented_segment = std::make_unique<paint_extended_segment_t>(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
-        shapes.push_back(std::move(paint_extented_segment));
-      };
-
-      create_segment(triangle.v1(), triangle.v2());
-      create_segment(triangle.v2(), triangle.v3());
-      create_segment(triangle.v3(), triangle.v1());
-    }
-
-    ggo::paint<format, ggo::sampling_4x4>(
-      buffer, artist.width(), artist.height(), artist.line_step(),
-      ggo::make_adaptor(shapes, [](const auto & paint_shape) { return paint_shape.get(); }),
-      ggo::rect_int::from_width_height(artist.width(), artist.height()));
-  }
 }
 
 //////////////////////////////////////////////////////////////
-ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_step, pixel_type, memory_lines_order)
 {
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
 {
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    render_bitmap_t<ggo::rgb_8u_yu>(buffer, *this);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_bitmap_t<ggo::bgrx_8u_yd>(buffer, *this);
-    break;
-  default:
+    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
   }
 }
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::cabrel_bitmap_artist::render_bitmap_t(void * buffer) const
+{
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+  ggo::fill_solid(img, ggo::white_8u(), ggo::rect_int::from_width_height(width(), height()));
+
+  auto triangles = compute_triangles();
+
+  // Map triangles to the rendering dimensions.
+  // Get triangles bounding box.
+  ggo::rect_f bounding_box(0.f, 0.f, 0.f, 0.f);
+  for (const auto & triangle : triangles)
+  {
+    bounding_box.extend(triangle.v1());
+    bounding_box.extend(triangle.v2());
+    bounding_box.extend(triangle.v3());
+  }
+
+  // Scale and move triangles.
+  const float ratio = 0.75f * min_size() / (std::max(bounding_box.width(), bounding_box.height()));
+  const ggo::vec2_f offset(0.5f * width(), 0.5f * height());
+  for (auto & triangle : triangles)
+  {
+    triangle.v1() -= bounding_box.center();
+    triangle.v2() -= bounding_box.center();
+    triangle.v3() -= bounding_box.center();
+
+    triangle.v1() *= ratio;
+    triangle.v2() *= ratio;
+    triangle.v3() *= ratio;
+
+    triangle.v1() += offset;
+    triangle.v2() += offset;
+    triangle.v3() += offset;
+  }
+
+  // Paint shadows.
+  ggo::scene2d<pixel_type_traits<pixel_type>::color_t> shadows;
+  const ggo::vec2_f shadow_offset(0.01f * min_size(), -0.01f * min_size());
+  for (auto triangle : triangles)
+  {
+    ggo::triangle2d_f shadow_triangle(triangle);
+    shadow_triangle.v1() += shadow_offset;
+    shadow_triangle.v2() += shadow_offset;
+    shadow_triangle.v3() += shadow_offset;
+
+    shadows.make_shape<ggo::paint_shape_t<ggo::triangle2d_f, ggo::rgb_8u>>(shadow_triangle, ggo::black_8u());
+  }
+  ggo::paint<ggo::sampling_4x4>(img, shadows);
+
+  float stddev = 0.01f * min_size();
+  ggo::gaussian_blur(img, stddev);
+
+  // Paint the triangles.
+  ggo::scene2d<pixel_type_traits<pixel_type>::color_t> scene;
+
+  float border_size = 0.00025f * min_size();
+
+  for (const auto & triangle : triangles)
+  {
+    scene.make_shape<ggo::paint_shape_t<ggo::triangle2d_f, ggo::rgb_8u>>(triangle, ggo::rgb_8u(ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>()));
+
+    auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
+    {
+      scene.make_shape<ggo::paint_shape_t<ggo::capsule_f, ggo::rgb_8u>>(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
+    };
+
+    create_segment(triangle.v1(), triangle.v2());
+    create_segment(triangle.v2(), triangle.v3());
+    create_segment(triangle.v3(), triangle.v1());
+  }
+
+  ggo::paint<ggo::sampling_4x4>(img, scene);
+}
+

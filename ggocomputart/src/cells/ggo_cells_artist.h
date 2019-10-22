@@ -9,7 +9,7 @@ namespace ggo
   {
   public:
 
-          cells_artist(int width, int height, int line_step, ggo::image_format format);
+          cells_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 

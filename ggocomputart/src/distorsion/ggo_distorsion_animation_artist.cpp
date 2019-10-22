@@ -2,83 +2,10 @@
 #include <kernel/ggo_kernel.h>
 #include <2d/fill/ggo_fill.h>
 
-namespace 
-{
-  //////////////////////////////////////////////////////////////
-  template <ggo::image_format format>
-  void render_t(void * buffer, const ggo::distorsion_animation_artist & artist, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms)
-  {
-    if (buffer == nullptr)
-    {
-      return;
-    }
-
-    using format_traits = ::ggo::image_format_traits<format>;
-
-    for (int y = 0; y < artist.height(); ++y)
-    {
-      const float y1 = y - 0.375f;
-      const float y2 = y - 0.125f;
-      const float y3 = y + 0.125f;
-      const float y4 = y + 0.375f;
-
-      void * ptr = ggo::get_line_ptr<format_traits::lines_order>(buffer, y, artist.height(), artist.line_step());
-
-      for (int x = 0; x < artist.width(); ++x)
-      {
-        const float x1 = x - 0.375f;
-        const float x2 = x - 0.125f;
-        const float x3 = x + 0.125f;
-        const float x4 = x + 0.375f;
-
-        const auto stripe1 = artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y1, transforms));
-        const auto stripe2 = artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y4, transforms));
-        const auto stripe3 = artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y1, transforms));
-        const auto stripe4 = artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y4, transforms));
-
-        // 4 samples are of the same color, we don't go further.
-        if (stripe1 == stripe2 && stripe2 == stripe3 && stripe3 == stripe4)
-        {
-          ggo::write_pixel<format>(buffer, stripe1->_color);
-        }
-        // Full processing.
-        else
-        {
-          ggo::accumulator<ggo::rgb_8u> acc;
-
-          acc.add(stripe1->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y2, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y3, transforms))->_color);
-          acc.add(stripe2->_color);
-
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y1, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y2, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y3, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y4, transforms))->_color);
-
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y1, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y2, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y3, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y4, transforms))->_color);
-
-          acc.add(stripe3->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y2, transforms))->_color);
-          acc.add(artist.get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y3, transforms))->_color);
-          acc.add(stripe4->_color);
-
-          ggo::write_pixel<format>(buffer, acc.div<16>());
-        }
-
-        buffer = ggo::move_ptr<ggo::image_format_traits<format>::pixel_byte_size>(buffer);
-      }
-    }
-  }
-}
-
 //////////////////////////////////////////////////////////////
-ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::distorsion_animation_artist::distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 300),
+fixed_frames_count_animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order, 300),
 _transforms(32)
 {
   _hue = ggo::rand<float>();
@@ -124,17 +51,87 @@ void ggo::distorsion_animation_artist::render_frame(void * buffer, int frame_ind
       transform._variance);
   }
 
-  switch (format())
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-  case ggo::rgb_8u_yu:
-    render_t<ggo::rgb_8u_yu>(buffer, *this, transforms);
-    break;
-  case ggo::bgrx_8u_yd:
-    render_t<ggo::bgrx_8u_yd>(buffer, *this, transforms);
-    break;
-  default:
+    render_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, transforms);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, transforms);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, transforms);
+  }
+  else
+  {
     GGO_FAIL();
-    break;
+  }
+}
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::distorsion_animation_artist::render_t(void * buffer, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms) const
+{
+  if (buffer == nullptr)
+  {
+    return;
+  }
+
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+  for (int y = 0; y < height(); ++y)
+  {
+    const float y1 = y - 0.375f;
+    const float y2 = y - 0.125f;
+    const float y3 = y + 0.125f;
+    const float y4 = y + 0.375f;
+
+    for (int x = 0; x < width(); ++x)
+    {
+      const float x1 = x - 0.375f;
+      const float x2 = x - 0.125f;
+      const float x3 = x + 0.125f;
+      const float x4 = x + 0.375f;
+
+      const auto stripe1 = get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y1, transforms));
+      const auto stripe2 = get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y4, transforms));
+      const auto stripe3 = get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y1, transforms));
+      const auto stripe4 = get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y4, transforms));
+
+      // 4 samples are of the same color, we don't go further.
+      if (stripe1 == stripe2 && stripe2 == stripe3 && stripe3 == stripe4)
+      {
+        img.write_pixel(x, y, stripe1->_color);
+      }
+      // Full processing.
+      else
+      {
+        ggo::color_accumulator<ggo::rgb_8u> acc;
+
+        acc.add(stripe1->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y2, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x1, y3, transforms))->_color);
+        acc.add(stripe2->_color);
+
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y1, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y2, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y3, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x2, y4, transforms))->_color);
+
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y1, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y2, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y3, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x3, y4, transforms))->_color);
+
+        acc.add(stripe3->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y2, transforms))->_color);
+        acc.add(get_stripe_at(ggo::distorsion_animation_artist::transform(x4, y3, transforms))->_color);
+        acc.add(stripe4->_color);
+
+        img.write_pixel(x, y, acc.div<16>());
+      }
+    }
   }
 }
 

@@ -149,107 +149,109 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
+}
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::mandelbrot_artist::render_bitmap_t(void * buffer) const
+{
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
+  auto palette = setup_palette();
+
+  std::complex<double> center;
+  double range;
+  std::tie(center, range) = setup_block(static_cast<int>(palette.size()));
+
+  for (int y = 0; y < height(); ++y)
+  {
+    double range_x = width() > height() ? range * width() / height() : range;
+    double range_y = width() > height() ? range : range * height() / width();
+
+    double y1 = ggo::map<double>(y - 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+    double y2 = ggo::map<double>(y - 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+    double y3 = ggo::map<double>(y + 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+    double y4 = ggo::map<double>(y + 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+
+    int iterations[16];
+
+    for (int x = 0; x < width(); ++x)
+    {
+      // Iterate and sample.
+      double x1 = ggo::map<double>(x - 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+      double x2 = ggo::map<double>(x - 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+      double x3 = ggo::map<double>(x + 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+      double x4 = ggo::map<double>(x + 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+
+      iterations[0] = iterate(x1, y1, static_cast<int>(palette.size()));
+      iterations[1] = iterate(x1, y4, static_cast<int>(palette.size()));
+      iterations[2] = iterate(x4, y1, static_cast<int>(palette.size()));
+      iterations[3] = iterate(x4, y4, static_cast<int>(palette.size()));
+
+      if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
+      {
+        int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
+
+        img.write_pixel(x, y, palette[index]);
+      }
+      else
+      {
+        iterations[4] = iterate(x1, y2, static_cast<int>(palette.size()));
+        iterations[5] = iterate(x1, y3, static_cast<int>(palette.size()));
+
+        iterations[6] = iterate(x2, y1, static_cast<int>(palette.size()));
+        iterations[7] = iterate(x2, y2, static_cast<int>(palette.size()));
+        iterations[8] = iterate(x2, y3, static_cast<int>(palette.size()));
+        iterations[9] = iterate(x2, y4, static_cast<int>(palette.size()));
+
+        iterations[10] = iterate(x3, y1, static_cast<int>(palette.size()));
+        iterations[11] = iterate(x3, y2, static_cast<int>(palette.size()));
+        iterations[12] = iterate(x3, y3, static_cast<int>(palette.size()));
+        iterations[13] = iterate(x3, y4, static_cast<int>(palette.size()));
+
+        iterations[14] = iterate(x4, y2, static_cast<int>(palette.size()));
+        iterations[15] = iterate(x4, y3, static_cast<int>(palette.size()));
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        for (int i = 0; i < 16; ++i)
+        {
+          int index = std::min(static_cast<int>(palette.size() - 1), iterations[i]);
+          r += palette[index].r();
+          g += palette[index].g();
+          b += palette[index].b();
+        }
+
+        ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
+
+        img.write_pixel(x, y, c_8u);
+      }
+    }
+  }
 }
 	
 //////////////////////////////////////////////////////////////
 void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
 {
-	auto palette = setup_palette();
-
-  std::complex<double> center;
-  double range;
-	std::tie(center, range) = setup_block(static_cast<int>(palette.size()));
-
-	for (int y = 0; y < height(); ++y)
-	{
-		double range_x = width() > height() ? range * width() / height() : range;
-		double range_y = width() > height() ? range : range * height() / width();
-
-		double y1 = ggo::map<double>(y - 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-		double y2 = ggo::map<double>(y - 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-		double y3 = ggo::map<double>(y + 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-		double y4 = ggo::map<double>(y + 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-	
-		int iterations[16];
-
-		for (int x = 0; x < width(); ++x)
-		{
-			// Iterate and sample.
-			double x1 = ggo::map<double>(x - 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-			double x2 = ggo::map<double>(x - 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-			double x3 = ggo::map<double>(x + 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-			double x4 = ggo::map<double>(x + 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-		
-			iterations[0] = iterate(x1, y1, static_cast<int>(palette.size()));
-			iterations[1] = iterate(x1, y4, static_cast<int>(palette.size()));
-			iterations[2] = iterate(x4, y1, static_cast<int>(palette.size()));
-			iterations[3] = iterate(x4, y4, static_cast<int>(palette.size()));
-		
-			if ((iterations[0] == iterations[1]) && (iterations[1] == iterations[2]) && (iterations[2] == iterations[3]))
-			{
-				int index = std::min(static_cast<int>(palette.size() - 1), iterations[0]);
-
-        switch (format())
-        {
-        case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), palette[index]);
-          break;
-        case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), palette[index]);
-          break;
-        default:
-          GGO_FAIL();
-          break;
-        }
-			}
-			else
-			{
-				iterations[4] = iterate(x1, y2, static_cast<int>(palette.size()));
-				iterations[5] = iterate(x1, y3, static_cast<int>(palette.size()));
-			
-				iterations[6] = iterate(x2, y1, static_cast<int>(palette.size()));
-				iterations[7] = iterate(x2, y2, static_cast<int>(palette.size()));
-				iterations[8] = iterate(x2, y3, static_cast<int>(palette.size()));
-				iterations[9] = iterate(x2, y4, static_cast<int>(palette.size()));
-			
-				iterations[10] = iterate(x3, y1, static_cast<int>(palette.size()));
-				iterations[11] = iterate(x3, y2, static_cast<int>(palette.size()));
-				iterations[12] = iterate(x3, y3, static_cast<int>(palette.size()));
-				iterations[13] = iterate(x3, y4, static_cast<int>(palette.size()));
-			
-				iterations[14] = iterate(x4, y2, static_cast<int>(palette.size()));
-				iterations[15] = iterate(x4, y3, static_cast<int>(palette.size()));
-			
-				int r = 0;
-				int g = 0;
-				int b = 0;
-				for (int i = 0; i < 16; ++i)
-				{
-					int index = std::min(static_cast<int>(palette.size() - 1), iterations[i]);
-					r += palette[index].r();
-          g += palette[index].g();
-          b += palette[index].b();
-				}
-
-        ggo::rgb_8u c_8u(uint8_t((r + 8) / 16), uint8_t((g + 8) / 16), uint8_t((b + 8) / 16));
-
-        switch (format())
-        {
-        case ggo::rgb_8u_yu:
-          ggo::write_pixel<ggo::rgb_8u_yu>(buffer, x, y, height(), line_step(), c_8u);
-          break;
-        case ggo::bgrx_8u_yd:
-          ggo::write_pixel<ggo::bgrx_8u_yd>(buffer, x, y, height(), line_step(), c_8u);
-          break;
-        default:
-          GGO_FAIL();
-          break;
-        }
-			}
-		}
-	}
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer);
+  }
+  else
+  {
+    GGO_FAIL();
+  }
 }

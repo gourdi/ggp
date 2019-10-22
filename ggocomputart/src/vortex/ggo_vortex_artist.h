@@ -6,10 +6,8 @@
 
 namespace ggo
 {
-  class vortex_artist
+  namespace vortex_artist
   {
-  public:
-
     struct vortex
     {
       ggo::pos2_f _pos;
@@ -29,7 +27,7 @@ namespace ggo
       float 					      _split_vert;
     };
 
-    static	void	render(void * buffer, int width, int height, int line_step, ggo::image_format format, const ggo::vortex_artist::params & params);
+    void	render(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, const ggo::vortex_artist::params & params);
   };
 }
 

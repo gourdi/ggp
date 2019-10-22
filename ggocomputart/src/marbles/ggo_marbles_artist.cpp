@@ -57,9 +57,9 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::marbles_artist::marbles_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::marbles_artist::marbles_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-bitmap_artist_abc(width, height, line_step, format)
+bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
 }
 
@@ -135,6 +135,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(buffer, width(), height(), line_step(), format(), scene, raytrace_params);
+	renderer.render(image(buffer, size(), pixel_type(), memory_lines_order(), line_byte_step()), scene, raytrace_params);
 }
 

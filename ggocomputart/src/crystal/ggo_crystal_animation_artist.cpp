@@ -2,9 +2,9 @@
 #include <2d/fill/ggo_fill.h>
 
 //////////////////////////////////////////////////////////////
-ggo::crystal_animation_artist::crystal_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::crystal_animation_artist::crystal_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_step, format, 100)
+fixed_frames_count_animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order, 100)
 {
   _bkgd_colors[0] = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f));
   _bkgd_colors[1] = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>(0.1f, 0.3f));
@@ -18,8 +18,9 @@ fixed_frames_count_animation_artist_abc(width, height, line_step, format, 100)
 //////////////////////////////////////////////////////////////
 void ggo::crystal_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
-  ggo::fill_4_colors<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(),
-    _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
+  image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+
+  ggo::fill_4_colors(img, _bkgd_colors[0], _bkgd_colors[1], _bkgd_colors[2], _bkgd_colors[3]);
 
 	ggo::crystal_artist::params params;
 	
@@ -37,5 +38,5 @@ void ggo::crystal_animation_artist::render_frame(void * buffer, int frame_index,
 		params._db[i] = ggo::ease_inout(frame_index, frames_count(), _start_params._db[i], _end_params._db[i]);
 	}
 	
-	_artist.render_bitmap(buffer, width(), height(), line_step(), format(), params);
+	_artist.render_bitmap(img, params);
 }

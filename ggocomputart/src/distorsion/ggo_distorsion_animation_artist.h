@@ -11,7 +11,7 @@ namespace ggo
   {
   public:
 
-          distorsion_animation_artist(int width, int height, int line_step, ggo::image_format format);
+          distorsion_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     void  render_frame(void * buffer, int frame_index, float time_step) override;
 
@@ -43,6 +43,9 @@ namespace ggo
     std::vector<colored_stripe>::const_iterator get_stripe_at(float x) const;
 
     static  float                               transform(float x, float y, const std::vector<fixed_transform> & transforms);
+
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void render_t(void * buffer, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms) const;
 
   private:
 

@@ -1,25 +1,16 @@
 #include "ggo_demeco_animation_artist.h"
-#include <2d/ggo_blit.h>
+#include <2d/processing/ggo_blit.h>
 #include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
 
-namespace
-{
-  constexpr ggo::image_format render_format = ggo::rgba_8u_yd;
-  constexpr ggo::image_format shadow_format = ggo::y_8u_yd;
-
-  using render_format_traits = ggo::image_format_traits<render_format>;
-  using shadow_format_traits = ggo::image_format_traits<shadow_format>;
-}
-
 //////////////////////////////////////////////////////////////
-ggo::demeco_animation_artist::demeco_animation_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::demeco_animation_artist::demeco_animation_artist(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-animation_artist_abc(width, height, line_step, format),
+animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order),
 _artist(width, height),
-_render_image({ width, height }, render_format),
-_shadow_image({ width, height }, shadow_format)
+_render_image({ width, height }),
+_shadow_image({ width, height })
 {
 }
 
@@ -37,32 +28,25 @@ void ggo::demeco_animation_artist::render_frame(void * buffer, int frame_index, 
   _artist.render_tile(_render_image.data(), _render_image.line_byte_step(), frame_index, ggo::rect_int::from_size(_render_image.size()));
 
   // Blit render buffer alpha channel into shadow buffer.
-  ggo::fill_solid<shadow_format>(_shadow_image.data(), _shadow_image.width(), _shadow_image.height(), _shadow_image.line_byte_step(), 255);
+  ggo::fill_solid(_shadow_image, 0xff);
   const int shadow_dx = min_size() / 100;
   const int shadow_dy = min_size() / 100;
   for (int y = shadow_dy; y < height(); ++y)
   {
-    const void * src = _render_image.pixel_ptr(0, y);
-    void * dst = _shadow_image.pixel_ptr(shadow_dx, y - shadow_dy);
-
     for (int x = shadow_dx; x < width(); ++x)
     {
-      auto pixel = read_pixel<render_format>(src);
-      write_pixel<shadow_format>(dst, 0xff - pixel.a());
-      
-      src = ggo::move_ptr<render_format_traits::pixel_byte_size>(src);
-      dst = ggo::move_ptr<shadow_format_traits::pixel_byte_size>(dst);
+      auto pixel = _render_image.read_pixel(x, y);
+      _shadow_image.write_pixel(x, y, 0xff - pixel.a());
     }
   }
 
   // Blur shadow.
   float stddev = min_size() / 100.f;
-  gaussian_blur<shadow_format>(_shadow_image.data(), _shadow_image.size(), _shadow_image.line_byte_step(), stddev);
+  gaussian_blur(_shadow_image, stddev);
   
   // Blit shadow and render buffers into output buffer.
-  blit<shadow_format, ggo::rgb_8u_yu>(_shadow_image.data(), _shadow_image.width(), _shadow_image.height(), _shadow_image.line_byte_step(),
-    buffer, width(), height(), line_step(), 0, 0);
+  image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
 
-  blit<render_format, ggo::rgb_8u_yu>(_render_image.data(), _render_image.width(), _render_image.height(), _render_image.line_byte_step(),
-    buffer, width(), height(), line_step(), 0, 0);
+  blit(_shadow_image, img);
+  blit(_render_image, img);
 }

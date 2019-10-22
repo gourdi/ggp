@@ -3,7 +3,6 @@
 
 #include <ggo_artist.h>
 #include <ggo_artist_ids.h>
-#include <2d/ggo_image_format.h>
 
 namespace ggo
 {
@@ -11,7 +10,7 @@ namespace ggo
   {
   public:
 
-    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::image_format format);
+    static animation_artist_abc * create(animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
     bool  render_frame(void * buffer, float time_step);
 
@@ -19,7 +18,7 @@ namespace ggo
 
     virtual void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) = 0;
 
-                  animation_artist_abc(int width, int height, int line_step, ggo::image_format format);
+                  animation_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
@@ -33,7 +32,7 @@ namespace ggo
   {
   protected:
 
-    fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format, int frames_count);
+    fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int frames_count);
 
     int frames_count() const { return _frames_count; }
 

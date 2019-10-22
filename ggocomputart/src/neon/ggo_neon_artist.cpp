@@ -5,34 +5,10 @@
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 
-namespace
-{
-  //////////////////////////////////////////////////////////////
-  template <ggo::image_format format>
-  void paint_point_t(const ggo::neon_artist & artist, void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping)
-  {
-    const float radius = 0.01f * artist.min_size();
-
-    ggo::pos2_f pos = artist.map_fit(0.8f * point_pos, -1, 1);
-
-    ggo::disc_f disc1(pos, radius);
-    ggo::paint<format, ggo::sampling_4x4>(
-      buffer, artist.width(), artist.height(), artist.line_step(),
-      disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
-
-    pos.x() = artist.width() - pos.x() - 1;
-
-    ggo::disc_f disc2(pos, radius);
-    ggo::paint<format, ggo::sampling_4x4>(
-      buffer, artist.width(), artist.height(), artist.line_step(),
-      disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
-  }
-}
-
 //////////////////////////////////////////////////////////////
-ggo::neon_artist::neon_artist(int width, int height, int line_step, ggo::image_format format)
+ggo::neon_artist::neon_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_step, format)
+fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _angle = 0;
   _radius_prv = ggo::rand<float>();
@@ -68,47 +44,61 @@ void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events,
 //////////////////////////////////////////////////////////////
 void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
+  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, frame_index, clipping);
+  }
+  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  {
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+  }
+  else
+  {
+    GGO_FAIL();
+  }
+}
+
+//////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+void ggo::neon_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
+{
+  ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+
   if (frame_index == 0)
   {
-    switch (format())
-    {
-    case ggo::rgb_8u_yu:
-      ggo::fill_solid<ggo::rgb_8u_yu>(buffer, width(), height(), line_step(), ggo::black_8u(), clipping);
-      break;
-    case ggo::bgrx_8u_yd:
-      ggo::fill_solid<ggo::bgrx_8u_yd>(buffer, width(), height(), line_step(), ggo::black_8u(), clipping);
-      break;
-    default:
-      GGO_FAIL();
-      break;
-    }
+    ggo::fill_black(img, clipping);
   }
 
   for (int substep = 0; substep < substeps_count; ++substep)
   {
-    paint_point(buffer, _points[substep], ggo::rgb_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
+    paint_point_t(img, _points[substep], ggo::rgb_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
 
     if (substep & 1)
     {
-      paint_point(buffer, _attractor_points[substep], _attractor_color, clipping);
+      paint_point_t(img, _attractor_points[substep], _attractor_color, clipping);
     }
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::paint_point(void * buffer, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
+template <ggo::pixel_type pixel_type_, ggo::lines_order memory_lines_order_>
+void ggo::neon_artist::paint_point_t(image_t<pixel_type_, memory_lines_order_> & img, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
 {
-  switch (format())
-  {
-  case ggo::rgb_8u_yu:
-    paint_point_t<ggo::rgb_8u_yu>(*this, buffer, point_pos, color, clipping);
-    break;
-  case ggo::bgrx_8u_yd:
-    paint_point_t<ggo::bgrx_8u_yd>(*this, buffer, point_pos, color, clipping);
-    break;
-  default:
-    GGO_FAIL();
-    break;
-  }
+  const float radius = 0.01f * min_size();
+
+  ggo::pos2_f pos = map_fit(0.8f * point_pos, -1, 1);
+
+  ggo::disc_f disc1(pos, radius);
+  ggo::paint<ggo::sampling_4x4>(img, disc1, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
+
+  pos.x() = width() - pos.x() - 1;
+
+  ggo::disc_f disc2(pos, radius);
+  ggo::paint<ggo::sampling_4x4>(img, disc2, ggo::make_solid_brush(color), ggo::add_blender<ggo::rgb_8u>(), clipping);
 }
+
 

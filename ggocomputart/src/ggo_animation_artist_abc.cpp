@@ -42,10 +42,10 @@ namespace ggo
   {
   public:
 
-    animation_artist_realtime_wrapper(ggo::realtime_artist_id artist_id, int width, int height, int line_step, ggo::image_format format)
+    animation_artist_realtime_wrapper(ggo::realtime_artist_id artist_id, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
     :
-    animation_artist_abc(width, height, line_step, format),
-    _artist(realtime_artist_abc::create(artist_id, width, height, line_step, format))
+    animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order),
+    _artist(realtime_artist_abc::create(artist_id, width, height, line_step, pixel_type, memory_lines_order))
     {
     }
 
@@ -68,9 +68,9 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::image_format format)
+  ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
     :
-    ggo::artist(width, height, line_step, format)
+    ggo::artist(width, height, line_step, pixel_type, memory_lines_order)
   {
   }
 
@@ -90,80 +90,80 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_artist_id artist_id, int width, int height, int line_step, ggo::image_format format)
+  ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_artist_id artist_id, int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
   {
     switch (artist_id)
     {
     case ggo::animation_artist_id::duffing:
-      return new ggo::duffing_animation_artist(width, height, line_step, format);
+      return new ggo::duffing_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::julia:
-      return new ggo::julia_animation_artist(width, height, line_step, format);
+      return new ggo::julia_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::filling_squares:
-      return new ggo::filling_squares_animation_artist(width, height, line_step, format);
+      return new ggo::filling_squares_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::plastic:
-      return new ggo::plastic_animation_artist(width, height, line_step, format);
+      return new ggo::plastic_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::aggregation:
-      return new ggo::aggregation_animation_artist(width, height, line_step, format);
+      return new ggo::aggregation_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::ifs:
-      return new ggo::ifs_animation_artist(width, height, line_step, format);
+      return new ggo::ifs_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::metaballs:
-      return new ggo::metaballs_animation_artist(width, height, line_step, format);
+      return new ggo::metaballs_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::smoke:
-      return new ggo::smoke_animation_artist(width, height, line_step, format);
+      return new ggo::smoke_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::alpha:
-      return new ggo::alpha_animation_artist(width, height, line_step, format);
+      return new ggo::alpha_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::dupecheck:
-      return new ggo::dupecheck_animation_artist(width, height, line_step, format);
+      return new ggo::dupecheck_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::crystal:
-      return new ggo::crystal_animation_artist(width, height, line_step, format);
+      return new ggo::crystal_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::ikeda:
-      return new ggo::ikeda_artist(width, height, line_step, format);
+      return new ggo::ikeda_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::cumbia:
-      return new ggo::cumbia_animation_artist(width, height, line_step, format);
+      return new ggo::cumbia_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::vortex:
-      return new ggo::vortex_animation_artist(width, height, line_step, format);
+      return new ggo::vortex_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::distorsion:
-      return new ggo::distorsion_animation_artist(width, height, line_step, format);
+      return new ggo::distorsion_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::toutouyoutou:
-      return new ggo::toutouyoutou_animation_artist(width, height, line_step, format);
+      return new ggo::toutouyoutou_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::amorosi:
-      return new ggo::amorosi_animation_artist(width, height, line_step, format);
+      return new ggo::amorosi_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::rah:
-      return new ggo::rah_animation_artist(width, height, line_step, format);
+      return new ggo::rah_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::hexa:
-      return new ggo::hexa_animation_artist(width, height, line_step, format);
+      return new ggo::hexa_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::chryzode:
-      return new ggo::chryzode_animation_artist(width, height, line_step, format);
+      return new ggo::chryzode_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::stoa:
-      return new ggo::stoa_animation_artist(width, height, line_step, format);
+      return new ggo::stoa_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::rediff:
-      return new ggo::rediff_animation_artist(width, height, line_step, format);
+      return new ggo::rediff_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::entabeni:
-      return new ggo::entabeni_animation_artist(width, height, line_step, format);
+      return new ggo::entabeni_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::kame:
-      return new ggo::kame_animation_artist(width, height, line_step, format);
+      return new ggo::kame_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::demeco:
-      return new ggo::demeco_animation_artist(width, height, line_step, format);
+      return new ggo::demeco_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::poupette:
-      return new ggo::poupette_animation_artist(width, height, line_step, format);
+      return new ggo::poupette_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::badaboum:
-      return new ggo::badaboum_animation_artist(width, height, line_step, format);
+      return new ggo::badaboum_animation_artist(width, height, line_step, pixel_type, memory_lines_order);
 
     // Real-time artists.
     case ggo::animation_artist_id::kanji:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::kanji, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::kanji, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::bozons:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::bozons, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::bozons, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::neon:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::neon, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::neon, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::storni:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::storni, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::storni, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::lagaude:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::wakenda:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::sonson:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_step, format);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_step, pixel_type, memory_lines_order);
 
     default:
       GGO_FAIL();
@@ -178,9 +178,9 @@ namespace ggo
 // FIXED FRAMES COUNT ANIMATION ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::fixed_frames_count_animation_artist_abc::fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::image_format format, int frames_count)
+ggo::fixed_frames_count_animation_artist_abc::fixed_frames_count_animation_artist_abc(int width, int height, int line_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int frames_count)
 :
-ggo::animation_artist_abc(width, height, line_step, format),
+ggo::animation_artist_abc(width, height, line_step, pixel_type, memory_lines_order),
 _frames_count(frames_count)
 {
 }

@@ -28,6 +28,7 @@ namespace ggo
   {
   public:
 
+    void        render(ggo::image & img, const ggo::scene & scene, const ggo::raytrace_params & raytrace_params = ggo::raytrace_params()) const;
     ggo::image  render(const ggo::scene & scene, size s, const ggo::raytrace_params & raytrace_params = ggo::raytrace_params()) const;
 
   private:
