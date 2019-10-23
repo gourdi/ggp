@@ -8,11 +8,11 @@
 // Definitions.
 namespace ggo
 {
-  template <typename data_t, typename getter, typename interpolation_t>
-  data_t linear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
+  template <typename data_t, typename getter, typename scalar_t>
+  data_t linear_interpolation2d(const getter & in, scalar_t x, scalar_t y);
 
-  template <typename data_t, typename getter, typename interpolation_t>
-  data_t cubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y);
+  template <typename data_t, typename getter, typename scalar_t>
+  data_t cubic_interpolation2d(const getter & in, scalar_t x, scalar_t y);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -21,18 +21,18 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <typename data_t, ggo::lines_order memory_lines_order>
-  inline data_t linear_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, data_t x, data_t y)
+  inline data_t linear_interpolation2d_mirror(const data_t * input, int width, int height, data_t x, data_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height); };
 
     return linear_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::lines_order memory_lines_order>
-  inline uint8_t linear_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
+  inline uint8_t linear_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height)); };
 
     return ggo::round_to<uint8_t>(linear_interpolation2d<float>(in, x, y));
   }
@@ -41,25 +41,25 @@ namespace ggo
   template <typename data_t, ggo::lines_order memory_lines_order = ggo::lines_order::down>
   inline data_t linear_interpolation2d_loop(const data_t * input, int width, int height, data_t x, data_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_loop<lines_order>(input, x, y, width, height, width * sizeof(data_t)); };
+    auto in = [&](int x, int y) { return ggo::get2d_loop<lines_order>(input, x, y, width, height); };
 
     return linear_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename interpolation_t, ggo::lines_order memory_lines_order>
-  inline data_t cubic_interpolation2d_mirror(const data_t * input, int width, int height, int line_byte_step, interpolation_t x, interpolation_t y)
+  template <typename data_t, typename scalar_t, ggo::lines_order memory_lines_order>
+  inline data_t cubic_interpolation2d_mirror(const data_t * input, int width, int height, scalar_t x, scalar_t y)
   {
-    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step); };
+    auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height); };
 
     return cubic_interpolation2d<data_t>(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::lines_order memory_lines_order>
-  inline uint8_t cubic_interpolation2d_mirror(const uint8_t * input, int width, int height, int line_byte_step, float x, float y)
+  inline uint8_t cubic_interpolation2d_mirror(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height, line_byte_step)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height)); };
 
     return ggo::round_to<uint8_t>(cubic_interpolation2d<float>(in, x, y));
   }
@@ -70,9 +70,11 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename getter, typename interpolation_t>
-  data_t linear_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
+  template <typename data_t, typename getter, typename scalar_t>
+  data_t linear_interpolation2d(const getter & in, scalar_t x, scalar_t y)
   {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
     int y_i = y >= 0 ? static_cast<int>(y) : static_cast<int>(y - 1);
@@ -82,8 +84,8 @@ namespace ggo
     GGO_ASSERT_LE(y, y_i + 1);
 
     // Interpolate.
-    interpolation_t dx = x - x_i;
-    interpolation_t dy = y - y_i;
+    scalar_t dx = x - x_i;
+    scalar_t dy = y - y_i;
     GGO_ASSERT_GE(dx, 0);
     GGO_ASSERT_LE(dx, 1);
     GGO_ASSERT_GE(dy, 0);
@@ -101,9 +103,11 @@ namespace ggo
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename getter, typename interpolation_t>
-  data_t cubic_interpolation2d(const getter & in, interpolation_t x, interpolation_t y)
+  template <typename data_t, typename getter, typename scalar_t>
+  data_t cubic_interpolation2d(const getter & in, scalar_t x, scalar_t y)
   {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
     // The integer coordinate of the lower left value.
     int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
     int y_i = y >= 0 ? static_cast<int>(y) : static_cast<int>(y - 1);
@@ -117,42 +121,42 @@ namespace ggo
     data_t v10 = in(x_i + 0, y_i - 1);
     data_t v20 = in(x_i + 1, y_i - 1);
     data_t v30 = in(x_i + 2, y_i - 1);
-    data_t v0 = cubic_interpolation(static_cast<interpolation_t>(x_i - 1), v00,
-                                    static_cast<interpolation_t>(x_i + 0), v10,
-                                    static_cast<interpolation_t>(x_i + 1), v20,
-                                    static_cast<interpolation_t>(x_i + 2), v30, x);
+    data_t v0 = cubic_interpolation(static_cast<scalar_t>(x_i - 1), v00,
+                                    static_cast<scalar_t>(x_i + 0), v10,
+                                    static_cast<scalar_t>(x_i + 1), v20,
+                                    static_cast<scalar_t>(x_i + 2), v30, x);
     
     data_t v01 = in(x_i - 1, y_i);
     data_t v11 = in(x_i + 0, y_i);
     data_t v21 = in(x_i + 1, y_i);
     data_t v31 = in(x_i + 2, y_i);
-    data_t v1 = cubic_interpolation(static_cast<interpolation_t>(x_i - 1), v01,
-                                    static_cast<interpolation_t>(x_i + 0), v11,
-                                    static_cast<interpolation_t>(x_i + 1), v21,
-                                    static_cast<interpolation_t>(x_i + 2), v31, x);
+    data_t v1 = cubic_interpolation(static_cast<scalar_t>(x_i - 1), v01,
+                                    static_cast<scalar_t>(x_i + 0), v11,
+                                    static_cast<scalar_t>(x_i + 1), v21,
+                                    static_cast<scalar_t>(x_i + 2), v31, x);
     
     data_t v02 = in(x_i - 1, y_i + 1);
     data_t v12 = in(x_i + 0, y_i + 1);
     data_t v22 = in(x_i + 1, y_i + 1);
     data_t v32 = in(x_i + 2, y_i + 1);
-    data_t v2 = cubic_interpolation(static_cast<interpolation_t>(x_i - 1), v02,
-                                    static_cast<interpolation_t>(x_i + 0), v12,
-                                    static_cast<interpolation_t>(x_i + 1), v22,
-                                    static_cast<interpolation_t>(x_i + 2), v32, x);
+    data_t v2 = cubic_interpolation(static_cast<scalar_t>(x_i - 1), v02,
+                                    static_cast<scalar_t>(x_i + 0), v12,
+                                    static_cast<scalar_t>(x_i + 1), v22,
+                                    static_cast<scalar_t>(x_i + 2), v32, x);
     
     data_t v03 = in(x_i - 1, y_i + 2);
     data_t v13 = in(x_i + 0, y_i + 2);
     data_t v23 = in(x_i + 1, y_i + 2);
     data_t v33 = in(x_i + 2, y_i + 2);
-    data_t v3 = cubic_interpolation(static_cast<interpolation_t>(x_i - 1), v03,
-                                    static_cast<interpolation_t>(x_i + 0), v13,
-                                    static_cast<interpolation_t>(x_i + 1), v23,
-                                    static_cast<interpolation_t>(x_i + 2), v33, x);
+    data_t v3 = cubic_interpolation(static_cast<scalar_t>(x_i - 1), v03,
+                                    static_cast<scalar_t>(x_i + 0), v13,
+                                    static_cast<scalar_t>(x_i + 1), v23,
+                                    static_cast<scalar_t>(x_i + 2), v33, x);
     
-    return cubic_interpolation(static_cast<interpolation_t>(y_i - 1), v0,
-                               static_cast<interpolation_t>(y_i + 0), v1,
-                               static_cast<interpolation_t>(y_i + 1), v2,
-                               static_cast<interpolation_t>(y_i + 2), v3, y);
+    return cubic_interpolation(static_cast<scalar_t>(y_i - 1), v0,
+                               static_cast<scalar_t>(y_i + 0), v1,
+                               static_cast<scalar_t>(y_i + 1), v2,
+                               static_cast<scalar_t>(y_i + 2), v3, y);
   }
 }
 

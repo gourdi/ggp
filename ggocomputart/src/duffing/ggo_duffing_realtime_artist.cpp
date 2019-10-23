@@ -63,30 +63,19 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
   }
 
   // Fade out (process 1 frame out of 2).
-  constexpr int pixel_byte_size = ggo::pixel_type_traits<ggo::pixel_type::bgrx_8u>::pixel_byte_size;
-
-  if (ggo::is_even(frame_index) == true)
+  for_each_pixel(img, clipping, [&](int x, int y)
   {
-    for (int y = clipping.bottom(); y <= clipping.top(); ++y)
-    {
-      void * ptr = ggo::get_pixel_ptr<ggo::lines_order::down, pixel_byte_size>(buffer, clipping.left(), y, height(), line_byte_step());
-      void * last_ptr = ggo::get_pixel_ptr<ggo::lines_order::down, pixel_byte_size>(buffer, clipping.right(), y, height(), line_byte_step());
+    const ggo::rgb_8u pixel = img.read_pixel(x, y);
 
-      for (; ptr <= last_ptr; ptr = ggo::move_ptr<pixel_byte_size>(ptr))
-      {
-        const ggo::rgb_8u pixel = ggo::pixel_type_traits<ggo::pixel_type::bgrx_8u>::read(ptr);
+    const int32_t diff_r = contract(pixel.r() - _bkgd_color.r());
+    const int32_t diff_g = contract(pixel.g() - _bkgd_color.g());
+    const int32_t diff_b = contract(pixel.b() - _bkgd_color.b());
 
-        const int32_t diff_r = contract(pixel.r() - _bkgd_color.r());
-        const int32_t diff_g = contract(pixel.g() - _bkgd_color.g());
-        const int32_t diff_b = contract(pixel.b() - _bkgd_color.b());
-
-        ggo::pixel_type_traits<ggo::pixel_type::bgrx_8u>::write(ptr, {
-          static_cast<uint8_t>(_bkgd_color.r() + diff_r),
-          static_cast<uint8_t>(_bkgd_color.g() + diff_g),
-          static_cast<uint8_t>(_bkgd_color.b() + diff_b) });
-      }
-    }
-  }
+    img.write_pixel(x, y, {
+      static_cast<uint8_t>(_bkgd_color.r() + diff_r),
+      static_cast<uint8_t>(_bkgd_color.g() + diff_g),
+      static_cast<uint8_t>(_bkgd_color.b() + diff_b) });
+  });
 
   // Paint the Duffing's points.
   for (const auto & point : _points)

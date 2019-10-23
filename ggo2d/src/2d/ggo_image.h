@@ -97,8 +97,8 @@ namespace ggo
 
     // Read interface.
     const void *  data() const { return _buffer; }
-    const void *  line_ptr(int y) const { return ggo::get_line_ptr<memory_lines_order_>(_buffer, y, _size.height(), _line_byte_step);    }
-    const void *  pixel_ptr(int x, int y) const { return ggo::get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, _size.height(), _line_byte_step); }
+    const void *  line_ptr(int y) const { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
+    const void *  pixel_ptr(int x, int y) const { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
     auto          read_pixel(int x, int y) const { return pixel_type_traits<pixel_type_>::read(pixel_ptr(x, y)); }
     auto          operator()(int x, int y) const { return read_pixel(x, y); }
 
@@ -106,9 +106,9 @@ namespace ggo
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) { return get_line_ptr<memory_lines_order_>(_buffer, y, height(), _line_byte_step); }
+    void *        line_ptr(int y) { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        pixel_ptr(int x, int y) { return get_pixel_ptr<memory_lines_order_, pixel_byte_size()>(_buffer, x, y, height(), _line_byte_step); }
+    void *        pixel_ptr(int x, int y) { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void          write_pixel(int x, int y, const typename color_t & c) { pixel_type_traits<pixel_type_>::write(pixel_ptr(x, y), c); }
 
@@ -220,16 +220,16 @@ namespace ggo
 
     // Read interface.
     const void *  data() const { return _buffer; }
-    const void *  line_ptr(int y) const { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _lines_order); }
-    const void *  pixel_ptr(int x, int y) const { return ggo::get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _memory_lines_order, pixel_byte_size()); }
+    const void *  line_ptr(int y) const { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
+    const void *  pixel_ptr(int x, int y) const { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
 
     // Write interface.
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
     void *        data() { return _buffer; }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        line_ptr(int y) { return ggo::get_line_ptr(_buffer, y, _size.height(), _line_byte_step, _memory_lines_order); }
+    void *        line_ptr(int y) { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
     template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void *        pixel_ptr(int x, int y) { return ggo::get_pixel_ptr(_buffer, x, y, _size.height(), _line_byte_step, _memory_lines_order, pixel_byte_size()); }
+    void *        pixel_ptr(int x, int y) { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
 
   private:
 
@@ -329,6 +329,34 @@ namespace ggo
     void_ptr_t ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
 
     return image_base_t<pt, lo, void_ptr_t>(ptr, clipping.size(), img.line_byte_step());
+  }
+}
+
+namespace ggo
+{
+  template <typename image_t, typename func_t>
+  void for_each_pixel(image_t & img, ggo::rect_int clipping, func_t && func)
+  {
+    int l = clipping.left();
+    int r = clipping.right();
+    int b = clipping.bottom();
+    int t = clipping.top();
+
+    for (int y = b; y <= t; ++y)
+    {
+      for (int x = l; x <= r; ++x)
+      {
+        func(x, y);
+      }
+    }
+  }
+
+  template <typename image_t, typename func_t>
+  void for_each_pixel(image_t & img, func_t && func)
+  {
+    auto clipping = ggo::rect_int::from_size(img.size());
+
+    for_each_pixel(img, clipping, func);
   }
 }
 

@@ -1,5 +1,6 @@
 #include "ggo_wakenda_realtime_artist.h"
 #include <2d/paint/ggo_paint.h>
+#include <2d/processing/ggo_blit.h>
 #include <2d/fill/ggo_fill.h>
 
 namespace
@@ -67,39 +68,37 @@ _bkgd_image({ width, height }, pixel_type, memory_lines_order, line_byte_step)
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::wakenda_realtime_artist::copy_bkgd(void * buffer, const ggo::rect_int & clipping) const
 {
-  constexpr int pixel_byte_size = pixel_type_traits<pixel_type>::pixel_byte_size;
+  const_image_t<pixel_type, memory_lines_order> bkgd_img(_bkgd_image.data(), size(), line_byte_step());
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
-  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
-  {
-    const void * src = _bkgd_image.pixel_ptr(clipping.left(), y);
-    void * dst = ggo::get_pixel_ptr<memory_lines_order, pixel_byte_size>(buffer, clipping.left(), y, height(), line_byte_step());
+  auto bkgd_view = make_image_view(bkgd_img, clipping);
+  auto img_view  = make_image_view(img, clipping);
 
-    memcpy(dst, src, pixel_byte_size * clipping.width());
-  }
+  blit(*bkgd_view, *img_view);
 }
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
 void ggo::wakenda_realtime_artist::process_bkgd(void * buffer, const ggo::rect_int & clipping) const
 {
-  constexpr int pixel_byte_size = pixel_type_traits<pixel_type>::pixel_byte_size;
+  const_image_t<pixel_type, memory_lines_order> bkgd_img(_bkgd_image.data(), size(), line_byte_step());
+  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
-  for (int y = clipping.bottom(); y <= clipping.top(); ++y)
+  for_each_pixel(img, clipping, [&](int x, int y)
   {
-    const uint8_t * bkgd_ptr = static_cast<const uint8_t *>(_bkgd_image.pixel_ptr(clipping.left(), y));
-    uint8_t * output_ptr = static_cast<uint8_t *>(ggo::get_pixel_ptr<memory_lines_order, pixel_byte_size>(buffer, clipping.left(), y, height(), line_byte_step()));
+    ggo::rgb_8u c_output = img.read_pixel(x, y);
+    ggo::rgb_8u c_bkgd   = bkgd_img.read_pixel(x, y);
 
-    for (int i = 0; i < pixel_byte_size * clipping.width(); ++i)
-    {
-      int d = static_cast<int>(*output_ptr) - static_cast<int>(*bkgd_ptr);
+    int dr = static_cast<int>(c_output.r()) - static_cast<int>(c_bkgd.r());
+    int dg = static_cast<int>(c_output.g()) - static_cast<int>(c_bkgd.g());
+    int db = static_cast<int>(c_output.b()) - static_cast<int>(c_bkgd.b());
 
-      d = (d * 63) / 64;
-      *output_ptr = *bkgd_ptr + d;
+    uint8_t r = c_output.r() + (dr * 63) / 64;
+    uint8_t g = c_output.g() + (dg * 63) / 64;
+    uint8_t b = c_output.r() + (db * 63) / 64;
 
-      ++bkgd_ptr;
-      ++output_ptr;
-    }
-  }
+    img.write_pixel(x, y, { r, g, b });
+  });
 }
 
 //////////////////////////////////////////////////////////////

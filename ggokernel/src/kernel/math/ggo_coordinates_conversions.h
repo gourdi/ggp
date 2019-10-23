@@ -9,36 +9,36 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  int from_continuous_to_pixel(data_t v)
+  constexpr int from_continuous_to_pixel(data_t v)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     return v >= 0 ? static_cast<int>(v) : static_cast<int>(v) - 1;
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t from_pixel_to_continuous(int v)
+  constexpr data_t from_pixel_to_continuous(int v)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     return static_cast<data_t>(v) + data_t(0.5);
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::pos2_i from_continuous_to_pixel(const ggo::pos2<data_t> & p)
+  constexpr ggo::pos2_i from_continuous_to_pixel(const ggo::pos2<data_t> & p)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     return { ggo::from_continuous_to_pixel(p.x()), ggo::from_continuous_to_pixel(p.y()) };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::pos2<data_t> from_pixel_to_continuous(const pos2_i & p)
+  constexpr ggo::pos2<data_t> from_pixel_to_continuous(const pos2_i & p)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     return { ggo::from_pixel_to_continuous<data_t>(p.x()), ggo::from_pixel_to_continuous<data_t>(p.y()) };
   }
@@ -47,7 +47,7 @@ namespace ggo
   template <typename data_t>
   rect_int from_continuous_to_pixel_exclusive(const ggo::rect_data<data_t> & rect)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     int left = static_cast<int>(std::floor(rect._pos.x()));
     int past_right = static_cast<int>(std::ceil(rect._pos.x() + rect._width));
@@ -61,7 +61,7 @@ namespace ggo
   template <typename data_t>
   std::optional<rect_int> from_continuous_to_pixel_inclusive(const ggo::rect_data<data_t> & rect)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     int left = static_cast<int>(std::ceil(rect._pos.x()));
     int past_right = static_cast<int>(std::floor(rect ._pos.x() + rect._width));
@@ -80,7 +80,7 @@ namespace ggo
   template <typename data_t>
   ggo::rect_data<data_t> from_pixel_to_continuous(const ggo::rect_int & rect)
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting floating point type");
+    static_assert(std::is_floating_point<data_t>::value);
 
     data_t left = static_cast<data_t>(rect.left());
     data_t right = static_cast<data_t>(rect.right()) + 1;

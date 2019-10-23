@@ -42,11 +42,13 @@ namespace
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step, int padded_line_size)
     {
+      ggo::const_image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
+
       ggo::array_8u padded_line(padded_line_size);
 
       for (int y = 0; y < height; ++y)
       {
-        const void * in_ptr = ggo::get_line_ptr<memory_lines_order>(buffer, y, height, line_byte_step);
+        const void * in_ptr = img.line_ptr(y);
         uint8_t * out_ptr = padded_line.data();
 
         for (int x = 0; x < width; ++x)

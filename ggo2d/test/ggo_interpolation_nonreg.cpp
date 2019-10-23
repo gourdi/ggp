@@ -8,7 +8,7 @@ namespace
   ////////////////////////////////////////////////////////////////////
   uint8_t linear_interpolation2d(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height, width)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height)); };
 
     return ggo::round_to<uint8_t>(ggo::linear_interpolation2d<float>(in, x, y));
   }
@@ -16,7 +16,7 @@ namespace
   ////////////////////////////////////////////////////////////////////
   uint8_t cubic_interpolation2d(const uint8_t * input, int width, int height, float x, float y)
   {
-    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height, width)); };
+    auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height)); };
 
     return ggo::round_to<uint8_t>(ggo::clamp(ggo::cubic_interpolation2d<float>(in, x, y), 0.f, 255.f));
   }

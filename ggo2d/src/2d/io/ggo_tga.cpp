@@ -30,9 +30,12 @@ namespace
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step)
     {
+      ggo::const_image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
+
       for (int y = 0; y < height; ++y)
       {
-        const void * ptr = ggo::get_line_ptr<memory_lines_order>(buffer, height - y - 1, height, line_byte_step);
+        // PIxels are stored top down.
+        const void * ptr = img.line_ptr(img.height() - y - 1);
 
         for (int x = 0; x < width; ++x)
         {

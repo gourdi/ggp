@@ -94,21 +94,13 @@ void ggo::ifs_artist::render(void * buffer, int line_byte_step, ggo::pixel_type 
 void ggo::ifs_artist::paint_buffer(void * buffer, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   uint8_t color, const ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> & accumul_buffer) const
 {
-  const float * ptr_src = static_cast<const float *>(accumul_buffer.data());
+  image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step);
 
-	for (int y = 0; y < height(); ++y)
-	{
-    void * ptr_dst = ggo::get_line_ptr<ggo::lines_order::up>(buffer, y, height(), line_byte_step);
-
-    for (int x = 0; x < width(); ++x)
-    {
-      ggo::alpha_blender_rgb8u blender(*ptr_src);
-      ggo::rgb_8u c_8u = blender(x, y, ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::read(ptr_dst), { color, color, color });
-      ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::write(ptr_dst, c_8u);
-
-      ptr_src++;
-      ptr_dst = ggo::move_ptr<ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::pixel_byte_size>(ptr_dst);
-    }
-	}
+  for_each_pixel(img, [&](int x, int y)
+  {
+    ggo::alpha_blender_rgb8u blender(accumul_buffer.read_pixel(x, y));
+    ggo::rgb_8u c_8u = blender(x, y, img.read_pixel(x, y), { color, color, color });
+    img.write_pixel(x, y, c_8u);
+  });
 }
 

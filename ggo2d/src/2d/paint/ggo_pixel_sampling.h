@@ -23,7 +23,7 @@ namespace ggo
     template <typename real_t, typename func_t>
     static void sample_pixel(int x, int y, func_t func)
     {
-      static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+      static_assert(std::is_floating_point<real_t>::value);
       func(real_t(x) + real_t(0.5), real_t(y) + real_t(0.5));
     }
 
@@ -37,7 +37,7 @@ namespace ggo
     template <typename real_t, typename func_t>
     static void sample_pixel(int x, int y, func_t func)
     {
-      static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+      static_assert(std::is_floating_point<real_t>::value);
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
@@ -58,7 +58,7 @@ namespace ggo
     template <typename real_t, typename func_t>
     static void sample_pixel(int x, int y, func_t func)
     {
-      static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+      static_assert(std::is_floating_point<real_t>::value);
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
@@ -93,7 +93,7 @@ namespace ggo
     template <typename real_t, typename func_t>
     static void sample_pixel(int x, int y, func_t func)
     {
-      static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+      static_assert(std::is_floating_point<real_t>::value);
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 
@@ -116,7 +116,7 @@ namespace ggo
     template <typename real_t, typename func_t>
     static void sample_pixel(int x, int y, func_t func)
     {
-      static_assert(std::is_floating_point<real_t>::value, "expecting floating point type");
+      static_assert(std::is_floating_point<real_t>::value);
       const real_t x_f(static_cast<real_t>(x));
       const real_t y_f(static_cast<real_t>(y));
 

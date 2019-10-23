@@ -24,7 +24,7 @@
 #include "stoa/ggo_stoa_animation_artist.h"
 #include "rediff/ggo_rediff_animation_artist.h"
 #include "entabeni/ggo_entabeni_animation_artist.h"
-#include "neon/ggo_neon_artist.h"
+#include "neon/ggo_neon_realtime_artist.h"
 #include "storni/ggo_storni_realtime_artist.h"
 #include "kame/ggo_kame_animation_artist.h"
 #include "demeco/ggo_demeco_animation_artist.h"

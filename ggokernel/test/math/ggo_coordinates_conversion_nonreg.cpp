@@ -13,17 +13,17 @@ GGO_TEST(coordinates_conversions, from_pixel_to_continuous_point)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(coordinates_conversions, from_continuous_to_pixel_point)
 {
-  ggo::pos2_i p1 = ggo::from_continuous_to_pixel(ggo::pos2_f(-1.1f, 2.9f));
-  GGO_CHECK_EQ(p1.x(), -2);
-  GGO_CHECK_EQ(p1.y(), 2);
+  constexpr ggo::pos2_i p1 = ggo::from_continuous_to_pixel(ggo::pos2_f(-1.1f, 2.9f));
+  static_assert(p1.x() == -2);
+  static_assert(p1.y() == 2);
 
-  ggo::pos2_i p2 = ggo::from_continuous_to_pixel(ggo::pos2_f(-0.4f, 3.1f));
-  GGO_CHECK_EQ(p2.x(), -1);
-  GGO_CHECK_EQ(p2.y(), 3);
+  constexpr ggo::pos2_i p2 = ggo::from_continuous_to_pixel(ggo::pos2_f(-0.4f, 3.1f));
+  static_assert(p2.x() == -1);
+  static_assert(p2.y() == 3);
 
-  ggo::pos2_i p3 = ggo::from_continuous_to_pixel(ggo::pos2_f(-2.9f, 3.9f));
-  GGO_CHECK_EQ(p3.x(), -3);
-  GGO_CHECK_EQ(p3.y(), 3);
+  constexpr ggo::pos2_i p3 = ggo::from_continuous_to_pixel(ggo::pos2_f(-2.9f, 3.9f));
+  static_assert(p3.x() == -3);
+  static_assert(p3.y() == 3);
 }
 
 ////////////////////////////////////////////////////////////////////

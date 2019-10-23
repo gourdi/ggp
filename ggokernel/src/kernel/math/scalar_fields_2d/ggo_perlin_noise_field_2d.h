@@ -71,7 +71,7 @@ namespace ggo
     y = y_tmp;
 
     return ggo::linear_interpolation2d_mirror<data_t, ggo::lines_order::up>( // We don't care about the direction
-      _noise.data(), _noise_size, _noise_size, _noise_size * sizeof(data_t), x, y);
+      _noise.data(), _noise_size, _noise_size, x, y);
   }
       
   template <typename data_t, bool positive_only>

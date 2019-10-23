@@ -1,4 +1,5 @@
 #include <kernel/memory/ggo_array.h>
+#include <2d/ggo_image.h>
 #include <2d/io/ggo_jpg.h>
 #include <jpeglib.h>
 #include <setjmp.h>
@@ -96,13 +97,15 @@ namespace
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void call(const void * buffer, int width, int height, int line_byte_step, jpeg_compress_struct & cinfo)
     {
+      ggo::const_image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
+
       ggo::array_8u line(3 * width);
 
       int y = cinfo.image_height - 1; // Top to bottom.
 
       while (cinfo.next_scanline < cinfo.image_height)
       {
-        const void * in_ptr = ggo::get_line_ptr<memory_lines_order>(buffer, y, height, line_byte_step);
+        const void * in_ptr = img.line_ptr(y);
         uint8_t * out_ptr = line.data();
 
         for (int x = 0; x < width; ++x)
