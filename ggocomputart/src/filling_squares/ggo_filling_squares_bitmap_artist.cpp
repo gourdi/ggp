@@ -4,21 +4,13 @@
 #include <2d/paint/ggo_paint.h>
 
 //////////////////////////////////////////////////////////////
-ggo::filling_squares_bitmap_artist::filling_squares_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-	
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::filling_squares_bitmap_artist::render_bitmap(void * buffer) const
-{
-  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(buffer, size(), line_byte_step());
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> view(buffer, { width, height }, line_byte_step);
 
 	float hue;
 	
-  auto multi_squares = ggo::filling_squares_artist::build_squares(width(), height(), hue);
+  auto multi_squares = ggo::filling_squares_artist::build_squares(width, height, hue);
 	
 	ggo::fill_solid(view, ggo::from_hsv<ggo::rgb_8u>(hue, ggo::rand<float>(), ggo::rand<float>()));
 

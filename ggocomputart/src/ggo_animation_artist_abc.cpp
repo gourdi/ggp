@@ -12,7 +12,7 @@
 #include "alpha/ggo_alpha_animation_artist.h"
 #include "dupecheck/ggo_dupecheck_animation_artist.h"
 #include "crystal/ggo_crystal_animation_artist.h"
-#include "ikeda/ggo_ikeda_artist.h"
+#include "ikeda/ggo_ikeda_animation_artist.h"
 #include "cumbia/ggo_cumbia_animation_artist.h"
 #include "vortex/ggo_vortex_animation_artist.h"
 #include "distorsion/ggo_distorsion_animation_artist.h"
@@ -117,7 +117,7 @@ namespace ggo
     case ggo::animation_artist_id::crystal:
       return new ggo::crystal_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::ikeda:
-      return new ggo::ikeda_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::ikeda_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::cumbia:
       return new ggo::cumbia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::vortex:

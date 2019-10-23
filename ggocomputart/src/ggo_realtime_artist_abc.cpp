@@ -1,7 +1,7 @@
 #include "ggo_realtime_artist_abc.h"
 #include "kanji/ggo_kanji_realtime_artist.h"
 #include "bozons/ggo_bozons_realtime_artist.h"
-#include "neon/ggo_neon_artist.h"
+#include "neon/ggo_neon_realtime_artist.h"
 #include "storni/ggo_storni_realtime_artist.h"
 #include "duffing/ggo_duffing_realtime_artist.h"
 #include "lagaude/ggo_lagaude_realtime_artist.h"
@@ -56,7 +56,7 @@ namespace ggo
     case realtime_artist_id::bozons:
       return new bozons_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::neon:
-      return new neon_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new neon_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::storni:
       return new storni_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::duffing:

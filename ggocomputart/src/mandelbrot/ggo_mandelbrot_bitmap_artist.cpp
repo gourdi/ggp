@@ -1,4 +1,4 @@
-#include "ggo_mandelbrot_artist.h"
+#include "ggo_mandelbrot_bitmap_artist.h"
 #include <kernel/math/interpolation/ggo_curve.h>
 #include <2d/ggo_image.h>
 #include <array>
@@ -149,41 +149,34 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::mandelbrot_artist::mandelbrot_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
-{
-}
-
-//////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::mandelbrot_artist::render_bitmap_t(void * buffer) const
+void ggo::mandelbrot_bitmap_artist::render_bitmap_t(void * buffer, int width, int height, int line_byte_step) const
 {
-  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
+  image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
 
   auto palette = setup_palette();
 
   auto [center, range] = setup_block(static_cast<int>(palette.size()));
 
-  for (int y = 0; y < height(); ++y)
+  for (int y = 0; y < height; ++y)
   {
-    double range_x = width() > height() ? range * width() / height() : range;
-    double range_y = width() > height() ? range : range * height() / width();
+    double range_x = width > height ? range * width / height : range;
+    double range_y = width > height ? range : range * height / width;
 
-    double y1 = ggo::map<double>(y - 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-    double y2 = ggo::map<double>(y - 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-    double y3 = ggo::map<double>(y + 1 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
-    double y4 = ggo::map<double>(y + 3 / 8., 0, height(), center.imag() - range_y, center.imag() + range_y);
+    double y1 = ggo::map<double>(y - 3 / 8., 0, height, center.imag() - range_y, center.imag() + range_y);
+    double y2 = ggo::map<double>(y - 1 / 8., 0, height, center.imag() - range_y, center.imag() + range_y);
+    double y3 = ggo::map<double>(y + 1 / 8., 0, height, center.imag() - range_y, center.imag() + range_y);
+    double y4 = ggo::map<double>(y + 3 / 8., 0, height, center.imag() - range_y, center.imag() + range_y);
 
     int iterations[16];
 
-    for (int x = 0; x < width(); ++x)
+    for (int x = 0; x < width; ++x)
     {
       // Iterate and sample.
-      double x1 = ggo::map<double>(x - 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-      double x2 = ggo::map<double>(x - 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-      double x3 = ggo::map<double>(x + 1 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
-      double x4 = ggo::map<double>(x + 3 / 8., 0, width(), center.real() - range_x, center.real() + range_x);
+      double x1 = ggo::map<double>(x - 3 / 8., 0, width, center.real() - range_x, center.real() + range_x);
+      double x2 = ggo::map<double>(x - 1 / 8., 0, width, center.real() - range_x, center.real() + range_x);
+      double x3 = ggo::map<double>(x + 1 / 8., 0, width, center.real() - range_x, center.real() + range_x);
+      double x4 = ggo::map<double>(x + 3 / 8., 0, width, center.real() - range_x, center.real() + range_x);
 
       iterations[0] = iterate(x1, y1, static_cast<int>(palette.size()));
       iterations[1] = iterate(x1, y4, static_cast<int>(palette.size()));
@@ -234,19 +227,19 @@ void ggo::mandelbrot_artist::render_bitmap_t(void * buffer) const
 }
 	
 //////////////////////////////////////////////////////////////
-void ggo::mandelbrot_artist::render_bitmap(void * buffer) const
+void ggo::mandelbrot_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
+    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, width, height, line_byte_step);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, width, height, line_byte_step);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer);
+    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, width, height, line_byte_step);
   }
   else
   {

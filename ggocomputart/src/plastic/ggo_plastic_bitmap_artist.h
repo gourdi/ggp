@@ -2,7 +2,6 @@
 #define __GGO_PLASTIC_BITMAP_ARTIST__
 
 #include <ggo_bitmap_artist_abc.h>
-#include "ggo_plastic_artist.h"
 
 namespace ggo
 {
@@ -10,9 +9,7 @@ namespace ggo
   {
   public:
 
-          plastic_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
-
-    void	render_bitmap(void * buffer) const override;
+    void	render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const override;
   };
 }
 

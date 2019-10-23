@@ -12,14 +12,7 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::hexa_bitmap_artist::hexa_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
-{
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::hexa_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
 #ifdef GGO_PREVIEW
   ggo::hexa_artist artist(false);
@@ -36,7 +29,7 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #else
   float depth_of_field = 0.92f * ggo::length(camera_basis.pos());
   float depth_of_field_factor = 0.05f * ggo::length(camera_basis.pos());
-  ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
+  ggo::multi_sampling_point_camera camera(width, height, camera_basis, camera_aperture, depth_of_field, depth_of_field_factor);
 #endif
 
   // Rendering.
@@ -45,5 +38,5 @@ void ggo::hexa_bitmap_artist::render_bitmap(void * buffer) const
 #else
   ggo::global_sampling_renderer renderer(camera, samples_count);
 #endif
-  artist.render(buffer, width(), height(), line_byte_step(), pixel_type(), memory_lines_order(), 1.f, renderer);
+  artist.render(buffer, width, height, line_byte_step, pixel_type, memory_lines_order, 1.f, renderer);
 }

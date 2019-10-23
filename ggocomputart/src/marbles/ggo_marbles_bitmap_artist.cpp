@@ -1,4 +1,4 @@
-#include "ggo_marbles_artist.h"
+#include "ggo_marbles_bitmap_artist.h"
 #include <raytracer/ggo_scene.h>
 #include <raytracer/renderers/ggo_global_sampling_renderer.h>
 #include <raytracer/cameras/ggo_point_camera.h>
@@ -57,14 +57,7 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::marbles_artist::marbles_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
-{
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::marbles_artist::render_bitmap(void * buffer) const
+void ggo::marbles_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
   ggo::scene scene(std::make_shared<ggo::background3d_color>(ggo::black<ggo::rgb_32f>()));
 
@@ -74,7 +67,7 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
 	// Setup the camera.
   ggo::basis3d_f camera_basis({ 0.f, 0.f, 10.f });
   camera_basis.rotate(ggo::ray3d_f::O_X(), 1.2f);
-	ggo::multi_sampling_point_camera camera(width(), height(), camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
+	ggo::multi_sampling_point_camera camera(width, height, camera_basis, 0.2f, ggo::rand<float>(7, 9), ggo::rand<float>(0.10f, 0.15f));
 
 	// Floor plane.
   constexpr uint32_t flags = ggo::discard_basis | ggo::discard_phong;
@@ -135,6 +128,6 @@ void ggo::marbles_artist::render_bitmap(void * buffer) const
   ggo::raytrace_params raytrace_params;
   raytrace_params._depth = 2;
   ggo::global_sampling_renderer renderer(camera, 128);
-	renderer.render(image(buffer, size(), pixel_type(), memory_lines_order(), line_byte_step()), scene, raytrace_params);
+  renderer.render(image(buffer, { width, height }, pixel_type, memory_lines_order, line_byte_step), scene, raytrace_params);
 }
 

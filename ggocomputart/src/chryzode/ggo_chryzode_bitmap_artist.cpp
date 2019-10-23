@@ -1,19 +1,9 @@
 #include "ggo_chryzode_bitmap_artist.h"
 #include "ggo_chryzode_artist.h"
-#include <2d/processing/ggo_gaussian_blur.h>
 
 //////////////////////////////////////////////////////////////
-ggo::chryzode_bitmap_artist::chryzode_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
-{
-  chryzode_artist artist(width(), height());
-
   chryzode_params params;
   params._multiplier1 = ggo::rand<float>(3, 11);
   params._multiplier2 = ggo::rand<float>(3, 11);
@@ -29,10 +19,11 @@ void ggo::chryzode_bitmap_artist::render_bitmap(void * buffer) const
     lines_count += params._modulo_end;
   }
   
-  float radius = ggo::rand<float>(0.2f, 0.35f) * min_size();
+  float radius = ggo::rand<float>(0.2f, 0.35f) * std::min(width, height);
   
   float hue_start = ggo::rand<float>();
   float hue_end = hue_start + (ggo::rand<bool>() ? -0.2f : 0.2f);
     
-  artist.render_chryzode(buffer, line_byte_step(), pixel_type(), memory_lines_order(), radius, params, hue_start, hue_end);
+  chryzode_artist artist(width, height);
+  artist.render_chryzode(buffer, line_byte_step, pixel_type, memory_lines_order, radius, params, hue_start, hue_end);
 }

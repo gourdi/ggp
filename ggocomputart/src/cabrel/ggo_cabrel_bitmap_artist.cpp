@@ -4,6 +4,7 @@
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_color_triangle.h>
 #include <2d/processing/ggo_gaussian_blur.h>
+#include "ggo_artist.h"
 
 namespace
 {
@@ -11,21 +12,21 @@ namespace
   bool is_edge_from_triangle(const std::tuple<int, int> & edge, const std::tuple<int, int, int> & triangle, int & v3)
   {
     if ((std::get<0>(edge) == std::get<0>(triangle) && std::get<1>(edge) == std::get<1>(triangle)) ||
-        (std::get<0>(edge) == std::get<1>(triangle) && std::get<1>(edge) == std::get<0>(triangle)))
+      (std::get<0>(edge) == std::get<1>(triangle) && std::get<1>(edge) == std::get<0>(triangle)))
     {
       v3 = std::get<2>(triangle);
       return true;
     }
 
     if ((std::get<0>(edge) == std::get<1>(triangle) && std::get<1>(edge) == std::get<2>(triangle)) ||
-        (std::get<0>(edge) == std::get<2>(triangle) && std::get<1>(edge) == std::get<1>(triangle)))
+      (std::get<0>(edge) == std::get<2>(triangle) && std::get<1>(edge) == std::get<1>(triangle)))
     {
       v3 = std::get<0>(triangle);
       return true;
     }
 
     if ((std::get<0>(edge) == std::get<0>(triangle) && std::get<1>(edge) == std::get<2>(triangle)) ||
-        (std::get<0>(edge) == std::get<2>(triangle) && std::get<1>(edge) == std::get<0>(triangle)))
+      (std::get<0>(edge) == std::get<2>(triangle) && std::get<1>(edge) == std::get<0>(triangle)))
     {
       v3 = std::get<1>(triangle);
       return true;
@@ -36,9 +37,9 @@ namespace
 
   //////////////////////////////////////////////////////////////
   bool triangle_intersect_other_triangles(const ggo::pos2_f & new_vertex,
-                                          const std::vector<ggo::pos2_f> & points,
-                                          const std::tuple<int, int> & edge,
-                                          const std::vector<std::tuple<int, int, int>> & triangles)
+    const std::vector<ggo::pos2_f> & points,
+    const std::tuple<int, int> & edge,
+    const std::vector<std::tuple<int, int, int>> & triangles)
   {
     // Check if the newly created triangle intersect other triangles.
     for (const auto & triangle_tuple : triangles)
@@ -82,7 +83,7 @@ namespace
       area_score = 1.f / area_score;
     }
     GGO_ASSERT(area_score >= 1.f);
-    area_score -= 1.f; 
+    area_score -= 1.f;
 
     // An angle score of 0 means that the candidate triangle is equilateral.
     const float angle1 = ggo::angle(v2 - v1, v3 - v1);
@@ -142,9 +143,9 @@ namespace
       }
 
       if (triangle &&
-          triangle->angle1() > ggo::pi<float>() / 6.0f &&
-          triangle->angle2() > ggo::pi<float>() / 6.0f &&
-          triangle->angle3() > ggo::pi<float>() / 6.0f)
+        triangle->angle1() > ggo::pi<float>() / 6.0f &&
+        triangle->angle2() > ggo::pi<float>() / 6.0f &&
+        triangle->angle3() > ggo::pi<float>() / 6.0f)
       {
         // Remove selected edge from available edges list.
         available_edges.erase(available_edges.begin() + index);
@@ -179,108 +180,112 @@ namespace
   }
 }
 
-//////////////////////////////////////////////////////////////
-ggo::cabrel_bitmap_artist::cabrel_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+namespace
 {
+  class cabrel_artist : public ggo::artist
+  {
+  public:
+
+    cabrel_artist(int width, int height) : artist(width, height) {}
+
+    //////////////////////////////////////////////////////////////
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void render_bitmap(void * buffer, int line_byte_step) const
+    {
+      ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step);
+
+      ggo::fill_solid(img, ggo::white_8u());
+
+      auto triangles = compute_triangles();
+
+      // Map triangles to the rendering dimensions.
+      // Get triangles bounding box.
+      ggo::rect_f bounding_box(0.f, 0.f, 0.f, 0.f);
+      for (const auto & triangle : triangles)
+      {
+        bounding_box.extend(triangle.v1());
+        bounding_box.extend(triangle.v2());
+        bounding_box.extend(triangle.v3());
+      }
+
+      // Scale and move triangles.
+      const float ratio = 0.75f * min_size() / (std::max(bounding_box.width(), bounding_box.height()));
+      const ggo::vec2_f offset(0.5f * width(), 0.5f * height());
+      for (auto & triangle : triangles)
+      {
+        triangle.v1() -= bounding_box.center();
+        triangle.v2() -= bounding_box.center();
+        triangle.v3() -= bounding_box.center();
+
+        triangle.v1() *= ratio;
+        triangle.v2() *= ratio;
+        triangle.v3() *= ratio;
+
+        triangle.v1() += offset;
+        triangle.v2() += offset;
+        triangle.v3() += offset;
+      }
+
+      // Paint shadows.
+      ggo::scene2d<ggo::pixel_type_traits<pixel_type>::color_t> shadows;
+      const ggo::vec2_f shadow_offset(0.01f * min_size(), -0.01f * min_size());
+      for (auto triangle : triangles)
+      {
+        ggo::triangle2d_f shadow_triangle(triangle);
+        shadow_triangle.v1() += shadow_offset;
+        shadow_triangle.v2() += shadow_offset;
+        shadow_triangle.v3() += shadow_offset;
+
+        shadows.make_paint_shape(shadow_triangle, ggo::black_8u());
+      }
+      ggo::paint<ggo::sampling_4x4>(img, shadows);
+
+      float stddev = 0.01f * min_size();
+      ggo::gaussian_blur(img, stddev);
+
+      // Paint the triangles.
+      ggo::scene2d<ggo::pixel_type_traits<pixel_type>::color_t> scene;
+
+      float border_size = 0.00025f * min_size();
+
+      for (const auto & triangle : triangles)
+      {
+        scene.make_paint_shape(triangle, { ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>() });
+
+        auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
+        {
+          scene.make_paint_shape(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
+        };
+
+        create_segment(triangle.v1(), triangle.v2());
+        create_segment(triangle.v2(), triangle.v3());
+        create_segment(triangle.v3(), triangle.v1());
+      }
+
+      ggo::paint<ggo::sampling_4x4>(img, scene);
+    }
+  };
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::cabrel_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  cabrel_artist artist(width, height);
+
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
+    artist.render_bitmap<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, line_byte_step);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
+    artist.render_bitmap<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, line_byte_step);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
   {
-    render_bitmap_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer);
+    artist.render_bitmap<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, line_byte_step);
   }
   else
   {
     GGO_FAIL();
   }
 }
-
-//////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::cabrel_bitmap_artist::render_bitmap_t(void * buffer) const
-{
-  image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
-
-  ggo::fill_solid(img, ggo::white_8u(), ggo::rect_int::from_width_height(width(), height()));
-
-  auto triangles = compute_triangles();
-
-  // Map triangles to the rendering dimensions.
-  // Get triangles bounding box.
-  ggo::rect_f bounding_box(0.f, 0.f, 0.f, 0.f);
-  for (const auto & triangle : triangles)
-  {
-    bounding_box.extend(triangle.v1());
-    bounding_box.extend(triangle.v2());
-    bounding_box.extend(triangle.v3());
-  }
-
-  // Scale and move triangles.
-  const float ratio = 0.75f * min_size() / (std::max(bounding_box.width(), bounding_box.height()));
-  const ggo::vec2_f offset(0.5f * width(), 0.5f * height());
-  for (auto & triangle : triangles)
-  {
-    triangle.v1() -= bounding_box.center();
-    triangle.v2() -= bounding_box.center();
-    triangle.v3() -= bounding_box.center();
-
-    triangle.v1() *= ratio;
-    triangle.v2() *= ratio;
-    triangle.v3() *= ratio;
-
-    triangle.v1() += offset;
-    triangle.v2() += offset;
-    triangle.v3() += offset;
-  }
-
-  // Paint shadows.
-  ggo::scene2d<pixel_type_traits<pixel_type>::color_t> shadows;
-  const ggo::vec2_f shadow_offset(0.01f * min_size(), -0.01f * min_size());
-  for (auto triangle : triangles)
-  {
-    ggo::triangle2d_f shadow_triangle(triangle);
-    shadow_triangle.v1() += shadow_offset;
-    shadow_triangle.v2() += shadow_offset;
-    shadow_triangle.v3() += shadow_offset;
-
-    shadows.make_paint_shape(shadow_triangle, ggo::black_8u());
-  }
-  ggo::paint<ggo::sampling_4x4>(img, shadows);
-
-  float stddev = 0.01f * min_size();
-  ggo::gaussian_blur(img, stddev);
-
-  // Paint the triangles.
-  ggo::scene2d<pixel_type_traits<pixel_type>::color_t> scene;
-
-  float border_size = 0.00025f * min_size();
-
-  for (const auto & triangle : triangles)
-  {
-    scene.make_paint_shape(triangle, { ggo::rand<uint8_t>(), ggo::rand<uint8_t>(), ggo::rand<uint8_t>() });
-
-    auto create_segment = [&](const ggo::pos2_f & p1, const ggo::pos2_f & p2)
-    {
-      scene.make_paint_shape(ggo::capsule_f(p1, p2, border_size), ggo::black_8u());
-    };
-
-    create_segment(triangle.v1(), triangle.v2());
-    create_segment(triangle.v2(), triangle.v3());
-    create_segment(triangle.v3(), triangle.v1());
-  }
-
-  ggo::paint<ggo::sampling_4x4>(img, scene);
-}
-

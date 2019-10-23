@@ -1,4 +1,4 @@
-#include "ggo_voronoi_artist.h"
+#include "ggo_voronoi_bitmap_artist.h"
 #include <map>
 #include <kernel/trees/ggo_tree.h>
 #include <kernel/memory/ggo_array.h>
@@ -298,21 +298,13 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::voronoi_artist::voronoi_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-ggo::bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
-{
-
-}
-
-//////////////////////////////////////////////////////////////
-void ggo::voronoi_artist::render_bitmap(void * buffer) const
+void ggo::voronoi_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
   int scale_factor = 4;
 
-  auto voronoi_tree = create_voronoi_tree(scale_factor * width(), scale_factor * height());
-  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * width(), scale_factor * height(), scale_factor);
+  auto voronoi_tree = create_voronoi_tree(scale_factor * width, scale_factor * height);
+  auto voronoi_map = create_voronoi_map(voronoi_tree, scale_factor * width, scale_factor * height, scale_factor);
 
-  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
+  ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, { width, height }, line_byte_step);
   paint_voronoi_map(img, voronoi_tree, voronoi_map, scale_factor);
 }

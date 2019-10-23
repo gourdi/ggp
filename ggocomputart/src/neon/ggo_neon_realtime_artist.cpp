@@ -1,4 +1,4 @@
-#include "ggo_neon_artist.h"
+#include "ggo_neon_realtime_artist.h"
 #include <2d/ggo_color.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/fill/ggo_fill.h>
@@ -6,7 +6,7 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::neon_artist::neon_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::neon_realtime_artist::neon_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
 fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
@@ -19,7 +19,7 @@ fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
+void ggo::neon_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
 {
   if ((frame_index % 100) == 0)
   {
@@ -42,7 +42,7 @@ void ggo::neon_artist::preprocess_frame(int frame_index, uint32_t cursor_events,
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+void ggo::neon_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
 {
   if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
@@ -64,7 +64,7 @@ void ggo::neon_artist::render_tile(void * buffer, int frame_index, const ggo::re
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::neon_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
+void ggo::neon_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
 {
   ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
@@ -86,7 +86,7 @@ void ggo::neon_artist::render_tile_t(void * buffer, int frame_index, const ggo::
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type_, ggo::lines_order memory_lines_order_>
-void ggo::neon_artist::paint_point_t(image_t<pixel_type_, memory_lines_order_> & img, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
+void ggo::neon_realtime_artist::paint_point_t(image_t<pixel_type_, memory_lines_order_> & img, const ggo::pos2_f & point_pos, const ggo::rgb_8u & color, const ggo::rect_int & clipping) const
 {
   const float radius = 0.01f * min_size();
 

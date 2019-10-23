@@ -3,6 +3,7 @@
 
 #include <ggo_bitmap_artist_abc.h>
 #include <kernel/memory/ggo_array.h>
+#include <kernel/ggo_vec2.h>
 
 namespace ggo
 {

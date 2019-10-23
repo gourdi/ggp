@@ -49,14 +49,6 @@ namespace
 }
 
 //////////////////////////////////////////////////////////////
-ggo::polygus_bitmap_artist::polygus_bitmap_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
-:
-bitmap_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
-{
-
-}
-
-//////////////////////////////////////////////////////////////
 std::vector<ggo::pos2_f> ggo::polygus_bitmap_artist::create_head() const
 {
   ggo::cubic_curve_float scaling;
@@ -392,17 +384,17 @@ void ggo::polygus_bitmap_artist::render_polygus(void * buffer) const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::polygus_bitmap_artist::render_bitmap(void * buffer) const
+void ggo::polygus_bitmap_artist::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-  if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
+  if (pixel_type == ggo::pixel_type::bgrx_8u && memory_lines_order == ggo::lines_order::down)
   {
     render_polygus<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
     render_polygus<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer);
   }
-  else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
+  else if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::down)
   {
     render_polygus<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer);
   }

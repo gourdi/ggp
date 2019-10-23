@@ -1,11 +1,11 @@
-#include "ggo_ikeda_artist.h"
+#include "ggo_ikeda_animation_artist.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::ikeda_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::ikeda_animation_artist::ikeda_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
 fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
 {
@@ -40,7 +40,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_typ
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ikeda_artist::render_frame(void * buffer, int frame_index, float time_step)
+void ggo::ikeda_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
 {
   ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
 
@@ -92,7 +92,7 @@ void ggo::ikeda_artist::render_frame(void * buffer, int frame_index, float time_
 }
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_artist::particle ggo::ikeda_artist::create_seed() const
+ggo::ikeda_animation_artist::particle ggo::ikeda_animation_artist::create_seed() const
 {
 	particle particle;
 

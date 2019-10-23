@@ -6,11 +6,11 @@
 
 namespace ggo
 {
-  class ikeda_artist : public fixed_frames_count_animation_artist_abc
+  class ikeda_animation_artist : public fixed_frames_count_animation_artist_abc
   {
   public:
 
-          ikeda_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          ikeda_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
 
   private:
 
