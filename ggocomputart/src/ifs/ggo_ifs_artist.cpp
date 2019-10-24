@@ -81,7 +81,7 @@ void ggo::ifs_artist::render(void * buffer, int line_byte_step, ggo::pixel_type 
 	
 	ggo::image_t<ggo::pixel_type::y_32f, ggo::lines_order::up> img_shadow(size());
   ggo::blit(img_accumul, img_shadow);
-	ggo::gaussian_blur(img_shadow, 0.4f * min_size());
+	ggo::gaussian_blur(img_shadow, 0.01f * min_size());
 	paint_buffer(buffer, line_byte_step, pixel_type, memory_lines_order, 255, img_shadow);
 
 	// Render the shape.

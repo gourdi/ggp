@@ -1,5 +1,6 @@
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_reduce.h>
+#include <kernel/ggo_ease.h>
 #include <kernel/ggo_string_helpers.h>
 #include <kernel/nonreg/ggo_nonreg.h>
 
@@ -256,6 +257,17 @@ GGO_TEST(base, range_intersection)
   GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 3 }, { 1, 4 })->_inf, 2);
   GGO_CHECK_EQ(ggo::get_range_intersection<int>({ 2, 3 }, { 1, 4 })->_sup, 3);
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(base, ease_inout)
+{
+  static_assert(ggo::ease_inout_to<float>(0, 2) == 0.0f);
+  static_assert(ggo::ease_inout_to<float>(1, 2) == 1.0f);
+  static_assert(ggo::ease_inout_to<float>(0, 3) == 0.0f);
+  static_assert(ggo::ease_inout_to<float>(1, 3) == 0.5f);
+  static_assert(ggo::ease_inout_to<float>(2, 3) == 1.0f);
+}
+
 
 
 

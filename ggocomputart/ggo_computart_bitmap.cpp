@@ -3,6 +3,7 @@
 #include <kernel/time/ggo_chronometer.h>
 #include <kernel/memory/ggo_array.h>
 #include <2d/io/ggo_bmp.h>
+#include <2d/fill/ggo_fill.h>
 #include <sstream>
 #include <iostream>
 #include <thread>
@@ -165,8 +166,9 @@ bool parse_args(int argc, char ** argv, ggo_params & params)
 //////////////////////////////////////////////////////////////
 void render_images(const ggo_params & params, int thread_id)
 {
-  std::unique_ptr<ggo::bitmap_artist_abc> artist(ggo::bitmap_artist_abc::create(params._artist_id, params._width, params._height, 3 * params._width, ggo::rgb_8u_yu));
-  ggo::array_8u buffer(3 * params._width * params._height);
+  std::unique_ptr<ggo::bitmap_artist_abc> artist(ggo::bitmap_artist_abc::create(params._artist_id));
+  
+  ggo::image img({ params._width, params._height }, ggo::pixel_type::rgb_8u, ggo::lines_order::up);
   
   while (true)
   {
@@ -192,11 +194,11 @@ void render_images(const ggo_params & params, int thread_id)
     ggo_logger(thread_id, filename.str()) << "Starting rendering image";
 
 		ggo::chronometer chronometer;
-    buffer.fill(0);
-		artist->render_bitmap(buffer.data());
+    ggo::fill_black(img);
+		artist->render_bitmap(img.data(), img.width(), img.height(), img.line_byte_step(), img.pixel_type(), img.memory_lines_order());
     ggo_logger(thread_id, filename.str()) << "Image rendered in " << chronometer.get_display_time();
 
-		if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, 3 * params._width) == false)
+		if (ggo::save_bmp(filename.str(), img) == false)
     {
       ggo_logger(thread_id, filename.str()) << "Failed saving file";
     }

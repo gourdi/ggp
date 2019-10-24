@@ -18,7 +18,7 @@
 // Rendering.
 int anim_workers_ids = 0;
 std::mutex anim_mutex;
-bool display_cpu_usage = false;
+bool display_cpu_usage = true;
 std::condition_variable anim_condition_start;
 std::condition_variable anim_condition_done;
 std::unique_ptr<ggo::realtime_artist_abc> artist;
@@ -54,7 +54,7 @@ ggo::realtime_artist_abc * create_artist()
   };
 #endif
 
-  int index = 4;// ggo::rand<size_t>(0, ids.size() - 1);
+  int index = 7;// ggo::rand<size_t>(0, ids.size() - 1);
 
   std::cout << "Artist ID: " << index << std::endl;
 

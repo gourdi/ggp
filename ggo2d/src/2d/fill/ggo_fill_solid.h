@@ -91,6 +91,22 @@ namespace ggo
       fill_black(*view);
     }
   }
+
+  struct fill_black_functor
+  {
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    static void call(image & img)
+    {
+      ggo::image_t<pixel_type, memory_lines_order> view(img.data(), img.size(), img.line_byte_step());
+
+      fill_black(view);
+    }
+  };
+
+  inline void fill_black(image & img)
+  {
+    ggo::dispatch_image_format<fill_black_functor>(img.pixel_type(), img.memory_lines_order(), img);
+  }
 }
 
 #endif

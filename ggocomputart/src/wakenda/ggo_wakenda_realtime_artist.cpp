@@ -93,9 +93,9 @@ void ggo::wakenda_realtime_artist::process_bkgd(void * buffer, const ggo::rect_i
     int dg = static_cast<int>(c_output.g()) - static_cast<int>(c_bkgd.g());
     int db = static_cast<int>(c_output.b()) - static_cast<int>(c_bkgd.b());
 
-    uint8_t r = c_output.r() + (dr * 63) / 64;
-    uint8_t g = c_output.g() + (dg * 63) / 64;
-    uint8_t b = c_output.r() + (db * 63) / 64;
+    uint8_t r = c_bkgd.r() + (dr * 63) / 64;
+    uint8_t g = c_bkgd.g() + (dg * 63) / 64;
+    uint8_t b = c_bkgd.b() + (db * 63) / 64;
 
     img.write_pixel(x, y, { r, g, b });
   });
@@ -141,10 +141,10 @@ void ggo::wakenda_realtime_artist::preprocess_frame(int frame_index, uint32_t cu
     for (const auto & transform : transforms)
     {
       float scale = ggo::ease_inout(frame_index, frames_count, transform._start._scale, transform._end._scale);
-      float dx = ggo::ease_inout(frame_index, frames_count, transform._start._dx, transform._end._dx);
-      float dy = ggo::ease_inout(frame_index, frames_count, transform._start._dy, transform._end._dy);
-      float powx = ggo::ease_inout(frame_index, frames_count, transform._start._powx, transform._end._powx);
-      float powy = ggo::ease_inout(frame_index, frames_count, transform._start._powy, transform._end._powy);
+      float dx    = ggo::ease_inout(frame_index, frames_count, transform._start._dx, transform._end._dx);
+      float dy    = ggo::ease_inout(frame_index, frames_count, transform._start._dy, transform._end._dy);
+      float powx  = ggo::ease_inout(frame_index, frames_count, transform._start._powx, transform._end._powx);
+      float powy  = ggo::ease_inout(frame_index, frames_count, transform._start._powy, transform._end._powy);
 
       d += scale * safe_pow(p.x() - dx, powx) * safe_pow(p.y() - dy, powy);
     }

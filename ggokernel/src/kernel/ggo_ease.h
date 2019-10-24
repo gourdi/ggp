@@ -31,7 +31,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   // t in [0, 1], result in [0, 1]
   template <typename data_t>
-  data_t ease_inout(data_t t)
+  constexpr data_t ease_inout(data_t t)
   {
     static_assert(std::is_floating_point<data_t>::value);
     data_t sq = t * t;
@@ -40,9 +40,9 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  data_t ease_inout_to(int index, int count)
+  constexpr data_t ease_inout_to(int index, int count)
   {
-    return ease_inout(data_t(index) / data_t(count));
+    return ease_inout(data_t(index) / data_t(count - 1));
   }
 
   //////////////////////////////////////////////////////////////
