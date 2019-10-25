@@ -420,5 +420,23 @@ namespace ggo
   };
 }
 
+namespace ggo
+{
+  template <typename data_t>
+  struct floating_point_traits {};
+
+  template <>
+  struct floating_point_traits<float>
+  {
+    using type = float;
+  };
+
+  template <>
+  struct floating_point_traits<double>
+  {
+    using type = double;
+  };
+}
+
 #endif
 

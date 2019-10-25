@@ -2,6 +2,7 @@
 #define __GGO_SCALE1D__
 
 #include <kernel/ggo_kernel.h>
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 namespace ggo
 {
@@ -35,37 +36,14 @@ namespace ggo
     GGO_ASSERT(to <= zero_offset + 1);
     GGO_ASSERT(from <= to);
 
-    // Compute points coordinates.
     int i_p = zero_offset - 1;
     int i_c = zero_offset;
     int i_n = zero_offset + 1;
     int i_nn = zero_offset + 2;
 
-    // Retrieve the values of the cubic and its derivatives.
-    data_t y0 = in(i_c);	// Value at x=0.
-    data_t y1 = in(i_n);	// Value at x=1.
-    data_t d0 = (in(i_n) - in(i_p)) / real_t(2); // Derative at x=0.
-    data_t d1 = (in(i_nn) - in(i_c)) / real_t(2); // Derative at x=1.
+    cubic<data_t> cub(in(i_p), in(i_c), in(i_n), in(i_nn));
 
-    // Now we have a linear system with 4 equations:
-    // y0 = d;
-    // y1 = a+b+c+d
-    // d0 = c
-    // d1 = 3*a+2*c+b
-    // So we can compute the cubic's coefs.
-    data_t a = real_t(2) * y0 - real_t(2) * y1 + d0 + d1;
-    data_t b = real_t(-3) * y0 + real_t(3) * y1 - real_t(2) * d0 - d1;
-    data_t c = d0;
-    data_t d = y0;
-
-    auto eval_cubic_integrale = [](data_t a, data_t b, data_t c, data_t d, real_t x)
-    {
-      real_t xx = x * x;
-      return a * xx * xx / real_t(4) + b * xx * x / real_t(3) + c * xx / real_t(2) + d * x;
-    };
-
-    // Finally, we can integrate.
-    return eval_cubic_integrale(a, b, c, d, to - zero_offset) - eval_cubic_integrale(a, b, c, d, from - zero_offset);
+    return cub.integrate(from - zero_offset, to - zero_offset);
   }
 
   //////////////////////////////////////////////////////////////
@@ -76,8 +54,8 @@ namespace ggo
 
     data_t val(0);
     int from_i = std::max(0, static_cast<int>(from));
-    int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
-    GGO_ASSERT(from_i < to_i);
+    int to_i = std::min(size_in - 1, static_cast<int>(to + real_t(1.0)));
+    GGO_ASSERT_LT(from_i, to_i);
 
     // Integrate the middle parts.
     for (int i = from_i; i < to_i; ++i)
@@ -102,8 +80,8 @@ namespace ggo
 
     data_t val = 0;
     int from_i = std::max(0, static_cast<int>(from));
-    int to_i = std::min(size_in - 1, static_cast<int>(to + 1.0));
-    GGO_ASSERT(from_i < to_i);
+    int to_i = std::min(size_in - 1, static_cast<int>(to + real_t(1.0)));
+    GGO_ASSERT_LT(from_i, to_i);
 
     // Integrate the middle parts.
     for (int i = from_i; i < to_i; ++i)

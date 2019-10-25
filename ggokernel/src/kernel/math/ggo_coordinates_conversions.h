@@ -9,7 +9,16 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  constexpr int from_continuous_to_pixel(data_t v)
+  constexpr int lower_bound(data_t v)
+  {
+    static_assert(std::is_floating_point<data_t>::value);
+
+    return v >= data_t(0.5f) ? static_cast<int>(v - data_t(0.5)) : static_cast<int>(v - data_t(1.5));
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  constexpr int from_continuous_to_discrete(data_t v)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
@@ -18,7 +27,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  constexpr data_t from_pixel_to_continuous(int v)
+  constexpr data_t from_discrete_to_continuous(int v)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
@@ -27,25 +36,25 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  constexpr ggo::pos2_i from_continuous_to_pixel(const ggo::pos2<data_t> & p)
+  constexpr ggo::pos2_i from_continuous_to_discrete(const ggo::pos2<data_t> & p)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
-    return { ggo::from_continuous_to_pixel(p.x()), ggo::from_continuous_to_pixel(p.y()) };
+    return { ggo::from_continuous_to_discrete(p.x()), ggo::from_continuous_to_discrete(p.y()) };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  constexpr ggo::pos2<data_t> from_pixel_to_continuous(const pos2_i & p)
+  constexpr ggo::pos2<data_t> from_discrete_to_continuous(const pos2_i & p)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
-    return { ggo::from_pixel_to_continuous<data_t>(p.x()), ggo::from_pixel_to_continuous<data_t>(p.y()) };
+    return { ggo::from_discrete_to_continuous<data_t>(p.x()), ggo::from_discrete_to_continuous<data_t>(p.y()) };
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  rect_int from_continuous_to_pixel_exclusive(const ggo::rect_data<data_t> & rect)
+  rect_int from_continuous_to_discrete_exclusive(const ggo::rect_data<data_t> & rect)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
@@ -59,7 +68,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  std::optional<rect_int> from_continuous_to_pixel_inclusive(const ggo::rect_data<data_t> & rect)
+  std::optional<rect_int> from_continuous_to_discrete_inclusive(const ggo::rect_data<data_t> & rect)
   {
     static_assert(std::is_floating_point<data_t>::value);
 
@@ -78,7 +87,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  ggo::rect_data<data_t> from_pixel_to_continuous(const ggo::rect_int & rect)
+  ggo::rect_data<data_t> from_discrete_to_continuous(const ggo::rect_int & rect)
   {
     static_assert(std::is_floating_point<data_t>::value);
 

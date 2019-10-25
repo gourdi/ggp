@@ -64,3 +64,78 @@ GGO_TEST(scale2d, linear_upsample)
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scale2d, resample_bilinear)
+{
+  constexpr int width_in = 2;
+  constexpr int height_in = 2;
+  const float in[width_in * height_in] = {
+    0.0f, 1.0f,
+    0.0f, 2.0f };
+
+  constexpr int width_out = 4;
+  constexpr int height_out = 4;
+  float out[width_out * height_out] = { 0 };
+
+  auto in_func  = [&](int x, int y) { x = ggo::mirror_index(x, width_in); y = ggo::mirror_index(y, height_in); return in[y * width_in + x]; };
+  auto out_func = [&](int x, int y, float v) { out[y * width_out + x] = v; };
+
+  ggo::resample<ggo::sampling_1, ggo::interpolation2d_type::bilinear, float>(in_func, width_in, height_in, out_func, width_out, height_out);
+
+  GGO_CHECK_FLOAT_EQ(out[0], 0.0f);
+  GGO_CHECK_FLOAT_EQ(out[1], 0.25f);
+  GGO_CHECK_FLOAT_EQ(out[2], 0.75f);
+  GGO_CHECK_FLOAT_EQ(out[3], 1.0f);
+
+  GGO_CHECK_FLOAT_EQ(out[4], 0.0f);
+  GGO_CHECK_FLOAT_EQ(out[5], 0.3125f);
+  GGO_CHECK_FLOAT_EQ(out[6], 0.9375f);
+  GGO_CHECK_FLOAT_EQ(out[7], 1.25f);
+
+  GGO_CHECK_FLOAT_EQ(out[8], 0.0f);
+  GGO_CHECK_FLOAT_EQ(out[9], 0.4375f);
+  GGO_CHECK_FLOAT_EQ(out[10], 1.3125f);
+  GGO_CHECK_FLOAT_EQ(out[11], 1.75f);
+
+  GGO_CHECK_FLOAT_EQ(out[12], 0.0f);
+  GGO_CHECK_FLOAT_EQ(out[13], 0.5f);
+  GGO_CHECK_FLOAT_EQ(out[14], 1.5f);
+  GGO_CHECK_FLOAT_EQ(out[15], 2.0f);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scale2d, resample_bicubic)
+{
+  constexpr int width_in = 3;
+  constexpr int height_in = 2;
+  const float in[width_in * height_in] = {
+    1.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, 1.0f };
+
+  constexpr int width_out = 4;
+  constexpr int height_out = 3;
+  float out[width_out * height_out] = { 0 };
+
+  auto in_func  = [&](int x, int y) { x = ggo::mirror_index(x, width_in); y = ggo::mirror_index(y, height_in); return in[y * width_in + x]; };
+  auto out_func = [&](int x, int y, float v) { out[y * width_out + x] = v; };
+
+  ggo::resample<ggo::sampling_2x2, ggo::interpolation2d_type::bicublic, float>(in_func, width_in, height_in, out_func, width_out, height_out);
+
+  GGO_CHECK_FLOAT_EQ(out[0], 1.03532910f);
+  GGO_CHECK_FLOAT_EQ(out[1], 0.362101257f);
+  GGO_CHECK_FLOAT_EQ(out[2], -0.0777994767f);
+  GGO_CHECK_FLOAT_EQ(out[3], -0.0584309921f);
+
+  GGO_CHECK_FLOAT_EQ(out[4], 1.03482056f);
+  GGO_CHECK_FLOAT_EQ(out[5], 0.329956055f);
+  GGO_CHECK_FLOAT_EQ(out[6], 0.121582061f);
+  GGO_CHECK_FLOAT_EQ(out[7], 0.516723514f);
+
+  GGO_CHECK_FLOAT_EQ(out[8], 1.03431189f);
+  GGO_CHECK_FLOAT_EQ(out[9], 0.297810882f);
+  GGO_CHECK_FLOAT_EQ(out[10], 0.320963532f);
+  GGO_CHECK_FLOAT_EQ(out[11], 1.09187818f);
+}
+
+
+

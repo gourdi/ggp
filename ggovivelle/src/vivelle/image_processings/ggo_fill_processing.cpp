@@ -13,7 +13,7 @@ namespace ggo
       using color_t = pixel_type_traits<pixel_type>::color_t;
       constexpr auto color_space = color_traits<color_t>::color_space;
 
-      ggo::image_view_t<pixel_type, memory_lines_order> view(image.data(), image.size(), image.line_byte_step());
+      ggo::image_t<pixel_type, memory_lines_order> view(image.data(), image.size(), image.line_byte_step());
 
       if constexpr (color_space == color_space::rgb)
       {

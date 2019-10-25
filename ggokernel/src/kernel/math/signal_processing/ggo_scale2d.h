@@ -1,7 +1,10 @@
 #ifndef __GGO_SCALE2D__
 #define __GGO_SCALE2D__
 
+#include <kernel/ggo_kernel.h>
 #include <kernel/math/signal_processing/ggo_scale1d.h>
+#include <kernel/math/interpolation/ggo_interpolation2d.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <kernel/memory/ggo_array.h>
 
@@ -90,6 +93,36 @@ namespace ggo
     scale_2d<horz_algo, vert_algo, data_t, data_t>(
       in, static_cast<int>(width_in), static_cast<int>(height_in),
       out, static_cast<int>(width_out), static_cast<int>(height_out));
+  }
+}
+
+//////////////////////////////////////////////////////////////
+// Sampling base scaling.
+namespace ggo
+{
+  template <ggo::pixel_sampling sampling, ggo::interpolation2d_type interp, typename scalar_t, typename in_t, typename out_t>
+  void resample(in_t && in, int width_in, int height_in, out_t && out, int width_out, int height_out)
+  {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
+    using data_t = std::result_of<in_t(int, int)>::type;
+
+    const scalar_t horz_ratio = scalar_t(width_in)  / scalar_t(width_out);
+    const scalar_t vert_ratio = scalar_t(height_in) / scalar_t(height_out);
+
+    for (int y = 0; y < height_out; ++y)
+    {
+      for (int x = 0; x < width_out; ++x)
+      {
+        data_t v(0);
+        ggo::sampler<sampling>::sample_pixel<scalar_t>(x, y, [&](scalar_t x_f, scalar_t y_f)
+        {
+          v += ggo::interpolation2d<interp, data_t>(in, x_f * horz_ratio, y_f * vert_ratio);
+        });
+
+        out(x, y, v / scalar_t(sampler<sampling>::samples_count));
+      }
+    }
   }
 }
 

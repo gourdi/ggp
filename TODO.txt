@@ -3,5 +3,9 @@
 - http://www.wblut.com/
 - Visual : raytracer -> remettre le Whole Program Optimization à Use Link Time Code Generation
 
+http://www.geisswerks.com/
+http://kevinbeason.com/smallpt/
+https://www.karlsims.com/rd.html
+
 Physarum:
 https://www.reddit.com/r/generative/comments/bvhepm/physarum_in_3d_with_depth_of_field_rendering/
