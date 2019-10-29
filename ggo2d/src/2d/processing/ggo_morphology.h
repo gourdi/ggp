@@ -160,8 +160,8 @@ namespace ggo
     template <typename input_void_ptr_t>
     static void erosion_disc(const image_base<input_void_ptr_t> & input, image & output, float radius)
     {
-      ggo::const_image_view_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
-      ggo::image_view_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
+      ggo::const_image_t<pixel_type> input_view(input.data(), input.size(), input.line_byte_step());
+      ggo::image_t<pixel_type> output_view(output.data(), output.size(), output.line_byte_step());
 
       ggo::erosion_disc(input_view, output_view, radius);
     }

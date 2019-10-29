@@ -14,30 +14,35 @@ namespace ggo
   {
     using color_t = ggo::pixel_type_traits<pt>::color_t;
     using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
+    using floating_point_t = ggo::color_traits<floating_point_color_t>::sample_t;
+
+    static_assert(std::is_floating_point_v<floating_point_t>);
 
     auto in = [&](int x, int y)
     {
-      auto c = ggo::pixel_type_traits<pt>::read(input.pixel_ptr(x, y));
-
-      return ggo::convert_color_to<floating_point_color_t>(c);
+      x = ggo::clamp(x, 0, input.width() - 1);
+      y = ggo::clamp(y, 0, input.height() - 1);
+      return ggo::convert_color_to<floating_point_color_t>(input.read_pixel(x, y));
     };
 
     auto out = [&](int x, int y, const floating_point_color_t & c)
     {
-      ggo::pixel_type_traits<pt>::write(output.pixel_ptr(x, y), ggo::convert_color_to<color_t>(c));
+      output.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
     };
 
-    switch (algo)
-    {
-    case ggo::scaling_algo::linear_integration:
-      ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration, floating_point_color_t, float>(
-        in, input.size().width(), input.size().height(), out, output.width(), output.height());
-      break;
-    case ggo::scaling_algo::cubic_integration:
-      ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration, floating_point_color_t, float>(
-        in, input.size().width(), input.size().height(), out, output.width(), output.height());
-      break;
-    }
+    ggo::resample<ggo::sampling_1, ggo::interpolation2d_type::bicublic, float>(in, input.size().width(), input.size().height(), out, output.width(), output.height());
+
+    //switch (algo)
+    //{
+    //case ggo::scaling_algo::linear_integration:
+    //  ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration, floating_point_color_t, float>(
+    //    in, input.size().width(), input.size().height(), out, output.width(), output.height());
+    //  break;
+    //case ggo::scaling_algo::cubic_integration:
+    //  ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration, floating_point_color_t, float>(
+    //    in, input.size().width(), input.size().height(), out, output.width(), output.height());
+    //  break;
+    //}
   }
 }
 

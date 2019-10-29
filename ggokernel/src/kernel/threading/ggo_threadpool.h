@@ -23,8 +23,13 @@ namespace ggo
     auto enqueue(func_t && f, args_t &&... args) -> std::future<typename std::result_of<func_t(args_t...)>::type>;
 
     auto threads_count() const { return workers.size(); }
+
+    static void init_global(int threads_count = std::thread::hardware_concurrency());
+    static threadpool * global();
     
   private:
+    static std::unique_ptr<threadpool> _global;
+
     // need to keep track of threads so we can join them
     std::vector<std::thread> workers;
     // the task queue
@@ -35,32 +40,6 @@ namespace ggo
     std::condition_variable condition;
     bool stop = false;
   };
-
-  // the constructor just launches some amount of workers
-  inline threadpool::threadpool(size_t threads_count)
-  {
-    for (size_t i = 0; i < threads_count; ++i)
-    {
-      workers.emplace_back([this]
-      {
-        for (;;)
-        {
-          std::function<void()> task;
-
-          {
-            std::unique_lock<std::mutex> lock(this->queue_mutex);
-            this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
-            if (this->stop && this->tasks.empty())
-              return;
-            task = std::move(this->tasks.front());
-            this->tasks.pop();
-          }
-
-          task();
-        }
-      });
-    }
-  }
 
   // add new work item to the pool
   template<class func_t, class... args_t>
@@ -78,20 +57,6 @@ namespace ggo
     }
     condition.notify_one();
     return res;
-  }
-
-  // the destructor joins all threads
-  inline threadpool::~threadpool()
-  {
-    {
-      std::unique_lock<std::mutex> lock(queue_mutex);
-      stop = true;
-    }
-    condition.notify_all();
-    for (std::thread &worker : workers)
-    {
-      worker.join();
-    }
   }
 }
 

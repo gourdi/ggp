@@ -4,9 +4,9 @@
 #include <vector>
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_rect_int.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_image.h>
-#include <2d/paint/ggo_pixel_sampling.h>
 #include <2d/paint/ggo_brush.h>
 #include <2d/paint/ggo_blend.h>
 #include <2d/paint/ggo_paint_shape_abc.h>

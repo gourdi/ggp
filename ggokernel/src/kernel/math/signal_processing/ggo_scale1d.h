@@ -10,7 +10,17 @@ namespace ggo
   {
     nearest_neighbor,
     linear_integration,
-    cubic_integration
+    cubic_integration,
+    linear_resampling_1,
+    linear_resampling_2x2,
+    linear_resampling_4x4,
+    linear_resampling_8x8,
+    linear_resampling_16x16,
+    cubic_resampling_1,
+    cubic_resampling_2x2,
+    cubic_resampling_4x4,
+    cubic_resampling_8x8,
+    cubic_resampling_16x16,
   };
 
   //////////////////////////////////////////////////////////////
@@ -32,9 +42,9 @@ namespace ggo
   data_t integrate_cubic_single(input in, int zero_offset, real_t from, real_t to)
   {
     static_assert(std::is_floating_point<real_t>::value);
-    GGO_ASSERT(from >= zero_offset);
-    GGO_ASSERT(to <= zero_offset + 1);
-    GGO_ASSERT(from <= to);
+    GGO_ASSERT_GE(from, zero_offset);
+    GGO_ASSERT_LE(to, zero_offset + 1);
+    GGO_ASSERT_LE(from, to);
 
     int i_p = zero_offset - 1;
     int i_c = zero_offset;
@@ -50,7 +60,7 @@ namespace ggo
   template <typename data_t, typename real_t, typename input>
   data_t integrate_cubic(input in, int size_in, real_t from, real_t to)
   {
-    GGO_ASSERT(from < to);
+    GGO_ASSERT_LT(from, to);
 
     data_t val(0);
     int from_i = std::max(0, static_cast<int>(from));

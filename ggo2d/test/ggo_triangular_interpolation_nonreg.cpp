@@ -17,7 +17,7 @@ GGO_TEST(triangular_interpolation, function)
   {
     for (int x = 0; x < image.width(); ++x)
     {
-      const ggo::pos2_f p = ggo::from_pixel_to_continuous<float>(ggo::pos2_i(x, y));
+      const ggo::pos2_f p = ggo::from_discrete_to_continuous<float>(ggo::pos2_i(x, y));
       const ggo::pos2_f p0(50.f, 50.f);
       const ggo::pos2_f p1(150.f, 50.f);
       const ggo::pos2_f p2(50.f, 150.f);

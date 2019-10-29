@@ -1,12 +1,12 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/time/ggo_chronometer.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_color.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
-#include <2d/paint/ggo_pixel_sampling.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_color_triangle.h>
 #include <2d/paint/ggo_brush.h>

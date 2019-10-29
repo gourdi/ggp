@@ -27,7 +27,7 @@ namespace ggo
     {
       for (int x = 0; x < w; ++x)
       {
-        auto s = from_pixel_to_continuous<floating_point_t>(ggo::pos2_i(x, y));
+        auto s = from_discrete_to_continuous<floating_point_t>(ggo::pos2_i(x, y));
 
         auto val = field.sample(s.x(), s.y());
 
@@ -45,6 +45,8 @@ namespace ggo
   {
     using floating_point_color_t = typename color_traits<typename image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<typename floating_point_color_t>::sample_t;
+
+    static_assert(std::is_floating_point_v<floating_point_t>);
 
     ggo::perlin_noise_field2d<floating_point_t> perlin_field2d;
 

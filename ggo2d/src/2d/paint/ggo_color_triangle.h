@@ -36,7 +36,7 @@ namespace ggo
     // Brush.
     brush_color_t brush(int x, int y) const
     {
-      const ggo::pos2<data_t> p = ggo::from_pixel_to_continuous<data_t>({ x, y });
+      const ggo::pos2<data_t> p = ggo::from_discrete_to_continuous<data_t>({ x, y });
       auto c = ggo::triangular_interpolation<data_t, brush_color_t, false>(_triangle.v1(), _color1, _triangle.v2(), _color2, _triangle.v3(), _color3, p);
       if (c.has_value() == false)
       {

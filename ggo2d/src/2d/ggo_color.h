@@ -203,7 +203,7 @@ namespace ggo
   template <>
   struct color_traits<ya_32f>
   {
-    using floating_point_color_t = ya_32f;
+    using floating_point_color_t = ggo::ya_32f;
     using no_alpha_color_t = float;
     using alpha_color_t = ggo::ya_32f;
     using sample_t = float;
@@ -388,6 +388,27 @@ namespace ggo
   struct floating_point_color_traits<ggo::rgb_32f, float>
   {
     using floating_point_color_t = ggo::rgb_32f;
+  };
+}
+
+namespace ggo
+{
+  template <>
+  struct floating_point_traits<ggo::ya_32f>
+  {
+    using type = float;
+  };
+
+  template <>
+  struct floating_point_traits<ggo::rgb_32f>
+  {
+    using type = float;
+  };
+
+  template <>
+  struct floating_point_traits<ggo::rgba_32f>
+  {
+    using type = float;
   };
 }
 

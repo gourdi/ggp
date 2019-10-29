@@ -1,6 +1,7 @@
 #include <kernel/ggo_string_helpers.h>
 #include <kernel/ggo_color_stream.h>
 #include <kernel/time/ggo_chronometer.h>
+#include <kernel/threading/ggo_threadpool.h>
 #include <vivelle/ggo_command.h>
 #include <vivelle/ggo_io.h>
 #include <vivelle/image_processings/ggo_image_processing_abc.h>
@@ -32,6 +33,8 @@ namespace ggo
 
 int main(int argc, char ** argv)
 {
+  ggo::threadpool::init_global();
+
   std::vector<std::string> args;
   for (int arg = 1; arg < argc; ++arg)
   {

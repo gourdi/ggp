@@ -10,9 +10,9 @@ GGO_TEST(scale2d, nearest_neighbor_upsample)
     { 4, 5, 6 } });
   ggo::array2d_32s output(6, 4);
 
-  ggo::scale_2d<ggo::scaling_algo::nearest_neighbor, ggo::scaling_algo::nearest_neighbor>(
-    input.data(), input.width(), input.height(), int(sizeof(int32_t) * input.width()),
-    output.data(), output.width(), output.height(), int(sizeof(int32_t) * output.width()));
+  ggo::scale_2d<ggo::scaling_algo::nearest_neighbor>(
+    input.data(), input.width(), input.height(),
+    output.data(), output.width(), output.height());
 
   const ggo::array2d_32s expected({
     { 1, 1, 2, 2, 3, 3 },
@@ -32,9 +32,9 @@ GGO_TEST(scale2d, linear_upsample)
       { 4.f, 5.f, 6.f } });
     ggo::array2d_32f output(5, 3);
 
-    ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
-      input.data(), input.width(), input.height(), int(sizeof(int32_t) * input.width()),
-      output.data(), output.width(), output.height(), int(sizeof(int32_t) * output.width()));
+    ggo::scale_2d<ggo::scaling_algo::linear_integration>(
+      input.data(), input.width(), input.height(),
+      output.data(), output.width(), output.height());
 
     const ggo::array2d_32f expected({
       { 1.7f, 2.1f, 2.5f, 2.9f, 3.3f },
@@ -50,9 +50,9 @@ GGO_TEST(scale2d, linear_upsample)
       { 1.f, 1.f, 2.f } });
     ggo::array2d_32f output(6, 4);
 
-    ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration>(
-      input.data(), input.width(), input.height(), int(sizeof(int32_t) * input.width()),
-      output.data(), output.width(), output.height(), int(sizeof(int32_t) * output.width()));
+    ggo::scale_2d<ggo::scaling_algo::linear_integration>(
+      input.data(), input.width(), input.height(),
+      output.data(), output.width(), output.height());
 
     const ggo::array2d_32f expected({
       { 1.f, 1.f, 1.f, 1.02083325f, 1.0625f, 1.10416651f },
