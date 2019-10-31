@@ -1,10 +1,10 @@
 #include "ggo_cells_bitmap_artist.h"
 #include <kernel/memory/ggo_array.h>
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <2d/processing/ggo_gaussian_blur.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_seed_paint.h>
-#include <2d/paint/ggo_pixel_sampling.h>
 #include <ggo_artist.h>
 
 namespace

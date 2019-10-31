@@ -2,9 +2,9 @@
 #define __GGO_POUPETTE_ARTIST__
 
 #include <kernel/ggo_rect_int.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <2d/ggo_color.h>
 #include <2d/ggo_pixel_type.h>
-#include <2d/paint/ggo_pixel_sampling.h>
 
 namespace ggo
 {

@@ -3,7 +3,7 @@
 
 #include <ggo_realtime_artist_abc.h>
 #include <kernel/memory/ggo_array.h>
-#include <2D/paint/ggo_pixel_sampling.h>
+#include <kernel/math/ggo_pixel_sampling.h>
 
 namespace ggo
 {

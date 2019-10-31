@@ -58,7 +58,7 @@ void ggo::storni_realtime_artist::storni::avoid_obstacles(int width, int height,
 //////////////////////////////////////////////////////////////
 void ggo::storni_realtime_artist::storni::avoid_cursor(int width, int height, ggo::pos2_i cursor_pos, float influence_hypot, float weight)
 {
-  const ggo::vec2_f diff(ggo::from_pixel_to_continuous<float>(cursor_pos) - _pos);
+  const ggo::vec2_f diff(ggo::from_discrete_to_continuous<float>(cursor_pos) - _pos);
   const float hypot = ggo::hypot(diff);
 
   if (hypot < influence_hypot)
@@ -477,7 +477,7 @@ void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect
       obstacle.x() - obstacle_hypot, obstacle.x() + obstacle_hypot,
       obstacle.y() - obstacle_hypot, obstacle.y() + obstacle_hypot);
 
-    ggo::rect_int obstacle_pixel_rect = from_continuous_to_pixel_exclusive(obstacle_rect);
+    ggo::rect_int obstacle_pixel_rect = from_continuous_to_discrete_exclusive(obstacle_rect);
     obstacle_pixel_rect.clip(width(), height());
 
     if (obstacle_pixel_rect.clip(clipping) == true)

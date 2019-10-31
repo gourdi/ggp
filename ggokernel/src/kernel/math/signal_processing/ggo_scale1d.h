@@ -51,9 +51,7 @@ namespace ggo
     int i_n = zero_offset + 1;
     int i_nn = zero_offset + 2;
 
-    cubic<data_t> cub(in(i_p), in(i_c), in(i_n), in(i_nn));
-
-    return cub.integrate(from - zero_offset, to - zero_offset);
+    return cubic<data_t, real_t>::make_smooth(in(i_p), in(i_c), in(i_n), in(i_nn)).integrate(from - zero_offset, to - zero_offset);
   }
 
   //////////////////////////////////////////////////////////////

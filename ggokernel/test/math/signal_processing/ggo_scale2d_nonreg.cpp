@@ -77,10 +77,7 @@ GGO_TEST(scale2d, resample_bilinear)
   constexpr int height_out = 4;
   float out[width_out * height_out] = { 0 };
 
-  auto in_func  = [&](int x, int y) { x = ggo::mirror_index(x, width_in); y = ggo::mirror_index(y, height_in); return in[y * width_in + x]; };
-  auto out_func = [&](int x, int y, float v) { out[y * width_out + x] = v; };
-
-  ggo::resample<ggo::sampling_1, ggo::interpolation2d_type::bilinear, float>(in_func, width_in, height_in, out_func, width_out, height_out);
+  ggo::scale_2d<ggo::scaling_algo::linear_resampling_1>(in, width_in, height_in, out, width_out, height_out);
 
   GGO_CHECK_FLOAT_EQ(out[0], 0.0f);
   GGO_CHECK_FLOAT_EQ(out[1], 0.25f);
@@ -116,10 +113,7 @@ GGO_TEST(scale2d, resample_bicubic)
   constexpr int height_out = 3;
   float out[width_out * height_out] = { 0 };
 
-  auto in_func  = [&](int x, int y) { x = ggo::mirror_index(x, width_in); y = ggo::mirror_index(y, height_in); return in[y * width_in + x]; };
-  auto out_func = [&](int x, int y, float v) { out[y * width_out + x] = v; };
-
-  ggo::resample<ggo::sampling_2x2, ggo::interpolation2d_type::bicublic, float>(in_func, width_in, height_in, out_func, width_out, height_out);
+  ggo::scale_2d<ggo::scaling_algo::cubic_resampling_2x2>(in, width_in, height_in, out, width_out, height_out);
 
   GGO_CHECK_FLOAT_EQ(out[0], 1.03532910f);
   GGO_CHECK_FLOAT_EQ(out[1], 0.362101257f);

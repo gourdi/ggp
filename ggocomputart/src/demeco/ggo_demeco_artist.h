@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <memory>
+#include <kernel/math/ggo_pixel_sampling.h>
 #include <2d/ggo_image.h>
-#include <2d/paint/ggo_pixel_sampling.h>
 #include <2d/paint/ggo_paint_shape_abc.h>
 #include <2d/paint/ggo_multi_scale_paint.h>
 

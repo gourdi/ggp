@@ -15,6 +15,8 @@ namespace ggo
     using color_t = ggo::pixel_type_traits<pt>::color_t;
     using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
     using floating_point_t = ggo::color_traits<floating_point_color_t>::sample_t;
+    using scanner2d_t = image_base_t<pt, lo, in_void_ptr_t>::scanner2d_t;
+    using tiling_t = image_base_t<pt, lo, in_void_ptr_t>::tiling_t;
 
     static_assert(std::is_floating_point_v<floating_point_t>);
 
@@ -30,19 +32,65 @@ namespace ggo
       output.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
     };
 
-    ggo::resample<ggo::sampling_1, ggo::interpolation2d_type::bicublic, float>(in, input.size().width(), input.size().height(), out, output.width(), output.height());
-
-    //switch (algo)
-    //{
-    //case ggo::scaling_algo::linear_integration:
-    //  ggo::scale_2d<ggo::scaling_algo::linear_integration, ggo::scaling_algo::linear_integration, floating_point_color_t, float>(
-    //    in, input.size().width(), input.size().height(), out, output.width(), output.height());
-    //  break;
-    //case ggo::scaling_algo::cubic_integration:
-    //  ggo::scale_2d<ggo::scaling_algo::cubic_integration, ggo::scaling_algo::cubic_integration, floating_point_color_t, float>(
-    //    in, input.size().width(), input.size().height(), out, output.width(), output.height());
-    //  break;
-    //}
+    // Scaling algorithm dispatch.
+    switch (algo)
+    {
+    case ggo::scaling_algo::nearest_neighbor:
+      ggo::scale_2d<ggo::scaling_algo::nearest_neighbor, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_integration:
+      ggo::scale_2d<ggo::scaling_algo::linear_integration, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_integration:
+      ggo::scale_2d<ggo::scaling_algo::linear_integration, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_resampling_1:
+      ggo::scale_2d<ggo::scaling_algo::linear_resampling_1, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_resampling_2x2:
+      ggo::scale_2d<ggo::scaling_algo::linear_resampling_2x2, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_resampling_4x4:
+      ggo::scale_2d<ggo::scaling_algo::linear_resampling_4x4, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_resampling_8x8:
+      ggo::scale_2d<ggo::scaling_algo::linear_resampling_8x8, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::linear_resampling_16x16:
+      ggo::scale_2d<ggo::scaling_algo::linear_resampling_16x16, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_resampling_1:
+      ggo::scale_2d<ggo::scaling_algo::nearest_neighbor, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_resampling_2x2:
+      ggo::scale_2d<ggo::scaling_algo::cubic_resampling_2x2, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_resampling_4x4:
+      ggo::scale_2d<ggo::scaling_algo::cubic_resampling_4x4, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_resampling_8x8:
+      ggo::scale_2d<ggo::scaling_algo::cubic_resampling_8x8, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    case ggo::scaling_algo::cubic_resampling_16x16:
+      ggo::scale_2d<ggo::scaling_algo::cubic_resampling_16x16, scanner2d_t, tiling_t, floating_point_t>(
+        in, input.width(), input.height(), out, output.width(), output.height());
+      break;
+    default:
+      GGO_FAIL();
+      break;
+    }
   }
 }
 

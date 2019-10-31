@@ -25,20 +25,19 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t>
+  template <typename data_t, typename scalar_t>
   struct cubic
   {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
     data_t _a;
     data_t _b;
     data_t _c;
     data_t _d;
 
     //////////////////////////////////////////////////////////////////
-    template <typename scalar_t>
-    cubic(scalar_t x0, data_t y0, scalar_t x1, data_t y1, scalar_t x2, data_t y2, scalar_t x3, data_t y3)
+    static cubic make_smooth(scalar_t x0, data_t y0, scalar_t x1, data_t y1, scalar_t x2, data_t y2, scalar_t x3, data_t y3)
     {
-      static_assert(std::is_floating_point_v<scalar_t>);
-
       if (std::abs(x2 - x0) <= scalar_t(0.0000001))
       {
         throw std::runtime_error("invalid data");
@@ -63,10 +62,11 @@ namespace ggo
       data_t t1 = (y2 - y0) / (x2 - x0);
       data_t t2 = (y3 - y1) / (x3 - x1);
       
-      _a = -(x2*(t2 + t1) + x1 * (-t2 - t1) - scalar_t(2)*y2 + scalar_t(2)*y1) / det;
-      _b = (x1*(x2*(t2 - t1) - scalar_t(3)*y2) + x22 * (t2 + scalar_t(2)*t1) + x12 * (scalar_t(-2)*t2 - t1) - scalar_t(3)*x2*y2 + (scalar_t(3)*x2 + 3 * x1)*y1) / det;
-      _c = -(x1*(x22*(scalar_t(2)*t2 + t1) - scalar_t(6)*x2*y2) - x13 * t2 + x12 * x2*(-t2 - scalar_t(2)*t1) + x23 * t1 + scalar_t(6)*x1*x2*y1) / det;
-      _d = (x12*(x22*(t2 - t1) - scalar_t(3)*x2*y2) + x13 * (y2 - x2 * t2) + x1 * x23*t1 + (scalar_t(3)*x1*x22 - x23)*y1) / det;
+      return {
+        -(x2*(t2 + t1) + x1 * (-t2 - t1) - scalar_t(2)*y2 + scalar_t(2)*y1) / det,
+        (x1*(x2*(t2 - t1) - scalar_t(3)*y2) + x22 * (t2 + scalar_t(2)*t1) + x12 * (scalar_t(-2)*t2 - t1) - scalar_t(3)*x2*y2 + (scalar_t(3)*x2 + 3 * x1)*y1) / det,
+        -(x1*(x22*(scalar_t(2)*t2 + t1) - scalar_t(6)*x2*y2) - x13 * t2 + x12 * x2*(-t2 - scalar_t(2)*t1) + x23 * t1 + scalar_t(6)*x1*x2*y1) / det,
+        (x12*(x22*(t2 - t1) - scalar_t(3)*x2*y2) + x13 * (y2 - x2 * t2) + x1 * x23*t1 + (scalar_t(3)*x1*x22 - x23)*y1) / det };
     }
 
     //////////////////////////////////////////////////////////////////
@@ -75,10 +75,8 @@ namespace ggo
     //   x1 = 0
     //   x2 = 1
     //   x3 = 2
-    cubic(data_t y0, data_t y1, data_t y2, data_t y3)
+    static cubic make_smooth(data_t y0, data_t y1, data_t y2, data_t y3)
     {
-      using scalar_t = floating_point_traits<data_t>::type;
-
       static_assert(std::is_floating_point_v<scalar_t>);
 
       // Cubic derivatives.
@@ -91,14 +89,14 @@ namespace ggo
       // d1 = c
       // d2 = 3*a+2*c+b
       // So we can compute the cubic's coefs.
-      _a = scalar_t(2) * (y1 - y2) + d1 + d2;
-      _b = scalar_t(3) * (y2 - y1) - scalar_t(2) * d1 - d2;
-      _c = d1;
-      _d = y1;
+      return {
+        scalar_t(2) * (y1 - y2) + d1 + d2,
+        scalar_t(3) * (y2 - y1) - scalar_t(2) * d1 - d2,
+        d1,
+        y1 };
     }
 
     //////////////////////////////////////////////////////////////////
-    template <typename scalar_t>
     data_t evaluate(scalar_t x) const
     {
       scalar_t xx = x * x;
@@ -107,7 +105,6 @@ namespace ggo
     }
 
     //////////////////////////////////////////////////////////////////
-    template <typename scalar_t>
     data_t integrate(scalar_t from, scalar_t to) const
     {
       GGO_ASSERT_LE(from, to);
@@ -122,7 +119,6 @@ namespace ggo
     }
 
     //////////////////////////////////////////////////////////////////
-    template <typename scalar_t>
     data_t derivate(scalar_t x) const
     {
       return scalar_t(3) * _a * x * x + scalar_t(2) * _b * x + _c;
@@ -133,28 +129,28 @@ namespace ggo
   template <typename t_x, typename t_y>
   auto cubic_interpolation(t_x x0, t_y y0, t_x x1, t_y y1, t_x x2, t_y y2, t_x x3, t_y y3, t_x x)
   {
-    return cubic(x0, y0, x1, y1, x2, y2, x3, y3).evaluate(x);
+    return cubic<t_y, t_x>::make_smooth(x0, y0, x1, y1, x2, y2, x3, y3).evaluate(x);
   }
 
   //////////////////////////////////////////////////////////////////
   template <typename t_x, typename t_y>
   constexpr t_y cubic_interpolation(t_y y0, t_y y1, t_y y2, t_y y3, t_x x)
   {
-    return cubic(y0, y1, y2, y3).evaluate(x);
+    return cubic<t_y, t_x>::make_smooth(y0, y1, y2, y3).evaluate(x);
   }
 
   //////////////////////////////////////////////////////////////////
   template <typename t_x, typename t_y>
   t_y cubic_integration(t_x x0, t_y y0, t_x x1, t_y y1, t_x x2, t_y y2, t_x x3, t_y y3, t_x from, t_x to)
   {
-    return cubic(x0, y0, x1, y1, x2, y2, x3, y3).integrate(from, to);
+    return cubic<t_y, t_x>::make_smooth(x0, y0, x1, y1, x2, y2, x3, y3).integrate(from, to);
   }
 
   //////////////////////////////////////////////////////////////////
   template <typename t_x, typename t_y>
   t_y cubic_integration(t_y y0, t_y y1, t_y y2, t_y y3, t_x from, t_x to)
   {
-    return cubic(y0, y1, y2, y3).integrate(from, to);
+    return cubic<t_y, t_x>::make_smooth(y0, y1, y2, y3).integrate(from, to);
   }
 }
 

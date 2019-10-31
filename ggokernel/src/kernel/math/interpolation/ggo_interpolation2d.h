@@ -80,18 +80,18 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename getter, typename scalar_t>
-  data_t linear_interpolation2d(const getter & in, scalar_t x, scalar_t y)
+  template <typename data_t, typename in_t, typename scalar_t>
+  data_t linear_interpolation2d(in_t && in, scalar_t x, scalar_t y)
   {
     static_assert(std::is_floating_point_v<scalar_t>);
 
     int x_i = lower_bound(x);
     int y_i = lower_bound(y);
 
-    GGO_ASSERT_GE(x, ggo::from_discrete_to_continuous<data_t>(x_i));
-    GGO_ASSERT_LE(x, ggo::from_discrete_to_continuous<data_t>(x_i + 1));
-    GGO_ASSERT_GE(y, ggo::from_discrete_to_continuous<data_t>(y_i));
-    GGO_ASSERT_LE(y, ggo::from_discrete_to_continuous<data_t>(y_i + 1));
+    GGO_ASSERT_GE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i));
+    GGO_ASSERT_LE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i + 1));
+    GGO_ASSERT_GE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i));
+    GGO_ASSERT_LE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i + 1));
 
     // Interpolate.
     scalar_t dx = x - from_discrete_to_continuous<scalar_t>(x_i);
@@ -113,8 +113,8 @@ namespace ggo
   }
   
   /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename getter, typename scalar_t>
-  data_t cubic_interpolation2d(const getter & in, scalar_t x, scalar_t y)
+  template <typename data_t, typename in_t, typename scalar_t>
+  data_t cubic_interpolation2d(in_t && in, scalar_t x, scalar_t y)
   {
     static_assert(std::is_floating_point_v<scalar_t>);
 
@@ -159,8 +159,8 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <interpolation2d_type interp, typename data_t, typename getter, typename scalar_t>
-  data_t interpolation2d(const getter & in, scalar_t x, scalar_t y)
+  template <interpolation2d_type interp, typename data_t, typename in_t, typename scalar_t>
+  data_t interpolation2d(in_t && in, scalar_t x, scalar_t y)
   {
     if constexpr (interp == interpolation2d_type::bilinear)
     {

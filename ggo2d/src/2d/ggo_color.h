@@ -391,27 +391,6 @@ namespace ggo
   };
 }
 
-namespace ggo
-{
-  template <>
-  struct floating_point_traits<ggo::ya_32f>
-  {
-    using type = float;
-  };
-
-  template <>
-  struct floating_point_traits<ggo::rgb_32f>
-  {
-    using type = float;
-  };
-
-  template <>
-  struct floating_point_traits<ggo::rgba_32f>
-  {
-    using type = float;
-  };
-}
-
 /////////////////////////////////////////////////////////////////////
 // Color conversion
 namespace ggo
