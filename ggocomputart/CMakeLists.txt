@@ -10,16 +10,17 @@ add_dependencies(ggocomputart ggoraytracer_nonreg ggoanimation_nonreg)
 
 # The executables.
 add_executable(ggocomputartbitmap ggo_computart_bitmap.cpp)
-target_link_libraries(ggocomputartbitmap ggocomputart)
+target_link_libraries(ggocomputartbitmap PRIVATE ggocomputart)
 
 add_executable(ggocomputartanim ggo_computart_anim.cpp)
-target_link_libraries(ggocomputartanim ggocomputart)
+target_link_libraries(ggocomputartanim PRIVATE ggocomputart)
 
-include(../conanbuildinfo.cmake)
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_include_directories(ggocomputartrealtime PRIVATE "${CONAN_SDL2_ROOT}/include/SDL2")
-if (MSVC)
-  target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart "winmm.lib" "imm32.lib" "version.lib" "${CONAN_SDL2_ROOT}/lib/SDL2.lib" "${CONAN_SDL2_ROOT}/lib/SDL2main.lib")
-endif()
+target_include_directories(ggocomputartrealtime PRIVATE ${CONAN_INCLUDE_DIRS_SDL2})
+target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart ${CONAN_LIBS_SDL2})
+
+add_executable(ggocomputartgpu ggo_computart_gpu.cpp)
+target_include_directories(ggocomputartgpu PRIVATE ${CONAN_INCLUDE_DIRS_GLFW} ${CONAN_INCLUDE_DIRS_GLAD})
+target_link_libraries(ggocomputartgpu PRIVATE ggocomputart ${CONAN_LIBS_GLFW} ${CONAN_LIBS_GLAD} opengl32)
 
 
