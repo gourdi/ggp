@@ -160,6 +160,12 @@ namespace ggo
     }
   };
 
+  template <typename data_t, typename scalar_t = float>
+  data_t linerp(const data_t & a, const data_t & b, scalar_t weight)
+  {
+    return weight * a + (1 - weight) * b;
+  }
+
   template <typename data_t> constexpr  data_t  clamp(data_t v, data_t inf, data_t sup) { return v > sup ? sup : (v < inf ? inf : v); };
   template <typename data_t> constexpr  data_t  square(data_t value) { return value * value; };
   template <typename data_t> constexpr  data_t  sign(data_t value) { return value > data_t(0) ? data_t(1) : data_t(-1); };
