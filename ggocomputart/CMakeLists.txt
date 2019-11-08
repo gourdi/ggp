@@ -16,11 +16,9 @@ add_executable(ggocomputartanim ggo_computart_anim.cpp)
 target_link_libraries(ggocomputartanim PRIVATE ggocomputart)
 
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
-target_include_directories(ggocomputartrealtime PRIVATE ${CONAN_INCLUDE_DIRS_SDL2})
-target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart ${CONAN_LIBS_SDL2})
+target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart SDL2::SDL2 SDL2::SDL2main)
 
 add_executable(ggocomputartgpu ggo_computart_gpu.cpp)
-target_include_directories(ggocomputartgpu PRIVATE ${CONAN_INCLUDE_DIRS_GLFW} ${CONAN_INCLUDE_DIRS_GLAD})
-target_link_libraries(ggocomputartgpu PRIVATE ggocomputart ${CONAN_LIBS_GLFW} ${CONAN_LIBS_GLAD} opengl32)
+target_link_libraries(ggocomputartgpu PRIVATE ggocomputart glad::glad glfw)
 
 

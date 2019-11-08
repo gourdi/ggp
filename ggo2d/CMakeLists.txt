@@ -4,10 +4,9 @@ include(../cmake/ggp.cmake)
 get_sources_from_root_directory("src" sources)
 group_sources(${sources})
 add_library(ggo2d STATIC ${sources})
-target_include_directories(ggo2d PUBLIC "src/")
 add_dependencies(ggo2d ggokernel_nonreg)
-target_include_directories(ggo2d PRIVATE ${CONAN_INCLUDE_DIRS_LIBJPEG} ${CONAN_INCLUDE_DIRS_LIBPNG})
-target_link_libraries(ggo2d PUBLIC ggokernel ${CONAN_LIBS_LIBJPEG} ${CONAN_LIBS_LIBPNG})
+target_include_directories(ggo2d PUBLIC "src/" PRIVATE ${JPEG_INCLUDE_DIR})
+target_link_libraries(ggo2d PUBLIC ggokernel PRIVATE png ${JPEG_LIBRARIES})
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

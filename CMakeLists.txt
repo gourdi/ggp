@@ -1,11 +1,12 @@
+cmake_minimum_required(VERSION 3.14.5)
+
 project(ggp)
 
-cmake_minimum_required(VERSION 3.8)
-
-enable_testing()
-
-include("${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
-link_directories(${CONAN_LIB_DIRS_LIBJPEG} ${CONAN_LIB_DIRS_LIBPNG} ${CONAN_LIB_DIRS_SDL2} ${CONAN_LIB_DIRS_GLFW} ${CONAN_LIB_DIRS_GLAD})
+find_package(JPEG REQUIRED)
+find_package(libpng CONFIG REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
 
 add_subdirectory(ggokernel)
 add_subdirectory(ggo2d)
