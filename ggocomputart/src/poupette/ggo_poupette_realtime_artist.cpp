@@ -3,7 +3,8 @@
 //////////////////////////////////////////////////////////////
 ggo::poupette_realtime_artist::poupette_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+ggo::realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+_artist(2000.f)
 {
 
 }

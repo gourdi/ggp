@@ -3,7 +3,8 @@
 //////////////////////////////////////////////////////////////
 ggo::poupette_animation_artist::poupette_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-ggo::fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, ggo::poupette_artist::_frames_count)
+ggo::fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, ggo::poupette_artist::_frames_count),
+_artist(2000.f)
 {
 
 }

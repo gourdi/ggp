@@ -1,9 +1,0 @@
-[requires]
-libjpeg/9c@bincrafters/stable
-libpng/1.6.37@bincrafters/stable
-sdl2/2.0.9@bincrafters/stable
-glfw/3.3@bincrafters/stable
-glad/0.1.29@bincrafters/stable
-
-[generators]
-cmake

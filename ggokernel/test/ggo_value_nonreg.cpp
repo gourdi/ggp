@@ -21,34 +21,6 @@ GGO_TEST(value, basic)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(value, array)
-{
-  {
-    std::array<int, 3> a{ 1, 2, 3 };
-    ggo::value val(a.begin(), a.end());
-
-    int i = 0;
-    for (auto v : val.to_range_of<int>())
-    {
-      GGO_CHECK_EQ(v, a[i++]);
-    }
-  }
-  {
-    std::list<ggo::pos2_f> a{ { 1.f, 2.f },{ 3.f, 4.f } };
-    ggo::value val(a.begin(), a.end());
-
-    int i = 0;
-    for (auto v : val.to_range_of<ggo::pos2_f>())
-    {
-      GGO_CHECK_FLOAT_EQ(v.x(), i == 0 ? 1.f : 3.0f);
-      GGO_CHECK_FLOAT_EQ(v.y(), i == 0 ? 2.f : 4.0f);
-
-      ++i;
-    }
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(value, type_mismatch_should_throw)
 {
   ggo::value v(1);

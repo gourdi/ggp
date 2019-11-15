@@ -14,11 +14,13 @@ namespace ggo
 
     static constexpr int _frames_count = 300;
 
-    poupette_artist();
+    poupette_artist(float color_max);
 
     void render_tile(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, 
                      int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const;
     bool finished(int frame_index) const;
+
+    std::array<ggo::rgb_32f, 4> interpolate_colors(float t) const;
 
   private:
 
