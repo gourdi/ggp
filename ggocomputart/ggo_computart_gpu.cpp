@@ -6,7 +6,7 @@
 #include <chrono>
 #include <kernel/ggo_ease.h>
 #include <2d/ggo_color.h>
-#include "ggo_gpu_artist_abc.h"
+#include "ggo_gpu_artist.h"
 
 static const struct
 {
@@ -116,14 +116,14 @@ int main(void)
 
   glBindVertexArray(0);
 
-  std::unique_ptr<ggo::gpu_artist_abc> artist;
+  std::unique_ptr<ggo::gpu_artist> artist;
   GLuint program = 0;
 
   while (!glfwWindowShouldClose(window))
   {
     if (!artist)
     {
-      artist.reset(ggo::gpu_artist_abc::create(ggo::gpu_artist_id::poupette));
+      artist.reset(ggo::gpu_artist::create(ggo::gpu_artist_id::poupette));
 
       GLuint vertex_shader_id = compile_shader(GL_VERTEX_SHADER, vertex_shader_text);
       GLuint fragment_shader_id = compile_shader(GL_FRAGMENT_SHADER, artist->get_fragment_shader());

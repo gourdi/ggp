@@ -426,5 +426,14 @@ namespace ggo
   };
 }
 
+namespace ggo
+{
+  struct ratio
+  {
+    uint64_t _num;
+    uint64_t _den;
+  };
+}
+
 #endif
 

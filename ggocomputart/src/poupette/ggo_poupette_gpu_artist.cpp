@@ -1,4 +1,5 @@
 #include "ggo_poupette_gpu_artist.h"
+#include <kernel/ggo_ease.h>
 
 //////////////////////////////////////////////////////////////
 std::string ggo::poupette_gpu_artist::get_fragment_shader() const
@@ -11,17 +12,9 @@ std::string ggo::poupette_gpu_artist::get_fragment_shader() const
 }
 
 //////////////////////////////////////////////////////////////
-std::map<std::string, ggo::value> ggo::poupette_gpu_artist::update(bool & finished, std::chrono::milliseconds elapsed_time)
+std::map<std::string, ggo::value> ggo::poupette_gpu_artist::update(float progress)
 {
-  float t = static_cast<float>(elapsed_time.count()) / 10000.f;
-  if (t >= 1.f)
-  {
-    finished = true;
-    return {};
-  }
-
-  finished = false;
-  auto colors = _artist.interpolate_colors(t);
+  auto colors = _artist.interpolate_colors(ggo::ease_inout(progress));
 
   auto to_vec3 = [](ggo::rgb_32f c)
   {
