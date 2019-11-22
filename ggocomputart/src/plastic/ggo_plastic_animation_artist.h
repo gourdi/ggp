@@ -1,8 +1,7 @@
 #ifndef __GGO_PLASTIC_ANIMATION_ARTIST__
 #define __GGO_PLASTIC_ANIMATION_ARTIST__
 
-#include <ggo_animation_artist_abc.h>
-#include "ggo_plastic_artist.h"
+#include <ggo_animation_artist.h>
 
 namespace ggo
 {
@@ -16,20 +15,24 @@ namespace ggo
 
     void  render_frame(void * buffer, int frame_index, float time_step) override;
 
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void  render_frame_t(void * buffer) const;
+
+    float compute_altitude(float x, float y) const;
+
   private:
 
-    struct anim_plastic_params
+    struct params
     {
-      float	_den;
-      float	_mult;
-      float _power;
-      float	_center_x;
-      float	_center_y;
-      float	_angle;
-      float	_radius;
-      float	_dangle;
+      float	  _den;
+      float	  _mult;
+      float   _power;
+      pos2_f	_center;
+      float	  _angle;
+      float	  _radius;
+      float	  _dangle;
     };
-    std::vector<anim_plastic_params> _params;
+    std::vector<params> _params;
 
     ggo::rgb_32f  _color;
     float 		    _altitude_factor;

@@ -118,6 +118,7 @@ namespace ggo
   enum class gpu_artist_id
   {
     poupette, // 0
+    plastic
   };
 }
 

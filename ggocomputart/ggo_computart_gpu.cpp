@@ -123,7 +123,13 @@ int main(void)
   {
     if (!artist)
     {
-      artist.reset(ggo::gpu_artist::create(ggo::gpu_artist_id::poupette));
+      const std::vector<ggo::gpu_artist_id> ids{
+        ggo::gpu_artist_id::poupette,
+        ggo::gpu_artist_id::plastic
+      };
+      int index = ggo::rand<int>(0, int(ids.size() - 1));
+
+      artist.reset(ggo::gpu_artist::create(ids[index]));
 
       GLuint vertex_shader_id = compile_shader(GL_VERTEX_SHADER, vertex_shader_text);
       GLuint fragment_shader_id = compile_shader(GL_FRAGMENT_SHADER, artist->get_fragment_shader());
@@ -156,10 +162,22 @@ int main(void)
         GLint loc = glGetUniformLocation(program, uniform.first.c_str());
 
         uniform.second.visit(
-          [&](int v) { glUniform1i(loc, v); },
-          [&](float v) { glUniform1f(loc, v); },
-          [&](ggo::vec2_f v) { glUniform2f(loc, v.x(), v.y()); },
-          [&](ggo::vec3_f v) { glUniform3f(loc, v.x(), v.y(), v.z()); });
+          [&](const int * ptr, size_t size, int n) {
+          switch (n)
+          {
+          case 1: glUniform1iv(loc, GLsizei(size), ptr); break;
+          case 2: glUniform2iv(loc, GLsizei(size), ptr); break;
+          case 3: glUniform3iv(loc, GLsizei(size), ptr); break;
+          }
+        },
+          [&](const float * ptr, size_t size, int n) {
+          switch (n)
+          {
+          case 1: glUniform1fv(loc, GLsizei(size), ptr); break;
+          case 2: glUniform2fv(loc, GLsizei(size), ptr); break;
+          case 3: glUniform3fv(loc, GLsizei(size), ptr); break;
+          }
+        });
       }
 
       glClear(GL_COLOR_BUFFER_BIT);

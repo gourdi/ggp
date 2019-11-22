@@ -1,5 +1,5 @@
-#ifndef __GGO_SCAN2D__
-#define __GGO_SCAN2D__
+#ifndef __GGO_SCANNER2D__
+#define __GGO_SCANNER2D__
 
 #include <kernel/ggo_rect_int.h>
 
@@ -7,8 +7,8 @@ namespace ggo
 {
   struct scanner2d_lines_up
   {
-    template <typename func>
-    static void for_each_pixel(const ggo::rect_int & clipping, func && f)
+    template <typename func_t>
+    static void for_each_pixel(const ggo::rect_int & clipping, func_t && func)
     {
       const auto b = clipping.bottom();
       const auto t = clipping.top();
@@ -19,7 +19,7 @@ namespace ggo
       {
         for (int x = l; x <= r; ++x)
         {
-          f(x, y);
+          func(x, y);
         }
       }
     }
@@ -27,8 +27,8 @@ namespace ggo
 
   struct scanner2d_lines_down
   {
-    template <typename func>
-    static void for_each_pixel(const ggo::rect_int & clipping, func && f)
+    template <typename func_t>
+    static void for_each_pixel(const ggo::rect_int & clipping, func_t && func)
     {
       const auto b = clipping.bottom();
       const auto t = clipping.top();
@@ -39,7 +39,7 @@ namespace ggo
       {
         for (int x = l; x <= r; ++x)
         {
-          f(x, y);
+          func(x, y);
         }
       }
     }

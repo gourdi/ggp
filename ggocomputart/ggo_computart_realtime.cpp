@@ -7,7 +7,7 @@
 #include <kernel/threading/ggo_signal.h>
 #include <2d/ggo_image.h>
 #include <2d/fill/ggo_fill.h>
-#include <ggo_realtime_artist_abc.h>
+#include <ggo_realtime_artist.h>
 
 #define GGO_SDL_ERROR(zzz) GGO_LOG_ERROR("\"" << #zzz << "\" failed (error:" << SDL_GetError() << ")"); throw std::runtime_error(SDL_GetError());
 
@@ -21,15 +21,16 @@ std::mutex anim_mutex;
 bool display_cpu_usage = true;
 std::condition_variable anim_condition_start;
 std::condition_variable anim_condition_done;
-std::unique_ptr<ggo::realtime_artist_abc> artist;
+std::unique_ptr<ggo::realtime_artist> artist;
 
 SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
-const int time_step_ms = 40; // 25 fps
+constexpr int time_step_ms = 40; // 25 fps
+constexpr ggo::ratio fps{ 1000, time_step_ms }; // 25 fps
 bool quit = false;
 
 /////////////////////////////////////////////////////////////////////
-ggo::realtime_artist_abc * create_artist()
+ggo::realtime_artist * create_artist()
 {
 #ifdef GGO_ANDROID
   const std::vector<ggo::realtime_artist_id> ids{
@@ -44,21 +45,21 @@ ggo::realtime_artist_abc * create_artist()
     ggo::realtime_artist_id::duffing,
     ggo::realtime_artist_id::kanji,
     ggo::realtime_artist_id::neon,
-    ggo::realtime_artist_id::storni,
-    ggo::realtime_artist_id::lagaude,
-    ggo::realtime_artist_id::demeco,
-    ggo::realtime_artist_id::wakenda,
-    ggo::realtime_artist_id::poupette,
-    ggo::realtime_artist_id::sonson,
-    ggo::realtime_artist_id::badaboum
+    //ggo::realtime_artist_id::storni,
+    //ggo::realtime_artist_id::lagaude,
+    //ggo::realtime_artist_id::demeco,
+    //ggo::realtime_artist_id::wakenda,
+    //ggo::realtime_artist_id::poupette,
+    //ggo::realtime_artist_id::sonson,
+    //ggo::realtime_artist_id::badaboum
   };
 #endif
 
-  int index = 7;// ggo::rand<size_t>(0, ids.size() - 1);
+  int index = ggo::rand<int>(0, int(ids.size() - 1));
 
   std::cout << "Artist ID: " << index << std::endl;
 
-  return ggo::realtime_artist_abc::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::pixel_type::bgrx_8u, ggo::lines_order::down);
+  return ggo::realtime_artist::create(ids[index], screen_surface->w, screen_surface->h, screen_surface->pitch, ggo::pixel_type::bgrx_8u, ggo::lines_order::down, fps);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -200,7 +201,7 @@ void main_loop()
     }
 
     // Update display.
-    artist->preprocess_frame(cursor_flags, { cursor_pos.x(), screen_surface->h - cursor_pos.y() - 1 }, time_step_ms / 1000.f);
+    artist->preprocess_frame(screen_surface->pixels, cursor_flags, { cursor_pos.x(), screen_surface->h - cursor_pos.y() - 1 });
     {
       // Start current frame rendering.
       {
@@ -249,7 +250,7 @@ void main_loop()
 
     if (frame_duration_ms < time_step_ms)
     {
-      delay_ms = time_step_ms - frame_duration_ms;
+      delay_ms = time_step_ms- frame_duration_ms;
       SDL_Delay(delay_ms);
       frame_duration_ms = time_step_ms;
     }

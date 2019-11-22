@@ -1,5 +1,6 @@
 #include "ggo_gpu_artist.h"
 #include "poupette/ggo_poupette_gpu_artist.h"
+#include "plastic/ggo_plastic_gpu_artist.h"
 
 namespace ggo
 {
@@ -10,7 +11,8 @@ namespace ggo
     {
     case gpu_artist_id::poupette:
       return new poupette_gpu_artist();
-
+    case gpu_artist_id::plastic:
+      return new plastic_gpu_artist();
     default:
       GGO_FAIL();
       return nullptr;
@@ -30,7 +32,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::map<std::string, ggo::value> progress_gpu_artist::update(bool & finished)
+  std::map<std::string, ggo::uniform> progress_gpu_artist::update(bool & finished)
   {
     auto now = std::chrono::steady_clock::now();
     auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - _start_time);

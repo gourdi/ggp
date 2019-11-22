@@ -356,18 +356,7 @@ namespace ggo
   template <typename image_t, typename func_t>
   void for_each_pixel(image_t & img, ggo::rect_int clipping, func_t && func)
   {
-    int l = clipping.left();
-    int r = clipping.right();
-    int b = clipping.bottom();
-    int t = clipping.top();
-
-    for (int y = b; y <= t; ++y)
-    {
-      for (int x = l; x <= r; ++x)
-      {
-        func(x, y);
-      }
-    }
+    image_t::scanner2d_t::for_each_pixel(clipping, func);
   }
 
   template <typename image_t, typename func_t>
