@@ -38,13 +38,13 @@
 //////////////////////////////////////////////////////////////
 namespace ggo
 {
-  class animation_artist_realtime_wrapper : public animation_artist_abc
+  class animation_artist_realtime_wrapper : public animation_artist
   {
   public:
 
     animation_artist_realtime_wrapper(ggo::realtime_artist_id artist_id, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
     :
-    animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+    animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
       _artist(realtime_artist::create(artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, {0, 0}))
     {
     }
@@ -68,14 +68,14 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  ggo::animation_artist_abc::animation_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+  ggo::animation_artist::animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
     :
     ggo::paint_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
   {
   }
 
   //////////////////////////////////////////////////////////////
-  ggo::animation_artist_abc * ggo::animation_artist_abc::create(
+  ggo::animation_artist * ggo::animation_artist::create(
     ggo::animation_artist_id artist_id, int width, int height, int line_byte_step, 
     ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
   {
@@ -165,19 +165,19 @@ namespace ggo
 // PROGRESS ANIMATION ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::progress_animation_artist_abc::progress_animation_artist_abc(
+ggo::progress_animation_artist::progress_animation_artist(
   int width, int height, int line_byte_step, 
   ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   ggo::ratio duration, ggo::ratio fps)
 :
-ggo::animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+ggo::animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
 _duration(duration),
 _fps(fps)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::progress_animation_artist_abc::render_frame(void * buffer, bool & finished)
+void ggo::progress_animation_artist::render_frame(void * buffer, bool & finished)
 {
   GGO_FAIL();
   float progress = to<float>(_elapsed_time / _duration);

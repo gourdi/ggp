@@ -7,7 +7,7 @@
 //
 //namespace ggo
 //{
-//  class dupecheck_animation_artist : public animation_artist_abc
+//  class dupecheck_animation_artist : public animation_artist
 //  {
 //  public:
 //

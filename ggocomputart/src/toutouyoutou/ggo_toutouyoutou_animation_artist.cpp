@@ -33,7 +33,7 @@ ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(
   ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   ggo::ratio fps)
 :
-animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
 _background({ width, height }, line_byte_step)
 {

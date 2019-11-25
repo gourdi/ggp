@@ -10,7 +10,7 @@ ggo::ikeda_animation_artist::ikeda_animation_artist(
   ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   ggo::ratio fps)
 :
-progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
+progress_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
 {
   _u0.set_harmonic(0, 0, 0);
   _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);

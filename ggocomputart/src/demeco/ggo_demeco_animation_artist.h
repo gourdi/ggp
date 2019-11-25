@@ -7,7 +7,7 @@
 //
 //namespace ggo
 //{
-//  class demeco_animation_artist : public animation_artist_abc
+//  class demeco_animation_artist : public animation_artist
 //  {
 //  public:
 //

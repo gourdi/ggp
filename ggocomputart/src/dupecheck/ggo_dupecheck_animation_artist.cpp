@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////
 //ggo::dupecheck_animation_artist::dupecheck_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 //:
-//animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+//animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 //{
 //  _colors[0] = ggo::rgb_32f(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());
 //  _colors[1] = ggo::rgb_32f(ggo::rand<float>(), ggo::rand<float>(), ggo::rand<float>());

@@ -7,11 +7,11 @@
 
 namespace ggo
 {
-  class animation_artist_abc : public paint_artist
+  class animation_artist : public paint_artist
   {
   public:
 
-    static animation_artist_abc * create(
+    static animation_artist * create(
       animation_artist_id artist_id, int width, int height, int line_byte_step,
       ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps);
 
@@ -19,17 +19,17 @@ namespace ggo
 
   protected:
 
-                  animation_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+                  animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
   };
 }
 
 namespace ggo
 {
-  class progress_animation_artist_abc : public animation_artist_abc
+  class progress_animation_artist : public animation_artist
   {
   protected:
 
-    progress_animation_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio duration, ggo::ratio fps);
+    progress_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio duration, ggo::ratio fps);
 
   private:
 

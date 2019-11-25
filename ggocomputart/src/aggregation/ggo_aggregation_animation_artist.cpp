@@ -11,7 +11,7 @@ ggo::aggregation_animation_artist::aggregation_animation_artist(
   ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   ggo::ratio fps)
 :
-progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 10, 1 }, fps)
+progress_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, { 10, 1 }, fps)
 {
   _threshold_dist = 0.00125f * std::min(width, height);
   _threshold_hypot = _threshold_dist * _threshold_dist;

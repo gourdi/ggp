@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////
 //ggo::demeco_animation_artist::demeco_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 //:
-//animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
+//animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
 //_artist(width, height),
 //_render_image({ width, height }),
 //_shadow_image({ width, height })

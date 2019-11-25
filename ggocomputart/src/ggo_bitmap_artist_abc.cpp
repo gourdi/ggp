@@ -69,7 +69,7 @@ void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer, int widt
 {
   //constexpr ratio fps = { 25, 1 };
 
-  //std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
+  //std::unique_ptr<ggo::animation_artist> artist(ggo::animation_artist::create(
   //  _artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, fps));
 
   //if (!artist)

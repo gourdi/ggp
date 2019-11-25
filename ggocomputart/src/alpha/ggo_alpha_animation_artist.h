@@ -7,7 +7,7 @@
 //
 //namespace ggo
 //{
-//  class alpha_animation_artist : public animation_artist_abc
+//  class alpha_animation_artist : public animation_artist
 //  {
 //  public:
 //

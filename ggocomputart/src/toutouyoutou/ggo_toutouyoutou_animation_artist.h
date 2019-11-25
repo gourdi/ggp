@@ -11,7 +11,7 @@
 
 namespace ggo
 {
-  class toutouyoutou_animation_artist : public animation_artist_abc
+  class toutouyoutou_animation_artist : public animation_artist
   {
   public:
 

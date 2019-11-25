@@ -8,7 +8,7 @@
 //
 //namespace ggo
 //{
-//  class amorosi_animation_artist : public animation_artist_abc
+//  class amorosi_animation_artist : public animation_artist
 //  {
 //  public:
 //

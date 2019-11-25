@@ -6,7 +6,7 @@
 
 namespace ggo
 {
-  class ikeda_animation_artist : public progress_animation_artist_abc
+  class ikeda_animation_artist : public progress_animation_artist
   {
   public:
 

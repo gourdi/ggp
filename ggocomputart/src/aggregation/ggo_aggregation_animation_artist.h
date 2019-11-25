@@ -6,7 +6,7 @@
 
 namespace ggo
 {
-  class aggregation_animation_artist : public progress_animation_artist_abc
+  class aggregation_animation_artist : public progress_animation_artist
   {
   public:
 

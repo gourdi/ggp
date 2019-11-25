@@ -8,7 +8,7 @@
 
 namespace ggo
 {
-  class duffing_animation_artist : public animation_artist_abc
+  class duffing_animation_artist : public animation_artist
   {
   public:
 

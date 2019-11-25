@@ -7,7 +7,7 @@ ggo::vortex_animation_artist::vortex_animation_artist(
   ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
   ggo::ratio fps)
 :
-progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
+progress_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
 {
   const int vortices_count = 20;
 

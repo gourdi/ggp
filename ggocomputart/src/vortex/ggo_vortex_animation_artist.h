@@ -7,7 +7,7 @@
 
 namespace ggo
 {
-  class vortex_animation_artist : public progress_animation_artist_abc
+  class vortex_animation_artist : public progress_animation_artist
   {
   public:
 
