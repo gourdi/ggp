@@ -1,5 +1,5 @@
 #include "ggo_bitmap_artist_abc.h"
-#include "ggo_animation_artist_abc.h"
+#include "ggo_animation_artist.h"
 #include "ggo_artist_ids.h"
 #include "duffing/ggo_duffing_bitmap_artist.h"
 #include "trees/ggo_trees_bitmap_artist.h"
@@ -11,7 +11,6 @@
 #include "filling_squares/ggo_filling_squares_bitmap_artist.h"
 #include "voronoi/ggo_voronoi_bitmap_artist.h"
 #include "vortex/ggo_vortex_bitmap_artist.h"
-#include "plastic/ggo_plastic_bitmap_artist.h"
 #include "mandelbrot/ggo_mandelbrot_bitmap_artist.h"
 #include "ifs/ggo_ifs_bitmap_artist.h"
 #include "mosaic/ggo_mosaic_bitmap_artist.h"
@@ -68,38 +67,38 @@ ggo::bitmap_artist_animation_wrapper::bitmap_artist_animation_wrapper(ggo::anima
 //////////////////////////////////////////////////////////////
 void ggo::bitmap_artist_animation_wrapper::render_bitmap(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order) const
 {
-  constexpr float time_step = 1.f / 25.f;
+  //constexpr ratio fps = { 25, 1 };
 
-  std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
-    _artist_id, width, height, line_byte_step, pixel_type, memory_lines_order));
+  //std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
+  //  _artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, fps));
 
-  if (!artist)
-  {
-    throw std::runtime_error("failed creating aniamtion artist");
-  }
+  //if (!artist)
+  //{
+  //  throw std::runtime_error("failed creating aniamtion artist");
+  //}
 
-  int frame_index = 0;
+  //int frame_index = 0;
 
-  while (true)
-  {
-    if (_frames_count > 0 && frame_index >= _frames_count)
-    {
-      break;
-    }
+  //while (true)
+  //{
+  //  if (_frames_count > 0 && frame_index >= _frames_count)
+  //  {
+  //    break;
+  //  }
 
-    void * frame_buffer = buffer;
-    if (_render_last_frame_only == true && frame_index != _frames_count - 1)
-    {
-      frame_buffer = nullptr;
-    }
+  //  void * frame_buffer = buffer;
+  //  if (_render_last_frame_only == true && frame_index != _frames_count - 1)
+  //  {
+  //    frame_buffer = nullptr;
+  //  }
 
-    if (artist->render_frame(frame_buffer, time_step) == false)
-    {
-      break;
-    }
+  //  if (artist->render_frame(frame_buffer, time_step) == false)
+  //  {
+  //    break;
+  //  }
 
-    ++frame_index;
-  }
+  //  ++frame_index;
+  //}
 }
 
 //////////////////////////////////////////////////////////////
@@ -130,8 +129,6 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
     return new ggo::voronoi_bitmap_artist();
   case ggo::bitmap_artist_id::vortex:
     return new ggo::vortex_bitmap_artist();
-  case ggo::bitmap_artist_id::plastic:
-    return new ggo::plastic_bitmap_artist();
   case ggo::bitmap_artist_id::mandelbrot:
     return new ggo::mandelbrot_bitmap_artist();
   case ggo::bitmap_artist_id::ifs:
@@ -165,7 +162,9 @@ ggo::bitmap_artist_abc * ggo::bitmap_artist_abc::create(bitmap_artist_id artist_
   case ggo::bitmap_artist_id::polygus:
     return new ggo::polygus_bitmap_artist();
 
-    // animation artists.
+  // Animation artists.
+  case ggo::bitmap_artist_id::plastic:
+    return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::plastic, 1);
   case ggo::bitmap_artist_id::smoke:
     return new ggo::bitmap_artist_animation_wrapper(ggo::animation_artist_id::smoke, 400);
   case ggo::bitmap_artist_id::ikeda:

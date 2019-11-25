@@ -28,12 +28,18 @@ void ggo::toutouyoutou_animation_artist::particle_emitter::create_particles(std:
 }
 
 //////////////////////////////////////////////////////////////
-ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::toutouyoutou_animation_artist::toutouyoutou_animation_artist(
+  int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio fps)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 1000),
+animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
 _grid(ggo::round_to<int>(view_height / influence_radius), ggo::round_to<int>(view_height / influence_radius)), // Grid size is the same as the discard radius.
 _background({ width, height }, line_byte_step)
 {
+  _sub_steps_count = static_cast<int>(std::ceil(to<float>(250 / fps)));
+  _delta_time = 1.f / to<float>(fps * _sub_steps_count);
+
   _rest_density = ggo::rand<float>(100.f, 200.f); // 150
   _stiffness = ggo::rand<float>(0.005f, 0.015f); // 0.01
   _near_stiffness = ggo::rand<float>(0.05f, 0.15f); // 0.1
@@ -75,9 +81,9 @@ _background({ width, height }, line_byte_step)
 }
 
 ////////////////////////////////////////////////////////////// 
-void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
+void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, bool & finished)
 {
-  for (int step = 0; step < sub_steps_count; ++step)
+  for (int step = 0; step < _sub_steps_count; ++step)
   {
     _emitter1.create_particles(_particles);
     _emitter2.create_particles(_particles);
@@ -95,7 +101,7 @@ void ggo::toutouyoutou_animation_artist::render_frame(void * buffer, int frame_i
 
   update_grid();
 
-  if (frame_index == 0)
+  if (_frame_index == 0)
   {
     ggo::fill_gaussian(_background, static_cast<float>(min_size()), ggo::white_8u(), { 0x80_u8, 0x80_u8, 0x80_u8 });
   }
@@ -162,6 +168,8 @@ void ggo::toutouyoutou_animation_artist::calculate_pressure()
 //////////////////////////////////////////////////////////////
 void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
 {
+  float delta_time_pow2 = ggo::square(_delta_time);
+
   for (auto & particle : _particles)
   {
     particle._relaxed_pos = particle._cur_pos;
@@ -190,9 +198,9 @@ void ggo::toutouyoutou_animation_artist::calculate_relaxed_positions()
       {
         u /= neighbour._dist;
  
-        float I = delta_time * influence * (_linear_viscocity * u + _quadratic_viscocity * u * u) / 2;
+        float I = _delta_time * influence * (_linear_viscocity * u + _quadratic_viscocity * u * u) / 2;
         
-        particle._relaxed_pos -= I * dpos * delta_time;
+        particle._relaxed_pos -= I * dpos * _delta_time;
       }
     }
   }
@@ -204,7 +212,7 @@ void ggo::toutouyoutou_animation_artist::move_to_relaxed_positions()
   for (auto & particle : _particles)
   {
     particle._cur_pos = particle._relaxed_pos;
-    particle._speed = (particle._cur_pos - particle._prv_pos) / delta_time;
+    particle._speed = (particle._cur_pos - particle._prv_pos) / _delta_time;
   }
 }
 
@@ -214,7 +222,7 @@ void ggo::toutouyoutou_animation_artist::advance()
   for (auto & particle : _particles)
   {
     particle._prv_pos = particle._cur_pos;
-    particle._cur_pos += delta_time * particle._speed;
+    particle._cur_pos += _delta_time * particle._speed;
   }
 }
 
@@ -245,7 +253,7 @@ void ggo::toutouyoutou_animation_artist::apply_body_forces()
 {
   for (auto & particle : _particles)
   {
-    particle._speed.y() -= _gravity * delta_time;
+    particle._speed.y() -= _gravity * _delta_time;
   }
 }
 
@@ -260,7 +268,7 @@ void ggo::toutouyoutou_animation_artist::resolve_collisions()
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.x() += (particle_radius - dist) / delta_time;
+        particle._speed.x() += (particle_radius - dist) / _delta_time;
       }
     }
     // Right wall.
@@ -269,7 +277,7 @@ void ggo::toutouyoutou_animation_artist::resolve_collisions()
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.x() -= (particle_radius - dist) / delta_time;
+        particle._speed.x() -= (particle_radius - dist) / _delta_time;
       }
     }
     // Bottom wall.
@@ -278,7 +286,7 @@ void ggo::toutouyoutou_animation_artist::resolve_collisions()
       if (dist < particle_radius)
       {
         dist = std::max<float>(0, dist);
-        particle._speed.y() += (particle_radius - dist) / delta_time;
+        particle._speed.y() += (particle_radius - dist) / _delta_time;
       }
     }
   }

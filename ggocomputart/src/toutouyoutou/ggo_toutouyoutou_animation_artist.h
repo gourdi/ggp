@@ -5,19 +5,22 @@
 // http://imdoingitwrong.wordpress.com/2010/12/14/why-my-fluids-dont-flow/
 // http://cg.informatik.uni-freiburg.de/publications/2007_SCA_SPH.pdf
 
-#include <ggo_animation_artist_abc.h>
+#include <ggo_animation_artist.h>
 #include <kernel/memory/ggo_array.h>
 #include <2d/ggo_image.h>
 
 namespace ggo
 {
-  class toutouyoutou_animation_artist : public fixed_frames_count_animation_artist_abc
+  class toutouyoutou_animation_artist : public animation_artist_abc
   {
   public:
 
-          toutouyoutou_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          toutouyoutou_animation_artist(
+            int width, int height, int line_byte_step,
+            ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+            ggo::ratio fps);
 
-    void  render_frame(void * buffer, int frame_index, float time_step) override;
+    void  render_frame(void * buffer, bool & finished) override;
 
   private:
 
@@ -76,10 +79,6 @@ namespace ggo
 
   private:
 
-    constexpr static int sub_steps_count = 10;
-    constexpr static int frame_rate = 25;
-    constexpr static float delta_time = 1.f / (frame_rate * sub_steps_count);
-    constexpr static float delta_time_pow2 = delta_time * delta_time;
     constexpr static float particle_radius = 0.05f;
     constexpr static float influence_radius = 6 * particle_radius;
     constexpr static float norm = 20 / (2 * ggo::pi<float>() * influence_radius * influence_radius);
@@ -87,24 +86,27 @@ namespace ggo
     constexpr static float view_height = 20;
 
     ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> _background;
-    std::vector<particle>                                       _particles;
-    ggo::array<std::vector<const particle *>, 2>                _grid;
-    particle_emitter                                            _emitter1;
-    particle_emitter                                            _emitter2;
-    float                                                       _rest_density;
-    float                                                       _stiffness;
-    float                                                       _near_stiffness;
-    float                                                       _surface_tension;
-    float                                                       _linear_viscocity;
-    float                                                       _quadratic_viscocity;
-    float                                                       _particle_mass;
-    float                                                       _gravity;
-    float                                                       _hue1;
-    float                                                       _hue2;
-    float                                                       _sat1;
-    float                                                       _sat2;
-    float                                                       _val1;
-    float                                                       _val2;
+    std::vector<particle> _particles;
+    ggo::array<std::vector<const particle *>, 2> _grid;
+    particle_emitter _emitter1;
+    particle_emitter _emitter2;
+    float _rest_density;
+    float _stiffness;
+    float _near_stiffness;
+    float _surface_tension;
+    float _linear_viscocity;
+    float _quadratic_viscocity;
+    float _particle_mass;
+    float _gravity;
+    float _hue1;
+    float _hue2;
+    float _sat1;
+    float _sat2;
+    float _val1;
+    float _val2;
+    int _sub_steps_count;
+    float _delta_time;
+    int _frame_index = 0;
   };
 }
 

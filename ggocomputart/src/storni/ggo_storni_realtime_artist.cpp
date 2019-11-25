@@ -128,10 +128,14 @@ void ggo::storni_realtime_artist::storni::clamp_velocity(float velocity_hypot_ma
 }
 
 //////////////////////////////////////////////////////////////
-ggo::storni_realtime_artist::storni_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::storni_realtime_artist::storni_realtime_artist(
+  int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio fps)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
-_background_buffer(height * line_byte_step)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+_background_buffer(height * line_byte_step),
+_fps(fps)
 {
   _hue = ggo::rand<float>();
 
@@ -213,7 +217,7 @@ void ggo::storni_realtime_artist::update_predators(float velocity_hypot_max, flo
     const float attraction_hypot = ggo::hypot(attraction);
     if (attraction_hypot != 0.0f)
     {
-      attraction *= 0.002f * min_size() / std::sqrt(attraction_hypot);
+      attraction *= to<float>(min_size() / (20 * _fps)) / std::sqrt(attraction_hypot);
       predator._vel += attraction;
     }
 
@@ -287,7 +291,8 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
     const float repulsion_hypot = ggo::hypot(repulsion);
     if (repulsion_hypot != 0.0f)
     {
-      repulsion *= 0.0009f * min_size() / std::sqrt(repulsion_hypot);
+      repulsion *= to<float>(25 * min_size() / (1000 * _fps)) / std::sqrt(repulsion_hypot);
+
       storni._vel += repulsion;
     }
 
@@ -295,7 +300,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
     const float aligment_hypot = ggo::hypot(alignment);
     if (aligment_hypot != 0.0f)
     {
-      alignment *= 0.0006f * min_size() / std::sqrt(aligment_hypot);
+      alignment *= to<float>(15 * min_size() / (1000 * _fps)) / std::sqrt(aligment_hypot);
       storni._vel += alignment;
     }
 
@@ -304,7 +309,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 
     if (attraction_hypot != 0.0f)
     {
-      attraction *= 0.0005f * min_size() / std::sqrt(attraction_hypot);
+      attraction *= to<float>(12 * min_size() / (1000 * _fps)) / std::sqrt(attraction_hypot);
       storni._vel += attraction;
     }
 
@@ -320,7 +325,7 @@ void ggo::storni_realtime_artist::update_stornis(float velocity_hypot_max, float
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
+void ggo::storni_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   // Update items.
   const float velocity_hypot_max = get_velocity_hypot_max();
@@ -341,7 +346,14 @@ void ggo::storni_realtime_artist::preprocess_frame(int frame_index, uint32_t cur
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+bool ggo::storni_realtime_artist::finished()
+{
+  _elapsed_time += 1 / _fps;
+  return _elapsed_time > 10;
+}
+
+//////////////////////////////////////////////////////////////
+void ggo::storni_realtime_artist::render_tile(void * buffer, const ggo::rect_int & clipping)
 {
   const float storni_size = 0.01f * std::sqrt(float(width() * height()));
   const float predator_size = 0.03f * std::sqrt(float(width() * height()));
@@ -351,7 +363,7 @@ void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, co
     fade_background_to_white<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(clipping);
     paint_stornies_background<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(clipping);
     blit_background<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
-    paint_obstacles<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping, frame_index);
+    paint_obstacles<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping, _elapsed_time);
     paint_stornies<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
     paint_stornies<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
   }
@@ -360,7 +372,7 @@ void ggo::storni_realtime_artist::render_tile(void * buffer, int frame_index, co
     fade_background_to_white<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(clipping);
     paint_stornies_background<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(clipping);
     blit_background<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
-    paint_obstacles<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping, frame_index);
+    paint_obstacles<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping, _elapsed_time);
     paint_stornies<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(buffer, _predators, predator_size, clipping);
     paint_stornies<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(buffer, _stornis, storni_size, clipping);
   }
@@ -462,11 +474,11 @@ void ggo::storni_realtime_artist::paint_stornies(void * buffer, const std::vecto
 
 //////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect_int & clipping, int frame_index) const
+void ggo::storni_realtime_artist::paint_obstacles(void * buffer, const ggo::rect_int & clipping, ggo::ratio elapsed_time) const
 {
   const float obstacle_hypot = get_obstacle_hypot(width(), height());
   const float obstacle_hypot_inv = 1.f / obstacle_hypot;
-  const float phase = 0.5f * frame_index;
+  const float phase = to<float>(10 * elapsed_time);
   const ggo::rgb_8u color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.f, 1.f);
 
   image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());

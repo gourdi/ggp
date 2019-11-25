@@ -5,35 +5,50 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::duffing_realtime_artist::duffing_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::duffing_realtime_artist::duffing_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
   _radius = 0.01f * min_size();
   uint8_t gray = ggo::rand<uint8_t>(0x80, 0xff);
   _bkgd_color = ggo::rgb_8u(gray, gray, gray);
   _hue = ggo::rand<float>();
   _angle_offset = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
+  _substeps_per_frame = 2500.f * static_cast<float>(fps._den) / static_cast<float>(fps._num);
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
+void ggo::duffing_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
+  // Fill background.
+  if (_substeps_count == 0)
+  {
+    ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down> img(buffer, size(), line_byte_step());
+
+    ggo::fill_solid(img, _bkgd_color);
+  }
+
   _paint_color = ggo::from_hsv<ggo::rgb_8u>(_hue, 1.0f, 0.75f);
   _hue += 0.0005f;
 
-  for (auto & point : _points)
+  _points.clear();
+
+  _substeps += _substeps_per_frame;
+
+  for (; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
   {
-    point = _duffing.update(0.01f);
+    auto point = _duffing.update(0.01f);
     point = ggo::rotate(point, _angle_offset);
     point = map_fit(point, -1.7f, 1.7f);
+
+    _points.push_back(point);
 
     _angle_offset = std::fmod(_angle_offset + 0.0001f, 2 * ggo::pi<float>());
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+void ggo::duffing_realtime_artist::render_tile(void * buffer, const ggo::rect_int & clipping)
 {
   auto contract = [](int v) -> int
   {
@@ -51,18 +66,9 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
     }
   };
 
-  const auto brush = ggo::make_solid_brush(_paint_color);
-  const auto blender = ggo::alpha_blender_rgb8u(0.1f);
-
   ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down> img(buffer, size(), line_byte_step());
 
-  // Fill background.
-  if (frame_index == 0)
-  {
-    ggo::fill_solid(img, _bkgd_color, clipping);
-  }
-
-  // Fade out (process 1 frame out of 2).
+  // Fade out.
   for_each_pixel(img, clipping, [&](int x, int y)
   {
     const ggo::rgb_8u pixel = img.read_pixel(x, y);
@@ -78,9 +84,19 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, int frame_index, c
   });
 
   // Paint the Duffing's points.
+  const auto brush = ggo::make_solid_brush(_paint_color);
+  const auto blender = ggo::alpha_blender_rgb8u(0.1f);
+
   for (const auto & point : _points)
   {
     ggo::paint<ggo::sampling_4x4>(img, ggo::disc_f(point, _radius), brush, blender, clipping);
   }
 }
+
+//////////////////////////////////////////////////////////////
+bool ggo::duffing_realtime_artist::finished()
+{
+  return _substeps_count > 30000;
+}
+
 

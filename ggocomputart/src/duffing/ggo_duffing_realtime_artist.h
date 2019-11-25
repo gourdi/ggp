@@ -1,32 +1,35 @@
 #ifndef __GGO_DUFFING_REALTIME_ARTIST__
 #define __GGO_DUFFING_REALTIME_ARTIST__
 
-#include <ggo_realtime_artist_abc.h>
+#include <ggo_realtime_artist.h>
 #include "ggo_duffing.h"
 
 namespace ggo
 {
-  class duffing_realtime_artist : public fixed_frames_count_realtime_artist_abc
+  class duffing_realtime_artist : public realtime_artist
   {
   public:
 
-          duffing_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          duffing_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps);
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
-    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
-    int   frames_count() const override { return 1500; }
+    void  preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
+    void  render_tile(void * buffer, const ggo::rect_int & clipping) override;
+    bool  finished() override;
 
   private:
 
-    ggo::duffing                _duffing;
-    float                       _radius;
-    std::array<ggo::pos2_f, 16> _points;
-    ggo::rgb_8u                 _bkgd_color;
-    float                       _hue;
-    ggo::rgb_8u                 _paint_color;
-    float                       _angle_offset;
+    ggo::duffing              _duffing;
+    float                     _radius;
+    std::vector<ggo::pos2_f>  _points;
+    ggo::rgb_8u               _bkgd_color;
+    float                     _hue;
+    ggo::rgb_8u               _paint_color;
+    float                     _angle_offset;
+    float                     _substeps = 0.f;
+    float                     _substeps_per_frame;
+    int                       _substeps_count = 0;
   };
 }
 

@@ -3,6 +3,7 @@
 
 #include <ggo_paint_artist.h>
 #include <ggo_artist_ids.h>
+#include <kernel/ggo_ratio.h>
 
 namespace ggo
 {

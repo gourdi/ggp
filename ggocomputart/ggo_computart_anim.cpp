@@ -1,4 +1,4 @@
-#include "ggo_animation_artist_abc.h"
+#include "ggo_animation_artist.h"
 #include <kernel/memory/ggo_array.h>
 #include <kernel/time/ggo_chronometer.h>
 #include <2d/io/ggo_bmp.h>
@@ -11,7 +11,7 @@ struct ggo_params
   std::string				        _output_directory;
   int						            _width;
   int						            _height;
-  float                     _time_step = 1.f / 25.f; // For now this is fixed.
+  ggo::ratio                _fps{ 25, 1 }; // For now this is fixed.
 };
 
 //////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ int main(int argc, char ** argv)
   std::cout << "Output directory: " << params._output_directory << std::endl;
 
   std::unique_ptr<ggo::animation_artist_abc> artist(ggo::animation_artist_abc::create(
-    params._artist_id, params._width, params._height, line_byte_step, ggo::rgb_8u_yu));
+    params._artist_id, params._width, params._height, line_byte_step, ggo::pixel_type::rgb_8u, ggo::lines_order::up, params._fps));
 
   if (artist.get() == nullptr)
   {
@@ -105,7 +105,9 @@ int main(int argc, char ** argv)
   {
     ggo::chronometer frame_chronometer;
 
-    if (artist->render_frame(buffer.data(), params._time_step) == false)
+    bool finished = true;
+    artist->render_frame(buffer.data(), finished);
+    if (finished == true)
     {
       break;
     }
@@ -120,7 +122,7 @@ int main(int argc, char ** argv)
     filename << i << ".bmp";
     std::cout << "Saved image " << filename.str() << " (image computed in " << frame_chronometer.get_display_time() << ")" << std::endl;
 
-    if (ggo::save_bmp(filename.str(), buffer.data(), ggo::rgb_8u_yu, params._width, params._height, line_byte_step) == false)
+    if (ggo::save_bmp(filename.str(), buffer.data(), artist->pixel_type(), artist->memory_lines_order(), params._width, params._height, line_byte_step) == false)
     {
       std::cerr << "Failed saving image " + filename.str() << std::endl;
     }

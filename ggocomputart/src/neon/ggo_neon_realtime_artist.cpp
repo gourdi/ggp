@@ -6,10 +6,11 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::neon_realtime_artist::neon_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::neon_realtime_artist::neon_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 {
+  _substeps_per_frame = 800.f * static_cast<float>(fps._den) / static_cast<float>(fps._num);
   _angle = 0;
   _radius_prv = ggo::rand<float>();
   _radius_cur = _radius_prv;
@@ -19,42 +20,51 @@ fixed_frames_count_realtime_artist_abc(width, height, line_byte_step, pixel_type
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_realtime_artist::preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step)
+void ggo::neon_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
-  if ((frame_index % 100) == 0)
+  if (_substeps_count == 0)
   {
-    _radius_attractor = ggo::rand<float>(0.2f, 1);
-    _attractor_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
+    memset(buffer, 0, line_byte_step() * height());
   }
 
-  for (int substep = 0; substep < substeps_count; ++substep)
+  _substeps += _substeps_per_frame;
+
+  _attractor_points.clear();
+  _points.clear();
+  for (; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
   {
     const float velocity = _radius_cur - _radius_prv;
     const float force = 0.0000075f * ggo::sign(_radius_attractor - _radius_cur);
     _radius_prv = _radius_cur;
     _radius_cur += velocity + force;
 
-    _points[substep] = _radius_cur * ggo::vec2_f::from_angle(_angle);
-    _attractor_points[substep] = _radius_attractor * ggo::vec2_f::from_angle(_angle);
+    _points.push_back(_radius_cur * ggo::vec2_f::from_angle(_angle));
+    _attractor_points.push_back(_radius_attractor * ggo::vec2_f::from_angle(_angle));
 
-    _angle += 0.001f;
+    _angle += 0.0025f;
+
+    if ((_substeps_count % 1000) == 0)
+    {
+      _radius_attractor = ggo::rand<float>(0.2f, 1);
+      _attractor_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
+    }
   }
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::neon_realtime_artist::render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping)
+void ggo::neon_realtime_artist::render_tile(void * buffer, const ggo::rect_int & clipping)
 {
   if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
   {
-    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+    render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down>(buffer, clipping);
   }
   else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::up)
   {
-    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, frame_index, clipping);
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up>(buffer, clipping);
   }
   else if (pixel_type() == ggo::pixel_type::rgb_8u && memory_lines_order() == ggo::lines_order::down)
   {
-    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, frame_index, clipping);
+    render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down>(buffer, clipping);
   }
   else
   {
@@ -63,24 +73,25 @@ void ggo::neon_realtime_artist::render_tile(void * buffer, int frame_index, cons
 }
 
 //////////////////////////////////////////////////////////////
+bool ggo::neon_realtime_artist::finished()
+{
+  return _substeps_count > 8000;
+}
+
+//////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-void ggo::neon_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
+void ggo::neon_realtime_artist::render_tile_t(void * buffer, const ggo::rect_int & clipping) const
 {
   ggo::image_t<pixel_type, memory_lines_order> img(buffer, size(), line_byte_step());
 
-  if (frame_index == 0)
+  for (const auto & p : _points)
   {
-    ggo::fill_black(img, clipping);
+    paint_point_t(img, p, ggo::rgb_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
   }
 
-  for (int substep = 0; substep < substeps_count; ++substep)
+  for (const auto & p : _attractor_points)
   {
-    paint_point_t(img, _points[substep], ggo::rgb_8u(uint8_t(0x08), uint8_t(0x08), uint8_t(0x08)), clipping);
-
-    if (substep & 1)
-    {
-      paint_point_t(img, _attractor_points[substep], _attractor_color, clipping);
-    }
+    paint_point_t(img, p, _attractor_color, clipping);
   }
 }
 

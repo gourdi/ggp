@@ -2,11 +2,13 @@
 #define __GGO_GPU_ARTIST_ABC__
 
 #include <ggo_artist_ids.h>
-#include <kernel/ggo_kernel.h>
+#include <kernel/ggo_ratio.h>
 #include <string>
 #include <map>
 #include <vector>
 #include <variant>
+#include <chrono>
+#include <kernel/ggo_kernel.h>
 
 namespace ggo
 {

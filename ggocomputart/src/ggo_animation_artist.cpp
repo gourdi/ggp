@@ -1,5 +1,5 @@
-#include "ggo_animation_artist_abc.h"
-#include "ggo_realtime_artist_abc.h"
+#include "ggo_animation_artist.h"
+#include "ggo_realtime_artist.h"
 #include "duffing/ggo_duffing_animation_artist.h"
 #include "julia/ggo_julia_animation_artist.h"
 #include "bozons/ggo_bozons_realtime_artist.h"
@@ -45,20 +45,20 @@ namespace ggo
     animation_artist_realtime_wrapper(ggo::realtime_artist_id artist_id, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
     :
     animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
-    _artist(realtime_artist_abc::create(artist_id, width, height, line_byte_step, pixel_type, memory_lines_order))
+      _artist(realtime_artist::create(artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, {0, 0}))
     {
     }
 
-    void  render_frame(void * buffer, int frame_index, float time_step, bool & finished) override
+    void  render_frame(void * buffer, bool & finished) override
     {
-      _artist->preprocess_frame(0, { 0, 0 }, time_step);
-      _artist->render_tile(buffer, ggo::rect_int::from_size(size()));
-      finished = _artist->finished();
+      //_artist->preprocess_frame(0, { 0, 0 }, time_step);
+      //_artist->render_tile(buffer, ggo::rect_int::from_size(size()));
+      //finished = _artist->finished();
     }
 
   private:
 
-    std::unique_ptr<realtime_artist_abc> _artist;
+    std::unique_ptr<realtime_artist> _artist;
   };
 }
 
@@ -75,28 +75,15 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool ggo::animation_artist_abc::render_frame(void * buffer, float time_step)
-  {
-    bool finished = true;
-    render_frame(buffer, _frame_index, time_step, finished);
-    if (finished == true)
-    {
-      return false;
-    }
-
-    ++_frame_index;
-
-    return true;
-  }
-
-  //////////////////////////////////////////////////////////////
-  ggo::animation_artist_abc * ggo::animation_artist_abc::create(ggo::animation_artist_id artist_id, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+  ggo::animation_artist_abc * ggo::animation_artist_abc::create(
+    ggo::animation_artist_id artist_id, int width, int height, int line_byte_step, 
+    ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
   {
     switch (artist_id)
     {
     case ggo::animation_artist_id::duffing:
-      return new ggo::duffing_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    case ggo::animation_artist_id::julia:
+      return new ggo::duffing_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
+    /*case ggo::animation_artist_id::julia:
       return new ggo::julia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::filling_squares:
       return new ggo::filling_squares_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
@@ -148,9 +135,9 @@ namespace ggo
       return new ggo::poupette_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::badaboum:
       return new ggo::badaboum_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-
+*/
     // Real-time artists.
-    case ggo::animation_artist_id::kanji:
+    /*case ggo::animation_artist_id::kanji:
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::kanji, width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::bozons:
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::bozons, width, height, line_byte_step, pixel_type, memory_lines_order);
@@ -164,7 +151,7 @@ namespace ggo
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_byte_step, pixel_type, memory_lines_order);
     case ggo::animation_artist_id::sonson:
       return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_byte_step, pixel_type, memory_lines_order);
-
+*/
     default:
       GGO_FAIL();
       return nullptr;
@@ -175,27 +162,36 @@ namespace ggo
 }
 
 //////////////////////////////////////////////////////////////
-// FIXED FRAMES COUNT ANIMATION ARTIST
+// PROGRESS ANIMATION ARTIST
 
 //////////////////////////////////////////////////////////////
-ggo::fixed_frames_count_animation_artist_abc::fixed_frames_count_animation_artist_abc(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int frames_count)
+ggo::progress_animation_artist_abc::progress_animation_artist_abc(
+  int width, int height, int line_byte_step, 
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio duration, ggo::ratio fps)
 :
 ggo::animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order),
-_frames_count(frames_count)
+_duration(duration),
+_fps(fps)
 {
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::fixed_frames_count_animation_artist_abc::render_frame(void * buffer, int frame_index, float time_step, bool & finished)
+void ggo::progress_animation_artist_abc::render_frame(void * buffer, bool & finished)
 {
-  if (frame_index >= _frames_count)
+  GGO_FAIL();
+  float progress = to<float>(_elapsed_time / _duration);
+
+  if (progress >= 1)
   {
     finished = true;
   }
   else
   {
-    render_frame(buffer, frame_index, time_step);
+    render_frame(buffer, progress);
 
     finished = false;
   }
+
+  _elapsed_time += 1 / _fps;
 }

@@ -45,7 +45,7 @@ ggo::realtime_artist * create_artist()
     ggo::realtime_artist_id::duffing,
     ggo::realtime_artist_id::kanji,
     ggo::realtime_artist_id::neon,
-    //ggo::realtime_artist_id::storni,
+    ggo::realtime_artist_id::storni,
     //ggo::realtime_artist_id::lagaude,
     //ggo::realtime_artist_id::demeco,
     //ggo::realtime_artist_id::wakenda,
@@ -55,7 +55,7 @@ ggo::realtime_artist * create_artist()
   };
 #endif
 
-  int index = ggo::rand<int>(0, int(ids.size() - 1));
+  int index = 4; // ggo::rand<int>(0, int(ids.size() - 1));
 
   std::cout << "Artist ID: " << index << std::endl;
 

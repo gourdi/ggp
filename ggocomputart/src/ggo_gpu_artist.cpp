@@ -37,7 +37,7 @@ namespace ggo
     auto now = std::chrono::steady_clock::now();
     auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - _start_time);
 
-    float progress = (0.001f * static_cast<float>(elapsed_time.count()) * static_cast<float>(_duration._den))  / static_cast<float>(_duration._num);
+    float progress = 0.001f * to<float>(elapsed_time.count() / _duration);
 
     if (progress > 1.f)
     {

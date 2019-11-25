@@ -1,27 +1,30 @@
 #ifndef __GGO_BOZONS_REALTIME_ARTIST__
 #define __GGO_BOZONS_REALTIME_ARTIST__
 
-#include "ggo_realtime_artist_abc.h"
+#include "ggo_realtime_artist.h"
 #include <list>
 
 namespace ggo
 {
-  class bozons_realtime_artist : public realtime_artist_abc
+  class bozons_realtime_artist : public realtime_artist
   {
   public:
 
-          bozons_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          bozons_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps);
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
-    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
-    bool  finished(int frame_index) const override;
+    void  preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
+    void  render_tile(void * buffer, const ggo::rect_int & clipping) override;
+    bool  finished() override;
 
   private:
 
     void create_bozon();
 
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-    void render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const;
+    void render_background_t(void * buffer) const;
+
+    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
+    void render_tile_t(void * buffer, const ggo::rect_int & clipping) const;
 
   private:
 
@@ -37,31 +40,33 @@ namespace ggo
       float       _radius;
     };
 
-    std::list<bozon>  _bozons;
-    float             _hue = 0.f;
-    ggo::rgb_8u       _bkgd_color1;
-    ggo::rgb_8u       _bkgd_color2;
-    ggo::rgb_8u       _bkgd_color3;
-    ggo::rgb_8u       _bkgd_color4; 
+    struct capsule
+    {
+      capsule(ggo::pos2_f p1, ggo::pos2_f p2, float radius, ggo::rgb_8u color) :
+        _p1(p1),
+        _p2(p2),
+        _radius(radius),
+        _color(color)
+      {
+      }
+
+      ggo::pos2_f _p1;
+      ggo::pos2_f _p2;
+      float _radius;
+      ggo::rgb_8u _color;
+    };
+
+    std::list<bozon>      _bozons;
+    std::vector<capsule>  _capsules;
+    float                 _hue = 0.f;
+    ggo::rgb_8u           _bkgd_color1;
+    ggo::rgb_8u           _bkgd_color2;
+    ggo::rgb_8u           _bkgd_color3;
+    ggo::rgb_8u           _bkgd_color4; 
+    float                 _substeps = 0.f;
+    float                 _substeps_per_frame;
+    int                   _substeps_count = 0;
   };
-
-  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-  void bozons_realtime_artist::render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping) const
-  {
-    ggo::image_t<pixel_type, memory_lines_order> image(buffer, size(), line_byte_step());
-
-    if (frame_index == 0)
-    {
-      ggo::fill_4_colors(image, _bkgd_color1, _bkgd_color2, _bkgd_color3, _bkgd_color4, clipping);
-    }
-
-    for (const auto & bozon : _bozons)
-    {
-      ggo::paint<ggo::sampling_4x4>(image,
-        ggo::capsule_f(bozon._prv_pos, bozon._cur_pos, bozon._radius),
-        ggo::solid_color_brush<ggo::rgb_8u>(bozon._color), ggo::overwrite_blender<rgb_8u>(), clipping);
-    }
-  }
 }
 
 #endif

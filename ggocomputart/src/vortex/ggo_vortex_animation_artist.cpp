@@ -2,9 +2,12 @@
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
 
 //////////////////////////////////////////////////////////////
-ggo::vortex_animation_artist::vortex_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::vortex_animation_artist::vortex_animation_artist(
+  int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio fps)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 250)
+progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
 {
   const int vortices_count = 20;
 
@@ -33,10 +36,10 @@ fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_typ
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::vortex_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
+void ggo::vortex_animation_artist::render_frame(void * buffer, float progress)
 {
   // Interpolate vortices position.
-  float interp = ggo::ease_inout_to<float>(frame_index, frames_count());
+  float interp = ggo::ease_inout(progress);
   for (auto & vortex : _params._vortices)
   {
     const ggo::pos2_f & start_pos = _vortices_paths[&vortex]._start_pos;

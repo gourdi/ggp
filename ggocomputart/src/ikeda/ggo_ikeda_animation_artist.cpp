@@ -5,9 +5,12 @@
 #include <2d/paint/ggo_blend.h>
 
 //////////////////////////////////////////////////////////////
-ggo::ikeda_animation_artist::ikeda_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::ikeda_animation_artist::ikeda_animation_artist(
+  int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio fps)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
+progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 8, 1 }, fps)
 {
   _u0.set_harmonic(0, 0, 0);
   _u0.set_harmonic(1, ggo::rand<float>(-1, 1), 0);
@@ -40,7 +43,7 @@ fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_typ
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::ikeda_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
+void ggo::ikeda_animation_artist::render_frame(void * buffer, float progress)
 {
   ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> img(buffer, size(), line_byte_step());
 
@@ -48,9 +51,9 @@ void ggo::ikeda_animation_artist::render_frame(void * buffer, int frame_index, f
 	
 	std::vector<particle> particles = _seeds;
 	
-	float u0 = _u0.evaluate(frame_index * ggo::pi<float>() / frames_count());
-	float u1 = _u1.evaluate(frame_index * ggo::pi<float>() / frames_count());
-	float u2 = _u2.evaluate(frame_index * ggo::pi<float>() / frames_count());
+	float u0 = _u0.evaluate(progress * ggo::pi<float>());
+	float u1 = _u1.evaluate(progress * ggo::pi<float>());
+	float u2 = _u2.evaluate(progress * ggo::pi<float>());
 	
 	for (auto & particle : particles)
 	{

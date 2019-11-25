@@ -6,9 +6,12 @@
 #include <2d/paint/ggo_color_triangle.h>
 
 ////////////////////////////////////////////////////////
-ggo::aggregation_animation_artist::aggregation_animation_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+ggo::aggregation_animation_artist::aggregation_animation_artist(
+  int width, int height, int line_byte_step,
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+  ggo::ratio fps)
 :
-fixed_frames_count_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, 300)
+progress_animation_artist_abc(width, height, line_byte_step, pixel_type, memory_lines_order, { 10, 1 }, fps)
 {
   _threshold_dist = 0.00125f * std::min(width, height);
   _threshold_hypot = _threshold_dist * _threshold_dist;
@@ -151,9 +154,9 @@ void ggo::aggregation_animation_artist::render_t(void * buffer) const
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_index, float time_step)
+void ggo::aggregation_animation_artist::render_frame(void * buffer, float progress)
 {
-  int points_count = get_final_points_count() / frames_count();
+  int new_points_count = ggo::round_to<int>(progress * get_final_points_count());
 
   for (auto & cell : _grid)
   {
@@ -163,7 +166,7 @@ void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_in
     }
   }
 
-  for (int i = 0; i < points_count; ++i)
+  for (int i = 0; i < new_points_count; ++i)
   {
     update();
   }
@@ -189,6 +192,8 @@ void ggo::aggregation_animation_artist::render_frame(void * buffer, int frame_in
 //////////////////////////////////////////////////////////////
 void ggo::aggregation_animation_artist::register_point(const ggo::pos2_f & pos, float hue, float sat, float val)
 {
+  ++_points_count;
+
   std::vector<ggo::pos2_f> loop_pos{
     pos,
   { pos.x() - width(), pos.y() },{ pos.x() + width(), pos.y() },

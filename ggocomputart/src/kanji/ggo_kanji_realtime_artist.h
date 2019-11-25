@@ -1,35 +1,43 @@
 #ifndef __GGO_KANJI_REALTIME_ARTIST__
 #define __GGO_KANJI_REALTIME_ARTIST__
 
-#include <ggo_realtime_artist_abc.h>
+#include <ggo_realtime_artist.h>
 
 namespace ggo
 {
-  class kanji_realtime_artist : public fixed_frames_count_realtime_artist_abc
+  class kanji_realtime_artist : public realtime_artist
   {
   public:
 
-          kanji_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order);
+          kanji_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps);
 
   private:
 
-    void  preprocess_frame(int frame_index, uint32_t cursor_events, ggo::pos2_i cursor_pos, float time_step) override;
-    void  render_tile(void * buffer, int frame_index, const ggo::rect_int & clipping) override;
-    int   frames_count() const override { return 500; }
+    void  preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos) override;
+    void  render_tile(void * buffer, const ggo::rect_int & clipping) override;
+    bool  finished() override;
 
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-    void  render_tile_t(void * buffer, int frame_index, const ggo::rect_int & clipping);
+    void  render_tile_t(void * buffer, const ggo::rect_int & clipping);
 
   private:
 
-    static constexpr int substeps_count = 8;
+    struct particle
+    {
+      ggo::pos2_f _prv_pos;
+      ggo::pos2_f _cur_pos;
+    };
 
-    std::vector<std::array<ggo::pos2_f, substeps_count>>  _particles;
-    ggo::pos2_f        		                                _attractor;
-    int							                                      _timer_max;
-    ggo::rgb_8u 	                                        _parts_color;
-    int							                                      _attractor_counter;
-    int							                                      _shake_counter;
+    std::vector<particle> _particles;
+    std::vector<pos2_f> _points;
+    ggo::pos2_f _attractor;
+    int _timer_max;
+    ggo::rgb_8u _parts_color;
+    int _attractor_counter;
+    int _shake_counter;
+    float _substeps = 0.f;
+    ggo::ratio _substeps_per_frame;
+    int _substeps_count = 0;
   };
 }
 
