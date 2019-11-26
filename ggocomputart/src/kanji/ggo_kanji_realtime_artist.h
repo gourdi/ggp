@@ -2,6 +2,7 @@
 #define __GGO_KANJI_REALTIME_ARTIST__
 
 #include <ggo_realtime_artist.h>
+#include <ggo_substeps_processing.h>
 
 namespace ggo
 {
@@ -35,9 +36,7 @@ namespace ggo
     ggo::rgb_8u _parts_color;
     int _attractor_counter;
     int _shake_counter;
-    float _substeps = 0.f;
-    ggo::ratio _substeps_per_frame;
-    int _substeps_count = 0;
+    substeps_processing _substeps_processing;
   };
 }
 

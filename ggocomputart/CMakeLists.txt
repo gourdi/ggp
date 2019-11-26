@@ -12,8 +12,8 @@ add_dependencies(ggocomputart ggoraytracer_nonreg ggoanimation_nonreg)
 add_executable(ggocomputartbitmap ggo_computart_bitmap.cpp)
 target_link_libraries(ggocomputartbitmap PRIVATE ggocomputart)
 
-add_executable(ggocomputartanim ggo_computart_anim.cpp)
-target_link_libraries(ggocomputartanim PRIVATE ggocomputart)
+add_executable(ggocomputartanimation ggo_computart_animation.cpp)
+target_link_libraries(ggocomputartanimation PRIVATE ggocomputart)
 
 add_executable(ggocomputartrealtime ggo_computart_realtime.cpp)
 target_link_libraries(ggocomputartrealtime PRIVATE ggocomputart SDL2::SDL2 SDL2::SDL2main)

@@ -2,6 +2,7 @@
 #define __GGO_NEON_ARTIST__
 
 #include <ggo_realtime_artist.h>
+#include <ggo_substeps_processing.h>
 #include <2d/ggo_image.h>
 
 namespace ggo
@@ -33,9 +34,7 @@ namespace ggo
     ggo::rgb_8u _attractor_color;
     std::vector<ggo::pos2_f> _attractor_points;
     std::vector<ggo::pos2_f> _points;
-    float _substeps = 0.f;
-    float _substeps_per_frame;
-    int _substeps_count = 0;
+    substeps_processing _substeps_processing;
   };
 }
 

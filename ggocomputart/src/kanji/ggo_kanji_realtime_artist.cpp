@@ -7,10 +7,9 @@
 //////////////////////////////////////////////////////////////
 ggo::kanji_realtime_artist::kanji_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+_substeps_processing(500 / fps)
 {
-  _substeps_per_frame = 500 / fps;
-
   _parts_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(0, 1), ggo::rand<float>(0, 1), 1);
   _timer_max = ggo::rand<int>(500, 750);
 
@@ -36,16 +35,14 @@ realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 //////////////////////////////////////////////////////////////
 void ggo::kanji_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
-  if (_substeps_count == 0)
+  if (_substeps_processing._substeps_count == 0)
   {
     memset(buffer, 0, line_byte_step() * height());
   }
 
   _points.clear();
 
-  _substeps += to<float>(_substeps_per_frame);
-
-  for (; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
+  _substeps_processing.call([&]
   {
     // Update the particles system.
     for (auto & particle : _particles)
@@ -102,7 +99,7 @@ void ggo::kanji_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor
 
       _attractor_counter = ggo::rand<int>(20, 50);
     }
-  }
+  });
 }
 
 //////////////////////////////////////////////////////////////
@@ -147,7 +144,7 @@ void ggo::kanji_realtime_artist::render_tile(void * buffer, const ggo::rect_int 
 //////////////////////////////////////////////////////////////
 bool ggo::kanji_realtime_artist::finished()
 {
-  return _substeps_count > 6000;
+  return _substeps_processing._substeps_count > 6000;
 }
 
 

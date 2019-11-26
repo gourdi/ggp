@@ -7,21 +7,21 @@
 //////////////////////////////////////////////////////////////
 ggo::duffing_realtime_artist::duffing_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+_substeps_processing(2500 / fps)
 {
   _radius = 0.01f * min_size();
   uint8_t gray = ggo::rand<uint8_t>(0x80, 0xff);
   _bkgd_color = ggo::rgb_8u(gray, gray, gray);
   _hue = ggo::rand<float>();
   _angle_offset = ggo::rand<float>(0.f, 2.f * ggo::pi<float>());
-  _substeps_per_frame = 2500.f * static_cast<float>(fps._den) / static_cast<float>(fps._num);
 }
 
 //////////////////////////////////////////////////////////////
 void ggo::duffing_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
   // Fill background.
-  if (_substeps_count == 0)
+  if (_substeps_processing._substeps_count == 0)
   {
     ggo::image_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down> img(buffer, size(), line_byte_step());
 
@@ -33,9 +33,7 @@ void ggo::duffing_realtime_artist::preprocess_frame(void * buffer, uint32_t curs
 
   _points.clear();
 
-  _substeps += _substeps_per_frame;
-
-  for (; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
+  _substeps_processing.call([&]
   {
     auto point = _duffing.update(0.01f);
     point = ggo::rotate(point, _angle_offset);
@@ -44,7 +42,7 @@ void ggo::duffing_realtime_artist::preprocess_frame(void * buffer, uint32_t curs
     _points.push_back(point);
 
     _angle_offset = std::fmod(_angle_offset + 0.0001f, 2 * ggo::pi<float>());
-  }
+  });
 }
 
 //////////////////////////////////////////////////////////////
@@ -96,7 +94,7 @@ void ggo::duffing_realtime_artist::render_tile(void * buffer, const ggo::rect_in
 //////////////////////////////////////////////////////////////
 bool ggo::duffing_realtime_artist::finished()
 {
-  return _substeps_count > 30000;
+  return _substeps_processing._substeps_count > 30000;
 }
 
 

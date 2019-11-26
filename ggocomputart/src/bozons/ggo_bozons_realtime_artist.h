@@ -2,6 +2,7 @@
 #define __GGO_BOZONS_REALTIME_ARTIST__
 
 #include "ggo_realtime_artist.h"
+#include <ggo_substeps_processing.h>
 #include <list>
 
 namespace ggo
@@ -63,9 +64,7 @@ namespace ggo
     ggo::rgb_8u           _bkgd_color2;
     ggo::rgb_8u           _bkgd_color3;
     ggo::rgb_8u           _bkgd_color4; 
-    float                 _substeps = 0.f;
-    float                 _substeps_per_frame;
-    int                   _substeps_count = 0;
+    substeps_processing   _substeps_processing;
   };
 }
 

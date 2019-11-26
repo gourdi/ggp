@@ -6,6 +6,7 @@ GGO_TEST(ratio, equality)
 {
   static_assert(ggo::ratio{ 1, 2 } == ggo::ratio{ 2, 4 });
   static_assert(ggo::ratio{ 2, 7 } == ggo::ratio{ 6, 21 });
+  static_assert(ggo::ratio{ 6, 2 } == 3);
 
   static_assert(ggo::ratio{ 1, 2 } != ggo::ratio{ 2, 3 });
   static_assert(ggo::ratio{ 1, 2 } != ggo::ratio{ 1, 4 });
@@ -30,24 +31,6 @@ GGO_TEST(ratio, divide)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(ratio, add_in_place_same_denominator)
-{
-  ggo::ratio r{ 1, 4 };
-  r += { 2, 4 };
-  GGO_CHECK_EQ(r._num, 3);
-  GGO_CHECK_EQ(r._den, 4);
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(ratio, add_in_place_different_denominator)
-{
-  ggo::ratio r{ 1, 4 }; 
-  r += { 2, 3 };
-  GGO_CHECK_EQ(r._num, 11);
-  GGO_CHECK_EQ(r._den, 12);
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(ratio, add_same_denominator)
 {
   constexpr auto res = ggo::ratio{ 1, 4 } + ggo::ratio{ 2, 4 };
@@ -60,6 +43,22 @@ GGO_TEST(ratio, add_different_denominator)
 {
   constexpr auto res = ggo::ratio{ 1, 4 } + ggo::ratio{ 2, 3 };
   static_assert(res._num == 11);
+  static_assert(res._den == 12);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(ratio, sub_same_denominator)
+{
+  constexpr auto res = ggo::ratio{ 13, 4 } - ggo::ratio{ 11, 4 };
+  static_assert(res._num == 2);
+  static_assert(res._den == 4);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(ratio, sub_different_denominator)
+{
+  constexpr auto res = ggo::ratio{ 2, 3 } - ggo::ratio{ 1, 4 };
+  static_assert(res._num == 5);
   static_assert(res._den == 12);
 }
 

@@ -8,9 +8,9 @@
 //////////////////////////////////////////////////////////////
 ggo::neon_realtime_artist::neon_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+_substeps_processing(800 / fps)
 {
-  _substeps_per_frame = 800.f * static_cast<float>(fps._den) / static_cast<float>(fps._num);
   _angle = 0;
   _radius_prv = ggo::rand<float>();
   _radius_cur = _radius_prv;
@@ -22,16 +22,15 @@ realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
 //////////////////////////////////////////////////////////////
 void ggo::neon_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
-  if (_substeps_count == 0)
+  if (_substeps_processing._substeps_count == 0)
   {
     memset(buffer, 0, line_byte_step() * height());
   }
 
-  _substeps += _substeps_per_frame;
-
   _attractor_points.clear();
   _points.clear();
-  for (; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
+
+  _substeps_processing.call([&]
   {
     const float velocity = _radius_cur - _radius_prv;
     const float force = 0.0000075f * ggo::sign(_radius_attractor - _radius_cur);
@@ -43,12 +42,12 @@ void ggo::neon_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_
 
     _angle += 0.0025f;
 
-    if ((_substeps_count % 1000) == 0)
+    if ((_substeps_processing._substeps_count % 1000) == 0)
     {
       _radius_attractor = ggo::rand<float>(0.2f, 1);
       _attractor_color = ggo::from_hsv<ggo::rgb_8u>(ggo::rand<float>(), 1.0f, 8.f / 255.f);
     }
-  }
+  });
 }
 
 //////////////////////////////////////////////////////////////
@@ -75,7 +74,7 @@ void ggo::neon_realtime_artist::render_tile(void * buffer, const ggo::rect_int &
 //////////////////////////////////////////////////////////////
 bool ggo::neon_realtime_artist::finished()
 {
-  return _substeps_count > 8000;
+  return _substeps_processing._substeps_count > 8000;
 }
 
 //////////////////////////////////////////////////////////////

@@ -2,6 +2,7 @@
 #define __GGO_DUFFING_REALTIME_ARTIST__
 
 #include <ggo_realtime_artist.h>
+#include <ggo_substeps_processing.h>
 #include "ggo_duffing.h"
 
 namespace ggo
@@ -27,9 +28,7 @@ namespace ggo
     float                     _hue;
     ggo::rgb_8u               _paint_color;
     float                     _angle_offset;
-    float                     _substeps = 0.f;
-    float                     _substeps_per_frame;
-    int                       _substeps_count = 0;
+    substeps_processing       _substeps_processing;
   };
 }
 

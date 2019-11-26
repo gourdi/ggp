@@ -12,10 +12,9 @@ namespace
 //////////////////////////////////////////////////////////////
 ggo::bozons_realtime_artist::bozons_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
 :
-ggo::realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order)
+ggo::realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+_substeps_processing(40 / fps)
 {
-  _substeps_per_frame = 40.f * static_cast<float>(fps._den) / static_cast<float>(fps._num);
-
   _hue = ggo::rand<float>();
   _bkgd_color1 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
   _bkgd_color2 = from_hsv<ggo::rgb_8u>(_hue, ggo::rand<float>(), ggo::rand<float>());
@@ -54,7 +53,7 @@ void ggo::bozons_realtime_artist::create_bozon()
 //////////////////////////////////////////////////////////////
 void ggo::bozons_realtime_artist::preprocess_frame(void * buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
 {
-  if (_substeps_count == 0)
+  if (_substeps_processing._substeps_count == 0)
   {
     if (pixel_type() == ggo::pixel_type::bgrx_8u && memory_lines_order() == ggo::lines_order::down)
     {
@@ -76,7 +75,7 @@ void ggo::bozons_realtime_artist::preprocess_frame(void * buffer, uint32_t curso
 
   _capsules.clear();
 
-  for (_substeps += _substeps_per_frame; _substeps >= 1.f; _substeps -= 1.f, ++_substeps_count)
+  _substeps_processing.call([&]
   {
     for (auto bozon_it = _bozons.begin(); bozon_it != _bozons.end(); /* Do NOT increment iterator here since we erase bozons inside the loop. */)
     {
@@ -88,7 +87,7 @@ void ggo::bozons_realtime_artist::preprocess_frame(void * buffer, uint32_t curso
       else
       {
         // Split bozon?
-        if (_substeps_count < 100 && ggo::rand<int>(0, 256) == 0)
+        if (_substeps_processing._substeps_count < 100 && ggo::rand<int>(0, 256) == 0)
         {
           bozon new_bozon;
 
@@ -126,11 +125,11 @@ void ggo::bozons_realtime_artist::preprocess_frame(void * buffer, uint32_t curso
     }
 
     // Create new bozons.
-    if (_substeps_count < 100 && ggo::rand<int>(0, 12) == 0)
+    if (_substeps_processing._substeps_count < 100 && ggo::rand<int>(0, 12) == 0)
     {
       create_bozon();
     }
-  }
+  });
 }
 
 //////////////////////////////////////////////////////////////
