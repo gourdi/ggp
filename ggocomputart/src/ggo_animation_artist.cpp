@@ -83,8 +83,8 @@ namespace ggo
     {
     case ggo::animation_artist_id::duffing:
       return new ggo::duffing_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
-    //case ggo::animation_artist_id::julia:
-    //  return new ggo::julia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::julia:
+      return new ggo::julia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::filling_squares:
     //  return new ggo::filling_squares_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::plastic:
