@@ -97,8 +97,8 @@ namespace ggo
     //  return new ggo::aggregation_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::ifs:
     //  return new ggo::ifs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::metaballs:
-    //  return new ggo::metaballs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::metaballs:
+      return new ggo::metaballs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::smoke:
     //  return new ggo::smoke_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::alpha:
@@ -109,8 +109,8 @@ namespace ggo
       return new ggo::crystal_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::ikeda:
       return new ggo::ikeda_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
-    //case ggo::animation_artist_id::cumbia:
-    //  return new ggo::cumbia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::cumbia:
+      return new ggo::cumbia_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::vortex:
       return new ggo::vortex_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::distorsion:
