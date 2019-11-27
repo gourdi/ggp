@@ -42,18 +42,22 @@ namespace ggo
   {
   public:
 
-    animation_artist_realtime_wrapper(ggo::realtime_artist_id artist_id, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
+    animation_artist_realtime_wrapper(
+      ggo::realtime_artist_id artist_id,
+      int width, int height, int line_byte_step,
+      ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
+      ggo::ratio fps)
     :
     animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
-      _artist(realtime_artist::create(artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, {0, 0}))
+      _artist(realtime_artist::create(artist_id, width, height, line_byte_step, pixel_type, memory_lines_order, fps))
     {
     }
 
     void  render_frame(void * buffer, bool & finished) override
     {
-      //_artist->preprocess_frame(0, { 0, 0 }, time_step);
-      //_artist->render_tile(buffer, ggo::rect_int::from_size(size()));
-      //finished = _artist->finished();
+      _artist->preprocess_frame(buffer, 0, { 0, 0 });
+      _artist->render_tile(buffer, ggo::rect_int::from_size(size()));
+      finished = _artist->finished();
     }
 
   private:
@@ -118,12 +122,12 @@ namespace ggo
     //case ggo::animation_artist_id::rah:
     //  return new ggo::rah_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::hexa:
-    //  return new ggo::hexa_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::chryzode:
+      return new ggo::hexa_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
+    case ggo::animation_artist_id::chryzode:
     //  return new ggo::chryzode_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::stoa:
-    //  return new ggo::stoa_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::rediff:
+      return new ggo::stoa_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
+    case ggo::animation_artist_id::rediff:
     //  return new ggo::rediff_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::entabeni:
     //  return new ggo::entabeni_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
@@ -137,21 +141,21 @@ namespace ggo
     //  return new ggo::badaboum_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
 
     // Real-time artists.
-    /*case ggo::animation_artist_id::kanji:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::kanji, width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::kanji:
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::kanji, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::bozons:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::bozons, width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::bozons, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::neon:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::neon, width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::neon, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::storni:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::storni, width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::storni, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::lagaude:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::lagaude, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::wakenda:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_byte_step, pixel_type, memory_lines_order);
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::wakenda, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::sonson:
-      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_byte_step, pixel_type, memory_lines_order);
-*/
+      return new ggo::animation_artist_realtime_wrapper(ggo::realtime_artist_id::sonson, width, height, line_byte_step, pixel_type, memory_lines_order, fps);
+
     default:
       GGO_FAIL();
       return nullptr;

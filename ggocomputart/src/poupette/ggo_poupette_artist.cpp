@@ -8,7 +8,7 @@ namespace
   //////////////////////////////////////////////////////////////
   template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::pixel_sampling sampling>
   void render_tile_t(const std::array<ggo::rgb_32f, 4> & colors,
-    void * buffer, int width, int height, int line_byte_step, int frame_index, const ggo::rect_int & clipping)
+    void * buffer, int width, int height, int line_byte_step, const ggo::rect_int & clipping)
   {
     const float h = static_cast<float>(height);
     const float w = static_cast<float>(width);
@@ -122,28 +122,28 @@ ggo::poupette_artist::poupette_artist(float color_max)
 
 //////////////////////////////////////////////////////////////
 void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
-                                       int frame_index, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const
+                                       float progress, const ggo::rect_int & clipping, ggo::pixel_sampling sampling) const
 {
-  auto colors = interpolate_colors(static_cast<float>(frame_index) / static_cast<float>(_frames_count - 1));
+  auto colors = interpolate_colors(progress);
 
   if (pixel_type == ggo::pixel_type::rgb_8u && memory_lines_order == ggo::lines_order::up)
   {
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     }
   }
@@ -152,19 +152,19 @@ void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::rgb_8u, ggo::lines_order::down, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     }
   }
@@ -173,19 +173,19 @@ void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int
     switch (sampling)
     {
     case ggo::sampling_1:
-      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_1>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_2x2:
-      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_2x2>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_4x4:
-      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_4x4>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_8x8:
-      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_8x8>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     case ggo::sampling_16x16:
-      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, frame_index, clipping);
+      render_tile_t<ggo::pixel_type::bgrx_8u, ggo::lines_order::down, ggo::sampling_16x16>(colors, buffer, width, height, line_byte_step, clipping);
       break;
     }
   }
@@ -196,21 +196,15 @@ void ggo::poupette_artist::render_tile(void * buffer, int width, int height, int
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::poupette_artist::finished(int frame_index) const
+std::array<ggo::rgb_32f, 4> ggo::poupette_artist::interpolate_colors(float progress) const
 {
-  return frame_index > _frames_count;
-}
-
-//////////////////////////////////////////////////////////////
-std::array<ggo::rgb_32f, 4> ggo::poupette_artist::interpolate_colors(float t) const
-{
-  t = ggo::ease_inout(t);
+  progress = ggo::ease_inout(progress);
 
   return { {
-      linerp(_c1_start, _c1_end, t),
-      linerp(_c2_start, _c2_end, t),
-      linerp(_c3_start, _c3_end, t),
-      linerp(_c4_start, _c4_end, t) } };
+      linerp(_c1_start, _c1_end, progress),
+      linerp(_c2_start, _c2_end, progress),
+      linerp(_c3_start, _c3_end, progress),
+      linerp(_c4_start, _c4_end, progress) } };
 }
 
 
