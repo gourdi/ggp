@@ -95,8 +95,8 @@ namespace ggo
       return new ggo::plastic_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::aggregation:
     //  return new ggo::aggregation_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::ifs:
-    //  return new ggo::ifs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::ifs:
+      return new ggo::ifs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::metaballs:
       return new ggo::metaballs_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::smoke:
