@@ -105,8 +105,8 @@ namespace ggo
     //  return new ggo::alpha_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::dupecheck:
     //  return new ggo::dupecheck_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::crystal:
-    //  return new ggo::crystal_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::crystal:
+      return new ggo::crystal_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::ikeda:
       return new ggo::ikeda_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::cumbia:
@@ -115,8 +115,8 @@ namespace ggo
       return new ggo::vortex_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::distorsion:
       return new ggo::distorsion_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
-    //case ggo::animation_artist_id::toutouyoutou:
-    //  return new ggo::toutouyoutou_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::toutouyoutou:
+      return new ggo::toutouyoutou_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     case ggo::animation_artist_id::amorosi:
       return new ggo::amorosi_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::rah:
@@ -135,8 +135,8 @@ namespace ggo
     //  return new ggo::kame_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case ggo::animation_artist_id::demeco:
     //  return new ggo::demeco_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case ggo::animation_artist_id::poupette:
-    //  return new ggo::poupette_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case ggo::animation_artist_id::poupette:
+      return new ggo::poupette_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case ggo::animation_artist_id::badaboum:
     //  return new ggo::badaboum_animation_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
 
