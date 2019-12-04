@@ -21,4 +21,4 @@ Remove-Item -Recurse -Force $BuildDir
 New-Item -ItemType Directory -Path $BuildDir
 
 $ToolchainArg = '"-DCMAKE_TOOLCHAIN_FILE=' + $VcpkgToolchainPath + '"'
-cmake -S $SrcDir -B $BuildDir -G "Visual Studio 15 2017 Win64" $ToolchainArg
+cmake -S $SrcDir -B $BuildDir -G  "Visual Studio 16 2019" -A x64 $ToolchainArg

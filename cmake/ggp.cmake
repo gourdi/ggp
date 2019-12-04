@@ -1,6 +1,6 @@
 if (MSVC)
   add_compile_definitions(_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS)
-  add_compile_options(/std:c++latest /WX /MP /GR- /bigobj "$<$<CONFIG:Release>:/O2;/Oi>")
+  add_compile_options(/std:c++17 /WX /MP /GR- /bigobj "$<$<CONFIG:Release>:/O2;/Oi>")
 endif()
 add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>") 
 
