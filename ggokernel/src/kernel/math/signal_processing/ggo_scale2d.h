@@ -27,7 +27,7 @@ namespace ggo
   {
     static_assert(std::is_floating_point_v<scalar_t>);
 
-    using data_t = std::result_of<in_t(int, int)>::type;
+    using data_t = typename std::result_of<in_t(int, int)>::type;
 
     const scalar_t horz_ratio = scalar_t(width_in) / scalar_t(width_out);
     const scalar_t vert_ratio = scalar_t(height_in) / scalar_t(height_out);

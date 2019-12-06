@@ -1,6 +1,7 @@
 #include "ggo_gpu_artist.h"
 #include "poupette/ggo_poupette_gpu_artist.h"
 #include "plastic/ggo_plastic_gpu_artist.h"
+#include "distorsion/ggo_distorsion_gpu_artist.h"
 
 namespace ggo
 {
@@ -13,6 +14,8 @@ namespace ggo
       return new poupette_gpu_artist();
     case gpu_artist_id::plastic:
       return new plastic_gpu_artist();
+    case gpu_artist_id::distorsion:
+      return new distorsion_gpu_artist();
     default:
       GGO_FAIL();
       return nullptr;

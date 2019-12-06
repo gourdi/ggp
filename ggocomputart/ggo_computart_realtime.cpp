@@ -25,7 +25,7 @@ std::unique_ptr<ggo::realtime_artist> artist;
 
 SDL_Window * window = nullptr;
 SDL_Surface * screen_surface = nullptr;
-constexpr int time_step_ms = 40; // 25 fps
+constexpr uint32_t time_step_ms = 40; // 25 fps
 constexpr ggo::ratio fps{ 1000, time_step_ms }; // 25 fps
 bool quit = false;
 
@@ -55,7 +55,7 @@ ggo::realtime_artist * create_artist()
   };
 #endif
 
-  int index = 4; // ggo::rand<int>(0, int(ids.size() - 1));
+  int index = ggo::rand<int>(0, int(ids.size() - 1));
 
   std::cout << "Artist ID: " << index << std::endl;
 

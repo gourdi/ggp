@@ -5,7 +5,7 @@ endif()
 add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>") 
 
 macro(get_sources_from_root_directory root sources)
-  file(GLOB_RECURSE all_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${root}/*.h" "${root}/*.cpp")
+  file(GLOB_RECURSE all_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${root}/*.h" "${root}/*.cpp" "${root}/*.glsl")
   set(${sources} ${all_files})
 endmacro()
 

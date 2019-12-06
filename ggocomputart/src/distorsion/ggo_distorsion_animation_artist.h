@@ -2,8 +2,7 @@
 #define __GGO_DISTORSION_ANIMATION_ARTIST__
 
 #include <ggo_animation_artist.h>
-#include <kernel/memory/ggo_array.h>
-#include <2d/ggo_color.h>
+#include <distorsion/ggo_distorsion_artist.h>
 
 namespace ggo
 {
@@ -16,45 +15,38 @@ namespace ggo
             ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order,
             ggo::ratio fps);
 
-    void  render_frame(void * buffer, float progress) override;
+  private:
 
-    struct colored_stripe
+    struct transform
     {
-      ggo::rgb_8u _color;
-      float       _x_sup;
-    };
-
-    struct animated_transform
-    {
-      ggo::pos2_f _center_start;
-      ggo::pos2_f _center_end;
-      ggo::vec2_f _disp;
-      float       _variance;
-    };
-
-    struct fixed_transform
-    {
-      fixed_transform(const ggo::pos2_f & center, const ggo::pos2_f & disp, float variance)
-        :
-        _center(center), _disp(disp), _variance(variance) {}
+      transform(ggo::pos2_f center, float disp, float variance) :_center(center), _disp(disp), _variance(disp) {}
 
       ggo::pos2_f _center;
-      ggo::vec2_f _disp;
-      float       _variance;
+      float _disp;
+      float _variance;
     };
 
-    std::vector<colored_stripe>::const_iterator get_stripe_at(float x) const;
+    struct stripe
+    {
+      stripe(float x_sup, ggo::rgb_8u color) : _x_sup(x_sup), _color(color) {}
 
-    static  float                               transform(float x, float y, const std::vector<fixed_transform> & transforms);
+      float _x_sup;
+      ggo::rgb_8u _color;
+    };
+
+    void  render_frame(void * buffer, float progress) override;
 
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-    void render_t(void * buffer, const std::vector<ggo::distorsion_animation_artist::fixed_transform> & transforms) const;
+    void render_t(void * buffer, const std::vector<transform> & transforms) const;
+
+    std::vector<ggo::distorsion_animation_artist::stripe>::const_iterator get_stripe_at(float x) const;
+
+    static float apply_transforms(float x, float y, const std::vector<transform>& transforms);
 
   private:
 
-    float                             _hue = 0.f;
-    std::vector<colored_stripe>       _stripes;
-    ggo::array<animated_transform, 1> _transforms;
+    std::vector<stripe> _stripes;
+    distorsion_artist _artist;
   };
 }
 

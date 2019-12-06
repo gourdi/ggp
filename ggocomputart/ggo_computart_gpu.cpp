@@ -125,9 +125,10 @@ int main(void)
     {
       const std::vector<ggo::gpu_artist_id> ids{
         ggo::gpu_artist_id::poupette,
-        ggo::gpu_artist_id::plastic
+        ggo::gpu_artist_id::plastic,
+        ggo::gpu_artist_id::distorsion
       };
-      int index = ggo::rand<int>(0, int(ids.size() - 1));
+      int index = 2; // ggo::rand<int>(0, int(ids.size() - 1));
 
       artist.reset(ggo::gpu_artist::create(ids[index]));
 
