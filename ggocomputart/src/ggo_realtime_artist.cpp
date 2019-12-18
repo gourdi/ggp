@@ -44,8 +44,8 @@ namespace ggo
     //  return new wakenda_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case realtime_artist_id::poupette:
     //  return new poupette_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
-    //case realtime_artist_id::sonson:
-    //  return new sonson_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
+    case realtime_artist_id::sonson:
+      return new sonson_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
     //case realtime_artist_id::badaboum:
     //  return new badaboum_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
 
