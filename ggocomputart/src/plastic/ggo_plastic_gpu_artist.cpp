@@ -17,7 +17,7 @@ std::string ggo::plastic_gpu_artist::get_fragment_shader() const
 }
 
 //////////////////////////////////////////////////////////////
-std::map<std::string, ggo::uniform> ggo::plastic_gpu_artist::update(float progress)
+std::map<std::string, ggo::uniform> ggo::plastic_gpu_artist::update(float progress, ggo::size render_size)
 {
   std::vector<float> params;
 

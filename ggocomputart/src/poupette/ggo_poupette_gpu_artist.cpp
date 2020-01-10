@@ -12,7 +12,7 @@ std::string ggo::poupette_gpu_artist::get_fragment_shader() const
 }
 
 //////////////////////////////////////////////////////////////
-std::map<std::string, ggo::uniform> ggo::poupette_gpu_artist::update(float progress)
+std::map<std::string, ggo::uniform> ggo::poupette_gpu_artist::update(float progress, ggo::size render_size)
 {
   auto colors = _artist.interpolate_colors(ggo::ease_inout(progress));
 

@@ -16,7 +16,7 @@ namespace ggo
   private:
 
     std::string                         get_fragment_shader() const override;
-    std::map<std::string, ggo::uniform> update(float progress) override;
+    std::map<std::string, ggo::uniform> update(float progress, ggo::size render_size) override;
 
   private:
 

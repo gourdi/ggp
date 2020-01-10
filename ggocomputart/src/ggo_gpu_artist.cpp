@@ -2,6 +2,7 @@
 #include "poupette/ggo_poupette_gpu_artist.h"
 #include "plastic/ggo_plastic_gpu_artist.h"
 #include "distorsion/ggo_distorsion_gpu_artist.h"
+#include "sonson/ggo_sonson_gpu_artist.h"
 
 namespace ggo
 {
@@ -16,6 +17,8 @@ namespace ggo
       return new plastic_gpu_artist();
     case gpu_artist_id::distorsion:
       return new distorsion_gpu_artist();
+    case gpu_artist_id::sonson:
+      return new sonson_gpu_artist();
     default:
       GGO_FAIL();
       return nullptr;
@@ -35,7 +38,7 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  std::map<std::string, ggo::uniform> progress_gpu_artist::update(bool & finished)
+  std::map<std::string, ggo::uniform> progress_gpu_artist::update(bool & finished, ggo::size render_size)
   {
     auto now = std::chrono::steady_clock::now();
     auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - _start_time);
@@ -49,6 +52,6 @@ namespace ggo
     }
     finished = false;
 
-    return update(progress);
+    return update(progress, render_size);
   }
 }

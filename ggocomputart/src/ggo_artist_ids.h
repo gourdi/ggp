@@ -119,7 +119,8 @@ namespace ggo
   {
     poupette, // 0
     plastic,
-    distorsion
+    distorsion,
+    sonson
   };
 }
 

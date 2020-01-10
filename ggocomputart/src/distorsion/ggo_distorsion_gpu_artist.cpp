@@ -16,7 +16,7 @@ std::string ggo::distorsion_gpu_artist::get_fragment_shader() const
 }
 
 //////////////////////////////////////////////////////////////
-std::map<std::string, ggo::uniform> ggo::distorsion_gpu_artist::update(float progress)
+std::map<std::string, ggo::uniform> ggo::distorsion_gpu_artist::update(float progress, ggo::size render_size)
 {
   std::vector<float> stripes;
   _artist.for_each_stripe([&](const distorsion_artist::stripe& stripe)

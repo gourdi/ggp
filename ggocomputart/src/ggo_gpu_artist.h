@@ -3,12 +3,13 @@
 
 #include <ggo_artist_ids.h>
 #include <kernel/ggo_ratio.h>
+#include <kernel/ggo_size.h>
+#include <kernel/ggo_kernel.h>
 #include <string>
 #include <map>
 #include <vector>
 #include <variant>
 #include <chrono>
-#include <kernel/ggo_kernel.h>
 
 namespace ggo
 {
@@ -52,7 +53,7 @@ namespace ggo
     static gpu_artist * create(gpu_artist_id artist_id);
 
     virtual std::string get_fragment_shader() const = 0;
-    virtual std::map<std::string, ggo::uniform> update(bool & finished) = 0;
+    virtual std::map<std::string, ggo::uniform> update(bool & finished, ggo::size render_size) = 0;
   };
 }
 
@@ -66,9 +67,9 @@ namespace ggo
 
   private:
 
-    virtual std::map<std::string, ggo::uniform> update(float progress) = 0;
+    virtual std::map<std::string, ggo::uniform> update(float progress, ggo::size render_size) = 0;
 
-    std::map<std::string, ggo::uniform> update(bool & finished) override;
+    std::map<std::string, ggo::uniform> update(bool & finished, ggo::size render_size) override;
 
   private:
 

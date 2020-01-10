@@ -126,9 +126,11 @@ int main(void)
       const std::vector<ggo::gpu_artist_id> ids{
         ggo::gpu_artist_id::poupette,
         ggo::gpu_artist_id::plastic,
-        ggo::gpu_artist_id::distorsion
+        ggo::gpu_artist_id::distorsion,
+        ggo::gpu_artist_id::sonson,
+
       };
-      int index = 2; // ggo::rand<int>(0, int(ids.size() - 1));
+      int index = 3; // ggo::rand<int>(0, int(ids.size() - 1));
 
       artist.reset(ggo::gpu_artist::create(ids[index]));
 
@@ -148,7 +150,7 @@ int main(void)
     glViewport(0, 0, width, height);
 
     bool finished = true;
-    auto uniforms = artist->update(finished);
+    auto uniforms = artist->update(finished, { width, height });
     if (finished == true)
     {
       artist.reset();
