@@ -106,12 +106,10 @@ function process_images_videos($artist)
 //////////////////////////////////////////////////////////////
 function process_script($artist)
 {
-echo "  <!DOCTYPE html>
+echo "<!DOCTYPE html>
 <html>
-";
-
-echo "
 <head>
+  <title>$artist</title>
   <style>
     * { margin:0; padding:0; }
     html, body { width:100%; height:100%; }
@@ -121,16 +119,11 @@ echo "
 
 <body> 
 <canvas id='canvas'></canvas>
-</body>
-
-<script type='text/javascript'>
-";
+<script>";
 
 include_once("helpers.js");
 include_once("artists/$artist/script/script.js");
-echo "
-
-</script>
+echo "</script></body>
 </html>";
 }
 
