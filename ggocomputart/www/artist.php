@@ -5,11 +5,13 @@ $artist = $_GET["artist"];
 include_once("helpers.php");
 
 //////////////////////////////////////////////////////////////
-function html_header($title, $meta_image)
+function html_header($title)
 {
   echo "<!DOCTYPE html>\n";
-  echo "<html itemscope itemtype=\"http://schema.org/Article\">\n";
-  echo "<head><link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />\n";
+  echo "<html lang='en'>\n";
+  echo "<head>\n";
+  echo "<meta charset='utf-8'>\n";
+  echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"gourdi.css\" />\n";
   echo "<title>$title</title>\n";
   echo "</head>\n";
   
@@ -66,8 +68,8 @@ function process_images_videos($artist)
   }
   
   // Now we can generate the HTML.
-  html_header($artist, "artists/$artist/images/00000001.jpg");
-
+  html_header($artist);
+  
   echo "<body>
 <table class=\"common\"> 
   <tr>
@@ -107,8 +109,9 @@ function process_images_videos($artist)
 function process_script($artist)
 {
 echo "<!DOCTYPE html>
-<html>
+<html lang='en'>
 <head>
+  <meta charset='utf-8'>
   <title>$artist</title>
   <style>
     * { margin:0; padding:0; }
@@ -119,11 +122,12 @@ echo "<!DOCTYPE html>
 
 <body> 
 <canvas id='canvas'></canvas>
-<script>";
+<script>\n\n";
 
 include_once("helpers.js");
 include_once("artists/$artist/script/script.js");
-echo "</script></body>
+echo "\n\n</script>
+</body>
 </html>";
 }
 
