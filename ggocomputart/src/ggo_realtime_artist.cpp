@@ -45,7 +45,7 @@ namespace ggo
     //case realtime_artist_id::poupette:
     //  return new poupette_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     case realtime_artist_id::sonson:
-      return new sonson_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order, fps);
+      return new sonson_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
     //case realtime_artist_id::badaboum:
     //  return new badaboum_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order);
 
@@ -55,5 +55,38 @@ namespace ggo
     };
 
     return nullptr;
+  }
+}
+
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  progress_realtime_artist::progress_realtime_artist(int width, int height, int line_byte_step, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio duration)
+    :
+    realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
+    _duration(duration)
+  {
+
+  }
+
+  //////////////////////////////////////////////////////////////
+  float progress_realtime_artist::progress() const
+  {
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(now - _start_time);
+
+    return 0.001f * to<float>(elapsed_time.count() / _duration);
+  }
+
+  //////////////////////////////////////////////////////////////
+  void progress_realtime_artist::preprocess_frame(void* buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+  {
+    preprocess_frame(buffer, cursor_events, cursor_pos, progress());
+  }
+
+  //////////////////////////////////////////////////////////////
+  bool progress_realtime_artist::finished()
+  {
+    return progress() >= 1.f;
   }
 }

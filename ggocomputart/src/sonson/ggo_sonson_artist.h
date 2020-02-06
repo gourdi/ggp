@@ -10,6 +10,8 @@ namespace ggo
   {
   public:
 
+    static constexpr int duration = 10;
+
     sonson_artist();
 
     struct glowing_circle
@@ -25,22 +27,21 @@ namespace ggo
       float _outter_size;
     };
 
-    bool update(ggo::ratio frame_duration);
-    std::vector<glowing_circle> get_circles() const;
+    std::vector<glowing_circle> get_circles(float progress) const;
 
   private:
 
     struct animated_glowing_circle
     {
-      ggo::pos2_f _center;
-      ggo::vec2_f _velocity;
+      ggo::pos2_f _center_start;
+      ggo::pos2_f _center_end;
 
-      float _r_angle;
-      float _g_angle;
-      float _b_angle;
-      float _dr_angle;
-      float _dg_angle;
-      float _db_angle;
+      float _r_angle_start;
+      float _g_angle_start;
+      float _b_angle_start;
+      float _r_angle_end;
+      float _g_angle_end;
+      float _b_angle_end;
 
       float _radius;
       float _inner_size;

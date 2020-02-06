@@ -64,18 +64,17 @@ namespace
 
 //////////////////////////////////////////////////////////////
 ggo::sonson_realtime_artist::sonson_realtime_artist(int width, int height, int line_byte_step,
-  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, ggo::ratio fps)
+  ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order)
 :
-realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order),
-_frame_duration(1 / fps)
+progress_realtime_artist(width, height, line_byte_step, pixel_type, memory_lines_order, sonson_artist::duration)
 {
 
 }
 
 //////////////////////////////////////////////////////////////
-void ggo::sonson_realtime_artist::preprocess_frame(void* buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos)
+void ggo::sonson_realtime_artist::preprocess_frame(void* buffer, uint32_t cursor_events, ggo::pos2_i cursor_pos, float progress)
 {
-  _circles = _artist.get_circles();
+  _circles = _artist.get_circles(progress);
 
   // Unnormalize.
   for (auto& circle : _circles)
@@ -131,10 +130,4 @@ void ggo::sonson_realtime_artist::render_tile(void* buffer, const ggo::rect_int&
   {
     GGO_FAIL();
   }
-}
-
-//////////////////////////////////////////////////////////////
-bool ggo::sonson_realtime_artist::finished()
-{
-  return !_artist.update(_frame_duration);
 }

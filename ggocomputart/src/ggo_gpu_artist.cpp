@@ -31,8 +31,9 @@ namespace ggo
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  progress_gpu_artist::progress_gpu_artist(ggo::ratio duration) :
-    _duration(duration)
+  progress_gpu_artist::progress_gpu_artist(ggo::ratio duration)
+  :
+  _duration(duration)
   {
 
   }

@@ -6,14 +6,14 @@
 
 namespace ggo
 {
-  class sonson_gpu_artist : public gpu_artist
+  class sonson_gpu_artist : public progress_gpu_artist
   {
   public:
 
-    sonson_gpu_artist() = default;
+    sonson_gpu_artist();
 
     std::string get_fragment_shader() const override;
-    std::map<std::string, ggo::uniform> update(bool& finished, ggo::size render_size) override;
+    std::map<std::string, ggo::uniform> update(float progress, ggo::size render_size) override;
 
   private:
 

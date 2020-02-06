@@ -8,16 +8,16 @@ ggo::sonson_artist::sonson_artist()
   {
     animated_glowing_circle circle;
 
-    circle._center = { ggo::rand(-0.25f, 1.25f),  ggo::rand(-0.25f, 1.25f) };
-    circle._velocity = ggo::rand<float>(0.01f, 0.02f) * ggo::vec2_f::from_angle(ggo::rand(0.f, 2 * ggo::pi<float>()));
+    circle._center_start = { ggo::rand(-0.25f, 1.25f),  ggo::rand(-0.25f, 1.25f) };
+    circle._center_end   = circle._center_start + ggo::rand<float>(0.1f, 0.2f) * ggo::vec2_f::from_angle(ggo::rand(0.f, 2 * ggo::pi<float>()));
 
-    circle._r_angle = ggo::rand(0.f, 2 * ggo::pi<float>());
-    circle._g_angle = ggo::rand(0.f, 2 * ggo::pi<float>());
-    circle._b_angle = ggo::rand(0.f, 2 * ggo::pi<float>());
+    circle._r_angle_start = ggo::rand(0.f, 2 * ggo::pi<float>());
+    circle._g_angle_start = ggo::rand(0.f, 2 * ggo::pi<float>());
+    circle._b_angle_start = ggo::rand(0.f, 2 * ggo::pi<float>());
 
-    circle._dr_angle = ggo::rand(0.01f, 0.02f);
-    circle._dg_angle = ggo::rand(0.01f, 0.02f);
-    circle._db_angle = ggo::rand(0.01f, 0.02f);
+    circle._r_angle_end = circle._r_angle_start + ggo::rand(1.f, 2.f);
+    circle._g_angle_end = circle._g_angle_start + ggo::rand(1.f, 2.f);
+    circle._b_angle_end = circle._b_angle_start + ggo::rand(1.f, 2.f);
 
     circle._radius = ggo::rand<float>(0.1f, 0.25f);
     circle._inner_size = ggo::rand<float>(0.01f, 0.04f);
@@ -29,28 +29,7 @@ ggo::sonson_artist::sonson_artist()
 }
 
 //////////////////////////////////////////////////////////////
-bool ggo::sonson_artist::update(ggo::ratio frame_duration)
-{
-  _elapsed_time += frame_duration;
-  if (_elapsed_time > 10)
-  {
-    return false;
-  }
-
-  for (auto & animated_circle : _circles)
-  {
-    animated_circle._center += animated_circle._velocity * to<float>(frame_duration);
-
-    animated_circle._r_angle += animated_circle._dr_angle * to<float>(frame_duration);
-    animated_circle._g_angle += animated_circle._dg_angle * to<float>(frame_duration);
-    animated_circle._b_angle += animated_circle._db_angle * to<float>(frame_duration);
-  }
-
-  return true;
-}
-
-//////////////////////////////////////////////////////////////
-std::vector<ggo::sonson_artist::glowing_circle> ggo::sonson_artist::get_circles() const
+std::vector<ggo::sonson_artist::glowing_circle> ggo::sonson_artist::get_circles(float progress) const
 {
   std::vector<glowing_circle> circles;
 
@@ -58,10 +37,10 @@ std::vector<ggo::sonson_artist::glowing_circle> ggo::sonson_artist::get_circles(
   {
     glowing_circle circle;
 
-    circle._center = animated_circle._center;
-    circle._r_angle = animated_circle._r_angle;
-    circle._g_angle = animated_circle._g_angle;
-    circle._b_angle = animated_circle._b_angle;
+    circle._center = ggo::linerp(animated_circle._center_start, animated_circle._center_end, 1 - progress);
+    circle._r_angle = ggo::linerp(animated_circle._r_angle_start, animated_circle._r_angle_end, 1 - progress);
+    circle._g_angle = ggo::linerp(animated_circle._g_angle_start, animated_circle._g_angle_end, 1 - progress);
+    circle._b_angle = ggo::linerp(animated_circle._b_angle_start, animated_circle._b_angle_end, 1 - progress);
     circle._opacity = animated_circle._opacity;
     circle._outter_size = animated_circle._outter_size;
     circle._radius = {
