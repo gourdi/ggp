@@ -106,13 +106,13 @@ function process_images_videos($artist)
 }
 
 //////////////////////////////////////////////////////////////
-function process_script($artist)
+function process_script($artist_name, $main_script, $artist_script)
 {
 echo "<!DOCTYPE html>
 <html lang='en'>
 <head>
   <meta charset='utf-8'>
-  <title>$artist</title>
+  <title>$artist_name</title>
   <style>
     * { margin:0; padding:0; }
     html, body { width:100%; height:100%; }
@@ -125,16 +125,21 @@ echo "<!DOCTYPE html>
 <script>\n\n";
 
 include_once("helpers.js");
-include_once("artists/$artist/script/script.js");
+include_once($main_script);
+include_once($artist_script);
 echo "\n\n</script>
 </body>
 </html>";
 }
 
 //////////////////////////////////////////////////////////////
-if (file_exists("artists/$artist/script/script.js"))
+if (file_exists("artists/$artist/script_2d/script.js"))
 {
-  process_script($artist);
+  process_script($artist, "artist_2d.js", "artists/$artist/script_2d/script.js");
+}
+else if (file_exists("artists/$artist/script_gl/script.js"))
+{
+  process_script($artist, "artist_gl.js", "artists/$artist/script_gl/script.js");
 }
 else
 {

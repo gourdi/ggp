@@ -65,11 +65,11 @@ function paint_glow(imageData, center_x, center_y, inner_radius, outter_radius, 
 
 function init()
 {
-  radius = random(0, 0.5);
+  radius = rand(0, 0.5);
   velocity = 0;
-  radius_attractor = random(0.1, 0.5);
-  angle = random(0, 2 * Math.PI);
-  attractor_color = hsv2rgb(random(0, 1), 1, 0.2);
+  radius_attractor = rand(0.1, 0.5);
+  angle = rand(0, 2 * Math.PI);
+  attractor_color = hsv2rgb(rand(0, 1), 1, 0.2);
   
   fill_solid({ r:0, g:0, b:0 });
 }
@@ -82,8 +82,8 @@ function render_frame(frame_index)
   // Update data.
   if ((frame_index % 100) == 0)
   {
-    radius_attractor = random(0.1, 0.5);
-    attractor_color = hsv2rgb(random(0, 1), 1, 0.2);
+    radius_attractor = rand(0.1, 0.5);
+    attractor_color = hsv2rgb(rand(0, 1), 1, 0.2);
   }
   
   var force = (radius_attractor > radius ? 0.001 : -0.001);

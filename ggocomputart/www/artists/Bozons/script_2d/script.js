@@ -14,14 +14,14 @@ var bozons = [];
 
 function init()
 {
-  var hue = random(0, 1);
+  var hue = rand(0, 1);
   
   // Background.
   fill_4_colors(
-    hsv2rgb(hue, random(0, 1), random(0, 1)),
-    hsv2rgb(hue, random(0, 1), random(0, 1)),
-    hsv2rgb(hue, random(0, 1), random(0, 1)),
-    hsv2rgb(hue, random(0, 1), random(0, 1))); 
+    hsv2rgb(hue, rand(0, 1), rand(0, 1)),
+    hsv2rgb(hue, rand(0, 1), rand(0, 1)),
+    hsv2rgb(hue, rand(0, 1), rand(0, 1)),
+    hsv2rgb(hue, rand(0, 1), rand(0, 1))); 
 
   // Create bozons.
   bozons = [];
@@ -29,13 +29,13 @@ function init()
   {
     var cur_pos_x = canvas.clientWidth / 2;
     var cur_pos_y = canvas.clientHeight / 2;
-    var angle = random(0, 2 * Math.PI);
-    var dangle = random(-0.025 * Math.PI, 0.025 * Math.PI);
-    var speed = random(0.01, 0.02) * min_size();
+    var angle = rand(0, 2 * Math.PI);
+    var dangle = rand(-0.025 * Math.PI, 0.025 * Math.PI);
+    var speed = rand(0.01, 0.02) * min_size();
     var radius = 0.0025 * min_size();
-    var rgb = hsv2rgb(hue, random(0, 1), random(0, 1), 100);
+    var rgb = hsv2rgb(hue, rand(0, 1), rand(0, 1), 100);
     var color = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',40)'; 
-    var counter = random(200, 300);
+    var counter = rand(200, 300);
 
     bozons.push(new bozon(cur_pos_x, cur_pos_y, angle, dangle, speed, radius, color, counter));
   }
@@ -68,9 +68,9 @@ function render_frame(frame_index)
     cur_bozon.cur_pos_y += cur_bozon.speed * Math.sin(cur_bozon.angle);
     
     // Split bozon?
-    if (frame_index > 30 && random(0, 1) < 0.01)
+    if (frame_index > 30 && rand(0, 1) < 0.01)
     {
-      var angle_offset = random(0, Math.PI / 4);
+      var angle_offset = rand(0, Math.PI / 4);
       
       var angle = cur_bozon.angle + angle_offset;
       var dangle = -cur_bozon.dangle; // Change direction too.
