@@ -7,13 +7,13 @@ namespace ggo
     switch (i)
     {
     case 0:
-      return _pos + _size_x * dir_x() + _size_y * dir_y();
+      return _pos + _half_size_x * dir_x() + _half_size_y * dir_y();
     case 1:
-      return _pos + _size_x * dir_x() - _size_y * dir_y();
+      return _pos + _half_size_x * dir_x() - _half_size_y * dir_y();
     case 2:
-      return _pos - _size_x * dir_x() - _size_y * dir_y();
+      return _pos - _half_size_x * dir_x() - _half_size_y * dir_y();
     case 3:
-      return _pos - _size_x * dir_x() + _size_y * dir_y();
+      return _pos - _half_size_x * dir_x() + _half_size_y * dir_y();
     default:
       GGO_FAIL();
       return ggo::pos2<data_t>(0.f, 0.f);
@@ -54,10 +54,10 @@ namespace ggo
     const ggo::vec2<data_t> x = {  _half_size_x * cos, _half_size_x * sin };
     const ggo::vec2<data_t> y = { -_half_size_y * sin, _half_size_y * cos };
 
-    return { { { _pos + x + y, vertex_id::right_top },
-               { _pos + x - y, vertex_id::right_bottom },
-               { _pos - x + y, vertex_id::left_top },
-               { _pos - x - y, vertex_id::left_bottom } } };
+    return { { { _pos + x + y, oriented_box_vertex_id::right_top },
+               { _pos + x - y, oriented_box_vertex_id::right_bottom },
+               { _pos - x + y, oriented_box_vertex_id::left_top },
+               { _pos - x - y, oriented_box_vertex_id::left_bottom } } };
   }
 
   //////////////////////////////////////////////////////////////////
@@ -78,10 +78,10 @@ namespace ggo
     const vertex left_top     = { _pos - x + y, oriented_box_vertex_id::left_top };
     const vertex left_bottom  = { _pos - x - y, oriented_box_vertex_id::left_bottom };
 
-    return { { { left_bottom,  left_top,     -x_norm, oriented_box_edge_id::left },
-               { right_bottom, right_top,     x_norm, oriented_box_edge_id::right },
-               { left_bottom,  right_bottom, -y_norm, oriented_box_edge_id::bottom },
-               { left_top,     right_top,     y_norm, oriented_box_edge_id::top } } };
+    return { { { { left_bottom,  left_top },     -x_norm, oriented_box_edge_id::left },
+               { { right_bottom, right_top },     x_norm, oriented_box_edge_id::right },
+               { { left_bottom,  right_bottom }, -y_norm, oriented_box_edge_id::bottom },
+               { { left_top,     right_top },     y_norm, oriented_box_edge_id::top } } };
   }
 
   //////////////////////////////////////////////////////////////////

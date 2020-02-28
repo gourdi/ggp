@@ -2,6 +2,7 @@
 #define __GGO_ITERATOR__
 
 #include <kernel/ggo_assert.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <cstddef>
 
 namespace ggo
@@ -25,23 +26,23 @@ namespace ggo
   template <typename data_t_, ptrdiff_t offset = 1>
   struct input_iterator_t final : public ggo::iterator_t<input_iterator_t<data_t_, offset>, const data_t_ *, offset>
   {
-    using data_t = typename data_t_;
+    using data_t = data_t_;
 
-    input_iterator_t(const data_t * ptr) : iterator_t(ptr) {}
+    input_iterator_t(const data_t * ptr) : iterator_t<input_iterator_t<data_t_, offset>, const data_t_ *, offset>(ptr) {}
 
-    const data_t & get(std::ptrdiff_t delta) const { return _ptr[offset * delta]; }
-    const data_t & operator*() const { return *_ptr; }
+    const data_t & get(std::ptrdiff_t delta) const { return this->_ptr[offset * delta]; }
+    const data_t & operator*() const { return *this->_ptr; }
   };
 
   template <typename data_t_, ptrdiff_t offset = 1>
   struct output_iterator_t final : public ggo::iterator_t<output_iterator_t<data_t_, offset>, data_t_ *, offset>
   {
-    using data_t = typename data_t_;
+    using data_t = data_t_;
 
-    output_iterator_t(data_t * ptr) : iterator_t(ptr) {}
+    output_iterator_t(data_t * ptr) : iterator_t<output_iterator_t<data_t_, offset>, data_t_ *, offset>(ptr) {}
 
-    void set(const data_t & v) { *_ptr = v; }
-    output_iterator_t & operator<<(const data_t & v) { *_ptr = v; _ptr += offset; return *this; }
+    void set(const data_t & v) { *this->_ptr = v; }
+    output_iterator_t & operator<<(const data_t & v) { *this->_ptr = v; this->_ptr += offset; return *this; }
   };
 
   template <typename subtype_t, typename ptr_t, ptrdiff_t offset>
@@ -100,23 +101,23 @@ namespace ggo
   template <typename data_t_>
   struct input_iterator final : public ggo::iterator<input_iterator<data_t_>, const data_t_ *>
   {
-    using data_t = typename data_t_;
+    using data_t = data_t_;
 
-    input_iterator(const data_t * ptr, std::ptrdiff_t offset) : iterator(ptr, offset) {}
+    input_iterator(const data_t * ptr, std::ptrdiff_t offset) : iterator<input_iterator<data_t_>, const data_t_ *>(ptr, offset) {}
 
-    const data_t & get(std::ptrdiff_t delta) const { return _ptr[_offset * delta]; }
-    const data_t & operator*() const { return *_ptr; }
+    const data_t & get(std::ptrdiff_t delta) const { return this->_ptr[this->_offset * delta]; }
+    const data_t & operator*() const { return *this->_ptr; }
   };
 
   template <typename data_t_>
   struct output_iterator final : public ggo::iterator<output_iterator<data_t_>, data_t_ *>
   {
-    using data_t = typename data_t_;
+    using data_t = data_t_;
 
-    output_iterator(data_t * ptr, std::ptrdiff_t offset) : iterator(ptr, offset) {}
+    output_iterator(data_t * ptr, std::ptrdiff_t offset) : iterator<output_iterator<data_t_>, data_t_ *>(ptr, offset) {}
 
-    void set(const data_t & v) { *_ptr = v; }
-    output_iterator & operator<<(const data_t & v) { *_ptr = v; _ptr += _offset; return *this; }
+    void set(const data_t & v) { *this->_ptr = v; }
+    output_iterator & operator<<(const data_t & v) { *this->_ptr = v; this->_ptr += this->_offset; return *this; }
   };
 
   template <typename subtype_t, typename ptr_t>

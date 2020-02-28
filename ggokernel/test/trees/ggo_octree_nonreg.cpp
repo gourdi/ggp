@@ -7,7 +7,7 @@ namespace
   template <typename shape_t>
   ggo::octree<shape_t, typename shape_t::type> build_octree(std::initializer_list<shape_t> shapes, int depth = 3)
   {
-    using data_t = shape_t::type;
+    using data_t = typename shape_t::type;
 
     auto get_bounding_box = [](const shape_t & shape)
     {

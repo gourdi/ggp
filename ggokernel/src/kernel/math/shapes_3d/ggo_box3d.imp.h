@@ -18,12 +18,12 @@ namespace ggo
   template <typename data_t>
   box3d<data_t>::box3d(const ggo::pos3<data_t> & p)
   {
-    _x_min = p.x();
-    _x_max = p.x();
-    _y_min = p.y();
-    _y_max = p.y();
-    _z_min = p.z();
-    _z_max = p.z();
+    _data._x_min = p.x();
+    _data._x_max = p.x();
+    _data._y_min = p.y();
+    _data._y_max = p.y();
+    _data._z_min = p.z();
+    _data._z_max = p.z();
   }
 
   //////////////////////////////////////////////////////////////
@@ -369,14 +369,14 @@ namespace ggo
   template <typename data_t>
   void box3d<data_t>::get_bounding_sphere(ggo::sphere3d<data_t> & bounding_sphere) const
   {
-    bounding_sphere.center().x() = T(0.5) * (_x_min + _x_max);
-    bounding_sphere.center().y() = T(0.5) * (_y_min + _y_max);
-    bounding_sphere.center().z() = T(0.5) * (_z_min + _z_max);
+    bounding_sphere.center().x() = data_t(0.5) * (_data._x_min + _data._x_max);
+    bounding_sphere.center().y() = data_t(0.5) * (_data._y_min + _data._y_max);
+    bounding_sphere.center().z() = data_t(0.5) * (_data._z_min + _data._z_max);
 
-    data_t dx = _x_max - _x_min;
-    data_t dy = _y_max - _y_min;
-    data_t dz = _z_max - _z_min;
-    bounding_sphere.radius() = T(0.5) * std::sqrt(dx * dx + dy * dy + dz * dz);
+    data_t dx = _data._x_max - _data._x_min;
+    data_t dy = _data._y_max - _data._y_min;
+    data_t dz = _data._z_max - _data._z_min;
+    bounding_sphere.radius() = data_t(0.5) * std::sqrt(dx * dx + dy * dy + dz * dz);
   }
 
   //////////////////////////////////////////////////////////////

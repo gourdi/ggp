@@ -17,28 +17,29 @@ namespace ggo
     left, right, bottom, top
   };
 
-  template <typename data_type>
-  class oriented_box final : public paintable_shape2d_abc<data_type>, public affine_shape2d_abc<data_type>
+  template <typename data_t_>
+  class oriented_box final : public paintable_shape2d_abc<data_t_>, public affine_shape2d_abc<data_t_>
   {
   public:
-
-    struct vertex
-    {
-      ggo::pos2<data_t> _pos;
-      oriented_box_vertex_id _id;
-    };
-
-    struct edge
-    {
-      std::array<vertex, 2> _vertices;
-      ggo::vec2<data_t> _normal;
-      oriented_box_edge_id _id;
-    };
-
-    using data_t = data_type;
+      
+    using data_t = data_t_;
     using affine_shape2d_abc<data_t>::rotate;
     using affine_shape2d_abc<data_t>::move;
     using samplable_shape2d_abc<data_t>::is_point_inside;
+
+  struct vertex
+  {
+    ggo::pos2<data_t_> _pos;
+    oriented_box_vertex_id _id;
+  };
+
+  struct edge
+  {
+    std::array<vertex, 2> _vertices;
+    ggo::vec2<data_t> _normal;
+    oriented_box_edge_id _id;
+  };
+
 
                                       oriented_box(ggo::pos2<data_t> pos, data_t angle, data_t half_size_x, data_t half_size_y) : _pos(pos), _angle(angle), _half_size_x(half_size_x), _half_size_y(half_size_y) {}
 
@@ -52,8 +53,8 @@ namespace ggo
 
     ggo::pos2<data_t>                 operator[](int i) const;
     std::array<ggo::pos2<data_t>, 4>  get_points() const;
-    std::array<typename vertex, 4>    get_vertices() const;
-    std::array<typename edge, 4>      get_edges() const;
+    std::array<vertex, 4>             get_vertices() const;
+    std::array<edge, 4>               get_edges() const;
 
     // Interfaces.
     void                              move(const ggo::vec2<data_t> & m) override { _pos += m; }

@@ -75,8 +75,8 @@ namespace ggo
       throw std::runtime_error("in-place erosion not supported");
     }
 
-    auto in = [&](int x, int y) { return ggo::ptr_offset(input, y * input_line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::ptr_offset(output, y * output_line_byte_step)[x] = v; };
+    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * input_line_byte_step)[x]; };
+    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * output_line_byte_step)[x] = v; };
     auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
 
     morpho_disc(in, out, width, height, radius, pred);

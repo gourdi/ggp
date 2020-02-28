@@ -76,7 +76,7 @@ namespace ggo
   template <typename get2d_t>
   auto get2d_zero(get2d_t get2d, int x, int y, int width, int height)
   {
-    using data_t = std::result_of<get2d_t(int, int)>::type;
+    using data_t = typename std::result_of<get2d_t(int, int)>::type;
 
     if (x < 0 || x >= width || y < 0 || y >= height)
     {

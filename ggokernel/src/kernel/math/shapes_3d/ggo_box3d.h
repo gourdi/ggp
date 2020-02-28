@@ -29,7 +29,7 @@ namespace ggo
   
     bool              is_point_inside(const ggo::pos3<data_t> & point) const;
   
-    bool              intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const;
+    bool              intersect_segment(const ggo::pos3<data_t> & pos, const ggo::vec3<data_t> & dir, data_t length) const override;
     bool              intersect_ray(const ggo::ray3d<data_t> & ray) const; // Fast intersection test.
     bool              intersect_ray(const ggo::ray3d<data_t> & ray, data_t & dist, ggo::ray3d<data_t> & normal) const override;
     bool              is_convex() const override { return true; }

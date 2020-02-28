@@ -5,26 +5,26 @@
 GGO_TEST(ggo_array, construction)
 {  
   {
-    ggo::array<uint8_t, 1> a(7);
+    ggo::array_8u a(7);
     GGO_CHECK(a.size() == 7);
     GGO_CHECK(a.count() == 7);
   }
 
   {
-    ggo::array<std::string, 1> a(3);
+    ggo::array1<std::string> a(3);
     GGO_CHECK_EQ(a.size(), 3);
     GGO_CHECK_EQ(a.count(),3);
   }
 
   {
-    ggo::array<float, 2> a(7, 11);
+    ggo::array2_f a(7, 11);
     GGO_CHECK_EQ(a.width(), 7);
     GGO_CHECK_EQ(a.height(), 11);
     GGO_CHECK_EQ(a.count(), 77);
   }
 
   {
-    ggo::array<int, 1> a({ 1, 2, 3, 4 });
+    ggo::array_i a({ 1, 2, 3, 4 });
     GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
@@ -33,7 +33,7 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<uint8_t, 1> a({ 1, 2, 3, 4 });
+    ggo::array_8u a({ 1, 2, 3, 4 });
     GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
@@ -42,7 +42,7 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<uint8_t, 1> a({ 1, 2, 3, 4 });
+    ggo::array_8u a({ 1, 2, 3, 4 });
     GGO_CHECK_EQ(a.size(), 4);
     GGO_CHECK_EQ(a(0), 1);
     GGO_CHECK_EQ(a(1), 2);
@@ -51,7 +51,7 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<int, 2> a({
+    ggo::array2_i a({
       {1, 2, 3},
       {4, 5, 6} });
     GGO_CHECK_EQ(a.count(), 6);
@@ -66,7 +66,7 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<uint8_t, 2> a({
+    ggo::array2_8u a({
       { 1_u8, 2_u8, 3_u8 },
       { 4_u8, 5_u8, 6_u8 } });
     GGO_CHECK_EQ(a.count(), 6);
@@ -81,7 +81,7 @@ GGO_TEST(ggo_array, construction)
   }
 
   {
-    ggo::array<uint8_t, 2> a({
+    ggo::array2_8u a({
       { 1, 2, 3 },
       { 4, 5, 6 } });
     GGO_CHECK_EQ(a.count(), 6);
@@ -100,7 +100,7 @@ GGO_TEST(ggo_array, construction)
 GGO_TEST(ggo_array, construction_and_fill)
 {
   {
-    ggo::array<uint8_t, 1> a(3, 2);
+    ggo::array_8u a(3, 2);
     GGO_CHECK_EQ(a.size(), 3);
     GGO_CHECK_EQ(a.count(), 3);
     GGO_CHECK_EQ(a(0), 2);
@@ -109,7 +109,7 @@ GGO_TEST(ggo_array, construction_and_fill)
   }
 
   {
-    ggo::array<float, 2> a(2, 3, 1.f);
+    ggo::array2_f a(2, 3, 1.f);
     GGO_CHECK_EQ(a.width(), 2);
     GGO_CHECK_EQ(a.height(), 3);
     GGO_CHECK_EQ(a.count(), 6);
@@ -340,8 +340,8 @@ GGO_TEST(ggo_array, range_loop)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(ggo_array, copy)
 {
-  ggo::array<uint8_t, 2> a(2, 3, 1);
-  ggo::array<uint8_t, 2> b(a);
+  ggo::array2_8u a(2, 3, 1);
+  ggo::array2_8u b(a);
   GGO_CHECK_EQ(b.width(), 2);
   GGO_CHECK_EQ(b.height(), 3);
   for (auto v : b)

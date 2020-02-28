@@ -90,7 +90,7 @@ namespace ggo
 
     data_t d = 2 * (dot1212 * dot1313 - dot1213 * dot1213);
 
-    if (std::fabs(d) <= T(0.0001))
+    if (std::fabs(d) <= data_t(0.0001))
     {
       // The 3 vertices of the triangle are in fact aligned.
       data_t min_x = std::min(_v1.x(), std::min(_v2.x(), _v3.x()));

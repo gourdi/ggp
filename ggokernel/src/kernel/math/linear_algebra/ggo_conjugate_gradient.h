@@ -14,27 +14,27 @@ namespace ggo
     // Check a is a square matrix.
     if (a.width() != a.height())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     // Check b is a n x 1 vertical vector.
     if (b.width() != a.width())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
     if (b.height() != 1)
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     // Check s is a n x 1 vertical vector.
     if (s.width() != a.width())
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
     if (s.height() != 1)
     {
-      throw ggo::dimension_mismatch_exception();
+      throw std::runtime_error("dimension mismatch");
     }
 
     auto cg_dot = [](const ggo::array<data_t, 2> & v1, const ggo::array<data_t, 2> & v2)

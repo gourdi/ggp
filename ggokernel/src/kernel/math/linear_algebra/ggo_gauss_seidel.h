@@ -59,7 +59,7 @@ namespace ggo
   //}
 
   template <typename data_t>
-  void gauss_seidel(const ggo::array<data_t, 2> & a, const ggo::array<data_t, 1> & b, ggo::array<data_t, 1> & s, int iterations)
+  void gauss_seidel(const ggo::array2<data_t> & a, const ggo::array1<data_t> & b, ggo::array1<data_t> & s, int iterations)
   {
     if (a.width() != a.height())
     {

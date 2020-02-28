@@ -47,7 +47,7 @@ namespace ggo
       scanner2d_t::for_each_pixel(tile, [&](int x, int y)
       {
         data_t v(0);
-        ggo::sampler<sampling>::sample_pixel<scalar_t>(x, y, [&](scalar_t x_f, scalar_t y_f)
+        ggo::sampler<sampling>::template sample_pixel<scalar_t>(x, y, [&](scalar_t x_f, scalar_t y_f)
         {
           v += ggo::interpolation2d<interp, data_t>(in_clampped, x_f * horz_ratio, y_f * vert_ratio);
         });

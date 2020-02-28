@@ -1,8 +1,11 @@
 if (MSVC)
   add_compile_definitions(_SCL_SECURE_NO_WARNINGS _CRT_SECURE_NO_WARNINGS)
-  add_compile_options(/std:c++17 /WX /MP /GR- /bigobj "$<$<CONFIG:Release>:/O2;/Oi>")
+  add_compile_options(/WX /MP /GR- /bigobj "$<$<CONFIG:Release>:/O2;/Oi>")
 endif()
-add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>") 
+add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 macro(get_sources_from_root_directory root sources)
   file(GLOB_RECURSE all_files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${root}/*.h" "${root}/*.cpp" "${root}/*.glsl")

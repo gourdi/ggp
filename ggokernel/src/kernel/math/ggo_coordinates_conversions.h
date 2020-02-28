@@ -111,7 +111,6 @@ namespace ggo
     data_t ratio_roi = roi.width() / roi.height();
     data_t ratio_render = static_cast<data_t>(render_size.width()) / static_cast<data_t>(render_size.height());
 
-    data_t scale = 0.f;
     if (ratio_render > ratio_roi)
     {
       return l * render_size.height() / roi.height();

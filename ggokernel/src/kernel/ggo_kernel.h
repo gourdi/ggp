@@ -15,6 +15,7 @@
 #include <optional>
 #include <bitset>
 #include <kernel/ggo_assert.h>
+#include <kernel/ggo_reduce.h>
 
 //////////////////////////////////////////////////////////////
 // Random.

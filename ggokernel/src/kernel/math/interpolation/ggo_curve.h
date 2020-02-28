@@ -91,20 +91,23 @@ namespace ggo
       throw std::runtime_error("not enough points in the curve");
     }
 
-    if (x <= _points.front().first)
+    if (x <= this->_points.front().first)
     {
-      return _points.front().second;
+      return this->_points.front().second;
     }
 
-    for (int i = 1; i < _points.size(); ++i)
+    for (int i = 1; i < this->_points.size(); ++i)
     {
-      if (x <= _points[i].first)
+      if (x <= this->_points[i].first)
       {
-        return linear_interpolation(_points[i - 1].first, _points[i - 1].second, _points[i].first, _points[i].second, x);
+        return linear_interpolation(this->_points[i - 1].first,
+                                    this->_points[i - 1].second,
+                                    this->_points[i].first,
+                                    this->_points[i].second, x);
       }
     }
 
-    return _points.back().second;
+    return this->_points.back().second;
   }
 
   //////////////////////////////////////////////////////////////
@@ -116,31 +119,31 @@ namespace ggo
       throw std::runtime_error("not enough points in the curve");
     }
 
-    if (x <= _points.front().first)
+    if (x <= this->_points.front().first)
     {
-      return _points.front().second;
+      return this->_points.front().second;
     }
 
-    for (int i = 1; i < _points.size(); ++i)
+    for (int i = 1; i < this->_points.size(); ++i)
     {
-      if (x <= _points[i].first)
+      if (x <= this->_points[i].first)
       {
-        t_x x1 = _points[i - 1].first;
-        t_x x2 = _points[i].first;
-        const auto & y1 = _points[i - 1].second;
-        const auto & y2 = _points[i].second;
+        t_x x1 = this->_points[i - 1].first;
+        t_x x2 = this->_points[i].first;
+        const auto & y1 = this->_points[i - 1].second;
+        const auto & y2 = this->_points[i].second;
 
-        t_x x0 = i - 2 < 0 ? 2 * x1 - x2 : _points[i - 2].first;
-        const auto & y0 = i - 2 < 0 ? y2 : _points[i - 2].second;
+        t_x x0 = i - 2 < 0 ? 2 * x1 - x2 : this->_points[i - 2].first;
+        const auto & y0 = i - 2 < 0 ? y2 : this->_points[i - 2].second;
 
-        t_x x3 = i + 1 >= _points.size() ? 2 * x2 - x1 : _points[i + 1].first;
-        const auto & y3 = i + 1 >= _points.size() ? y1 : _points[i + 1].second;
+        t_x x3 = i + 1 >= this->_points.size() ? 2 * x2 - x1 : this->_points[i + 1].first;
+        const auto & y3 = i + 1 >= this->_points.size() ? y1 : this->_points[i + 1].second;
 
         return cubic_interpolation(x0, y0, x1, y1, x2, y2, x3, y3, x);
       }
     }
 
-    return _points.back().second;
+    return this->_points.back().second;
   }
 }
 

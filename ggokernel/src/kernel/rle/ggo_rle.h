@@ -33,7 +33,7 @@ namespace ggo
   }
 
   template <typename data_t>
-  void rle_decode(const std::vector<std::pair<data_t, int>> & rle_data, ggo::array<data_t, 1> & output)
+  void rle_decode(const std::vector<std::pair<data_t, int>> & rle_data, ggo::array1<data_t> & output)
   {
     auto it = output.begin();
     rle_decode<data_t>(rle_data, [&](const data_t & value, int count) { std::fill(it, it + count, value); it += count; });

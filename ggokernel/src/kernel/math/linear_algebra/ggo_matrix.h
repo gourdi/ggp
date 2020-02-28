@@ -36,8 +36,8 @@ namespace ggo
     matrix &                  operator=(const matrix<data_t, size_y, size_x> & m) = default;
     matrix &                  operator=(matrix<data_t, size_y, size_x> && m) = default;
 
-    constexpr bool  operator==(const matrix<data_t, size_y, size_x> & m) const { return details::eq<data_t, size_y * size_x>(this->_data, m._data); }
-    constexpr bool  operator!=(const matrix<data_t, size_y, size_x> & m) const { return !this->operator==(m); }
+    constexpr bool  operator==(const matrix<data_t, size_y, size_x> & m) const { return _data == m._data; }
+    constexpr bool  operator!=(const matrix<data_t, size_y, size_x> & m) const { return _data != m._data; }
 
   private:
     
@@ -83,24 +83,24 @@ namespace ggo
     return is_symmetric(m, size);
   }
 
-  template <typename vec_t,
-    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
-    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
-    constexpr vec_t operator*(const square_matrix<data_t, n_dims> & m, const vec_t & v)
-  {
-    vec_t result;
-
-    for (int y = 0; y < n_dims; ++y)
-    {
-      result[y] = 0;
-      for (int x = 0; x < n_dims; ++x)
-      {
-        result[y] += m(y, x) * v[x];
-      }
-    }
-
-    return result;
-  }
+//  template <typename vec_t,
+//    typename data_t = typename vec_t::_data_t, int n_dims = vec_t::_n_dims,
+//    typename = std::enable_if_t<std::is_base_of_v<vec_base<data_t, n_dims>, vec_t>>>
+//    constexpr vec_t operator*(const square_matrix<data_t, n_dims> & m, const vec_t & v)
+//  {
+//    vec_t result;
+//
+//    for (int y = 0; y < n_dims; ++y)
+//    {
+//      result[y] = 0;
+//      for (int x = 0; x < n_dims; ++x)
+//      {
+//        result[y] += m(y, x) * v[x];
+//      }
+//    }
+//
+//    return result;
+//  }
 }
 
 /////////////////////////////////////////////////////////////////////

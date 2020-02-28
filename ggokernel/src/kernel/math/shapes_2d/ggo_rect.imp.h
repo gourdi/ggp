@@ -68,7 +68,7 @@ namespace ggo
   template <typename data_t>
   rect<data_t> rect<data_t>::from_union(const rect<data_t> & rect1, const rect<data_t> & rect2)
   {
-    return rect(ggo::rect_data_union(rect1.data(), rect2.data()));
+    return rect(ggo::get_union(rect1.data(), rect2.data()));
   }
 
   /////////////////////////////////////////////////////////////////////

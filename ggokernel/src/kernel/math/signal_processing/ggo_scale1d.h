@@ -130,6 +130,7 @@ namespace ggo
       else
       {
         static_assert(std::is_floating_point<real_t>::value == true);
+        static_assert(algo == scaling_algo::linear_integration || algo == scaling_algo::cubic_integration);
 
         real_t from = static_cast<real_t>(i) * ratio;
         real_t to = static_cast<real_t>(i + 1) * ratio;
@@ -141,10 +142,6 @@ namespace ggo
         else if constexpr(algo == scaling_algo::cubic_integration)
         {
           out(i, inv_ratio * integrate_cubic<data_t, real_t>(in, size_in, from, to));
-        }
-        else
-        {
-          static_assert(false);
         }
       }
     }

@@ -11,11 +11,11 @@
 namespace ggo
 {
   template <typename data_t_, int n_dims>
-  class array final
+  class array
   {
   public:
 
-    using data_t = typename data_t_;
+    using data_t = data_t_;
 
     // Default constructor.
     array()
@@ -28,13 +28,6 @@ namespace ggo
     array(int dim1, args... a)
     {
       array_builder<n_dims, n_dims>::process_args(_dimensions, &_buffer, dim1, a...);
-    }
-
-    // Constructor from a ggo::size, 2d only.
-    template <typename... args>
-    array(ggo::size s) : array(s.width(), s.height())
-    {
-      static_assert(n_dims == 2);
     }
 
     // Copy constructor.
@@ -53,30 +46,6 @@ namespace ggo
       _buffer = rhs._buffer;
 
       rhs._buffer = nullptr;
-    }
-
-    // Coefs constructors (only 1d and 2d).
-    template <size_t n, typename = std::enable_if_t<n_dims == 1>>
-    array(data_t const (&coefs)[n])
-    {
-      static_assert(n_dims == 1);
-      _dimensions[0] = n;
-      _buffer = new data_t[n];
-      std::copy(coefs, coefs + n, _buffer);
-    }
-
-    template <size_t h, size_t w, typename = std::enable_if_t<n_dims == 2>>
-    array(data_t const (&coefs)[h][w])
-    {
-      static_assert(n_dims == 2);
-      _dimensions[0] = w;
-      _dimensions[1] = h;
-      _buffer = new data_t[h * w];
-
-      for (int row = 0; row < h; ++row)
-      {
-        std::copy(coefs[row], coefs[row] + w, _buffer + row * w);
-      }
     }
 
     // Destructor.
@@ -123,31 +92,6 @@ namespace ggo
       static_assert(dim < n_dims);
       static_assert(dim > 2); // Use size(), width() or height() instead.
       return _dimensions[dim];
-    }
-
-    auto size() const
-    {
-      static_assert(n_dims == 1 || n_dims == 2);
-      if constexpr (n_dims == 1)
-      {
-        return _dimensions[0];
-      }
-      else
-      {
-        return ggo::size(_dimensions[0], _dimensions[1]);
-      }
-    }
-
-    int width() const
-    {
-      static_assert(n_dims == 2);
-      return _dimensions[0];
-    }
-
-    int height() const
-    {
-      static_assert(n_dims == 2);
-      return _dimensions[1];
     }
 
     // Returns the full number of elements inside the array.
@@ -332,7 +276,7 @@ namespace ggo
       }
     };
 
-  private:
+  protected:
 
     int       _dimensions[n_dims];
     data_t *  _buffer;
@@ -349,21 +293,78 @@ namespace ggo
   }
 }
 
-//////////////////////////////////////////////////////////////
-// Usefull aliases.
 namespace ggo
 {
-  using array_c       = array<char, 1>;
-  using array_i       = array<int, 1>;
-  using array_8u      = array<uint8_t, 1>;
-  using array_32f     = array<float, 1>;
-
   template <typename data_t>
-  using array2d       = array<data_t, 2>;
+  class array1 final : public array<data_t, 1>
+  {
+  public:
+    
+    array1(int size) : array<data_t, 1>(size) {}
+    array1(int size, const data_t & fill_value) : array<data_t, 1>(size, fill_value ) {}
+    
+    template <size_t n>
+    array1(data_t const (&coefs)[n])
+    {
+      this->_dimensions[0] = n;
+      this->_buffer = new data_t[n];
+      std::copy(coefs, coefs + n, this->_buffer);
+    }
+    
+    int size() const { return this->_dimensions[0]; }
+  };
 
-  using array2d_8u    = array<uint8_t, 2>;
-  using array2d_32s   = array<int32_t, 2>;
-  using array2d_32f   = array<float, 2>;
+  using array_c       = array1<char>;
+  using array_i       = array1<int>;
+  using array_8u      = array1<uint8_t>;
+  using array_32f     = array1<float>;
+  using array_f       = array1<float>;
+}
+
+namespace ggo
+{
+  template <typename data_t>
+  class array2 final : public array<data_t, 2>
+  {
+  public:
+    
+    array2(int width, int height) : array<data_t, 2>(width, height) {}
+    array2(int width, int height, const data_t & fill_value) : array<data_t, 2>(width, height, fill_value ) {}
+    
+    template <size_t h, size_t w>
+    array2(data_t const (&coefs)[h][w])
+    {
+      this->_dimensions[0] = w;
+      this->_dimensions[1] = h;
+      this->_buffer = new data_t[h * w];
+
+      for (int row = 0; row < h; ++row)
+      {
+        std::copy(coefs[row], coefs[row] + w, this->_buffer + row * w);
+      }
+    }
+
+    int width() const
+    {
+      return this->_dimensions[0];
+    }
+
+    int height() const
+    {
+      return this->_dimensions[1];
+    }
+    
+    ggo::size size() const
+    {
+      return { this->_dimensions[0], this->_dimensions[1] };
+    }
+  };
+
+  using array2_8u    = array2<uint8_t>;
+  using array2_32s   = array2<int32_t>;
+  using array2_i     = array2<int>;
+  using array2_32f   = array2<float>;
+  using array2_f     = array2<float>;
 }
 
 #endif

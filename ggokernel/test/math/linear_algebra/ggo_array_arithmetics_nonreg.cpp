@@ -4,7 +4,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, indices)
 {
-  const ggo::array<int, 2> m({
+  const ggo::array2_i m({
     { 1, 2, 3 },
     { 4, 5, 6 } });
 
@@ -25,16 +25,16 @@ GGO_TEST(array_arithmetics, indices)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, multiply1)
 {
-  const ggo::array<int, 2> m({
+  const ggo::array2_i m({
     { 1, 2 },
     { -1, 3 } });
-  const ggo::array<int, 2> v({
+  const ggo::array2_i v({
     { 1 },
     { -2 } });
 
   auto r = m * v;
 
-  const ggo::array<int, 2> expected({
+  const ggo::array2_i expected({
     { -3 },
     { -7 } });
 
@@ -44,17 +44,17 @@ GGO_TEST(array_arithmetics, multiply1)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, multiply2)
 {
-  const ggo::array<int, 2> m1({
+  const ggo::array2_i m1({
     { 1, 2},
     { 3, -1},
     { 2, 4} });
-  const ggo::array<int, 2> m2({
+  const ggo::array2_i m2({
     { 1, 2, 3, 4},
     { -2, 1, -3, 1} });
 
   auto m = m1 * m2;
 
-  const ggo::array<int, 2> expected({
+  const ggo::array2_i expected({
     { -3, 4, -3, 6 },
     { 5, 5, 12, 11 },
     { -6, 8, -6, 12 } });
@@ -65,18 +65,18 @@ GGO_TEST(array_arithmetics, multiply2)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, add)
 {
-  const ggo::array<int, 2> m1({
+  const ggo::array2_i m1({
     { 1, 2 },
     { 3, -1},
     { 2, 4 } });
-  const ggo::array<int, 2> m2({
+  const ggo::array2_i m2({
     { 2, 1 },
     { -1, 3 },
     { 1, -2 } });
 
   auto m = m1 + m2;
 
-  const ggo::array<int, 2> expected({
+  const ggo::array2_i expected({
     { 3, 3 },
     { 2, 2 },
     { 3, 2 } });
@@ -87,16 +87,16 @@ GGO_TEST(array_arithmetics, add)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(array_arithmetics, sub)
 {
-  const ggo::array<int, 2> m1({
+  const ggo::array2_i m1({
     { 1, 2 },
     { 3, -1 } });
-  const ggo::array<int, 2> m2({
+  const ggo::array2_i m2({
     { 2, -2 },
     { -1, 3 } });
 
   auto m = m1 - m2;
 
-  const ggo::array<int, 2> expected({
+  const ggo::array2_i expected({
     { -1, 4 },
     { 4, -4 } });
 

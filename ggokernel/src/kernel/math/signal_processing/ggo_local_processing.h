@@ -71,7 +71,7 @@ namespace ggo
     {
       if constexpr (border_mode == ggo::border_mode::zero)
       {
-        return input_iterator_t::data_t(0);
+        return typename input_iterator_t::data_t(0);
       }
       else
       {
