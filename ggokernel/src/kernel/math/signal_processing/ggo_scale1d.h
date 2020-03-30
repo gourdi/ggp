@@ -1,28 +1,12 @@
-#ifndef __GGO_SCALE1D__
-#define __GGO_SCALE1D__
+#pragma once
 
 #include <kernel/ggo_kernel.h>
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
+#include <kernel/math/interpolation/ggo_integration1d.h>
 
+// Nearest neighbor.
 namespace ggo
 {
-  enum class scaling_algo
-  {
-    nearest_neighbor,
-    linear_integration,
-    cubic_integration,
-    linear_resampling_1,
-    linear_resampling_2x2,
-    linear_resampling_4x4,
-    linear_resampling_8x8,
-    linear_resampling_16x16,
-    cubic_resampling_1,
-    cubic_resampling_2x2,
-    cubic_resampling_4x4,
-    cubic_resampling_8x8,
-    cubic_resampling_16x16,
-  };
-
   //////////////////////////////////////////////////////////////
   inline int nearest_neighbor_index(int i, int size_in, int size_out)
   {
@@ -30,146 +14,148 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  // Here what we do is building a cubic curve which value at x=0 is
-  // the one is input[i] and which value at x=1 is input[i+1].
-  // Furthermore, to have a smooth global curve, we also make sure
-  // that that the derivatuve of the cubic at x=0 is the slope
-  // between the points at input[i-1] and input[i+1], and that the
-  // derivative at x=1 is the slope between the points at input[i]
-  // and input[i+2].
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, typename real_t, typename input>
-  data_t integrate_cubic_single(input in, int zero_offset, real_t from, real_t to)
+  template <typename in_t, typename out_t>
+  void scale_1d_nearest_neighbor(in_t&& in, int size_in, out_t && out, int size_out)
   {
-    static_assert(std::is_floating_point<real_t>::value);
-    GGO_ASSERT_GE(from, zero_offset);
-    GGO_ASSERT_LE(to, zero_offset + 1);
-    GGO_ASSERT_LE(from, to);
-
-    int i_p = zero_offset - 1;
-    int i_c = zero_offset;
-    int i_n = zero_offset + 1;
-    int i_nn = zero_offset + 2;
-
-    return cubic<data_t, real_t>::make_smooth(in(i_p), in(i_c), in(i_n), in(i_nn)).integrate(from - zero_offset, to - zero_offset);
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, typename real_t, typename input>
-  data_t integrate_cubic(input in, int size_in, real_t from, real_t to)
-  {
-    GGO_ASSERT_LT(from, to);
-
-    data_t val(0);
-    int from_i = std::max(0, static_cast<int>(from));
-    int to_i = std::min(size_in - 1, static_cast<int>(to + real_t(1.0)));
-    GGO_ASSERT_LT(from_i, to_i);
-
-    // Integrate the middle parts.
-    for (int i = from_i; i < to_i; ++i)
-    {
-      val += integrate_cubic_single<data_t>(in, i, real_t(i), real_t(i + 1));
-    }
-
-    // Remove first block.
-    val -= integrate_cubic_single<data_t>(in, from_i, real_t(from_i), from);
-
-    // Remove last block.
-    val -= integrate_cubic_single<data_t>(in, to_i - 1, to, real_t(to_i));
-
-    return val;
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <typename data_t, typename real_t, typename input>
-  data_t integrate_linear(input in, int size_in, real_t from, real_t to)
-  {
-    GGO_ASSERT(from < to);
-
-    data_t val = 0;
-    int from_i = std::max(0, static_cast<int>(from));
-    int to_i = std::min(size_in - 1, static_cast<int>(to + real_t(1.0)));
-    GGO_ASSERT_LT(from_i, to_i);
-
-    // Integrate the middle parts.
-    for (int i = from_i; i < to_i; ++i)
-    {
-      val += in(i) + in(i + 1);
-    }
-    val /= 2;
-
-    // Remove first block.
-    data_t a = in(from_i + 1) - in(from_i);
-    data_t b = in(from_i) - a * static_cast<real_t>(from_i);
-    val -= a * (from * from - from_i * from_i) / static_cast<real_t>(2) + b * (from - from_i);
-
-    // Remove last block.
-    a = in(to_i) - in(to_i - 1);
-    b = in(to_i - 1) - a * static_cast<real_t>(to_i - 1);
-    val -= a * (to_i * to_i - to * to) / static_cast<real_t>(2) + b * (to_i - to);
-
-    return val;
-  }
-
-  //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename real_t, typename input, typename output>
-  void scale_1d(input in, int size_in, output out, int size_out)
-  {
-    static_assert(std::is_floating_point<real_t>::value == true);
-
-    real_t ratio = static_cast<real_t>(size_in - 1) / static_cast<real_t>(size_out);
-    real_t inv_ratio = 1 / ratio;
-
     for (int i = 0; i < size_out; ++i)
     {
-      if constexpr(algo == scaling_algo::nearest_neighbor)
-      {
-        int i_in = nearest_neighbor_index(i, size_in, size_out);
-        out(i, in(i_in));
-      }
-      else
-      {
-        static_assert(std::is_floating_point<real_t>::value == true);
-        static_assert(algo == scaling_algo::linear_integration || algo == scaling_algo::cubic_integration);
-
-        real_t from = static_cast<real_t>(i) * ratio;
-        real_t to = static_cast<real_t>(i + 1) * ratio;
-
-        if constexpr(algo == scaling_algo::linear_integration)
-        {
-          out(i, inv_ratio * integrate_linear<data_t, real_t>(in, size_in, from, to));
-        }
-        else if constexpr(algo == scaling_algo::cubic_integration)
-        {
-          out(i, inv_ratio * integrate_cubic<data_t, real_t>(in, size_in, from, to));
-        }
-      }
+      int i_in = nearest_neighbor_index(i, size_in, size_out);
+      out(i, in(i_in));
     }
   }
 
   //////////////////////////////////////////////////////////////
-  template <scaling_algo algo, typename data_t, typename int_t>
-  void	scale_1d(const data_t * input, int_t size_in, data_t * output, int_t size_out)
+  template <typename data_t>
+  void scale_1d_nearest_neighbor(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
   {
-    static_assert(std::is_integral<int_t>::value == true);
+    auto in = [&](int i) { return ptr_in[i]; };
+    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
 
-    auto in = [&](int i)
-    {
-      if constexpr(algo == scaling_algo::cubic_integration)
-      {
-        i = ggo::clamp<int>(i, 0, int(size_in) - 1);
-      }
-
-      return input[i];
-    };
-    
-    auto out = [&](int i, data_t v)
-    {
-      output[i] = v;
-    };
-
-    scale_1d<algo, data_t, data_t>(in, static_cast<int>(size_in), out, static_cast<int>(size_out));
+    return scale_1d_nearest_neighbor(in, size_in, out, size_out);
   }
 }
 
-#endif
+// Linear and cubic interpolation.
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename scalar_t>
+  constexpr scalar_t interpolation_ratio(int size_in, int size_out)
+  {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
+    return static_cast<scalar_t>(size_in - 1) / static_cast<scalar_t>(size_out - 1);
+  }
+
+  static_assert(interpolation_ratio<float>(4, 4) == 1.f);
+  static_assert(interpolation_ratio<float>(5, 4) == 4.f / 3.f);
+  static_assert(interpolation_ratio<float>(4, 5) == 3.f / 4.f);
+
+  //////////////////////////////////////////////////////////////
+  template <typename in_t, typename out_t, typename scalar_t = float>
+  void scale_1d_linear_interpolation(in_t && in, int size_in, out_t && out, int size_out)
+  {
+    scalar_t ratio = interpolation_ratio<scalar_t>(size_in, size_out);
+
+    for (int i = 0; i < size_out; ++i)
+    {
+      scalar_t x = ratio * i;
+      out(i, linear_interpolation1d(in, x));
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void scale_1d_linear_interpolation(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
+  {
+    auto in  = [&](int i) { return ptr_in[i]; };
+    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+
+    return scale_1d_linear_interpolation(in, size_in, out, size_out);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename in_t, typename out_t, typename scalar_t = float>
+  void scale_1d_cubic_interpolation(in_t&& in, int size_in, out_t&& out, int size_out)
+  {
+    scalar_t ratio = interpolation_ratio<scalar_t>(size_in, size_out);
+
+    for (int i = 0; i < size_out; ++i)
+    {
+      scalar_t x = ratio * i;
+      out(i, cubic_interpolation1d(in, x));
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void scale_1d_cubic_interpolation(const data_t* ptr_in, int size_in, data_t* ptr_out, int size_out)
+  {
+    auto in  = [&](int i) { return ptr_in[ggo::clamp(i, 0, size_in - 1)]; };
+    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+
+    return scale_1d_cubic_interpolation(in, size_in, out, size_out);
+  }
+}
+
+// Linear integration.
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename scalar_t>
+  constexpr std::pair<scalar_t, scalar_t> get_integration_boudaries(int size_in, int size_out, int sample_index)
+  {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
+    scalar_t delta = scalar_t(size_in - 1) / scalar_t(size_out);
+    return std::make_pair(sample_index * delta, (sample_index + 1) * delta);
+  }
+
+  static_assert(get_integration_boudaries<float>(4, 10, 0) == std::pair<float, float>(0.f, 3.f / 10.0f));
+  static_assert(get_integration_boudaries<float>(4, 10, 9) == std::pair<float, float>(27.f / 10.0f, 3.0f));
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, typename in_t, typename out_t, typename scalar_t = float>
+  void scale_1d_linear_integration(in_t && in, int size_in, out_t&& out, int size_out)
+  {
+    for (int i = 0; i < size_out; ++i)
+    {
+      const auto [from, to] = get_integration_boudaries<scalar_t>(size_in, size_out, i);
+
+      out(i, linear_integration1d<data_t>(in, from, to) / (to - from));
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void scale_1d_linear_integration(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
+  {
+    auto in  = [&](int i) { return ptr_in[i]; };
+    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+
+    return scale_1d_linear_integration<data_t>(in, size_in, out, size_out);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t, typename in_t, typename out_t, typename scalar_t = float>
+  void scale_1d_cubic_integration(in_t&& in, int size_in, out_t&& out, int size_out)
+  {
+    for (int i = 0; i < size_out; ++i)
+    {
+      const auto [from, to] = get_integration_boudaries<scalar_t>(size_in, size_out, i);
+
+      out(i, cubic_integration1d<data_t>(in, from, to) / (to - from));
+    }
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void scale_1d_cubic_integration(const data_t* ptr_in, int size_in, data_t* ptr_out, int size_out)
+  {
+    auto in  = [&](int i) { return ptr_in[ggo::clamp(i, 0, size_in - 1)]; };
+    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+
+    return scale_1d_cubic_integration<data_t>(in, size_in, out, size_out);
+  }
+}
+

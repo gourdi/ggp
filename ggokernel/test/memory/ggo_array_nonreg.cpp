@@ -3,105 +3,35 @@
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(ggo_array, construction)
-{  
+{
   {
-    ggo::array_8u a(7);
-    GGO_CHECK(a.size() == 7);
+    const ggo::array_8u a(7);
     GGO_CHECK(a.count() == 7);
   }
 
   {
-    ggo::array1<std::string> a(3);
-    GGO_CHECK_EQ(a.size(), 3);
-    GGO_CHECK_EQ(a.count(),3);
+    const ggo::array1<std::string> a(3);
+    GGO_CHECK_EQ(a.count(), 3);
   }
 
   {
-    ggo::array2_f a(7, 11);
-    GGO_CHECK_EQ(a.width(), 7);
-    GGO_CHECK_EQ(a.height(), 11);
+    const ggo::array2_f a(7, 11);
+    GGO_CHECK_EQ(a.width(), 11);
+    GGO_CHECK_EQ(a.height(), 7);
+    GGO_CHECK_EQ(a.rows(), 7);
+    GGO_CHECK_EQ(a.cols(), 11);
+    GGO_CHECK_EQ(a.dim(0), 7);
+    GGO_CHECK_EQ(a.dim(1), 11);
     GGO_CHECK_EQ(a.count(), 77);
   }
-
-  {
-    ggo::array_i a({ 1, 2, 3, 4 });
-    GGO_CHECK_EQ(a.size(), 4);
-    GGO_CHECK_EQ(a(0), 1);
-    GGO_CHECK_EQ(a(1), 2);
-    GGO_CHECK_EQ(a(2), 3);
-    GGO_CHECK_EQ(a(3), 4);
-  }
-
-  {
-    ggo::array_8u a({ 1, 2, 3, 4 });
-    GGO_CHECK_EQ(a.size(), 4);
-    GGO_CHECK_EQ(a(0), 1);
-    GGO_CHECK_EQ(a(1), 2);
-    GGO_CHECK_EQ(a(2), 3);
-    GGO_CHECK_EQ(a(3), 4);
-  }
-
-  {
-    ggo::array_8u a({ 1, 2, 3, 4 });
-    GGO_CHECK_EQ(a.size(), 4);
-    GGO_CHECK_EQ(a(0), 1);
-    GGO_CHECK_EQ(a(1), 2);
-    GGO_CHECK_EQ(a(2), 3);
-    GGO_CHECK_EQ(a(3), 4);
-  }
-
-  {
-    ggo::array2_i a({
-      {1, 2, 3},
-      {4, 5, 6} });
-    GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.width(), 3);
-    GGO_CHECK_EQ(a.height(), 2);
-    GGO_CHECK_EQ(a(0, 0), 1);
-    GGO_CHECK_EQ(a(1, 0), 2);
-    GGO_CHECK_EQ(a(2, 0), 3);
-    GGO_CHECK_EQ(a(0, 1), 4);
-    GGO_CHECK_EQ(a(1, 1), 5);
-    GGO_CHECK_EQ(a(2, 1), 6);
-  }
-
-  {
-    ggo::array2_8u a({
-      { 1_u8, 2_u8, 3_u8 },
-      { 4_u8, 5_u8, 6_u8 } });
-    GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.width(), 3);
-    GGO_CHECK_EQ(a.height(), 2);
-    GGO_CHECK_EQ(a(0, 0), 1);
-    GGO_CHECK_EQ(a(1, 0), 2);
-    GGO_CHECK_EQ(a(2, 0), 3);
-    GGO_CHECK_EQ(a(0, 1), 4);
-    GGO_CHECK_EQ(a(1, 1), 5);
-    GGO_CHECK_EQ(a(2, 1), 6);
-  }
-
-  {
-    ggo::array2_8u a({
-      { 1, 2, 3 },
-      { 4, 5, 6 } });
-    GGO_CHECK_EQ(a.count(), 6);
-    GGO_CHECK_EQ(a.width(), 3);
-    GGO_CHECK_EQ(a.height(), 2);
-    GGO_CHECK_EQ(a(0, 0), 1);
-    GGO_CHECK_EQ(a(1, 0), 2);
-    GGO_CHECK_EQ(a(2, 0), 3);
-    GGO_CHECK_EQ(a(0, 1), 4);
-    GGO_CHECK_EQ(a(1, 1), 5);
-    GGO_CHECK_EQ(a(2, 1), 6);
-  }
 }
+
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(ggo_array, construction_and_fill)
 {
   {
-    ggo::array_8u a(3, 2);
-    GGO_CHECK_EQ(a.size(), 3);
+    const ggo::array_8u a(3, 2_u8);
     GGO_CHECK_EQ(a.count(), 3);
     GGO_CHECK_EQ(a(0), 2);
     GGO_CHECK_EQ(a(1), 2);
@@ -109,199 +39,222 @@ GGO_TEST(ggo_array, construction_and_fill)
   }
 
   {
-    ggo::array2_f a(2, 3, 1.f);
-    GGO_CHECK_EQ(a.width(), 2);
-    GGO_CHECK_EQ(a.height(), 3);
+    const ggo::array2_f a(2, 3, 1.f);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
+    GGO_CHECK_EQ(a.rows(), 2);
+    GGO_CHECK_EQ(a.cols(), 3);
+    GGO_CHECK_EQ(a.dim(0), 2);
+    GGO_CHECK_EQ(a.dim(1), 3);
     GGO_CHECK_EQ(a.count(), 6);
     GGO_CHECK_FLOAT_EQ(a(0, 0), 1.f);
-    GGO_CHECK_FLOAT_EQ(a(1, 0), 1.f);
     GGO_CHECK_FLOAT_EQ(a(0, 1), 1.f);
-    GGO_CHECK_FLOAT_EQ(a(1, 1), 1.f);
     GGO_CHECK_FLOAT_EQ(a(0, 2), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(1, 0), 1.f);
+    GGO_CHECK_FLOAT_EQ(a(1, 1), 1.f);
     GGO_CHECK_FLOAT_EQ(a(1, 2), 1.f);
   }
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, access)
+GGO_TEST(ggo_array, construction_from_c_array)
 {
   {
-    ggo::array<int, 1> a(7);
-    a(0) = 2;
-    a(1) = 4;
-    a(2) = 7;
-    a(3) = 1;
-    a(4) = 0;
-    a(5) = 8;
-    a(6) = 9;
-    GGO_CHECK(a(0) == 2);
-    GGO_CHECK(a(1) == 4);
-    GGO_CHECK(a(2) == 7);
-    GGO_CHECK(a(3) == 1);
-    GGO_CHECK(a(4) == 0);
-    GGO_CHECK(a(5) == 8);
-    GGO_CHECK(a(6) == 9);
+    const ggo::array_i a({ 1, 2, 3, 4 });
+    GGO_CHECK_EQ(a.count(), 4);
+    GGO_CHECK_EQ(a(0), 1);
+    GGO_CHECK_EQ(a(1), 2);
+    GGO_CHECK_EQ(a(2), 3);
+    GGO_CHECK_EQ(a(3), 4);
+    GGO_CHECK_EQ(a.data()[0], 1);
+    GGO_CHECK_EQ(a.data()[1], 2);
+    GGO_CHECK_EQ(a.data()[2], 3);
+    GGO_CHECK_EQ(a.data()[3], 4);
   }
 
   {
-    ggo::array<int, 2> a(2, 3);
-    a(0, 0) = 2;
-    a(1, 0) = 5;
-    a(0, 1) = 7;
-    a(1, 1) = 9;
-    a(0, 2) = 0;
-    a(1, 2) = 1;
-    GGO_CHECK(a(0, 0) == 2);
-    GGO_CHECK(a(1, 0) == 5);
-    GGO_CHECK(a(0, 1) == 7);
-    GGO_CHECK(a(1, 1) == 9);
-    GGO_CHECK(a(0, 2) == 0);
-    GGO_CHECK(a(1, 2) == 1);
+    const ggo::array_8u a({ 1, 2, 3, 4 });
+    GGO_CHECK_EQ(a.count(), 4);
+    GGO_CHECK_EQ(a(0), 1);
+    GGO_CHECK_EQ(a(1), 2);
+    GGO_CHECK_EQ(a(2), 3);
+    GGO_CHECK_EQ(a(3), 4);
+    GGO_CHECK_EQ(a.data()[0], 1);
+    GGO_CHECK_EQ(a.data()[1], 2);
+    GGO_CHECK_EQ(a.data()[2], 3);
+    GGO_CHECK_EQ(a.data()[3], 4);
+  }
 
-    const int * data = a.data();
-    GGO_CHECK(data[0] == 2);
-    GGO_CHECK(data[1] == 5);
-    GGO_CHECK(data[2] == 7);
-    GGO_CHECK(data[3] == 9);
-    GGO_CHECK(data[4] == 0);
-    GGO_CHECK(data[5] == 1);
+  {
+    const ggo::array2_i a({
+      {1, 2, 3},
+      {4, 5, 6} });
+    GGO_CHECK_EQ(a.count(), 6);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
+    GGO_CHECK_EQ(a.rows(), 2);
+    GGO_CHECK_EQ(a.cols(), 3);
+    GGO_CHECK_EQ(a.dim(0), 2);
+    GGO_CHECK_EQ(a.dim(1), 3);
+    GGO_CHECK_EQ(a(0, 0), 1);
+    GGO_CHECK_EQ(a(0, 1), 2);
+    GGO_CHECK_EQ(a(0, 2), 3);
+    GGO_CHECK_EQ(a(1, 0), 4);
+    GGO_CHECK_EQ(a(1, 1), 5);
+    GGO_CHECK_EQ(a(1, 2), 6);
+    GGO_CHECK_EQ(a.data()[0], 1);
+    GGO_CHECK_EQ(a.data()[1], 2);
+    GGO_CHECK_EQ(a.data()[2], 3);
+    GGO_CHECK_EQ(a.data()[3], 4);
+    GGO_CHECK_EQ(a.data()[4], 5);
+    GGO_CHECK_EQ(a.data()[5], 6);
+  }
+
+  {
+    const ggo::array2_8u a({
+      { 1_u8, 2_u8, 3_u8 },
+      { 4_u8, 5_u8, 6_u8 } });
+    GGO_CHECK_EQ(a.count(), 6);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
+    GGO_CHECK_EQ(a.rows(), 2);
+    GGO_CHECK_EQ(a.cols(), 3);
+    GGO_CHECK_EQ(a.dim(0), 2);
+    GGO_CHECK_EQ(a.dim(1), 3);
+    GGO_CHECK_EQ(a(0, 0), 1);
+    GGO_CHECK_EQ(a(0, 1), 2);
+    GGO_CHECK_EQ(a(0, 2), 3);
+    GGO_CHECK_EQ(a(1, 0), 4);
+    GGO_CHECK_EQ(a(1, 1), 5);
+    GGO_CHECK_EQ(a(1, 2), 6);
+    GGO_CHECK_EQ(a.data()[0], 1);
+    GGO_CHECK_EQ(a.data()[1], 2);
+    GGO_CHECK_EQ(a.data()[2], 3);
+    GGO_CHECK_EQ(a.data()[3], 4);
+    GGO_CHECK_EQ(a.data()[4], 5);
+    GGO_CHECK_EQ(a.data()[5], 6); 
+  }
+
+  {
+    const ggo::array2_8u a({
+      { 1, 2, 3 },
+      { 4, 5, 6 } });
+    GGO_CHECK_EQ(a.count(), 6);
+    GGO_CHECK_EQ(a.width(), 3);
+    GGO_CHECK_EQ(a.height(), 2);
+    GGO_CHECK_EQ(a.rows(), 2);
+    GGO_CHECK_EQ(a.cols(), 3);
+    GGO_CHECK_EQ(a.dim(0), 2);
+    GGO_CHECK_EQ(a.dim(1), 3);
+    GGO_CHECK_EQ(a(0, 0), 1);
+    GGO_CHECK_EQ(a(0, 1), 2);
+    GGO_CHECK_EQ(a(0, 2), 3);
+    GGO_CHECK_EQ(a(1, 0), 4);
+    GGO_CHECK_EQ(a(1, 1), 5);
+    GGO_CHECK_EQ(a(1, 2), 6);
+    GGO_CHECK_EQ(a.data()[0], 1);
+    GGO_CHECK_EQ(a.data()[1], 2);
+    GGO_CHECK_EQ(a.data()[2], 3);
+    GGO_CHECK_EQ(a.data()[3], 4);
+    GGO_CHECK_EQ(a.data()[4], 5);
+    GGO_CHECK_EQ(a.data()[5], 6); }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(ggo_array, at_loop)
+{
+  {
+    ggo::array_8u a({ 1, 2, 3 });
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-4), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-3), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-2), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 3), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 4), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 5), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 6), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>( 7), 2);
+  }
+
+  {
+    ggo::array<uint16_t, 2> a({
+      {1, 2, 3},
+      {4, 5, 6} });
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1, -1), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1,  0), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1,  1), 5);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1,  2), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(-1,  3), 4);
+
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(0, -1), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(0,  0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(0,  1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(0,  2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(0,  3), 1);
+
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(1, -1), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(1,  0), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(1,  1), 5);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(1,  2), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(1,  3), 4);
+
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(2, -1), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(2,  0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(2,  1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(2,  2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::loop>(2,  3), 1);
   }
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, loop_access)
+GGO_TEST(ggo_array, at_mirror)
 {
   {
-    ggo::array_8u a(3);
-    a(0) = 1;
-    a(1) = 2;
-    a(2) = 3;
-    GGO_CHECK_EQ(a.at_loop(-4), 3);
-    GGO_CHECK_EQ(a.at_loop(-3), 1);
-    GGO_CHECK_EQ(a.at_loop(-2), 2);
-    GGO_CHECK_EQ(a.at_loop(-1), 3);
-    GGO_CHECK_EQ(a.at_loop( 0), 1);
-    GGO_CHECK_EQ(a.at_loop( 1), 2);
-    GGO_CHECK_EQ(a.at_loop( 2), 3);
-    GGO_CHECK_EQ(a.at_loop( 3), 1);
-    GGO_CHECK_EQ(a.at_loop( 4), 2);
-    GGO_CHECK_EQ(a.at_loop( 5), 3);
-    GGO_CHECK_EQ(a.at_loop( 6), 1);
-    GGO_CHECK_EQ(a.at_loop( 7), 2);
+    ggo::array_8u a({ 1, 2, 3 });
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-4), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-3), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-2), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(3), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(4), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(5), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(6), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(7), 2);
   }
 
   {
-    ggo::array<uint16_t, 2> a(3, 2);
-    a(0, 0) = 1;
-    a(1, 0) = 2;
-    a(2, 0) = 3;
-    a(0, 1) = 4;
-    a(1, 1) = 5;
-    a(2, 1) = 6;
-    GGO_CHECK_EQ(a.at_loop(-1, -1), 6);
-    GGO_CHECK_EQ(a.at_loop( 0, -1), 4);
-    GGO_CHECK_EQ(a.at_loop( 1, -1), 5);
-    GGO_CHECK_EQ(a.at_loop( 2, -1), 6);
-    GGO_CHECK_EQ(a.at_loop( 3, -1), 4);
+    ggo::array<uint16_t, 2> a({
+      {1, 2, 3},
+      {4, 5, 6} });
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1, -1), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1,  0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1,  1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1,  2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(-1,  3), 3);
 
-    GGO_CHECK_EQ(a.at_loop(-1, 0), 3);
-    GGO_CHECK_EQ(a.at_loop( 0, 0), 1);
-    GGO_CHECK_EQ(a.at_loop( 1, 0), 2);
-    GGO_CHECK_EQ(a.at_loop( 2, 0), 3);
-    GGO_CHECK_EQ(a.at_loop( 3, 0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0, -1), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0,  0), 1);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0,  1), 2);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0,  2), 3);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(0,  3), 3);
 
-    GGO_CHECK_EQ(a.at_loop(-1, 1), 6);
-    GGO_CHECK_EQ(a.at_loop( 0, 1), 4);
-    GGO_CHECK_EQ(a.at_loop( 1, 1), 5);
-    GGO_CHECK_EQ(a.at_loop( 2, 1), 6);
-    GGO_CHECK_EQ(a.at_loop( 3, 1), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1, -1), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1,  0), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1,  1), 5);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1,  2), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(1,  3), 6);
 
-    GGO_CHECK_EQ(a.at_loop(-1, 2), 3);
-    GGO_CHECK_EQ(a.at_loop( 0, 2), 1);
-    GGO_CHECK_EQ(a.at_loop( 1, 2), 2);
-    GGO_CHECK_EQ(a.at_loop( 2, 2), 3);
-    GGO_CHECK_EQ(a.at_loop( 3, 2), 1);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, loop_mirror)
-{
-  {
-    ggo::array_8u a(3);
-    a(0) = 1;
-    a(1) = 2;
-    a(2) = 3;
-    GGO_CHECK_EQ(a.at_mirror(-4), 3);
-    GGO_CHECK_EQ(a.at_mirror(-3), 3);
-    GGO_CHECK_EQ(a.at_mirror(-2), 2);
-    GGO_CHECK_EQ(a.at_mirror(-1), 1);
-    GGO_CHECK_EQ(a.at_mirror(0), 1);
-    GGO_CHECK_EQ(a.at_mirror(1), 2);
-    GGO_CHECK_EQ(a.at_mirror(2), 3);
-    GGO_CHECK_EQ(a.at_mirror(3), 3);
-    GGO_CHECK_EQ(a.at_mirror(4), 2);
-    GGO_CHECK_EQ(a.at_mirror(5), 1);
-    GGO_CHECK_EQ(a.at_mirror(6), 1);
-    GGO_CHECK_EQ(a.at_mirror(7), 2);
-  }
-
-  {
-    ggo::array<uint16_t, 2> a(3, 2);
-    a(0, 0) = 1;
-    a(1, 0) = 2;
-    a(2, 0) = 3;
-    a(0, 1) = 4;
-    a(1, 1) = 5;
-    a(2, 1) = 6;
-    GGO_CHECK_EQ(a.at_mirror(-1, -1), 1);
-    GGO_CHECK_EQ(a.at_mirror(0, -1), 1);
-    GGO_CHECK_EQ(a.at_mirror(1, -1), 2);
-    GGO_CHECK_EQ(a.at_mirror(2, -1), 3);
-    GGO_CHECK_EQ(a.at_mirror(3, -1), 3);
-
-    GGO_CHECK_EQ(a.at_mirror(-1, 0), 1);
-    GGO_CHECK_EQ(a.at_mirror(0, 0), 1);
-    GGO_CHECK_EQ(a.at_mirror(1, 0), 2);
-    GGO_CHECK_EQ(a.at_mirror(2, 0), 3);
-    GGO_CHECK_EQ(a.at_mirror(3, 0), 3);
-
-    GGO_CHECK_EQ(a.at_mirror(-1, 1), 4);
-    GGO_CHECK_EQ(a.at_mirror(0, 1), 4);
-    GGO_CHECK_EQ(a.at_mirror(1, 1), 5);
-    GGO_CHECK_EQ(a.at_mirror(2, 1), 6);
-    GGO_CHECK_EQ(a.at_mirror(3, 1), 6);
-
-    GGO_CHECK_EQ(a.at_mirror(-1, 2), 4);
-    GGO_CHECK_EQ(a.at_mirror(0, 2), 4);
-    GGO_CHECK_EQ(a.at_mirror(1, 2), 5);
-    GGO_CHECK_EQ(a.at_mirror(2, 2), 6);
-    GGO_CHECK_EQ(a.at_mirror(3, 2), 6);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(ggo_array, fill)
-{
-  {
-    ggo::array<float, 1> a(5);
-    a.fill(8);
-    GGO_CHECK(a(0) == 8);
-    GGO_CHECK(a(1) == 8);
-    GGO_CHECK(a(2) == 8);
-    GGO_CHECK(a(3) == 8);
-    GGO_CHECK(a(4) == 8);
-  }
-
-  {
-    ggo::array<float, 2> a(3, 2);
-    a.fill(8);
-    GGO_CHECK(a(0, 0) == 8);
-    GGO_CHECK(a(1, 0) == 8);
-    GGO_CHECK(a(2, 0) == 8);
-    GGO_CHECK(a(0, 1) == 8);
-    GGO_CHECK(a(1, 1) == 8);
-    GGO_CHECK(a(2, 1) == 8);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2, -1), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2,  0), 4);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2,  1), 5);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2,  3), 6);
+    GGO_CHECK_EQ(a.at<ggo::border_mode::mirror>(2,  2), 6);
   }
 }
 
@@ -342,8 +295,8 @@ GGO_TEST(ggo_array, copy)
 {
   ggo::array2_8u a(2, 3, 1);
   ggo::array2_8u b(a);
-  GGO_CHECK_EQ(b.width(), 2);
-  GGO_CHECK_EQ(b.height(), 3);
+  GGO_CHECK_EQ(b.height(), 2);
+  GGO_CHECK_EQ(b.width(), 3);
   for (auto v : b)
   {
     GGO_CHECK_EQ(v, 1);

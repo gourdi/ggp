@@ -1,41 +1,50 @@
-#ifndef __GGO_INTERPOLATION_2D__
-#define __GGO_INTERPOLATION_2D__
+#pragma once
 
 #include <kernel/ggo_borders.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
+#include <kernel/math/interpolation/ggo_interpolation_polynom.h>
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
 
-/////////////////////////////////////////////////////////////////////
-// Definitions.
+// Linear interpolation.
 namespace ggo
 {
-  enum class interpolation2d_type
+  /////////////////////////////////////////////////////////////////////
+  template <typename in_t, typename scalar_t>
+  auto linear_interpolation2d(const in_t & in, scalar_t x, scalar_t y)
   {
-    bilinear,
-    bicublic
-  };
+    static_assert(std::is_floating_point_v<scalar_t>);
 
-  template <typename data_t, typename getter, typename scalar_t>
-  data_t linear_interpolation2d(const getter & in, scalar_t x, scalar_t y);
+    int x_i = lower_sample_index(x);
+    int y_i = lower_sample_index(y);
 
-  template <typename data_t, typename getter, typename scalar_t>
-  data_t cubic_interpolation2d(const getter & in, scalar_t x, scalar_t y);
+    // Y interpolation.
+    scalar_t dy = y - sample_coordinate<scalar_t>(y_i);
+    GGO_ASSERT_GE(dy, 0);
+    GGO_ASSERT_LE(dy, 1);
 
-  template <interpolation2d_type interp, typename data_t, typename getter, typename scalar_t>
-  data_t interpolation2d(const getter & in, scalar_t x, scalar_t y);
-}
+    auto v00 = in(x_i, y_i);
+    auto v01 = in(x_i, y_i + 1);
+    auto v0 = (1 - dy) * v00 + dy * v01;
 
-/////////////////////////////////////////////////////////////////////
-// Some usefull specializations.
-namespace ggo
-{
+    auto v10 = in(x_i + 1, y_i);
+    auto v11 = in(x_i + 1, y_i + 1);
+    auto v1 = (1 - dy) * v10 + dy * v11;
+
+    // X interpolation.
+    scalar_t dx = x - sample_coordinate<scalar_t>(x_i);
+    GGO_ASSERT_GE(dx, 0);
+    GGO_ASSERT_LE(dx, 1);
+
+    return (1 - dx) * v0 + dx * v1;
+  }
+
   /////////////////////////////////////////////////////////////////////
   template <ggo::lines_order memory_lines_order, typename data_t>
   data_t linear_interpolation2d_mirror(const data_t * input, int width, int height, data_t x, data_t y)
   {
     auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height); };
 
-    return linear_interpolation2d<data_t>(in, x, y);
+    return linear_interpolation2d(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -49,11 +58,56 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <ggo::lines_order memory_lines_order, typename data_t>
-  inline data_t linear_interpolation2d_loop(const data_t * input, int width, int height, data_t x, data_t y)
+  inline data_t linear_interpolation2d_loop(const data_t* input, int width, int height, data_t x, data_t y)
   {
     auto in = [&](int x, int y) { return ggo::get2d_loop<lines_order>(input, x, y, width, height); };
 
     return linear_interpolation2d<data_t>(in, x, y);
+  }
+}
+
+// Cubic interpolation.
+namespace ggo
+{
+  /////////////////////////////////////////////////////////////////////
+  template <typename in_t, typename scalar_t>
+  auto cubic_interpolation2d(in_t && in, scalar_t x, scalar_t y)
+  {
+    static_assert(std::is_floating_point_v<scalar_t>);
+
+    int x_i = lower_sample_index(x);
+    int y_i = lower_sample_index(y);
+
+    scalar_t x_zero = static_cast<scalar_t>(x_i);
+    scalar_t y_zero = static_cast<scalar_t>(y_i);
+    GGO_ASSERT_LE(x_zero, x);
+    GGO_ASSERT_LE(y_zero, y);
+
+    auto v00 = in(x_i - 1, y_i - 1);
+    auto v10 = in(x_i + 0, y_i - 1);
+    auto v20 = in(x_i + 1, y_i - 1);
+    auto v30 = in(x_i + 2, y_i - 1);
+    auto v0 = evaluate(make_interpolation_cubic(v00, v10, v20, v30), x - x_zero);
+
+    auto v01 = in(x_i - 1, y_i);
+    auto v11 = in(x_i + 0, y_i);
+    auto v21 = in(x_i + 1, y_i);
+    auto v31 = in(x_i + 2, y_i);
+    auto v1 = evaluate(make_interpolation_cubic(v01, v11, v21, v31), x - x_zero);
+
+    auto v02 = in(x_i - 1, y_i + 1);
+    auto v12 = in(x_i + 0, y_i + 1);
+    auto v22 = in(x_i + 1, y_i + 1);
+    auto v32 = in(x_i + 2, y_i + 1);
+    auto v2 = evaluate(make_interpolation_cubic(v02, v12, v22, v32), x - x_zero);
+
+    auto v03 = in(x_i - 1, y_i + 2);
+    auto v13 = in(x_i + 0, y_i + 2);
+    auto v23 = in(x_i + 1, y_i + 2);
+    auto v33 = in(x_i + 2, y_i + 2);
+    auto v3 = evaluate(make_interpolation_cubic(v03, v13, v23, v33), x - x_zero);
+
+    return evaluate(make_interpolation_cubic(v0, v1, v2, v3), y - y_zero);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -62,7 +116,7 @@ namespace ggo
   {
     auto in = [&](int x, int y) { return ggo::get2d_mirror<memory_lines_order>(input, x, y, width, height); };
 
-    return cubic_interpolation2d<data_t>(in, x, y);
+    return cubic_interpolation2d(in, x, y);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -75,102 +129,3 @@ namespace ggo
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-// Implementation.
-namespace ggo
-{
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename in_t, typename scalar_t>
-  data_t linear_interpolation2d(in_t && in, scalar_t x, scalar_t y)
-  {
-    static_assert(std::is_floating_point_v<scalar_t>);
-
-    int x_i = lower_bound(x);
-    int y_i = lower_bound(y);
-
-    GGO_ASSERT_GE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i));
-    GGO_ASSERT_LE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i + 1));
-    GGO_ASSERT_GE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i));
-    GGO_ASSERT_LE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i + 1));
-
-    // Interpolate.
-    scalar_t dx = x - from_discrete_to_continuous<scalar_t>(x_i);
-    scalar_t dy = y - from_discrete_to_continuous<scalar_t>(y_i);
-    GGO_ASSERT_GE(dx, 0);
-    GGO_ASSERT_LE(dx, 1);
-    GGO_ASSERT_GE(dy, 0);
-    GGO_ASSERT_LE(dy, 1);
-    
-    data_t v00 = in(x_i, y_i);
-    data_t v01 = in(x_i, y_i + 1);
-    data_t v10 = in(x_i + 1, y_i);
-    data_t v11 = in(x_i + 1, y_i + 1);
-    
-    data_t v0 = (1 - dy) * v00 + dy * v01;
-    data_t v1 = (1 - dy) * v10 + dy * v11;
-
-    return (1 - dx) * v0 + dx * v1;
-  }
-  
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t, typename in_t, typename scalar_t>
-  data_t cubic_interpolation2d(in_t && in, scalar_t x, scalar_t y)
-  {
-    static_assert(std::is_floating_point_v<scalar_t>);
-
-    int x_i = lower_bound(x);
-    int y_i = lower_bound(y);
-    GGO_ASSERT_GE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i));
-    GGO_ASSERT_LE(x, ggo::from_discrete_to_continuous<scalar_t>(x_i + 1));
-    GGO_ASSERT_GE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i));
-    GGO_ASSERT_LE(y, ggo::from_discrete_to_continuous<scalar_t>(y_i + 1));
-
-    scalar_t x_zero = from_discrete_to_continuous<scalar_t>(x_i);
-    scalar_t y_zero = from_discrete_to_continuous<scalar_t>(y_i);
-    GGO_ASSERT_LE(x_zero, x);
-    GGO_ASSERT_LE(y_zero, y);
-
-    // Interpolate.
-    data_t v00 = in(x_i - 1, y_i - 1);
-    data_t v10 = in(x_i + 0, y_i - 1);
-    data_t v20 = in(x_i + 1, y_i - 1);
-    data_t v30 = in(x_i + 2, y_i - 1);
-    data_t v0 = cubic_interpolation(v00, v10, v20, v30, x - x_zero);
-    
-    data_t v01 = in(x_i - 1, y_i);
-    data_t v11 = in(x_i + 0, y_i);
-    data_t v21 = in(x_i + 1, y_i);
-    data_t v31 = in(x_i + 2, y_i);
-    data_t v1 = cubic_interpolation(v01, v11, v21, v31, x - x_zero);
-    
-    data_t v02 = in(x_i - 1, y_i + 1);
-    data_t v12 = in(x_i + 0, y_i + 1);
-    data_t v22 = in(x_i + 1, y_i + 1);
-    data_t v32 = in(x_i + 2, y_i + 1);
-    data_t v2 = cubic_interpolation(v02, v12, v22, v32, x - x_zero);
-    
-    data_t v03 = in(x_i - 1, y_i + 2);
-    data_t v13 = in(x_i + 0, y_i + 2);
-    data_t v23 = in(x_i + 1, y_i + 2);
-    data_t v33 = in(x_i + 2, y_i + 2);
-    data_t v3 = cubic_interpolation(v03, v13, v23, v33, x - x_zero);
-    
-    return cubic_interpolation(v0, v1, v2, v3, y - y_zero);
-  }
-
-  /////////////////////////////////////////////////////////////////////
-  template <interpolation2d_type interp, typename data_t, typename in_t, typename scalar_t>
-  data_t interpolation2d(in_t && in, scalar_t x, scalar_t y)
-  {
-    if constexpr (interp == interpolation2d_type::bilinear)
-    {
-      return linear_interpolation2d<data_t>(in, x, y);
-    }
-    else if constexpr (interp == interpolation2d_type::bicublic)
-    {
-      return cubic_interpolation2d<data_t>(in, x, y);
-    }
-  }
-}
-
-#endif

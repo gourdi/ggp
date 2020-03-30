@@ -9,17 +9,17 @@ GGO_TEST(array_arithmetics, indices)
     { 4, 5, 6 } });
 
   // Width is the number of columns, height is the number of rows.
-  GGO_CHECK_EQ(m.width(), 3);
-  GGO_CHECK_EQ(m.height(), 2);
+  GGO_CHECK_EQ(m.dim(0), 2); 
+  GGO_CHECK_EQ(m.dim(1), 3);
 
   // Make sure that the first index is the column one, and the second index the row one,
   // unlike the math convention.
   GGO_CHECK_EQ(m(0, 0), 1);
-  GGO_CHECK_EQ(m(1, 0), 2);
-  GGO_CHECK_EQ(m(2, 0), 3);
-  GGO_CHECK_EQ(m(0, 1), 4);
+  GGO_CHECK_EQ(m(0, 1), 2);
+  GGO_CHECK_EQ(m(0, 2), 3);
+  GGO_CHECK_EQ(m(1, 0), 4);
   GGO_CHECK_EQ(m(1, 1), 5);
-  GGO_CHECK_EQ(m(2, 1), 6);
+  GGO_CHECK_EQ(m(1, 2), 6);
 }
 
 /////////////////////////////////////////////////////////////////////

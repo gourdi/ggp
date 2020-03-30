@@ -10,23 +10,23 @@
 namespace ggo
 {
   template <typename data_t>
-  ggo::array2<data_t> operator*(const ggo::array2<data_t> & m1, const ggo::array2<data_t> & m2)
+  ggo::array<data_t, 2> operator*(const ggo::array<data_t, 2> & m1, const ggo::array<data_t, 2> & m2)
   {
     if (m1.width() != m2.height())
     {
       throw std::runtime_error("dimension mismatch");
     }
 
-    ggo::array2<data_t> r(m2.width(), m1.height());
+    ggo::array<data_t, 2> r(m1.height(), m2.width());
 
     for (int y = 0; y < m1.height(); ++y)
     {
       for (int x = 0; x < m2.width(); ++x)
       {
-        r(x, y) = 0;
+        r(y, x) = 0;
         for (int j = 0; j < m1.width(); ++j)
         {
-          r(x, y) += m1(j, y) * m2(x, j);
+          r(y, x) += m1(y, j) * m2(j, x);
         }
       }
     }
@@ -55,7 +55,7 @@ namespace ggo
       throw std::runtime_error("dimension mismatch");
     }
 
-    ggo::array2<data_t> r(m1.width(), m2.height());
+    ggo::array2<data_t> r(m1.height(), m1.width());
 
     for (int i = 0; i < r.count(); ++i)
     {
@@ -73,7 +73,7 @@ namespace ggo
       throw std::runtime_error("dimension mismatch");
     }
 
-    ggo::array2<data_t> r(m1.width(), m2.height());
+    ggo::array2<data_t> r(m1.height(), m1.width());
 
     for (int i = 0; i < r.count(); ++i)
     {

@@ -8,7 +8,7 @@ GGO_TEST(scale1d, nearest_neighbor_upsample)
   const ggo::array_32f input({ 1.f, 2.f });
   ggo::array_32f output(20);
 
-  ggo::scale_1d<ggo::scaling_algo::nearest_neighbor>(input.data(), input.size(), output.data(), output.size());
+  ggo::scale_1d_nearest_neighbor(input.data(), input.size(), output.data(), output.size());
 
   const ggo::array_32f expected({
     1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f,
@@ -23,7 +23,7 @@ GGO_TEST(scale1d, nearest_neighbor_downsample)
   const ggo::array_32f input({ 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f });
   ggo::array_32f output(2);
 
-  ggo::scale_1d<ggo::scaling_algo::nearest_neighbor>(input.data(), input.size(), output.data(), output.size());
+  ggo::scale_1d_nearest_neighbor(input.data(), input.size(), output.data(), output.size());
 
   const ggo::array_32f expected({ 3.f, 7.f });
 
@@ -31,13 +31,64 @@ GGO_TEST(scale1d, nearest_neighbor_downsample)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(scale1d, linear_upsample)
+GGO_TEST(scale1d, linear_interpolation)
+{
+  const ggo::array_32f input({ 1.f, 1.f, 2.f, 2.f });
+  ggo::array_32f output(10);
+
+  ggo::scale_1d_linear_interpolation(input.data(), input.size(), output.data(), output.size());
+
+  const ggo::array_32f expected({
+    3.f / 3.f,
+    3.f / 3.f,
+    3.f / 3.f,
+    3.f / 3.f,
+    4.f / 3.f,
+    5.f / 3.f,
+    6.f / 3.f,
+    6.f / 3.f,
+    6.f / 3.f,
+    6.f / 3.f });
+
+  for (int i = 0; i < output.size(); ++i)
+  {
+    GGO_CHECK_FLOAT_NEAR(output[i], expected[i], 0.001f);
+  }
+}
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scale1d, cubic_interpolation)
+{
+  const ggo::array_32f input({ 1.f, 1.f, 2.f, 2.f });
+  ggo::array_32f output(10);
+
+  ggo::scale_1d_cubic_interpolation(input.data(), input.size(), output.data(), output.size());
+
+  const ggo::array_32f expected({
+    1.00000000f,
+    0.96296298f,
+    0.92592591f,
+    1.00000000f,
+    1.29629636f,
+    1.70370388f,
+    2.00000000f,
+    2.07407403f,
+    2.03703713f,
+    2.00000000f });
+
+  for (int i = 0; i < output.size(); ++i)
+  {
+    GGO_CHECK_FLOAT_NEAR(output[i], expected[i], 0.001f);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scale1d, linear_integration_upsample)
 {
   {
     const ggo::array_32f input({ 1.f, 2.f });
     ggo::array_32f output(20);
 
-    ggo::scale_1d<ggo::scaling_algo::linear_integration>(input.data(), input.size(), output.data(), output.size());
+    ggo::scale_1d_linear_integration(input.data(), input.size(), output.data(), output.size());
 
     const ggo::array_32f expected({
       1.025f, 1.075f, 1.125f, 1.175f, 1.225f, 1.275f, 1.325f, 1.375f, 1.425f, 1.475f,
@@ -53,7 +104,7 @@ GGO_TEST(scale1d, linear_upsample)
     const ggo::array_32f input({1.f, 1.f, 1.f, 2.f, 2.f, 2.f });
     ggo::array_32f output(10);
 
-    ggo::scale_1d<ggo::scaling_algo::linear_integration>(input.data(), input.size(), output.data(), output.size());
+    ggo::scale_1d_linear_integration(input.data(), input.size(), output.data(), output.size());
 
     const ggo::array_32f expected({ 1.f, 1.f, 1.f, 1.f, 1.25f, 1.75f, 2.f, 2.f, 2.f, 2.f });
 
@@ -62,12 +113,12 @@ GGO_TEST(scale1d, linear_upsample)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(scale1d, linear_downsample)
+GGO_TEST(scale1d, linear_integration_downsample)
 {
   const ggo::array_32f input({ 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f });
   ggo::array_32f output(2);
 
-  ggo::scale_1d<ggo::scaling_algo::linear_integration>(input.data(), input.size(), output.data(), output.size());
+  ggo::scale_1d_linear_integration(input.data(), input.size(), output.data(), output.size());
 
   const ggo::array_32f expected({ 2.5f, 5.5f });
 
@@ -78,12 +129,12 @@ GGO_TEST(scale1d, linear_downsample)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(scale1d, cubic_upsample)
+GGO_TEST(scale1d, cubic_integration_upsample)
 {
   const ggo::array_32f input({ 1.f, 1.f, 1.f, 2.f, 2.f, 2.f });
   ggo::array_32f output(20);
 
-  ggo::scale_1d<ggo::scaling_algo::cubic_integration>(input.data(), input.size(), output.data(), output.size());
+  ggo::scale_1d_cubic_integration(input.data(), input.size(), output.data(), output.size());
 
   const ggo::array_32f expected({
     1.f, 1.f, 1.f, 1.f,
@@ -97,4 +148,3 @@ GGO_TEST(scale1d, cubic_upsample)
     GGO_CHECK_FLOAT_NEAR(output[i], expected[i], 0.001f);
   }
 }
-

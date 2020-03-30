@@ -1,81 +1,64 @@
-#ifndef __GGO_INTERPOLATION_3D__
-#define __GGO_INTERPOLATION_3D__
+#pragma once
 
 #include <kernel/ggo_kernel.h>
+#include <kernel/math/ggo_discretization.h>
 
-/////////////////////////////////////////////////////////////////////
-// Definition.
-namespace ggo
-{
-  template <typename input_t, typename interpolation_t>
-  interpolation_t linear_interpolation3d(const input_t * input,
-                                         int size_x, int size_y, int size_z,
-                                         interpolation_t x, interpolation_t y, interpolation_t z);
-
-}
-
-/////////////////////////////////////////////////////////////////////
-// Implementation.
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <typename input_t, typename interpolation_t>
-  interpolation_t linear_interpolation3d(const input_t * input,
-                                         int size_x, int size_y, int size_z,
-                                         interpolation_t x, interpolation_t y, interpolation_t z)
+  template <typename in_t, typename scalar_t>
+  auto linear_interpolation3d(in_t && in, scalar_t x, scalar_t y, scalar_t z)
   {
-    // The integer coordinate of the lower left value.
-    int x_i = x >= 0 ? static_cast<int>(x) : static_cast<int>(x - 1);
-    int y_i = y >= 0 ? static_cast<int>(y) : static_cast<int>(y - 1);
-    int z_i = z >= 0 ? static_cast<int>(z) : static_cast<int>(z - 1);
-    GGO_ASSERT_LE(x_i, x);
-    GGO_ASSERT_LE(x, x_i + 1);
-    GGO_ASSERT_LE(y_i, y);
-    GGO_ASSERT_LE(y, y_i + 1);
-    GGO_ASSERT_LE(z_i, z);
-    GGO_ASSERT_LE(z, z_i + 1);
+    static_assert(std::is_floating_point_v<scalar_t>);
 
-    // Interpolate.
-    interpolation_t dx = x - x_i;
-    interpolation_t dy = y - y_i;
-    interpolation_t dz = z - z_i;
-    GGO_ASSERT_GE(dx, 0);
-    GGO_ASSERT_LE(dx, 1);
-    GGO_ASSERT_GE(dy, 0);
-    GGO_ASSERT_LE(dy, 1);
+    int x_i = lower_sample_index(x);
+    int y_i = lower_sample_index(y);
+    int z_i = lower_sample_index(z);
+
+    // Z interpolation.
+    scalar_t dz = z - sample_coordinate<scalar_t>(z_i);
     GGO_ASSERT_GE(dz, 0);
     GGO_ASSERT_LE(dz, 1);
+
+    auto v000 = in(x_i, y_i, z_i);
+    auto v001 = in(x_i, y_i, z_i + 1);
+    auto v00 = (1 - dz) * v000 + dz * v001;
+
+    auto v100 = in(x_i + 1, y_i, z_i);
+    auto v101 = in(x_i + 1, y_i, z_i + 1);
+    auto v10 = (1 - dz) * v100 + dz * v101;
+
+    auto v010 = in(x_i, y_i + 1, z_i);
+    auto v011 = in(x_i, y_i + 1, z_i + 1);
+    auto v01 = (1 - dz) * v010 + dz * v011;
+
+    auto v110 = in(x_i + 1, y_i + 1, z_i);
+    auto v111 = in(x_i + 1, y_i + 1, z_i + 1);
+    auto v11 = (1 - dz) * v110 + dz * v111;
+
+    // Y interpolation.
+    scalar_t dy = y - sample_coordinate<scalar_t>(y_i);
+    GGO_ASSERT_GE(dy, 0);
+    GGO_ASSERT_LE(dy, 1);
     
-    // Loop indexes.
-    int x_i0 = pos_mod(x_i, size_x);
-    int y_i0 = pos_mod(y_i, size_y);
-    int z_i0 = pos_mod(z_i, size_z);
-    int x_i1 = pos_mod(x_i + 1, size_x);
-    int y_i1 = pos_mod(y_i + 1, size_x);
-    int z_i1 = pos_mod(z_i + 1, size_x);
-    
-    //              vZYX
-    interpolation_t v000 = static_cast<interpolation_t>(input[z_i0 * size_x * size_y + y_i0 * size_x + x_i0]);
-    interpolation_t v001 = static_cast<interpolation_t>(input[z_i0 * size_x * size_y + y_i0 * size_x + x_i1]);
-    interpolation_t v010 = static_cast<interpolation_t>(input[z_i0 * size_x * size_y + y_i1 * size_x + x_i0]);
-    interpolation_t v011 = static_cast<interpolation_t>(input[z_i0 * size_x * size_y + y_i1 * size_x + x_i1]);
-    interpolation_t v100 = static_cast<interpolation_t>(input[z_i1 * size_x * size_y + y_i0 * size_x + x_i0]);
-    interpolation_t v101 = static_cast<interpolation_t>(input[z_i1 * size_x * size_y + y_i0 * size_x + x_i1]);
-    interpolation_t v110 = static_cast<interpolation_t>(input[z_i1 * size_x * size_y + y_i1 * size_x + x_i0]);
-    interpolation_t v111 = static_cast<interpolation_t>(input[z_i1 * size_x * size_y + y_i1 * size_x + x_i1]);
-    
-    //              vYX
-    interpolation_t v00 = (1 - dz) * v000 + dz * v100;
-    interpolation_t v01 = (1 - dz) * v001 + dz * v101;
-    interpolation_t v10 = (1 - dz) * v010 + dz * v110;
-    interpolation_t v11 = (1 - dz) * v011 + dz * v111;
-    
-    //              vX
-    interpolation_t v0 = (1 - dy) * v00 + dy * v10;
-    interpolation_t v1 = (1 - dy) * v01 + dy * v11;
+    auto v0 = (1 - dy) * v00 + dy * v01;
+    auto v1 = (1 - dy) * v10 + dy * v11;
+
+    // X interpolation.
+    scalar_t dx = x - sample_coordinate<scalar_t>(x_i);
+    GGO_ASSERT_GE(dx, 0);
+    GGO_ASSERT_LE(dx, 1);
 
     return (1 - dx) * v0 + dx * v1;
   }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t, typename scalar_t>
+  auto linear_interpolation3d(const data_t * input, int size_x, int size_y, int size_z, scalar_t x, scalar_t y, scalar_t z)
+  {
+    auto in = [&](int x, int y, int z) { return input[(z * size_y + y) * size_x + x]; };
+
+    return linear_interpolation3d(in, x, y, z);
+  }
 }
 
-#endif

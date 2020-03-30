@@ -1,7 +1,7 @@
 #ifndef __GGO_PIXEL_SAMPLING__
 #define __GGO_PIXEL_SAMPLING__
 
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 
 /////////////////////////////////////////////////////////////////////
 // Sampling structs.
@@ -26,7 +26,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value);
-      auto p = from_discrete_to_continuous<real_t>({ x, y });
+      auto p = get_pixel_center<real_t>({ x, y });
       
       func(p.x(), p.y());
     }
@@ -42,7 +42,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value);
-      auto p = from_discrete_to_continuous<real_t>({ x, y });
+      auto p = get_pixel_center<real_t>({ x, y });
       
       func(p.x() - real_t(0.25), p.y() - real_t(0.25));
       func(p.x() + real_t(0.25), p.y() - real_t(0.25));
@@ -61,7 +61,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value);
-      auto p = from_discrete_to_continuous<real_t>({ x, y });
+      auto p = get_pixel_center<real_t>({ x, y });
 
       func(p.x() - real_t(0.375), p.y() - real_t(0.375));
       func(p.x() - real_t(0.375), p.y() - real_t(0.125));
@@ -95,7 +95,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value);
-      auto p = from_discrete_to_continuous<real_t>({ x, y });
+      auto p = get_pixel_center<real_t>({ x, y });
 
       for (int offset_y = -7; offset_y <= 7; offset_y += 2)
       {
@@ -117,7 +117,7 @@ namespace ggo
     static void sample_pixel(int x, int y, func_t func)
     {
       static_assert(std::is_floating_point<real_t>::value);
-      auto p = from_discrete_to_continuous<real_t>({ x, y });
+      auto p = get_pixel_center<real_t>({ x, y });
 
       for (int offset_y = -15; offset_y <= 15; offset_y += 2)
       {

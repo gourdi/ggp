@@ -14,6 +14,18 @@ namespace ggo
       ggo::assign(coefs + 1, a...);
     }
   }
+
+  // Variant to force the number of coefs to assign.
+  template <int count, typename data_t, typename... args>
+  constexpr void assign(data_t * coefs, data_t k, args... a)
+  {
+    *coefs = k;
+
+    if constexpr (count > 1)
+    {
+      ggo::assign<count - 1>(coefs + 1, a...);
+    }
+  }
 }
 
 // Buffers
