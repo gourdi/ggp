@@ -1,9 +1,8 @@
-#ifndef __GGO_MULTI_SCALE_PAINT__
-#define __GGO_MULTI_SCALE_PAINT__
+#pragma once
 
 #include <vector>
 #include <kernel/ggo_rect_int.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 #include <kernel/math/ggo_pixel_sampling.h>
 
 namespace ggo
@@ -102,7 +101,7 @@ namespace ggo
     using data_t = typename shape_t::data_t;
 
     // Check for shape intersecting the current block.
-    const ggo::rect_data<data_t> block_rect_data = from_discrete_to_continuous<data_t>(block_rect);
+    const ggo::rect_data<data_t> block_rect_data = to_continuous<data_t>(block_rect);
 
     const ggo::rect_intersection intersection = shape.get_rect_intersection(block_rect_data);
 
@@ -185,7 +184,7 @@ namespace ggo
 
     // Clip.
     ggo::rect<data_t> shape_bounding_rect(shape_bounding_rect_data);
-    rect_int shape_pixel_rect = from_continuous_to_discrete_exclusive(shape_bounding_rect.data());
+    rect_int shape_pixel_rect = discretize(shape_bounding_rect.data());
     if (shape_pixel_rect.clip(image.width(), image.height()) == false || shape_pixel_rect.clip(clipping) == false)
     {
       return;
@@ -220,7 +219,7 @@ namespace ggo
     GGO_ASSERT(current_scale >= 0);
 
     // Check for shapes intersecting the current block.
-    auto block_rect_data = from_discrete_to_continuous<data_t>(block_rect);
+    auto block_rect_data = to_continuous<data_t>(block_rect);
 
     bool block_inside_all_shapes = true;
 
@@ -321,7 +320,7 @@ namespace ggo
     }
 
     // Retrieve shapes that are not clipped away.
-    const ggo::rect_data<data_t> clipping_rect_data = from_discrete_to_continuous<data_t>(safe_clipping);
+    const ggo::rect_data<data_t> clipping_rect_data = to_continuous<data_t>(safe_clipping);
     std::optional<ggo::rect_data<data_t>> bounding_rect_data;
 
     std::vector<const paint_shape_abc<color_t, data_t> *> clipped_paint_shapes;
@@ -348,7 +347,7 @@ namespace ggo
       return;
     }
 
-    ggo::rect_int bounding_pixel_rect = from_continuous_to_discrete_exclusive(*bounding_rect_data);
+    ggo::rect_int bounding_pixel_rect = discretize(*bounding_rect_data);
     if (bounding_pixel_rect.clip(safe_clipping) == false)
     {
       return;
@@ -364,6 +363,4 @@ namespace ggo
     process_blocks(bounding_pixel_rect, block_size, block_size, process_block);
   }
 }
-
-#endif
 

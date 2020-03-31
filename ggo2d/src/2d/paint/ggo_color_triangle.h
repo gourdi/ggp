@@ -1,8 +1,7 @@
-#ifndef __GGO_COLOR_TRIANGLE__
-#define __GGO_COLOR_TRIANGLE__
+#pragma once
 
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 #include <kernel/math/interpolation/ggo_triangle_interpolation.h>
 #include <2d/ggo_color.h>
 #include <2d/paint/ggo_blend.h>
@@ -36,7 +35,7 @@ namespace ggo
     // Brush.
     brush_color_t brush(int x, int y) const
     {
-      const ggo::pos2<data_t> p = ggo::from_discrete_to_continuous<data_t>({ x, y });
+      const ggo::pos2<data_t> p = ggo::get_pixel_center<data_t>({ x, y });
       auto c = ggo::triangular_interpolation<data_t, brush_color_t, false>(_triangle.v1(), _color1, _triangle.v2(), _color2, _triangle.v3(), _color3, p);
       if (c.has_value() == false)
       {
@@ -126,4 +125,3 @@ namespace ggo
   };
 }
 
-#endif

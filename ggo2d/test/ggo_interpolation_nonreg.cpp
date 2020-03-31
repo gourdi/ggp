@@ -10,7 +10,7 @@ namespace
   {
     auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height)); };
 
-    return ggo::round_to<uint8_t>(ggo::linear_interpolation2d<float>(in, x, y));
+    return ggo::round_to<uint8_t>(ggo::linear_interpolation2d(in, x, y));
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ namespace
   {
     auto in = [&](int x, int y) { return static_cast<float>(ggo::get2d_zero<ggo::lines_order::up>(input, x, y, width, height)); };
 
-    return ggo::round_to<uint8_t>(ggo::clamp(ggo::cubic_interpolation2d<float>(in, x, y), 0.f, 255.f));
+    return ggo::round_to<uint8_t>(ggo::clamp(ggo::cubic_interpolation2d(in, x, y), 0.f, 255.f));
   }
 
   ////////////////////////////////////////////////////////////////////

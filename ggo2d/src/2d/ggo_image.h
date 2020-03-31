@@ -3,28 +3,11 @@
 
 #include <kernel/ggo_rect_int.h>
 #include <kernel/memory/ggo_ptr_arithmetics.h>
-#include <kernel/memory/ggo_tiling.h>
-#include <kernel/memory/ggo_scanner2d.h>
 #include <2d/ggo_pixel_type.h>
 #include <optional>
 
 namespace ggo
 {
-  template <lines_order memory_lines_order>
-  struct scanner2d_traits {};
-
-  template <>
-  struct scanner2d_traits<lines_order::up>
-  {
-    using type = scanner2d_lines_up;
-  };
-
-  template <>
-  struct scanner2d_traits<lines_order::down>
-  {
-    using type = scanner2d_lines_down;
-  };
-
   template <pixel_type pixel_type_, lines_order memory_lines_order_, typename void_ptr_t>
   class image_base_t final
   {
@@ -33,8 +16,6 @@ namespace ggo
   public:
  
     using color_t = typename pixel_type_traits<pixel_type_>::color_t;
-    using scanner2d_t = typename scanner2d_traits<memory_lines_order_>::type;
-    using tiling_t = ggo::vertical_tiling;
 
     image_base_t(const ggo::size & s, int line_byte_step)
       : _buffer(malloc(s.height() * line_byte_step))

@@ -2,7 +2,7 @@
 #define __GGO_RGB_GRADIENT_BRUSH__
 
 #include <kernel/ggo_ease.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 #include <2d/paint/ggo_brush.h>
 
 //////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ namespace ggo
   template <typename color_t>
   color_t gradient_brush<color_t>::operator()(int x, int y) const
   {
-    ggo::pos2<data_t> p = from_discrete_to_continuous<data_t>({ x, y });
+    ggo::pos2<data_t> p = get_pixel_center<data_t>({ x, y });
     ggo::vec2<data_t> diff = p - _pos;
 
     return convert_color_to<color_t>(_curve.evaluate(ggo::dot(diff, _dir)));

@@ -1,9 +1,8 @@
-#ifndef __GGO_BLUR_PAINT__
-#define __GGO_BLUR_PAINT__
+#pragma once
 
 #include <vector>
 #include <kernel/ggo_vec.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 
 namespace ggo
 {
@@ -19,7 +18,7 @@ namespace ggo
     shape_bounding_rect.inflate(blur_radius);
 
     // Clip.
-    rect_int shape_pixel_rect = from_continuous_to_discrete_exclusive(shape_bounding_rect.data());
+    rect_int shape_pixel_rect = discretize(shape_bounding_rect.data());
     if (shape_pixel_rect.clip(width, height) == false)
     {
       return;
@@ -29,7 +28,7 @@ namespace ggo
     real_t squared_radius = blur_radius * blur_radius;
     shape_pixel_rect.for_each_pixel([&](int x, int y)
     {
-      auto center = from_discrete_to_continuous<real_t>({ x, y });
+      auto center = get_pixel_center<real_t>({ x, y });
 
       int inside = 0;
       int total = 0;
@@ -63,5 +62,4 @@ namespace ggo
   }
 }
 
-#endif
 

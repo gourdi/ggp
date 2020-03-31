@@ -3,7 +3,7 @@
 
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_ease.h>
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 #include <2d/paint/ggo_blend.h>
 
 namespace ggo
@@ -16,7 +16,7 @@ namespace ggo
     auto bounding_rect = shape.get_bounding_rect();
     bounding_rect = extend(bounding_rect, radius);
 
-    ggo::rect_int pixel_rect = from_continuous_to_discrete_exclusive(bounding_rect);
+    ggo::rect_int pixel_rect = discretize(bounding_rect);
     if (pixel_rect.clip(ggo::rect_int::from_size(image.size())) == false)
     {
       return;
@@ -24,7 +24,7 @@ namespace ggo
 
     pixel_rect.for_each_pixel([&](int x, int y)
     {
-      auto p = ggo::from_discrete_to_continuous<typename shape_t::data_t>({ x, y });
+      auto p = ggo::get_pixel_center<typename shape_t::data_t>({ x, y });
       auto dist = shape.dist_to_point(p);
       if (dist < radius)
       {

@@ -22,7 +22,7 @@ namespace ggo
   template <typename data_t, int degree, typename scalar_t>
   data_t evaluate(const polynom<data_t, degree>& polynom, scalar_t x)
   {
-    scalar_t r = polynom._coefs[degree];
+    data_t r = polynom._coefs[degree];
 
     for (int d = degree - 1; d >= 0; --d)
     {

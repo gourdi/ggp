@@ -1,7 +1,7 @@
 #ifndef __GGO_FILL_SCALAR_FIELD__
 #define __GGO_FILL_SCALAR_FIELD__
 
-#include <kernel/math/ggo_coordinates_conversions.h>
+#include <kernel/math/ggo_discretization.h>
 #include <kernel/math/scalar_fields_2d/ggo_perlin_noise_field_2d.h>
 #include <kernel/math/scalar_fields_2d/ggo_gaussian_field_2d.h>
 #include <2d/ggo_image.h>
@@ -27,7 +27,7 @@ namespace ggo
     {
       for (int x = 0; x < w; ++x)
       {
-        auto s = from_discrete_to_continuous<floating_point_t>(ggo::pos2_i(x, y));
+        auto s = get_pixel_center<floating_point_t>(ggo::pos2_i(x, y));
 
         auto val = field.sample(s.x(), s.y());
 
