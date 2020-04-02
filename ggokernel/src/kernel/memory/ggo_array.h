@@ -111,9 +111,10 @@ namespace ggo
     void fill(const data_t& v) { std::fill(_buffer, _buffer + count(), v); }
 
     // 1D API
-    template <size_t n, typename = std::enable_if_t<n_dims == 1>>
+    template <size_t n>
     array(data_t const (&coefs)[n])
     {
+      static_assert(n_dims == 1);
       _dims[0] = n;
       _buffer = new data_t[n];
       std::copy(coefs, coefs + n, _buffer);
@@ -124,7 +125,7 @@ namespace ggo
     data_t & operator[](int index) { static_assert(n_dims == 1); return _buffer[index]; }
 
     // 2D API
-    template <size_t h, size_t w, typename = std::enable_if_t<n_dims == 2>>
+    template <size_t h, size_t w>
     array(data_t const (&coefs)[h][w])
     {
       static_assert(n_dims == 2);

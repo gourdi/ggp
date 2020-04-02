@@ -29,14 +29,14 @@ GGO_TEST(array_arithmetics, multiply1)
     { 1, 2 },
     { -1, 3 } });
   const ggo::array2_i v({
-    { 1 },
-    { -2 } });
+    {{ 1 }},
+    {{ -2 }} });
 
   auto r = m * v;
 
   const ggo::array2_i expected({
-    { -3 },
-    { -7 } });
+    {{ -3 }},
+    {{ -7 }} });
 
   GGO_CHECK_EQ(r, expected);
 }

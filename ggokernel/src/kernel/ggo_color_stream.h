@@ -18,7 +18,7 @@ namespace ggo
   {
 #ifdef WIN32
     set_console_green();
-#else
+#elif __LINUX__
     os << "\033[1;32m";
 #endif
     return os;
@@ -29,7 +29,7 @@ namespace ggo
   {
 #ifdef WIN32
     set_console_yellow();
-#else
+#elif __LINUX__
     os << "\033[1;33m";
 #endif
     return os;
@@ -40,7 +40,7 @@ namespace ggo
   {
 #ifdef WIN32
     set_console_red();
-#else
+#elif __LINUX__
     os << "\033[31m";
 #endif
     return os;
@@ -51,7 +51,7 @@ namespace ggo
   {
 #ifdef WIN32
     set_console_default();
-#else
+#elif __LINUX__
     os << "\033[0m";
 #endif
     return os;
