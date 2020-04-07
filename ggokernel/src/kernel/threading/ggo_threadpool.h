@@ -45,7 +45,7 @@ namespace ggo
   template<class func_t, class... args_t>
   auto threadpool::enqueue(func_t && f, args_t &&... args) -> std::future<typename std::result_of<func_t(args_t...)>::type>
   {
-    using return_type = typename std::result_of<func_t(args_t...)>::type;
+    using return_type = typename std::invoke_result_t<func_t, args_t...>;
 
     auto task = std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<func_t>(f), std::forward<args_t>(args)...));
 

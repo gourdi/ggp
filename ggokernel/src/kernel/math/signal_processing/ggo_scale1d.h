@@ -69,7 +69,7 @@ namespace ggo
   void scale_1d_linear_interpolation(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
   {
     auto in  = [&](int i) { return ptr_in[i]; };
-    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+    auto out = [&](int i, const data_t & v) { ptr_out[i] = v; };
 
     return scale_1d_linear_interpolation<float>(in, size_in, out, size_out);
   }
@@ -89,7 +89,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void scale_1d_cubic_interpolation(const data_t* ptr_in, int size_in, data_t* ptr_out, int size_out)
+  void scale_1d_cubic_interpolation(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
   {
     auto in  = [&](int i) { return ptr_in[ggo::clamp(i, 0, size_in - 1)]; };
     auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
@@ -115,14 +115,14 @@ namespace ggo
   static_assert(get_integration_boudaries<float>(4, 10, 9) == std::pair<float, float>(27.f / 10.0f, 3.0f));
 
   //////////////////////////////////////////////////////////////
-  template <typename scalar_t, typename data_t, typename in_t, typename out_t>
+  template <typename scalar_t, typename in_t, typename out_t>
   void scale_1d_linear_integration(in_t && in, int size_in, out_t&& out, int size_out)
   {
     for (int i = 0; i < size_out; ++i)
     {
       const auto [from, to] = get_integration_boudaries<scalar_t>(size_in, size_out, i);
 
-      out(i, linear_integration1d<data_t>(in, from, to) / (to - from));
+      out(i, linear_integration1d(in, from, to) / (to - from));
     }
   }
 
@@ -131,31 +131,31 @@ namespace ggo
   void scale_1d_linear_integration(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
   {
     auto in  = [&](int i) { return ptr_in[i]; };
-    auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
+    auto out = [&](int i, const data_t & v) { ptr_out[i] = v; };
 
-    return scale_1d_linear_integration<float, data_t>(in, size_in, out, size_out);
+    return scale_1d_linear_integration<float>(in, size_in, out, size_out);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename scalar_t, typename data_t, typename in_t, typename out_t>
-  void scale_1d_cubic_integration(in_t&& in, int size_in, out_t&& out, int size_out)
+  template <typename scalar_t, typename in_t, typename out_t>
+  void scale_1d_cubic_integration(in_t && in, int size_in, out_t && out, int size_out)
   {
     for (int i = 0; i < size_out; ++i)
     {
       const auto [from, to] = get_integration_boudaries<scalar_t>(size_in, size_out, i);
 
-      out(i, cubic_integration1d<data_t>(in, from, to) / (to - from));
+      out(i, cubic_integration1d(in, from, to) / (to - from));
     }
   }
 
   //////////////////////////////////////////////////////////////
   template <typename data_t>
-  void scale_1d_cubic_integration(const data_t* ptr_in, int size_in, data_t* ptr_out, int size_out)
+  void scale_1d_cubic_integration(const data_t * ptr_in, int size_in, data_t * ptr_out, int size_out)
   {
     auto in  = [&](int i) { return ptr_in[ggo::clamp(i, 0, size_in - 1)]; };
     auto out = [&](int i, const data_t& v) { ptr_out[i] = v; };
 
-    return scale_1d_cubic_integration<float, data_t>(in, size_in, out, size_out);
+    return scale_1d_cubic_integration<float>(in, size_in, out, size_out);
   }
 }
 

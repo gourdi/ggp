@@ -2,7 +2,7 @@
 #include <kernel/math/interpolation/ggo_integration1d.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(integration, linear)
+GGO_TEST(integration1d, linear)
 {
   const float data[4] = { 0, 1, 1, 2 };
 
@@ -14,7 +14,7 @@ GGO_TEST(integration, linear)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(integration, cubic)
+GGO_TEST(integration1d, cubic)
 {
   const float data[5] = { 0, 1, 0, -1, 0 };
 

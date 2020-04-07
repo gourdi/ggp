@@ -84,3 +84,25 @@ GGO_TEST(scale2d, cubic_interpolation)
 
   GGO_CHECK(std::equal(output.begin(), output.end(), expected.begin(), expected.end(), [](float v1, float v2) { return std::abs(v1 - v2) < 0.001f; }));
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scale2d, linear_integration)
+{
+  const ggo::array2_f input({
+    { 1.f, 1.f, 1.f },
+    { 1.f, 1.f, 2.f } });
+  ggo::array2_f output(4, 6);
+
+  ggo::scale_2d_linear_integration(
+    input.data(), input.width(), input.height(),
+    output.data(), output.width(), output.height());
+
+  const ggo::array2_f expected({
+    { 1.f, 1.f, 1.f, 1.02083337f, 1.06250000f, 1.10416663f },
+    { 1.f, 1.f, 1.f, 1.06250000f, 1.18750012f, 1.31250000f },
+    { 1.f, 1.f, 1.f, 1.10416675f, 1.31250000f, 1.52083325f },
+    { 1.f, 1.f, 1.f, 1.14583349f, 1.43750024f, 1.72916651f } });
+
+  GGO_CHECK(std::equal(output.begin(), output.end(), expected.begin(), expected.end(), [](float v1, float v2) { return std::abs(v1 - v2) < 0.001f; }));
+}
+

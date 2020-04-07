@@ -17,9 +17,12 @@ GGO_TEST(scaling, y32f)
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f },
     { 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f } });
 
-  auto output_linear = ggo::scale_linear_interpolation(input, { 100, 100 });
-  ggo::save_bmp("scaling_linear.bmp", output_linear);
+  auto output_linear_interpolation = ggo::scale_linear_interpolation(input, { 100, 100 });
+  ggo::save_bmp("scale_linear_interpolation.bmp", output_linear_interpolation);
 
-  auto output_bicubic = ggo::scale_cubic_interpolation(input, { 100, 100 });
-  ggo::save_bmp("scaling_cubic.bmp", output_bicubic);
+  auto output_bicubic_interpolation = ggo::scale_cubic_interpolation(input, { 100, 100 });
+  ggo::save_bmp("scale_cubic_interpolation.bmp", output_bicubic_interpolation);
+
+  auto output_linear_integration = ggo::scale_linear_integration(input, { 100, 100 });
+  ggo::save_bmp("scale_linear_integration.bmp", output_linear_integration);
 }

@@ -31,7 +31,6 @@ namespace ggo
   {
     using color_t = ggo::pixel_type_traits<pt>::color_t;
     using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
-    using floating_point_t = ggo::color_traits<floating_point_color_t>::sample_t;
 
     auto in = [&](int x, int y)
     {
@@ -52,7 +51,6 @@ namespace ggo
   {
     using color_t = ggo::pixel_type_traits<pt>::color_t;
     using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
-    using floating_point_t = ggo::color_traits<floating_point_color_t>::sample_t;
 
     auto in = [&](int x, int y)
     {
@@ -68,6 +66,26 @@ namespace ggo
     };
 
     scale_2d_cubic_interpolation(in, input.width(), input.height(), out, output.width(), output.height());
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <pixel_type pt, lines_order lo, typename in_void_ptr_t>
+  void scale_linear_integration(const image_base_t<pt, lo, in_void_ptr_t>& input, image_t<pt, lo>& output)
+  {
+    using color_t = ggo::pixel_type_traits<pt>::color_t;
+    using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
+
+    auto in = [&](int x, int y)
+    {
+      return ggo::convert_color_to<floating_point_color_t>(input.read_pixel(x, y));
+    };
+
+    auto out = [&](int x, int y, const floating_point_color_t& c)
+    {
+      output.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
+    };
+
+    scale_2d_linear_integration(in, input.width(), input.height(), out, output.width(), output.height());
   }
 }
 
@@ -142,6 +160,30 @@ namespace ggo
     image output(output_size, input.pixel_type(), input.memory_lines_order());
 
     dispatch_image_format<scaler_cubic_interpolation>(input.pixel_type(), input.memory_lines_order(), input, output);
+
+    return output;
+  }
+
+  //////////////////////////////////////////////////////////////
+  struct scaler_linear_integration
+  {
+    template <pixel_type pixel_type, lines_order memory_lines_order, typename input_image_t, typename output_image_t>
+    static void call(const input_image_t& input, output_image_t& output)
+    {
+      const_image_t<pixel_type, memory_lines_order> input_view(input.data(), input.size(), input.line_byte_step());
+      image_t<pixel_type, memory_lines_order> output_view(output.data(), output.size(), output.line_byte_step());
+
+      scale_linear_integration(input_view, output_view);
+    }
+  };
+
+  //////////////////////////////////////////////////////////////
+  template <typename void_ptr_t>
+  image scale_linear_integration(const image_base<void_ptr_t>& input, ggo::size output_size)
+  {
+    image output(output_size, input.pixel_type(), input.memory_lines_order());
+
+    dispatch_image_format<scaler_linear_integration>(input.pixel_type(), input.memory_lines_order(), input, output);
 
     return output;
   }
