@@ -40,8 +40,9 @@ namespace ggo
     std::shared_ptr<const expression> _right;
   };
 
-  std::shared_ptr<const expression> make_add(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right);
-  std::shared_ptr<const expression> make_sub(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right);
-  std::shared_ptr<const expression> make_mul(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right);
-  std::shared_ptr<const expression> make_div(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right);
+  std::shared_ptr<const ggo::expression> operator+(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right);
+  std::shared_ptr<const ggo::expression> operator-(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right);
+  std::shared_ptr<const ggo::expression> operator*(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right);
+  std::shared_ptr<const ggo::expression> operator/(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right);
 }
+

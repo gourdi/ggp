@@ -345,9 +345,12 @@ namespace ggo
   template<typename T> constexpr T pi() { return static_cast<T>(3.1415926535897932385); }
   template<typename T> constexpr T inv_sqrt2() { return static_cast<T>(0.707106781186547524); }
   template<typename T> constexpr T sqrt2() { return static_cast<T>(1.414213562373095049); }
+  template<typename T> constexpr T e() { return static_cast<T>(2.718281828459045); }
 
   constexpr float   pi_f = pi<float>();
   constexpr double  pi_d = pi<double>();
+  constexpr float   e_f = e<float>();
+  constexpr double  e_d = e<double>();
 
   enum class lines_order
   {

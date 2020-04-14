@@ -33,10 +33,16 @@ namespace ggo
   {
     return _name;
   }
+
+  /////////////////////////////////////////////////////////////////////
+  std::shared_ptr<expression> make_variable(const std::string& v)
+  {
+    return std::make_shared<ggo::variable>(v);
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
 std::shared_ptr<const ggo::expression> operator"" _symb(const char* v, std::size_t l)
 {
-  return std::make_shared<ggo::variable>(v);
+  return ggo::make_variable(v);
 }

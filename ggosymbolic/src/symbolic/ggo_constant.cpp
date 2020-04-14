@@ -30,7 +30,7 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<expression> make_constant(double c)
+  std::shared_ptr<const expression> make_constant(double c)
   {
     return std::make_shared<ggo::constant>(c);
   }

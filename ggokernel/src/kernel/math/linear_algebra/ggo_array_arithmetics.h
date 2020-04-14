@@ -23,11 +23,13 @@ namespace ggo
     {
       for (int x = 0; x < m2.width(); ++x)
       {
-        r(y, x) = 0;
-        for (int j = 0; j < m1.width(); ++j)
+        auto k = m1(y, 0) * m2(0, x);
+        for (int j = 1; j < m1.width(); ++j)
         {
-          r(y, x) += m1(y, j) * m2(j, x);
+          k = k + m1(y, j) * m2(j, x);
         }
+
+        r(y, x) = k;
       }
     }
 

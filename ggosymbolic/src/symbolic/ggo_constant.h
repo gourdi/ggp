@@ -23,8 +23,8 @@ namespace ggo
     const double _c;
   };
 
-  std::shared_ptr<expression> make_constant(double c);
-  std::string                 constant_to_str(double c);
+  std::shared_ptr<const expression> make_constant(double c);
+  std::string                       constant_to_str(double c);
 }
 
 std::shared_ptr<const ggo::expression> operator"" _symb(long double c);

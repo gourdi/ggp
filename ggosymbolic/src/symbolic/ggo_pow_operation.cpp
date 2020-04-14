@@ -14,7 +14,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const expression> pow_operation::derivate(const std::string& var) const
   {
-    return make_mul(make_constant(_exponant), make_pow(_expression, _exponant - 1));
+    return make_constant(_exponant) * pow(_expression, _exponant - 1);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -33,11 +33,11 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<const expression> make_pow(std::shared_ptr<const expression> expression, double exponant)
+  std::shared_ptr<const expression> pow(std::shared_ptr<const expression> expression, double exponant)
   {
     if (exponant == 0)
     {
-      return make_constant(1.);
+      return 1._symb;
     }
 
     if (exponant == 1)
@@ -47,7 +47,7 @@ namespace ggo
 
     if (exponant == -1)
     {
-      return make_div(make_constant(1), expression);
+      return 1._symb / expression;
     }
 
     return std::make_shared<pow_operation>(expression, exponant);

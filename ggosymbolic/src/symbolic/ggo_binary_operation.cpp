@@ -27,27 +27,27 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const expression> binary_operation::derivate_add(const std::string& var) const
   {
-    return make_add(_left->derivate(var), _right->derivate(var));
+    return _left->derivate(var) + _right->derivate(var);
   }
 
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const expression> binary_operation::derivate_sub(const std::string& var) const
   {
-    return make_sub(_left->derivate(var), _right->derivate(var));
+    return _left->derivate(var) - _right->derivate(var);
   }
 
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const expression> binary_operation::derivate_mul(const std::string& var) const
   {
-    return make_add(make_mul(_left->derivate(var), _right), make_mul(_left, _right->derivate(var)));
+    return _left->derivate(var) * _right + _left * _right->derivate(var);
   }
 
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const expression> binary_operation::derivate_div(const std::string& var) const
   {
-    auto num = make_sub(make_mul(_left->derivate(var), _right), make_mul(_left, _right->derivate(var)));
-    auto den = make_pow(_right, 2.);
-    return make_div(num, den);
+    auto num = _left->derivate(var) * _right - _left * _right->derivate(var);
+    auto den = pow(_right, 2.);
+    return num / den;
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<const expression> make_add(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right)
+  std::shared_ptr<const ggo::expression> operator+(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
     if (left->is_constant(0.) == true)
     {
@@ -139,26 +139,26 @@ namespace ggo
       return left;
     }
 
-    return std::make_shared<binary_operation>(binary_operation::add, left, right);
+    return std::make_shared<ggo::binary_operation>(ggo::binary_operation::add, left, right);
   }
 
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<const expression> make_sub(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right)
+  std::shared_ptr<const ggo::expression> operator-(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
     if (right->is_constant(0.) == true)
     {
       return left;
     }
 
-    return std::make_shared<binary_operation>(binary_operation::sub, left, right);
+    return std::make_shared<ggo::binary_operation>(ggo::binary_operation::sub, left, right);
   }
 
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<const expression> make_mul(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right)
+  std::shared_ptr<const ggo::expression> operator*(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
     if (left->is_constant(0.) == true || right->is_constant(0.) == true)
     {
-      return std::make_shared<constant>(0.);
+      return std::make_shared<ggo::constant>(0.);
     }
 
     if (left->is_constant(1.) == true)
@@ -171,15 +171,15 @@ namespace ggo
       return left;
     }
 
-    return std::make_shared<binary_operation>(binary_operation::mul, left, right);
+    return std::make_shared<ggo::binary_operation>(ggo::binary_operation::mul, left, right);
   }
 
   /////////////////////////////////////////////////////////////////////
-  std::shared_ptr<const expression> make_div(std::shared_ptr<const expression> left, std::shared_ptr<const expression> right)
+  std::shared_ptr<const ggo::expression> operator/(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
     if (left->is_constant(0.) == true)
     {
-      return std::make_shared<constant>(0.);
+      return std::make_shared<ggo::constant>(0.);
     }
 
     if (right->is_constant(1.) == true)
@@ -187,7 +187,6 @@ namespace ggo
       return left;
     }
 
-    return std::make_shared<binary_operation>(binary_operation::div, left, right);
+    return std::make_shared<ggo::binary_operation>(ggo::binary_operation::div, left, right);
   }
 }
-

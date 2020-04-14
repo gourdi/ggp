@@ -1,15 +1,21 @@
 #pragma once
 
 #include <symbolic/ggo_expression.h>
-#include <memory>
 
 namespace ggo
 {
-  class pow_operation : public expression
+  class trigonometric_operation : public expression
   {
   public:
 
-    pow_operation(std::shared_ptr<const expression> expression, double exponant) : _expression(expression), _exponant(exponant) { }
+    enum type
+    {
+      cos,
+      sin,
+      tan
+    };
+
+    trigonometric_operation(type t, std::shared_ptr<const expression> expression) : _type(t), _expression(expression) { }
 
     double                            eval(const std::map<std::string, double>& env) const override;
     std::shared_ptr<const expression> derivate(const std::string& var) const override;
@@ -21,9 +27,11 @@ namespace ggo
 
   private:
 
+    type                              _type;
     std::shared_ptr<const expression> _expression;
-    double                            _exponant;
   };
 
-  std::shared_ptr<const expression> pow(std::shared_ptr<const expression> expression, double exponant);
+  std::shared_ptr<const expression> cos(std::shared_ptr<const expression> expression);
+  std::shared_ptr<const expression> sin(std::shared_ptr<const expression> expression);
+  std::shared_ptr<const expression> tan(std::shared_ptr<const expression> expression);
 }

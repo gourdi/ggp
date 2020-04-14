@@ -1,21 +1,37 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <symbolic/ggo_binary_operation.h>
+#include <symbolic/ggo_log_operation.h>
+#include <symbolic/ggo_exp_operation.h>
+#include <symbolic/ggo_pow_operation.h>
 #include <symbolic/ggo_constant.h>
 #include <symbolic/ggo_variable.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(derivate, constants)
+GGO_TEST(derivate, binary_ops)
 {
-  auto subop1 = ggo::make_add("x"_symb, 2._symb);
-  auto subop2 = ggo::make_mul("y"_symb, "x"_symb);
+  auto op = ("x"_symb + 2._symb) / ("y"_symb * "x"_symb);
+  GGO_CHECK_EQ(op->flat_repr(), "((x+2)/(y*x))");
 
-  auto op = ggo::make_div(subop1, subop2);
-  std::cout << op->flat_repr() << "\n";
-
-  auto dx = op->derivate("x");
-  std::cout << dx->flat_repr() << "\n";
-
-  auto dy = op->derivate("y");
-  std::cout << dy->flat_repr() << "\n";
-
+  GGO_CHECK_EQ(op->derivate("x")->flat_repr(), "(((y*x)-((x+2)*y))/(y*x)^2)");
+  GGO_CHECK_EQ(op->derivate("y")->flat_repr(), "((0-((x+2)*x))/(y*x)^2)");
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(derivate, log_pow)
+{
+  auto op = ggo::log(ggo::pow("x"_symb, 5.));
+  GGO_CHECK_EQ(op->flat_repr(), "log(x^5)");
+
+  GGO_CHECK_EQ(op->derivate("x")->flat_repr(), "((5*x^4)/x^5)");
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(derivate, exp)
+{
+  auto op = ggo::exp(ggo::pow("x"_symb, 5.), 3.);
+  GGO_CHECK_EQ(op->flat_repr(), "3^(x^5)");
+
+  GGO_CHECK_EQ(op->derivate("x")->flat_repr(), "((3^(x^5)*(5*x^4))*log(3))");
+}
+
+

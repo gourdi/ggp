@@ -22,6 +22,8 @@ namespace ggo
 
     const std::string _name;
   };
+
+  std::shared_ptr<expression> make_variable(const std::string & v);
 }
 
 std::shared_ptr<const ggo::expression> operator"" _symb(const char * v, std::size_t l);
