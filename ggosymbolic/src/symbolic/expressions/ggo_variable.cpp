@@ -1,5 +1,5 @@
-#include <symbolic/ggo_variable.h>
-#include <symbolic/ggo_constant.h>
+#include <symbolic/expressions/ggo_variable.h>
+#include <symbolic/expressions/ggo_constant.h>
 #include <stdexcept>
 
 namespace ggo

@@ -1,8 +1,8 @@
-#include <symbolic/ggo_exp_operation.h>
-#include <symbolic/ggo_log_operation.h>
-#include <symbolic/ggo_binary_operation.h>
-#include <symbolic/ggo_constant.h>
-#include <symbolic/ggo_variable.h>
+#include <symbolic/expressions/ggo_exp_operation.h>
+#include <symbolic/expressions/ggo_log_operation.h>
+#include <symbolic/expressions/ggo_binary_operation.h>
+#include <symbolic/expressions/ggo_constant.h>
+#include <symbolic/expressions/ggo_variable.h>
 
 namespace ggo
 {

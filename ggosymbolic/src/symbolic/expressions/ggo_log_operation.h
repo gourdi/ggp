@@ -1,15 +1,17 @@
 #pragma once
 
-#include <symbolic/ggo_expression.h>
+#include <symbolic/expressions/ggo_expression.h>
+#include <kernel/ggo_kernel.h>
 #include <memory>
 
 namespace ggo
 {
-  class pow_operation : public expression
+  class log_operation : public expression
   {
   public:
 
-    pow_operation(std::shared_ptr<const expression> expression, double exponant) : _expression(expression), _exponant(exponant) { }
+    log_operation(std::shared_ptr<const expression> expression) : log_operation(expression, ggo::e_d) { }
+    log_operation(std::shared_ptr<const expression> expression, double base) : _expression(expression), _base(base) { }
 
     double                            eval(const std::map<std::string, double>& env) const override;
     std::shared_ptr<const expression> derivate(const std::string& var) const override;
@@ -22,8 +24,9 @@ namespace ggo
   private:
 
     std::shared_ptr<const expression> _expression;
-    double                            _exponant;
+    double                            _base;
   };
 
-  std::shared_ptr<const expression> pow(std::shared_ptr<const expression> expression, double exponant);
+  std::shared_ptr<const expression> log(std::shared_ptr<const expression> expression);
+  std::shared_ptr<const expression> log(double d);
 }

@@ -1,7 +1,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <symbolic/ggo_binary_operation.h>
-#include <symbolic/ggo_constant.h>
-#include <symbolic/ggo_variable.h>
+#include <symbolic/expressions/ggo_binary_operation.h>
+#include <symbolic/expressions/ggo_constant.h>
+#include <symbolic/expressions/ggo_variable.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(eval, constants)

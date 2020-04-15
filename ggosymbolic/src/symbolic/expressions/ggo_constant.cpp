@@ -1,4 +1,4 @@
-#include <symbolic/ggo_constant.h>
+#include <symbolic/expressions/ggo_constant.h>
 
 namespace ggo
 {
