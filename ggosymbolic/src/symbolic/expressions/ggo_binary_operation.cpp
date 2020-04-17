@@ -129,12 +129,20 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const ggo::expression> operator+(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
-    if (left->is_constant(0.) == true)
+    auto left_constant = left->get_constant();
+    auto right_constant = right->get_constant();
+
+    if (left_constant && right_constant)
+    {
+      return std::make_shared<ggo::constant>(*left_constant + *right_constant);
+    }
+
+    if (left_constant && *left_constant == 0.f)
     {
       return right;
     }
 
-    if (right->is_constant(0.) == true)
+    if (right_constant && *right_constant == 0.f)
     {
       return left;
     }
@@ -145,7 +153,15 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const ggo::expression> operator-(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
-    if (right->is_constant(0.) == true)
+    auto left_constant = left->get_constant();
+    auto right_constant = right->get_constant();
+
+    if (left_constant && right_constant)
+    {
+      return std::make_shared<ggo::constant>(*left_constant - *right_constant);
+    }
+
+    if (right_constant && *right_constant == 0.)
     {
       return left;
     }
@@ -156,17 +172,30 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const ggo::expression> operator*(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
-    if (left->is_constant(0.) == true || right->is_constant(0.) == true)
+    auto left_constant = left->get_constant();
+    auto right_constant = right->get_constant();
+
+    if (left_constant && right_constant)
+    {
+      return std::make_shared<ggo::constant>(*left_constant * *right_constant);
+    }
+
+    if (left_constant && *left_constant == 0.)
     {
       return std::make_shared<ggo::constant>(0.);
     }
 
-    if (left->is_constant(1.) == true)
+    if (right_constant && *right_constant == 0.)
+    {
+      return std::make_shared<ggo::constant>(0.);
+    }
+
+    if (left_constant && *left_constant == 1.)
     {
       return right;
     }
 
-    if (right->is_constant(1.) == true)
+    if (right_constant && *right_constant == 1.)
     {
       return left;
     }
@@ -177,12 +206,20 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   std::shared_ptr<const ggo::expression> operator/(std::shared_ptr<const ggo::expression> left, std::shared_ptr<const ggo::expression> right)
   {
-    if (left->is_constant(0.) == true)
+    auto left_constant = left->get_constant();
+    auto right_constant = right->get_constant();
+
+    if (left_constant && right_constant)
+    {
+      return std::make_shared<ggo::constant>(*left_constant / *right_constant);
+    }
+
+    if (left_constant && *left_constant == 0.)
     {
       return std::make_shared<ggo::constant>(0.);
     }
 
-    if (right->is_constant(1.) == true)
+    if (right_constant && *right_constant == 1.)
     {
       return left;
     }

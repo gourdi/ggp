@@ -13,7 +13,7 @@ namespace ggo
     double                            eval(const std::map<std::string, double>& env) const override;
     std::shared_ptr<const expression> derivate(const std::string& var) const override;
 
-    bool                              is_constant(double c) const override { return false; }
+    std::optional<std::string>        get_variable() const override { return _name; }
 
     std::string                       tree_repr(const std::string& indent) const override;
     std::string                       flat_repr() const override;
