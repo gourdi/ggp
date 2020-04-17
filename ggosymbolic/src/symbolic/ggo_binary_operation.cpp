@@ -1,6 +1,6 @@
-#include <symbolic/expressions/ggo_binary_operation.h>
-#include <symbolic/expressions/ggo_constant.h>
-#include <symbolic/expressions/ggo_pow_operation.h>
+#include <symbolic/ggo_binary_operation.h>
+#include <symbolic/ggo_constant.h>
+#include <symbolic/ggo_pow_operation.h>
 #include <stdexcept>
 
 namespace ggo

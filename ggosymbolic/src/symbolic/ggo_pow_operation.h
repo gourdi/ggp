@@ -1,6 +1,6 @@
 #pragma once
 
-#include <symbolic/expressions/ggo_expression.h>
+#include <symbolic/ggo_expression.h>
 #include <memory>
 
 namespace ggo

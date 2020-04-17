@@ -1,7 +1,7 @@
-#include <symbolic/expressions/ggo_trigonometric_operation.h>
-#include <symbolic/expressions/ggo_binary_operation.h>
-#include <symbolic/expressions/ggo_constant.h>
-#include <symbolic/expressions/ggo_pow_operation.h>
+#include <symbolic/ggo_trigonometric_operation.h>
+#include <symbolic/ggo_binary_operation.h>
+#include <symbolic/ggo_constant.h>
+#include <symbolic/ggo_pow_operation.h>
 #include <cmath>
 #include <stdexcept>
 

@@ -60,27 +60,6 @@ GGO_TEST(linear_algebra, gaussian_elimination_2x2_constants)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(linear_algebra, gaussian_elimination_2x2_simple)
-{
-  ggo::array<std::shared_ptr<const ggo::expression>, 2> m({
-    { "m11"_symb, 1._symb },
-    { 1._symb, "m22"_symb } });
-  ggo::array<std::shared_ptr<const ggo::expression>, 1> b({
-    "b1"_symb,
-    "b2"_symb });
-
-  auto s = ggo::gaussian_elimination(m, b, 0._symb, [](std::shared_ptr<const ggo::expression> e) { auto cst = e->get_constant(); return cst && *cst == 0.; });
-  std::cout << s(0)->flat_repr() << '\n' << s(1)->flat_repr() << '\n';
-
-  const std::map<std::string, double> env({
-    { "m11", 2. },
-    { "m22", -1. },
-    { "b1", 2. },
-    { "b2", 1. } });
-  std::cout << s(0)->eval(env) << '\n' << s(1)->eval(env) << '\n';
-}
-
-/////////////////////////////////////////////////////////////////////
 GGO_TEST(linear_algebra, gaussian_elimination_2x2_generic)
 {
   ggo::array<std::shared_ptr<const ggo::expression>, 2> m({
