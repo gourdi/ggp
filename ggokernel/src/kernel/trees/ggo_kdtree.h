@@ -52,7 +52,7 @@ namespace ggo
     }
 
     float size_max = 0.f;
-    for (int cur_dim = 0; cur_dim < vec_t::_n_dims; ++cur_dim)
+    for (int cur_dim = 0; cur_dim < vec_t::n_dims; ++cur_dim)
     {
       auto sort_func = [&](const data_point & p1, const data_point & p2) { return p1._pos._coefs[cur_dim] < p2._pos._coefs[cur_dim]; };
 
@@ -67,7 +67,7 @@ namespace ggo
         _split_axis = cur_dim;
       }
     }
-    GGO_ASSERT(_split_axis >= 0 && _split_axis < vec_t::_n_dims);
+    GGO_ASSERT(_split_axis >= 0 && _split_axis < vec_t::n_dims);
 
     std::vector<data_point> sorted_points(points);
 

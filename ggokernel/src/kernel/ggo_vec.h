@@ -12,11 +12,11 @@
 // vec_base
 namespace ggo
 {
-  template <typename data_t, int n_dims, typename subtype_t>
+  template <typename data_t_, int n_dims_, typename subtype_t>
   struct vec_base
   {
-    using _data_t = data_t;
-    static constexpr int _n_dims = n_dims;
+    using data_t = data_t_;
+    static constexpr int n_dims = n_dims_;
 
     // Constructors.
     constexpr vec_base() = default;
