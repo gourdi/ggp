@@ -10,6 +10,31 @@
 namespace ggo
 {
   template <typename data_t>
+  ggo::array<data_t, 1> operator*(const ggo::array<data_t, 2> & m, const ggo::array<data_t, 1> & v)
+  {
+    if (m.width() != v.size())
+    {
+      throw std::runtime_error("dimension mismatch");
+    }
+
+    ggo::array<data_t, 1> r(m.height());
+
+    for (int y = 0; y < m.height(); ++y)
+    {
+      auto k = m(y, 0) * v(0);
+      
+      for (int x = 1; x < m.width(); ++x)
+      {
+        k = k + m(y, x) * v(x);
+      }
+      
+      r(y) = k;
+    }
+
+    return r;
+  }
+
+  template <typename data_t>
   ggo::array<data_t, 2> operator*(const ggo::array<data_t, 2> & m1, const ggo::array<data_t, 2> & m2)
   {
     if (m1.width() != m2.height())
