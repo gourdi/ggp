@@ -1,5 +1,4 @@
-#ifndef __GGO_BMP__
-#define __GGO_BMP__
+#pragma once
 
 #include <string>
 #include <2d/ggo_image.h>
@@ -25,7 +24,3 @@ namespace ggo
     return save_bmp(filename, image.data(), image.pixel_type(), image.memory_lines_order(), image.width(), image.height(), image.line_byte_step());
   }
 }
-
-#endif
-
-
