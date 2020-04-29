@@ -12,7 +12,7 @@ git clone https://github.com/Microsoft/vcpkg.git $VCPKG_DIR
 $VCPKG_DIR/bootstrap-vcpkg.sh
 
 VCPKG_EXE="$VCPKG_DIR/vcpkg"
-$VCPKG_EXE install sdl2 libjpeg-turbo libpng sdl2 glfw3 glad --triplet x64-osx
+$VCPKG_EXE install sdl2 libjpeg-turbo libpng sdl2 glfw3 glad tinyxml2 --triplet x64-osx
 
 VCPKG_TOOLCHAIN_PATH="$VCPKG_DIR/scripts/buildsystems/vcpkg.cmake"
 

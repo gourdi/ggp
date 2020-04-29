@@ -11,7 +11,7 @@ $Bootstrap = Join-Path -Path $VcpkgDir -ChildPath "bootstrap-vcpkg.bat"
 & $Bootstrap
 
 $VcpkgExe = Join-Path -Path $VcpkgDir -ChildPath "vcpkg.exe"
-& $VcpkgExe install sdl2 libjpeg-turbo libpng sdl2 glfw3 glad --triplet x64-windows
+& $VcpkgExe install sdl2 libjpeg-turbo libpng sdl2 glfw3 glad tinyxml2 --triplet x64-windows
 
 $VcpkgToolchainPath = Join-Path -Path $VcpkgDir -ChildPath "\scripts\buildsystems\vcpkg.cmake"
 
