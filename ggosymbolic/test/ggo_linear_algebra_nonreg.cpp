@@ -2,9 +2,9 @@
 #include <kernel/memory/ggo_array.h>
 #include <kernel/math/linear_algebra/ggo_array_arithmetics.h>
 #include <kernel/math/linear_algebra/ggo_gaussian_elimination.h>
-#include <symbolic/expressions/ggo_binary_operation.h>
-#include <symbolic/expressions/ggo_constant.h>
-#include <symbolic/expressions/ggo_variable.h>
+#include <symbolic/ggo_binary_operation.h>
+#include <symbolic/ggo_constant.h>
+#include <symbolic/ggo_variable.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(linear_algebra, matrix_add)
@@ -70,16 +70,19 @@ GGO_TEST(linear_algebra, gaussian_elimination_2x2_generic)
     "b2"_symb });
 
   auto s = ggo::gaussian_elimination(m, b, 0._symb, [](std::shared_ptr<const ggo::expression> e) { auto cst = e->get_constant(); return cst && *cst == 0.; });
-  std::cout << s(0)->flat_repr() << '\n' << s(1)->flat_repr() << '\n';
 
+  // Check solutions really are solutions by plugging them into the system using some real value as parameters.
+  const double b1 = 2;
+  const double b2 = 1;
   const std::map<std::string, double> env({
-    { "m11", 1. },
-    { "m12", 1. },
-    { "m21", 1. },
-    { "m22", -1. },
-    { "b1", 2. },
-    { "b2", 1. } });
-  std::cout << s(0)->eval(env) << '\n' << s(1)->eval(env) << '\n';
+    { "m11", 1. }, { "m12", 1. },
+    { "m21", 1. }, { "m22", -1. },
+    { "b1", b1 },
+    { "b2", b2 } });
+  auto eq1 = "m11"_symb * s(0) + "m12"_symb * s(1);
+  auto eq2 = "m21"_symb * s(0) + "m22"_symb * s(1);
+  GGO_CHECK_EQ(eq1->eval(env), b1);
+  GGO_CHECK_EQ(eq2->eval(env), b2);
 }
 
 
