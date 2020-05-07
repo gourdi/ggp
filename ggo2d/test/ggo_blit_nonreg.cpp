@@ -10,7 +10,7 @@ GGO_TEST(blit, clipping)
     { 1, 2, 3 },
     { 4, 5, 6 } });
 
-  const ggo::array2_8u expected(dst.width(), dst.height(), 0);
+  const ggo::array2_8u expected(dst.height(), dst.width(), 0);
 
   ggo::blit(src, dst, -3, 0);
   GGO_CHECK_IMG(dst, expected);
