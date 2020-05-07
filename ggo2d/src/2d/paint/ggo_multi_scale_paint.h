@@ -4,7 +4,7 @@
 #include <kernel/ggo_rect_int.h>
 #include <kernel/math/ggo_discretization.h>
 #include <kernel/math/ggo_pixel_sampling.h>
-#include <2d/paint/ggo_scene2d.h>
+#include <2d/paint/ggo_canvas.h>
 
 /////////////////////////////////////////////////////////////////////
 // Single shape implementation.
@@ -229,7 +229,7 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
   void paint_multi_scale(image_t & image,
-    const scene2d<color_t, data_t> & scene,
+    const canvas<color_t, data_t> & canvas,
     int scale_factor, int first_scale,
     const ggo::rect_int & clipping)
   {
@@ -244,13 +244,13 @@ namespace ggo
     const ggo::rect_data<data_t> clipping_rect_data = to_continuous<data_t>(safe_clipping);
     std::optional<ggo::rect_data<data_t>> bounding_rect_data;
 
-    std::vector<const paint_shape_abc<color_t, data_t> *> clipped_paint_shapes;
-    for (const auto & paint_shape : scene)
+    std::vector<const layer<color_t, data_t> *> clipped_layers;
+    for (const auto & layer : canvas)
     {
-      const ggo::rect_data<data_t> cur_rect_data = paint_shape.get_bounding_rect();
+      const ggo::rect_data<data_t> cur_rect_data = layer.get_bounding_rect();
       if (ggo::test_intersection(cur_rect_data, clipping_rect_data) == true)
       {
-        clipped_paint_shapes.push_back(&paint_shape);
+        clipped_layers.push_back(&layer);
 
         if (bounding_rect_data)
         {
@@ -263,7 +263,7 @@ namespace ggo
       }
     }
 
-    if (clipped_paint_shapes.empty() == true)
+    if (clipped_layers.empty() == true)
     {
       return;
     }
@@ -277,7 +277,7 @@ namespace ggo
     // Process blocks.
     auto process_block = [&](const ggo::rect_int & block_rect)
     {
-      paint_block_multi_t<sampling>(image, block_rect, scale_factor, first_scale, clipped_paint_shapes);
+      paint_block_multi_t<sampling>(image, block_rect, scale_factor, first_scale, clipped_layers);
     };
 
     int block_size = ggo::pow(scale_factor, first_scale);

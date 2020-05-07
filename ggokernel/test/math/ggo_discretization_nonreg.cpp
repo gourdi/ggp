@@ -41,15 +41,15 @@ GGO_TEST(discretization, from_discrete_to_continuous_rect)
 GGO_TEST(discretization, from_continuous_to_discrete_rect_exclusive)
 {
   const std::vector<std::tuple<ggo::rect_data<float>, ggo::rect_int>> test_set{
-    { ggo::rect_data_from_left_right_bottom_top(1.0f, 4.0f, 2.0f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
-    { ggo::rect_data_from_left_right_bottom_top(1.1f, 3.9f, 2.1f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
-    { ggo::rect_data_from_left_right_bottom_top(1.1f, 4.0f, 2.1f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
-    { ggo::rect_data_from_left_right_bottom_top(1.0f, 3.9f, 2.0f, 5.9f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
-    { ggo::rect_data_from_left_right_bottom_top(0.9f, 4.1f, 1.9f, 6.1f), ggo::rect_int::from_left_right_bottom_top(0, 4, 1, 6) },
-    { ggo::rect_data_from_left_right_bottom_top(0.0f, 1.0f, 0.0f, 1.0f), ggo::rect_int::from_left_right_bottom_top(0, 0, 0, 0) },
-    { ggo::rect_data_from_left_right_bottom_top(0.4f, 0.6f, 0.4f, 0.6f), ggo::rect_int::from_left_right_bottom_top(0, 0, 0, 0) },
-    { ggo::rect_data_from_left_right_bottom_top(-1.0f, 2.0f, -2.0f, 2.0f), ggo::rect_int::from_left_right_bottom_top(-1, 1, -2, 1) },
-    { ggo::rect_data_from_left_right_bottom_top(-0.9f, 1.9f, -1.9f, 1.9f), ggo::rect_int::from_left_right_bottom_top(-1, 1, -2, 1) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(1.0f, 4.0f, 2.0f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(1.1f, 3.9f, 2.1f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(1.1f, 4.0f, 2.1f, 6.0f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(1.0f, 3.9f, 2.0f, 5.9f), ggo::rect_int::from_left_right_bottom_top(1, 3, 2, 5) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(0.9f, 4.1f, 1.9f, 6.1f), ggo::rect_int::from_left_right_bottom_top(0, 4, 1, 6) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(0.0f, 1.0f, 0.0f, 1.0f), ggo::rect_int::from_left_right_bottom_top(0, 0, 0, 0) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(0.4f, 0.6f, 0.4f, 0.6f), ggo::rect_int::from_left_right_bottom_top(0, 0, 0, 0) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(-1.0f, 2.0f, -2.0f, 2.0f), ggo::rect_int::from_left_right_bottom_top(-1, 1, -2, 1) },
+    { ggo::rect_data<float>::from_left_right_bottom_top(-0.9f, 1.9f, -1.9f, 1.9f), ggo::rect_int::from_left_right_bottom_top(-1, 1, -2, 1) },
   };
 
   for (const auto & test : test_set)

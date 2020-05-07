@@ -7,10 +7,13 @@
 
 namespace ggo
 {
-  template <typename data_t>
+  template <typename data_t_>
   class circle
   {
   public:
+
+    using data_t = data_t_;
+
 
                                     circle() {}
                                     circle(data_t x, data_t y, data_t radius) : _center(x, y), _radius(radius) {}

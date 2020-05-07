@@ -131,7 +131,7 @@ namespace ggo
     auto y_inf = ggo::min(p1.y(), p2.y(), p3.y(), p4.y());
     auto y_sup = ggo::max(p1.y(), p2.y(), p3.y(), p4.y());
 
-    return rect_data_from_left_right_bottom_top(x_inf, x_sup, y_inf, y_sup);
+    return rect_data<data_t>::from_left_right_bottom_top(x_inf, x_sup, y_inf, y_sup);
   }
 
   //////////////////////////////////////////////////////////////////

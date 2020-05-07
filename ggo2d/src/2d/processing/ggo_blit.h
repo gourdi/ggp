@@ -3,7 +3,7 @@
 
 #include <2d/ggo_image.h>
 #include <2d/ggo_color.h>
-#include <2d/paint/ggo_blend.h>
+#include <2d/blend/ggo_alpha_blend.h>
 
 // Static images.
 namespace ggo

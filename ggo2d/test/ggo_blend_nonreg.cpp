@@ -1,5 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
-#include <2d/paint/ggo_blend.h>
+#include <2d/blend/ggo_alpha_blend.h>
+#include <2d/blend/ggo_add_blend.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_y8u)

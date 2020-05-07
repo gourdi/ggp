@@ -1,5 +1,4 @@
-#ifndef __GGO_FILL_SOLID__
-#define __GGO_FILL_SOLID__
+#pragma once
 
 #include <2d/ggo_image.h>
 #include <2d/ggo_color.h>
@@ -109,4 +108,3 @@ namespace ggo
   }
 }
 
-#endif

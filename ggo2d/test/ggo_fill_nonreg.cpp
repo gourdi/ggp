@@ -163,17 +163,17 @@ GGO_TEST(fill, 4colors)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, curve)
 {
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
+  //ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
 
-  ggo::linear_curve<float, ggo::rgb_32f> curve;
+  //ggo::linear_curve<float, ggo::rgb_32f> curve;
 
-  curve.push_point(0.0f, ggo::red<ggo::rgb_32f>());
-  curve.push_point(0.5f, ggo::green<ggo::rgb_32f>());
-  curve.push_point(1.0f, ggo::yellow<ggo::rgb_32f>());
+  //curve.push_point(0.0f, ggo::red<ggo::rgb_32f>());
+  //curve.push_point(0.5f, ggo::green<ggo::rgb_32f>());
+  //curve.push_point(1.0f, ggo::yellow<ggo::rgb_32f>());
 
-  ggo::fill_color_curve(image, curve);
+  //ggo::fill_color_curve(image, curve);
 
-  ggo::save_bmp("fill_curve.bmp", image);
+  //ggo::save_bmp("fill_curve.bmp", image);
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -1,9 +1,11 @@
 #pragma once
 
+#include <2d/paint/ggo_layer.h>
+
 namespace ggo
 {
   template <typename color_t_, typename scalar_t_ = float>
-  class scene2d
+  class canvas
   {
   public:
 
@@ -14,9 +16,9 @@ namespace ggo
     {
     public:
 
-      iterator(typename std::vector<std::shared_ptr<const paint_shape_abc<color_t, scalar_t>>>::const_iterator it) : _it(it) {}
+      iterator(typename std::vector<std::shared_ptr<const layer<color_t, scalar_t>>>::const_iterator it) : _it(it) {}
 
-      const paint_shape_abc<color_t, scalar_t> & operator*() const { return *(*_it); }
+      const layer<color_t, scalar_t> & operator*() const { return *(*_it); }
       void operator++() { ++_it; }
       void operator--() { --_it; }
       bool operator==(const iterator& it) { return _it == it._it; }
@@ -24,7 +26,7 @@ namespace ggo
 
     private:
 
-      typename std::vector<std::shared_ptr<const paint_shape_abc<color_t, scalar_t>>>::const_iterator _it;
+      typename std::vector<std::shared_ptr<const layer<color_t, scalar_t>>>::const_iterator _it;
     };
 
     template <typename paint_shape_t, typename... args>
@@ -38,44 +40,44 @@ namespace ggo
     }
 
     template <typename shape_t, typename brush_t, typename blender_t = ggo::overwrite_blender<color_t>>
-    auto & make_paint_shape(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
+    auto & make_layer(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
     {
-      auto * paint_shape = new paint_shape_t<shape_t, color_t, brush_t, blender_t>(shape, brush, blender);
+      auto * layer = new layer_t<shape_t, color_t, brush_t, blender_t>(shape, brush, blender);
 
-      _paint_shapes.emplace_back(paint_shape);
+      _layers.emplace_back(layer);
 
-      return *paint_shape;
+      return *layer;
     }
 
     template <typename shape_t>
-    auto & make_paint_shape(const shape_t & shape, const color_t & color, float opacity)
+    auto & make_layer(const shape_t & shape, const color_t & color, float opacity)
     {
-      return make_paint_shape(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
+      return make_layer(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
     }
 
     template <typename shape_t>
-    auto & make_paint_shape(const shape_t & shape, const color_t & color)
+    auto & make_layer(const shape_t & shape, const color_t & color)
     {
-      return make_paint_shape(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
+      return make_layer(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
     }
 
-    template <typename paint_shape_t>
-    auto & add_shape(const paint_shape_t& shape)
+    //template <typename paint_shape_t>
+    //auto & add_shape(const paint_shape_t & shape)
+    //{
+    //  paint_shape_t * shape_copy = new paint_shape_t(shape);
+
+    //  _paint_shapes.emplace_back(shape_copy);
+
+    //  return *shape_copy;
+    //}
+
+    void add_layer(std::shared_ptr<const layer<color_t, scalar_t>> shape)
     {
-      paint_shape_t * shape_copy = new paint_shape_t(shape);
-
-      _paint_shapes.emplace_back(shape_copy);
-
-      return *shape_copy;
+      _layers.emplace_back(shape);
     }
 
-    void add_shape(std::shared_ptr<const paint_shape_abc<color_t, scalar_t>> shape)
-    {
-      _paint_shapes.emplace_back(shape);
-    }
-
-    auto begin() const { return iterator(_paint_shapes.cbegin()); }
-    auto end() const { return iterator(_paint_shapes.cend()); }
+    auto begin() const { return iterator(_layers.cbegin()); }
+    auto end() const { return iterator(_layers.cend()); }
 
     void clear() { _paint_shapes.clear(); }
 
@@ -107,6 +109,6 @@ namespace ggo
 
   private:
 
-    std::vector<std::shared_ptr<const paint_shape_abc<color_t, scalar_t>>> _paint_shapes;
+    std::vector<std::shared_ptr<const layer<color_t, scalar_t>>> _layers;
   };
 }

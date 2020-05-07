@@ -53,7 +53,7 @@ namespace ggo
 
     if (std::distance(begin, end) < 2)
     {
-      throw std::runtime_error("not enough points in the curve");
+      return begin->second;
     }
 
     if (x <= begin->first)
@@ -108,7 +108,7 @@ namespace ggo
   {
     if (std::distance(begin, end) < 2)
     {
-      throw std::runtime_error("not enough points in the curve");
+      return begin->second;
     }
 
     auto get_prv = [](auto it) { auto prv = it; --prv; return prv; };

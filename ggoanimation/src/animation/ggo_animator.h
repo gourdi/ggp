@@ -1,5 +1,6 @@
 #ifndef __GGO_ANIMATOR__
 #define __GGO_ANIMATOR__
+#if 0
 
 #include <vector>
 #include <stdint.h>
@@ -36,4 +37,5 @@ namespace ggo
   };
 }
 
+#endif
 #endif

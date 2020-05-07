@@ -16,20 +16,21 @@ GGO_TEST(marching_squares, circle)
   const int size = 400;
   const ggo::pos2_f offset(0.5f * size, 0.5f * size);
 
-  using color_capsule = ggo::paint_shape_t<ggo::capsule_f, ggo::rgb_8u>;
-  ggo::scene2d<ggo::rgb_8u> scene;
+  using capsule_layer = ggo::layer_t<ggo::capsule_f, ggo::rgb_8u>;
+  ggo::canvas<ggo::rgb_8u> canvas;
   for (const auto & cell : cells)
   {
     for (const auto & segment : cell._segments)
     {
       ggo::capsule_f capsule(offset + 50.f * segment.p1(), offset + 50.f * segment.p2(), 2.f);
-      scene.add_shape(color_capsule(capsule, ggo::white_8u()));
+      
+      canvas.make_layer(capsule, ggo::white_8u());
     }
   }
 
   ggo::image_t<ggo::pixel_type::rgb_8u> image({ size, size });
 
-  ggo::paint<ggo::sampling_4x4>(image, scene);
+  ggo::paint<ggo::sampling_4x4>(image, canvas);
 
   ggo::save_bmp("marching_squares.bmp", image);
 }

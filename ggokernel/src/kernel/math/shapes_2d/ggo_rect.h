@@ -27,6 +27,7 @@ namespace ggo
                       // Conversion operator.
     const rect_data<data_t> data() const { return _rect_data; }
                           
+    pos2<data_t>      pos() const { return _rect_data._pos; }
     data_t					  left() const { return _rect_data._pos.x(); }
     data_t					  bottom() const { return _rect_data._pos.y(); }
     data_t					  width() const { return _rect_data._width; }

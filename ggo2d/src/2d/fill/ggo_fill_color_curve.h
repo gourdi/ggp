@@ -1,3 +1,5 @@
+#if 0
+
 #ifndef __GGO_FILL_COLOR_CURVE__
 #define __GGO_FILL_COLOR_CURVE__
 
@@ -36,4 +38,4 @@ namespace ggo
 }
 
 #endif
-
+#endif

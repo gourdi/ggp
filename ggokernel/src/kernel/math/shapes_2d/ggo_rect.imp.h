@@ -61,7 +61,7 @@ namespace ggo
   template <typename data_t>
   rect<data_t> rect<data_t>::from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top)
   {
-    return rect(ggo::rect_data_from_left_right_bottom_top(left, right, bottom, top));
+    return rect(ggo::rect_data<data_t>::from_left_right_bottom_top(left, right, bottom, top));
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ namespace ggo
 
     _rect_data._pos.x() = left;
     _rect_data._pos.y() = bottom;
-    _rect_data._width = right - left;
-    _rect_data._height = top - bottom;
+    _rect_data._width   = right - left;
+    _rect_data._height  = top - bottom;
   }
 }

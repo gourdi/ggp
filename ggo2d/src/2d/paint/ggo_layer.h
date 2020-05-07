@@ -1,13 +1,13 @@
-#ifndef __GGO_PAINT_SHAPE__
-#define __GGO_PAINT_SHAPE__
+#pragma once
 
-#include <2d/paint/ggo_blend.h>
+#include <2d/brush/ggo_solid_color_brush.h>
+#include <2d/blend/ggo_overwrite_blend.h>
 
 namespace ggo
 {
-  // Abstract base class paint shape.
-  template <typename color_t_, typename data_t_>
-  struct paint_shape_abc
+  // Abstract base class layer.
+  template <typename color_t_, typename data_t_ = float>
+  struct layer
   {
     using color_t = typename color_t_;
     using data_t = typename data_t_;
@@ -23,9 +23,9 @@ namespace ggo
     virtual color_t           paint(int x, int y, const color_t & bkgd_color) const = 0;
   };
 
-  // Static paint shape.
+  // Static layer.
   template <typename shape_t, typename color_t, typename brush_t = solid_color_brush<color_t>, typename blender_t = ggo::overwrite_blender<color_t>>
-  struct paint_shape_t : public paint_shape_abc<color_t, typename shape_t::data_t>
+  struct layer_t : public layer<color_t, typename shape_t::data_t>
   {
     using data_t = typename shape_t::data_t;
 
@@ -33,7 +33,7 @@ namespace ggo
     brush_t _brush;
     blender_t _blender;
 
-    paint_shape_t(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t()) : _shape(shape), _brush(brush), _blender(blender) {}
+    layer_t(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t()) : _shape(shape), _brush(brush), _blender(blender) {}
 
     rect_data<data_t> get_bounding_rect() const override { return _shape.get_bounding_rect(); }
     rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const override { return _shape.get_rect_intersection(rect_data); }
@@ -47,4 +47,3 @@ namespace ggo
   };
 }
 
-#endif

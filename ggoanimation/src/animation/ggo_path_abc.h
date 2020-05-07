@@ -1,6 +1,7 @@
 #ifndef __GGO_PATH_ABC__
 #define __GGO_PATH_ABC__
 
+#if 0
 #include <kernel/ggo_vec2.h>
 
 namespace ggo
@@ -15,4 +16,5 @@ namespace ggo
   };
 }
 
+#endif
 #endif

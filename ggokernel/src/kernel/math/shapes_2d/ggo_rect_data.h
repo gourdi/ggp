@@ -13,19 +13,26 @@ namespace ggo
     rect_data() = default;
     rect_data(const ggo::pos2<data_t> & pos, data_t width, data_t height) : _pos(pos), _width(width), _height(height) {}
 
+    static rect_data<data_t> from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top)
+    {
+      GGO_ASSERT(left <= right);
+      GGO_ASSERT(bottom <= top);
+
+      return rect_data<data_t>({ left, bottom }, right - left, top - bottom);
+    }
+
+    static rect_data<data_t> from_points(pos2<data_t> p1, pos2<data_t> p2)
+    {
+      GGO_ASSERT(left <= right);
+      GGO_ASSERT(bottom <= top);
+
+      return rect_data<data_t>({ left, bottom }, right - left, top - bottom);
+    }
+
     pos2<data_t>  _pos;
     data_t        _width;
     data_t        _height;
   };
-
-  template <typename data_t>
-  rect_data<data_t> rect_data_from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top)
-  {
-    GGO_ASSERT(left <= right);
-    GGO_ASSERT(bottom <= top);
-
-    return rect_data<data_t>({ left, bottom }, right - left, top - bottom);
-  }
 
   template <typename data_t>
   rect_data<data_t> extend(const rect_data<data_t> & rect, data_t e)

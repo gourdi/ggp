@@ -1,6 +1,6 @@
 #ifndef __GGO_ANIMATE_ABC__
 #define __GGO_ANIMATE_ABC__
-
+#if 0
 #include <animation/ggo_path_abc.h>
 #include <2d/ggo_image.h>
 
@@ -91,4 +91,5 @@ namespace ggo
   };
 }
 
+#endif
 #endif

@@ -1,3 +1,4 @@
+#if 0
 #include "ggo_animator.h"
 #include "ggo_animate_abc.h"
 
@@ -43,3 +44,4 @@ void ggo::animator::render(ggo::image & img, const ggo::rect_int & clipping) con
   }
 }
 
+#endif

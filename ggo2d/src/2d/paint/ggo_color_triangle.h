@@ -4,13 +4,12 @@
 #include <kernel/math/ggo_discretization.h>
 #include <kernel/math/interpolation/ggo_triangle_interpolation.h>
 #include <2d/ggo_color.h>
-#include <2d/paint/ggo_blend.h>
-#include <2d/paint/ggo_paint_shape_abc.h>
+#include <2d/paint/ggo_layer.h>
 
 namespace ggo
 {
   template <typename color_t, typename brush_color_t, typename data_t = float>
-  struct color_triangle_abc : public paint_shape_abc<color_t, data_t>
+  struct color_triangle_abc : public layer<color_t, data_t>
   {
     using shape_t = ggo::triangle2d<data_t>;
 

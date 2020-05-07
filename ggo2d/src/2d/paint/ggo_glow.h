@@ -4,7 +4,7 @@
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_ease.h>
 #include <kernel/math/ggo_discretization.h>
-#include <2d/paint/ggo_blend.h>
+#include <2d/blend/ggo_alpha_blend.h>
 
 namespace ggo
 {
@@ -28,10 +28,10 @@ namespace ggo
       auto dist = shape.dist_to_point(p);
       if (dist < radius)
       {
-        auto glow_opacity = 1 - ggo::ease_inout(dist / radius);
-        auto bkgd_color = image.read_pixel(x, y);
-        auto pixel_color = alpha_blend(bkgd_color, color, opacity * glow_opacity);
-        image.write_pixel(x, y, pixel_color);
+        //auto glow_opacity = 1 - ggo::ease_inout(dist / radius);
+        //auto bkgd_color = image.read_pixel(x, y);
+        //auto pixel_color = alpha_blend(bkgd_color, color, opacity * glow_opacity);
+        //image.write_pixel(x, y, pixel_color);
       }
     });
   }

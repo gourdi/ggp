@@ -38,13 +38,17 @@ GGO_TEST(paint, color_triangle)
 {
   using color_triangle_t = ggo::solid_color_triangle<ggo::rgb_8u>;
 
-  ggo::scene2d<ggo::rgb_8u> scene;
-  const auto & triangle1 = scene.add_shape(color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f()));
-  scene.add_shape(color_triangle_t({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f()));
+  ggo::canvas<ggo::rgb_8u> canvas;
+
+  std::shared_ptr<const color_triangle_t> triangle1(new color_triangle_t({ { 10.f, 10.f }, { 110.f, 10.f }, { 110.f, 90.f } }, ggo::green_32f(), ggo::red_32f(), ggo::yellow_32f()));
+  canvas.add_layer(triangle1);
+
+  std::shared_ptr<const color_triangle_t> triangle2(new color_triangle_t({ triangle1->_triangle.v1(),{ 50.f, 90.f }, triangle1->_triangle.v3() }, ggo::green_32f(), ggo::blue_32f(), ggo::yellow_32f()));
+  canvas.add_layer(triangle2);
 
   ggo::image_t<ggo::pixel_type::rgb_8u> image({ 120, 100 });
   ggo::fill_solid(image, ggo::gray_8u());
-  ggo::paint<ggo::sampling_4x4>(image, scene);
+  ggo::paint<ggo::sampling_4x4>(image, canvas);
 
   ggo::save_bmp("paint_color_triangles.bmp", image);
 }
@@ -58,21 +62,18 @@ GGO_TEST(paint, alpha_color_triangle)
   using color_triangle_t = ggo::alpha_color_triangle<ggo::rgb_8u>;
   using brush_color_t = color_triangle_t::brush_color_t;
 
-  ggo::scene2d<ggo::rgb_8u> scene;
+  ggo::canvas<ggo::rgb_8u> canvas;
 
-  const auto & triangle1 = scene.add_shape(color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
+  std::shared_ptr<const color_triangle_t> triangle1(new color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
     brush_color_t(0.f, 1.f, 0.f, 1.f),
     brush_color_t(0.f, 1.f, 0.f, 0.75f),
     brush_color_t(0.f, 1.f, 0.f, 0.5f)));
 
-  scene.add_shape(color_triangle_t({ triangle1._triangle.v1(),{ 50.f, 90.f }, triangle1._triangle.v3() },
-    brush_color_t(0.f, 1.f, 0.f, 1.f),
-    brush_color_t(0.f, 1.f, 0.f, 0.25f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f)));
+  canvas.add_layer(triangle1);
 
   ggo::image_t<ggo::pixel_type::rgb_8u, ggo::lines_order::up> image({ 120, 100 });
   ggo::fill_solid(image, ggo::gray_8u());
-  ggo::paint<ggo::sampling_4x4>(image, scene);
+  ggo::paint<ggo::sampling_4x4>(image, canvas);
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", image);
 }

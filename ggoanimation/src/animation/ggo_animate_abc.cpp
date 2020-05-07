@@ -1,3 +1,4 @@
+#if 0
 #include "ggo_animate_abc.h"
 #include <kernel/ggo_kernel.h>
 
@@ -50,3 +51,4 @@ void ggo::path_animate_abc::render(ggo::image & img, const ggo::rect_int & clipp
 {
   render(img, clipping, frame_index, _cur_pos);
 }
+#endif

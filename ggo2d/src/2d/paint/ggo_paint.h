@@ -7,9 +7,7 @@
 #include <kernel/math/ggo_pixel_sampling.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_image.h>
-#include <2d/paint/ggo_brush.h>
-#include <2d/paint/ggo_blend.h>
-#include <2d/paint/ggo_paint_shape_abc.h>
+#include <2d/paint/ggo_layer.h>
 #include <2d/paint/ggo_multi_scale_paint.h>
 
 // Paint single shape.
@@ -76,14 +74,14 @@ namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
-  void paint(image_t & image, const scene2d<color_t, data_t> & scene, const ggo::rect_int & clipping)
+  void paint(image_t & image, const canvas<color_t, data_t> & scene, const ggo::rect_int & clipping)
   {
     paint_multi_scale<sampling>(image, scene, 8, 2, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
-  void paint(image_t & image, const scene2d<color_t, data_t> & scene)
+  void paint(image_t & image, const canvas<color_t, data_t> & scene)
   {
     paint_multi_scale<sampling>(image, scene, 8, 2, ggo::rect_int::from_size(image.size()));
   }

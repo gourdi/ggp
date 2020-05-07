@@ -1,3 +1,4 @@
+#if 0
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
 #include <animation/paths/ggo_velocity_path.h>
@@ -30,3 +31,4 @@ GGO_TEST(path, spiral)
   GGO_CHECK_FLOAT_EQ(p2.x(), -2.f);
   GGO_CHECK_FLOAT_EQ(p2.y(), 0.f);
 }
+#endif

@@ -1,6 +1,6 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/processing/ggo_mask.h>
-#include <2d/paint/ggo_brush.h>
+#include <2d/brush/ggo_solid_color_brush.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(mask, color)

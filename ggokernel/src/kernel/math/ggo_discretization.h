@@ -149,12 +149,12 @@ namespace ggo
   {
     static_assert(std::is_floating_point<data_t>::value);
 
-    data_t left = static_cast<data_t>(rect.left());
-    data_t right = static_cast<data_t>(rect.right()) + 1;
+    data_t left   = static_cast<data_t>(rect.left());
+    data_t right  = static_cast<data_t>(rect.right()) + 1;
     data_t bottom = static_cast<data_t>(rect.bottom());
-    data_t top = static_cast<data_t>(rect.top()) + 1;
+    data_t top    = static_cast<data_t>(rect.top()) + 1;
 
-    return ggo::rect_data_from_left_right_bottom_top<data_t>(left, right, bottom, top);
+    return ggo::rect_data<data_t>::from_left_right_bottom_top(left, right, bottom, top);
   }
 }
 

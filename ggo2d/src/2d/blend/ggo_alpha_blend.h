@@ -1,5 +1,4 @@
-#ifndef __GGO_BLENDER__
-#define __GGO_BLENDER__
+#pragma once
 
 #include <kernel/ggo_kernel.h>
 #include <2d/ggo_color.h>
@@ -8,8 +7,7 @@
 // cf. https://en.wikipedia.org/wiki/Alpha_compositing
 /////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////
-// Alpha blending free functions.
+// Functions.
 namespace ggo
 {
   // Specialized functions with background with no alpha channel.
@@ -212,33 +210,17 @@ namespace ggo
   }
 }
 
-/////////////////////////////////////////////////////////////////////
-// Alpha blending with an additional opacity factor (used in glow painting for instance).
-namespace ggo
-{
-  template <typename real_t>
-  ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgb_8u & brush_color, real_t opacity)
-  {
-    static_assert(std::is_floating_point<real_t>::value);
-
-    uint32_t opacity_uint = ggo::round_to<uint32_t>(ggo::clamp<real_t>(opacity, 0., 1.) * 0x100u);
-
-    return linerp(brush_color, bkgd_color, ggo::log2_fract<8>(opacity_uint));
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-// Alpha blending structs (used in painting functions).
+// Structs.
 namespace ggo
 {
   // Structs.
   template <typename color_t>
   struct alpha_blender
   {
-    static_assert(std::is_same<typename ggo::color_traits<color_t>::sample_t, float>::value == true);
+    static_assert(std::is_same_v<typename ggo::color_traits<color_t>::sample_t, float> == true);
 
-    float _opacity;
-    float _inv_opacity;
+    const float _opacity;
+    const float _inv_opacity;
 
     alpha_blender(float opacity) : _opacity(opacity), _inv_opacity(1.f - opacity) {}
 
@@ -254,8 +236,8 @@ namespace ggo
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
 
-    uint32_t _opacity;
-    uint32_t _inv_opacity;
+    const uint32_t _opacity;
+    const uint32_t _inv_opacity;
 
     alpha_blender(float opacity)
       :
@@ -280,8 +262,8 @@ namespace ggo
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
 
-    uint32_t _opacity;
-    uint32_t _inv_opacity;
+    const uint32_t _opacity;
+    const uint32_t _inv_opacity;
 
     alpha_blender(float opacity)
       :
@@ -303,13 +285,14 @@ namespace ggo
     }
   };
 
+#if 0 
   template <>
   struct alpha_blender<ggo::rgba_8u>
   {
     static constexpr uint32_t bit_shift = 8;
     static constexpr uint32_t one = 1 << bit_shift;
 
-    uint32_t _opacity;
+    const uint32_t _opacity;
 
     alpha_blender(float opacity)
     :
@@ -318,6 +301,7 @@ namespace ggo
 
     rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
     {
+      THIS LOOKS REALLY WRONG
       return linerp(brush_color, bkgd_color, ggo::log2_fract<bit_shift>(_opacity));
     }
 
@@ -326,89 +310,12 @@ namespace ggo
       return operator()(0, 0, bkgd_color, brush_color);
     }
   };
+#endif
 
   using alpha_blender_y8u = ggo::alpha_blender<uint8_t>;
   using alpha_blender_rgb8u = ggo::alpha_blender<rgb_8u>;
-  using alpha_blender_rgba8u = ggo::alpha_blender<rgba_8u>;
+//  using alpha_blender_rgba8u = ggo::alpha_blender<rgba_8u>;
   using alpha_blender_y32f = ggo::alpha_blender<float>;
   using alpha_blender_rgb32f = ggo::alpha_blender<rgb_32f>;
 }
 
-/////////////////////////////////////////////////////////////////////
-// Overwrite blending.
-namespace ggo
-{
-  // Structs.
-  template <typename color_t>
-  struct overwrite_blender
-  {
-    static_assert(color_traits<color_t>::has_alpha == false);
-
-    color_t operator()(int x, int y, const color_t & bkgd_color, const color_t & brush_color) const
-    {
-      return brush_color;
-    }
-  };
-
-  template <>
-  struct overwrite_blender<rgba_8u>
-  {
-    rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
-    {
-      return alpha_blend(bkgd_color, brush_color);
-    }
-  };
-}
-
-/////////////////////////////////////////////////////////////////////
-// Additive blending free functions.
-namespace ggo
-{
-  // Free functions.
-  inline uint8_t add_blend(uint8_t bkgd_color, uint8_t brush_color)
-  {
-    return uint8_t(std::min<uint32_t>(0xff, uint32_t(bkgd_color) + uint32_t(brush_color)));
-  }
-
-  inline ggo::rgb_8u add_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgb_8u & brush_color)
-  {
-    return {
-      add_blend(bkgd_color.r(), brush_color.r()),
-      add_blend(bkgd_color.g(), brush_color.g()),
-      add_blend(bkgd_color.b(), brush_color.b()) };
-  }
-
-  inline float add_blend(float bkgd_color, float brush_color)
-  {
-    return std::min(1.f, bkgd_color + brush_color);
-  }
-
-  inline rgb_32f add_blend(const rgb_32f & bkgd_color, const rgb_32f & brush_color)
-  {
-    return {
-      add_blend(bkgd_color.r(), brush_color.r()),
-      add_blend(bkgd_color.g(), brush_color.g()),
-      add_blend(bkgd_color.b(), brush_color.b()) };
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-// Additive blending free structs.
-namespace ggo
-{
-  template <typename color_t, typename brush_color_t = color_t>
-  struct add_blender
-  {
-    color_t operator()(int x, int y, const color_t & bkgd_color, const brush_color_t & brush_color) const
-    {
-      return add_blend(bkgd_color, convert_color_to<color_t>(brush_color));
-    }
-
-    color_t operator()(const color_t & bkgd_color, const brush_color_t & brush_color) const
-    {
-      return operator()(0, 0, bkgd_color, convert_color_to<color_t>(brush_color));
-    }
-  };
-}
-
-#endif

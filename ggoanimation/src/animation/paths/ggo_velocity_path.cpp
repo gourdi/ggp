@@ -1,4 +1,5 @@
 #include "ggo_velocity_path.h"
+#if 0
 
 //////////////////////////////////////////////////////////////
 ggo::velocity_path::velocity_path(float delta, float angle)
@@ -11,3 +12,4 @@ ggo::pos2_f ggo::velocity_path::get_pos(int counter)
 {
 	return float(counter) * _velocity;
 }
+#endif

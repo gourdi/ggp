@@ -7,11 +7,10 @@
 #include <2d/ggo_color.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
+#include <2d/brush/ggo_gradient_brush.h>
+#include <2d/blend/ggo_add_blend.h>
 #include <2d/paint/ggo_paint.h>
 #include <2d/paint/ggo_color_triangle.h>
-#include <2d/paint/ggo_brush.h>
-#include <2d/paint/ggo_gradient_brush.h>
-#include <2d/paint/ggo_blend.h>
 #include <2d/paint/ggo_blur_paint.h>
 
 //#define GGO_BENCH
@@ -212,30 +211,28 @@ GGO_TEST(paint, polygons_rectangles)
   constexpr int line_byte_step = 3 * width;
 
   // Paint polygons.
-  ggo::scene2d<ggo::rgb_8u> polygons;
-  using paint_polygon = ggo::paint_shape_t<ggo::polygon2d_f, ggo::rgb_8u>;
-  polygons.add_shape(paint_polygon({ { 10, 10 },{ 50, 10 },{ 50, 90 },{ 10, 90 } }, ggo::white_8u()));
-  polygons.add_shape(paint_polygon({ { 90, 10 },{ 50, 10 },{ 50, 90 },{ 90, 90 } }, ggo::white_8u()));
+  ggo::canvas<ggo::rgb_8u> canvas_polygons;
+  canvas_polygons.make_layer(ggo::polygon2d_f({ { 10, 10 },{ 50, 10 },{ 50, 90 },{ 10, 90 } }), ggo::white_8u());
+  canvas_polygons.make_layer(ggo::polygon2d_f({ { 90, 10 },{ 50, 10 },{ 50, 90 },{ 90, 90 } }), ggo::white_8u());
 
   std::vector<uint8_t> buffer_polygons(width * line_byte_step);
   ggo::image_t<ggo::pixel_type::rgb_8u> image_polygons(buffer_polygons.data(), { width, height });
 
   ggo::fill_solid(image_polygons, ggo::blue_8u());
-  ggo::paint<ggo::sampling_4x4>(image_polygons, polygons);
+  ggo::paint<ggo::sampling_4x4>(image_polygons, canvas_polygons);
 
   ggo::save_bmp("paint_polygons.bmp", image_polygons);
 
   // Paint rectangles.
-  ggo::scene2d<ggo::rgb_8u> rectangles;
-  using paint_rect = ggo::paint_shape_t<ggo::rect_f, ggo::rgb_8u>;
-  rectangles.add_shape(paint_rect(ggo::rect_f::from_left_right_bottom_top(10, 50, 10, 90), ggo::white_8u()));
-  rectangles.add_shape(paint_rect(ggo::rect_f::from_left_right_bottom_top(50, 90, 10, 90), ggo::white_8u()));
+  ggo::canvas<ggo::rgb_8u> canvas_rectangles;
+  canvas_rectangles.make_layer(ggo::rect_f::from_left_right_bottom_top(10, 50, 10, 90), ggo::white_8u());
+  canvas_rectangles.make_layer(ggo::rect_f::from_left_right_bottom_top(50, 90, 10, 90), ggo::white_8u());
 
   std::vector<uint8_t> buffer_rectangles(width * line_byte_step);
   ggo::image_t<ggo::pixel_type::rgb_8u> image_rectangles(buffer_rectangles.data(), { width, height });
 
   ggo::fill_solid(image_rectangles, ggo::blue_8u());
-  ggo::paint<ggo::sampling_4x4>(image_rectangles, rectangles);
+  ggo::paint<ggo::sampling_4x4>(image_rectangles, canvas_rectangles);
 
   ggo::save_bmp("paint_rectangles.bmp", image_rectangles);
 
@@ -329,21 +326,21 @@ GGO_TEST(paint, blur)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, gradient)
 {
-  constexpr int width = 140;
-  constexpr int height = 120;
+  //constexpr int width = 140;
+  //constexpr int height = 120;
 
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ width, height });
-  ggo::fill_black(image);
+  //ggo::image_t<ggo::pixel_type::rgb_8u> image({ width, height });
+  //ggo::fill_black(image);
 
-  ggo::pos2_f center(40.f, 50.f);
-  ggo::gradient_brush<ggo::rgb_8u> brush(center, { 2.f, 1.f });
-  brush.push_color(-20.f, ggo::yellow_8u());
-  brush.push_color(  0.f, ggo::blue_8u());
-  brush.push_color( 20.f, ggo::green_8u());
+  //ggo::pos2_f center(40.f, 50.f);
+  //ggo::gradient_brush<ggo::rgb_8u> brush(center, { 2.f, 1.f });
+  //brush.push_color(-20.f, ggo::yellow_8u());
+  //brush.push_color(  0.f, ggo::blue_8u());
+  //brush.push_color( 20.f, ggo::green_8u());
 
-  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f(center, 35.f), brush, ggo::overwrite_blender<ggo::rgb_8u>());
+  //ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f(center, 35.f), brush, ggo::overwrite_blender<ggo::rgb_8u>());
 
-  ggo::save_bmp("paint_gradient.bmp", image);
+  //ggo::save_bmp("paint_gradient.bmp", image);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -369,15 +366,15 @@ GGO_TEST(paint, clipping)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, rgba8)
 {
-  constexpr int width = 140;
-  constexpr int height = 120;
+  //constexpr int width = 140;
+  //constexpr int height = 120;
 
-  ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
-  ggo::fill_black(image);
-  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 70.f, 40.f }, 35.f), { 0xff, 0x00, 0x00, 0xff });
-  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 70.f, 60.f }, 35.f), { 0x00, 0x00, 0xff, 0xff }, 0.5f);
+  //ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
+  //ggo::fill_black(image);
+  //ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 70.f, 40.f }, 35.f), { 0xff, 0x00, 0x00, 0xff });
+  //ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 70.f, 60.f }, 35.f), { 0x00, 0x00, 0xff, 0xff }, 0.5f);
 
-  ggo::save_bmp("paint_rgba.bmp", image);
+  //ggo::save_bmp("paint_rgba.bmp", image);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -389,15 +386,13 @@ GGO_TEST(paint, rgba8_multishape_sameshape)
   ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
   ggo::fill_black(image);
 
-  ggo::scene2d<ggo::rgba_8u> scene;
-
-  using paint_disc = ggo::paint_shape_t<ggo::disc_f, ggo::rgba_8u>;
+  ggo::canvas<ggo::rgba_8u> canvas;
 
   for (int i = 0; i < 8; ++i)
   {
-    scene.make_paint_shape(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
+    canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
   }
-  ggo::paint<ggo::sampling_8x8>(image, scene);
+  ggo::paint<ggo::sampling_8x8>(image, canvas);
 
   ggo::save_bmp("paint_rgba_multi_shame_shape.bmp", image);
 }
@@ -411,15 +406,13 @@ GGO_TEST(paint, rgba8_multishape_discs)
   ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
   ggo::fill_checker(image, { 0xff, 0xff, 0xff, 0xff }, { 0x80, 0x80, 0x80, 0x80 }, 20);
 
-  ggo::scene2d<ggo::rgba_8u> scene;
+  ggo::canvas<ggo::rgba_8u> canvas;
 
-  using paint_disc = ggo::paint_shape_t<ggo::disc_f, ggo::rgba_8u>;
+  canvas.make_layer(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  canvas.make_layer(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
 
-  scene.make_paint_shape(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  scene.make_paint_shape(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  scene.make_paint_shape(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-
-  ggo::paint<ggo::sampling_8x8>(image, scene);
+  ggo::paint<ggo::sampling_8x8>(image, canvas);
 
   ggo::save_bmp("paint_rgba_multi_discs.bmp", image);
 }

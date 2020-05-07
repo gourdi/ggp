@@ -1,5 +1,6 @@
 #ifndef __GGO_SPIRAL_PATH__
 #define __GGO_SPIRAL_PATH__
+#if 0
 
 #include <animation/ggo_path_abc.h>
 
@@ -20,4 +21,5 @@ namespace ggo
   };
 }
 
+#endif
 #endif
