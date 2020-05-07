@@ -36,7 +36,7 @@ GGO_TEST(triangular_interpolation, function)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, color_triangle)
 {
-  using color_triangle_t = ggo::solid_color_triangle<ggo::rgb_8u>;
+  using color_triangle_t = ggo::color_triangle<ggo::rgb_8u, ggo::rgb_8u, ggo::rgb_32f>;
 
   ggo::canvas<ggo::rgb_8u> canvas;
 
@@ -59,15 +59,14 @@ GGO_TEST(paint, alpha_color_triangle)
   const int width = 120;
   const int height = 100;
 
-  using color_triangle_t = ggo::alpha_color_triangle<ggo::rgb_8u>;
-  using brush_color_t = color_triangle_t::brush_color_t;
+  using color_triangle_t = ggo::color_triangle<ggo::rgb_8u, ggo::rgba_8u, ggo::rgba_32f>;
 
   ggo::canvas<ggo::rgb_8u> canvas;
 
   std::shared_ptr<const color_triangle_t> triangle1(new color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
-    brush_color_t(0.f, 1.f, 0.f, 1.f),
-    brush_color_t(0.f, 1.f, 0.f, 0.75f),
-    brush_color_t(0.f, 1.f, 0.f, 0.5f)));
+    { 0.f, 1.f, 0.f, 1.f },
+    { 0.f, 1.f, 0.f, 0.75f },
+    { 0.f, 1.f, 0.f, 0.5f }));
 
   canvas.add_layer(triangle1);
 

@@ -39,7 +39,7 @@ namespace ggo
       return *shape;
     }
 
-    template <typename shape_t, typename brush_t, typename blender_t = ggo::overwrite_blender<color_t>>
+    template <typename shape_t, typename brush_t, typename blender_t>
     auto & make_layer(const shape_t & shape, const brush_t & brush, const blender_t & blender = blender_t())
     {
       auto * layer = new layer_t<shape_t, color_t, brush_t, blender_t>(shape, brush, blender);
@@ -49,17 +49,19 @@ namespace ggo
       return *layer;
     }
 
-    template <typename shape_t>
-    auto & make_layer(const shape_t & shape, const color_t & color, float opacity)
+    template <typename shape_t, typename brush_color_t>
+    auto& make_layer(const shape_t& shape, const brush_color_t& color)
     {
-      return make_layer(shape, solid_color_brush<color_t>(color), alpha_blender<color_t>(opacity));
+      return make_layer(shape, solid_color_brush<brush_color_t>(color), alpha_blender<color_t, brush_color_t>());
     }
 
-    template <typename shape_t>
-    auto & make_layer(const shape_t & shape, const color_t & color)
+    template <typename shape_t, typename brush_color_t>
+    auto & make_layer(const shape_t & shape, const brush_color_t& color, float opacity)
     {
-      return make_layer(shape, solid_color_brush<color_t>(color), overwrite_blender<color_t>());
+      return make_layer(shape, solid_color_brush<brush_color_t>(color), alpha_blender<color_t, brush_color_t>(opacity));
     }
+
+
 
     //template <typename paint_shape_t>
     //auto & add_shape(const paint_shape_t & shape)

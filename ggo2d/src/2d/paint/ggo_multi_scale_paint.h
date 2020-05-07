@@ -34,10 +34,7 @@ namespace ggo
     case ggo::rect_intersection::rect_in_shape:
       block_rect.for_each_pixel([&](int x, int y)
       {
-        const auto bkgd_color = image.read_pixel(x, y);
-        const auto brush_color = brush(x, y);
-
-        image.write_pixel(x, y, blend(x, y, bkgd_color, brush_color));
+        image.write_pixel(x, y, blend(image.read_pixel(x, y), brush(x, y)));
       });
       break;
 
@@ -62,12 +59,12 @@ namespace ggo
         GGO_ASSERT(fract._num <= fract._den);
 
         // Blending.
-        auto bkgd_color     = image.read_pixel(block_rect.left(), block_rect.bottom());
-        auto brush_color    = brush(block_rect.left(), block_rect.bottom());
-        auto blended_color  = blend(block_rect.left(), block_rect.bottom(), bkgd_color, brush_color);
-        auto pixel_color    = linerp(blended_color, bkgd_color, fract);
+        int x = block_rect.left();
+        int y = block_rect.bottom();
+        auto bkgd_color   = image.read_pixel(x, y);
+        auto pixel_color  = linerp(blend(bkgd_color, brush(x, y)), bkgd_color, fract);
 
-        image.write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
+        image.write_pixel(x, y, pixel_color);
 
         return;
       }

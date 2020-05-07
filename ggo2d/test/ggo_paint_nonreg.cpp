@@ -8,9 +8,8 @@
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
 #include <2d/brush/ggo_gradient_brush.h>
-#include <2d/blend/ggo_add_blend.h>
+#include <2d/blend/ggo_additive_blend.h>
 #include <2d/paint/ggo_paint.h>
-#include <2d/paint/ggo_color_triangle.h>
 #include <2d/paint/ggo_blur_paint.h>
 
 //#define GGO_BENCH
@@ -82,7 +81,7 @@ GGO_TEST(paint, shape_y_8u_yu_add_sampling1)
   ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::solid_color_brush<uint8_t> brush(0xff);
-  ggo::add_blender<uint8_t> blender;
+  ggo::additive_blender<uint8_t> blender;
 
   ggo::paint<ggo::sampling_1>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), brush, blender);
 
@@ -138,7 +137,7 @@ GGO_TEST(paint, shape_y_8u_yu_alpha_sampling4x4)
   std::vector<uint8_t> buffer(height * line_byte_step, 0);
   ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
 
-  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), ggo::solid_color_brush<uint8_t>(0xff), ggo::alpha_blender_y8u(0.5f));
+  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), 0xff_u8, 0.5f);
 
   const std::vector<uint8_t> expected{
     0x00, 0x28, 0x40, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -250,10 +249,7 @@ GGO_TEST(paint, y_32f_yu)
 
   ggo::fill_solid(image, 0.1f);
 
-  ggo::paint<ggo::sampling_4x4>(
-    image,
-    ggo::disc_f({ 0.25f * width, 0.25f * height }, 20.f),
-    ggo::solid_color_brush<float>(1.f), ggo::alpha_blender_y32f(0.8f));
+  ggo::paint<ggo::sampling_4x4>(image, ggo::disc_f({ 0.25f * width, 0.25f * height }, 20.f), 1.f, 0.8f);
 
   ggo::save_bmp("paint_y_32f_yu.bmp", image);
 }
@@ -380,41 +376,41 @@ GGO_TEST(paint, rgba8)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, rgba8_multishape_sameshape)
 {
-  constexpr int width = 140;
-  constexpr int height = 120;
+  //constexpr int width = 140;
+  //constexpr int height = 120;
 
-  ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
-  ggo::fill_black(image);
+  //ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
+  //ggo::fill_black(image);
 
-  ggo::canvas<ggo::rgba_8u> canvas;
+  //ggo::canvas<ggo::rgba_8u> canvas;
 
-  for (int i = 0; i < 8; ++i)
-  {
-    canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
-  }
-  ggo::paint<ggo::sampling_8x8>(image, canvas);
+  //for (int i = 0; i < 8; ++i)
+  //{
+  //  canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 255, 0, 0, 255 });
+  //}
+  //ggo::paint<ggo::sampling_8x8>(image, canvas);
 
-  ggo::save_bmp("paint_rgba_multi_shame_shape.bmp", image);
+  //ggo::save_bmp("paint_rgba_multi_shame_shape.bmp", image);
 }
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, rgba8_multishape_discs)
 {
-  constexpr int width = 140;
-  constexpr int height = 120;
+  //constexpr int width = 140;
+  //constexpr int height = 120;
 
-  ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
-  ggo::fill_checker(image, { 0xff, 0xff, 0xff, 0xff }, { 0x80, 0x80, 0x80, 0x80 }, 20);
+  //ggo::image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::down> image({ width, height });
+  //ggo::fill_checker(image, { 0xff, 0xff, 0xff, 0xff }, { 0x80, 0x80, 0x80, 0x80 }, 20);
 
-  ggo::canvas<ggo::rgba_8u> canvas;
+  //ggo::canvas<ggo::rgba_8u> canvas;
 
-  canvas.make_layer(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
-  canvas.make_layer(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  //canvas.make_layer(ggo::disc_f({ 0.4f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  //canvas.make_layer(ggo::disc_f({ 0.5f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
+  //canvas.make_layer(ggo::disc_f({ 0.6f * width, 0.5f * height }, 50.f), { 0xff, 0, 0, 0x80 });
 
-  ggo::paint<ggo::sampling_8x8>(image, canvas);
+  //ggo::paint<ggo::sampling_8x8>(image, canvas);
 
-  ggo::save_bmp("paint_rgba_multi_discs.bmp", image);
+  //ggo::save_bmp("paint_rgba_multi_discs.bmp", image);
 }
 
 

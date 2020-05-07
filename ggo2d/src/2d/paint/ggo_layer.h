@@ -1,7 +1,7 @@
 #pragma once
 
 #include <2d/brush/ggo_solid_color_brush.h>
-#include <2d/blend/ggo_overwrite_blend.h>
+#include <2d/blend/ggo_alpha_blend.h>
 
 namespace ggo
 {
@@ -19,13 +19,13 @@ namespace ggo
     virtual rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const = 0;
     virtual bool              is_point_inside(const ggo::pos2<data_t> & p) const = 0;
 
-    // Color.
+    // Paint.
     virtual color_t           paint(int x, int y, const color_t & bkgd_color) const = 0;
   };
 
   // Static layer.
-  template <typename shape_t, typename color_t, typename brush_t = solid_color_brush<color_t>, typename blender_t = ggo::overwrite_blender<color_t>>
-  struct layer_t : public layer<color_t, typename shape_t::data_t>
+  template <typename shape_t, typename bkgd_color_t, typename brush_t = solid_color_brush<bkgd_color_t>, typename blender_t = ggo::alpha_blender<bkgd_color_t, typename brush_t::color_t>>
+  struct layer_t : public layer<bkgd_color_t, typename shape_t::data_t>
   {
     using data_t = typename shape_t::data_t;
 
@@ -39,11 +39,7 @@ namespace ggo
     rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const override { return _shape.get_rect_intersection(rect_data); }
     bool              is_point_inside(const ggo::pos2<data_t> & p) const override { return _shape.is_point_inside(p); }
 
-    color_t           paint(int x, int y, const color_t & bkgd_color) const override
-    {
-      auto brush_color = _brush(x, y);
-      return _blender(x, y, bkgd_color, brush_color);
-    }
+    bkgd_color_t      paint(int x, int y, const bkgd_color_t & bkgd_color) const override { return _blender(bkgd_color, _brush(x, y)); }
   };
 }
 

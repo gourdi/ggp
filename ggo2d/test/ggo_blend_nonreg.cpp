@@ -1,6 +1,6 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <2d/blend/ggo_alpha_blend.h>
-#include <2d/blend/ggo_add_blend.h>
+#include <2d/blend/ggo_additive_blend.h>
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_y8u)
@@ -24,7 +24,7 @@ GGO_TEST(blend, alpha_y8u)
   }
 
   {
-    const ggo::alpha_blender_y8u alpha_blend(1.f);
+    const ggo::opacity_alpha_blender<uint8_t, uint8_t> alpha_blend(1.f);
 
     GGO_CHECK_EQ(alpha_blend(0xff, 0x00), 0x00);
     GGO_CHECK_EQ(alpha_blend(0xff, 0x80), 0x80);
@@ -32,7 +32,7 @@ GGO_TEST(blend, alpha_y8u)
   }
 
   {
-    const ggo::alpha_blender_y8u alpha_blend(0.5f);
+    const ggo::opacity_alpha_blender<uint8_t, uint8_t> alpha_blend(0.5f);
 
     GGO_CHECK_EQ(alpha_blend(0x00, 0x00), 0x00);
     GGO_CHECK_EQ(alpha_blend(0x00, 0x80), 0x40);
@@ -110,7 +110,7 @@ GGO_TEST(blend, alpha_rgb8u)
   }
 
   {
-    const ggo::alpha_blender_rgb8u alpha_blend(1.f);
+    const ggo::opacity_alpha_blender<ggo::rgb_8u, ggo::rgb_8u> alpha_blend(1.f);
 
     auto c = alpha_blend({ 0xff_u8, 0xff_u8, 0xff_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
     GGO_CHECK_EQ(int(c.r()), 0x00);
@@ -119,7 +119,7 @@ GGO_TEST(blend, alpha_rgb8u)
   }
 
   {
-    const ggo::alpha_blender_rgb8u alpha_blend(0.5f);
+    const ggo::opacity_alpha_blender<ggo::rgb_8u, ggo::rgb_8u> alpha_blend(0.5f);
 
     auto c = alpha_blend({ 0x00_u8, 0x00_u8, 0x00_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
     GGO_CHECK_EQ(int(c.r()), 0x00);
@@ -226,7 +226,7 @@ GGO_TEST(blend, alpha_rgba32f)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, additive_rgb8u)
 {
-  ggo::rgb_8u c = ggo::add_blend(ggo::rgb_8u(0x00, 0x80, 0xff), ggo::rgb_8u(0xff, 0xff, 0xff));
+  ggo::rgb_8u c = ggo::additive_blend(ggo::rgb_8u(0x00, 0x80, 0xff), ggo::rgb_8u(0xff, 0xff, 0xff));
   GGO_CHECK_EQ(int(c.r()), 0xff);
   GGO_CHECK_EQ(int(c.g()), 0xff);
   GGO_CHECK_EQ(int(c.b()), 0xff);

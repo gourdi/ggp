@@ -9,14 +9,14 @@
 #include <2d/ggo_image.h>
 #include <2d/paint/ggo_layer.h>
 #include <2d/paint/ggo_multi_scale_paint.h>
+#include <2d/blend/ggo_alpha_blend.h>
 
 // Paint single shape.
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
-  void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend,
-    const ggo::rect_int & clipping)
+  void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend, const ggo::rect_int & clipping)
   {
     paint_multi_scale<sampling>(image, shape, 8, 2, brush, blend, clipping);
   }
@@ -30,15 +30,14 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename shape_t>
-  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c, float opacity,
-    const ggo::rect_int & clipping)
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c, float opacity, const ggo::rect_int & clipping)
   {
     using color_t = typename image_t::color_t;
 
     solid_color_brush<color_t> brush(c);
-    alpha_blender<color_t> blender(opacity);
+    opacity_alpha_blender<color_t, color_t> blender(opacity);
 
-    paint<sampling, image_t, shape_t, solid_color_brush<color_t>, alpha_blender<color_t>>(image, shape, brush, blender, clipping);
+    paint<sampling>(image, shape, brush, blender, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -50,15 +49,14 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename shape_t>
-  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c,
-    const ggo::rect_int & clipping)
+  void paint(image_t & image, const shape_t & shape, const typename image_t::color_t & c, const ggo::rect_int & clipping)
   {
     using color_t = typename image_t::color_t;
 
     solid_color_brush<color_t> brush(c);
-    overwrite_blender<color_t> blender;
+    alpha_blender<color_t, color_t> blender;
 
-    paint<sampling, image_t, shape_t, solid_color_brush<color_t>, overwrite_blender<color_t>>(image, shape, brush, blender, clipping);
+    paint<sampling>(image, shape, brush, blender, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////

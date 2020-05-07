@@ -4,12 +4,14 @@
 
 namespace ggo
 {
-  template <typename color_t>
+  template <typename color_t_>
   struct solid_color_brush
   {
+    using color_t = color_t_;
+
     const color_t _brush_color;
 
-    solid_color_brush(const color_t& c) : _brush_color(c) {}
+    solid_color_brush(const color_t & c) : _brush_color(c) {}
 
     color_t operator()(int x, int y) const
     {
