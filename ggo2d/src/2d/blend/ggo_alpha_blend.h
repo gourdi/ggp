@@ -183,7 +183,6 @@ namespace ggo
   constexpr bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
   {
     constexpr color_space bkgd_color_space  = color_traits<bkgd_color_t>::color_space;
-    constexpr color_space brush_color_space = color_traits<brush_color_t>::color_space;
 
     // The brush does not have an alpha channel, so it just overwrite the background.
     if constexpr (has_alpha_v<brush_color_t> == false)
@@ -221,66 +220,6 @@ namespace ggo
       return alpha_blend(bkgd_color, brush_color);
     }
   };
-}
-
-// Tests y8u.
-namespace ggo
-{
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0xff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x00)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x80)) == 0x7f);
-
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0xffff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x0000)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x8000)) == 0x7f);
-
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0xffffffff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x00000000)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x80000000)) == 0x7f);
-
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 1.0f)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.0f)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.5f)) == 0x7f);
-}
-
-// Tests y16u.
-namespace ggo 
-{
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0xff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x00)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x80)) == 0x7f7f);
-
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0xffff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x0000)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x8000)) == 0x7fff);
-
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0xffffffff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x00000000)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x80000000)) == 0x7fff);
-
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 1.0f)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.0f)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.5f)) == 0x7fff);
-}
-
-// Tests y32u.
-namespace ggo
-{
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0xff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x00)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x80)) == 0x7f7f7f7f);
-
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0xffff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x0000)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x8000)) == 0x7fff7fff);
-
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0xffffffff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x00000000)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x80000000)) == 0x7fffffff);
-
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 1.0f)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.0f)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.5f)) == 0x7fffffff);
 }
 
 

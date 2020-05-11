@@ -62,7 +62,7 @@ namespace ggo
     int height() const { return _size.height(); }
     int line_byte_step() const { return _line_byte_step; }
     
-    static constexpr int pixel_byte_size() { return typename pixel_type_traits<pixel_type_>::pixel_byte_size; }
+    static constexpr int pixel_byte_size() { return pixel_type_traits<pixel_type_>::pixel_byte_size; }
     static constexpr ggo::pixel_type pixel_type() { return pixel_type_; }
     static constexpr ggo::lines_order memory_lines_order() { return memory_lines_order_; }
 
@@ -103,14 +103,14 @@ namespace ggo
     auto          operator()(int x, int y) const { return read_pixel(x, y); }
 
     // Write interface.
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        data() { return _buffer; }
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        line_ptr(int y) { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        pixel_ptr(int x, int y) { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
-    void          write_pixel(int x, int y, const typename color_t & c) { pixel_type_traits<pixel_type_>::write(pixel_ptr(x, y), c); }
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
+    void          write_pixel(int x, int y, const color_t & c) { pixel_type_traits<pixel_type_>::write(pixel_ptr(x, y), c); }
 
   private:
 
@@ -190,8 +190,8 @@ namespace ggo
       : _buffer(image._buffer)
       , _owns_buffer(image._owns_buffer)
       , _size(image._size)
-      , _memory_lines_order(image._memory_lines_order)
       , _pixel_type(image._pixel_type)
+      , _memory_lines_order(image._memory_lines_order)
       , _line_byte_step(image._line_byte_step)
     {
       image._buffer = nullptr;
@@ -224,11 +224,11 @@ namespace ggo
     const void *  pixel_ptr(int x, int y) const { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
 
     // Write interface.
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        data() { return _buffer; }
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        line_ptr(int y) { int dy = memory_lines_order() == lines_order::up ? y : height() - y - 1; return move_ptr(_buffer, dy * line_byte_step()); }
-    template <typename = typename std::enable_if_t<std::is_same_v<void_ptr_t, void *>>>
+    template <typename dummy_t = void_ptr_t, typename = typename std::enable_if_t<std::is_same_v<dummy_t, void *>>>
     void *        pixel_ptr(int x, int y) { return move_ptr(line_ptr(y), x * pixel_byte_size()); }
 
   private:
@@ -254,7 +254,7 @@ namespace ggo
     template <ggo::pixel_type pixel_type, typename... args>
     static auto call(args&&... a)
     {
-      return functor::call<pixel_type, memory_lines_order>(std::forward<args>(a)...);
+      return functor::template call<pixel_type, memory_lines_order>(std::forward<args>(a)...);
     }
   };
 
@@ -297,7 +297,7 @@ namespace ggo
   template <typename image_t>
   std::optional<generic_view<image_t>> make_image_view(image_t & img, rect_int clipping)
   {
-    if (clipping.clip(rect_int::from_size(_size)) == false)
+    if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
       return {};
     }

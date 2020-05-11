@@ -26,7 +26,7 @@ namespace ggo
     int _height;
   };
 
-  inline std::ostream & operator<<(std::ostream & os,  size & s)
+  inline std::ostream & operator<<(std::ostream & os, const size & s)
   {
     os << '(' << s.width() << ", " << s.height() << ')';
     return os;

@@ -446,21 +446,21 @@ namespace ggo
     {
       if constexpr(color_traits_out::color_space == color_space::y) // y => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(c);
+        return convert_sample_to<typename color_traits_out::sample_t>(c);
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // y => ya
       {
-        return { convert_sample_to<color_traits_out::sample_t>(c), color_traits_out::max };
+        return { convert_sample_to<typename color_traits_out::sample_t>(c), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // y => rgb
       {
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c);
+        auto y_out = convert_sample_to<typename color_traits_out::sample_t>(c);
         return { y_out, y_out, y_out };
       }
       else // y => rgba
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c);
+        auto y_out = convert_sample_to<typename color_traits_out::sample_t>(c);
         return { y_out, y_out, y_out, color_traits_out::max };
       }
     }
@@ -472,44 +472,44 @@ namespace ggo
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // ya => ya
       {
-        return { convert_sample_to<color_traits_out::sample_t>(c.y()), convert_sample_to<color_traits_out::sample_t>(c.a()) };
+        return { convert_sample_to<typename color_traits_out::sample_t>(c.y()), convert_sample_to<typename color_traits_out::sample_t>(c.a()) };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // ya => rgb
       {
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c.y());
+        auto y_out = convert_sample_to<typename color_traits_out::sample_t>(c.y());
         return { y_out, y_out, y_out };
       }
       else // ya => rgb
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
-        auto y_out = convert_sample_to<color_traits_out::sample_t>(c.y());
-        return { y_out, y_out, y_out, convert_sample_to<color_traits_out::sample_t>(c.a()) };
+        auto y_out = convert_sample_to<typename color_traits_out::sample_t>(c.y());
+        return { y_out, y_out, y_out, convert_sample_to<typename color_traits_out::sample_t>(c.a()) };
       }
     }
     else if constexpr(color_traits_in::color_space == color_space::rgb)
     {
       if constexpr(color_traits_out::color_space == color_space::y) // rgb => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
+        return convert_sample_to<typename color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // rgb => ya
       {
-        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
+        return { convert_sample_to<typename color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // rgb => rgb
       {
         return {
-          convert_sample_to<color_traits_out::sample_t>(c.r()),
-          convert_sample_to<color_traits_out::sample_t>(c.g()),
-          convert_sample_to<color_traits_out::sample_t>(c.b()) };
+          convert_sample_to<typename color_traits_out::sample_t>(c.r()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.g()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.b()) };
       }
       else // rgb => rgba
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
         return {
-          convert_sample_to<color_traits_out::sample_t>(c.r()),
-          convert_sample_to<color_traits_out::sample_t>(c.g()),
-          convert_sample_to<color_traits_out::sample_t>(c.b()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.r()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.g()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.b()),
           color_traits_out::max };
       }
     }
@@ -518,27 +518,27 @@ namespace ggo
       static_assert(color_traits_in::color_space == color_space::rgba);
       if constexpr(color_traits_out::color_space == color_space::y) // rgba => y
       {
-        return convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
+        return convert_sample_to<typename color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b()));
       }
       else if constexpr(color_traits_out::color_space == color_space::ya) // rgba => y
       {
-        return { convert_sample_to<color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
+        return { convert_sample_to<typename color_traits_out::sample_t>(rgb_to_y(c.r(), c.g(), c.b())), color_traits_out::max };
       }
       else if constexpr(color_traits_out::color_space == color_space::rgb) // rgba => rgb
       {
         return {
-          convert_sample_to<color_traits_out::sample_t>(c.r()),
-          convert_sample_to<color_traits_out::sample_t>(c.g()),
-          convert_sample_to<color_traits_out::sample_t>(c.b()) };
+          convert_sample_to<typename color_traits_out::sample_t>(c.r()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.g()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.b()) };
       }
       else // rgba => rgba
       {
         static_assert(color_traits_out::color_space == color_space::rgba);
         return {
-          convert_sample_to<color_traits_out::sample_t>(c.r()),
-          convert_sample_to<color_traits_out::sample_t>(c.g()),
-          convert_sample_to<color_traits_out::sample_t>(c.b()),
-          convert_sample_to<color_traits_out::sample_t>(c.a()) };
+          convert_sample_to<typename color_traits_out::sample_t>(c.r()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.g()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.b()),
+          convert_sample_to<typename color_traits_out::sample_t>(c.a()) };
       }
     }
   }
@@ -550,7 +550,7 @@ namespace ggo
 {
   template <typename color_t> constexpr color_t white()
   { 
-    using color_traits = typename color_traits<color_t>;
+    using color_traits = color_traits<color_t>;
 
     if constexpr (color_traits::color_space == color_space::rgba)
     {
@@ -579,7 +579,7 @@ namespace ggo
 
   template <typename color_t> constexpr color_t black()
   { 
-    using color_traits = typename color_traits<color_t>;
+    using color_traits = color_traits<color_t>;
     using sample_t = typename color_traits::sample_t;
 
     if constexpr (color_traits::color_space == color_space::rgba)
@@ -748,12 +748,12 @@ namespace ggo
   template <int bit_shift, typename data_t>
   ggo::rgb<data_t> fixed_point_div(const ggo::rgb<data_t> & c)
   {
-    using sample_t = typename ggo::color_traits<color<data_t>>::sample_t;
+    using sample_t = typename ggo::color_traits<rgb<data_t>>::sample_t;
 
-    static_assert(bit_shift > 1, "invalid bit shift");
+    static_assert(bit_shift > 1);
     static_assert(std::is_integral<sample_t>::value && std::is_unsigned<sample_t>::value, "expected unsigned integral sample type");
 
-    return ggo::color<data_t>(
+    return ggo::rgb<data_t>(
       ggo::fixed_point_div<bit_shift>(c.r()),
       ggo::fixed_point_div<bit_shift>(c.g()),
       ggo::fixed_point_div<bit_shift>(c.b()));
@@ -809,7 +809,7 @@ namespace ggo
   template <uint32_t log2_den>
   float linerp(float color_a, float color_b, const log2_fract<log2_den> & weight_a)
   {
-    const float weight_a_32f = weight_a.to<float>();
+    const float weight_a_32f = weight_a.template to<float>();
     const float weight_b_32f = 1.f - weight_a_32f;
 
     return weight_a_32f * color_a + weight_b_32f * color_b;
@@ -818,7 +818,7 @@ namespace ggo
   template <uint32_t log2_den>
   rgb_32f linerp(const rgb_32f & color_a, const rgb_32f & color_b, const log2_fract<log2_den> & weight_a)
   {
-    const float weight_a_32f = weight_a.to<float>();
+    const float weight_a_32f = weight_a.template to<float>();
     const float weight_b_32f = 1.f - weight_a_32f;
 
     return {

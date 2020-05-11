@@ -8,7 +8,7 @@ namespace ggo
   template <typename data_t>
   struct rect_data
   {
-    static_assert(std::is_floating_point<data_t>::value, "expecting flaoting point type");
+    static_assert(std::is_floating_point_v<data_t>);
 
     rect_data() = default;
     rect_data(const ggo::pos2<data_t> & pos, data_t width, data_t height) : _pos(pos), _width(width), _height(height) {}
@@ -23,10 +23,10 @@ namespace ggo
 
     static rect_data<data_t> from_points(pos2<data_t> p1, pos2<data_t> p2)
     {
-      GGO_ASSERT(left <= right);
-      GGO_ASSERT(bottom <= top);
+      auto [left, right] = std::minmax(p1.x(), p2.x());
+      auto [bottom, top] = std::minmax(p1.y(), p2.y());
 
-      return rect_data<data_t>({ left, bottom }, right - left, top - bottom);
+      return from_left_right_bottom_top(left, right, bottom, top);
     }
 
     pos2<data_t>  _pos;

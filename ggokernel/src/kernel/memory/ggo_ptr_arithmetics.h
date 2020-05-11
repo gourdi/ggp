@@ -1,5 +1,4 @@
-#ifndef __GGO_PTR_ARITHMETICS__
-#define __GGO_PTR_ARITHMETICS__
+#pragma once
 
 #include <kernel/ggo_kernel.h>
 
@@ -79,4 +78,3 @@ namespace ggo
 //  }
 //}
 //
-#endif

@@ -1,6 +1,8 @@
 #ifndef __GGO_BLIT__
 #define __GGO_BLIT__
 
+#include <kernel/ggo_size.h>
+#include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <2d/ggo_image.h>
 #include <2d/ggo_color.h>
 #include <2d/blend/ggo_alpha_blend.h>
@@ -29,7 +31,7 @@ namespace ggo
       {
         if constexpr (has_alpha_v<input_color_t> == true)
         {
-          output_image.write_pixel(x, y, alpha_blend<output_color_t>(output_image.read_pixel(x, y), input_image.read_pixel(x, y)));
+          output_image.write_pixel(x, y, alpha_blend(output_image.read_pixel(x, y), input_image.read_pixel(x, y)));
         }
         else
         {
@@ -70,8 +72,8 @@ namespace ggo
           auto c3 = alpha_blend<color_t>(c2, c1);
           pixel_type_traits<pixel_type>::write(output_ptr, c3);
 
-          input_ptr = ggo::move_ptr<input_image.pixel_byte_size()>(input_ptr);
-          output_ptr = ggo::move_ptr<output_image.pixel_byte_size()>(output_ptr);
+          input_ptr = ggo::move_ptr(input_ptr, input_image.pixel_byte_size());
+          output_ptr = ggo::move_ptr(output_ptr, output_image.pixel_byte_size());
         }
       }
     }
@@ -110,7 +112,7 @@ namespace ggo
     {
       return;
     }
-
+    
     GGO_ASSERT_EQ(input_view->size(), output_view->size());
 
     blit(*input_view,* output_view);

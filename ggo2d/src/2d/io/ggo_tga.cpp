@@ -87,8 +87,6 @@ namespace ggo
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
-    int line_size = ggo::pad(3 * width, 4);
-
     // Header.
     header header;
     memset(&header, 0, sizeof(header));

@@ -2,6 +2,7 @@
 #define __GGO_PIXEL_TYPE__
 
 #include <stdint.h>
+#include <utility>
 #include <kernel/memory/ggo_iterator.h>
 #include <2d/ggo_color.h>
 
@@ -301,16 +302,16 @@ namespace ggo
     switch (pt)
     {
     default: throw std::runtime_error("invalid image format"); break;
-    case pixel_type::y_8u: return functor::call<pixel_type::y_8u>(std::forward<args>(a)...);
-    case pixel_type::y_16u: return functor::call<pixel_type::y_16u>(std::forward<args>(a)...);
-    case pixel_type::y_32f: return functor::call<pixel_type::y_32f>(std::forward<args>(a)...);
-    case pixel_type::ya_8u: return functor::call<pixel_type::ya_8u>(std::forward<args>(a)...);
-    case pixel_type::rgb_8u: return functor::call<pixel_type::rgb_8u>(std::forward<args>(a)...);
-    case pixel_type::bgr_8u: return functor::call<pixel_type::bgr_8u>(std::forward<args>(a)...);
-    case pixel_type::bgrx_8u: return functor::call<pixel_type::bgrx_8u>(std::forward<args>(a)...);
-    case pixel_type::rgba_8u: return functor::call<pixel_type::rgba_8u>(std::forward<args>(a)...);
-    case pixel_type::rgb_16u: return functor::call<pixel_type::rgb_16u>(std::forward<args>(a)...);
-    case pixel_type::rgb_32f: return functor::call<pixel_type::rgb_32f>(std::forward<args>(a)...);
+    case pixel_type::y_8u: return functor::template call<pixel_type::y_8u>(std::forward<args>(a)...);
+    case pixel_type::y_16u: return functor::template call<pixel_type::y_16u>(std::forward<args>(a)...);
+    case pixel_type::y_32f: return functor::template call<pixel_type::y_32f>(std::forward<args>(a)...);
+    case pixel_type::ya_8u: return functor::template call<pixel_type::ya_8u>(std::forward<args>(a)...);
+    case pixel_type::rgb_8u: return functor::template call<pixel_type::rgb_8u>(std::forward<args>(a)...);
+    case pixel_type::bgr_8u: return functor::template call<pixel_type::bgr_8u>(std::forward<args>(a)...);
+    case pixel_type::bgrx_8u: return functor::template call<pixel_type::bgrx_8u>(std::forward<args>(a)...);
+    case pixel_type::rgba_8u: return functor::template call<pixel_type::rgba_8u>(std::forward<args>(a)...);
+    case pixel_type::rgb_16u: return functor::template call<pixel_type::rgb_16u>(std::forward<args>(a)...);
+    case pixel_type::rgb_32f: return functor::template call<pixel_type::rgb_32f>(std::forward<args>(a)...);
     }
   }
 }
@@ -338,6 +339,7 @@ namespace ggo
   }
 }
 
+#if 0
 // Static iterators.
 namespace ggo
 {
@@ -385,6 +387,6 @@ namespace ggo
     void set(const data_t & color) { pixel_type_traits<pt>::write(_ptr, color); }
   };
 }
-
+#endif
 #endif
 
