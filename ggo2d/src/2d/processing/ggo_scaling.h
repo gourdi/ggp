@@ -10,7 +10,7 @@ namespace ggo
   template <pixel_type pt, lines_order lo, typename in_void_ptr_t>
   void scale_nearest_neighbor(const image_base_t<pt, lo, in_void_ptr_t> & input, image_t<pt, lo> & output)
   {
-    using color_t = ggo::pixel_type_traits<pt>::color_t;
+    using color_t = typename ggo::pixel_type_traits<pt>::color_t;
 
     auto in = [&](int x, int y)
     {
@@ -29,8 +29,8 @@ namespace ggo
   template <pixel_type pt, lines_order lo, typename in_void_ptr_t>
   void scale_linear_interpolation(const image_base_t<pt, lo, in_void_ptr_t>& input, image_t<pt, lo>& output)
   {
-    using color_t = ggo::pixel_type_traits<pt>::color_t;
-    using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
+    using color_t = typename ggo::pixel_type_traits<pt>::color_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
 
     auto in = [&](int x, int y)
     {
@@ -49,8 +49,8 @@ namespace ggo
   template <pixel_type pt, lines_order lo, typename in_void_ptr_t>
   void scale_cubic_interpolation(const image_base_t<pt, lo, in_void_ptr_t> & input, image_t<pt, lo> & output)
   {
-    using color_t = ggo::pixel_type_traits<pt>::color_t;
-    using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
+    using color_t = typename ggo::pixel_type_traits<pt>::color_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
 
     auto in = [&](int x, int y)
     {
@@ -72,8 +72,8 @@ namespace ggo
   template <pixel_type pt, lines_order lo, typename in_void_ptr_t>
   void scale_linear_integration(const image_base_t<pt, lo, in_void_ptr_t>& input, image_t<pt, lo>& output)
   {
-    using color_t = ggo::pixel_type_traits<pt>::color_t;
-    using floating_point_color_t = ggo::color_traits<color_t>::floating_point_color_t;
+    using color_t = typename ggo::pixel_type_traits<pt>::color_t;
+    using floating_point_color_t = typename ggo::color_traits<color_t>::floating_point_color_t;
 
     auto in = [&](int x, int y)
     {
@@ -111,7 +111,7 @@ namespace ggo
   {
     image output(output_size, input.pixel_type(), input.memory_lines_order());
 
-    dispatch_image_format<scaler_nearest_neighbor>(input.pixel_type(), input.memory_lines_order(), input, output, algo);
+    dispatch_image_format<scaler_nearest_neighbor>(input.pixel_type(), input.memory_lines_order(), input, output);
 
     return output;
   }

@@ -32,7 +32,7 @@ namespace ggo
     const typename pixel_type_traits<pixel_type>::color_t & c2,
     int tile_size)
   {
-    ggo::image_view_t<ggo::memory_lines_order::up, pixel_type> image(buffer, { width, height }, line_byte_step);
+    ggo::image_t<pixel_type, ggo::lines_order::up> image(buffer, { width, height }, line_byte_step);
 
     fill_checker(image, c1, c2, tile_size);
   }

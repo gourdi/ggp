@@ -9,11 +9,13 @@ namespace ggo
   template <typename color_t_, typename data_t_ = float>
   struct layer
   {
-    using color_t = typename color_t_;
-    using data_t = typename data_t_;
+    using color_t = color_t_;
+    using data_t = data_t_;
 
     static_assert(std::is_floating_point_v<data_t> == true);
 
+    virtual ~layer() = default;
+    
     // Geometry.
     virtual rect_data<data_t> get_bounding_rect() const = 0;
     virtual rect_intersection	get_rect_intersection(const rect_data<data_t> & rect_data) const = 0;

@@ -16,7 +16,6 @@ GGO_TEST(marching_squares, circle)
   const int size = 400;
   const ggo::pos2_f offset(0.5f * size, 0.5f * size);
 
-  using capsule_layer = ggo::layer_t<ggo::capsule_f, ggo::rgb_8u>;
   ggo::canvas<ggo::rgb_8u> canvas;
   for (const auto & cell : cells)
   {

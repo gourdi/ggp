@@ -16,7 +16,7 @@ GGO_TEST(image, move)
   GGO_CHECK_EQ(img1.pixel_type(), ggo::pixel_type::rgb_8u);
   GGO_CHECK_EQ(img1.memory_lines_order(), ggo::lines_order::down);
   GGO_CHECK_EQ(img1.line_byte_step(), 30);
-  GGO_CHECK_EQ(img2.data(), nullptr);
+  GGO_CHECK(img2.data() == nullptr);
 }
 
 /////////////////////////////////////////////////////////////////////

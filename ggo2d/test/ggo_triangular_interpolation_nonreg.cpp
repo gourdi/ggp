@@ -56,9 +56,6 @@ GGO_TEST(paint, color_triangle)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, alpha_color_triangle)
 {
-  const int width = 120;
-  const int height = 100;
-
   using color_triangle_t = ggo::color_triangle<ggo::rgb_8u, ggo::rgba_8u, ggo::rgba_32f>;
 
   ggo::canvas<ggo::rgb_8u> canvas;

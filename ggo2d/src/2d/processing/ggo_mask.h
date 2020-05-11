@@ -8,7 +8,7 @@ namespace ggo
   template <typename image_t, typename mask_image_t, typename brush_t>
   void apply_mask(image_t & image, const mask_image_t & mask, brush_t && brush)
   {
-    static_assert(color_traits<mask_image_t::color_t>::samples_count == 1);
+    static_assert(color_traits<typename mask_image_t::color_t>::samples_count == 1);
 
     if (image.size() != mask.size())
     {

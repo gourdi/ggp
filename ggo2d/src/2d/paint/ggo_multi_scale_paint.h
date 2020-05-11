@@ -49,7 +49,7 @@ namespace ggo
         using fract_t = ggo::log2_fract<sampler_t::samples_count_log2>;
 
         fract_t fract;
-        sampler_t::sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
+        sampler_t::template sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
         {
           if (shape.is_point_inside({ x_f, y_f }) == true)
           {

@@ -21,7 +21,7 @@ namespace ggo
 
     opacity_blender(float opacity, blend_t blend = blend_t())
       :
-      _opacity(opacity),²
+      _opacity(opacity),
       _inv_opacity(1 - opacity),
       _blend(blend)
     {
@@ -30,7 +30,7 @@ namespace ggo
     template <typename brush_color_t>
     float operator()(float bkgd_color, brush_color_t brush_color) const
     {
-      return _inv_opacity * bkgd_color + _opacity * _blend(brush_color);
+      return _inv_opacity * bkgd_color + _opacity * _blend(bkgd_color, brush_color);
     }
   };
 
@@ -58,7 +58,7 @@ namespace ggo
     template <typename brush_color_t>
     uint8_t operator()(uint8_t bkgd_color, brush_color_t brush_color) const
     {
-      return fixed_point_div<bit_shift>(_inv_opacity * bkgd_color + _opacity * _blend(brush_color));
+      return fixed_point_div<bit_shift>(_inv_opacity * bkgd_color + _opacity * _blend(bkgd_color, brush_color));
     }
   };
 

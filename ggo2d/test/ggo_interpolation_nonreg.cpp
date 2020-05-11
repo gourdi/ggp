@@ -33,8 +33,6 @@ namespace
         50, 25, 185,
         200, 132, 98,
         43, 77, 210} };
-
-    uint8_t v = interpolate_func(input.data(), 3, 3, 0.25f, 0.25f);
     
     for (int y = 0; y < size; ++y)
     {

@@ -10,6 +10,7 @@
 #include <2d/paint/ggo_layer.h>
 #include <2d/paint/ggo_multi_scale_paint.h>
 #include <2d/blend/ggo_alpha_blend.h>
+#include <2d/blend/ggo_opacity_blend.h>
 
 // Paint single shape.
 namespace ggo
@@ -35,7 +36,7 @@ namespace ggo
     using color_t = typename image_t::color_t;
 
     solid_color_brush<color_t> brush(c);
-    opacity_alpha_blender<color_t, color_t> blender(opacity);
+    opacity_blender<color_t, alpha_blender<color_t, color_t>> blender(opacity);
 
     paint<sampling>(image, shape, brush, blender, clipping);
   }

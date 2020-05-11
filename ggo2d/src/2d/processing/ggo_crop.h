@@ -44,7 +44,7 @@ namespace ggo
   {
     auto make_output_image = [](const ggo::size & crop_size)
     {
-      return ggo::image_t<pixel_type, memory_lines_order, void_ptr_t, owns_buffer>(crop_size);
+      return ggo::image_t<pixel_type, memory_lines_order>(crop_size);
     };
 
     return crop_details::crop(input, crop_rect, make_output_image);

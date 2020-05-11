@@ -36,7 +36,6 @@ GGO_TEST(harmonic_surface, test2)
     float length = 1;
     float wavelength = static_cast<float>(size >> (i + 1));
     float amplitude = 1.f / static_cast<float>(i + 1);
-    float phase = 0;
 
     harmonics.push_harmonic(length * ggo::vec2_f::from_angle(angle), wavelength, amplitude, 0);
   }

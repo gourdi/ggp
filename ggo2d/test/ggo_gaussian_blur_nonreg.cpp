@@ -21,7 +21,7 @@ bool test_y_32f()
     1.f, 1.f, 0.f, 0.f, 0.f, 1.f, 0.f,
     0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f };
 
-  ggo::gaussian_blur(ggo::image_t<ggo::pixel_type::y_32f, memory_lines_order>(pixels, { width, height }), 0.5f);
+  //ggo::gaussian_blur(ggo::image_t<ggo::pixel_type::y_32f, memory_lines_order>(pixels, { width, height }), 0.5f);
 
   const float expected[width * height] = {
     1.00000000f,  0.893493056f,  0.106506981f,  0.000000000f, 0.000000000f,  0.0000000000f, 0.000000000f,
@@ -50,7 +50,7 @@ bool test_y_8u()
     0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
 
-  ggo::gaussian_blur(ggo::image_t<ggo::pixel_type::y_8u, memory_lines_order>(pixels, { width, height }), 0.5f);
+  //ggo::gaussian_blur(ggo::image_t<ggo::pixel_type::y_8u, memory_lines_order>(pixels, { width, height }), 0.5f);
 
   const uint8_t expected[width * height] = {
     0xff, 0xe4, 0x1b, 0x00, 0x00, 0x00, 0x00,

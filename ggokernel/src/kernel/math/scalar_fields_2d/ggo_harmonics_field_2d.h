@@ -1,7 +1,7 @@
-#ifndef __GGO_HARMONIC_2D__
-#define __GGO_HARMONIC_2D__
+#pragma once
 
 #include <kernel/ggo_vec2.h>
+#include <kernel/ggo_kernel.h>
 #include <kernel/math/scalar_fields_2d/ggo_scalar_field_2d_abc.h>
 
 namespace ggo
@@ -54,5 +54,3 @@ namespace ggo
     return result;
   }
 }
-
-#endif

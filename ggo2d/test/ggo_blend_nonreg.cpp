@@ -3,65 +3,64 @@
 #include <2d/blend/ggo_additive_blend.h>
 #include <2d/blend/ggo_opacity_blend.h>
 
-
-// Tests y8u.
-namespace ggo
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, alpha_y8u)
 {
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0xff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x00)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x80)) == 0x7f);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0xff)), 0x00);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x00)), 0xff);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x80)), 0x7f);
 
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0xffff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x0000)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x8000)) == 0x7f);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0xffff)), 0x00);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x0000)), 0xff);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x8000)), 0x7f);
 
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0xffffffff)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x00000000)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x80000000)) == 0x7f);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0xffffffff)), 0x00);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x00000000)), 0xff);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x80000000)), 0x7f);
 
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 1.0f)) == 0x00);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.0f)) == 0xff);
-  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.5f)) == 0x7f);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 1.0f)), 0x00);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.0f)), 0xff);
+  GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.5f)), 0x7f);
 }
 
-// Tests y16u.
-namespace ggo
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, alpha_y16u)
 {
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0xff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x00)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x80)) == 0x7f7f);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0xff)), 0x0000);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x00)), 0xffff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x80)), 0x7f7f);
 
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0xffff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x0000)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x8000)) == 0x7fff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0xffff)), 0x0000);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x0000)), 0xffff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x8000)), 0x7fff);
 
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0xffffffff)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x00000000)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x80000000)) == 0x7fff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0xffffffff)), 0x0000);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x00000000)), 0xffff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x80000000)), 0x7fff);
 
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 1.0f)) == 0x0000);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.0f)) == 0xffff);
-  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.5f)) == 0x7fff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 1.0f)), 0x0000);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.0f)), 0xffff);
+  GGO_CHECK_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.5f)), 0x7fff);
 }
 
-// Tests y32u.
-namespace ggo
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, alpha_y32u)
 {
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0xff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x00)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x80)) == 0x7f7f7f7f);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0xff)), 0x00000000);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x00)), 0xffffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x80)), 0x7f7f7f7f);
 
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0xffff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x0000)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x8000)) == 0x7fff7fff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0xffff)), 0x00000000);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x0000)), 0xffffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x8000)), 0x7fff7fff);
 
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0xffffffff)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x00000000)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x80000000)) == 0x7fffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0xffffffff)), 0x00000000);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x00000000)), 0xffffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x80000000)), 0x7fffffff);
 
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 1.0f)) == 0x00000000);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.0f)) == 0xffffffff);
-  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.5f)) == 0x7fffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 1.0f)), 0x00000000);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.0f)), 0xffffffff);
+  GGO_CHECK_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.5f)), 0x7fffffff);
 }
 
 /////////////////////////////////////////////////////////////////////

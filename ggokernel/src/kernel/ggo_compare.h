@@ -8,7 +8,7 @@ namespace ggo
 {
   namespace details
   {
-    template <typename data_t, int count, int index>
+    template <typename data_t, size_t count, size_t index>
     struct compare_t
     {
       static constexpr bool call(const data_t * ptr1, const data_t * ptr2)
@@ -22,7 +22,7 @@ namespace ggo
       }
     };
 
-    template <typename data_t, int count>
+    template <typename data_t, size_t count>
     struct compare_t<data_t, count, 0>
     {
       static constexpr bool call(const data_t * ptr1, const data_t * ptr2)
@@ -38,31 +38,31 @@ namespace ggo
     };
   }
 
-  template <int size, typename data_t>
+  template <size_t size, typename data_t>
   constexpr bool compare(const data_t * ptr1, const data_t * ptr2)
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(ptr1, ptr2);
   }
 
-  template <int size, typename data_t>
+  template <size_t size, typename data_t>
   constexpr bool compare(const data_t * ptr1, const data_t * ptr2, data_t epsilon)
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(ptr1, ptr2, epsilon);
   }
 
-  template <int size, typename data_t>
+  template <size_t size, typename data_t>
   constexpr bool compare(data_t const (&buffer1)[size], data_t const (&buffer2)[size])
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(buffer1, buffer2);
   }
 
-  template <int size, typename data_t>
+  template <size_t size, typename data_t>
   constexpr bool compare(data_t const (&buffer1)[size], data_t const (&buffer2)[size], data_t epsilon)
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(buffer1, buffer2, epsilon);
   }
 
-  template <int size, typename data_t>
+  template <size_t size, typename data_t>
   constexpr bool compare(const std::array<data_t, size> & array1, const std::array<data_t, size> & array2, data_t epsilon)
   {
     return ggo::details::compare_t<data_t, size, size - 1>::call(array1.data(), array2.data(), epsilon);

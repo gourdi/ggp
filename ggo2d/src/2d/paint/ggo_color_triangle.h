@@ -15,7 +15,7 @@ namespace ggo
     using shape_t = ggo::triangle2d<data_t>;
 
     static_assert(std::is_floating_point_v<data_t> == true);
-    static_assert(std::is_floating_point_v<ggo::color_traits<vertex_color_t>::sample_t> == true);
+    static_assert(std::is_floating_point_v<typename ggo::color_traits<vertex_color_t>::sample_t> == true);
 
     color_triangle(const ggo::triangle2d<data_t> & triangle,
       const vertex_color_t & color1,

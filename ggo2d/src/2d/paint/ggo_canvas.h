@@ -29,14 +29,14 @@ namespace ggo
       typename std::vector<std::shared_ptr<const layer<color_t, scalar_t>>>::const_iterator _it;
     };
 
-    template <typename paint_shape_t, typename... args>
+    template <typename layer_t, typename... args>
     auto & make(args &&... a)
     {
-      auto * shape = new paint_shape_t(std::forward<args>(a)...);
+      auto * layer = new layer_t(std::forward<args>(a)...);
 
-      _paint_shapes.emplace_back(shape);
+      _layers.emplace_back(layer);
 
-      return *shape;
+      return *layer;
     }
 
     template <typename shape_t, typename brush_t, typename blender_t>
@@ -81,7 +81,7 @@ namespace ggo
     auto begin() const { return iterator(_layers.cbegin()); }
     auto end() const { return iterator(_layers.cend()); }
 
-    void clear() { _paint_shapes.clear(); }
+    void clear() { _layers.clear(); }
 
     //scene2d<color_t, scalar_t> intersect(ggo::rect_data rect) const
     //{

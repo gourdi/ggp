@@ -1,4 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
+#include <kernel/ggo_compare.h>
 #include <2d/processing/ggo_local_processing.h>
 
 ////////////////////////////////////////////////////////////////////

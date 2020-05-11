@@ -78,7 +78,7 @@ namespace ggo
     {
       if constexpr (border_mode == ggo::border_mode::zero)
       {
-        return output_image_t::color_t(0);
+        return typename output_image_t::color_t(0);
       }
       else
       {
@@ -161,7 +161,7 @@ namespace ggo
     {
       if constexpr (border_mode == ggo::border_mode::zero)
       {
-        return output_image_t::color_t(0);
+        return typename output_image_t::color_t(0);
       }
       else
       {

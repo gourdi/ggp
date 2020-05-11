@@ -14,7 +14,7 @@ namespace ggo
     const typename image_t::color_t & c4,
     std::optional<ggo::rect_int> clipping = {})
   {
-    using floating_point_color_t = typename color_traits<image_t::color_t>::floating_point_color_t;
+    using floating_point_color_t = typename color_traits<typename image_t::color_t>::floating_point_color_t;
     using floating_point_t = typename color_traits<floating_point_color_t>::sample_t;
 
     static_assert(std::is_floating_point_v<floating_point_t>);
@@ -41,7 +41,7 @@ namespace ggo
       for (int x = clipping->left(); x <= clipping->right(); ++x)
       {
         auto color7 = (static_cast<floating_point_t>(x) * color5 + static_cast<floating_point_t>(w - x) * color6) * inv_w;
-        image.write_pixel(x, y, ggo::convert_color_to<image_t::color_t>(color7));
+        image.write_pixel(x, y, ggo::convert_color_to<typename image_t::color_t>(color7));
       }
     }
   }
@@ -54,7 +54,7 @@ namespace ggo
     const typename pixel_type_traits<pixel_type>::color_t & c4,
     std::optional<ggo::rect_int> clipping = {})
   {
-    ggo::image_view_t<ggo::memory_lines_order::up, pixel_type> image(buffer, { width, height }, line_byte_step);
+    ggo::image_t<pixel_type, ggo::lines_order::up> image(buffer, { width, height }, line_byte_step);
 
     fill_4_colors(image, c1, c2, c3, c4, clipping);
   }

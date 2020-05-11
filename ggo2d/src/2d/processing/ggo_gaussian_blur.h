@@ -69,9 +69,9 @@ namespace ggo
     template <typename image_t, typename cache_t>
     void gaussian_blur(image_t & image, cache_t & cache, float stddev, border_mode border_mode)
     {
-      static_assert(std::is_same_v<image_t::color_t, cache_t::color_t>);
+      static_assert(std::is_same_v<typename image_t::color_t, typename cache_t::color_t>);
 
-      using helpers = gaussian_blur_details::helpers<image_t::color_t>;
+      using helpers = gaussian_blur_details::helpers<typename image_t::color_t>;
 
       const auto kernel = helpers::build_kernel(stddev);
       if (kernel.size() <= 1)
@@ -165,6 +165,9 @@ namespace ggo
       break;
     case ggo::pixel_type::bgrx_8u:
       gaussian_blur_aux<ggo::pixel_type::bgrx_8u>(img, stddev, border_mode);
+      break;
+    default:
+      throw std::runtime_error("unsupported pixel type");
       break;
     }
   }

@@ -68,7 +68,7 @@ namespace ggo
   template <typename input_image_t, typename output_image_t>
   void dilatation_disc(const input_image_t & input, output_image_t & output, float radius)
   {
-    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+    static_assert(std::is_same_v<typename input_image_t::color_t, typename output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 
@@ -88,7 +88,7 @@ namespace ggo
   template <typename input_image_t, typename output_image_t>
   void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height)
   {
-    static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
+    static_assert(std::is_same_v<typename input_image_t::color_t, typename output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 

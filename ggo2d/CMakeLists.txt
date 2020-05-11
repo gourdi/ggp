@@ -6,7 +6,7 @@ group_sources(${sources})
 add_library(ggo2d STATIC ${sources})
 add_dependencies(ggo2d ggokernel_nonreg)
 target_include_directories(ggo2d PUBLIC "src/" PRIVATE ${JPEG_INCLUDE_DIR})
-target_link_libraries(ggo2d PUBLIC ggokernel PRIVATE png ${JPEG_LIBRARIES})
+target_link_libraries(ggo2d PUBLIC ggokernel PRIVATE png_static ${JPEG_LIBRARIES})
 
 # The non-regression executable.
 get_sources_from_root_directory("test" sources)

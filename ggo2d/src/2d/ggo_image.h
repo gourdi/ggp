@@ -1,7 +1,7 @@
-#ifndef __GGO_IMAGE__
-#define __GGO_IMAGE__
+#pragma once
 
 #include <kernel/ggo_rect_int.h>
+#include <kernel/ggo_kernel.h>
 #include <kernel/memory/ggo_ptr_arithmetics.h>
 #include <2d/ggo_pixel_type.h>
 #include <optional>
@@ -348,6 +348,4 @@ namespace ggo
     for_each_pixel(img, clipping, func);
   }
 }
-
-#endif
 
