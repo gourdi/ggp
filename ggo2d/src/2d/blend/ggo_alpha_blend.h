@@ -11,17 +11,17 @@
 namespace ggo
 {
   // Specialized functions with background with no alpha channel.
-  inline uint8_t alpha_blend(uint8_t bkgd_color, ggo::ya_8u brush_color)
+  inline constexpr uint8_t alpha_blend(uint8_t bkgd_color, ggo::ya_8u brush_color)
   {
     return ggo::round_div<uint32_t>(brush_color.a() * brush_color.y() + (0xff - brush_color.a()) * bkgd_color, 0xff);
   }
 
-  inline uint16_t alpha_blend(uint16_t bkgd_color, ggo::ya_16u brush_color)
+  inline constexpr uint16_t alpha_blend(uint16_t bkgd_color, ggo::ya_16u brush_color)
   {
     return ggo::round_div<uint32_t>(brush_color.a() * brush_color.y() + (0xffff - brush_color.a()) * bkgd_color, 0xffff);
   }
 
-  inline uint32_t alpha_blend(uint32_t bkgd_color, ggo::ya_32u brush_color)
+  inline constexpr uint32_t alpha_blend(uint32_t bkgd_color, ggo::ya_32u brush_color)
   {
     uint64_t bkgd_color_64 = static_cast<uint64_t>(bkgd_color);
     uint64_t brush_color_y_64 = static_cast<uint64_t>(brush_color.y());
@@ -30,12 +30,12 @@ namespace ggo
     return static_cast<uint32_t>(ggo::round_div<uint64_t>(brush_color_a_64 * brush_color_y_64 + (0xffffffff - brush_color_a_64) * bkgd_color_64, 0xffffffff));
   }
 
-  inline float alpha_blend(float bkgd_color, ggo::ya_32f brush_color)
+  inline constexpr float alpha_blend(float bkgd_color, ggo::ya_32f brush_color)
   {
     return brush_color.a() * brush_color.y() + (1.f - brush_color.a()) * bkgd_color;
   }
 
-  inline ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgba_8u & brush_color)
+  inline constexpr ggo::rgb_8u alpha_blend(const ggo::rgb_8u & bkgd_color, const ggo::rgba_8u & brush_color)
   {
     uint32_t inv_opacity = 0xff - brush_color.a();
 
@@ -45,7 +45,7 @@ namespace ggo
       ggo::round_div<uint32_t>(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xff));
   }
 
-  inline ggo::rgb_16u alpha_blend(const ggo::rgb_16u & bkgd_color, const ggo::rgba_16u & brush_color)
+  inline constexpr ggo::rgb_16u alpha_blend(const ggo::rgb_16u & bkgd_color, const ggo::rgba_16u & brush_color)
   {
     uint32_t inv_opacity = 0xffff - brush_color.a();
 
@@ -55,7 +55,7 @@ namespace ggo
       ggo::round_div<uint32_t>(brush_color.a() * brush_color.b() + inv_opacity * bkgd_color.b(), 0xffff));
   }
 
-  inline ggo::rgb_32u alpha_blend(const ggo::rgb_32u & bkgd_color, const ggo::rgba_32u & brush_color)
+  inline constexpr ggo::rgb_32u alpha_blend(const ggo::rgb_32u & bkgd_color, const ggo::rgba_32u & brush_color)
   {
     uint64_t bkgd_color_t_64 = static_cast<uint64_t>(bkgd_color.r());
     uint64_t bkgd_color_g_64 = static_cast<uint64_t>(bkgd_color.g());
@@ -74,7 +74,7 @@ namespace ggo
       static_cast<uint32_t>(ggo::round_div<uint64_t>(brush_color_a_64 * brush_color_b_64 + inv_opacity_64 * bkgd_color_b_64, 0xffffffff)));
   }
 
-  inline ggo::rgb_32f alpha_blend(const ggo::rgb_32f & bkgd_color, const ggo::rgba_32f & brush_color)
+  inline constexpr ggo::rgb_32f alpha_blend(const ggo::rgb_32f & bkgd_color, const ggo::rgba_32f & brush_color)
   {
     float inv_opacity = 1.f - brush_color.a();
 
@@ -85,7 +85,7 @@ namespace ggo
   }
 
   // Specialized functions with background with an alpha channel.
-  inline ggo::ya_8u alpha_blend(const ggo::ya_8u & bkgd_color, const ggo::ya_8u & brush_color)
+  inline constexpr ggo::ya_8u alpha_blend(const ggo::ya_8u & bkgd_color, const ggo::ya_8u & brush_color)
   {
     uint32_t cropped_bkgd_a = ggo::round_div<uint32_t>((0xff - brush_color.a()) * bkgd_color.a(), 0xff);
     uint32_t a = brush_color.a() + cropped_bkgd_a;
@@ -180,7 +180,7 @@ namespace ggo
 
   // Generic function, uses the specialized functions.
   template <typename bkgd_color_t, typename brush_color_t>
-  bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
+  constexpr bkgd_color_t alpha_blend(const bkgd_color_t & bkgd_color, const brush_color_t & brush_color)
   {
     constexpr color_space bkgd_color_space  = color_traits<bkgd_color_t>::color_space;
     constexpr color_space brush_color_space = color_traits<brush_color_t>::color_space;
@@ -210,7 +210,7 @@ namespace ggo
   }
 }
 
-// Basic alpha blending (without opacity). Just overwrites the pixel, and use the alpha channel if available.
+// Struct calling the above functions.
 namespace ggo
 {
   template <typename bkgd_color_t, typename brush_color_t>
@@ -223,109 +223,64 @@ namespace ggo
   };
 }
 
-// Opacity alpha blending.
+// Tests y8u.
 namespace ggo
 {
-  template <typename bkgd_color_t, typename brush_color_t>
-  struct opacity_alpha_blender
-  {
-  };
+  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0xff)) == 0x00);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x00)) == 0xff);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x80)) == 0x7f);
 
-  template <>
-  struct opacity_alpha_blender<float, float>
-  {
-    const float _opacity;
-    const float _inv_opacity;
+  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0xffff)) == 0x00);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x0000)) == 0xff);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x8000)) == 0x7f);
 
-    opacity_alpha_blender(float opacity)
-      :
-      _opacity(opacity),
-      _inv_opacity(1 - opacity)
-    {
-    }
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0xffffffff)) == 0x00);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x00000000)) == 0xff);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x80000000)) == 0x7f);
 
-    float operator()(float bkgd_color, float brush_color) const
-    {
-      return _inv_opacity * bkgd_color + _opacity * brush_color;
-    }
-  };
-
-  template <>
-  struct opacity_alpha_blender<uint8_t, uint8_t>
-  {
-    static constexpr uint32_t bit_shift = 8;
-    static constexpr uint32_t one = 1 << bit_shift;
-
-    const uint32_t _opacity;
-    const uint32_t _inv_opacity;
-
-    template <typename scalar_t>
-    opacity_alpha_blender(scalar_t opacity)
-      :
-      _opacity(ggo::round_to<uint32_t>(opacity * one)),
-      _inv_opacity(ggo::round_to<uint32_t>((1 - opacity) * one))
-    {
-      static_assert(std::is_floating_point_v<scalar_t> == true);
-    }
-
-    uint8_t operator()(uint8_t bkgd_color, uint8_t brush_color) const
-    {
-      return fixed_point_div<bit_shift>(_inv_opacity * bkgd_color + _opacity * brush_color);
-    }
-  };
-
-  template <>
-  struct opacity_alpha_blender<ggo::rgb_8u, ggo::rgb_8u>
-  {
-    static constexpr uint32_t bit_shift = 8;
-    static constexpr uint32_t one = 1 << bit_shift;
-
-    const uint32_t _opacity;
-    const uint32_t _inv_opacity;
-
-    template <typename scalar_t>
-    opacity_alpha_blender(scalar_t opacity)
-      :
-      _opacity(ggo::round_to<uint32_t>(opacity * one)),
-      _inv_opacity(ggo::round_to<uint32_t>((1 - opacity) * one))
-    {
-      static_assert(std::is_floating_point_v<scalar_t> == true);
-    }
-
-    rgb_8u operator()(const rgb_8u & bkgd_color, const rgb_8u & brush_color) const
-    {
-      return {
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.r() + _opacity * brush_color.r())),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.g() + _opacity * brush_color.g())),
-        static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.b() + _opacity * brush_color.b())) };
-    }
-  };
-
-#if 0 
-  template <>
-  struct alpha_blender<ggo::rgba_8u>
-  {
-    static constexpr uint32_t bit_shift = 8;
-    static constexpr uint32_t one = 1 << bit_shift;
-
-    const uint32_t _opacity;
-
-    alpha_blender(float opacity)
-    :
-    _opacity(ggo::round_to<uint32_t>(opacity * one))
-    {}
-
-    rgba_8u operator()(int x, int y, const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
-    {
-      THIS LOOKS REALLY WRONG
-      return linerp(brush_color, bkgd_color, ggo::log2_fract<bit_shift>(_opacity));
-    }
-
-    rgba_8u operator()(const rgba_8u & bkgd_color, const rgba_8u & brush_color) const
-    {
-      return operator()(0, 0, bkgd_color, brush_color);
-    }
-  };
-#endif
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 1.0f)) == 0x00);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.0f)) == 0xff);
+  static_assert(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.5f)) == 0x7f);
 }
+
+// Tests y16u.
+namespace ggo 
+{
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0xff)) == 0x0000);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x00)) == 0xffff);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x80)) == 0x7f7f);
+
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0xffff)) == 0x0000);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x0000)) == 0xffff);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x8000)) == 0x7fff);
+
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0xffffffff)) == 0x0000);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x00000000)) == 0xffff);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x80000000)) == 0x7fff);
+
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 1.0f)) == 0x0000);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.0f)) == 0xffff);
+  static_assert(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.5f)) == 0x7fff);
+}
+
+// Tests y32u.
+namespace ggo
+{
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0xff)) == 0x00000000);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x00)) == 0xffffffff);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x80)) == 0x7f7f7f7f);
+
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0xffff)) == 0x00000000);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x0000)) == 0xffffffff);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x8000)) == 0x7fff7fff);
+
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0xffffffff)) == 0x00000000);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x00000000)) == 0xffffffff);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x80000000)) == 0x7fffffff);
+
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 1.0f)) == 0x00000000);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.0f)) == 0xffffffff);
+  static_assert(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.5f)) == 0x7fffffff);
+}
+
 

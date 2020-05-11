@@ -1,84 +1,8 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <2d/blend/ggo_alpha_blend.h>
 #include <2d/blend/ggo_additive_blend.h>
+#include <2d/blend/ggo_opacity_blend.h>
 
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(blend, alpha_y8u)
-{
-  {
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0xff)), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x00)), 0xff);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_8u(0x00, 0x80)), 0x7f);
-
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0xffff)), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x0000)), 0xff);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_16u(0, 0x8000)), 0x7f);
-
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0xffffffff)), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x00000000)), 0xff);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32u(0, 0x80000000)), 0x7f);
-
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 1.0f)), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.0f)), 0xff);
-    GGO_CHECK_EQ(alpha_blend(0xff_u8, ggo::ya_32f(0, 0.5f)), 0x7f);
-  }
-
-  {
-    const ggo::opacity_alpha_blender<uint8_t, uint8_t> alpha_blend(1.f);
-
-    GGO_CHECK_EQ(alpha_blend(0xff, 0x00), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0xff, 0x80), 0x80);
-    GGO_CHECK_EQ(alpha_blend(0xff, 0xff), 0xff);
-  }
-
-  {
-    const ggo::opacity_alpha_blender<uint8_t, uint8_t> alpha_blend(0.5f);
-
-    GGO_CHECK_EQ(alpha_blend(0x00, 0x00), 0x00);
-    GGO_CHECK_EQ(alpha_blend(0x00, 0x80), 0x40);
-    GGO_CHECK_EQ(alpha_blend(0x00, 0xff), 0x80);
-  }
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(blend, alpha_y16u)
-{
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0xff)), 0x0000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x00)), 0xffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_8u(0x00, 0x80)), 0x7f7f);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0xffff)), 0x0000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x0000)), 0xffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_16u(0, 0x8000)), 0x7fff);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0xffffffff)), 0x0000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x00000000)), 0xffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32u(0, 0x80000000)), 0x7fff);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 1.0f)), 0x0000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.0f)), 0xffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffff_u16, ggo::ya_32f(0, 0.5f)), 0x7fff);
-}
-
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(blend, alpha_y32u)
-{
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0xff)), 0x00000000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x00)), 0xffffffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_8u(0x00, 0x80)), 0x7f7f7f7f);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0xffff)), 0x00000000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x0000)), 0xffffffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_16u(0, 0x8000)), 0x7fff7fff);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0xffffffff)), 0x00000000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x00000000)), 0xffffffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32u(0, 0x80000000)), 0x7fffffff);
-
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 1.0f)), 0x00000000);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.0f)), 0xffffffff);
-  GGO_CHECK_FLOAT_EQ(alpha_blend(0xffffffff_u32, ggo::ya_32f(0, 0.5f)), 0x7fffffff);
-}
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_y32f)
@@ -103,29 +27,9 @@ GGO_TEST(blend, alpha_y32f)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_rgb8u)
 {
-  {
-    GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0xff)), ggo::rgb_8u(0xff, 0x80, 0x00));
-    GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0x80)), ggo::rgb_8u(0xff, 0xbf, 0x7f));
-    GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0x00)), ggo::rgb_8u(0xff, 0xff, 0xff));
-  }
-
-  {
-    const ggo::opacity_alpha_blender<ggo::rgb_8u, ggo::rgb_8u> alpha_blend(1.f);
-
-    auto c = alpha_blend({ 0xff_u8, 0xff_u8, 0xff_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
-    GGO_CHECK_EQ(int(c.r()), 0x00);
-    GGO_CHECK_EQ(int(c.g()), 0x80);
-    GGO_CHECK_EQ(int(c.b()), 0xff);
-  }
-
-  {
-    const ggo::opacity_alpha_blender<ggo::rgb_8u, ggo::rgb_8u> alpha_blend(0.5f);
-
-    auto c = alpha_blend({ 0x00_u8, 0x00_u8, 0x00_u8 }, { 0x00_u8, 0x80_u8, 0xff_u8 });
-    GGO_CHECK_EQ(int(c.r()), 0x00);
-    GGO_CHECK_EQ(int(c.g()), 0x40);
-    GGO_CHECK_EQ(int(c.b()), 0x80);
-  }
+  GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0xff)), ggo::rgb_8u(0xff, 0x80, 0x00));
+  GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0x80)), ggo::rgb_8u(0xff, 0xbf, 0x7f));
+  GGO_CHECK_EQ(alpha_blend(ggo::rgb_8u(0xff, 0xff, 0xff), ggo::rgba_8u(0xff, 0x80, 0x00, 0x00)), ggo::rgb_8u(0xff, 0xff, 0xff));
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -195,40 +99,63 @@ GGO_TEST(blend, alpha_ya32f)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_rgba8u)
 {
-  auto alpha_blend_rgba8u = [](const ggo::rgba_8u & bkgd_color, const ggo::rgba_8u & brush_color)
-  {
-    return ggo::alpha_blend(bkgd_color, brush_color);
-  };
-
-  GGO_CHECK_EQ(alpha_blend_rgba8u({ 0x00, 0x80, 0xff, 0x00 }, { 0x00, 0x80, 0xff, 0x00 }), ggo::rgba_8u(0x00, 0x00, 0x00, 0x00));
-  GGO_CHECK_EQ(alpha_blend_rgba8u({ 0x00, 0x80, 0xff, 0x00 }, { 0x00, 0x80, 0xff, 0xff }), ggo::rgba_8u(0x00, 0x80, 0xff, 0xff));
-  GGO_CHECK_EQ(alpha_blend_rgba8u({ 0x80, 0xff, 0x00, 0x20 }, { 0x00, 0x80, 0xff, 0xee }), ggo::rgba_8u(0x01, 0x81, 0xfd, 0xf0));
+  GGO_CHECK_EQ(ggo::alpha_blend(ggo::rgba_8u{ 0x00, 0x80, 0xff, 0x00 }, ggo::rgba_8u{ 0x00, 0x80, 0xff, 0x00 }), ggo::rgba_8u(0x00, 0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::alpha_blend(ggo::rgba_8u{ 0x00, 0x80, 0xff, 0x00 }, ggo::rgba_8u{ 0x00, 0x80, 0xff, 0xff }), ggo::rgba_8u(0x00, 0x80, 0xff, 0xff));
+  GGO_CHECK_EQ(ggo::alpha_blend(ggo::rgba_8u{ 0x80, 0xff, 0x00, 0x20 }, ggo::rgba_8u{ 0x00, 0x80, 0xff, 0xee }), ggo::rgba_8u(0x01, 0x81, 0xfd, 0xf0));
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blend, alpha_rgba32f)
 {
-  auto alpha_blend_rgba32f = [](const ggo::rgba_32f & bkgd_color, const ggo::rgba_32f & brush_color)
-  {
-    return ggo::alpha_blend(bkgd_color, brush_color);
-  };
+  GGO_CHECK_EQ(ggo::alpha_blend(ggo::rgba_32f{ 0.0f, 0.5f, 1.0f, 0.0f }, ggo::rgba_32f{ 0.0f, 0.5f, 1.0f, 0.0f }), ggo::rgba_32f(0.0f, 0.0f, 0.0f, 0.0f));
+  GGO_CHECK_EQ(ggo::alpha_blend(ggo::rgba_32f{ 0.0f, 0.5f, 1.0f, 0.0f }, ggo::rgba_32f{ 0.0f, 0.5f, 1.0f, 1.0f }), ggo::rgba_32f(0.0f, 0.5f, 1.0f, 1.0f));
 
-  GGO_CHECK_EQ(alpha_blend_rgba32f({ 0.0f, 0.5f, 1.0f, 0.0f }, { 0.0f, 0.5f, 1.0f, 0.0f }), ggo::rgba_32f(0.0f, 0.0f, 0.0f, 0.0f));
-  GGO_CHECK_EQ(alpha_blend_rgba32f({ 0.0f, 0.5f, 1.0f, 0.0f }, { 0.0f, 0.5f, 1.0f, 1.0f }), ggo::rgba_32f(0.0f, 0.5f, 1.0f, 1.0f));
-  
-  const ggo::rgba_32f out = alpha_blend_rgba32f({ 0.5f, 1.0f, 0.0f, 0.1f }, { 0.0f, 0.5f, 1.0f, 0.9f });
+  const ggo::rgba_32f out = ggo::alpha_blend(ggo::rgba_32f{ 0.5f, 1.0f, 0.0f, 0.1f }, ggo::rgba_32f{ 0.0f, 0.5f, 1.0f, 0.9f });
   GGO_CHECK_FLOAT_EQ(out.r(), (0.9f * 0.0f + 0.01f * 0.5f) / 0.91f);
   GGO_CHECK_FLOAT_EQ(out.g(), (0.9f * 0.5f + 0.01f * 1.0f) / 0.91f);
   GGO_CHECK_FLOAT_EQ(out.b(), (0.9f * 1.0f + 0.01f * 0.0f) / 0.91f);
   GGO_CHECK_FLOAT_EQ(out.a(), 0.91f);
 }
 
-////////////////////////////////////////////////////////////////////
-GGO_TEST(blend, additive_rgb8u)
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, opacity_y8u)
 {
-  ggo::rgb_8u c = ggo::additive_blend(ggo::rgb_8u(0x00, 0x80, 0xff), ggo::rgb_8u(0xff, 0xff, 0xff));
-  GGO_CHECK_EQ(int(c.r()), 0xff);
-  GGO_CHECK_EQ(int(c.g()), 0xff);
-  GGO_CHECK_EQ(int(c.b()), 0xff);
+  {
+    const ggo::opacity_blender<uint8_t, ggo::alpha_blender<uint8_t, uint8_t>> blend(1.f);
+
+    GGO_CHECK_EQ(blend(0xff, 0x00), 0x00);
+    GGO_CHECK_EQ(blend(0xff, 0x80), 0x80);
+    GGO_CHECK_EQ(blend(0xff, 0xff), 0xff);
+  }
+
+  {
+    const ggo::opacity_blender<uint8_t, ggo::alpha_blender<uint8_t, uint8_t>> blend(0.5f);
+
+    GGO_CHECK_EQ(blend(0x00, 0x00), 0x00);
+    GGO_CHECK_EQ(blend(0x00, 0x80), 0x40);
+    GGO_CHECK_EQ(blend(0x00, 0xff), 0x80);
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(blend, opacity_rgb8u)
+{
+  {
+    const ggo::opacity_blender<ggo::rgb_8u, ggo::alpha_blender<ggo::rgb_8u, ggo::rgb_8u>> blend(1.f);
+
+    auto c = blend({ 0xff_u8, 0xff_u8, 0xff_u8 }, ggo::rgb_8u{ 0x00_u8, 0x80_u8, 0xff_u8 });
+    GGO_CHECK_EQ(int(c.r()), 0x00);
+    GGO_CHECK_EQ(int(c.g()), 0x80);
+    GGO_CHECK_EQ(int(c.b()), 0xff);
+  }
+
+  {
+    const ggo::opacity_blender<ggo::rgb_8u, ggo::alpha_blender<ggo::rgb_8u, ggo::rgb_8u>> blend(0.5f);
+
+    auto c = blend({ 0x00_u8, 0x00_u8, 0x00_u8 }, ggo::rgb_8u{ 0x00_u8, 0x80_u8, 0xff_u8 });
+    GGO_CHECK_EQ(int(c.r()), 0x00);
+    GGO_CHECK_EQ(int(c.g()), 0x40);
+    GGO_CHECK_EQ(int(c.b()), 0x80);
+  }
 }
 

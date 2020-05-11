@@ -20,8 +20,8 @@ namespace ggo
     constexpr ya(data_t y, data_t a) : vec_base<data_t, 2, ya<data_t>>(y, a) {}
     constexpr ya(data_t k) : vec_base<data_t, 2, ya<data_t>>(k) {}
 
-    data_t & y() { return this->_coefs[0]; }
-    data_t & a() { return this->_coefs[1]; }
+    constexpr data_t & y() { return this->_coefs[0]; }
+    constexpr data_t & a() { return this->_coefs[1]; }
 
     constexpr data_t y() const { return this->_coefs[0]; }
     constexpr data_t a() const { return this->_coefs[1]; }
@@ -396,39 +396,39 @@ namespace ggo
 namespace ggo
 {
   template <typename sample_out_t, typename sample_in_t>
-  sample_out_t convert_sample_to(sample_in_t s)
+  constexpr sample_out_t convert_sample_to(sample_in_t s)
   {
     static_assert(std::is_same<sample_in_t, sample_out_t>::value == true);
     return s;
   }
 
   // 8u => 16u
-  template <> inline uint16_t convert_sample_to(uint8_t s) { return (uint16_t(s) << 8) | s; }
+  template <> inline constexpr uint16_t convert_sample_to(uint8_t s) { return (uint16_t(s) << 8) | s; }
   // 8u => 32u
-  template <> inline uint32_t convert_sample_to(uint8_t s) { return (uint32_t(s) << 24) | (uint32_t(s) << 16) | (uint32_t(s) << 8) | s; }
+  template <> inline constexpr uint32_t convert_sample_to(uint8_t s) { return (uint32_t(s) << 24) | (uint32_t(s) << 16) | (uint32_t(s) << 8) | s; }
   // 8u => 32f
-  template <> inline float convert_sample_to(uint8_t s) { return s / float(std::numeric_limits<uint8_t>::max()); }
+  template <> inline constexpr float convert_sample_to(uint8_t s) { return s / float(std::numeric_limits<uint8_t>::max()); }
 
   // 16u => 8u
-  template <> inline uint8_t convert_sample_to(uint16_t s) { return static_cast<uint8_t>(s >> 8); }
+  template <> inline constexpr uint8_t convert_sample_to(uint16_t s) { return static_cast<uint8_t>(s >> 8); }
   // 16u => 32u
-  template <> inline uint32_t convert_sample_to(uint16_t s) { return (uint32_t(s) << 16) | s; }
+  template <> inline constexpr uint32_t convert_sample_to(uint16_t s) { return (uint32_t(s) << 16) | s; }
   // 16u => 32f
-  template <> inline float convert_sample_to(uint16_t s) { return s / float(std::numeric_limits<uint16_t>::max()); }
+  template <> inline constexpr float convert_sample_to(uint16_t s) { return s / float(std::numeric_limits<uint16_t>::max()); }
 
   // 32u => 8u
-  template <> inline uint8_t convert_sample_to(uint32_t s) { return static_cast<uint8_t>(s >> 24); }
+  template <> inline constexpr uint8_t convert_sample_to(uint32_t s) { return static_cast<uint8_t>(s >> 24); }
   // 32u => 16u
-  template <> inline uint16_t convert_sample_to(uint32_t s) { return static_cast<uint16_t>(s >> 16); }
+  template <> inline constexpr uint16_t convert_sample_to(uint32_t s) { return static_cast<uint16_t>(s >> 16); }
   // 32u => 32f
-  template <> inline float convert_sample_to(uint32_t s) { return s / float(std::numeric_limits<uint32_t>::max()); }
+  template <> inline constexpr float convert_sample_to(uint32_t s) { return s / float(std::numeric_limits<uint32_t>::max()); }
   
   // 32f => 8u
-  template <> inline uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  template <> inline constexpr uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
   // 32f => 16u
-  template <> inline uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  template <> inline constexpr uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
   // 32f => 32u (here we need to go 'double' because of numerical imprecisions)
-  template <> inline uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(static_cast<double>(s), 0., 1.) + 0.5); }
+  template <> inline constexpr uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(static_cast<double>(s), 0., 1.) + 0.5); }
 
   template <typename sample_t>
   sample_t rgb_to_y(sample_t r, sample_t g, sample_t b)
@@ -437,7 +437,7 @@ namespace ggo
   }
 
   template <typename color_out_t, typename color_in_t>
-  color_out_t convert_color_to(const color_in_t & c)
+  constexpr color_out_t convert_color_to(const color_in_t & c)
   {
     using color_traits_in = color_traits<color_in_t>;
     using color_traits_out = color_traits<color_out_t>;
