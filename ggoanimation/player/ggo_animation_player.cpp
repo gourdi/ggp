@@ -2,9 +2,9 @@
 #include <iostream>
 #include <kernel/ggo_ratio.h>
 #include <kernel/ggo_log.h>
-#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_paint_canvas.h>
 #include <2d/fill/ggo_fill_solid.h>
-#include <animation/ggo_synfig_io.h>
+#include <animation/io/ggo_synfig_io.h>
 
 #define GGO_SDL_ERROR(zzz) GGO_LOG_ERROR("\"" << #zzz << "\" failed (error:" << SDL_GetError() << ")"); throw std::runtime_error(SDL_GetError());
 
@@ -12,7 +12,6 @@
 
 SDL_Window* window = nullptr;
 constexpr uint32_t time_step_ms = 20; // 25 fps
-constexpr ggo::ratio fps{ 1000, time_step_ms }; // 25 fps
 bool quit = false;
 
 /////////////////////////////////////////////////////////////////////
@@ -30,7 +29,7 @@ void main_loop()
 {
   bool fullscreen = false;
 
-  auto animation = ggo::load_synfig_animation();
+  auto animation = ggo::load_synfig_animation("/Users/ggourdin/test.sif");
 
   auto run_start_time_ms = SDL_GetTicks();
 
@@ -54,6 +53,8 @@ void main_loop()
       case SDL_KEYUP:
         switch (event.key.keysym.scancode)
         {
+        default:
+          break;
         case SDL_SCANCODE_ESCAPE:
           if (fullscreen)
           {
@@ -110,13 +111,17 @@ void main_loop()
 }
 
 /////////////////////////////////////////////////////////////////////
+#ifdef __MACH__
+int main(int argc, char** argv)
+#else
 int SDL_main(int argc, char** argv)
+#endif
 {
   try
   {
     // Initialize SDL
-    const int screen_width = 1280;
-    const int screen_height = 720;
+    const int screen_width = 640;
+    const int screen_height = 480;
 
     GGO_SDL_CALL(SDL_Init(SDL_INIT_VIDEO));
     window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_SHOWN);

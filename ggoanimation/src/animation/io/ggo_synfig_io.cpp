@@ -1,6 +1,7 @@
-#include <animation/ggo_synfig_io.h>
+#include <animation/io/ggo_synfig_io.h>
 #include <kernel/math/interpolation/ggo_interpolation1d.h>
 #include <2d/blend/ggo_alpha_blend.h>
+#include <2d/blend/ggo_opacity_blend.h>
 #include <2d/brush/ggo_solid_color_brush.h>
 #include <tinyxml2.h>
 
@@ -106,6 +107,10 @@ namespace ggo
         {
           animation->_color = read_color_animation(param);
         }
+        else if (param->Attribute("name") == std::string("amount"))
+        {
+          animation->_opacity = read_float_animation(param);
+        }
       }
 
       return animation;
@@ -128,6 +133,10 @@ namespace ggo
         else if (param->Attribute("name") == std::string("color"))
         {
           animation->_color = read_color_animation(param);
+        }
+        else if (param->Attribute("name") == std::string("amount"))
+        {
+          animation->_opacity = read_float_animation(param);
         }
       }
 
@@ -158,12 +167,12 @@ namespace ggo
     return ggo::rgb_32f(r, g, b);
   }
 
-  animation load_synfig_animation()
+  animation load_synfig_animation(const std::string & filename)
   {
     animation anim;
 
     tinyxml2::XMLDocument doc;
-    doc.LoadFile("d:/test.sif");
+    doc.LoadFile(filename.c_str());
 
     auto canvas = doc.FirstChildElement("canvas");
 
@@ -190,12 +199,16 @@ namespace ggo
     float radius = ggo::linear_interpolation1d(_radius.begin(), _radius.end(), time);
     ggo::pos2_f center = ggo::linear_interpolation1d(_center.begin(), _center.end(), time);
     ggo::rgba_32f color = ggo::linear_interpolation1d(_color.begin(), _color.end(), time);
+    float opacity = ggo::linear_interpolation1d(_opacity.begin(), _opacity.end(), time);
 
+    using brush_t = solid_color_brush<ggo::rgb_8u>;
+    using blend_t = opacity_blender<ggo::rgb_8u, alpha_blender<ggo::rgb_8u, ggo::rgb_8u>>;
+    
     disc_f disc(transform(center), transform(radius));
-    solid_color_brush_rgb8u brush(convert_color_to<ggo::rgb_8u>(color));
-    alpha_blender_rgb8u blender(color.a());
+    brush_t brush(convert_color_to<ggo::rgb_8u>(color));
+    blend_t blender(opacity * color.a());
 
-    return std::make_shared<layer_t<disc_f, ggo::rgb_8u, solid_color_brush_rgb8u, alpha_blender_rgb8u>>(disc, brush, blender);
+    return std::make_shared<layer_t<disc_f, ggo::rgb_8u, brush_t, blend_t>>(disc, brush, blender);
   };
 
   std::shared_ptr<const layer<ggo::rgb_8u>> rectangle_animation::layer_at_time(float time, view_transform<float> transform) const
@@ -203,12 +216,16 @@ namespace ggo
     ggo::pos2_f p1 = ggo::linear_interpolation1d(_p1.begin(), _p1.end(), time);
     ggo::pos2_f p2 = ggo::linear_interpolation1d(_p2.begin(), _p2.end(), time);
     ggo::rgba_32f color = ggo::linear_interpolation1d(_color.begin(), _color.end(), time);
+    float opacity = ggo::linear_interpolation1d(_opacity.begin(), _opacity.end(), time);
 
+    using brush_t = solid_color_brush<ggo::rgb_8u>;
+    using blend_t = opacity_blender<ggo::rgb_8u, alpha_blender<ggo::rgb_8u, ggo::rgb_8u>>;
+    
     rect_f rect(transform(p1), transform(p2));
-    solid_color_brush_rgb8u brush(convert_color_to<ggo::rgb_8u>(color));
-    alpha_blender_rgb8u blender(color.a());
+    brush_t brush(convert_color_to<ggo::rgb_8u>(color));
+    blend_t blender(opacity * color.a());
 
-    return std::make_shared<layer_t<rect_f, ggo::rgb_8u, solid_color_brush_rgb8u, alpha_blender_rgb8u>>(rect, brush, blender);
+    return std::make_shared<layer_t<rect_f, ggo::rgb_8u, brush_t, blend_t>>(rect, brush, blender);
   }
 
 

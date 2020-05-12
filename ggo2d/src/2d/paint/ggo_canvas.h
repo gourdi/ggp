@@ -1,6 +1,8 @@
 #pragma once
 
 #include <2d/paint/ggo_layer.h>
+#include <2d/blend/ggo_opacity_blend.h>
+#include <2d/blend/ggo_alpha_blend.h>
 
 namespace ggo
 {
@@ -50,7 +52,7 @@ namespace ggo
     }
 
     template <typename shape_t, typename brush_color_t>
-    auto& make_layer(const shape_t& shape, const brush_color_t& color)
+    auto & make_layer(const shape_t& shape, const brush_color_t & color)
     {
       return make_layer(shape, solid_color_brush<brush_color_t>(color), alpha_blender<color_t, brush_color_t>());
     }
@@ -58,20 +60,8 @@ namespace ggo
     template <typename shape_t, typename brush_color_t>
     auto & make_layer(const shape_t & shape, const brush_color_t& color, float opacity)
     {
-      return make_layer(shape, solid_color_brush<brush_color_t>(color), alpha_blender<color_t, brush_color_t>(opacity));
+      return make_layer(shape, solid_color_brush<brush_color_t>(color), opacity_blender<color_t, alpha_blender<color_t, brush_color_t>>(opacity));
     }
-
-
-
-    //template <typename paint_shape_t>
-    //auto & add_shape(const paint_shape_t & shape)
-    //{
-    //  paint_shape_t * shape_copy = new paint_shape_t(shape);
-
-    //  _paint_shapes.emplace_back(shape_copy);
-
-    //  return *shape_copy;
-    //}
 
     void add_layer(std::shared_ptr<const layer<color_t, scalar_t>> shape)
     {
@@ -82,32 +72,6 @@ namespace ggo
     auto end() const { return iterator(_layers.cend()); }
 
     void clear() { _layers.clear(); }
-
-    //scene2d<color_t, scalar_t> intersect(ggo::rect_data rect) const
-    //{
-    //  scene2d<color_t, scalar_t> subscene;
-    //  bool rect_inside_all_shapes = true;
-
-    //  for (const auto & paint_shape : _paint_shapes)
-    //  {
-    //    ggo::rect_intersection intersection = paint_shape->get_rect_intersection(block_rect_data);
-
-    //    switch (intersection)
-    //    {
-    //    case ggo::rect_intersection::disjoints:
-    //      break;
-    //    case ggo::rect_intersection::rect_in_shape:
-    //      subscene.add_shape(paint_shape);
-    //      break;
-    //    case ggo::rect_intersection::partial_overlap:
-    //    case ggo::rect_intersection::shape_in_rect:
-    //    case ggo::rect_intersection::unknown:
-    //      rect_inside_all_shapes = false;
-    //      subscene.add_shape(paint_shape);
-    //      break;
-    //    }
-    //  }
-    //}
 
   private:
 

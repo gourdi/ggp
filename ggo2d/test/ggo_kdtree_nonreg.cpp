@@ -2,7 +2,7 @@
 #include <kernel/trees/ggo_kdtree.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <kernel/math/shapes_3d/ggo_shapes3d.h>
-#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_paint_layer.h>
 #include <2d/io/ggo_bmp.h>
 
 ////////////////////////////////////////////////////////////////////

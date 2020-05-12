@@ -9,7 +9,7 @@
 #include <2d/io/ggo_bmp.h>
 #include <2d/brush/ggo_gradient_brush.h>
 #include <2d/blend/ggo_additive_blend.h>
-#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_paint_layer.h>
 #include <2d/paint/ggo_blur_paint.h>
 
 //#define GGO_BENCH

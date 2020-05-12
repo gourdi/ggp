@@ -1,7 +1,7 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/rle_image/ggo_rle_image.h>
 #include <2d/fill/ggo_fill.h>
-#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_paint_layer.h>
 #include <2d/processing/ggo_blit.h>
 #include <2d/processing/ggo_mask.h>
 

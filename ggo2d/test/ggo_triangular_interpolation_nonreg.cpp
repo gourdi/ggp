@@ -4,7 +4,7 @@
 #include <2d/io/ggo_bmp.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_color_triangle.h>
-#include <2d/paint/ggo_paint.h>
+#include <2d/paint/ggo_paint_layer.h>
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)

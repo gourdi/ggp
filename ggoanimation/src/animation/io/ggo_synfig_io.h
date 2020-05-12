@@ -14,6 +14,7 @@ namespace ggo
 
   struct layer_animation
   {
+    virtual ~layer_animation() = default;
     virtual std::shared_ptr<const layer<ggo::rgb_8u>> layer_at_time(float time, view_transform<float> transform) const = 0;
   };
 
@@ -22,6 +23,7 @@ namespace ggo
     std::vector<keyframe<float>> _radius;
     std::vector<keyframe<ggo::pos2_f>> _center;
     std::vector<keyframe<ggo::rgba_32f>> _color;
+    std::vector<keyframe<float>> _opacity;
 
     std::shared_ptr<const layer<ggo::rgb_8u>> layer_at_time(float time, view_transform<float> transform) const override;
   };
@@ -31,6 +33,7 @@ namespace ggo
     std::vector<keyframe<ggo::pos2_f>> _p1;
     std::vector<keyframe<ggo::pos2_f>> _p2;
     std::vector<keyframe<ggo::rgba_32f>> _color;
+    std::vector<keyframe<float>> _opacity;
 
     std::shared_ptr<const layer<ggo::rgb_8u>> layer_at_time(float time, view_transform<float> transform) const override;
   };
@@ -46,7 +49,7 @@ namespace ggo
 
 
 
-  animation load_synfig_animation();
+  animation load_synfig_animation(const std::string & filename);
 
 
 }
