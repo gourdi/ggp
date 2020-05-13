@@ -1,5 +1,4 @@
-#ifndef __GGO_COLOR__
-#define __GGO_COLOR__
+#pragma once
 
 #include <stdint.h>
 #include <sstream>
@@ -1013,4 +1012,3 @@ namespace ggo
   }
 }
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef __GGO_PIXEL_TYPE__
-#define __GGO_PIXEL_TYPE__
+#pragma once
 
 #include <stdint.h>
 #include <utility>
@@ -388,5 +387,5 @@ namespace ggo
   };
 }
 #endif
-#endif
+
 

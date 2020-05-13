@@ -1,5 +1,4 @@
-#ifndef __GGO_RLE_IMAGE__
-#define __GGO_RLE_IMAGE__
+#pragma once
 
 #include <kernel/rle/ggo_rle.h>
 
@@ -103,4 +102,3 @@ namespace ggo
   }
 }
 
-#endif
