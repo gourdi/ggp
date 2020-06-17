@@ -50,7 +50,7 @@ namespace ggo
   template <typename points_t, typename knots_t, typename scalar_t>
   auto polynomial_curve(const points_t & points, const knots_t & knots, scalar_t t)
   {
-    return polynomial_curve<points_t::value_type>(points.begin(), points.end(), knots.begin(), knots.end(), t);
+    return polynomial_curve<typename points_t::value_type>(points.begin(), points.end(), knots.begin(), knots.end(), t);
   }
 }
 
