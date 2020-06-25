@@ -8,7 +8,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename scalar_t>
-  data_t uniform_bspline_linear(std::vector<data_t> control_points, scalar_t t)
+  data_t uniform_bspline_linear(const std::vector<data_t> & control_points, scalar_t t)
   {
     t *= control_points.size() - 1;
     
@@ -32,7 +32,7 @@ namespace ggo
     
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename scalar_t>
-  data_t uniform_bspline_quadratic(std::vector<data_t> control_points, scalar_t t)
+  data_t uniform_bspline_quadratic(const std::vector<data_t> & control_points, scalar_t t)
   {
     t *= control_points.size() - 2;
     
@@ -60,7 +60,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename scalar_t>
-  data_t uniform_bspline_cubic(std::vector<data_t> control_points, scalar_t t)
+  data_t uniform_bspline_cubic(const std::vector<data_t> & control_points, scalar_t t)
   {
     t *= control_points.size() - 3;
     
@@ -123,7 +123,7 @@ namespace ggo
         new_control_points.push_back(control_point);
       }
 
-      control_points = new_control_points;
+      std::swap(control_points, new_control_points);
 
       knots.erase(knots.begin());
       knots.pop_back();
@@ -134,7 +134,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename data_t, typename scalar_t>
-  data_t bspline(int degree, std::vector<data_t> control_points, std::vector<scalar_t> knots, scalar_t t)
+  data_t bspline(int degree, const std::vector<data_t> & control_points, const std::vector<scalar_t> & knots, scalar_t t)
   {
     GGO_ASSERT_EQ(knots.size(), control_points.size() + degree - 1);
 

@@ -50,11 +50,21 @@ if (eval1 == eval2) { \
 
 #define GGO_CHECK_FLOAT_NEAR(v1, v2, tol) {\
 auto eval1 = (v1); auto eval2 = (v2); \
-if (std::fabs(eval1 - eval2) > tol) { \
+if (std::abs(eval1 - eval2) > tol) { \
   ++_failed_count; \
   GGO_TEST_FAILED_COUT << ": " << #v1 << " [=" << eval1 << "] != " << #v2 << " [=" << eval2 << "]" << std::endl; }}
 
 #define GGO_CHECK_FLOAT_EQ(v1, v2) GGO_CHECK_FLOAT_NEAR(v1, v2, 0.0001)
+
+#define GGO_CHECK_VEC2F_NEAR(v1, v2, tol) {\
+auto eval1 = (v1); auto eval2 = (v2); \
+auto x1 = eval1.x(); auto x2 = eval2.x(); \
+auto y1 = eval1.y(); auto y2 = eval2.y(); \
+if (std::abs(x1 - x2) > 0.0001 || std::abs(y1 - y2) > 0.0001) { \
+  ++_failed_count; \
+  GGO_TEST_FAILED_COUT << ": " << #v1 << " [=" << eval1 << "] != " << #v2 << " [=" << eval2 << "]" << std::endl; }}
+
+#define GGO_CHECK_VEC2F_EQ(v1, v2) GGO_CHECK_VEC2F_NEAR(v1, v2, 0.0001)
 
 #define GGO_CHECK_THROW(code) { \
 bool thrown = false; try{ code; } catch(...) { thrown = true; } \
