@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(polynomial_curve, linear1)
 {
-  const std::vector<ggo::pos2_f> points({ {0.f, 1.f }, {1.f, 1.f} });
+  const std::vector<ggo::pos2_f> points({ {0.f, 1.f}, {1.f, 1.f} });
   const std::vector<float> knots({ 0.f, 1.f });
 
   GGO_CHECK_VEC2F_EQ(ggo::polynomial_curve(points, knots, 0.0f), ggo::pos2_f(0.0f, 1.0f));
@@ -16,7 +16,7 @@ GGO_TEST(polynomial_curve, linear1)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(polynomial_curve, linear2)
 {
-  const std::vector<ggo::pos2_f> points({ {0.f, 1.f }, {1.f, 1.f} });
+  const std::vector<ggo::pos2_f> points({ {0.f, 1.f}, {1.f, 1.f} });
   const std::vector<float> knots({ 3.f, 5.f });
 
   GGO_CHECK_VEC2F_EQ(ggo::polynomial_curve(points, knots, 3.0f), ggo::pos2_f(0.f, 1.f));
@@ -27,7 +27,7 @@ GGO_TEST(polynomial_curve, linear2)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(polynomial_curve, quadratic1)
 {
-  const std::vector<ggo::pos2_f> points({ {0.f, 1.f }, {1.f, 1.f}, {1.f, 0.f} });
+  const std::vector<ggo::pos2_f> points({ {0.f, 1.f}, {1.f, 1.f}, {1.f, 0.f} });
   const std::vector<float> knots({ 0.f, 1.f, 2.f });
 
   // The curve must go through the control points.
@@ -43,7 +43,7 @@ GGO_TEST(polynomial_curve, quadratic1)
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(polynomial_curve, quadratic2)
 {
-  const std::vector<ggo::pos2_f> points({ {0.f, 1.f }, {1.f, 1.f}, {1.f, 0.f} });
+  const std::vector<ggo::pos2_f> points({ {0.f, 1.f}, {1.f, 1.f}, {1.f, 0.f} });
   const std::vector<float> knots({ 0.f, 1.f, 5.f });
 
   // The curve must go through the control points.
