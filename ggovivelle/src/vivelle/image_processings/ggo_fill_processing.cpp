@@ -10,7 +10,7 @@ namespace ggo
     template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
     static void fill_solid(ggo::image & image, const std::string & color_param)
     {
-      using color_t = pixel_type_traits<pixel_type>::color_t;
+      using color_t = typename pixel_type_traits<pixel_type>::color_t;
       constexpr auto color_space = color_traits<color_t>::color_space;
 
       ggo::image_t<pixel_type, memory_lines_order> view(image.data(), image.size(), image.line_byte_step());
