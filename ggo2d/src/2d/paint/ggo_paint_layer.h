@@ -15,11 +15,11 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
-  void paint_layer_t(image_t & image, const ggo::rect_int & block_rect,
+  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t>
+  void paint_layer_t(const ggo::rect_int & block_rect,
     const int scale_factor, const int current_scale,
     const shape_t & shape,
-    brush_t brush, blend_t blend)
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend)
   {
     GGO_ASSERT(current_scale >= 0);
 
@@ -38,7 +38,7 @@ namespace ggo
     case ggo::rect_intersection::rect_in_shape:
       block_rect.for_each_pixel([&](int x, int y)
       {
-        image.write_pixel(x, y, blend(image.read_pixel(x, y), brush(x, y)));
+        write_pixel(x, y, blend(read_pixel(x, y), brush(x, y)));
       });
       break;
 
@@ -65,10 +65,10 @@ namespace ggo
         // Blending.
         int x = block_rect.left();
         int y = block_rect.bottom();
-        auto bkgd_color   = image.read_pixel(x, y);
+        auto bkgd_color   = read_pixel(x, y);
         auto pixel_color  = linerp(blend(bkgd_color, brush(x, y)), bkgd_color, fract);
 
-        image.write_pixel(x, y, pixel_color);
+        write_pixel(x, y, pixel_color);
 
         return;
       }
@@ -76,9 +76,9 @@ namespace ggo
       // Recursion.
       auto paint_subblock = [&](const ggo::rect_int & block_rect)
       {
-        paint_layer_t<sampling>(image, block_rect,
+        paint_layer_t<sampling>(block_rect,
           scale_factor, current_scale - 1,
-          shape, brush, blend);
+          shape, read_pixel, write_pixel, brush, blend);
       };
 
       const int subblock_size = ggo::pow(scale_factor, current_scale - 1);
@@ -88,11 +88,10 @@ namespace ggo
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
-  void paint_layer(image_t & image,
-    const shape_t & shape,
+  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t>
+  void paint_layer(int width, int height, const shape_t & shape,
     int scale_factor, int first_scale,
-    brush_t brush, blend_t blend,
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend,
     const ggo::rect_int & clipping)
   {
     using data_t = typename shape_t::data_t;
@@ -107,7 +106,7 @@ namespace ggo
     // Clip.
     ggo::rect<data_t> shape_bounding_rect(shape_bounding_rect_data);
     rect_int shape_pixel_rect = discretize(shape_bounding_rect.data());
-    if (shape_pixel_rect.clip(image.width(), image.height()) == false || shape_pixel_rect.clip(clipping) == false)
+    if (shape_pixel_rect.clip(width, height) == false || shape_pixel_rect.clip(clipping) == false)
     {
       return;
     }
@@ -115,7 +114,7 @@ namespace ggo
     // Process blocks.
     auto process_rect = [&](const ggo::rect_int & block_rect)
     {
-      paint_layer_t<sampling>(image, block_rect, scale_factor, first_scale, shape, brush, blend);
+      paint_layer_t<sampling>(block_rect, scale_factor, first_scale, shape, read_pixel, write_pixel, brush, blend);
     };
 
     int block_size = ggo::pow(scale_factor, first_scale);
@@ -130,7 +129,10 @@ namespace ggo
   template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
   void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend, const ggo::rect_int & clipping)
   {
-    paint_layer<sampling>(image, shape, 8, 2, brush, blend, clipping);
+    auto read_pixel  = [&](int x, int y) { return image.read_pixel(x, y); };
+    auto write_pixel = [&](int x, int y, auto p) { image.write_pixel(x, y, p); };
+
+    paint_layer<sampling>(image.width(), image.height(), shape, 8, 2, read_pixel, write_pixel, brush, blend, clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
