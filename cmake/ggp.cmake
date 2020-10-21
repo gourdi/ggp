@@ -4,7 +4,7 @@ if (MSVC)
 endif()
 add_compile_definitions("$<$<CONFIG:Debug>:GGO_DEBUG>")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 macro(get_sources_from_root_directory root sources)

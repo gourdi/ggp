@@ -3,33 +3,49 @@
 #include <2d/ggo_image.h>
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, size_t h, size_t w>
-auto make_image_t(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
+template <typename memory_layout_t, ggo::pixel_type pixel_type, size_t h, size_t w>
+auto make_image_aux_t(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  ggo::image_t<pixel_type, memory_lines_order> image({ w, h });
+  ggo::image_t<pixel_type, memory_layout_t> image({ w, h });
 
-  void * ptr = image.data();
   for (int y = 0; y < h; ++y)
   {
     for (int x = 0; x < w; ++x)
     {
-      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), coefs[y][x]);
+      image.write_pixel(x, y, coefs[y][x]);
     }
-    ptr = ggo::move_ptr(ptr, image.line_byte_step());
   }
 
   return image;
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-auto make_image_t(int width, int height, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+template <ggo::pixel_type pixel_type, size_t h, size_t w>
+auto make_image_t(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  ggo::image_t<pixel_type, memory_lines_order> image({ width, height });
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
 
-  for (int y = 0; y < height; ++y)
+  return make_image_aux_t<ggo::bottom_up_memory_layout<pixel_byte_size>, pixel_type>(coefs);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, size_t h, size_t w>
+auto make_image_rows_down_t(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image_aux_t<ggo::top_down_memory_layout<pixel_byte_size>, pixel_type>(coefs);
+}
+
+////////////////////////////////////////////////////////////////////
+template <typename memory_layout_t, ggo::pixel_type pixel_type>
+auto make_image_aux_t(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  ggo::image_t<pixel_type, memory_layout_t> image(s);
+
+  for (int y = 0; y < s.height(); ++y)
   {
-    for (int x = 0; x < width; ++x)
+    for (int x = 0; x < s.width(); ++x)
     {
       image.write_pixel(x, y, fill_value);
     }
@@ -39,82 +55,151 @@ auto make_image_t(int width, int height, typename ggo::pixel_type_traits<pixel_t
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, size_t h, size_t w>
+template <ggo::pixel_type pixel_type>
+auto make_image_t(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image_aux_t<ggo::bottom_up_memory_layout<pixel_byte_size>, pixel_type>(s, fill_value);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type>
+auto make_image_rows_down_t(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image_aux_t<ggo::top_down_memory_layout<pixel_byte_size>, pixel_type>(s, fill_value);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, size_t h, size_t w>
+auto make_image(std::unique_ptr<ggo::memory_layout> mem_layout, typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
+{  
+  ggo::image image(pixel_type, std::move(mem_layout));
+
+  for (int y = 0; y < image.height(); ++y)
+  {
+    for (int x = 0; x < image.width(); ++x)
+    {
+      ggo::write_pixel<pixel_type>(image, x, y, coefs[y][x]);
+    }
+  }
+
+  return image;
+
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, size_t h, size_t w>
 auto make_image(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  ggo::image image({ w, h }, pixel_type, memory_lines_order);
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
 
-  void * ptr = image.data();
-  for (int y = 0; y < h; ++y)
-  {
-    for (int x = 0; x < w; ++x)
-    {
-      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), coefs[y][x]);
-    }
-    ptr = ggo::move_ptr(ptr, image.line_byte_step());
-  }
-
-  return image;
+  return make_image<pixel_type>(std::make_unique<ggo::bottom_up_memory_layout<pixel_byte_size>>(ggo::size(w, h)), coefs);
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order = ggo::lines_order::up>
-auto make_image(int width, int height, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+template <ggo::pixel_type pixel_type, size_t h, size_t w>
+auto make_image_rows_down(typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[h][w])
 {
-  ggo::image image({ width, height }, pixel_type, memory_lines_order);
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
 
-  void * ptr = image.data();
-  for (int y = 0; y < height; ++y)
+  return make_image<pixel_type>(std::make_unique<ggo::top_down_memory_layout<pixel_byte_size>>(ggo::size(w, h)), coefs);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type>
+auto make_image(std::unique_ptr<ggo::memory_layout> mem_layout, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  ggo::image image(pixel_type, std::move(mem_layout));
+
+  for (int y = 0; y < image.height(); ++y)
   {
-    for (int x = 0; x < width; ++x)
+    for (int x = 0; x < image.width(); ++x)
     {
-      ggo::pixel_type_traits<pixel_type>::write(ggo::move_ptr(ptr, x * image.pixel_byte_size()), fill_value);
+      ggo::write_pixel<pixel_type>(image, x, y, fill_value);
     }
-    ptr = ggo::move_ptr(ptr, image.line_byte_step());
   }
 
   return image;
 }
 
 ////////////////////////////////////////////////////////////////////
-template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, typename data_t>
-bool compare_images(const ggo::image_base_t<pixel_type, memory_lines_order, void_ptr_t> & image, const ggo::array2<data_t> & pixels)
+template <ggo::pixel_type pixel_type>
+auto make_image(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image<pixel_type>(std::make_unique<ggo::bottom_up_memory_layout<pixel_byte_size>>(s), fill_value);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type>
+auto make_image_rows_down(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t fill_value)
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image<pixel_type>(std::make_unique<ggo::top_down_memory_layout<pixel_byte_size>>(s), fill_value);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, typename void_ptr_t, typename memory_layout_t, typename data_t>
+bool compare_images(const ggo::image_base_t<pixel_type, memory_layout_t, void_ptr_t> & image, const ggo::array2<data_t> & pixels)
 {
   if (image.size().width() != pixels.dim(1) || image.size().height() != pixels.dim(0))
   {
     return false;
   }
 
-  const void * ptr1 = image.data();
-  const data_t * ptr2 = pixels.data();
+  const data_t * ptr = pixels.data();
   for (int y = 0; y < image.height(); ++y)
   {
     for (int x = 0; x < image.width(); ++x)
     {
-      auto c1 = ggo::pixel_type_traits<pixel_type>::read(ggo::move_ptr(ptr1, x * image.pixel_byte_size()));
-      auto c2 = ptr2[x];
+      auto c1 = image.read_pixel(x, y);
+      auto c2 = ptr[x];
       if (c1 != c2)
       {
         return false;
       }
     }
 
-    ptr1 = ggo::move_ptr(ptr1, image.line_byte_step());
-    ptr2 += pixels.width();
+    ptr += pixels.width();
   }
 
   return true;
 }
 
 ////////////////////////////////////////////////////////////////////
+template <typename void_ptr_t, typename data_t>
 struct compare_images_functor
 {
-  template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, typename void_ptr_t, typename data_t>
+  template <ggo::pixel_type pixel_type>
   static bool call(const ggo::image_base<void_ptr_t> & image, const ggo::array2<data_t> & pixels)
   {
-    ggo::const_image_t<pixel_type, memory_lines_order> view(image.data(), image.size());
+    if (image.size().width() != pixels.dim(1) || image.size().height() != pixels.dim(0))
+    {
+      return false;
+    }
 
-    return compare_images(view, pixels);
+    const data_t * ptr = pixels.data();
+    for (int y = 0; y < image.height(); ++y)
+    {
+      for (int x = 0; x < image.width(); ++x)
+      {
+        auto c1 = ggo::read_pixel<pixel_type>(image, x, y);
+        auto c2 = ptr[x];
+        if (c1 != c2)
+        {
+          return false;
+        }
+      }
+
+      ptr += pixels.width();
+    }
+
+    return true;
   }
 };
 
@@ -122,7 +207,7 @@ struct compare_images_functor
 template <typename void_ptr_t, typename data_t>
 bool compare_images(const ggo::image_base<void_ptr_t> & image, const ggo::array2<data_t> & pixels)
 {
-  return ggo::dispatch_image_format<compare_images_functor>(image.pixel_type(), image.memory_lines_order(), image, pixels);
+  return ggo::dispatch_pixel_type<compare_images_functor<void_ptr_t, data_t>>(image.pixel_type(), image, pixels);
 }
 
 ////////////////////////////////////////////////////////////////////

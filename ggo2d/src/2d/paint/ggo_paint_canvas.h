@@ -14,12 +14,12 @@ namespace ggo
     int scale_factor, int current_scale,
     const std::vector<const paint_shape_t *> & paint_shapes)
   {
-    using data_t = typename paint_shape_t::data_t;
+    using scalar_t = typename paint_shape_t::scalar_t;
 
     GGO_ASSERT(current_scale >= 0);
 
     // Check for shapes intersecting the current block.
-    auto block_rect_data = to_continuous<data_t>(block_rect);
+    auto block_rect_data = to_continuous<scalar_t>(block_rect);
 
     bool block_inside_all_shapes = true;
 
@@ -74,7 +74,7 @@ namespace ggo
       const auto bkgd_color = image.read_pixel(block_rect.left(), block_rect.bottom());
 
       ggo::color_accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
-      ggo::sampler<sampling>::template sample_pixel<data_t>(block_rect.left(), block_rect.bottom(), [&](data_t x_f, data_t y_f)
+      ggo::sampler<sampling>::template sample_pixel<scalar_t>(block_rect.left(), block_rect.bottom(), [&](scalar_t x_f, scalar_t y_f)
       {
         auto sample_color = bkgd_color;
 

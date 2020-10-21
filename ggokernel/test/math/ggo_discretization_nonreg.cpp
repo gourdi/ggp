@@ -58,34 +58,3 @@ GGO_TEST(discretization, from_continuous_to_discrete_rect_exclusive)
     GGO_CHECK_EQ(discrete_rect, std::get<1>(test));
   }
 }
-
-////////////////////////////////////////////////////////////////////
-GGO_TEST(discretization, map_fit_length)
-{
-  {
-    auto l = ggo::map_fit<float>(1, ggo::rect<float>::from_left_right_bottom_top(2, 5, 1, 3), { 8, 4 });
-    GGO_CHECK_FLOAT_EQ(l, 2);
-  }
-
-  {
-    auto l = ggo::map_fit<float>(1, ggo::rect<float>::from_left_right_bottom_top(2, 5, 1, 3), { 6, 8 });
-    GGO_CHECK_FLOAT_EQ(l, 2);
-  }
-}
-
-////////////////////////////////////////////////////////////////////
-GGO_TEST(discretization, map_fit_point)
-{
-  {
-    auto p = ggo::map_fit<float>({ 3, 2 }, ggo::rect<float>::from_left_right_bottom_top(2, 5, 1, 3), { 8, 4 });
-    GGO_CHECK_FLOAT_EQ(p.x(), 3);
-    GGO_CHECK_FLOAT_EQ(p.y(), 2);
-  }
-
-  {
-    auto p = ggo::map_fit<float>({ 3, 2 }, ggo::rect<float>::from_left_right_bottom_top(2, 5, 1, 3), { 6, 8 });
-    GGO_CHECK_FLOAT_EQ(p.x(), 2);
-    GGO_CHECK_FLOAT_EQ(p.y(), 4);
-  }
-}
-

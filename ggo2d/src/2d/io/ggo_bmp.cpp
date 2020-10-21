@@ -34,39 +34,6 @@ namespace
 
   static_assert(sizeof(file_header) == 14);
   static_assert(sizeof(info_header) == 40);
-
-  //////////////////////////////////////////////////////////////
-  // Write pixels (note that pixels are stored BGR from bottom to top).
-  struct write_pixels
-  {
-    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step, int padded_line_size)
-    {
-      ggo::const_image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
-
-      ggo::array_8u padded_line(padded_line_size);
-
-      for (int y = 0; y < height; ++y)
-      {
-        const void * in_ptr = img.line_ptr(y);
-        uint8_t * out_ptr = padded_line.data();
-
-        for (int x = 0; x < width; ++x)
-        {
-          auto c = ggo::pixel_type_traits<pixel_type>::read(in_ptr);
-          ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
-
-          *out_ptr++ = rgb.b();
-          *out_ptr++ = rgb.g();
-          *out_ptr++ = rgb.r();
-
-          in_ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(in_ptr);
-        }
-
-        ofs.write(reinterpret_cast<char *>(padded_line.data()), padded_line_size);
-      }
-    }
-  };
 }
 
 namespace ggo
@@ -112,7 +79,8 @@ namespace ggo
 
     // Pixels.
     int line_byte_size = ggo::pad(3 * info_header._width, 4);
-    image image({ int(info_header._width), int(info_header._height) }, ggo::pixel_type::bgr_8u, ggo::lines_order::up, line_byte_size);
+    ggo::size s = { int(info_header._width), int(info_header._height) };
+    image image(ggo::pixel_type::bgr_8u, std::make_unique<ggo::bottom_up_memory_layout<3>>(s, line_byte_size));
 
     ifs.read(reinterpret_cast<char *>(image.data()), info_header._height * line_byte_size);
 
@@ -126,11 +94,11 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_bmp(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int width, int height, int line_byte_step)
+  bool save_bmp(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, const memory_layout & mem_layout)
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
-    int padded_line_size	= ggo::pad(3 * width, 4);
+    int padded_line_size	= ggo::pad(3 * mem_layout.size().width(), 4);
 
     // File header.
     file_header file_header;
@@ -139,7 +107,7 @@ namespace ggo
     file_header._b = 'B';
     file_header._m = 'M';
     file_header._offset = sizeof(file_header) + sizeof(info_header);
-    file_header._file_size = file_header._offset + 3 * padded_line_size * height;
+    file_header._file_size = file_header._offset + 3 * padded_line_size * mem_layout.size().height();
 
     ofs.write(reinterpret_cast<char*>(&file_header), sizeof(file_header));
 
@@ -148,13 +116,33 @@ namespace ggo
     memset(&info_header, 0, sizeof(info_header));
 
     info_header._size = sizeof(info_header);
-    info_header._width = width;
-    info_header._height = height;
+    info_header._width = mem_layout.size().width();
+    info_header._height = mem_layout.size().height();
     info_header._planes = 1;
     info_header._bpp = 24;
 
     ofs.write(reinterpret_cast<char*>(&info_header), sizeof(info_header));
-    dispatch_image_format<write_pixels>(pixel_type, memory_lines_order, ofs, buffer, width, height, line_byte_step, padded_line_size);
+
+    // Write the pixels.
+    ggo::array_8u padded_line(padded_line_size);
+
+    for (int y = 0; y < mem_layout.size().height(); ++y)
+    {
+      uint8_t * out_ptr = padded_line.data();
+
+      for (int x = 0; x < mem_layout.size().width(); ++x)
+      {
+        const void * in_ptr = mem_layout.at(buffer, x, y);
+
+        rgb_8u rgb = ggo::read_rgb_8u(in_ptr, pixel_type);
+
+        *out_ptr++ = rgb.b();
+        *out_ptr++ = rgb.g();
+        *out_ptr++ = rgb.r();
+      }
+
+      ofs.write(reinterpret_cast<char*>(padded_line.data()), padded_line_size);
+    }
 
     if (!ofs)
     {

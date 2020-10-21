@@ -1,5 +1,4 @@
-#ifndef __GGO_PIXEL_SAMPLING__
-#define __GGO_PIXEL_SAMPLING__
+#pragma once
 
 #include <kernel/math/ggo_discretization.h>
 
@@ -132,6 +131,4 @@ namespace ggo
     static constexpr uint32_t samples_count_log2 = 8;
   };
 }
-
-#endif
 

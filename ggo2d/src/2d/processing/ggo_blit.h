@@ -1,42 +1,21 @@
-#ifndef __GGO_BLIT__
-#define __GGO_BLIT__
+#pragma once
 
-#include <kernel/ggo_size.h>
-#include <kernel/memory/ggo_ptr_arithmetics.h>
-#include <2d/ggo_image.h>
+#include <kernel/math/signal_processing/ggo_blit.h>
 #include <2d/ggo_color.h>
 #include <2d/blend/ggo_alpha_blend.h>
 
-// Static images.
+#if 0
 namespace ggo
 {
   // Generic function.
-  template <typename input_image_t, typename output_image_t>
-  void blit(const input_image_t & input_image, output_image_t & output_image)
+  template <typename in_t, typename out_t>
+  void blit(dst_t && dst, ggo::size dst_size, src_t && src, ggo::size src_size, ggo::pos2i offset)
   {
-    using input_color_t = typename input_image_t::color_t;
-    using output_color_t = typename output_image_t::color_t;
-
-    if (input_image.size() != output_image.size())
+    for (int y_dst, int y_src; ; ++y_dst, ++y_src)
     {
-      throw std::runtime_error("size mismatch");
-    }
-
-    const int w = input_image.width();
-    const int h = input_image.height();
-
-    for (int y = 0; y < h; ++y)
-    {
-      for (int x = 0; x < w; ++x)
+      for (int x_dst, int x_src; ; ++x_dst, ++x_src)
       {
-        if constexpr (has_alpha_v<input_color_t> == true)
-        {
-          output_image.write_pixel(x, y, alpha_blend(output_image.read_pixel(x, y), input_image.read_pixel(x, y)));
-        }
-        else
-        {
-          output_image.write_pixel(x, y, convert_color_to<output_color_t>(input_image.read_pixel(x, y)));
-        }
+        dst(x_dst, y_dst, src(x_src, y_src));
       }
     }
   }
@@ -118,37 +97,99 @@ namespace ggo
     blit(*input_view,* output_view);
   }
 }
+#endif
 
-// Dynamic images.
+// Static images, with no dispatch.
 namespace ggo
 {
-  struct dispatch_output
+  template <ggo::pixel_type src_pixel_type, typename dst_image_t, typename src_image_t>
+  struct dispatch_src_dst
   {
-    template <ggo::pixel_type output_pixel_type, ggo::lines_order output_memory_lines_order, typename input_image_t, typename output_image_t>
-    static void call(const input_image_t & input_image, output_image_t & output_image, int left, int bottom)
+    template <ggo::pixel_type dst_pixel_type>
+    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
     {
-      ggo::image_t<output_pixel_type, output_memory_lines_order> output_view(output_image.data(), output_image.size(), output_image.line_byte_step());
+      using dst_color_t = typename pixel_type_traits<dst_pixel_type>::color_t;
+      using src_color_t = typename pixel_type_traits<src_pixel_type>::color_t;
 
-      blit(input_image, output_view, left, bottom);
+      if constexpr (has_alpha_v<src_color_t> == true)
+      {
+
+      }
+      else
+      {
+        auto dst = [&](int x, int y, src_color_t c)
+        {
+          auto c2 = ggo::convert_color_to<dst_color_t>(c);
+          write_pixel<dst_pixel_type>(dst_image, x, y, c2);
+        };
+        auto src = [&](int x, int y){ return read_pixel<src_pixel_type>(src_image, x, y); };
+
+        blit(dst, dst_image.size(), src, src_image.size(), offset);
+      }
     }
   };
 
-  struct dispatch_input
+  template <typename dst_image_t, typename src_image_t>
+  struct dispatch_src
   {
-    template <ggo::pixel_type input_pixel_type, ggo::lines_order input_memory_lines_order, typename input_image_t>
-    static void call(const input_image_t & input_image, image_base<void *> & output_image, int left, int bottom)
+    template <ggo::pixel_type src_pixel_type>
+    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
     {
-      ggo::const_image_t<input_pixel_type, input_memory_lines_order> input_view(input_image.data(), input_image.size(), input_image.line_byte_step());
-
-      dispatch_image_format<dispatch_output>(output_image.pixel_type(), output_image.memory_lines_order(), input_view, output_image, left, bottom);
+      dispatch_pixel_type<dispatch_src_dst<src_pixel_type, dst_image_t, src_image_t>>(dst_image.pixel_type(), dst_image, src_image, offset);
     }
   };
 
-  template <typename in_void_ptr_t>
-  void blit(const image_base<in_void_ptr_t> & input_image, image_base<void *> & output_image, int left, int bottom)
+
+
+
+  template <typename dst_image_t, typename src_image_t>
+  void blit(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
   {
-    dispatch_image_format<dispatch_input>(input_image.pixel_type(), input_image.memory_lines_order(), input_image, output_image, left, bottom);
+    if constexpr (requires { src_image.read_pixel(int, int); })
+    {
+      using dst_color_t = typename dst_image_t::color_t;
+      using src_color_t = typename src_image_t::color_t;
+
+      if constexpr (has_alpha_v<src_color_t> == true)
+      {
+        auto dst = [&](int x, int y, src_color_t c)
+        {
+          auto c2 = dst_image.read_pixel(x, y);
+          auto c3 = alpha_blend(c2, c);
+          dst_image.write_pixel(x, y, c3);
+        };
+        auto src = [&](int x, int y) { return src_image.read_pixel(x, y); };
+
+        blit(dst, dst_image.size(), src, src_image.size(), offset);
+      }
+      else
+      {
+        auto dst = [&](int x, int y, src_color_t c)
+        {
+          auto c2 = ggo::convert_color_to<dst_color_t>(c);
+          dst_image.write_pixel(x, y, c2);
+        };
+        auto src = [&](int x, int y) { return src_image.read_pixel(x, y); };
+
+        blit(dst, dst_image.size(), src, src_image.size(), offset);
+      }
+    }
+    else
+    {
+      dispatch_pixel_type<dispatch_src<dst_image_t, src_image_t>>(src_image.pixel_type(), dst_image, src_image, offset);
+    }
   }
 }
-
-#endif
+//
+//// Dynamic images.
+//namespace ggo
+//{
+//
+//
+//  template <typename dst_image_t, typename src_image_t>
+//  void blit(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
+//  {
+//    dispatch_pixel_type<dispatch_src<dst_image_t, src_image_t>>(src_image.pixel_type(), dst_image, src_image, offset);
+//  }
+//}
+//

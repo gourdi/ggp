@@ -351,24 +351,6 @@ namespace ggo
   constexpr double  pi_d = pi<double>();
   constexpr float   e_f = e<float>();
   constexpr double  e_d = e<double>();
-
-  enum class lines_order
-  {
-    down,
-    up
-  };
-
-  inline std::ostream & operator<<(std::ostream & os, lines_order lo)
-  {
-    switch (lo)
-    {
-    case lines_order::down:
-      os << "lines_order::down"; break;
-    case lines_order::up:
-      os << "lines_order::up"; break;
-    }
-    return os;
-  }
 }
 
 //////////////////////////////////////////////////////////////

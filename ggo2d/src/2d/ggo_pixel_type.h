@@ -338,6 +338,25 @@ namespace ggo
   }
 }
 
+// Read pixel.
+namespace ggo
+{
+  ggo::rgb_8u read_rgb_8u(const void * ptr, pixel_type pt)
+  {
+    switch (pt)
+    {
+    case ggo::pixel_type::bgrx_8u:
+      return ggo::pixel_type_traits<ggo::pixel_type::bgrx_8u>::read(ptr);
+    case ggo::pixel_type::bgr_8u:
+      return ggo::pixel_type_traits<ggo::pixel_type::bgr_8u>::read(ptr);
+    case ggo::pixel_type::rgb_8u:
+      return ggo::pixel_type_traits<ggo::pixel_type::rgb_8u>::read(ptr);
+    default:
+      throw std::runtime_error("pixel type is not rgb_8u");
+    }
+  }
+}
+
 #if 0
 // Static iterators.
 namespace ggo

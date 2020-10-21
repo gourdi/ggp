@@ -22,33 +22,6 @@ namespace
 #pragma pack(pop)
 
   static_assert(sizeof(header) == 18);
-
-  //////////////////////////////////////////////////////////////
-  // Write pixels (note that pixels are stored BGR from top to bottom).
-  struct write_pixels
-  {
-    template <ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order>
-    static void call(std::ofstream & ofs, const void * buffer, int width, int height, int line_byte_step)
-    {
-      ggo::const_image_t<pixel_type, memory_lines_order> img(buffer, { width, height }, line_byte_step);
-
-      for (int y = 0; y < height; ++y)
-      {
-        // PIxels are stored top down.
-        const void * ptr = img.line_ptr(img.height() - y - 1);
-
-        for (int x = 0; x < width; ++x)
-        {
-          auto c = ggo::pixel_type_traits<pixel_type>::read(ptr);
-          ggo::rgb_8u rgb = ggo::convert_color_to<ggo::rgb_8u>(c);
-          ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
-          ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
-          ptr = ggo::move_ptr<ggo::pixel_type_traits<pixel_type>::pixel_byte_size>(ptr);
-        }
-      }
-    }
-  };
 }
 
 namespace ggo
@@ -74,16 +47,24 @@ namespace ggo
     // Pixels.
     ifs.seekg(header._id_length, std::ios_base::cur);
 
-    const lines_order memory_lines_order = (header._image_descriptor & (1 << 5)) ? lines_order::down : lines_order::down;
+    std::unique_ptr<memory_layout> mem_layout;
+    if (header._image_descriptor & (1 << 5))
+    {
+      mem_layout.reset(new top_down_memory_layout<3>({ header._width, header._height }, 3 * header._width));
+    }
+    else
+    {
+      mem_layout.reset(new bottom_up_memory_layout<3>({ header._width, header._height }, 3 * header._width));
+    }
 
-    ggo::image image({ header._width, header._height }, pixel_type::bgr_8u, memory_lines_order);
-    ifs.read(reinterpret_cast<char *>(image.data()), image.size().height() * image.line_byte_step());
+    ggo::image image(pixel_type::bgr_8u, std::move(mem_layout));
+    ifs.read(reinterpret_cast<char *>(image.data()), 3 * image.size().height() * image.size().width());
 
     return image;
   }
 
   //////////////////////////////////////////////////////////////
-  bool save_tga(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, int width, int height, int line_byte_step)
+  bool save_tga(const std::string & filename, const void * buffer, ggo::pixel_type pixel_type, const memory_layout & mem_layout)
   {
     std::ofstream ofs(filename.c_str(), std::ios_base::binary);
 
@@ -92,14 +73,26 @@ namespace ggo
     memset(&header, 0, sizeof(header));
 
     header._image_type = 2;
-    header._width = width;
-    header._height = height;
+    header._width = mem_layout.size().width();
+    header._height = mem_layout.size().height();
     header._bpp = 24;
     header._image_descriptor = (1 << 5); // Always down.
 
     ofs.write(reinterpret_cast<char*>(&header), sizeof(header));
 
-    dispatch_image_format<write_pixels>(pixel_type, memory_lines_order, ofs, buffer, width, height, line_byte_step);
+    for (int y = 0; y < mem_layout.size().height(); ++y)
+    {
+      for (int x = 0; x < mem_layout.size().width(); ++x)
+      {
+        const void * in_ptr = mem_layout.at(buffer, x, mem_layout.size().height() - y - 1); // Pixels are stored top down.
+
+        rgb_8u rgb = ggo::read_rgb_8u(in_ptr, pixel_type);
+
+        ofs.write(reinterpret_cast<char*>(&rgb.b()), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb.g()), 1);
+        ofs.write(reinterpret_cast<char*>(&rgb.r()), 1);
+      }
+    }
 
     if (!ofs)
     {
