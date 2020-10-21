@@ -151,7 +151,7 @@ namespace ggo
       : _buffer(buffer)
       , _owns_buffer(false)
       , _pixel_type(pixel_type)
-      , _memory_layout(mem_layout)
+      , _memory_layout(std::move(mem_layout))
     {
     }
 
