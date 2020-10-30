@@ -2,7 +2,7 @@
 #include <kernel/ggo_vec.h>
 #include <kernel/math/scalar_fields_2d/ggo_harmonics_field_2d.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(harmonic_surface, test1)
 {
@@ -52,4 +52,4 @@ GGO_TEST(harmonic_surface, test2)
   
   ggo::save_bmp("test_harmonic_surface2.bmp", image);
 }
-
+#endif

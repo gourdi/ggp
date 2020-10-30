@@ -1,7 +1,7 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/processing/ggo_scaling.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(scaling, y32f)
 {
@@ -28,3 +28,4 @@ GGO_TEST(scaling, y32f)
   ggo::scale_linear_integration(input, rescaled);
   ggo::save_bmp("scale_linear_integration.bmp", rescaled);
 }
+#endif

@@ -3,7 +3,7 @@
 #include <2d/ggo_color.h>
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(marching_squares, circle)
 {
@@ -33,3 +33,4 @@ GGO_TEST(marching_squares, circle)
 
   ggo::save_bmp("marching_squares.bmp", image);
 }
+#endif

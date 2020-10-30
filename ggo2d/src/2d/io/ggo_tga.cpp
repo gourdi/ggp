@@ -50,11 +50,11 @@ namespace ggo
     std::unique_ptr<memory_layout> mem_layout;
     if (header._image_descriptor & (1 << 5))
     {
-      mem_layout.reset(new top_down_memory_layout<3>({ header._width, header._height }, 3 * header._width));
+      mem_layout.reset(new rows_memory_layout<3, vertical_direction::down>({ header._width, header._height }, 3 * header._width));
     }
     else
     {
-      mem_layout.reset(new bottom_up_memory_layout<3>({ header._width, header._height }, 3 * header._width));
+      mem_layout.reset(new rows_memory_layout<3, vertical_direction::up>({ header._width, header._height }, 3 * header._width));
     }
 
     ggo::image image(pixel_type::bgr_8u, std::move(mem_layout));

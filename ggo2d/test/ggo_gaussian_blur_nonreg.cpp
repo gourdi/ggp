@@ -1,4 +1,5 @@
 //#define GGO_GAUSSIAN_DEBUG 1
+#if 0
 
 #include "ggo_2d_nonreg.h"
 #include <kernel/time/ggo_chronometer.h>
@@ -7,7 +8,6 @@
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
-
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(gaussian_blur, y_32f)
 {
@@ -179,5 +179,5 @@ GGO_TEST(gaussian_blur, dynamic_image_y_8u_down)
 
   GGO_CHECK(ggo::compare(pixels, expected, 0.0001f));
 }
-
+#endif
 

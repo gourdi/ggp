@@ -13,6 +13,7 @@
 #include <2d/paint/ggo_blur_paint.h>
 
 //#define GGO_BENCH
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
@@ -413,5 +414,5 @@ GGO_TEST(paint, rgba8_multishape_discs)
   //ggo::save_bmp("paint_rgba_multi_discs.bmp", image);
 }
 
-
+#endif
 

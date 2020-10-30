@@ -14,17 +14,17 @@ namespace ggo
   /////////////////////////////////////////////////////////////////////
   image rescale_node::process(ggo::image img) const
   {
-    switch (_scaling_algo)
-    {
-    case algo::nearest_neighbor:
-      return scale_nearest_neighbor(img, _output_size);
-    case algo::bilinear_interpolation:
-      return scale_linear_interpolation(img, _output_size);
-    case algo::bicubic_interpolation:
-      return scale_cubic_interpolation(img, _output_size);
-    case algo::bilinear_integration:
-      return scale_linear_integration(img, _output_size);
-    }
+    //switch (_scaling_algo)
+    //{
+    //case algo::nearest_neighbor:
+    //  return scale_nearest_neighbor(img, _output_size);
+    //case algo::bilinear_interpolation:
+    //  return scale_linear_interpolation(img, _output_size);
+    //case algo::bicubic_interpolation:
+    //  return scale_cubic_interpolation(img, _output_size);
+    //case algo::bilinear_integration:
+    //  return scale_linear_integration(img, _output_size);
+    //}
 
     throw std::runtime_error("invalid scaling algorithm");
     return img;

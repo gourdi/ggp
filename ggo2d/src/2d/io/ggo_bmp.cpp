@@ -80,7 +80,7 @@ namespace ggo
     // Pixels.
     int line_byte_size = ggo::pad(3 * info_header._width, 4);
     ggo::size s = { int(info_header._width), int(info_header._height) };
-    image image(ggo::pixel_type::bgr_8u, std::make_unique<ggo::bottom_up_memory_layout<3>>(s, line_byte_size));
+    image image(ggo::pixel_type::bgr_8u, std::make_unique<ggo::rows_memory_layout<3, vertical_direction::up>>(s, line_byte_size));
 
     ifs.read(reinterpret_cast<char *>(image.data()), info_header._height * line_byte_size);
 

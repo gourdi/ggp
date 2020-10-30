@@ -5,7 +5,7 @@
 #include <kernel/math/sampling/low_discrepancy_sequences/ggo_best_candidate_sequence.h>
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 namespace
 {
   /////////////////////////////////////////////////////////////////////
@@ -62,4 +62,4 @@ GGO_TEST(low_discrepancy_sequences, best_candidate)
     save_points(points, count, oss.str());
   }
 }
-
+#endif

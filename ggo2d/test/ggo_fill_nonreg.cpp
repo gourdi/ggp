@@ -1,7 +1,7 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, fill_black_y_8u_up)
 {
@@ -195,6 +195,6 @@ GGO_TEST(fill, checker)
 
   ggo::save_bmp("fill_checker.bmp", image);
 }
-
+#endif
 
 

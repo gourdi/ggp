@@ -117,7 +117,7 @@ namespace ggo
 
     int line_byte_step = 3 * decompressor._cinfo.output_width;
     ggo::size s = { int(decompressor._cinfo.output_width), int(decompressor._cinfo.output_height) };
-    image image(ggo::pixel_type::rgb_8u, std::make_unique<ggo::top_down_memory_layout<3>>(s, line_byte_step));
+    image image(ggo::pixel_type::rgb_8u, std::make_unique<ggo::rows_memory_layout<3, vertical_direction::down>>(s, line_byte_step));
 
     JSAMPLE * line_ptr = reinterpret_cast<JSAMPLE *>(image.data());
     while (decompressor._cinfo.output_scanline < decompressor._cinfo.output_height)

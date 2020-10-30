@@ -10,7 +10,7 @@ namespace
   /////////////////////////////////////////////////////////////////////
   float linear_interpolation2d(const float* input, int width, int height, float x, float y)
   {
-    ggo::bottom_up_memory_layout<sizeof(float)> memory_layout({ width, height }, width * sizeof(float));
+    ggo::rows_memory_layout<sizeof(float), ggo::vertical_direction::up> memory_layout({ width, height }, width * sizeof(float));
 
     auto in = [&](int x, int y)
     {
@@ -28,7 +28,7 @@ namespace
   /////////////////////////////////////////////////////////////////////
   float cubic_interpolation2d(const float * input, int width, int height, float x, float y)
   {
-    ggo::bottom_up_memory_layout<sizeof(float)> memory_layout({ width, height }, width * sizeof(float));
+    ggo::rows_memory_layout<sizeof(float), ggo::vertical_direction::up> memory_layout({ width, height }, width * sizeof(float));
 
     auto in = [&](int x, int y)
     {

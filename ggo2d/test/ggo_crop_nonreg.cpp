@@ -4,119 +4,77 @@
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(crop, y_8u_yu)
 {
-  auto image = make_image<ggo::pixel_type::y_8u, ggo::lines_order::up>({
-    { 00, 01, 02, 03, 04, 05 },
-    { 10, 11, 12, 13, 14, 15 },
-    { 20, 21, 22, 23, 24, 25 },
-    { 30, 31, 32, 33, 34, 35 },
-    { 40, 41, 42, 43, 44, 45 } });
+  const auto image = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, {
+    00, 01, 02, 03, 04, 05,
+    10, 11, 12, 13, 14, 15,
+    20, 21, 22, 23, 24, 25,
+    30, 31, 32, 33, 34, 35,
+    40, 41, 42, 43, 44, 45 });
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 3);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 12);
-    GGO_CHECK_EQ(ptr[1], 13);
-    GGO_CHECK_EQ(ptr[2], 14);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 1));
+    const auto expected = make_image_t<ggo::pixel_type::y_8u>({ 3, 1 }, { 12, 13, 14 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(-1, 4, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 5);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 10);
-    GGO_CHECK_EQ(ptr[1], 11);
-    GGO_CHECK_EQ(ptr[2], 12);
-    GGO_CHECK_EQ(ptr[3], 13);
-    GGO_CHECK_EQ(ptr[4], 14);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(-1, 4, 1, 1));
+    const auto expected = make_image_t<ggo::pixel_type::y_8u>({ 5, 1 }, { 10, 11, 12, 13, 14 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(-1, 0, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 1);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 10);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(-1, 1, 1, 1));
+    const auto expected = make_image_t<ggo::pixel_type::y_8u>({ 2, 1 }, { 10, 11 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(4, 10, 1, 2));
-    GGO_CHECK_EQ(cropped.width(), 2);
-    GGO_CHECK_EQ(cropped.height(), 2);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 14);
-    GGO_CHECK_EQ(ptr[1], 15);
-    GGO_CHECK_EQ(ptr[2], 24);
-    GGO_CHECK_EQ(ptr[3], 25);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(4, 10, 1, 2));
+    const auto expected = make_image_t<ggo::pixel_type::y_8u>({ 2, 2 }, { 14, 15, 24, 25 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    GGO_CHECK_THROW(ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(-2, -1, 1, 2)));
-    GGO_CHECK_THROW(ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(6, 10, 1, 2)));
-    GGO_CHECK_THROW(ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(1, 2, -2, -1)));
-    GGO_CHECK_THROW(ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(1, 2, 5, 7)));
+    GGO_CHECK_THROW(ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(-2, -1, 1, 2)));
+    GGO_CHECK_THROW(ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(6, 10, 1, 2)));
+    GGO_CHECK_THROW(ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(1, 2, -2, -1)));
+    GGO_CHECK_THROW(ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(1, 2, 5, 7)));
   }
 }
 
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(crop, y_8u_yd)
 {
-  auto image = make_image<ggo::pixel_type::y_8u, ggo::lines_order::down>({
-    { 00, 01, 02, 03, 04, 05 },
-    { 10, 11, 12, 13, 14, 15 },
-    { 20, 21, 22, 23, 24, 25 },
-    { 30, 31, 32, 33, 34, 35 },
-    { 40, 41, 42, 43, 44, 45 } });
+  const auto image = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 5 }, { 
+    00, 01, 02, 03, 04, 05,
+    10, 11, 12, 13, 14, 15,
+    20, 21, 22, 23, 24, 25,
+    30, 31, 32, 33, 34, 35,
+    40, 41, 42, 43, 44, 45 });
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 3);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 32);
-    GGO_CHECK_EQ(ptr[1], 33);
-    GGO_CHECK_EQ(ptr[2], 34);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 1));
+    const auto expected = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 3, 1 }, { 32, 33, 34 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(-1, 4, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 5);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 30);
-    GGO_CHECK_EQ(ptr[1], 31);
-    GGO_CHECK_EQ(ptr[2], 32);
-    GGO_CHECK_EQ(ptr[3], 33);
-    GGO_CHECK_EQ(ptr[4], 34);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(-1, 4, 1, 1));
+    const auto expected = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 5, 1 }, { 30, 31, 32, 33, 34 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(-1, 0, 1, 1));
-    GGO_CHECK_EQ(cropped.width(), 1);
-    GGO_CHECK_EQ(cropped.height(), 1);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 30);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(-1, 1, 1, 1));
+    const auto expected = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 2, 1 }, { 30, 31 });
+    GGO_CHECK_IMG(cropped, expected);
   }
 
   {
-    auto cropped = ggo::crop(image, ggo::rect_int::from_left_right_bottom_top(4, 10, 1, 2));
-    GGO_CHECK_EQ(cropped.width(), 2);
+    const auto cropped = ggo::crop_t(image, ggo::rect_int::from_left_right_bottom_top(4, 10, 1, 2));
+    const auto expected = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 2, 2 }, { 24, 25, 34, 35 });
     GGO_CHECK_EQ(cropped.height(), 2);
-
-    const uint8_t * ptr = static_cast<const uint8_t *>(cropped.data());
-    GGO_CHECK_EQ(ptr[0], 24);
-    GGO_CHECK_EQ(ptr[1], 25);
-    GGO_CHECK_EQ(ptr[2], 34);
-    GGO_CHECK_EQ(ptr[3], 35);
   }
 }
 

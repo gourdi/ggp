@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(memory_layouts, bottom_up_buffer_byte_size)
 {
-  ggo::bottom_up_memory_layout<2> memory_layout({ 4, 3 }, 10);
+  ggo::rows_memory_layout<2, ggo::vertical_direction::up> memory_layout({ 4, 3 }, 10);
   
   GGO_CHECK_EQ(memory_layout.buffer_byte_size(), 30);
 }
@@ -13,7 +13,7 @@ GGO_TEST(memory_layouts, bottom_up_buffer_byte_size)
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(memory_layouts, for_each)
 {
-  ggo::bottom_up_memory_layout<2> memory_layout({ 4, 3 }, 10);
+  ggo::rows_memory_layout<2, ggo::vertical_direction::up> memory_layout({ 4, 3 }, 10);
   
   ggo::array_8u a(30);
   a.fill(0);

@@ -2,6 +2,7 @@
 #include <2d/fill/ggo_fill.h>
 #include <2d/processing/ggo_morphology.h>
 #include <2d/io/ggo_bmp.h>
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(morphology, dilatation_disc)
@@ -35,3 +36,4 @@ GGO_TEST(morphology, erosion_rect)
 
   ggo::save_bmp("erosion_rectangle.bmp", output);
 }
+#endif

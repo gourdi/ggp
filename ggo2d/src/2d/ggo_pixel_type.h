@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <utility>
-#include <kernel/memory/ggo_iterator.h>
 #include <2d/ggo_color.h>
 
 namespace ggo
@@ -341,7 +340,7 @@ namespace ggo
 // Read pixel.
 namespace ggo
 {
-  ggo::rgb_8u read_rgb_8u(const void * ptr, pixel_type pt)
+  inline ggo::rgb_8u read_rgb_8u(const void * ptr, pixel_type pt)
   {
     switch (pt)
     {

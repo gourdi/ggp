@@ -2,7 +2,7 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/math/interpolation/ggo_interpolation2d.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 namespace
 {
   ////////////////////////////////////////////////////////////////////
@@ -57,3 +57,4 @@ GGO_TEST(interpolation2d, test)
   test_interpolation<linear_interpolation2d>("interpolate_bilinear.bmp");
   test_interpolation<cubic_interpolation2d>("interpolate_bicubic.bmp");
 }
+#endif

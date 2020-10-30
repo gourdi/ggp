@@ -118,13 +118,13 @@ namespace ggo
     memory_layout_t _memory_layout;
   };
 
-  template <ggo::pixel_type pixel_type, typename memory_layout_t = bottom_up_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size>>
+  template <ggo::pixel_type pixel_type, typename memory_layout_t = rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, vertical_direction::up>>
   using const_image_t = image_base_t<pixel_type, memory_layout_t, const void *>;
 
-  template <ggo::pixel_type pixel_type, typename memory_layout_t = bottom_up_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size>>
+  template <ggo::pixel_type pixel_type, typename memory_layout_t = rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, vertical_direction::up>>
   using image_t = image_base_t<pixel_type, memory_layout_t, void *>;
 
-  using image_rgb_8u = image_base_t<pixel_type::rgb_8u, bottom_up_memory_layout<3>, void *>;
+  using image_rgb_8u = image_base_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::up>, void *>;
 }
 
 namespace ggo
@@ -144,7 +144,7 @@ namespace ggo
     {
       static_assert(std::is_same_v<void_ptr_t, void *>);
 
-      GGO_ASSERT_PTR(mem_layout.get());
+      GGO_ASSERT_PTR(_memory_layout.get());
     }
 
     image_base(void_ptr_t buffer, ggo::pixel_type pixel_type, std::unique_ptr<memory_layout> mem_layout)
@@ -153,6 +153,7 @@ namespace ggo
       , _pixel_type(pixel_type)
       , _memory_layout(std::move(mem_layout))
     {
+      GGO_ASSERT_PTR(_memory_layout.get());
     }
 
     ~image_base()

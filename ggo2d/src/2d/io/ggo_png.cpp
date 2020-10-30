@@ -26,15 +26,15 @@ namespace ggo
     {
     case PNG_FORMAT_RGB:
       pixel_type = ggo::pixel_type::rgb_8u;
-      mem_layout = std::make_unique<ggo::top_down_memory_layout<3>>(s, line_byte_step);
+      mem_layout = std::make_unique<ggo::rows_memory_layout<3, vertical_direction::down>>(s, line_byte_step);
       break;
     case PNG_FORMAT_RGBA:
       pixel_type = ggo::pixel_type::rgba_8u;
-      mem_layout = std::make_unique<ggo::top_down_memory_layout<4>>(s, line_byte_step);
+      mem_layout = std::make_unique<ggo::rows_memory_layout<4, vertical_direction::down>>(s, line_byte_step);
       break;
     case PNG_FORMAT_GA:
       pixel_type = ggo::pixel_type::ya_8u;
-      mem_layout = std::make_unique<ggo::top_down_memory_layout<2>>(s, line_byte_step);
+      mem_layout = std::make_unique<ggo::rows_memory_layout<2, vertical_direction::down>>(s, line_byte_step);
       break;
     default:
       throw std::runtime_error("unsupported image format");
@@ -76,9 +76,9 @@ namespace ggo
       return false;
     }
 
-    ggo::image_t<pixel_type::rgb_8u, top_down_memory_layout<3>> image(top_down_memory_layout<3>(mem_layout.size()));
+    ggo::image_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::down>> image(rows_memory_layout<3, vertical_direction::down>(mem_layout.size()));
 
-    image.for_each_pixel([&](int x, int y, void * ptr)
+    image.for_each_pixel([&](void *, int x, int y)
     {
       ggo::rgb_8u rgb = ggo::read_rgb_8u(mem_layout.at(buffer, x, y), pixel_type);
 

@@ -4,7 +4,7 @@
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/processing/ggo_blit.h>
 #include <2d/processing/ggo_mask.h>
-
+#if 0
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(rle_image, y8u)
 {
@@ -119,4 +119,4 @@ GGO_TEST(rle_image, paint)
   GGO_CHECK_EQ(image.read_pixel(1, 1), 0x61);
   GGO_CHECK_EQ(image.read_pixel(2, 1), 0x00);
 }
-
+#endif

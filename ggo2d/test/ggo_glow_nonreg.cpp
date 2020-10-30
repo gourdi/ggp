@@ -2,7 +2,7 @@
 #include <2d/ggo_image.h>
 #include <2d/paint/ggo_glow.h>
 #include <2d/io/ggo_bmp.h>
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(glow, rgb8)
 {
@@ -18,5 +18,5 @@ GGO_TEST(glow, rgb8)
 
   ggo::save_bmp("glow.bmp", image);
 }
-
+#endif
 

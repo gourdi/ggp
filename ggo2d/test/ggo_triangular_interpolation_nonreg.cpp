@@ -5,7 +5,7 @@
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_color_triangle.h>
 #include <2d/paint/ggo_paint_layer.h>
-
+#if 0
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)
 {
@@ -74,3 +74,4 @@ GGO_TEST(paint, alpha_color_triangle)
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", image);
 }
+#endif

@@ -1,6 +1,7 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/processing/ggo_mask.h>
 #include <2d/brush/ggo_solid_color_brush.h>
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(mask, color)
@@ -36,5 +37,5 @@ GGO_TEST(mask, layer)
 
   GGO_CHECK_IMG(image, expected);
 }
-
+#endif
 

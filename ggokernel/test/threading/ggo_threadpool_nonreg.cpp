@@ -4,59 +4,59 @@
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(threadpool, base)
 {
-  std::mutex m;
-  ggo::threadpool pool(2);
+  //std::mutex m;
+  //ggo::threadpool pool(2);
 
-  std::vector<std::future<void>> results;
+  //std::vector<std::future<void>> results;
 
-  auto job = [&]()
-  {
-    m.lock();
-    std::cout << "begin" << std::endl;
-    m.unlock();
+  //auto job = [&]() -> void
+  //{
+  //  m.lock();
+  //  std::cout << "begin" << std::endl;
+  //  m.unlock();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  //  std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    m.lock();
-    std::cout << "end" << std::endl;
-    m.unlock();
-  };
+  //  m.lock();
+  //  std::cout << "end" << std::endl;
+  //  m.unlock();
+  //};
 
-  std::cout << "start" << std::endl;
+  //std::cout << "start" << std::endl;
 
-  results.emplace_back(pool.enqueue(job));
-  results.emplace_back(pool.enqueue(job));
+  //results.emplace_back(pool.enqueue(job));
+  //results.emplace_back(pool.enqueue(job));
 
-  for (auto & r : results)
-  {
-    r.wait();
-  }
+  //for (auto & r : results)
+  //{
+  //  r.wait();
+  //}
 
-  std::cout << "join" << std::endl;
+  //std::cout << "join" << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(threadpool, many_jobs)
 {
-  ggo::threadpool pool(8);
+  //ggo::threadpool pool(8);
 
-  std::vector<std::future<int>> results;
+  //std::vector<std::future<int>> results;
 
-  auto job = [&](int i) -> int
-  {
-    return i;
-  };
+  //auto job = [&](int i) -> int
+  //{
+  //  return i;
+  //};
 
-  for (int i = 0; i < 100; ++i)
-  {
-    results.emplace_back(pool.enqueue(job, i));
-  }
+  //for (int i = 0; i < 100; ++i)
+  //{
+  //  results.emplace_back(pool.enqueue(job, i));
+  //}
 
-  int sum = 0;
-  for (auto & r : results)
-  {
-    sum += r.get();
-  }
+  //int sum = 0;
+  //for (auto & r : results)
+  //{
+  //  sum += r.get();
+  //}
 
-  GGO_CHECK_EQ(sum, 4950);
+  //GGO_CHECK_EQ(sum, 4950);
 }

@@ -2,10 +2,10 @@
 #include <2d/ggo_image.h>
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, move)
+GGO_TEST(static_image, move)
 {
-  ggo::image img1({ 20, 30 }, ggo::pixel_type::rgb_8u, ggo::lines_order::up);
-  ggo::image img2({ 10, 20 }, ggo::pixel_type::rgb_8u, ggo::lines_order::down);
+  auto img1 = make_image_t<ggo::pixel_type::rgb_8u>({ 20, 30 }, ggo::black_8u());
+  auto img2 = make_image_t<ggo::pixel_type::rgb_8u>({ 10, 20 }, ggo::black_8u());
 
   void * ptr = img2.data();
 
@@ -14,11 +14,26 @@ GGO_TEST(image, move)
   GGO_CHECK_EQ(img1.data(), ptr);
   GGO_CHECK_EQ(img1.size(), ggo::size(10, 20));
   GGO_CHECK_EQ(img1.pixel_type(), ggo::pixel_type::rgb_8u);
-  GGO_CHECK_EQ(img1.memory_lines_order(), ggo::lines_order::down);
-  GGO_CHECK_EQ(img1.line_byte_step(), 30);
   GGO_CHECK(img2.data() == nullptr);
 }
 
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(dynamic_image, move)
+{
+  auto img1 = make_image<ggo::pixel_type::rgb_8u>({ 20, 30 }, ggo::black_8u());
+  auto img2 = make_image_rows_down<ggo::pixel_type::y_32f>({ 10, 20 }, 0.f);
+
+  void * ptr = img2.data();
+
+  img1 = std::move(img2);
+
+  GGO_CHECK_EQ(img1.data(), ptr);
+  GGO_CHECK_EQ(img1.size(), ggo::size(10, 20));
+  GGO_CHECK_EQ(img1.pixel_type(), ggo::pixel_type::y_32f);
+  GGO_CHECK(img2.data() == nullptr);
+}
+
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(image, image_view_yd)
 {
@@ -58,3 +73,4 @@ GGO_TEST(image, image_view_yu)
   GGO_CHECK_EQ(view->read_pixel(1, 1), 23);
   GGO_CHECK_EQ(view->read_pixel(2, 1), 24);
 }
+#endif

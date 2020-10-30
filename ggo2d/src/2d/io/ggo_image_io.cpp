@@ -10,7 +10,7 @@ namespace ggo
   //////////////////////////////////////////////////////////////
   ggo::image load_image(const std::string & filename)
   {
-    std::string extension = std::filesystem::path(filename).extension().u8string();
+    std::string extension = std::filesystem::path(filename).extension().generic_string();
 
     if (extension == ".bmp")
     {
