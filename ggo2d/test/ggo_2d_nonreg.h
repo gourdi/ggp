@@ -116,6 +116,51 @@ auto make_image_rows_down(ggo::size s, typename ggo::pixel_type_traits<pixel_typ
 }
 
 ////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, int pixel_byte_size, ggo::vertical_direction vdir, size_t l>
+auto make_image_aux(std::unique_ptr<ggo::rows_memory_layout<pixel_byte_size, vdir>> mem_layout, typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[l])
+{
+  if (mem_layout->width() * mem_layout->height() != l)
+  {
+    throw std::runtime_error("invalid number of pixels");
+  }
+
+  const int line_byte_step = mem_layout->_line_byte_step;
+
+  ggo::image image(pixel_type, std::move(mem_layout));
+
+  int i = 0;
+  for (int y = 0; y < image.height(); ++y)
+  {
+    for (int x = 0; x < image.width(); ++x)
+    {
+      void * ptr = ggo::move_ptr(image.data(), y * line_byte_step + x * pixel_byte_size);
+
+      ggo::pixel_type_traits<pixel_type>::write(ptr, coefs[i++]);
+    }
+  }
+
+  return image;
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, size_t l>
+auto make_image(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[l])
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image_aux<pixel_type>(std::make_unique<ggo::rows_memory_layout<pixel_byte_size, ggo::vertical_direction::up>>(s), coefs);
+}
+
+////////////////////////////////////////////////////////////////////
+template <ggo::pixel_type pixel_type, size_t l>
+auto make_image_rows_down(ggo::size s, typename ggo::pixel_type_traits<pixel_type>::color_t const (&coefs)[l])
+{
+  constexpr int pixel_byte_size = ggo::pixel_type_traits<pixel_type>::pixel_byte_size;
+
+  return make_image_aux<pixel_type>(std::make_unique<ggo::rows_memory_layout<pixel_byte_size, ggo::vertical_direction::down>>(s), coefs);
+}
+
+////////////////////////////////////////////////////////////////////
 template <ggo::pixel_type pixel_type, 
   typename img1_memory_layout_t, typename img1_void_ptr_t,
   typename img2_memory_layout_t, typename img2_void_ptr_t>

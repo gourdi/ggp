@@ -1,5 +1,4 @@
-#ifndef __GGO_MASK__
-#define __GGO_MASK__
+#pragma once
 
 #include <kernel/ggo_size.h>
 
@@ -29,4 +28,3 @@ namespace ggo
   }
 }
 
-#endif

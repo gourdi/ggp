@@ -77,5 +77,3 @@ GGO_TEST(crop, y_8u_yd)
     GGO_CHECK_EQ(cropped.height(), 2);
   }
 }
-
-

@@ -228,7 +228,6 @@ GGO_TEST(blit, dst_up_src_down_fit)
     0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0 });
 }
-#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, brush_rgba8_background_rgb8)
@@ -240,32 +239,46 @@ GGO_TEST(blit, brush_rgba8_background_rgb8)
 
   ggo::blit_t(dst, src, { 1, 2 });
 
-  const ggo::array<ggo::rgb_8u, 2> expected({
-    { { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } },
-    { { 0x00, 0x00, 0x00 }, { 0xff, 0x80, 0x40 }, { 0x80, 0x40, 0x20 } },
-    { { 0x00, 0x00, 0x00 }, { 0x40, 0x20, 0x10 }, { 0x00, 0x00, 0x00 } },
-    { { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } },
-    { { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } } });
-
-  GGO_CHECK_IMG(dst, expected);
+  GGO_CHECK_PIXELS(dst, {
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0xff, 0x80, 0x40 }, { 0x80, 0x40, 0x20 },
+    { 0x00, 0x00, 0x00 }, { 0x40, 0x20, 0x10 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } });
 }
+
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, dynamic_image)
 {
-  auto dst = make_image_rows_down<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
-  auto src = make_image_rows_down<ggo::pixel_type::y_8u>({
-    { 1, 2, 3 },
-    { 4, 5, 6 } });
+  auto dst = make_image_rows_down<ggo::pixel_type::rgb_8u>({ 3, 5 }, 0);
+  auto src = make_image_rows_down<ggo::pixel_type::rgba_8u>({ 2, 2 }, {
+    { 0xff, 0x80, 0x40, 0xff }, { 0xff, 0x80, 0x40, 0x80 },
+    { 0xff, 0x80, 0x40, 0x40 }, { 0xff, 0x80, 0x40, 0x00 } });
 
-  ggo::blit(dst, src, { 2, 1 });
+  ggo::blit(dst, src, { 1, 2 });
 
-  const ggo::array2_8u expected({
-    { 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 2, 3, 0 },
-    { 0, 0, 4, 5, 6, 0 },
-    { 0, 0, 0, 0, 0, 0 } });
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 0, 0), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 0), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 0), ggo::rgb_8u(0x00, 0x00, 0x00));
 
-  GGO_CHECK_IMG(dst, expected);
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 0, 1), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 1), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 1), ggo::rgb_8u(0x00, 0x00, 0x00));
+
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 0, 2), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 2), ggo::rgb_8u(0x40, 0x20, 0x10));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 2), ggo::rgb_8u(0x00, 0x00, 0x00));
+
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 0, 3), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 3), ggo::rgb_8u(0xff, 0x80, 0x40));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 3), ggo::rgb_8u(0x80, 0x40, 0x20));
+
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 0, 4), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 4), ggo::rgb_8u(0x00, 0x00, 0x00));
+  GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 4), ggo::rgb_8u(0x00, 0x00, 0x00));  /*(dst, {
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0xff, 0x80, 0x40 }, { 0x80, 0x40, 0x20 },
+    { 0x00, 0x00, 0x00 }, { 0x40, 0x20, 0x10 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
+    { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } });*/
 }
-#endif

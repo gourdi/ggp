@@ -19,6 +19,8 @@ namespace ggo
             const void *  at(const void * ptr, int x, int y) const { return move_ptr(ptr, offset(x, y)); }
 
             const size &  size() const { return _size; }
+            int           width() const { return _size.width(); }
+            int           height() const { return _size.height(); }
 
   protected:
 

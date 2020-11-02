@@ -64,8 +64,7 @@ namespace ggo
   }
 }
 
-
-// Dynamic images.
+// Dynamic generic images.
 namespace ggo
 {
   template <typename input_image_t, typename output_image_t, typename scan_t>
@@ -100,4 +99,3 @@ namespace ggo
     dispatch_pixel_type<dispatch_src<input_image_t, output_image_t>>(src_image.pixel_type(), input_image, offset, output_image, scan);
   }
 }
-

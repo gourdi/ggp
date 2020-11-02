@@ -103,8 +103,8 @@ namespace ggo
 // Static images, with no dispatch.
 namespace ggo
 {
-  template <typename dst_image_t, typename src_image_t>
-  void blit_t(dst_image_t& dst_image, const src_image_t& src_image, ggo::pos2_i offset)
+  template <typename dst_image_t, typename src_image_t, typename scan_t>
+  void blit_t(dst_image_t& dst_image, const src_image_t& src_image, ggo::pos2_i offset, const scan_t & scan)
   {
     using dst_color_t = typename dst_image_t::color_t;
     using src_color_t = typename src_image_t::color_t;
@@ -130,26 +130,40 @@ namespace ggo
       };
       auto src = [&](int x, int y) { return src_image.read_pixel(x, y); };
 
-      blit(dst, dst_image.size(), src, src_image.size(), offset, scan_rows_up());
+      blit(dst, dst_image.size(), src, src_image.size(), offset, scan);
     }
+  }
+
+  template <typename dst_image_t, typename src_image_t>
+  void blit_t(dst_image_t& dst_image, const src_image_t& src_image, ggo::pos2_i offset)
+  {
+    blit_t(dst_image, src_image, offset, scan_rows_up());
   }
 }
 
 // Dynamic images.
 namespace ggo
 {
-  template <ggo::pixel_type src_pixel_type, typename dst_image_t, typename src_image_t>
+  template <ggo::pixel_type src_pixel_type, typename dst_image_t, typename src_image_t, typename scan_t>
   struct dispatch_src_dst
   {
     template <ggo::pixel_type dst_pixel_type>
-    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
+    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset, const scan_t & scan)
     {
       using dst_color_t = typename pixel_type_traits<dst_pixel_type>::color_t;
       using src_color_t = typename pixel_type_traits<src_pixel_type>::color_t;
 
       if constexpr (has_alpha_v<src_color_t> == true)
       {
+        auto dst = [&](int x, int y, src_color_t c)
+        {
+          auto c2 = read_pixel<dst_pixel_type>(dst_image, x, y);
+          auto c3 = alpha_blend(c2, c);
+          write_pixel<dst_pixel_type>(dst_image, x, y, c3);
+        };
+        auto src = [&](int x, int y) { return read_pixel<src_pixel_type>(src_image, x, y); };
 
+        blit(dst, dst_image.size(), src, src_image.size(), offset, scan_rows_up());
       }
       else
       {
@@ -165,20 +179,26 @@ namespace ggo
     }
   };
 
-  template <typename dst_image_t, typename src_image_t>
+  template <typename dst_image_t, typename src_image_t, typename scan_t>
   struct dispatch_src
   {
     template <ggo::pixel_type src_pixel_type>
-    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
+    static void call(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset, const scan_t & scan)
     {
-      dispatch_pixel_type<dispatch_src_dst<src_pixel_type, dst_image_t, src_image_t>>(dst_image.pixel_type(), dst_image, src_image, offset);
+      dispatch_pixel_type<dispatch_src_dst<src_pixel_type, dst_image_t, src_image_t, scan_t>>(dst_image.pixel_type(), dst_image, src_image, offset, scan);
     }
   };
+
+  template <typename dst_image_t, typename src_image_t, typename scan_t>
+  void blit(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset, const scan_t & scan)
+  {
+    dispatch_pixel_type<dispatch_src<dst_image_t, src_image_t, scan_t>>(src_image.pixel_type(), dst_image, src_image, offset, scan);
+  }
 
   template <typename dst_image_t, typename src_image_t>
   void blit(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
   {
-    dispatch_pixel_type<dispatch_src<dst_image_t, src_image_t>>(src_image.pixel_type(), dst_image, src_image, offset);
+    blit(dst_image, src_image, offset, scan_rows_up());
   }
 }
 
