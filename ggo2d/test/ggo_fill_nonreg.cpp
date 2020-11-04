@@ -67,6 +67,22 @@ GGO_TEST(fill, fill_solid_y_8u_rows_up)
 }
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, fill_solid_y_8u_rows_up_clipping)
+{
+  auto image = make_image_t<ggo::pixel_type::y_8u>({ 5, 3 }, {
+    10, 11, 12, 13, 14,
+    20, 21, 22, 23, 24,
+    30, 31, 32, 33, 34 });
+
+  ggo::fill_solid(image, 42, ggo::rect_int::from_left_right_bottom_top(2, 3, 0, 1));
+
+  GGO_CHECK_PIXELS(image, {
+    10, 11, 42, 42, 14,
+    20, 21, 42, 42, 24,
+    30, 31, 32, 33, 34 });
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, fill_solid_bgra_8u_rows_down)
 {
   using memory_layout_t = ggo::rows_memory_layout<4, ggo::vertical_direction::down>;
