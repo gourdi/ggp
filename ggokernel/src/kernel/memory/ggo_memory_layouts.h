@@ -69,7 +69,7 @@ namespace ggo
       }
       else
       {
-        for (int y = t; y >= b; ++y)
+        for (int y = t; y >= b; --y)
         {
           void_ptr_t it = move_ptr(ptr, (_size.height() - y - 1) * _line_byte_step + l * item_byte_size);
 

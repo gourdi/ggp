@@ -124,6 +124,9 @@ namespace ggo
   template <ggo::pixel_type pixel_type, typename memory_layout_t = rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, vertical_direction::up>>
   using image_t = image_base_t<pixel_type, memory_layout_t, void *>;
 
+  template <ggo::pixel_type pixel_type, ggo::vertical_direction rows_vdir, typename void_ptr_t>
+  using rows_images_t = image_base_t<pixel_type, ggo::rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, rows_vdir>, void_ptr_t>;
+
   using image_rgb_8u = image_base_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::up>, void *>;
 }
 
@@ -235,112 +238,40 @@ namespace ggo
   }
 }
 
-// Dispatch.
-namespace ggo
-{
-#if 0
-  template <lines_order memory_lines_order, typename functor>
-  struct dispatch_image_format_functor
-  {
-    template <ggo::pixel_type pixel_type, typename... args>
-    static auto call(args&&... a)
-    {
-      return functor::template call<pixel_type, memory_lines_order>(std::forward<args>(a)...);
-    }
-  };
-
-  template <typename functor, typename... args>
-  auto dispatch_image_format(ggo::pixel_type pixel_type, ggo::lines_order memory_lines_order, args&&... a)
-  {
-    switch (memory_lines_order)
-    {
-    case lines_order::up:
-      return dispatch_pixel_type<dispatch_image_format_functor<lines_order::up, functor>>(pixel_type, std::forward<args>(a)...);
-    case lines_order::down:
-      return dispatch_pixel_type<dispatch_image_format_functor<lines_order::down, functor>>(pixel_type, std::forward<args>(a)...);
-    default:
-      throw std::runtime_error("invalid memory lines order");
-      break;
-    }
-  }
-#endif
-}
-
 // Image view.
 namespace ggo
 {
-  /*
-  template <typename image_t>
-  class generic_view
-  {
-  public:
-
-    using color_t = typename image_t::color_t;
-
-    generic_view(image_t & img, ggo::rect_int clipping) : _img(img) {}
-
-    size size() const { return _clipping.size(); }
-
-  private:
-
-    rect_int  _clipping;
-    image_t & _img;
-  };
-
-  template <typename image_t>
-  std::optional<generic_view<image_t>> make_image_view(image_t & img, rect_int clipping)
+  template <pixel_type pt, vertical_direction rows_vdir, typename void_ptr_t>
+  std::optional<rows_images_t<pt, rows_vdir, const void *>> make_image_view(const rows_images_t<pt, rows_vdir, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
       return {};
     }
 
-    return generic_view<image_t>(img, clipping);
+    const void * ptr = img.pixel_ptr(clipping.left(), rows_vdir == ggo::vertical_direction::up ? clipping.bottom() : clipping.top());
+
+    constexpr int pixel_byte_size = pixel_type_traits<pt>::pixel_byte_size;
+    using rows_memory_layout_t = rows_memory_layout<pixel_byte_size, rows_vdir>;
+    using rows_image_t = image_base_t<pt, rows_memory_layout_t, const void *>;
+
+    return rows_image_t(ptr, rows_memory_layout_t(clipping.size(), img.memory_layout()._line_byte_step));
   }
 
-  template <pixel_type pt, lines_order lo, typename void_ptr_t>
-  std::optional<image_base_t<pt, lo, const void *>> make_image_view(const image_base_t<pt, lo, void_ptr_t> & img, ggo::rect_int clipping)
+  template <pixel_type pt, vertical_direction rows_vdir, typename void_ptr_t>
+  std::optional<rows_images_t<pt, rows_vdir, void_ptr_t>> make_image_view(rows_images_t<pt, rows_vdir, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
       return {};
     }
 
-    const void * ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
+    void_ptr_t ptr = img.pixel_ptr(clipping.left(), rows_vdir == ggo::vertical_direction::up ? clipping.bottom() : clipping.top());
 
-    return image_base_t<pt, lo, const void *>(ptr, clipping.size(), img.line_byte_step());
+    constexpr int pixel_byte_size = pixel_type_traits<pt>::pixel_byte_size;
+    using rows_memory_layout_t = rows_memory_layout<pixel_byte_size, rows_vdir>;
+    using rows_image_t = image_base_t<pt, rows_memory_layout_t, void_ptr_t>;
+
+    return rows_image_t(ptr, rows_memory_layout_t(clipping.size(), img.memory_layout()._line_byte_step));
   }
-
-  template <pixel_type pt, lines_order lo, typename void_ptr_t>
-  std::optional<image_base_t<pt, lo, void_ptr_t>> make_image_view(image_base_t<pt, lo, void_ptr_t> & img, ggo::rect_int clipping)
-  {
-    if (clipping.clip(rect_int::from_size(img.size())) == false)
-    {
-      return {};
-    }
-
-    void_ptr_t ptr = img.pixel_ptr(clipping.left(), lo == ggo::lines_order::up ? clipping.bottom() : clipping.top());
-
-    return image_base_t<pt, lo, void_ptr_t>(ptr, clipping.size(), img.line_byte_step());
-  }*/
 }
-
-namespace ggo
-{
-#if 0
-  template <typename image_t, typename func_t>
-  void for_each_pixel(image_t & img, ggo::rect_int clipping, func_t && func)
-  {
-    image_t::scanner2d_t::for_each_pixel(clipping, func);
-  }
-
-  template <typename image_t, typename func_t>
-  void for_each_pixel(image_t & img, func_t && func)
-  {
-    auto clipping = ggo::rect_int::from_size(img.size());
-
-    for_each_pixel(img, clipping, func);
-  }
-#endif
-}
-

@@ -33,16 +33,15 @@ GGO_TEST(dynamic_image, move)
   GGO_CHECK(img2.data() == nullptr);
 }
 
-#if 0
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, image_view_yd)
+GGO_TEST(image, image_view_rows_down)
 {
-  auto img = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::down>({
-    { 00, 01, 02, 03, 04, 05 },
-    { 10, 11, 12, 13, 14, 15 },
-    { 20, 21, 22, 23, 24, 25 },
-    { 30, 31, 32, 33, 34, 35 },
-    { 40, 41, 42, 43, 44, 45 } });
+  auto img = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 5 }, {
+    00, 01, 02, 03, 04, 05,
+    10, 11, 12, 13, 14, 15,
+    20, 21, 22, 23, 24, 25,
+    30, 31, 32, 33, 34, 35,
+    40, 41, 42, 43, 44, 45 });
 
   auto view = ggo::make_image_view(img, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
 
@@ -55,14 +54,14 @@ GGO_TEST(image, image_view_yd)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(image, image_view_yu)
+GGO_TEST(image, image_view_rows_up)
 {
-  auto img = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
-    { 00, 01, 02, 03, 04, 05 },
-    { 10, 11, 12, 13, 14, 15 },
-    { 20, 21, 22, 23, 24, 25 },
-    { 30, 31, 32, 33, 34, 35 },
-    { 40, 41, 42, 43, 44, 45 } });
+  auto img = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, {
+    00, 01, 02, 03, 04, 05,
+    10, 11, 12, 13, 14, 15,
+    20, 21, 22, 23, 24, 25,
+    30, 31, 32, 33, 34, 35,
+    40, 41, 42, 43, 44, 45 });
 
   auto view = ggo::make_image_view(img, ggo::rect_int::from_left_right_bottom_top(2, 4, 1, 2));
 
@@ -73,4 +72,3 @@ GGO_TEST(image, image_view_yu)
   GGO_CHECK_EQ(view->read_pixel(1, 1), 23);
   GGO_CHECK_EQ(view->read_pixel(2, 1), 24);
 }
-#endif

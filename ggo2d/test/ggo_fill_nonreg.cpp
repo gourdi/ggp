@@ -1,64 +1,76 @@
 #include "ggo_2d_nonreg.h"
 #include <2d/fill/ggo_fill.h>
 #include <2d/io/ggo_bmp.h>
-#if 0
+
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, fill_black_y_8u_up)
+GGO_TEST(fill, fill_black_y_8u_rows_up)
 {
-  auto image = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
-    { 10, 11, 12, 13, 14 },
-    { 20, 21, 22, 23, 24 },
-    { 30, 31, 32, 33, 34 } });
+  auto image = make_image_t<ggo::pixel_type::y_8u>({ 5, 3 }, {
+    10, 11, 12, 13, 14,
+    20, 21, 22, 23, 24,
+    30, 31, 32, 33, 34 });
 
   ggo::fill_black(image);
 
-  const ggo::array<uint8_t, 2> expected({
-    { 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0 } });
-
-  GGO_CHECK_IMG(image, expected);
+  GGO_CHECK_PIXELS(image, {
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0 });
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, fill_black_rgba_8u_up)
+GGO_TEST(fill, fill_black_y_8u_rows_up_clipping)
 {
-  auto image = make_image_t<ggo::pixel_type::rgba_8u, ggo::lines_order::up>({
-    { { 10, 11, 12, 13 }, { 14, 15, 16, 17 } },
-    { { 20, 21, 22, 23 }, { 24, 25, 26, 27 } },
-    { { 30, 31, 32, 33 }, { 34, 35, 36, 37 } }, });
+  auto image = make_image_t<ggo::pixel_type::y_8u>({ 5, 3 }, {
+    10, 11, 12, 13, 14,
+    20, 21, 22, 23, 24,
+    30, 31, 32, 33, 34 });
+
+  ggo::fill_black(image, ggo::rect_int::from_left_right_bottom_top(2, 3, 0, 1));
+
+  GGO_CHECK_PIXELS(image, {
+    10, 11,  0,  0, 14,
+    20, 21,  0,  0, 24,
+    30, 31, 32, 33, 34 });
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, fill_black_rgba_8u_rows_up)
+{
+  auto image = make_image_t<ggo::pixel_type::rgba_8u>({2, 3 }, {
+    { 10, 11, 12, 13 }, { 14, 15, 16, 17 },
+    { 20, 21, 22, 23 }, { 24, 25, 26, 27 },
+    { 30, 31, 32, 33 }, { 34, 35, 36, 37 } });
 
   ggo::fill_black(image);
 
-  const ggo::array<ggo::rgba_8u, 2> expected({
-    { { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff } },
-    { { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff } },
-    { { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff } } });
-
-  GGO_CHECK_IMG(image, expected);
+  GGO_CHECK_PIXELS(image, {
+    { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff },
+    { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff },
+    { 0x00, 0x00, 0x00, 0xff }, { 0x00, 0x00, 0x00, 0xff } });
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, fill_solid_y_8u_up)
+GGO_TEST(fill, fill_solid_y_8u_rows_up)
 {
-  auto image = make_image_t<ggo::pixel_type::y_8u, ggo::lines_order::up>({
-    { 10, 11, 12, 13, 14 },
-    { 20, 21, 22, 23, 24 },
-    { 30, 31, 32, 33, 34 } });
+  auto image = make_image_t<ggo::pixel_type::y_8u>({ 5, 3 }, {
+    10, 11, 12, 13, 14,
+    20, 21, 22, 23, 24,
+    30, 31, 32, 33, 34 });
 
   ggo::fill_solid(image, 42);
 
-  const ggo::array<uint8_t, 2> expected({
-    { 42, 42, 42, 42, 42 },
-    { 42, 42, 42, 42, 42 },
-    { 42, 42, 42, 42, 42 } });
-
-  GGO_CHECK_IMG(image, expected);
+  GGO_CHECK_PIXELS(image, {
+    42, 42, 42, 42, 42,
+    42, 42, 42, 42, 42,
+    42, 42, 42, 42, 42 });
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, fill_solid_bgra_8u_yd)
+GGO_TEST(fill, fill_solid_bgra_8u_rows_down)
 {
+  using memory_layout_t = ggo::rows_memory_layout<4, ggo::vertical_direction::down>;
+
   std::vector<uint8_t> buffer{
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -66,7 +78,7 @@ GGO_TEST(fill, fill_solid_bgra_8u_yd)
     40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
     60, 61, 62, 63, 64, 65, 66, 67, 68, 69 };
-  ggo::image_t<ggo::pixel_type::bgra_8u, ggo::lines_order::down> image(buffer.data(), { 2, 6 }, 10);
+  ggo::image_t<ggo::pixel_type::bgra_8u, memory_layout_t> image(buffer.data(), memory_layout_t({ 2, 6 }, 10));
 
   ggo::fill_solid(image, { uint8_t(96), uint8_t(97), uint8_t(98), uint8_t(99) });
 
@@ -106,7 +118,9 @@ GGO_TEST(fill, fill_solid_rgb_32f_yu)
   fill_line(reinterpret_cast<float *>(buffer.data() + 2 * line_step), 30);
   fill_line(reinterpret_cast<float *>(buffer.data() + 3 * line_step), 40);
 
-  ggo::image_t<ggo::pixel_type::rgb_32f, ggo::lines_order::up> image(buffer.data(), { 3, 4 }, line_step);
+  using memory_layout_t = ggo::rows_memory_layout<12, ggo::vertical_direction::up>;
+
+  ggo::image_t<ggo::pixel_type::rgb_32f, memory_layout_t> image(buffer.data(), memory_layout_t({ 3, 4 }, line_step));
 
   ggo::fill_solid(image, { 97.f, 98.f, 99.f });
 
@@ -135,7 +149,7 @@ GGO_TEST(fill, fill_solid_rgb_32f_yu)
   GGO_CHECK_EQ(buffer[3 * line_step - 1], 0);
   GGO_CHECK_EQ(buffer[4 * line_step - 1], 0);
 }
-
+#if 0       
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, perlin)
 {

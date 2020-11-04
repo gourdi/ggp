@@ -2,7 +2,7 @@
 #include <2d/processing/ggo_crop.h>
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(crop, y_8u_yu)
+GGO_TEST(crop, y_8u_rows_up)
 {
   const auto image = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, {
     00, 01, 02, 03, 04, 05,
@@ -44,7 +44,7 @@ GGO_TEST(crop, y_8u_yu)
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(crop, y_8u_yd)
+GGO_TEST(crop, y_8u_rows_down)
 {
   const auto image = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 5 }, { 
     00, 01, 02, 03, 04, 05,
