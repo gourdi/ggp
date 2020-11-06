@@ -127,6 +127,7 @@ namespace ggo
   template <ggo::pixel_type pixel_type, ggo::vertical_direction rows_vdir, typename void_ptr_t>
   using rows_images_t = image_base_t<pixel_type, ggo::rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, rows_vdir>, void_ptr_t>;
 
+  using image_y_8u = image_base_t<pixel_type::y_8u, rows_memory_layout<1, vertical_direction::up>, void *>;
   using image_rgb_8u = image_base_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::up>, void *>;
 }
 

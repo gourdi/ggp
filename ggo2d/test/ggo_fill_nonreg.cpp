@@ -165,6 +165,23 @@ GGO_TEST(fill, fill_solid_rgb_32f_yu)
   GGO_CHECK_EQ(buffer[3 * line_step - 1], 0);
   GGO_CHECK_EQ(buffer[4 * line_step - 1], 0);
 }
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, fill_checker)
+{
+  ggo::image_y_8u image({ 7, 4 });
+
+  ggo::fill_checker(image, 0x00, 0xff, 3);
+
+  GGO_CHECK_PIXELS(image, {
+    0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff,
+    0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff,
+    0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff,
+    0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00 });
+}
+
+
+
 #if 0       
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, perlin)
@@ -189,23 +206,26 @@ GGO_TEST(fill, 4colors)
 
   ggo::save_bmp("fill_4colors.bmp", image);
 }
+#endif
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, curve)
 {
-  //ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
+  ggo::image_y_8u image({ 6, 5 });
 
-  //ggo::linear_curve<float, ggo::rgb_32f> curve;
+  const std::map<float, float> curve{ { 0.0f, 0.0f }, { 0.5f, 0.2f }, { 1.0f, 1.f } };
 
-  //curve.push_point(0.0f, ggo::red<ggo::rgb_32f>());
-  //curve.push_point(0.5f, ggo::green<ggo::rgb_32f>());
-  //curve.push_point(1.0f, ggo::yellow<ggo::rgb_32f>());
+  ggo::fill_color_curve(image, curve);
 
-  //ggo::fill_color_curve(image, curve);
-
-  //ggo::save_bmp("fill_curve.bmp", image);
+  GGO_CHECK_PIXELS(image, {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a,
+    0x33, 0x33, 0x33, 0x33, 0x33, 0x33,
+    0x99, 0x99, 0x99, 0x99, 0x99, 0x99,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff });
 }
 
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, gaussian)
 {
@@ -216,15 +236,6 @@ GGO_TEST(fill, gaussian)
   ggo::save_bmp("fill_gaussian.bmp", image);
 }
 
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, checker)
-{
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
-
-  ggo::fill_checker(image, ggo::yellow<ggo::rgb_8u>(), ggo::blue<ggo::rgb_8u>(), 10);
-
-  ggo::save_bmp("fill_checker.bmp", image);
-}
 #endif
 
 

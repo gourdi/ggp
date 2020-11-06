@@ -1,41 +1,33 @@
-#if 0
+#pragma once
 
-#ifndef __GGO_FILL_COLOR_CURVE__
-#define __GGO_FILL_COLOR_CURVE__
-
-#include <kernel/math/interpolation/ggo_curve.h>
+#include <2d/ggo_color.h>
+#include <map>
 
 namespace ggo
 {
-  template <typename image_t, typename curve_t>
-  void fill_color_curve(image_t & image, const curve_t & curve)
+  template <typename image_t, typename scalar_t, typename color_t>
+  void fill_color_curve(image_t & image, const std::map<scalar_t, color_t> & curve)
   {
-    using floating_point_color_t = typename color_traits<image_t::color_t>::floating_point_color_t;
-    using floating_point_t = typename color_traits<floating_point_color_t>::sample_t;
+    using sample_t = typename color_traits<color_t>::sample_t;
+
+    static_assert(color_traits<image_t::color_t>::color_space == color_traits<color_t>::color_space);
+    static_assert(std::is_floating_point_v<sample_t>);
+    static_assert(std::is_same_v<sample_t, scalar_t>);
 
     const int w = image.width();
     const int h = image.height();
-    const floating_point_t inv_h = 1 / floating_point_t(h);
+    const scalar_t inv_h = 1 / scalar_t(h - 1);
 
     for (int y = 0; y < h; ++y)
     {
-      const auto c = convert_color_to<image_t::color_t>(curve.evaluate(y * inv_h));
+      const auto c1 = linear_interpolation1d(curve.begin(), curve.end(), y * inv_h);
+      const auto c2 = convert_color_to<image_t::color_t>(c1);
 
       for (int x = 0; x < w; ++x)
       {
-        image.write_pixel(x, y, c);
+        image.write_pixel(x, y, c2);
       }
     }
   }
-
-  template <ggo::lines_order memory_lines_order, ggo::pixel_type pixel_type, typename curve_t>
-  void fill_color_curve(void * buffer, int width, int height, int line_byte_step, const curve_t & curve)
-  {
-    ggo::image_view_t<memory_lines_order, pixel_type> image(buffer, { width, height }, line_byte_step);
-
-    fill_color_curve(image, curve);
-  }
 }
 
-#endif
-#endif
