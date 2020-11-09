@@ -192,21 +192,23 @@ GGO_TEST(fill, perlin)
 
   ggo::save_bmp("fill_perlin.bmp", image);
 }
+#endif
+
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, 4colors)
 {
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
+  ggo::image_y_8u image({ 6, 5 });
 
-  ggo::fill_4_colors(image,
-    ggo::red<ggo::rgb_8u>(),
-    ggo::yellow<ggo::rgb_8u>(),
-    ggo::blue<ggo::rgb_8u>(),
-    ggo::white<ggo::rgb_8u>());
+  ggo::fill_4_colors(image, 0x00, 0xff, 0x80, 0x40);
 
-  ggo::save_bmp("fill_4colors.bmp", image);
+  GGO_CHECK_PIXELS(image, {
+    0x40, 0x66, 0x8c, 0xb3, 0xd9, 0xff, 
+    0x50, 0x66, 0x7d, 0x93, 0xa9, 0xbf, 
+    0x60, 0x66, 0x6d, 0x73, 0x79, 0x80, 
+    0x70, 0x66, 0x5d, 0x53, 0x49, 0x40, 
+    0x80, 0x66, 0x4d, 0x33, 0x1a, 0x00 });
 }
-#endif
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, curve)
@@ -225,17 +227,18 @@ GGO_TEST(fill, curve)
     0xff, 0xff, 0xff, 0xff, 0xff, 0xff });
 }
 
-#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, gaussian)
 {
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
+  ggo::image_y_8u image({ 6, 5 });
 
-  ggo::fill_gaussian(image, 50.f, ggo::yellow<ggo::rgb_8u>(), ggo::blue<ggo::rgb_8u>());
+  ggo::fill_gaussian(image, 2.f, 0xff, 0x00);
 
-  ggo::save_bmp("fill_gaussian.bmp", image);
+  GGO_CHECK_PIXELS(image, {
+    0x14, 0x35, 0x58, 0x58, 0x35, 0x14,
+    0x2a, 0x71, 0xbb, 0xbb, 0x71, 0x2a,
+    0x35, 0x91, 0xf0, 0xf0, 0x91, 0x35,
+    0x2a, 0x71, 0xbb, 0xbb, 0x71, 0x2a,
+    0x14, 0x35, 0x58, 0x58, 0x35, 0x14 });
 }
-
-#endif
-
 

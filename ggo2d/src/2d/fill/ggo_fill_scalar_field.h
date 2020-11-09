@@ -1,5 +1,4 @@
-#ifndef __GGO_FILL_SCALAR_FIELD__
-#define __GGO_FILL_SCALAR_FIELD__
+#pragma once
 
 #include <kernel/math/ggo_discretization.h>
 #include <kernel/math/scalar_fields_2d/ggo_perlin_noise_field_2d.h>
@@ -100,4 +99,3 @@ namespace ggo
   }
 }
 
-#endif
