@@ -180,21 +180,6 @@ GGO_TEST(fill, fill_checker)
     0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00 });
 }
 
-
-
-#if 0       
-/////////////////////////////////////////////////////////////////////
-GGO_TEST(fill, perlin)
-{
-  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
-
-  ggo::fill_perlin(image, 5.f, ggo::red_8u(), ggo::yellow_8u());
-
-  ggo::save_bmp("fill_perlin.bmp", image);
-}
-#endif
-
-
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(fill, 4colors)
 {
@@ -241,4 +226,16 @@ GGO_TEST(fill, gaussian)
     0x2a, 0x71, 0xbb, 0xbb, 0x71, 0x2a,
     0x14, 0x35, 0x58, 0x58, 0x35, 0x14 });
 }
+
+#if 0       
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(fill, perlin)
+{
+  ggo::image_t<ggo::pixel_type::rgb_8u> image({ 160, 140 });
+
+  ggo::fill_perlin(image, 5.f, ggo::red_8u(), ggo::yellow_8u());
+
+  ggo::save_bmp("fill_perlin.bmp", image);
+}
+#endif
 

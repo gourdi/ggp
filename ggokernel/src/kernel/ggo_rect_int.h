@@ -196,48 +196,6 @@ namespace ggo
   {
     return p.x() >= _left && p.x() <= _right && p.y() >= _bottom && p.y() <= _top;
   }
-
-  //////////////////////////////////////////////////////////////
-  template <typename process_block_func>
-  void process_blocks(const ggo::rect_int & rect, int block_width, int block_height, process_block_func process_block)
-  {
-    int x = rect.left();
-    int y = rect.bottom();
-
-    int x_end = std::min(x + block_width - 1, rect.right());
-    int y_end = std::min(y + block_height - 1, rect.top());
-
-    while (true)
-    {
-      process_block(rect_int::from_left_right_bottom_top(x, x_end, y, y_end));
-
-      // Move to the next block.
-      if (x_end < rect.right())
-      {
-        x += block_width;
-        x_end = std::min(x + block_width - 1, rect.right());
-      }
-      else
-      {
-        GGO_ASSERT(x_end == rect.right());
-
-        if (y_end == rect.top())
-        {
-          // Done.
-          break;
-        }
-        else
-        {
-          // Go to next line.
-          x = rect.left();
-          x_end = std::min(x + block_width - 1, rect.right());
-
-          y += block_height;
-          y_end = std::min(y + block_height - 1, rect.top());
-        }
-      }
-    }
-  }
 }
 
 #endif

@@ -88,5 +88,3 @@ GGO_TEST(rect_int, is_inside)
   GGO_CHECK_EQ(r.is_inside({ 2, 0 }), false);
   GGO_CHECK_EQ(r.is_inside({ 6, 4 }), false);
 }
-
-
