@@ -48,7 +48,7 @@ GGO_TEST(sampling, disc)
 GGO_TEST(sampling, rect)
 {
   {
-    ggo::rect_f rect { 1.5, 0.5, 2, 4 };
+    auto rect = ggo::rect_f::from_left_bottom_width_height(1.5, 0.5, 2, 4);
 
     auto samples = grid_sampling(rect, 1.f);
 

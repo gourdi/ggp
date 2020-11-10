@@ -1,4 +1,3 @@
-#include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/time/ggo_chronometer.h>
 #include <kernel/math/ggo_pixel_sampling.h>
@@ -11,9 +10,9 @@
 #include <2d/blend/ggo_additive_blend.h>
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/paint/ggo_blur_paint.h>
+#include "ggo_2d_nonreg.h"
 
 //#define GGO_BENCH
-#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
@@ -21,19 +20,18 @@ GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
   constexpr int width = 6;
   constexpr int height = 4;
 
-  std::vector<uint8_t> buffer(height * width, 0);
-  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, width);
+  ggo::image_y_8u image({ width, height });
 
-  ggo::paint<ggo::sampling_16x16>(image, ggo::rect_f(2.f, 1.f, 3.f, 1.f), 0xff);
+  ggo::fill_solid(image, 0x00);
+  ggo::paint<ggo::sampling_16x16>(image, ggo::rect_f::from_left_bottom_width_height(2.f, 1.f, 3.f, 1.f), 0xff);
 
-  const std::vector<uint8_t> expected{
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00,	0x00, 0xff,	0xff,	0xff,	0x00,
-    0x00,	0x00,	0x00,	0x00,	0x00,	0x00,
-    0x00,	0x00,	0x00,	0x00,	0x00,	0x00 };
-
-  GGO_CHECK(buffer == expected);
+  GGO_CHECK_PIXELS(image, {
+      0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+      0x00,	0x00, 0xff,	0xff,	0xff,	0x00,
+      0x00,	0x00,	0x00,	0x00,	0x00,	0x00,
+      0x00,	0x00,	0x00,	0x00,	0x00,	0x00 });
 }
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)

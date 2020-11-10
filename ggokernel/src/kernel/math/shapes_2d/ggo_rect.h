@@ -20,10 +20,13 @@ namespace ggo
 
                       rect();
                       rect(const rect<data_t> & rect);
-                      rect(const pos2<data_t> & p1, const pos2<data_t> & p2);
-                      rect(data_t left, data_t bottom, data_t width, data_t height);
                       rect(const rect_data<data_t> & rect_data);
-                      
+
+    static rect       from_points(const pos2<data_t> & p1, const pos2<data_t> & p2);
+    static rect       from_left_bottom_width_height(data_t left, data_t bottom, data_t width, data_t height);
+    static rect       from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top);
+    static rect       from_union(const rect<data_t> & rect1, const rect<data_t> & rect2);
+
                       // Conversion operator.
     const rect_data<data_t> data() const { return _rect_data; }
                           
@@ -54,11 +57,6 @@ namespace ggo
     bool	            is_point_inside(const ggo::pos2<data_t> & p) const override;
     rect_data<data_t> get_bounding_rect() const override { return _rect_data; }
     rect_intersection get_rect_intersection(const rect_data<data_t> & rect_data) const override;
-
-  public:
-      
-    static rect<data_t> from_left_right_bottom_top(data_t left, data_t right, data_t bottom, data_t top);
-    static rect<data_t> from_union(const rect<data_t> & rect1, const rect<data_t> & rect2);
 
   private:
 

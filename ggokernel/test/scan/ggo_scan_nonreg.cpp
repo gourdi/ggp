@@ -6,7 +6,8 @@ GGO_TEST(scan, scan_tiles_up_single_tile)
 {
   std::vector<ggo::rect_int> tiles;
 
-  ggo::scan_tiles_up(ggo::rect_int::from_left_right_bottom_top(5, 15, 10, 20), 40, 40, [&](const ggo::rect_int& tile)
+  ggo::scan_tiles_up scan;
+  scan(ggo::rect_int::from_left_right_bottom_top(5, 15, 10, 20), 40, 40, [&](const ggo::rect_int& tile)
   {
     tiles.push_back(tile);
   });
@@ -21,7 +22,8 @@ GGO_TEST(scan, scan_tiles_up_multiple_tiles)
 {
   std::vector<ggo::rect_int> tiles;
 
-  ggo::scan_tiles_up(ggo::rect_int::from_left_right_bottom_top(5, 12, 10, 15), 5, 5, [&](const ggo::rect_int& tile)
+  ggo::scan_tiles_up scan;
+  scan(ggo::rect_int::from_left_right_bottom_top(5, 12, 10, 15), 5, 5, [&](const ggo::rect_int& tile)
   {
     tiles.push_back(tile);
   });
@@ -39,7 +41,8 @@ GGO_TEST(scan, scan_tiles_down_multiple_tiles)
 {
   std::vector<ggo::rect_int> tiles;
 
-  ggo::scan_tiles_down(ggo::rect_int::from_left_right_bottom_top(5, 12, 10, 15), 5, 5, [&](const ggo::rect_int& tile)
+  ggo::scan_tiles_down scan;
+  scan(ggo::rect_int::from_left_right_bottom_top(5, 12, 10, 15), 5, 5, [&](const ggo::rect_int& tile)
   {
     tiles.push_back(tile);
   });

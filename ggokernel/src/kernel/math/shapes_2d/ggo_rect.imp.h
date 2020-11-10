@@ -20,41 +20,40 @@ namespace ggo
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  rect<data_t>::rect(const pos2<data_t> & p1, const pos2<data_t> & p2)
+  rect<data_t>::rect(const rect_data<data_t> & rect_data)
+    :
+    _rect_data(rect_data)
+  {
+
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  rect<data_t> rect<data_t>::from_points(const pos2<data_t> & p1, const pos2<data_t> & p2)
   {
     auto horz = std::minmax(p1.x(), p2.x());
     auto vert = std::minmax(p1.y(), p2.y());
 
-    _rect_data._pos = { horz.first, vert.first };
-    _rect_data._width = horz.second - horz.first;
-    _rect_data._height = vert.second - vert.first;
-    GGO_ASSERT(_rect_data._width >= 0);
-    GGO_ASSERT(_rect_data._height >= 0);
+    rect_data<data_t> rect_data;
+    rect_data._pos = { horz.first, vert.first };
+    rect_data._width = horz.second - horz.first;
+    rect_data._height = vert.second - vert.first;
+    GGO_ASSERT(rect_data._width >= 0);
+    GGO_ASSERT(rect_data._height >= 0);
+
+    return rect<data_t>(rect_data);
   }
 
   /////////////////////////////////////////////////////////////////////
   template <typename data_t>
-  rect<data_t>::rect(data_t left, data_t bottom, data_t width, data_t height)
+  rect<data_t> rect<data_t>::from_left_bottom_width_height(data_t left, data_t bottom, data_t width, data_t height)
   {
-    _rect_data._pos = { left, bottom };
-    _rect_data._width = width;
-    _rect_data._height = height;
-  }
+    rect_data<data_t> rect_data;
+    rect_data._pos = { left, bottom };
+    rect_data._width = width;
+    rect_data._height = height;
 
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  rect<data_t>::rect(const rect_data<data_t> & rect_data)
-  :
-  _rect_data(rect_data)
-  {
-    
-  }
-  
-  /////////////////////////////////////////////////////////////////////
-  template <typename data_t>
-  bool rect<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
-  {
-    return (p.x() >= left() && p.x() <= right() && p.y() >= bottom() && p.y() <= top());
+    return rect<data_t>(rect_data);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -69,6 +68,13 @@ namespace ggo
   rect<data_t> rect<data_t>::from_union(const rect<data_t> & rect1, const rect<data_t> & rect2)
   {
     return rect(ggo::get_union(rect1.data(), rect2.data()));
+  }
+
+  /////////////////////////////////////////////////////////////////////
+  template <typename data_t>
+  bool rect<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
+  {
+    return (p.x() >= left() && p.x() <= right() && p.y() >= bottom() && p.y() <= top());
   }
 
   /////////////////////////////////////////////////////////////////////

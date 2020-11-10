@@ -1,9 +1,9 @@
-#ifndef __GGO_PAINT__
-#define __GGO_PAINT__
+#pragma once
 
 #include <vector>
 #include <kernel/ggo_kernel.h>
 #include <kernel/ggo_rect_int.h>
+#include <kernel/scan/ggo_scan.h>
 #include <kernel/math/ggo_pixel_sampling.h>
 #include <kernel/math/shapes_2d/ggo_shapes2d.h>
 #include <2d/ggo_image.h>
@@ -15,11 +15,11 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t>
+  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t, typename tiles_scan_t>
   void paint_layer_t(const ggo::rect_int & block_rect,
     const int scale_factor, const int current_scale,
     const shape_t & shape,
-    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend)
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend, tiles_scan_t && tiles_scan)
   {
     GGO_ASSERT(current_scale >= 0);
 
@@ -74,24 +74,24 @@ namespace ggo
       }
 
       // Recursion.
-      auto paint_subblock = [&](const ggo::rect_int & block_rect)
+      auto paint_subtile = [&](const ggo::rect_int & block_rect)
       {
         paint_layer_t<sampling>(block_rect,
           scale_factor, current_scale - 1,
-          shape, read_pixel, write_pixel, brush, blend);
+          shape, read_pixel, write_pixel, brush, blend, tiles_scan);
       };
 
-      const int subblock_size = ggo::pow(scale_factor, current_scale - 1);
-      process_blocks(block_rect, subblock_size, subblock_size, paint_subblock);
+      const int subtile_size = ggo::pow(scale_factor, current_scale - 1);
+      tiles_scan(block_rect, subtile_size, subtile_size, paint_subtile);
       break;
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t>
+  template <pixel_sampling sampling, typename shape_t, typename read_pixel_t, typename write_pixel_t, typename brush_t, typename blend_t, typename tiles_scan_t>
   void paint_layer(int width, int height, const shape_t & shape,
     int scale_factor, int first_scale,
-    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend,
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, brush_t && brush, blend_t && blend, tiles_scan_t && tiles_scan,
     const ggo::rect_int & clipping)
   {
     using data_t = typename shape_t::data_t;
@@ -114,17 +114,29 @@ namespace ggo
     // Process blocks.
     auto process_rect = [&](const ggo::rect_int & block_rect)
     {
-      paint_layer_t<sampling>(block_rect, scale_factor, first_scale, shape, read_pixel, write_pixel, brush, blend);
+      paint_layer_t<sampling>(block_rect, scale_factor, first_scale, shape, read_pixel, write_pixel, brush, blend, tiles_scan);
     };
 
-    int block_size = ggo::pow(scale_factor, first_scale);
-    process_blocks(shape_pixel_rect, block_size, block_size, process_rect);
+    int tile_size = ggo::pow(scale_factor, first_scale);
+    tiles_scan(shape_pixel_rect, tile_size, tile_size, process_rect);
   }
 }
 
 // Helpers.
 namespace ggo
 {
+  template <typename image_t>
+  auto tiles_scan_for(image_t & image)
+  {
+    return ggo::scan_tiles_down();
+  }
+
+  template <pixel_type img_pixel_type>
+  auto tiles_scan_for(ggo::image_base_t<img_pixel_type, ggo::rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, ggo::vertical_direction::up>, void *> & image)
+  {
+    return ggo::scan_tiles_up();
+  }
+
   /////////////////////////////////////////////////////////////////////
   template <pixel_sampling sampling, typename image_t, typename shape_t, typename brush_t, typename blend_t>
   void paint(image_t & image, const shape_t & shape, brush_t brush, blend_t blend, const ggo::rect_int & clipping)
@@ -132,7 +144,7 @@ namespace ggo
     auto read_pixel  = [&](int x, int y) { return image.read_pixel(x, y); };
     auto write_pixel = [&](int x, int y, auto p) { image.write_pixel(x, y, p); };
 
-    paint_layer<sampling>(image.width(), image.height(), shape, 8, 2, read_pixel, write_pixel, brush, blend, clipping);
+    paint_layer<sampling>(image.width(), image.height(), shape, 8, 2, read_pixel, write_pixel, brush, blend, tiles_scan_for(image), clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -181,4 +193,3 @@ namespace ggo
   }
 }
 
-#endif
