@@ -15,14 +15,14 @@
 //#define GGO_BENCH
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
+GGO_TEST(paint, rect_y_8u_rows_up_overwrite_sampling16x16)
 {
   constexpr int width = 6;
   constexpr int height = 4;
 
   ggo::image_y_8u image({ width, height });
 
-  ggo::fill_solid(image, 0x00);
+  ggo::fill_black(image);
   ggo::paint<ggo::sampling_16x16>(image, ggo::rect_f::from_left_bottom_width_height(2.f, 1.f, 3.f, 1.f), 0xff);
 
   GGO_CHECK_PIXELS(image, {
@@ -31,17 +31,16 @@ GGO_TEST(paint, rect_y_8u_yu_overwrite_sampling16x16)
       0x00,	0x00,	0x00,	0x00,	0x00,	0x00,
       0x00,	0x00,	0x00,	0x00,	0x00,	0x00 });
 }
-#if 0
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)
+GGO_TEST(paint, shape_y_8u_rows_up_overwrite_sampling1)
 {
   constexpr int width = 10;
   constexpr int height = 10;
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0);
-  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_y_8u image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::paint<ggo::sampling_1>(image, ggo::disc_f({ 2.5f, 3.5f }, 3.f), 0xff);
 
@@ -70,14 +69,14 @@ GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling1)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(paint, shape_y_8u_yu_add_sampling1)
+GGO_TEST(paint, shape_y_8u_rows_up_add_sampling1)
 {
   constexpr int width = 10;
   constexpr int height = 10;
   constexpr int line_byte_step = 11;
 
   std::vector<uint8_t> buffer(height * line_byte_step, 0x80);
-  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> image(buffer.data(), { width, height }, line_byte_step);
+  ggo::image_y_8u image(buffer.data(), { width, height }, line_byte_step);
 
   ggo::solid_color_brush<uint8_t> brush(0xff);
   ggo::additive_blender<uint8_t> blender;
@@ -98,7 +97,7 @@ GGO_TEST(paint, shape_y_8u_yu_add_sampling1)
 
   GGO_CHECK(buffer == expected);
 }
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(paint, shape_y_8u_yu_overwrite_sampling4x4)
 {

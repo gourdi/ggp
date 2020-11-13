@@ -76,7 +76,7 @@ namespace ggo
       return false;
     }
 
-    ggo::image_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::down>> image(rows_memory_layout<3, vertical_direction::down>(mem_layout.size()));
+    ggo::image_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::down>> image(mem_layout.size());
 
     image.for_each_pixel([&](void *, int x, int y)
     {

@@ -18,22 +18,22 @@ namespace ggo
  
     using color_t = typename pixel_type_traits<pixel_type_>::color_t;
 
-    image_base_t(memory_layout_t mem_layout)
-      : _buffer(malloc(mem_layout.buffer_byte_size()))
-      , _owns_buffer(true)
-      , _memory_layout(mem_layout)
+    image_base_t() = delete;
+
+    template <typename... args_t>
+    image_base_t(ggo::size s, args_t&&... args)
+      : _owns_buffer(true)
+      , _memory_layout(s, std::forward<args_t>(args)...)
     {
       static_assert(std::is_same_v<void_ptr_t, void *>);
+      _buffer = malloc(_memory_layout.buffer_byte_size());
     }
 
-    image_base_t(const ggo::size & s) : image_base_t(memory_layout_t(s))
-    {
-    }
-
-    image_base_t(void_ptr_t buffer, memory_layout_t mem_layout)
+    template <typename... args_t>
+    image_base_t<pixel_type_, memory_layout_t, void_ptr_t>(void_ptr_t buffer, ggo::size s, args_t&&... args)
       : _buffer(buffer)
       , _owns_buffer(false)
-      , _memory_layout(mem_layout)
+      , _memory_layout(s, std::forward<args_t>(args)...)
     {
     }
 
@@ -58,31 +58,31 @@ namespace ggo
     static constexpr ggo::pixel_type pixel_type() { return pixel_type_; }
 
     // Move.
-    image_base_t(image_base_t && image)
-      : _buffer(image._buffer)
-      , _owns_buffer(image._owns_buffer)
-      , _memory_layout(std::move(image._memory_layout))
-    {
-      image._buffer = nullptr;
-    }
+    //image_base_t(image_base_t && image)
+    //  : _buffer(image._buffer)
+    //  , _owns_buffer(image._owns_buffer)
+    //  , _memory_layout(std::move(image._memory_layout))
+    //{
+    //  image._buffer = nullptr;
+    //}
 
-    void operator=(image_base_t && image)
-    {
-      if (_owns_buffer == true)
-      {
-        free(_buffer);
-      }
+    //void operator=(image_base_t && image)
+    //{
+    //  if (_owns_buffer == true)
+    //  {
+    //    free(_buffer);
+    //  }
 
-      _buffer = image._buffer;
-      _owns_buffer = image._owns_buffer;
-      _memory_layout = std::move(image._memory_layout);
+    //  _buffer = image._buffer;
+    //  _owns_buffer = image._owns_buffer;
+    //  _memory_layout = std::move(image._memory_layout);
 
-      image._buffer = nullptr;
-    }
+    //  image._buffer = nullptr;
+    //}
 
     // No copy. Use blit API instead.
-    image_base_t(const image_base_t & image) = delete;
-    void operator=(const image_base_t & image) = delete;
+    //image_base_t(const image_base_t & image) = delete;
+    //void operator=(const image_base_t & image) = delete;
 
     // Read interface.
     const void *  data() const { return _buffer; }
@@ -273,6 +273,6 @@ namespace ggo
     using rows_memory_layout_t = rows_memory_layout<pixel_byte_size, rows_vdir>;
     using rows_image_t = image_base_t<pt, rows_memory_layout_t, void_ptr_t>;
 
-    return rows_image_t(ptr, rows_memory_layout_t(clipping.size(), img.memory_layout()._line_byte_step));
+    return rows_image_t(ptr, clipping.size(), img.memory_layout()._line_byte_step);
   }
 }
