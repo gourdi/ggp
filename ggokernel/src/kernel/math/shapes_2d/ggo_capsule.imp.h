@@ -1,46 +1,46 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  capsule<data_t>::capsule(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2, data_t width)
+  template <typename scalar_t>
+  capsule<scalar_t>::capsule(const ggo::pos2<scalar_t> & p1, const ggo::pos2<scalar_t> & p2, scalar_t width)
     :
     _p1(p1), _p2(p2), _width(width)
   {
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  bool capsule<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
+  template <typename scalar_t>
+  bool capsule<scalar_t>::is_point_inside(const ggo::pos2<scalar_t> & p) const
   {
-    return ggo::segment<data_t>(_p1, _p2).dist_to_point(p) < _width;
+    return ggo::segment<scalar_t>(_p1, _p2).dist_to_point(p) < _width;
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  rect_data<data_t> capsule<data_t>::get_bounding_rect() const
+  template <typename scalar_t>
+  rect_data<scalar_t> capsule<scalar_t>::get_bounding_rect() const
   {
-    data_t left    = std::min(_p1.x(), _p2.x()) - _width;
-    data_t right   = std::max(_p1.x(), _p2.x()) + _width;
-    data_t bottom  = std::min(_p1.y(), _p2.y()) - _width;
-    data_t top     = std::max(_p1.y(), _p2.y()) + _width;
+    scalar_t left    = std::min(_p1.x(), _p2.x()) - _width;
+    scalar_t right   = std::max(_p1.x(), _p2.x()) + _width;
+    scalar_t bottom  = std::min(_p1.y(), _p2.y()) - _width;
+    scalar_t top     = std::max(_p1.y(), _p2.y()) + _width;
 
     return { {left, bottom}, right - left, top - bottom };
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  rect_intersection capsule<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t>
+  rect_intersection capsule<scalar_t>::get_rect_intersection(const rect_data<scalar_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.x();
-    data_t bottom  = rect_data._pos.y();
-    data_t right   = left + rect_data._width;
-    data_t top     = bottom + rect_data._height;
+    scalar_t left    = rect_data._pos.x();
+    scalar_t bottom  = rect_data._pos.y();
+    scalar_t right   = left + rect_data._width;
+    scalar_t top     = bottom + rect_data._height;
 
-    ggo::segment<data_t> s1({ left,  bottom }, { left, top });      // Left rectangle edge.
-    ggo::segment<data_t> s2({ right, bottom }, { right, top });     // Right rectangle edge.
-    ggo::segment<data_t> s3({ left,  bottom }, { right, bottom });  // Bottom rectangle edge.
-    ggo::segment<data_t> s4({ left,  top }, { right, top });        // data_top rectangle edge.
-    ggo::segment<data_t> s(_p1, _p2);
+    ggo::segment<scalar_t> s1({ left,  bottom }, { left, top });      // Left rectangle edge.
+    ggo::segment<scalar_t> s2({ right, bottom }, { right, top });     // Right rectangle edge.
+    ggo::segment<scalar_t> s3({ left,  bottom }, { right, bottom });  // Bottom rectangle edge.
+    ggo::segment<scalar_t> s4({ left,  top }, { right, top });        // scalar_top rectangle edge.
+    ggo::segment<scalar_t> s(_p1, _p2);
 
     // Rectangle in shape.
     if (is_point_inside({ left,  bottom }) == true &&
@@ -51,10 +51,10 @@ namespace ggo
       return rect_intersection::rect_in_shape;
     }
 
-    data_t squared_width = _width * _width;
+    scalar_t squared_width = _width * _width;
 
     // Shape in rectangle?
-    ggo::rect<data_t> rect(rect_data);
+    ggo::rect<scalar_t> rect(rect_data);
     if (rect.is_point_inside(_p1) == true && rect.is_point_inside(_p2) == true &&
         s.hypot_to_segment(s1) > squared_width &&
         s.hypot_to_segment(s2) > squared_width &&
@@ -77,10 +77,10 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t capsule<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
+  template <typename scalar_t>
+  scalar_t capsule<scalar_t>::dist_to_point(const ggo::pos2<scalar_t> & p) const
   {
-    data_t hypot = ggo::segment<data_t>(_p1, _p2).hypot_to_point(p);
+    scalar_t hypot = ggo::segment<scalar_t>(_p1, _p2).hypot_to_point(p);
 
     if (hypot < _width * _width)
     {

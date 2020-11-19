@@ -95,7 +95,7 @@ namespace ggo
       }
       else
       {
-        rgb_8u blended_brush_color = _blend(brush_color);
+        rgb_8u blended_brush_color = _blend(bkgd_color, brush_color);
 
         return {
           static_cast<uint8_t>(fixed_point_div<bit_shift>(_inv_opacity * bkgd_color.r() + _opacity * blended_brush_color.r())),

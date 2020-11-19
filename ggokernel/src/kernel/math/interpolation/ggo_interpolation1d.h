@@ -49,8 +49,6 @@ namespace ggo
   template <typename iterator_t, typename scalar_t>
   auto linear_interpolation1d(iterator_t begin, iterator_t end, scalar_t x)
   {
-    auto get_prv = [](auto it) { auto prv = it; --prv; return prv; };
-
     if (std::distance(begin, end) < 2)
     {
       return begin->second;
@@ -65,14 +63,14 @@ namespace ggo
     {
       if (x <= cur->first)
       {
-        auto prv = get_prv(cur);
+        auto prv = std::prev(cur);
         auto interpolation = make_interpolation_linear(prv->first, prv->second, cur->first, cur->second);
 
         return ggo::evaluate(interpolation, x);
       }
     }
 
-    return get_prv(end)->second;
+    return std::prev(end)->second;
   }
 }
 
@@ -95,7 +93,7 @@ namespace ggo
   template <typename data_t, typename scalar_t>
   data_t cubic_interpolation1d(const data_t * in, int size, scalar_t x)
   {
-    return cubic_interpolation1d([&](int i) { return in[ggo::clamp(i, 0, size - 1)]; }, x);
+    return cubic_interpolation1d([&](int i) { return in[std::clamp(i, 0, size - 1)]; }, x);
   }
 }
 
@@ -111,29 +109,26 @@ namespace ggo
       return begin->second;
     }
 
-    auto get_prv = [](auto it) { auto prv = it; --prv; return prv; };
-    auto get_nxt = [](auto it) { auto nxt = it; ++nxt; return nxt; };
-
     if (x <= begin->first)
     {
       return begin->second;
     }
 
-    for (auto cur = get_nxt(begin); cur != end; ++cur)
+    for (auto cur = std::next(begin); cur != end; ++cur)
     {
       if (x <= cur->first)
       {
-        auto prv = get_prv(cur);
+        auto prv = std::prev(cur);
 
         scalar_t x1 = prv->first;
         scalar_t x2 = cur->first;
         const auto& y1 = prv->second;
         const auto& y2 = cur->second;
 
-        scalar_t x0    = prv == begin ? 2 * x1 - x2 : get_prv(prv)->first;
-        const auto& y0 = prv == begin ? y2 : get_prv(prv)->second;
+        scalar_t x0    = prv == begin ? 2 * x1 - x2 : std::prev(prv)->first;
+        const auto& y0 = prv == begin ? y2 : std::prev(prv)->second;
 
-        auto nxt = get_nxt(cur);
+        auto nxt = std::next(cur);
         scalar_t x3    = nxt == end ? 2 * x2 - x1 : nxt->first;
         const auto& y3 = nxt == end ? y1 : nxt->second;
 
@@ -143,7 +138,7 @@ namespace ggo
       }
     }
 
-    return get_prv(end)->second;
+    return std::prev(end)->second;
   }
 }
 

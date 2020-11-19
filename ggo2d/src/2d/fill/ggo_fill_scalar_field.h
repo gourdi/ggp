@@ -35,7 +35,7 @@ namespace ggo
     }
   }
 }
-
+#if 0
 namespace ggo
 {
   template <typename image_t>
@@ -65,7 +65,7 @@ namespace ggo
     fill_perlin(img, scale, c1, c2);
   }
 }
-
+#endif
 namespace ggo
 {
   template <typename image_t>
@@ -85,17 +85,6 @@ namespace ggo
     gaussian_field2d._amp = 1;
 
     fill_scalar_field2d(image, gaussian_field2d, c1, c2);
-  }
-
-  template <ggo::pixel_type pixel_type>
-  void fill_gaussian(void * buffer,
-    int width, int height, int line_byte_step,
-    typename color_traits<typename color_traits<typename pixel_type_traits<pixel_type>::color_t>::floating_point_color_t>::sample_t stddev,
-    const typename pixel_type_traits<pixel_type>::color_t & c1, const typename pixel_type_traits<pixel_type>::color_t & c2)
-  {
-    ggo::image_t<pixel_type, ggo::lines_order::up> img(buffer, { width, height }, line_byte_step);
-
-    fill_gaussian(img, stddev, c1, c2);
   }
 }
 

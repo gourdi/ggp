@@ -1,5 +1,6 @@
-#ifndef __GGO_PERLIN_NOISE_FIELD_2D__
-#define __GGO_PERLIN_NOISE_FIELD_2D__
+#pragma once
+
+#if 0
 
 #include <kernel/math/scalar_fields_2d/ggo_scalar_field_2d_abc.h>
 #include <kernel/math/interpolation/ggo_interpolation2d.h>

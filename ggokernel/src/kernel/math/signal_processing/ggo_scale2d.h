@@ -92,7 +92,7 @@ namespace ggo
   template <typename data_t>
   void scale_2d_cubic_interpolation(const data_t * ptr_in, int width_in, int height_in, data_t * ptr_out, int width_out, int height_out)
   {
-    auto in  = [&](int x, int y) { return ptr_in[ggo::clamp(y, 0, height_in - 1) * width_in + ggo::clamp(x, 0, width_in - 1)]; };
+    auto in  = [&](int x, int y) { return ptr_in[std::clamp(y, 0, height_in - 1) * width_in + std::clamp(x, 0, width_in - 1)]; };
     auto out = [&](int x, int y, const data_t& v) { ptr_out[y * width_out + x] = v; };
 
     scale_2d_cubic_interpolation(in, width_in, height_in, out, width_out, height_out);

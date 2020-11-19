@@ -167,7 +167,6 @@ namespace ggo
     return weight * a + (1 - weight) * b;
   }
 
-  template <typename data_t> constexpr  data_t  clamp(data_t v, data_t inf, data_t sup) { return v > sup ? sup : (v < inf ? inf : v); };
   template <typename data_t> constexpr  data_t  square(data_t value) { return value * value; };
   template <typename data_t> constexpr  data_t  sign(data_t value) { return value > data_t(0) ? data_t(1) : data_t(-1); };
   template <typename data_t> constexpr  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
@@ -250,7 +249,7 @@ namespace ggo
     constexpr in_t inf = static_cast<in_t>(std::numeric_limits<out_t>::min());
     constexpr in_t sup = static_cast<in_t>(std::numeric_limits<out_t>::max());
 
-    return round_to<out_t>(clamp(v, inf, sup));
+    return round_to<out_t>(std::clamp(v, inf, sup));
   }
 
   template <typename out_t, cast_mode mode, typename in_t>

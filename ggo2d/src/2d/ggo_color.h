@@ -423,11 +423,11 @@ namespace ggo
   template <> inline constexpr float convert_sample_to(uint32_t s) { return s / float(std::numeric_limits<uint32_t>::max()); }
   
   // 32f => 8u
-  template <> inline constexpr uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  template <> inline constexpr uint8_t convert_sample_to(float s) { return static_cast<uint8_t>(std::numeric_limits<uint8_t>::max() * std::clamp(s, 0.f, 1.f) + 0.5f); }
   // 32f => 16u
-  template <> inline constexpr uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * ggo::clamp(s, 0.f, 1.f) + 0.5f); }
+  template <> inline constexpr uint16_t convert_sample_to(float s) { return static_cast<uint16_t>(std::numeric_limits<uint16_t>::max() * std::clamp(s, 0.f, 1.f) + 0.5f); }
   // 32f => 32u (here we need to go 'double' because of numerical imprecisions)
-  template <> inline constexpr uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * ggo::clamp(static_cast<double>(s), 0., 1.) + 0.5); }
+  template <> inline constexpr uint32_t convert_sample_to(float s) { return static_cast<uint32_t>(std::numeric_limits<uint32_t>::max() * std::clamp(static_cast<double>(s), 0., 1.) + 0.5); }
 
   template <typename sample_t>
   sample_t rgb_to_y(sample_t r, sample_t g, sample_t b)
@@ -852,24 +852,24 @@ namespace ggo
 namespace ggo
 {
   // Reference: http://en.wikipedia.org/wiki/HSL_color_space
-  template <typename data_t>
-  void hsv2rgb(data_t h, data_t s, data_t v, data_t & r, data_t & g, data_t & b)
+  template <typename scalar_t>
+  void hsv2rgb(scalar_t h, scalar_t s, scalar_t v, scalar_t & r, scalar_t & g, scalar_t & b)
   {
-    static_assert(std::is_floating_point<data_t>::value);
+    static_assert(std::is_floating_point<scalar_t>::value);
 
-    h = std::fmod(h, data_t(1));
+    h = std::fmod(h, scalar_t(1));
     if (h < 0)
     {
       h += 1;
     }
-    s = ggo::clamp<data_t>(s, 0, 1);
-    v = ggo::clamp<data_t>(v, 0, 1);
+    s = std::clamp<scalar_t>(s, 0, 1);
+    v = std::clamp<scalar_t>(v, 0, 1);
 
-    int		  h_i = ggo::clamp(int(h * 6), 0, 5);
-    data_t	f = h * 6 - std::floor(h * 6);
-    data_t	p = v * (1 - s);
-    data_t	q = v * (1 - f * s);
-    data_t	t = v * (1 - (1 - f) * s);
+    int		  h_i = std::clamp(int(h * 6), 0, 5);
+    scalar_t	f = h * 6 - std::floor(h * 6);
+    scalar_t	p = v * (1 - s);
+    scalar_t	q = v * (1 - f * s);
+    scalar_t	t = v * (1 - (1 - f) * s);
 
     switch (h_i)
     {

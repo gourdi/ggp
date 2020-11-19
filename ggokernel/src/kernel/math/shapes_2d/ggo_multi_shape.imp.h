@@ -1,8 +1,8 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  bool multi_shape<data_t, mode>::is_point_inside(const ggo::pos2<data_t> & p) const
+  template <typename scalar_t, boolean_mode mode>
+  bool multi_shape<scalar_t, mode>::is_point_inside(const ggo::pos2<scalar_t> & p) const
   {
     switch (mode)
     {
@@ -19,8 +19,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  bool multi_shape<data_t, mode>::is_point_inside_union(const ggo::pos2<data_t> & p) const
+  template<typename scalar_t, boolean_mode mode>
+  bool multi_shape<scalar_t, mode>::is_point_inside_union(const ggo::pos2<scalar_t> & p) const
   {
     for (const auto & shape : _shapes)
     {
@@ -33,8 +33,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  bool multi_shape<data_t, mode>::is_point_inside_intersection(const ggo::pos2<data_t> & p) const
+  template<typename scalar_t, boolean_mode mode>
+  bool multi_shape<scalar_t, mode>::is_point_inside_intersection(const ggo::pos2<scalar_t> & p) const
   {
     for (const auto & shape : _shapes)
     {
@@ -47,8 +47,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  bool multi_shape<data_t, mode>::is_point_inside_difference(const ggo::pos2<data_t> & p) const
+  template<typename scalar_t, boolean_mode mode>
+  bool multi_shape<scalar_t, mode>::is_point_inside_difference(const ggo::pos2<scalar_t> & p) const
   {
     // The point must be in the first shape but not in the following ones.
     for (auto it = this->_shapes.begin(); it != this->_shapes.end(); ++it)
@@ -74,12 +74,12 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  rect_data<data_t> multi_shape<data_t, mode>::get_bounding_rect() const
+  template <typename scalar_t, boolean_mode mode>
+  rect_data<scalar_t> multi_shape<scalar_t, mode>::get_bounding_rect() const
   {
     if (_shapes.empty() == true)
     {
-      return { { data_t(0), data_t(0) }, data_t(0), data_t(0) };
+      return { { scalar_t(0), scalar_t(0) }, scalar_t(0), scalar_t(0) };
     }
     
     switch (mode)
@@ -92,13 +92,13 @@ namespace ggo
       return get_bounding_rect_difference();
     default:
       GGO_FAIL();
-      return{ { data_t(0), data_t(0) }, data_t(0), data_t(0) };
+      return{ { scalar_t(0), scalar_t(0) }, scalar_t(0), scalar_t(0) };
     }
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  rect_data<data_t> multi_shape<data_t, mode>::get_bounding_rect_union() const
+  template<typename scalar_t, boolean_mode mode>
+  rect_data<scalar_t> multi_shape<scalar_t, mode>::get_bounding_rect_union() const
   {
     auto it = _shapes.begin();
     auto shape_ptr = *it;
@@ -117,8 +117,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  rect_data<data_t> multi_shape<data_t, mode>::get_bounding_rect_intersection() const
+  template<typename scalar_t, boolean_mode mode>
+  rect_data<scalar_t> multi_shape<scalar_t, mode>::get_bounding_rect_intersection() const
   {
     auto it = _shapes.begin();
     auto shape_ptr = *it;
@@ -131,7 +131,7 @@ namespace ggo
       auto intersection = get_intersection(rect, shape_ptr->get_bounding_rect());
       if (!intersection)
       {
-        return{ { data_t(0), data_t(0) }, data_t(0), data_t(0) };
+        return{ { scalar_t(0), scalar_t(0) }, scalar_t(0), scalar_t(0) };
       }
 
       rect = *intersection;
@@ -143,8 +143,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template<typename data_t, boolean_mode mode>
-  rect_data<data_t> multi_shape<data_t, mode>::get_bounding_rect_difference() const
+  template<typename scalar_t, boolean_mode mode>
+  rect_data<scalar_t> multi_shape<scalar_t, mode>::get_bounding_rect_difference() const
   {
     auto it = _shapes.begin();
     auto shape_ptr = *it;
@@ -152,8 +152,8 @@ namespace ggo
   }
   
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  rect_intersection multi_shape<data_t, mode>::get_rect_intersection(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t, boolean_mode mode>
+  rect_intersection multi_shape<scalar_t, mode>::get_rect_intersection(const rect_data<scalar_t> & rect_data) const
   {
     switch (mode)
     {
@@ -170,8 +170,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  rect_intersection multi_shape<data_t, mode>::get_rect_intersection_union(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t, boolean_mode mode>
+  rect_intersection multi_shape<scalar_t, mode>::get_rect_intersection_union(const rect_data<scalar_t> & rect_data) const
   {
     bool disjoint_all = true;
     bool shape_in_rect_all = true;
@@ -210,8 +210,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  rect_intersection multi_shape<data_t, mode>::get_rect_intersection_intersection(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t, boolean_mode mode>
+  rect_intersection multi_shape<scalar_t, mode>::get_rect_intersection_intersection(const rect_data<scalar_t> & rect_data) const
   {
     bool rect_in_shape_all = true;
     bool shape_in_rect_all = true;
@@ -250,8 +250,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////////
-  template <typename data_t, boolean_mode mode>
-  rect_intersection multi_shape<data_t, mode>::get_rect_intersection_difference(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t, boolean_mode mode>
+  rect_intersection multi_shape<scalar_t, mode>::get_rect_intersection_difference(const rect_data<scalar_t> & rect_data) const
   {
     auto it = _shapes.begin();
     auto shape = *it++;

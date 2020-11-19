@@ -26,7 +26,7 @@ GGO_TEST(blit, clipping)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_up_fit)
+GGO_TEST(blit, rows_up_fit)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
   const auto src = make_image_t<ggo::pixel_type::y_8u>({ 3, 2 }, {
@@ -44,7 +44,7 @@ GGO_TEST(blit, y_up_fit)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_down_fit)
+GGO_TEST(blit, rows_down_fit)
 {
   auto dst = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
   const auto src = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 3, 2 }, {
@@ -62,7 +62,7 @@ GGO_TEST(blit, y_down_fit)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_up_bottom_left)
+GGO_TEST(blit, rows_up_bottom_left)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
   const auto src = make_image_t<ggo::pixel_type::y_8u>({ 3, 2 }, {
@@ -98,7 +98,7 @@ GGO_TEST(blit, y_down_bottom_left)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_up_top_right)
+GGO_TEST(blit, rows_up_top_right)
 {
   auto dst = make_image_t<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
   const auto src = make_image_t<ggo::pixel_type::y_8u>({ 3, 2 }, {
@@ -116,7 +116,7 @@ GGO_TEST(blit, y_up_top_right)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_down_top_right)
+GGO_TEST(blit, rows_down_top_right)
 {
   auto dst = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 5 }, 0);
   const auto src = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 3, 2 }, {
@@ -134,7 +134,7 @@ GGO_TEST(blit, y_down_top_right)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_up_overlap)
+GGO_TEST(blit, rows_up_overlap)
 {
   const auto src = make_image_t<ggo::pixel_type::y_8u>({ 6, 4 }, {
     11, 12, 13, 14, 15, 16,
@@ -164,7 +164,7 @@ GGO_TEST(blit, y_up_overlap)
 }
 
 /////////////////////////////////////////////////////////////////////
-GGO_TEST(blit, y_down_overlap)
+GGO_TEST(blit, rows_down_overlap)
 {
   const auto src = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 6, 4 }, {
     11, 12, 13, 14, 15, 16,

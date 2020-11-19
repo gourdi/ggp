@@ -73,7 +73,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     ggo::paint<ggo::sampling_16x16>(image, ggo::disc_f({ x_f, y_f }, 2.f), ggo::white_8u());
   }
   
-  for (int i = 0; i < (1<<20); ++i)
+  for (int i = 0; i < (1<<14); ++i)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
@@ -86,7 +86,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     image.write_pixel(x_i, y_i, ggo::white_8u());
   }
   
-  for (int i = 0; i < (1<<20); ++i)
+  for (int i = 0; i < (1<<14); ++i)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>();
     
@@ -99,7 +99,7 @@ GGO_TEST(shape_sampling, hemisphere_uniform_sampling)
     image.write_pixel(x_i, y_i, ggo::white_8u());
   }
   
-  for (int i = 0; i < (1<<18); ++i)
+  for (int i = 0; i < (1<<10); ++i)
   {
     auto sample = ggo::hemisphere_uniform_sampling<float>(ggo::pi<float>() / 4);
     

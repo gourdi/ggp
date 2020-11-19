@@ -1,5 +1,6 @@
-#ifndef __GGO_2D_MORPHOLOGY__
-#define __GGO_2D_MORPHOLOGY__
+#pragma once
+
+#if 0
 
 #include <kernel/math/signal_processing/ggo_morphology.h>
 #include <2d/ggo_pixel_type.h>

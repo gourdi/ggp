@@ -73,9 +73,6 @@ namespace ggo
 // Global function.
 namespace ggo
 {
-  template <typename process_block_func>
-  void process_blocks(const ggo::rect_int & rect, int block_width, int block_height, process_block_func process_block);
-
   inline std::ostream & operator<<(std::ostream & os, const ggo::rect_int & r)
   {
     os << "left: " << r.left() << ", right: " << r.right() << ", bottom: " << r.bottom() << ", top: " << r.top();

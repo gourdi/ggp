@@ -17,59 +17,58 @@ namespace ggo
     left, right, bottom, top
   };
 
-  template <typename data_t_>
-  class oriented_box final : public paintable_shape2d_abc<data_t_>, public affine_shape2d_abc<data_t_>
+  template <typename scalar_t_>
+  class oriented_box final : public paintable_shape2d_abc<scalar_t_>, public affine_shape2d_abc<scalar_t_>
   {
   public:
       
-    using data_t = data_t_;
-    using affine_shape2d_abc<data_t>::rotate;
-    using affine_shape2d_abc<data_t>::move;
-    using samplable_shape2d_abc<data_t>::is_point_inside;
+    using scalar_t = scalar_t_;
+    using affine_shape2d_abc<scalar_t>::rotate;
+    using affine_shape2d_abc<scalar_t>::move;
+    using samplable_shape2d_abc<scalar_t>::is_point_inside;
 
   struct vertex
   {
-    ggo::pos2<data_t_> _pos;
+    ggo::pos2<scalar_t_> _pos;
     oriented_box_vertex_id _id;
   };
 
   struct edge
   {
     std::array<vertex, 2> _vertices;
-    ggo::vec2<data_t> _normal;
+    ggo::vec2<scalar_t> _normal;
     oriented_box_edge_id _id;
   };
 
+                                        oriented_box(ggo::pos2<scalar_t> pos, scalar_t angle, scalar_t half_size_x, scalar_t half_size_y) : _pos(pos), _angle(angle), _half_size_x(half_size_x), _half_size_y(half_size_y) {}
 
-                                      oriented_box(ggo::pos2<data_t> pos, data_t angle, data_t half_size_x, data_t half_size_y) : _pos(pos), _angle(angle), _half_size_x(half_size_x), _half_size_y(half_size_y) {}
+    const ggo::pos2<scalar_t> &         pos() const { return _pos; }
+    scalar_t                            angle() const { return _angle; }
+    scalar_t                            half_size_x() const { return _half_size_x; }
+    scalar_t                            half_size_y() const { return _half_size_y; }
 
-    const ggo::pos2<data_t> &         pos() const { return _pos; }
-    data_t                            angle() const { return _angle; }
-    data_t                            half_size_x() const { return _half_size_x; }
-    data_t                            half_size_y() const { return _half_size_y; }
+    ggo::vec2<scalar_t>                 dir_x() const { return { std::cos(_angle), std::sin(_angle) }; }
+    ggo::vec2<scalar_t>                 dir_y() const { return { -std::sin(_angle), std::cos(_angle) }; }
 
-    ggo::vec2<data_t>                 dir_x() const { return { std::cos(_angle), std::sin(_angle) }; }
-    ggo::vec2<data_t>                 dir_y() const { return { -std::sin(_angle), std::cos(_angle) }; }
-
-    ggo::pos2<data_t>                 operator[](int i) const;
-    std::array<ggo::pos2<data_t>, 4>  get_points() const;
-    std::array<vertex, 4>             get_vertices() const;
-    std::array<edge, 4>               get_edges() const;
+    ggo::pos2<scalar_t>                 operator[](int i) const;
+    std::array<ggo::pos2<scalar_t>, 4>  get_points() const;
+    std::array<vertex, 4>               get_vertices() const;
+    std::array<edge, 4>                 get_edges() const;
 
     // Interfaces.
-    void                              move(const ggo::vec2<data_t> & m) override { _pos += m; }
-    void                              rotate(data_t angle, const ggo::pos2<data_t> & center) override;
-    ggo::pos2<data_t>                 get_center() const override { return _pos; }
-    bool                              is_point_inside(const ggo::pos2<data_t> & p) const override;
-    rect_data<data_t>                 get_bounding_rect() const override;
-    rect_intersection                 get_rect_intersection(const rect_data<data_t> & rect_data) const override;
+    void                                move(const ggo::vec2<scalar_t> & m) override { _pos += m; }
+    void                                rotate(scalar_t angle, const ggo::pos2<scalar_t> & center) override;
+    ggo::pos2<scalar_t>                 get_center() const override { return _pos; }
+    bool                                is_point_inside(const ggo::pos2<scalar_t> & p) const override;
+    rect_data<scalar_t>                 get_bounding_rect() const override;
+    rect_intersection                   get_rect_intersection(const rect_data<scalar_t> & rect_data) const override;
 
   private:
 
-    ggo::pos2<data_t> _pos;
-    data_t            _angle;
-    data_t            _half_size_x;
-    data_t            _half_size_y;
+    ggo::pos2<scalar_t> _pos;
+    scalar_t            _angle;
+    scalar_t            _half_size_x;
+    scalar_t            _half_size_y;
   };
 }
 
@@ -77,28 +76,28 @@ namespace ggo
 // Project.
 namespace ggo
 {
-  template <typename data_t>
+  template <typename scalar_t>
   struct oriented_box_projection
   {
-    data_t _center;
-    data_t _inf;
-    data_t _sup;
+    scalar_t _center;
+    scalar_t _inf;
+    scalar_t _sup;
   };
 
-  template <typename data_t>
-  ggo::oriented_box_projection<data_t> project(const ggo::oriented_box<data_t> & box, ggo::vec2_f dir)
+  template <typename scalar_t>
+  ggo::oriented_box_projection<scalar_t> project(const ggo::oriented_box<scalar_t> & box, ggo::vec2_f dir)
   {
     GGO_ASSERT(ggo::is_normalized(dir));
 
-    const data_t cos = std::cos(box.angle());
-    const data_t sin = std::sin(box.angle());
+    const scalar_t cos = std::cos(box.angle());
+    const scalar_t sin = std::sin(box.angle());
 
-    const ggo::vec2<data_t> x{ cos, sin };
-    const ggo::vec2<data_t> y{ -sin, cos };
+    const ggo::vec2<scalar_t> x{ cos, sin };
+    const ggo::vec2<scalar_t> y{ -sin, cos };
 
-    data_t dot_center = ggo::dot(box.pos(), dir);
-    data_t dot_dir_x = ggo::dot(x, dir);
-    data_t dot_dir_y = ggo::dot(y, dir);
+    scalar_t dot_center = ggo::dot(box.pos(), dir);
+    scalar_t dot_dir_x = ggo::dot(x, dir);
+    scalar_t dot_dir_y = ggo::dot(y, dir);
 
     return {
       dot_center,
@@ -114,16 +113,16 @@ namespace ggo
 // Intersection.
 namespace ggo
 {
-  template <typename data_t>
-  bool test_intersection(const ggo::oriented_box<data_t> & box1, const ggo::oriented_box<data_t> & box2);
+  template <typename scalar_t>
+  bool test_intersection(const ggo::oriented_box<scalar_t> & box1, const ggo::oriented_box<scalar_t> & box2);
 }
 
 /////////////////////////////////////////////////////////////////////
 // I/O operators.
 namespace ggo
 {
-  template <typename data_t>
-  std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<data_t> & box)
+  template <typename scalar_t>
+  std::ostream & operator<<(std::ostream & os, const ggo::oriented_box<scalar_t> & box)
   {
     os << "(" << box.pos() << "; " << box.dir() << "; " << box.size1() << "; " << box.size2() << ")";
     return os;

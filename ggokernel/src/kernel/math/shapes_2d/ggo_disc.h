@@ -7,44 +7,44 @@
 
 namespace ggo
 {
-  template <typename data_type>
-  class disc final : public paintable_shape2d_abc<data_type>,
-                     public distancable_shape2d_abc<data_type>,
-                     public affine_shape2d_abc<data_type>
+  template <typename scalar_t_>
+  class disc final : public paintable_shape2d_abc<scalar_t_>,
+                     public distancable_shape2d_abc<scalar_t_>,
+                     public affine_shape2d_abc<scalar_t_>
   {
   public:
     
-    using data_t = data_type;
-    using samplable_shape2d_abc<data_t>::is_point_inside;
-    using distancable_shape2d_abc<data_t>::dist_to_point;
+    using scalar_t = scalar_t_;
+    using samplable_shape2d_abc<scalar_t>::is_point_inside;
+    using distancable_shape2d_abc<scalar_t>::dist_to_point;
 
                               disc() {}
-                              disc(const ggo::pos2<data_t> & center, data_t radius) : _center(center), _radius(radius) {}
-                              disc(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2);
+                              disc(const ggo::pos2<scalar_t> & center, scalar_t radius) : _center(center), _radius(radius) {}
+                              disc(const ggo::pos2<scalar_t> & p1, const ggo::pos2<scalar_t> & p2);
            
-    ggo::pos2<data_t> &		    center() { return _center; }
-    const ggo::pos2<data_t> & center() const { return _center; }
+    ggo::pos2<scalar_t> &		    center() { return _center; }
+    const ggo::pos2<scalar_t> & center() const { return _center; }
            
-    data_t &					        radius() { return _radius; }
-    const data_t &			      radius() const { return _radius; }
+    scalar_t &					        radius() { return _radius; }
+    const scalar_t &			      radius() const { return _radius; }
            
-    data_t					          get_radius() const { return _radius; }
-    void				              set_radius(data_t radius) { _radius = radius; }
-    void				              set_center(const ggo::pos2<data_t> & center) { _center = center; }
+    scalar_t					          get_radius() const { return _radius; }
+    void				              set_radius(scalar_t radius) { _radius = radius; }
+    void				              set_center(const ggo::pos2<scalar_t> & center) { _center = center; }
            
     // Interfaces.
-    ggo::pos2<data_t>         get_center() const override { return _center; }
-    void				              move(const ggo::vec2<data_t> & m) override { _center += m; }
-    void				              rotate(data_t angle, const ggo::pos2<data_t> & center) override { _center = ggo::rotate(_center, center, angle); }
-    data_t                    dist_to_point(const ggo::pos2<data_t> & p) const override;
-    bool	                    is_point_inside(const ggo::pos2<data_t> & p) const override;
-    rect_data<data_t>         get_bounding_rect() const override;
-    rect_intersection         get_rect_intersection(const rect_data<data_t> & rect_data) const override;
+    ggo::pos2<scalar_t>         get_center() const override { return _center; }
+    void				              move(const ggo::vec2<scalar_t> & m) override { _center += m; }
+    void				              rotate(scalar_t angle, const ggo::pos2<scalar_t> & center) override { _center = ggo::rotate(_center, center, angle); }
+    scalar_t                    dist_to_point(const ggo::pos2<scalar_t> & p) const override;
+    bool	                    is_point_inside(const ggo::pos2<scalar_t> & p) const override;
+    rect_data<scalar_t>         get_bounding_rect() const override;
+    rect_intersection         get_rect_intersection(const rect_data<scalar_t> & rect_data) const override;
 
   private:
 
-    ggo::pos2<data_t> _center;
-    data_t			      _radius;
+    ggo::pos2<scalar_t> _center;
+    scalar_t			      _radius;
   };
 }
 
@@ -56,6 +56,6 @@ namespace ggo
 
 namespace ggo
 {
-  template <typename data_t, bool orthonormal, bool cross_product_up>
-  ggo::disc<data_t> from_local_to_world(const ggo::disc<data_t> & d, const orthogonal_basis2d<data_t, orthonormal, cross_product_up> & basis);
+  template <typename scalar_t, bool orthonormal, bool cross_product_up>
+  ggo::disc<scalar_t> from_local_to_world(const ggo::disc<scalar_t> & d, const orthogonal_basis2d<scalar_t, orthonormal, cross_product_up> & basis);
 }

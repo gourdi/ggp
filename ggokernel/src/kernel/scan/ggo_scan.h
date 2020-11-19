@@ -39,7 +39,7 @@ namespace ggo
   struct scan_tiles_up
   {
     template <typename process_tile_func>
-    void operator()(const ggo::rect_int & rect, int tile_width, int tile_height, process_tile_func process_tile)
+    void operator()(const ggo::rect_int & rect, int tile_width, int tile_height, process_tile_func process_tile) const
     {
       int x = rect.left();
       int y = rect.bottom();
@@ -84,7 +84,7 @@ namespace ggo
   struct scan_tiles_down
   {
     template <typename process_tile_func>
-    void operator()(const ggo::rect_int & rect, int tile_width, int tile_height, process_tile_func process_tile)
+    void operator()(const ggo::rect_int & rect, int tile_width, int tile_height, process_tile_func process_tile) const
     {
       int x = rect.left();
       int y = rect.top();

@@ -44,18 +44,5 @@ namespace ggo
       }
     }
   }
-
-  template <ggo::pixel_type pixel_type>
-  void fill_4_colors(void * buffer, int width, int height, int line_byte_step,
-    const typename pixel_type_traits<pixel_type>::color_t & c1,
-    const typename pixel_type_traits<pixel_type>::color_t & c2,
-    const typename pixel_type_traits<pixel_type>::color_t & c3,
-    const typename pixel_type_traits<pixel_type>::color_t & c4,
-    std::optional<ggo::rect_int> clipping = {})
-  {
-    ggo::image_t<pixel_type, ggo::lines_order::up> image(buffer, { width, height }, line_byte_step);
-
-    fill_4_colors(image, c1, c2, c3, c4, clipping);
-  }
 }
 

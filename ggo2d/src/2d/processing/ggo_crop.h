@@ -18,7 +18,7 @@ namespace ggo
 
     for (auto [x, y] : scan(r))
     {
-      output_image.write_pixel(x, y, input_image.read(x + bottom_left.x(), y + bottom_left().y()));
+      output_image.write_pixel(x, y, input_image.read(x + offset.x(), y + offset.y()));
     }
   }
 }
@@ -71,7 +71,7 @@ namespace ggo
   struct crop_dispatch
   {
     template <pixel_type img_pixel_type>
-    static void call()
+    static void call(const input_image_t& input_image, ggo::pos2_i offset, output_image_t& output_image, scan_t scan)
     {
       ggo::rect_int r = ggo::rect_int::from_left_width_bottom_height(offset.x(), output_image.width(), offset.y(), output_image.height());
 
@@ -96,6 +96,6 @@ namespace ggo
       throw std::runtime_error("pixel type pismatch");
     }
 
-    dispatch_pixel_type<dispatch_src<input_image_t, output_image_t>>(src_image.pixel_type(), input_image, offset, output_image, scan);
+    dispatch_pixel_type<dispatch_src<input_image_t, output_image_t>>(input_image.pixel_type(), input_image, offset, output_image, scan);
   }
 }

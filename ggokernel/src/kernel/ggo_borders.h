@@ -31,7 +31,7 @@ namespace ggo
     }
     else if constexpr (mode == border_mode::duplicate_edge)
     {
-      return ggo::clamp(i, 0, size - 1);
+      return std::clamp(i, 0, size - 1);
     }
     else if constexpr (mode == border_mode::loop)
     {

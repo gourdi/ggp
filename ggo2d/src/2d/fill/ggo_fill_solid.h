@@ -67,7 +67,7 @@ namespace ggo
   }
 
   template <ggo::pixel_type img_pixel_type, ggo::vertical_direction rows_vdir>
-  void fill_black(rows_images_t<img_pixel_type, rows_vdir, void *> & image)
+  void fill_black(rows_images_t<img_pixel_type, rows_vdir> & image)
   {
     using color_t = typename pixel_type_traits<img_pixel_type>::color_t;
 

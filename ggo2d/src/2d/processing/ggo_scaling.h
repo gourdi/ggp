@@ -16,7 +16,7 @@ namespace ggo
     auto in  = [&](int x, int y) { return input_image.read_pixel(x, y); };
     auto out = [&](int x, int y, const color_t & c) { output_image.write_pixel(x, y, c); };
 
-    scale_2d_nearest_neighbor(in, input.width(), input.height(), out, output.width(), output.height());
+    scale_2d_nearest_neighbor(in, input_image.width(), input_image.height(), out, output_image.width(), output_image.height());
   }
 
   //////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ namespace ggo
       output_image.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
     };
 
-    scale_2d_linear_interpolation(in, input.width(), input.height(), out, output.width(), output.height());
+    scale_2d_linear_interpolation(in, input_image.width(), input_image.height(), out, output_image.width(), output_image.height());
   }
 
   //////////////////////////////////////////////////////////////
@@ -52,8 +52,8 @@ namespace ggo
 
     auto in = [&](int x, int y)
     {
-      x = clamp(x, 0, input.width() - 1);
-      y = clamp(y, 0, input.height() - 1);
+      x = clamp(x, 0, input_image.width() - 1);
+      y = clamp(y, 0, input_image.height() - 1);
 
       return ggo::convert_color_to<floating_point_color_t>(input_image.read_pixel(x, y));
     };
@@ -63,7 +63,7 @@ namespace ggo
       output_image.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
     };
 
-    scale_2d_cubic_interpolation(in, input.width(), input.height(), out, output.width(), output.height());
+    scale_2d_cubic_interpolation(in, input_image.width(), input_image.height(), out, output_image.width(), output_image.height());
   }
 
   //////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ namespace ggo
       output_image.write_pixel(x, y, ggo::convert_color_to<color_t>(c));
     };
 
-    scale_2d_linear_integration(in, input.width(), input.height(), out, output.width(), output.height());
+    scale_2d_linear_integration(in, input_image.width(), input_image.height(), out, output_image.width(), output_image.height());
   }
 }
 

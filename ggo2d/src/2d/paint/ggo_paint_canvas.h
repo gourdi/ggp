@@ -9,80 +9,81 @@
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename paint_shape_t>
-  void paint_canvas_t(image_t & image, const ggo::rect_int & block_rect,
-    int scale_factor, int current_scale,
-    const std::vector<const paint_shape_t *> & paint_shapes)
+  template <pixel_sampling sampling, typename paint_shape_t, typename read_pixel_t, typename write_pixel_t, typename tiles_scan_t>
+  void paint_canvas_t(const ggo::rect_int & tile_rect,
+    const int scale_factor, const int current_scale,
+    const std::vector<const paint_shape_t *> & paint_shapes,
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, const tiles_scan_t & tiles_scan)
   {
     using scalar_t = typename paint_shape_t::scalar_t;
 
     GGO_ASSERT(current_scale >= 0);
 
-    // Check for shapes intersecting the current block.
-    auto block_rect_data = to_continuous<scalar_t>(block_rect);
+    // Check for shapes intersecting the current tile.
+    auto tile_rect_data = to_continuous<scalar_t>(tile_rect);
 
-    bool block_inside_all_shapes = true;
+    bool tile_inside_all_shapes = true;
 
-    std::vector<const paint_shape_t *> current_block_paint_shapes;
+    std::vector<const paint_shape_t *> current_tile_paint_shapes;
     for (const auto * paint_shape : paint_shapes)
     {
-      ggo::rect_intersection intersection = paint_shape->get_rect_intersection(block_rect_data);
+      ggo::rect_intersection intersection = paint_shape->get_rect_intersection(tile_rect_data);
 
       switch (intersection)
       {
       case ggo::rect_intersection::disjoints:
         break;
       case ggo::rect_intersection::rect_in_shape:
-        current_block_paint_shapes.push_back(paint_shape);
+        current_tile_paint_shapes.push_back(paint_shape);
         break;
       case ggo::rect_intersection::partial_overlap:
       case ggo::rect_intersection::shape_in_rect:
       case ggo::rect_intersection::unknown:
-        block_inside_all_shapes = false;
-        current_block_paint_shapes.push_back(paint_shape);
+        tile_inside_all_shapes = false;
+        current_tile_paint_shapes.push_back(paint_shape);
         break;
       }
     }
 
-    // Check if the current block intersects some shapes.
-    if (current_block_paint_shapes.empty() == true)
+    // Check if the current tile intersects some shapes.
+    if (current_tile_paint_shapes.empty() == true)
     {
       return;
     }
 
-    // If the current block is inside all shapes: no need to sample.
-    if (block_inside_all_shapes == true)
+    // If the current tile is inside all shapes: no need to sample.
+    if (tile_inside_all_shapes == true)
     {
-      block_rect.for_each_pixel([&](int x, int y)
+      tile_rect.for_each_pixel([&](int x, int y)
       {
-        auto pixel_color = image.read_pixel(x, y);
+        auto pixel_color = read_pixel(x, y);
 
-        for (const auto * paint_shape : current_block_paint_shapes)
+        for (const auto * paint_shape : current_tile_paint_shapes)
         {
           pixel_color = paint_shape->paint(x, y, pixel_color);
         }
 
-        image.write_pixel(x, y, pixel_color);
+        write_pixel(x, y, pixel_color);
       });
 
       return;
     }
 
-    // The current block is only a pixel: sample shapes.
-    if (block_rect.is_one() == true)
+    // The current tile is only a pixel: sample shapes.
+    if (tile_rect.is_one() == true)
     {
-      const auto bkgd_color = image.read_pixel(block_rect.left(), block_rect.bottom());
+      const auto bkgd_color = read_pixel(tile_rect.left(), tile_rect.bottom());
 
       ggo::color_accumulator<typename std::remove_const<decltype(bkgd_color)>::type> acc;
-      ggo::sampler<sampling>::template sample_pixel<scalar_t>(block_rect.left(), block_rect.bottom(), [&](scalar_t x_f, scalar_t y_f)
+      ggo::sampler<sampling>::template sample_pixel<scalar_t>(tile_rect.left(), tile_rect.bottom(), [&](scalar_t x_f, scalar_t y_f)
       {
         auto sample_color = bkgd_color;
 
-        for (const auto * paint_shape : current_block_paint_shapes)
+        for (const auto * paint_shape : current_tile_paint_shapes)
         {
           if (paint_shape->is_point_inside({ x_f, y_f }) == true)
           {
-            sample_color = paint_shape->paint(block_rect.left(), block_rect.bottom(), sample_color);
+            sample_color = paint_shape->paint(tile_rect.left(), tile_rect.bottom(), sample_color);
           }
         }
 
@@ -90,43 +91,44 @@ namespace ggo
       });
 
       const auto pixel_color = acc.template div<ggo::sampler<sampling>::samples_count>();
-      image.write_pixel(block_rect.left(), block_rect.bottom(), pixel_color);
+      write_pixel(tile_rect.left(), tile_rect.bottom(), pixel_color);
     }
     else
     {
       // General case: recursion.
-      auto paint_subblock = [&](const ggo::rect_int & block_rect)
+      auto paint_subtile = [&](const ggo::rect_int & tile_rect)
       {
-        paint_canvas_t<sampling>(image, block_rect, scale_factor, current_scale - 1, current_block_paint_shapes);
+        paint_canvas_t<sampling>(tile_rect, scale_factor, current_scale - 1, current_tile_paint_shapes, read_pixel, write_pixel, tiles_scan);
       };
 
-      int subblock_size = ggo::pow(scale_factor, current_scale - 1);
-      process_blocks(block_rect, subblock_size, subblock_size, paint_subblock);
+      int subtile_size = ggo::pow(scale_factor, current_scale - 1);
+      tiles_scan(tile_rect, subtile_size, subtile_size, paint_subtile);
     }
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
-  void paint_canvas(image_t & image,
-    const canvas<color_t, data_t> & canvas,
+  template <pixel_sampling sampling, typename color_t, typename scalar_t, typename read_pixel_t, typename write_pixel_t, typename tiles_scan_t>
+  void paint_canvas(int width, int height,
+    const canvas<color_t, scalar_t> & canvas,
     int scale_factor, int first_scale,
+    read_pixel_t && read_pixel, write_pixel_t && write_pixel, const tiles_scan_t & tiles_scan,
     const ggo::rect_int & clipping)
   {
     // Clip.
     ggo::rect_int safe_clipping(clipping);
-    if (safe_clipping.clip(image.size()) == false)
+    if (safe_clipping.clip(width, height) == false)
     {
       return;
     }
 
     // Retrieve shapes that are not clipped away.
-    const ggo::rect_data<data_t> clipping_rect_data = to_continuous<data_t>(safe_clipping);
-    std::optional<ggo::rect_data<data_t>> bounding_rect_data;
+    const ggo::rect_data<scalar_t> clipping_rect_data = to_continuous<scalar_t>(safe_clipping);
+    std::optional<ggo::rect_data<scalar_t>> bounding_rect_data;
 
-    std::vector<const layer<color_t, data_t> *> clipped_layers;
+    std::vector<const layer<color_t, scalar_t> *> clipped_layers;
     for (const auto & layer : canvas)
     {
-      const ggo::rect_data<data_t> cur_rect_data = layer.get_bounding_rect();
+      const ggo::rect_data<scalar_t> cur_rect_data = layer.get_bounding_rect();
       if (ggo::test_intersection(cur_rect_data, clipping_rect_data) == true)
       {
         clipped_layers.push_back(&layer);
@@ -153,14 +155,14 @@ namespace ggo
       return;
     }
 
-    // Process blocks.
-    auto process_block = [&](const ggo::rect_int & block_rect)
+    // Process tiles.
+    auto process_rect = [&](const ggo::rect_int & tile_rect)
     {
-      paint_canvas_t<sampling>(image, block_rect, scale_factor, first_scale, clipped_layers);
+      paint_canvas_t<sampling>(tile_rect, scale_factor, first_scale, clipped_layers, read_pixel, write_pixel, tiles_scan);
     };
 
-    int block_size = ggo::pow(scale_factor, first_scale);
-    process_blocks(bounding_pixel_rect, block_size, block_size, process_block);
+    int tile_size = ggo::pow(scale_factor, first_scale);
+    tiles_scan(bounding_pixel_rect, tile_size, tile_size, process_rect);
   }
 }
 
@@ -168,15 +170,18 @@ namespace ggo
 namespace ggo
 {
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
-  void paint(image_t & image, const canvas<color_t, data_t> & canvas, const ggo::rect_int & clipping)
+  template <pixel_sampling sampling, typename image_t, typename color_t, typename scalar_t>
+  void paint(image_t & image, const canvas<color_t, scalar_t> & canvas, const ggo::rect_int & clipping)
   {
-    paint_canvas<sampling>(image, canvas, 8, 2, clipping);
+    auto read_pixel  = [&](int x, int y) { return image.read_pixel(x, y); };
+    auto write_pixel = [&](int x, int y, auto p) { image.write_pixel(x, y, p); };
+
+    paint_canvas<sampling>(image.width(), image.height(), canvas, 8, 2, read_pixel, write_pixel, tiles_scan_for(image), clipping);
   }
 
   /////////////////////////////////////////////////////////////////////
-  template <pixel_sampling sampling, typename image_t, typename color_t, typename data_t>
-  void paint(image_t & image, const canvas<color_t, data_t> & canvas)
+  template <pixel_sampling sampling, typename image_t, typename color_t, typename scalar_t>
+  void paint(image_t & image, const canvas<color_t, scalar_t> & canvas)
   {
     paint<sampling>(image, canvas, ggo::rect_int::from_size(image.size()));
   }

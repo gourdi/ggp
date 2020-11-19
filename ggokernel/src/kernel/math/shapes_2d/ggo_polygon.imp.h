@@ -1,46 +1,46 @@
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  polygon2d<data_t> polygon2d<data_t>::create_oriented_box(const ggo::pos2<data_t> & center, const ggo::vec2<data_t> & direction, data_t size1, data_t size2)
+  template <typename scalar_t>
+  polygon2d<scalar_t> polygon2d<scalar_t>::create_oriented_box(const ggo::pos2<scalar_t> & center, const ggo::vec2<scalar_t> & direction, scalar_t size1, scalar_t size2)
   {
     // Normalize the direction.
-    data_t len = direction.get_length();
+    scalar_t len = direction.get_length();
     if (len <= 0)
     {
       throw std::runtime_error("division by zero");
     }
 
-    ggo::vec2<data_t> norm(direction / len);
+    ggo::vec2<scalar_t> norm(direction / len);
 
-    data_t x1 = center.x() + size1 * norm.x() + size2 * norm.y();
-    data_t y1 = center.y() + size1 * norm.y() - size2 * norm.x();
+    scalar_t x1 = center.x() + size1 * norm.x() + size2 * norm.y();
+    scalar_t y1 = center.y() + size1 * norm.y() - size2 * norm.x();
                                                         
-    data_t x2 = center.x() + size1 * norm.x() - size2 * norm.y();
-    data_t y2 = center.y() + size1 * norm.y() + size2 * norm.x();
+    scalar_t x2 = center.x() + size1 * norm.x() - size2 * norm.y();
+    scalar_t y2 = center.y() + size1 * norm.y() + size2 * norm.x();
                                                         
-    data_t x3 = center.x() - size1 * norm.x() - size2 * norm.y();
-    data_t y3 = center.y() - size1 * norm.y() + size2 * norm.x();
+    scalar_t x3 = center.x() - size1 * norm.x() - size2 * norm.y();
+    scalar_t y3 = center.y() - size1 * norm.y() + size2 * norm.x();
                                                         
-    data_t x4 = center.x() - size1 * norm.x() + size2 * norm.y();
-    data_t y4 = center.y() - size1 * norm.y() - size2 * norm.x();
+    scalar_t x4 = center.x() - size1 * norm.x() + size2 * norm.y();
+    scalar_t y4 = center.y() - size1 * norm.y() - size2 * norm.x();
 
-    return polygon2d<data_t>({ {x1, y1}, {x2, y2}, {x3, y3}, {x4, y4} });
+    return polygon2d<scalar_t>({ {x1, y1}, {x2, y2}, {x3, y3}, {x4, y4} });
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  polygon2d<data_t> polygon2d<data_t>::create_axis_aligned_box(data_t left, data_t right, data_t top, data_t bottom)
+  template <typename scalar_t>
+  polygon2d<scalar_t> polygon2d<scalar_t>::create_axis_aligned_box(scalar_t left, scalar_t right, scalar_t top, scalar_t bottom)
   {
     if (left > right) { std::swap(left, right); }
     if (bottom > top) { std::swap(top, bottom); }
 
-    return polygon2d<data_t>({ {left, top}, {right, top}, {right, bottom}, {left, bottom} });
+    return polygon2d<scalar_t>({ {left, top}, {right, top}, {right, bottom}, {left, bottom} });
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_point(const ggo::pos2<data_t> & p) const
+  template <typename scalar_t>
+  scalar_t polygon2d<scalar_t>::dist_to_point(const ggo::pos2<scalar_t> & p) const
   {
     switch (_points.size())
     {
@@ -57,20 +57,20 @@ namespace ggo
     }
 
     // First point to last point edge.
-    data_t hypot = ggo::segment<data_t>(_points.front(), _points.back()).hypot_to_point(p);
+    scalar_t hypot = ggo::segment<scalar_t>(_points.front(), _points.back()).hypot_to_point(p);
 
     // Other edges.
     for (auto it = _points.begin(); it + 1 != _points.end(); ++it)
     {
-      hypot = std::min(hypot, ggo::segment<data_t>(*it, *(it + 1)).hypot_to_point(p));
+      hypot = std::min(hypot, ggo::segment<scalar_t>(*it, *(it + 1)).hypot_to_point(p));
     }
 
     return std::sqrt(hypot);
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  rect_data<data_t> polygon2d<data_t>::get_bounding_rect() const
+  template <typename scalar_t>
+  rect_data<scalar_t> polygon2d<scalar_t>::get_bounding_rect() const
   {
     if (_points.empty() == true)
     {
@@ -78,23 +78,23 @@ namespace ggo
     }
 
     auto it 	     = _points.begin();
-    data_t left    = it->x();
-    data_t right   = it->x();
-    data_t bottom  = it->y();
-    data_t top     = it->y();
+    scalar_t left    = it->x();
+    scalar_t right   = it->x();
+    scalar_t bottom  = it->y();
+    scalar_t top     = it->y();
     it++;
 
     while (it != _points.end())
     {
-      left	  = std::min<data_t>(it->x(), left);
-      right	  = std::max<data_t>(it->x(), right);
-      bottom	= std::min<data_t>(it->y(), bottom);
-      top		  = std::max<data_t>(it->y(), top);
+      left	  = std::min<scalar_t>(it->x(), left);
+      right	  = std::max<scalar_t>(it->x(), right);
+      bottom	= std::min<scalar_t>(it->y(), bottom);
+      top		  = std::max<scalar_t>(it->y(), top);
 
       it++;
     }
 
-    rect_data<data_t> rect_data;
+    rect_data<scalar_t> rect_data;
     rect_data._pos = { left, bottom };
     rect_data._width = right - left;
     rect_data._height = top - bottom;
@@ -103,8 +103,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  bool polygon2d<data_t>::is_point_inside(const ggo::pos2<data_t> & p) const
+  template <typename scalar_t>
+  bool polygon2d<scalar_t>::is_point_inside(const ggo::pos2<scalar_t> & p) const
   {
     if (_points.size() <= 2)
     {
@@ -128,32 +128,32 @@ namespace ggo
     return inside;
 
 #if 0
-    data_t angle(0);
-    data_t angle1 = atan2(_points.back().y() - y, _points.back().x() - x);
+    scalar_t angle(0);
+    scalar_t angle1 = atan2(_points.back().y() - y, _points.back().x() - x);
     for (const auto & point : _points)
     {
-      data_t angle2 = atan2(point.y() - y, point.x() - x);
-      data_t dangle = angle2 - angle1;
-      if (dangle >  pi<data_t>()) { dangle -= 2 * pi<data_t>(); }
-      if (dangle < -pi<data_t>()) { dangle += 2 * pi<data_t>(); }
+      scalar_t angle2 = atan2(point.y() - y, point.x() - x);
+      scalar_t dangle = angle2 - angle1;
+      if (dangle >  pi<scalar_t>()) { dangle -= 2 * pi<scalar_t>(); }
+      if (dangle < -pi<scalar_t>()) { dangle += 2 * pi<scalar_t>(); }
       angle += dangle;
       angle1 = angle2;
     }
 
-    return std::abs(angle) > pi<data_t>();
+    return std::abs(angle) > pi<scalar_t>();
 #endif
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_segment(const ggo::pos2<data_t> & p1, const ggo::pos2<data_t> & p2) const
+  template <typename scalar_t>
+  scalar_t polygon2d<scalar_t>::dist_to_segment(const ggo::pos2<scalar_t> & p1, const ggo::pos2<scalar_t> & p2) const
   {
     return dist_to_segment({ p1, p2 });
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  data_t polygon2d<data_t>::dist_to_segment(const ggo::segment<data_t> & segment) const
+  template <typename scalar_t>
+  scalar_t polygon2d<scalar_t>::dist_to_segment(const ggo::segment<scalar_t> & segment) const
   {
     switch (_points.size())
     {
@@ -169,7 +169,7 @@ namespace ggo
       return 0;
     }
 
-    data_t hypot = ggo::segment<data_t>(_points[0], _points[_points.size() - 1]).hypot_to_segment(segment);
+    scalar_t hypot = ggo::segment<scalar_t>(_points[0], _points[_points.size() - 1]).hypot_to_segment(segment);
     if (hypot == 0)
     {
       return 0;
@@ -177,7 +177,7 @@ namespace ggo
 
     for (size_t i = 0; i < _points.size() - 1; ++i)
     {
-      data_t hypot_cur = ggo::segment<data_t>(_points[i], _points[i + 1]).hypot_to_segment(segment);
+      scalar_t hypot_cur = ggo::segment<scalar_t>(_points[i], _points[i + 1]).hypot_to_segment(segment);
       if (hypot_cur == 0)
       {
         return 0;
@@ -190,18 +190,18 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  ggo::rect_intersection polygon2d<data_t>::get_rect_intersection(const rect_data<data_t> & rect_data) const
+  template <typename scalar_t>
+  ggo::rect_intersection polygon2d<scalar_t>::get_rect_intersection(const rect_data<scalar_t> & rect_data) const
   {
-    data_t left    = rect_data._pos.x();
-    data_t bottom  = rect_data._pos.y();
-    data_t right   = left + rect_data._width;
-    data_t top     = bottom + rect_data._height;
+    scalar_t left    = rect_data._pos.x();
+    scalar_t bottom  = rect_data._pos.y();
+    scalar_t right   = left + rect_data._width;
+    scalar_t top     = bottom + rect_data._height;
     
     // Border intersection => partial overlap.
     for (size_t i = 0; i < _points.size(); ++i)
     {
-      ggo::segment<data_t> segment(_points[i], _points[(i + 1) % _points.size()]);
+      ggo::segment<scalar_t> segment(_points[i], _points[(i + 1) % _points.size()]);
 
       if (segment.intersect_horizontal_segment(left, right, bottom) == true ||
           segment.intersect_horizontal_segment(left, right, top   ) == true)
@@ -221,7 +221,7 @@ namespace ggo
     // - rect in polygon
     // - disjoint
 
-    ggo::rect<data_t> rect(rect_data);
+    ggo::rect<scalar_t> rect(rect_data);
     
     // Check if the polygon is inside the rect. Since there is no border
     // intersection, we just need to check if a point of the polygon 
@@ -244,8 +244,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  void polygon2d<data_t>::move(const ggo::vec2<data_t> & m)
+  template <typename scalar_t>
+  void polygon2d<scalar_t>::move(const ggo::vec2<scalar_t> & m)
   {
     for (auto & point : _points)
     {
@@ -254,8 +254,8 @@ namespace ggo
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename data_t>
-  void polygon2d<data_t>::rotate(data_t angle, const ggo::pos2<data_t> & center)
+  template <typename scalar_t>
+  void polygon2d<scalar_t>::rotate(scalar_t angle, const ggo::pos2<scalar_t> & center)
   {
     for (auto & point : _points)
     {

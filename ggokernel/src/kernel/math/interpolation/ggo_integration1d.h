@@ -78,7 +78,7 @@ namespace ggo
   template <typename data_t, typename scalar_t>
   data_t cubic_integration1d(const data_t* in, int size, scalar_t from, scalar_t to)
   {
-    return cubic_integration1d([&](int i) { return in[ggo::clamp(i, 0, size - 1)]; }, from, to);
+    return cubic_integration1d([&](int i) { return in[std::clamp(i, 0, size - 1)]; }, from, to);
   }
 }
 

@@ -3,6 +3,7 @@
 #include <kernel/ggo_rect_int.h>
 #include <kernel/ggo_kernel.h>
 #include <kernel/memory/ggo_memory_layouts.h>
+#include <kernel/scan/ggo_scan.h>
 #include <2d/ggo_pixel_type.h>
 #include <optional>
 
@@ -58,31 +59,31 @@ namespace ggo
     static constexpr ggo::pixel_type pixel_type() { return pixel_type_; }
 
     // Move.
-    //image_base_t(image_base_t && image)
-    //  : _buffer(image._buffer)
-    //  , _owns_buffer(image._owns_buffer)
-    //  , _memory_layout(std::move(image._memory_layout))
-    //{
-    //  image._buffer = nullptr;
-    //}
+    image_base_t(image_base_t && image)
+      : _buffer(image._buffer)
+      , _owns_buffer(image._owns_buffer)
+      , _memory_layout(std::move(image._memory_layout))
+    {
+      image._buffer = nullptr;
+    }
 
-    //void operator=(image_base_t && image)
-    //{
-    //  if (_owns_buffer == true)
-    //  {
-    //    free(_buffer);
-    //  }
+    void operator=(image_base_t && image)
+    {
+      if (_owns_buffer == true)
+      {
+        free(_buffer);
+      }
 
-    //  _buffer = image._buffer;
-    //  _owns_buffer = image._owns_buffer;
-    //  _memory_layout = std::move(image._memory_layout);
+      _buffer = image._buffer;
+      _owns_buffer = image._owns_buffer;
+      _memory_layout = std::move(image._memory_layout);
 
-    //  image._buffer = nullptr;
-    //}
+      image._buffer = nullptr;
+    }
 
     // No copy. Use blit API instead.
-    //image_base_t(const image_base_t & image) = delete;
-    //void operator=(const image_base_t & image) = delete;
+    image_base_t(const image_base_t & image) = delete;
+    void operator=(const image_base_t & image) = delete;
 
     // Read interface.
     const void *  data() const { return _buffer; }
@@ -124,8 +125,11 @@ namespace ggo
   template <ggo::pixel_type pixel_type, typename memory_layout_t = rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, vertical_direction::up>>
   using image_t = image_base_t<pixel_type, memory_layout_t, void *>;
 
-  template <ggo::pixel_type pixel_type, ggo::vertical_direction rows_vdir, typename void_ptr_t>
-  using rows_images_t = image_base_t<pixel_type, ggo::rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, rows_vdir>, void_ptr_t>;
+  template <ggo::pixel_type pixel_type, ggo::vertical_direction rows_vdir>
+  using const_rows_images_t = image_base_t<pixel_type, ggo::rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, rows_vdir>, const void *>;
+
+  template <ggo::pixel_type pixel_type, ggo::vertical_direction rows_vdir>
+  using rows_images_t = image_base_t<pixel_type, ggo::rows_memory_layout<pixel_type_traits<pixel_type>::pixel_byte_size, rows_vdir>, void *>;
 
   using image_y_8u = image_base_t<pixel_type::y_8u, rows_memory_layout<1, vertical_direction::up>, void *>;
   using image_rgb_8u = image_base_t<pixel_type::rgb_8u, rows_memory_layout<3, vertical_direction::up>, void *>;
@@ -239,11 +243,11 @@ namespace ggo
   }
 }
 
-// Image view.
+// Image view (for row images only).
 namespace ggo
 {
   template <pixel_type pt, vertical_direction rows_vdir, typename void_ptr_t>
-  std::optional<rows_images_t<pt, rows_vdir, const void *>> make_image_view(const rows_images_t<pt, rows_vdir, void_ptr_t> & img, ggo::rect_int clipping)
+  std::optional<const_rows_images_t<pt, rows_vdir>> make_image_view(const image_base_t<pt, ggo::rows_memory_layout<pixel_type_traits<pt>::pixel_byte_size, rows_vdir>, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
@@ -256,11 +260,11 @@ namespace ggo
     using rows_memory_layout_t = rows_memory_layout<pixel_byte_size, rows_vdir>;
     using rows_image_t = image_base_t<pt, rows_memory_layout_t, const void *>;
 
-    return rows_image_t(ptr, rows_memory_layout_t(clipping.size(), img.memory_layout()._line_byte_step));
+    return const_rows_images_t(ptr, rows_memory_layout_t(clipping.size(), img.memory_layout()._line_byte_step));
   }
 
   template <pixel_type pt, vertical_direction rows_vdir, typename void_ptr_t>
-  std::optional<rows_images_t<pt, rows_vdir, void_ptr_t>> make_image_view(rows_images_t<pt, rows_vdir, void_ptr_t> & img, ggo::rect_int clipping)
+  std::optional<image_base_t<pt, ggo::rows_memory_layout<pixel_type_traits<pt>::pixel_byte_size, rows_vdir>, void_ptr_t>> make_image_view(image_base_t<pt, ggo::rows_memory_layout<pixel_type_traits<pt>::pixel_byte_size, rows_vdir>, void_ptr_t> & img, ggo::rect_int clipping)
   {
     if (clipping.clip(rect_int::from_size(img.size())) == false)
     {
@@ -274,5 +278,21 @@ namespace ggo
     using rows_image_t = image_base_t<pt, rows_memory_layout_t, void_ptr_t>;
 
     return rows_image_t(ptr, clipping.size(), img.memory_layout()._line_byte_step);
+  }
+}
+
+// Helpers.
+namespace ggo
+{
+  template <typename image_t>
+  auto tiles_scan_for(image_t & image)
+  {
+    return ggo::scan_tiles_down();
+  }
+
+  template <pixel_type img_pixel_type>
+  auto tiles_scan_for(ggo::image_base_t<img_pixel_type, ggo::rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, ggo::vertical_direction::up>, void *> & image)
+  {
+    return ggo::scan_tiles_up();
   }
 }

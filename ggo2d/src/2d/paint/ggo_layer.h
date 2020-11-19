@@ -29,7 +29,7 @@ namespace ggo
   template <typename shape_t, typename bkgd_color_t, typename brush_t = solid_color_brush<bkgd_color_t>, typename blender_t = ggo::alpha_blender<bkgd_color_t, typename brush_t::color_t>>
   struct layer_t : public layer<bkgd_color_t, typename shape_t::scalar_t>
   {
-    using scalar_t = typename shape_t::scalar_t;
+    using scalar_t = typename shape_t::data_t;
 
     shape_t _shape;
     brush_t _brush;

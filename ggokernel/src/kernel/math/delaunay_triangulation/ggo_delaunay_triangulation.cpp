@@ -93,7 +93,7 @@ namespace
     dy2 /= len2;
 
     // We need to clamp, otherwise dot is 1 or -1 which may result to a NaN when computin acos.
-    T dot = ggo::clamp(dx1 * dx2 + dy1 * dy2, T(-0.999999), T(0.999999));
+    T dot = std::clamp(dx1 * dx2 + dy1 * dy2, T(-0.999999), T(0.999999));
 
     return std::acos(dot);
   }

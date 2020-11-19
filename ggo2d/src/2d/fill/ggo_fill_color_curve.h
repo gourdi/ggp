@@ -1,5 +1,6 @@
 #pragma once
 
+#include <kernel/math/interpolation/ggo_interpolation1d.h>
 #include <2d/ggo_color.h>
 #include <map>
 
