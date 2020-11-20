@@ -1,30 +1,9 @@
 #pragma once
 
-#if 0
-
 #include <kernel/math/signal_processing/ggo_morphology.h>
 #include <2d/ggo_pixel_type.h>
 #include <2d/ggo_image.h>
 
-// Definition.
-namespace ggo
-{
-  // Dilatation.
-  template <typename input_image_t, typename output_image_t>
-  void dilatation_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height);
-
-  template <typename input_image_t, typename output_image_t>
-  void dilatation_disc(const input_image_t & input, output_image_t & output, float radius);
-
-  // Erosion.
-  template <typename input_image_t, typename output_image_t>
-  void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height);
-
-  template <typename input_image_t, typename output_image_t>
-  void erosion_disc(const input_image_t & input, output_image_t & output, float radius);
-}
-
-// Implementation.
 namespace ggo
 {
   template <typename color_t>
@@ -48,83 +27,83 @@ namespace ggo
 
   // Dilatation.
   template <typename input_image_t, typename output_image_t>
-  void dilatation_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height)
+  void dilatation_rectangle(const input_image_t & input_image, output_image_t & output_image, int kernel_width, int kernel_height)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 
-    if (input.size() != output.size())
+    if (input_image.size() != output_image.size())
     {
       throw std::runtime_error("dimension mismatch");
     }
 
-    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
-    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
+    auto in = [&](int x, int y) { return input_image.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output_image.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
-    morpho_rectangle(in, out, input.width(), input.height(), kernel_width, kernel_height, pred);
+    morpho_rectangle(in, out, input_image.width(), input_image.height(), kernel_width, kernel_height, pixels_scan_for(input_image), pred);
   }
 
   template <typename input_image_t, typename output_image_t>
-  void dilatation_disc(const input_image_t & input, output_image_t & output, float radius)
+  void dilatation_disc(const input_image_t & input_image, output_image_t & output_image, float radius)
   {
     static_assert(std::is_same_v<typename input_image_t::color_t, typename output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 
-    if (input.size() != output.size())
+    if (input_image.size() != output_image.size())
     {
       throw std::runtime_error("dimension mismatch");
     }
 
-    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
-    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
+    auto in = [&](int x, int y) { return input_image.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output_image.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::dilatation(c1, c2); };
 
-    morpho_disc(in, out, input.width(), input.height(), radius, pred);
+    morpho_disc(in, out, input_image.width(), input_image.height(), radius, pixels_scan_for(input_image), pred);
   }
 
   // Erosion.
   template <typename input_image_t, typename output_image_t>
-  void erosion_rectangle(const input_image_t & input, output_image_t & output, int kernel_width, int kernel_height)
+  void erosion_rectangle(const input_image_t & input_image, output_image_t & output_image, int kernel_width, int kernel_height)
   {
     static_assert(std::is_same_v<typename input_image_t::color_t, typename output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 
-    if (input.size() != output.size())
+    if (input_image.size() != output_image.size())
     {
       throw std::runtime_error("dimension mismatch");
     }
 
-    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
-    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
+    auto in = [&](int x, int y) { return input_image.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output_image.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
-    morpho_rectangle(in, out, input.width(), input.height(), kernel_width, kernel_height, pred);
+    morpho_rectangle(in, out, input_image.width(), input_image.height(), kernel_width, kernel_height, pixels_scan_for(input_image), pred);
   }
 
   template <typename input_image_t, typename output_image_t>
-  void erosion_disc(const input_image_t & input, output_image_t & output, float radius)
+  void erosion_disc(const input_image_t & input_image, output_image_t & output_image, float radius)
   {
     static_assert(std::is_same_v<typename input_image_t::color_t, output_image_t::color_t>);
 
     using color_t = typename input_image_t::color_t;
 
-    if (input.size() != output.size())
+    if (input_image.size() != output_image.size())
     {
       throw std::runtime_error("dimension mismatch");
     }
 
-    auto in = [&](int x, int y) { return input.read_pixel(x, y); };
-    auto out = [&](int x, int y, const color_t & c) { output.write_pixel(x, y, c); };
+    auto in = [&](int x, int y) { return input_image.read_pixel(x, y); };
+    auto out = [&](int x, int y, const color_t & c) { output_image.write_pixel(x, y, c); };
     auto pred = [](const color_t & c1, const color_t & c2) { return morpho_t<color_t>::erosion(c1, c2); };
 
-    morpho_disc(in, out, input.width(), input.height(), radius, pred);
+    morpho_disc(in, out, input_image.width(), input_image.height(), radius, pixels_scan_for(input_image), pred);
   }
 }
-
+#if 0
 // Dynamic images. For now only a subset of pixel types is supported.
 namespace ggo
 {
@@ -238,5 +217,4 @@ namespace ggo
     }
   }
 }
-
 #endif

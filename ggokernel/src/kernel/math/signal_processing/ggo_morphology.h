@@ -1,162 +1,137 @@
-#ifndef __GGO_MORPHOLOGY__
-#define __GGO_MORPHOLOGY__
+#pragma once
 
 #include <kernel/memory/ggo_ptr_arithmetics.h>
-
-namespace ggo
-{
-  template <typename getter, typename setter, typename predicate>
-  void morpho_rectangle(const getter & in, setter out, int width, int height, int kernel_width, int kernel_height, predicate pred);
- 
-  template <typename getter, typename setter, typename predicate>
-  void morpho_disc(const getter & in, setter out, int width, int height, float radius, predicate pred);
-}
-
-namespace ggo
-{
-  template <typename data_t>
-  void dilatation_rectangle(const data_t * input, data_t * output,
-    int width, int height, int input_line_byte_step, int output_line_byte_step,
-    int kernel_width, int kernel_height)
-  {
-    if (input == output)
-    {
-      throw std::runtime_error("in-place dilatation not supported");
-    }
-
-    auto in = [&](int x, int y){ return ggo::move_ptr(input, y * input_line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * output_line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
-
-    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
-  }
-  
-  template <typename data_t>
-  void dilatation_disc(const data_t * input, data_t * output,
-    int width, int height, int input_line_byte_step, int output_line_byte_step,
-    float radius)
-  {
-    if (input == output)
-    {
-      throw std::runtime_error("in-place dilatation not supported");
-    }
-
-    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * input_line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * output_line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
-
-    morpho_disc(in, out, width, height, radius, pred);
-  }
-
-  template <typename data_t>
-  void erosion_rectangle(const data_t * input, data_t * output, 
-    int width, int height, int input_line_byte_step, int output_line_byte_step,
-    int kernel_width, int kernel_height)
-  {
-    if (input == output)
-    {
-      throw std::runtime_error("in-place erosion not supported");
-    }
-
-    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * input_line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * output_line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
-
-    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, pred);
-  }
-
-  template <typename data_t>
-  void erosion_disc(const data_t * input, data_t * output,
-    int width, int height, int input_line_byte_step, int output_line_byte_step,
-    float radius)
-  {
-    if (input == output)
-    {
-      throw std::runtime_error("in-place erosion not supported");
-    }
-
-    auto in = [&](int x, int y) { return ggo::move_ptr(input, y * input_line_byte_step)[x]; };
-    auto out = [&](int x, int y, const data_t & v) { ggo::move_ptr(output, y * output_line_byte_step)[x] = v; };
-    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
-
-    morpho_disc(in, out, width, height, radius, pred);
-  }
-}
+#include <kernel/ggo_rect_int.h>
+#include <kernel/scan/ggo_scan.h>
 
 namespace ggo
 {
   //////////////////////////////////////////////////////////////
-  template <typename getter, typename setter, typename predicate>
-  void morpho_rectangle(const getter & in, setter out, int width, int height, int kernel_width, int kernel_height, predicate pred)
+  template <typename getter, typename setter, typename scan_t, typename predicate>
+  void morpho_rectangle(const getter & in, setter out, int width, int height, int kernel_width, int kernel_height, scan_t scan, predicate pred)
   {
-    for (int y = 0; y < height; ++y)
+    for (auto [x, y] : scan(ggo::rect_int::from_size({ width, height })))
     {
       int y_inf = std::max(0, y - kernel_height);
       int y_sup = std::min(height - 1, y + kernel_height);
 
-      for (int x = 0; x < width; ++x)
+      int x_inf = std::max(0, x - kernel_width);
+      int x_sup = std::min(width - 1, x + kernel_width);
+
+      auto v = in(x, y);
+
+      for (auto [kernel_x, kernel_y] : scan(ggo::rect_int::from_left_right_bottom_top(x_inf, x_sup, y_inf, y_sup)))
       {
-        int x_inf = std::max(0, x - kernel_width);
-        int x_sup = std::min(width - 1, x + kernel_width);
+        auto cur = in(kernel_x, kernel_y);
 
-        auto v = in(x, y);
-
-        for (int kernel_y = y_inf; kernel_y <= y_sup; ++kernel_y)
-        {
-          for (int kernel_x = x_inf; kernel_x <= x_sup; ++kernel_x)
-          {
-            auto cur = in(kernel_x, kernel_y);
-
-            v = pred(cur, v);
-          }
-        }
-        
-        out(x, y, v);
+        v = pred(cur, v);
       }
+
+      out(x, y, v);
     }
   }
 
   //////////////////////////////////////////////////////////////
-  template <typename getter, typename setter, typename predicate>
-  void morpho_disc(const getter & in, setter out, int width, int height, float radius, predicate pred)
+  template <typename getter, typename setter, typename scan_t, typename predicate>
+  void morpho_disc(const getter & in, setter out, int width, int height, float radius, scan_t scan, predicate pred)
   {
     float radius_squared = radius * radius;
     int kernel_size = static_cast<int>(radius + 1);
 
-    for (int y = 0; y < height; ++y)
+    for (auto [x, y] : scan(ggo::rect_int::from_size({ width, height })))
     {
-      for (int x = 0; x < width; ++x)
+      int y_inf = std::max(0, y - kernel_size);
+      int y_sup = std::min(height - 1, y + kernel_size);
+
+      int x_inf = std::max(0, x - kernel_size);
+      int x_sup = std::min(width - 1, x + kernel_size);
+
+      auto v = in(x, y);
+
+      for (auto [kernel_x, kernel_y] : scan(ggo::rect_int::from_left_right_bottom_top(x_inf, x_sup, y_inf, y_sup)))
       {
-        auto v = in(x, y);
+        int dx = kernel_x - x;
+        int dy = kernel_y - y;
+        float hypot = static_cast<float>(dx * dx + dy * dy);
 
-        for (int kernel_y = -kernel_size; kernel_y <= kernel_size; ++kernel_y)
+        if (hypot <= radius_squared)
         {
-          for (int kernel_x = -kernel_size; kernel_x <= kernel_size; ++kernel_x)
-          {
-            int input_x = x + kernel_x;
-            int input_y = y + kernel_y;
+          auto cur = in(kernel_x, kernel_y);
 
-            if (input_x < 0 || input_x >= width ||
-                input_y < 0 || input_y >= height)
-            {
-              continue;
-            }
-
-            float hypot = static_cast<float>(kernel_x * kernel_x + kernel_y * kernel_y);
-
-            if (hypot <= radius_squared)
-            {
-              auto cur = in(input_x, input_y);
-
-              v = pred(cur, v);
-            }
-          }
+          v = pred(cur, v);
         }
-        
-        out(x, y, v);
       }
+
+      out(x, y, v);
     }
   }
 }
 
-#endif
+// Helpers.
+namespace ggo
+{
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void dilatation_rectangle(const data_t* input, data_t* output, int width, int height, int kernel_width, int kernel_height)
+  {
+    if (input == output)
+    {
+      throw std::runtime_error("in-place dilatation not supported");
+    }
+
+    auto in = [&](int x, int y) { return input[y * width + x]; };
+    auto out = [&](int x, int y, const data_t& v) { output[y * width + x] = v; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
+
+    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, scan_rows_up(), pred);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void dilatation_disc(const data_t* input, data_t* output, int width, int height, float radius)
+  {
+    if (input == output)
+    {
+      throw std::runtime_error("in-place dilatation not supported");
+    }
+
+    auto in = [&](int x, int y) { return input[y * width + x]; };
+    auto out = [&](int x, int y, const data_t & v) { output[y * width + x] = v; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::max(cur, ref); };
+
+    morpho_disc(in, out, width, height, radius, scan_rows_up(), pred);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void erosion_rectangle(const data_t* input, data_t* output, int width, int height, int kernel_width, int kernel_height)
+  {
+    if (input == output)
+    {
+      throw std::runtime_error("in-place erosion not supported");
+    }
+
+    auto in = [&](int x, int y) { return input[y * width + x]; };
+    auto out = [&](int x, int y, const data_t & v) { output[y * width + x] = v; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
+
+    morpho_rectangle(in, out, width, height, kernel_width, kernel_height, scan_rows_up(), pred);
+  }
+
+  //////////////////////////////////////////////////////////////
+  template <typename data_t>
+  void erosion_disc(const data_t * input, data_t * output, int width, int height, float radius)
+  {
+    if (input == output)
+    {
+      throw std::runtime_error("in-place erosion not supported");
+    }
+
+    auto in = [&](int x, int y) { return input[y * width + x]; };
+    auto out = [&](int x, int y, const data_t & v) { output[y * width + x] = v; };
+    auto pred = [](const data_t & cur, const data_t & ref) { return std::min(cur, ref); };
+
+    morpho_disc(in, out, width, height, radius, scan_rows_up(), pred);
+  }
+}
+

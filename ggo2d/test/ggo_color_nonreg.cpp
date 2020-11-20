@@ -35,19 +35,6 @@ GGO_TEST(color, conversions)
 }
 
 ////////////////////////////////////////////////////////////////////
-GGO_TEST(color, linear_curve)
-{
-  //ggo::linear_curve<float, ggo::rgb_32f> curve;
-  //curve.push_point(0, ggo::rgb_32f(1.f, 0.f, 0.f));
-  //curve.push_point(1, ggo::rgb_32f(0.f, 1.f, 1.f));
-  //ggo::rgb_32f c = curve.evaluate(0.25f);
-
-  //GGO_CHECK_FLOAT_EQ(c.r(), 0.75f);
-  //GGO_CHECK_FLOAT_EQ(c.g(), 0.25f);
-  //GGO_CHECK_FLOAT_EQ(c.b(), 0.25f);
-}
-
-////////////////////////////////////////////////////////////////////
 GGO_TEST(color, hex)
 {
   ggo::rgb_8u c(0xF0, 0x42, 0x0F);

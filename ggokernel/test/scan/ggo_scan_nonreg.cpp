@@ -2,6 +2,42 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 
 /////////////////////////////////////////////////////////////////////
+GGO_TEST(scan, scan_rows_up)
+{
+  ggo::scan_rows_up scan;
+
+  std::vector<ggo::vec2_i> scanned;
+  for (auto [x, y] : scan(ggo::rect_int::from_left_right_bottom_top(1, 3, 4, 5)))
+  {
+    scanned.emplace_back(x, y);
+  }
+
+  const std::vector<ggo::vec2_i> expected({
+    { 1, 4 }, { 2, 4 }, { 3, 4 },
+    { 1, 5 }, { 2, 5 }, { 3, 5 } });
+
+  GGO_CHECK_EQ(scanned, expected);
+}
+
+/////////////////////////////////////////////////////////////////////
+GGO_TEST(scan, scan_rows_down)
+{
+  ggo::scan_rows_down scan;
+
+  std::vector<ggo::vec2_i> scanned;
+  for (auto [x, y] : scan(ggo::rect_int::from_left_right_bottom_top(1, 3, 4, 5)))
+  {
+    scanned.emplace_back(x, y);
+  }
+
+  const std::vector<ggo::vec2_i> expected({
+    { 1, 5 }, { 2, 5 }, { 3, 5 },
+    { 1, 4 }, { 2, 4 }, { 3, 4 } });
+
+  GGO_CHECK_EQ(scanned, expected);
+}
+
+/////////////////////////////////////////////////////////////////////
 GGO_TEST(scan, scan_tiles_up_single_tile)
 {
   std::vector<ggo::rect_int> tiles;

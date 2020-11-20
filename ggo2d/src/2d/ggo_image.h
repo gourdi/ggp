@@ -285,14 +285,26 @@ namespace ggo
 namespace ggo
 {
   template <typename image_t>
-  auto tiles_scan_for(image_t & image)
+  auto tiles_scan_for(const image_t & image)
   {
     return ggo::scan_tiles_down();
   }
 
   template <pixel_type img_pixel_type>
-  auto tiles_scan_for(ggo::image_base_t<img_pixel_type, ggo::rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, ggo::vertical_direction::up>, void *> & image)
+  auto tiles_scan_for(const ggo::image_base_t<img_pixel_type, ggo::rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, ggo::vertical_direction::up>, void *> & image)
   {
     return ggo::scan_tiles_up();
+  }
+
+  template <typename image_t>
+  auto pixels_scan_for(const image_t & image)
+  {
+    return ggo::scan_rows_down();
+  }
+
+  template <pixel_type img_pixel_type>
+  auto pixels_scan_for(const ggo::image_base_t<img_pixel_type, ggo::rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, ggo::vertical_direction::up>, void*>& image)
+  {
+    return ggo::scan_rows_up();
   }
 }
