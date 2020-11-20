@@ -5,7 +5,7 @@
 #include <2d/fill/ggo_fill.h>
 #include <2d/paint/ggo_color_triangle.h>
 #include <2d/paint/ggo_paint_layer.h>
-#if 0
+
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(triangular_interpolation, function)
 {
@@ -64,7 +64,7 @@ GGO_TEST(paint, alpha_color_triangle)
   std::shared_ptr<const color_triangle_t> triangle1(new color_triangle_t({ { 10.f, 10.f },{ 110.f, 10.f },{ 110.f, 90.f } },
     { 0.f, 1.f, 0.f, 1.f },
     { 0.f, 1.f, 0.f, 0.75f },
-    { 0.f, 1.f, 0.f, 0.5f }));
+    { 0.f, 1.f, 0.f, 0.25f }));
 
   canvas.add_layer(triangle1);
 
@@ -74,4 +74,3 @@ GGO_TEST(paint, alpha_color_triangle)
 
   ggo::save_bmp("paint_alpha_color_triangles.bmp", image);
 }
-#endif
