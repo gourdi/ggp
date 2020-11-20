@@ -1,6 +1,5 @@
 #include <kernel/nonreg/ggo_nonreg.h>
 #include <kernel/ggo_kernel.h>
-//#include <kernel/math/interpolation/ggo_curve.h>
 #include <2d/ggo_color.h>
 
 ////////////////////////////////////////////////////////////////////
