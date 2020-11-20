@@ -52,8 +52,8 @@ namespace ggo
 
     auto in = [&](int x, int y)
     {
-      x = clamp(x, 0, input_image.width() - 1);
-      y = clamp(y, 0, input_image.height() - 1);
+      x = std::clamp(x, 0, input_image.width() - 1);
+      y = std::clamp(y, 0, input_image.height() - 1);
 
       return ggo::convert_color_to<floating_point_color_t>(input_image.read_pixel(x, y));
     };
