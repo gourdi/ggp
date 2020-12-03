@@ -4,7 +4,7 @@
 #include <2d/paint/ggo_paint_layer.h>
 #include <2d/processing/ggo_blit.h>
 #include <2d/processing/ggo_mask.h>
-#if 0
+
 ////////////////////////////////////////////////////////////////////
 GGO_TEST(rle_image, y8u)
 {
@@ -67,7 +67,7 @@ GGO_TEST(rle_image, blit)
 
   ggo::rle_image<uint8_t> dst(width, height);
 
-  ggo::image_t<ggo::pixel_type::y_8u, ggo::lines_order::up> src({ width, height });
+  ggo::image_t<ggo::pixel_type::y_8u> src({ width, height });
   for (int y = 0; y < height; ++y)
   {
     for (int x = 0; x < width; ++x)
@@ -76,7 +76,7 @@ GGO_TEST(rle_image, blit)
     }
   }
 
-  ggo::blit(src, dst);
+  ggo::blit(dst, src, { 0, 0 });
 
   for (int y = 0; y < height; ++y)
   {
@@ -86,6 +86,7 @@ GGO_TEST(rle_image, blit)
     }
   }
 }
+#if 0
 
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(rle_image, mask)

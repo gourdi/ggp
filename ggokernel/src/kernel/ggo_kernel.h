@@ -169,11 +169,9 @@ namespace ggo
 
   template <typename data_t> constexpr  data_t  square(data_t value) { return value * value; };
   template <typename data_t> constexpr  data_t  sign(data_t value) { return value > data_t(0) ? data_t(1) : data_t(-1); };
-  template <typename data_t> constexpr  data_t  cotan(data_t angle)                     { return 1 / std::tan(angle); }
-  constexpr inline					            int		  pad(int value, int pad)				          { return (((value-1)/pad)+1)*pad; };
+  constexpr inline					            int		  pad(int value, int pad) { return (((value-1)/pad)+1)*pad; };
   template <typename data_t>constexpr   bool	  is_even(data_t value) { return (value & 1) == 0; };
-  template <typename data_t>constexpr   bool	  is_odd(data_t value)						        { return (value & 1) == 1; };
-  inline					                      int		  log2(int v)								              { int log2 = 1; while (v >>= 1) { ++log2; } return log2; }
+  template <typename data_t>constexpr   bool	  is_odd(data_t value) { return (value & 1) == 1; };
 }
 
 //////////////////////////////////////////////////////////////

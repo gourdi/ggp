@@ -7,7 +7,7 @@ namespace ggo
 {
   //////////////////////////////////////////////////////////////
   template <typename input_image_t, typename output_image_t>
-  void scale_nearest_neighbor_t(const input_image_t & input_image, output_image_t & output_image)
+  void scale_nearest_neighbor(const input_image_t & input_image, output_image_t & output_image)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
@@ -21,7 +21,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename input_image_t, typename output_image_t>
-  void scale_linear_interpolation_t(const input_image_t & input_image, output_image_t & output_image)
+  void scale_linear_interpolation(const input_image_t & input_image, output_image_t & output_image)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
@@ -43,7 +43,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename input_image_t, typename output_image_t>
-  void scale_cubic_interpolation_t(const input_image_t & input_image, output_image_t & output_image)
+  void scale_cubic_interpolation(const input_image_t & input_image, output_image_t & output_image)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
@@ -68,7 +68,7 @@ namespace ggo
 
   //////////////////////////////////////////////////////////////
   template <typename input_image_t, typename output_image_t>
-  void scale_linear_integration_t(const input_image_t & input_image, output_image_t & output_image)
+  void scale_linear_integration(const input_image_t & input_image, output_image_t & output_image)
   {
     static_assert(std::is_same_v<input_image_t::color_t, output_image_t::color_t>);
 
@@ -88,7 +88,7 @@ namespace ggo
     scale_2d_linear_integration(in, input_image.width(), input_image.height(), out, output_image.width(), output_image.height());
   }
 }
-
+#if 0
 // Dynamic images.
 namespace ggo
 {
@@ -231,4 +231,5 @@ namespace ggo
     dispatch_pixel_type<scaler_linear_integration<input_image_t, output_image_t>>(input_image.pixel_type(), input_image, output_image);
   }
 }
+#endif
 

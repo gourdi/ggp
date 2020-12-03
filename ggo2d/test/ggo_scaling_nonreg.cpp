@@ -22,16 +22,16 @@ GGO_TEST(scaling, y32f)
 
   ggo::image_rgb_8u image_rgb8u({ 100, 100 });
 
-  ggo::scale_linear_interpolation_t(input, rescaled);
-  ggo::blit_t(image_rgb8u, rescaled, { 0, 0 });
+  ggo::scale_linear_interpolation(input, rescaled);
+  ggo::blit(image_rgb8u, rescaled, { 0, 0 });
   ggo::save_bmp("scale_linear_interpolation.bmp", image_rgb8u);
 
-  ggo::scale_cubic_interpolation_t(input, rescaled);
-  ggo::blit_t(image_rgb8u, rescaled, { 0, 0 });
+  ggo::scale_cubic_interpolation(input, rescaled);
+  ggo::blit(image_rgb8u, rescaled, { 0, 0 });
   ggo::save_bmp("scale_cubic_interpolation.bmp", image_rgb8u);
 
-  ggo::scale_linear_integration_t(input, rescaled);
-  ggo::blit_t(image_rgb8u, rescaled, { 0, 0 });
+  ggo::scale_linear_integration(input, rescaled);
+  ggo::blit(image_rgb8u, rescaled, { 0, 0 });
   ggo::save_bmp("scale_linear_integration.bmp", image_rgb8u);
 }
 

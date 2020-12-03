@@ -3,11 +3,11 @@
 #include <2d/ggo_image.h>
 #include <kernel/ggo_rect_int.h>
 
-// Static generic images.
+// Generic images.
 namespace ggo
 {
   template <typename input_image_t, typename output_image_t, typename scan_t>
-  void crop_t(const input_image_t & input_image, ggo::pos2_i offset, output_image_t & output_image, scan_t scan)
+  void crop(const input_image_t & input_image, ggo::pos2_i offset, output_image_t & output_image, scan_t scan)
   {
     ggo::rect_int r = ggo::rect_int::from_left_width_bottom_height(offset.x(), output_image.width(), offset.y(), output_image.height());
 
@@ -23,11 +23,11 @@ namespace ggo
   }
 }
 
-// Static rows memory images.
+// Rows memory images.
 namespace ggo
 {
   template <pixel_type img_pixel_type, vertical_direction rows_vdir, typename void_ptr_t>
-  auto crop_t(const ggo::image_base_t<img_pixel_type, rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, rows_vdir>, void_ptr_t> & src, ggo::rect_int rect)
+  auto crop(const ggo::image_base_t<img_pixel_type, rows_memory_layout<pixel_type_traits<img_pixel_type>::pixel_byte_size, rows_vdir>, void_ptr_t> & src, ggo::rect_int rect)
   {
     if (rect.clip(src.size()) == false)
     {
@@ -64,11 +64,12 @@ namespace ggo
   }
 }
 
+#if 0
 // Dynamic generic images.
 namespace ggo
 {
   template <typename input_image_t, typename output_image_t, typename scan_t>
-  struct crop_dispatch
+  struct crop_dispatcher
   {
     template <pixel_type img_pixel_type>
     static void call(const input_image_t& input_image, ggo::pos2_i offset, output_image_t& output_image, scan_t scan)
@@ -89,7 +90,7 @@ namespace ggo
   };
 
   template <typename input_image_t, typename output_image_t, typename scan_t>
-  void crop(const input_image_t & input_image, ggo::pos2_i offset, output_image_t & output_image, scan_t scan)
+  void crop_d(const input_image_t & input_image, ggo::pos2_i offset, output_image_t & output_image, scan_t scan)
   {
     if (input_image.pixel_type() != output_image.pixel_type())
     {
@@ -99,3 +100,4 @@ namespace ggo
     dispatch_pixel_type<dispatch_src<input_image_t, output_image_t>>(input_image.pixel_type(), input_image, offset, output_image, scan);
   }
 }
+#endif

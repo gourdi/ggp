@@ -12,16 +12,16 @@ GGO_TEST(blit, clipping)
 
   const auto expected = make_image_t<ggo::pixel_type::y_8u>({ 6, 4 }, 0);
 
-  ggo::blit_t(dst, src, { -3, 0 });
+  ggo::blit(dst, src, { -3, 0 });
   GGO_CHECK_IMG(dst, expected);
 
-  ggo::blit_t(dst, src, { 6, 0 });
+  ggo::blit(dst, src, { 6, 0 });
   GGO_CHECK_IMG(dst, expected);
 
-  ggo::blit_t(dst, src, { 0, -2 });
+  ggo::blit(dst, src, { 0, -2 });
   GGO_CHECK_IMG(dst, expected);
 
-  ggo::blit_t(dst, src, { 0, 5 });
+  ggo::blit(dst, src, { 0, 5 });
   GGO_CHECK_IMG(dst, expected);
 }
 
@@ -33,7 +33,7 @@ GGO_TEST(blit, rows_up_fit)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 2, 1 });
+  ggo::blit(dst, src, { 2, 1 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -51,7 +51,7 @@ GGO_TEST(blit, rows_down_fit)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 2, 1 });
+  ggo::blit(dst, src, { 2, 1 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -69,7 +69,7 @@ GGO_TEST(blit, rows_up_bottom_left)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { -2, -1 });
+  ggo::blit(dst, src, { -2, -1 });
 
   GGO_CHECK_PIXELS(dst, {
     6, 0, 0, 0, 0, 0,
@@ -87,7 +87,7 @@ GGO_TEST(blit, y_down_bottom_left)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { -2, -1 });
+  ggo::blit(dst, src, { -2, -1 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -105,7 +105,7 @@ GGO_TEST(blit, rows_up_top_right)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 4, 4 });
+  ggo::blit(dst, src, { 4, 4 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -123,7 +123,7 @@ GGO_TEST(blit, rows_down_top_right)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 4, 4 });
+  ggo::blit(dst, src, { 4, 4 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 4, 5,
@@ -145,7 +145,7 @@ GGO_TEST(blit, rows_up_overlap)
   {
     auto dst = make_image_t<ggo::pixel_type::y_8u>({ 3, 2 }, 0);
 
-    ggo::blit_t(dst, src, { -2, -1 });
+    ggo::blit(dst, src, { -2, -1 });
 
     GGO_CHECK_PIXELS(dst, {
       23, 24, 25,
@@ -155,7 +155,7 @@ GGO_TEST(blit, rows_up_overlap)
   {
     auto dst = make_image_t<ggo::pixel_type::y_8u>({ 3, 2 }, 0);
 
-    ggo::blit_t(dst, src, { -5, -1 });
+    ggo::blit(dst, src, { -5, -1 });
 
     GGO_CHECK_PIXELS(dst, {
       26, 0, 0,
@@ -175,7 +175,7 @@ GGO_TEST(blit, rows_down_overlap)
   {
     auto dst = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 3, 2 }, 0);
 
-    ggo::blit_t(dst, src, { -2, -1 });
+    ggo::blit(dst, src, { -2, -1 });
 
     GGO_CHECK_PIXELS(dst, {
       23, 24, 25,
@@ -185,7 +185,7 @@ GGO_TEST(blit, rows_down_overlap)
   {
     auto dst = make_image_rows_down_t<ggo::pixel_type::y_8u>({ 3, 2 }, 0);
 
-    ggo::blit_t(dst, src, { -5, -1 });
+    ggo::blit(dst, src, { -5, -1 });
 
     GGO_CHECK_PIXELS(dst, {
       26, 0, 0,
@@ -201,7 +201,7 @@ GGO_TEST(blit, dst_down_src_up_fit)
     1, 2, 3,
     4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 2, 1 });
+  ggo::blit(dst, src, { 2, 1 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -219,7 +219,7 @@ GGO_TEST(blit, dst_up_src_down_fit)
      1, 2, 3,
      4, 5, 6 });
 
-  ggo::blit_t(dst, src, { 2, 1 });
+  ggo::blit(dst, src, { 2, 1 });
 
   GGO_CHECK_PIXELS(dst, {
     0, 0, 0, 0, 0, 0,
@@ -237,7 +237,7 @@ GGO_TEST(blit, brush_rgba8_background_rgb8)
     { 0xff, 0x80, 0x40, 0xff }, { 0xff, 0x80, 0x40, 0x80 },
     { 0xff, 0x80, 0x40, 0x40 }, { 0xff, 0x80, 0x40, 0x00 } });
 
-  ggo::blit_t(dst, src, { 1, 2 });
+  ggo::blit(dst, src, { 1, 2 });
 
   GGO_CHECK_PIXELS(dst, {
     { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
@@ -246,7 +246,7 @@ GGO_TEST(blit, brush_rgba8_background_rgb8)
     { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
     { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 } });
 }
-
+#if 0
 /////////////////////////////////////////////////////////////////////
 GGO_TEST(blit, dynamic_image)
 {
@@ -277,3 +277,4 @@ GGO_TEST(blit, dynamic_image)
   GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 1, 4), ggo::rgb_8u(0x00, 0x00, 0x00));
   GGO_CHECK_EQ(ggo::read_pixel<ggo::pixel_type::rgb_8u>(dst, 2, 4), ggo::rgb_8u(0x00, 0x00, 0x00));
 }
+#endif

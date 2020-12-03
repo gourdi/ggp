@@ -23,7 +23,7 @@ GGO_TEST(harmonic_surface, test1)
   }
 
   ggo::image_rgb_8u image_rgb8u({ size, size });
-  ggo::blit_t(image_rgb8u, image_y32f, { 0, 0 });
+  ggo::blit(image_rgb8u, image_y32f, { 0, 0 });
   
   ggo::save_bmp("test_harmonic_surface1.bmp", image_rgb8u);
 }
@@ -55,7 +55,7 @@ GGO_TEST(harmonic_surface, test2)
   }
 
   ggo::image_rgb_8u image_rgb8u({ size, size });
-  ggo::blit_t(image_rgb8u, image_y32f, { 0, 0 });
+  ggo::blit(image_rgb8u, image_y32f, { 0, 0 });
   
   ggo::save_bmp("test_harmonic_surface2.bmp", image_rgb8u);
 }

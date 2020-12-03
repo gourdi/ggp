@@ -9,7 +9,7 @@
 namespace ggo
 {
   template <typename dst_image_t, typename src_image_t>
-  void blit_t(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
+  void blit(dst_image_t & dst_image, const src_image_t & src_image, ggo::pos2_i offset)
   {
     using dst_color_t = typename dst_image_t::color_t;
     using src_color_t = typename src_image_t::color_t;
